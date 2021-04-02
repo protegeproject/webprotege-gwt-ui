@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
@@ -39,12 +38,6 @@ public class ProjectManager {
                           @Nonnull ProjectAccessManager projectAccessManager) {
         this.projectCache = projectCache;
         this.projectAccessManager = projectAccessManager;
-    }
-
-
-    @Nonnull
-    public ProjectActionHandlerRegistry getActionHandlerRegistry(@Nonnull ProjectId projectId) {
-        return projectCache.getActionHandlerRegistry(checkNotNull(projectId));
     }
 
     /**

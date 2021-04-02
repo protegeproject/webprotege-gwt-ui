@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.project;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
-import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -78,11 +77,6 @@ public class ProjectCache implements HasDispose {
         this.dormantProjectTime = dormantProjectTime;
         logger.info("Dormant project time: {} milliseconds", dormantProjectTime);
     }
-
-    public ProjectActionHandlerRegistry getActionHandlerRegistry(ProjectId projectId) {
-        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getActionHandlerRegistry();
-    }
-
 
     /**
      * Gets the list of cached project ids.
