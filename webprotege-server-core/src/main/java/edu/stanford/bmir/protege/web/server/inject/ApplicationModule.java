@@ -31,8 +31,6 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
-import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
-import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
@@ -90,12 +88,6 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     public ProjectDetailsManager provideProjectDetailsManager(ProjectDetailsManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public ProjectPermissionsManager provideProjectPermissionsManager(ProjectPermissionsManagerImpl impl) {
         return impl;
     }
 
