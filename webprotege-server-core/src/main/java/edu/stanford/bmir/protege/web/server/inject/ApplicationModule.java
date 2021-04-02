@@ -20,9 +20,7 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslato
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
-import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
@@ -145,12 +143,6 @@ public class ApplicationModule {
     public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {
         projectAccessManager.ensureIndexes();
         return projectAccessManager;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public ActionHandlerRegistry provideActionHandlerRegistry(ActionHandlerRegistryImpl impl) {
-        return impl;
     }
 
     @Provides
