@@ -91,12 +91,6 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    public UserDetailsManager provideUserDetailsManager(UserDetailsManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
     public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
         return manager;
     }
@@ -130,11 +124,6 @@ public class ApplicationModule {
     @ApplicationSingleton
     public OWLEntityProvider provideOWLProvider(@ApplicationDataFactory OWLDataFactory dataFactory) {
         return dataFactory;
-    }
-
-    @ApplicationSingleton
-    public UserActivityManager provideUserActivityManager(UserActivityManagerProvider provider) {
-        return provider.get();
     }
 
     @Provides
