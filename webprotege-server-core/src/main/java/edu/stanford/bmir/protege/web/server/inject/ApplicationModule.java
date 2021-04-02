@@ -18,8 +18,6 @@ import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
-import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
-import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
@@ -260,13 +258,6 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     public SlackWebhookRepository provideSlackWebhookRepository(SlackWebhookRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public CollectionItemDataRepository provideCollectionElementDataRepository(CollectionItemDataRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
     }

@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.api.ApiKeyHasher;
 import edu.stanford.bmir.protege.web.server.api.ApiKeyManager;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
-import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
@@ -39,8 +38,7 @@ public class GenerateApiKeyCmd extends Cmd {
                 new OWLEntityConverter(new OWLDataFactoryImpl()),
                 new ProjectIdConverter(),
                 new ThreadIdConverter(),
-                new CommentIdConverter(),
-                new CollectionIdConverter(), new FormIdConverter(), new TagIdConverter(), new ColorConverter());
+                new CommentIdConverter(), new FormIdConverter(), new TagIdConverter(), new ColorConverter());
         Morphia morphia = morphiaProvider.get();
         Datastore datastore = morphia.createDatastore(mongoClient, "webprotege");
         ApiKeyManager keyManager = new ApiKeyManager(new ApiKeyHasher(), new UserApiKeyStoreImpl(datastore));

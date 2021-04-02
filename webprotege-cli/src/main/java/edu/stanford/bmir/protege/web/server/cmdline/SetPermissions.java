@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.server.cmdline;
 
 import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 import edu.stanford.bmir.protege.web.server.access.*;
-import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.checkerframework.checker.nullness.Opt;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -105,8 +102,7 @@ public class SetPermissions {
                 new OWLEntityConverter(new OWLDataFactoryImpl()),
                 new ProjectIdConverter(),
                 new ThreadIdConverter(),
-                new CommentIdConverter(),
-                new CollectionIdConverter(), new FormIdConverter(), new TagIdConverter(), new ColorConverter());
+                new CommentIdConverter(), new FormIdConverter(), new TagIdConverter(), new ColorConverter());
         Morphia morphia = morphiaProvider.get();
         return morphia.createDatastore(mongoClient, "webprotege");
     }
