@@ -36,7 +36,7 @@ public class OWLPropertyDeserializer<P extends OWLProperty> extends StdDeseriali
 
     @Override
     public P deserialize(JsonParser jsonParser,
-                                   DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+                                   DeserializationContext deserializationContext) throws IOException {
         OWLEntity entity = deserializer.deserialize(jsonParser, deserializationContext);
         if(!(cls.isInstance(entity))) {
             throw new JsonParseException(jsonParser,

@@ -19,7 +19,7 @@ public class PlainObjectPropertyFrame_Serialization_TestCase {
     public void setUp() throws Exception {
         var subject = mockOWLObjectProperty();
         var parents = ImmutableSet.of(mockOWLObjectProperty(), mockOWLObjectProperty());
-        var propertyValues = ImmutableSet.<PlainPropertyAnnotationValue>of(
+        var propertyValues = ImmutableSet.of(
                 PlainPropertyAnnotationValue.get(mockOWLAnnotationProperty(), Literal("Hello"))
         );
         var domains = ImmutableSet.of(mockOWLClass());

@@ -32,7 +32,7 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
 
     @Override
     public PrimitiveFormControlData deserialize(JsonParser p,
-                                       DeserializationContext ctxt) throws IOException, JsonProcessingException {
+                                       DeserializationContext ctxt) throws IOException {
 
         JsonNode node = p.readValueAsTree();
         if(node.isTextual()) {

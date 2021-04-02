@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,7 +32,7 @@ public class ApiKeyHasher_TestCase {
     @Test
     public void shouldHashApiKey() throws Exception {
         byte[] bytes = MessageDigest.getInstance("SHA-256")
-                                    .digest(apiKeyString.getBytes("utf-8"));
+                                    .digest(apiKeyString.getBytes(StandardCharsets.UTF_8));
         String hashedApiKeyString = BaseEncoding.base16()
                                                 .lowerCase()
                                                 .encode(bytes);

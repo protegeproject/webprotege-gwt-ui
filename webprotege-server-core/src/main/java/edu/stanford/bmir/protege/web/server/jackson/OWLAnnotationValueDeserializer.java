@@ -30,7 +30,7 @@ public class OWLAnnotationValueDeserializer extends StdDeserializer<OWLAnnotatio
     }
 
     @Override
-    public OWLAnnotationValue deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public OWLAnnotationValue deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         if(p.hasToken(JsonToken.START_OBJECT)) {
             return literalDeserializer.deserialize(p, ctxt);
         }

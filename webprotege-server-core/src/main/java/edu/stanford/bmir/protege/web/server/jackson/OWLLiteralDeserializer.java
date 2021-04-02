@@ -31,7 +31,7 @@ public class OWLLiteralDeserializer extends StdDeserializer<OWLLiteral> {
 
     @Override
     public OWLLiteral deserialize(JsonParser jsonParser,
-                                  DeserializationContext ctxt) throws IOException, JsonProcessingException {
+                                  DeserializationContext ctxt) throws IOException {
 
         String value = null;
         String lang = null;

@@ -34,7 +34,7 @@ public class OWLEntityDeserializer<E extends OWLEntity> extends StdDeserializer<
     }
 
     @Override
-    public E deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public E deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return deserialize(jsonParser);
     }
 

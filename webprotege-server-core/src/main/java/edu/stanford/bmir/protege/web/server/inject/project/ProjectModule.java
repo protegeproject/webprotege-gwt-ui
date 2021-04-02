@@ -27,10 +27,6 @@ import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
-import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
-import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
-import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
-import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
@@ -538,13 +534,6 @@ public class ProjectModule {
     }
 
     @Provides
-    OBONamespaceCache providesOboNamespaceCache(OBONamespaceCacheFactory factory) {
-        var namespaceCache = factory.create();
-        namespaceCache.rebuildNamespaceCache();
-        return namespaceCache;
-    }
-
-    @Provides
     MatchingEngine provideMatchingEngine(MatchingEngineImpl impl) {
         return impl;
     }
@@ -626,11 +615,6 @@ public class ProjectModule {
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
             MongoDatabase database, ObjectMapper objectMapper) {
         return new ProjectEntityCrudKitSettingsRepository(database, objectMapper);
-    }
-
-    @Provides
-    TermDefinitionManager provideTermDefinitionManager(TermDefinitionManagerImpl impl) {
-        return impl;
     }
 
     @Provides

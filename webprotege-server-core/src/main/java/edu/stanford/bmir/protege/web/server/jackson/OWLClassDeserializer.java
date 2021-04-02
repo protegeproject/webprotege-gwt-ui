@@ -26,7 +26,7 @@ public class OWLClassDeserializer extends StdDeserializer<OWLClass> {
     }
 
     @Override
-    public OWLClass deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public OWLClass deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return deserializer.deserialize(jsonParser, deserializationContext);
     }
 }

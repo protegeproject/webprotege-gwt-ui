@@ -48,7 +48,7 @@ public class SingleChoiceControlValuesBuilder {
                                  singleChoiceControlDescriptor,
                                  value,
                                  depth))
-                         .collect(ImmutableList.<FormControlDataDto>toImmutableList());
+                         .collect(ImmutableList.toImmutableList());
     }
 
     private boolean isIncluded(@Nonnull PrimitiveFormControlDataDto dto) {

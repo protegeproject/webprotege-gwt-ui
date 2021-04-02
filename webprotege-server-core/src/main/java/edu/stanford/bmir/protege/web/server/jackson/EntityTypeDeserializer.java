@@ -20,7 +20,7 @@ public class EntityTypeDeserializer extends StdDeserializer<EntityType<?>> {
     }
 
     @Override
-    public EntityType<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public EntityType<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         String typeName = jsonParser.getValueAsString();
         if(EntityType.CLASS.getPrefixedName().equals(typeName)) {
             return EntityType.CLASS;

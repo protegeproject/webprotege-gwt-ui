@@ -31,7 +31,7 @@ public class CommentRenderer {
         for(ParsedMention pm : parsedMentions) {
             int startIndex = pm.getStartIndex();
             int endIndex = pm.getEndIndex();
-            rendering.append(commentBody.substring(currentPos, startIndex));
+            rendering.append(commentBody, currentPos, startIndex);
             Mention mention = pm.getParsedMention();
             if(mention.getMentionedUserId().isPresent()) {
                 rendering.append("<span class=\"wp-comment__user-mention\">");
@@ -39,7 +39,7 @@ public class CommentRenderer {
                 rendering.append("</span>");
             }
             else {
-                rendering.append(commentBody.substring(startIndex, endIndex));
+                rendering.append(commentBody, startIndex, endIndex);
             }
             currentPos = endIndex;
         }
