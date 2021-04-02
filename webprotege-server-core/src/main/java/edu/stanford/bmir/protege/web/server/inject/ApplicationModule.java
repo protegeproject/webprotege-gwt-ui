@@ -14,8 +14,6 @@ import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
-import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
@@ -77,12 +75,6 @@ public class ApplicationModule {
     @Provides
     public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public AuthenticationManager provideAuthenticationManager(AuthenticationManagerImpl impl) {
-        return impl;
     }
 
     @Provides
