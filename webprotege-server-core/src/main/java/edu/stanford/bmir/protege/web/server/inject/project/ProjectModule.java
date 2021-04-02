@@ -9,7 +9,6 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
@@ -30,7 +29,6 @@ import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
-import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
@@ -354,13 +352,6 @@ public class ProjectModule {
 //        return provider.get();
 //    }
 
-
-    @Provides
-    HasApplyChanges providesHasApplyChanges(ChangeManager manager) {
-        return manager;
-    }
-
-
     @Provides
     @ProjectSingleton
     HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProviderImpl provider) {
@@ -529,11 +520,6 @@ public class ProjectModule {
     TagRepository provideTagRepository(TagRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
-    }
-
-    @Provides
-    TagRepositoryCachingImpl provideTagRepositoryCachingImpl(TagRepositoryImpl impl) {
-        return new TagRepositoryCachingImpl(impl);
     }
 
     @ProjectSingleton
