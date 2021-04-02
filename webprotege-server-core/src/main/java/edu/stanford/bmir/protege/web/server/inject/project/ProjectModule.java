@@ -317,12 +317,6 @@ public class ProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    public RevisionStore provideRevisionStore(RevisionStoreProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     ImmutableList<IRI> providesShortFormOrdering() {
         return DefaultShortFormAnnotationPropertyIRIs.asImmutableList();
     }

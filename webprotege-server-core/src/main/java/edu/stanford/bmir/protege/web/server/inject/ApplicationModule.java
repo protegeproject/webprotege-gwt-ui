@@ -106,12 +106,6 @@ public class ApplicationModule {
         return Collections::emptySet;
     }
 
-    @Provides
-    @ApplicationSingleton
-    public ProjectManager provideOWLAPIProjectManager(ProjectCache projectCache, ProjectAccessManager projectAccessManager) {
-        return new ProjectManager(projectCache, projectAccessManager);
-    }
-
     @ApplicationSingleton
     @Provides
     public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {

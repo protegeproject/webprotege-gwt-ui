@@ -42,14 +42,9 @@ public class ProjectDownloadServlet extends HttpServlet {
     @Nonnull
     private final AccessManager accessManager;
 
-    @Nonnull
-    private final ProjectDownloadService projectDownloadService;
-
     @Inject
-    public ProjectDownloadServlet(@Nonnull AccessManager accessManager,
-                                  @Nonnull ProjectDownloadService projectDownloadService) {
+    public ProjectDownloadServlet(@Nonnull AccessManager accessManager) {
         this.accessManager = accessManager;
-        this.projectDownloadService = projectDownloadService;
     }
 
     @Override
@@ -71,29 +66,5 @@ public class ProjectDownloadServlet extends HttpServlet {
                     formatAddr(req),
                     downloadParameters.getProjectId());
 
-        if (!accessManager.hasPermission(Subject.forUser(userId),
-                                         new ProjectResource(downloadParameters.getProjectId()),
-                                         BuiltInAction.DOWNLOAD_PROJECT)) {
-            logger.info("Denied download request as user does not have permission to download this project.");
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-        else if (downloadParameters.isProjectDownload()) {
-            startProjectDownload(resp, userId, downloadParameters);
-        }
-    }
-
-    private void startProjectDownload(HttpServletResponse resp,
-                                      UserId userId,
-                                      FileDownloadParameters downloadParameters) throws IOException {
-        ProjectId projectId = downloadParameters.getProjectId();
-        RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
-        DownloadFormat format = downloadParameters.getFormat();
-        projectDownloadService.downloadProject(userId, projectId, revisionNumber, format, resp);
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        projectDownloadService.shutDown();
     }
 }
