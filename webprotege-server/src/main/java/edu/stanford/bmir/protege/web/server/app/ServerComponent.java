@@ -26,7 +26,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
         SharedApplicationModule.class,
         FileSystemConfigurationModule.class,
         ConfigurationTasksModule.class,
-        ActionHandlersModule.class,
         AuthenticationModule.class,
         DbModule.class,
         ServerModule.class,
