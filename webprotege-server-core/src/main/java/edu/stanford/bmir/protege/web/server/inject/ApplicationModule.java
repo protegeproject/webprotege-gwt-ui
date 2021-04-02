@@ -47,8 +47,6 @@ import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepository;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
-import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
@@ -190,13 +188,6 @@ public class ApplicationModule {
     @Provides
     public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
         return handler;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public WatchRecordRepository provideWatchRecordRepository(WatchRecordRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
     }
 
     @Provides

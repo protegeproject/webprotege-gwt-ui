@@ -40,10 +40,6 @@ import edu.stanford.bmir.protege.web.server.search.ProjectEntitySearchFiltersMan
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
-import edu.stanford.bmir.protege.web.server.watches.WatchManager;
-import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
-import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
-import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -248,20 +244,6 @@ public class ProjectModule {
     @Provides
     public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
         return hierarchyProvider;
-    }
-
-    @Provides
-    public WatchManager provideWatchManager(WatchManagerImpl impl) {
-        // Attach it so that it listens for entity frame changed events
-        // There's no need to detatch it because it is project scoped
-        // and has the same lifetime as a project event manager.
-        impl.attach();
-        return impl;
-    }
-
-    @Provides
-    public WatchTriggeredHandler provideWatchTriggeredHandler(WatchTriggeredHandlerImpl impl) {
-        return impl;
     }
 
     @ProjectSingleton
