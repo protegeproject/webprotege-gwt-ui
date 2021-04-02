@@ -353,11 +353,6 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideCreateEntityDiscussionThreadActionHandler(CreateEntityDiscussionThreadHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
     public ProjectActionHandler provideEditCommentAction(EditCommentActionHandler handler) {
         return handler;
     }
