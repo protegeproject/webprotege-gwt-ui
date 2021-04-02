@@ -536,21 +536,6 @@ public class ProjectModule {
         return new TagRepositoryCachingImpl(impl);
     }
 
-    @Provides
-    EntityTagsRepository provideEntityTagsRepository(EntityTagsRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
-
-    @ProjectSingleton
-    @Provides
-    EntityTagsRepositoryCachingImpl provideEntityTagsRepositoryCachingImpl(EntityTagsRepositoryImpl impl) {
-        EntityTagsRepositoryCachingImpl rep = new EntityTagsRepositoryCachingImpl(impl);
-        rep.ensureIndexes();
-        rep.preloadCache();
-        return rep;
-    }
-
     @ProjectSingleton
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
