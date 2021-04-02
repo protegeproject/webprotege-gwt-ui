@@ -503,12 +503,6 @@ public class ProjectModule {
         return impl;
     }
 
-    @Provides
-    TagRepository provideTagRepository(TagRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
-
     @ProjectSingleton
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
