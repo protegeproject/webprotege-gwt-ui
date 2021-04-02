@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
-import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -41,7 +40,6 @@ import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
-import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
 import edu.stanford.bmir.protege.web.server.search.ProjectEntitySearchFiltersManagerImpl;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
@@ -53,7 +51,6 @@ import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -82,7 +79,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module(includes = {IndexModule.class, ShortFormModule.class, ProjectActionHandlersModule.class})
+@Module(includes = {IndexModule.class, ShortFormModule.class})
 public class ProjectModule {
 
     private final ProjectId projectId;
