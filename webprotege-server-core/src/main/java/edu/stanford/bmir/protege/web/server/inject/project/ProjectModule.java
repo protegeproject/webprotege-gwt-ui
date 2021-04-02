@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
-import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
@@ -46,7 +45,6 @@ import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
@@ -274,11 +272,6 @@ public class ProjectModule {
     @Provides
     public EntityIRIChecker provideEntityIRIChecker(EntityIRICheckerImpl iriChecker) {
         return iriChecker;
-    }
-
-    @Provides
-    public OWLOntologyChecker provideOntologyChecker(ShellOntologyChecker checker) {
-        return checker;
     }
 
     @Provides
