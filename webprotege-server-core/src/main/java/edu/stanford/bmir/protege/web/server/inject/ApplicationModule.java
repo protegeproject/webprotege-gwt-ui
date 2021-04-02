@@ -101,12 +101,6 @@ public class ApplicationModule {
         return manager;
     }
 
-    @ApplicationSingleton
-    @Provides
-    public PerspectivesManager providesPerspectivesManager(PerspectivesManagerImpl impl) {
-        return impl;
-    }
-
     @Provides
     public HasUserIds providesHasUserIds() {
         return Collections::emptySet;
@@ -358,26 +352,6 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     EntitySearchFilterRepository provideEntitySearchFilterRepository(EntitySearchFilterRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    ImmutableList<BuiltInPerspective> provideBuiltInProjectPerspectives(BuiltInPerspectivesProvider builtInPerspectivesProvider) {
-        return builtInPerspectivesProvider.getBuiltInPerspectives();
-    }
-
-    @Provides
-    @ApplicationSingleton
-    PerspectiveDescriptorRepository providePerspectiveDescriptorsRepository(PerspectiveDescriptorRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    PerspectiveLayoutRepository providePerspectiveLayoutsRepository(PerspectiveLayoutRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
     }
