@@ -358,12 +358,6 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler<DeleteEntityCommentAction, DeleteEntityCommentResult> provideDeleteEntityCommentActionHandler(DeleteEntityCommentHandler handler) {
-        return handler;
-    }
-
-
-    @Provides @IntoSet
     public ProjectActionHandler provideEditCommentAction(EditCommentActionHandler handler) {
         return handler;
     }
