@@ -275,11 +275,6 @@ public class ProjectModule {
     }
 
     @Provides
-    public RevisionNumber provideRevisionNumber(RevisionNumberProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     public HasGetChangeSubjects provideHasGetChangeSubjects(OntologyChangeSubjectProvider provider) {
         return provider;
     }
@@ -287,17 +282,6 @@ public class ProjectModule {
     @Provides
     public DeprecatedEntityChecker provideDeprecatedEntityChecker(DeprecatedEntityCheckerImpl checker) {
         return checker;
-    }
-
-    @Provides
-    public HasGetRevisionSummary provideGetRevisionSummary(RevisionManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ProjectSingleton
-    public RevisionManager provideRevisionManager(RevisionManagerImpl impl) {
-        return impl;
     }
 
     @Provides

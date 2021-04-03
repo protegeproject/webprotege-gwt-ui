@@ -30,8 +30,7 @@ import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.form
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/06/2012
  * <p>
- * A servlet which allows ontologies to be downloaded from WebProtege.  See {@link ProjectDownloader} for
- * the piece of machinery that actually does the processing of request parameters and the downloading.
+ * A servlet which allows ontologies to be downloaded from WebProtege.
  * </p>
  */
 @ApplicationSingleton
@@ -39,12 +38,8 @@ public class ProjectDownloadServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectDownloadServlet.class);
 
-    @Nonnull
-    private final AccessManager accessManager;
-
     @Inject
-    public ProjectDownloadServlet(@Nonnull AccessManager accessManager) {
-        this.accessManager = accessManager;
+    public ProjectDownloadServlet() {
     }
 
     @Override

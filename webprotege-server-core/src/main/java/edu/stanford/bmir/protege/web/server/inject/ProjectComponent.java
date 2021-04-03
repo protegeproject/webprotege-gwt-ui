@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataModule;
 import edu.stanford.bmir.protege.web.server.form.FormDescriptorDtoTranslatorComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
-import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -32,8 +31,6 @@ public interface ProjectComponent {
     EventManager<ProjectEvent<?>> getEventManager();
 
     ProjectDisposablesManager getDisposablesManager();
-
-    RevisionManager getRevisionManager();
 
     EntityFrameFormDataComponent getEntityFrameFormDataComponentBuilder(EntityFrameFormDataModule module);
 
