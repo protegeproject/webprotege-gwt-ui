@@ -249,11 +249,6 @@ public class ProjectModule {
     }
 
     @Provides
-    public IRIShortFormProvider provideIriShortFormProvider(IriShortFormAdapter adapter) {
-        return adapter;
-    }
-
-    @Provides
     public HasGetRendering provideHasGetRendering(RenderingManager renderingManager) {
         return renderingManager;
     }
@@ -261,12 +256,6 @@ public class ProjectModule {
     @Provides
     public HasLang provideHasLang() {
         return () -> "en";
-    }
-
-    @Provides
-    @ProjectSingleton
-    public OntologyIRIShortFormProvider provideOntologyIRIShortFormProvider(WebProtegeOntologyIRIShortFormProvider provider) {
-        return provider;
     }
 
     @Provides
