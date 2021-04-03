@@ -299,11 +299,6 @@ public class ProjectModule {
     }
 
     @Provides
-    MatchingEngine provideMatchingEngine(MatchingEngineImpl impl) {
-        return impl;
-    }
-
-    @Provides
     HierarchyPositionMatchingEngine provideHierarchyPositionMatchingEngine(HierarchyPositionMatchingEngineImpl impl) {
         return impl;
     }
