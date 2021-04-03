@@ -30,12 +30,9 @@ import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendere
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
-import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
-import edu.stanford.bmir.protege.web.server.search.ProjectEntitySearchFiltersManagerImpl;
 import edu.stanford.bmir.protege.web.server.shortform.*;
-import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
@@ -47,8 +44,6 @@ import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.IRIShortFormProvider;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -623,12 +618,6 @@ public class ProjectModule {
     @ProjectSingleton
     EntitySearchFilterIndexesManager provideEntitySearchFilterIndexesManager(LuceneIndexWriterImpl writer) {
         return writer;
-    }
-
-    @Provides
-    @ProjectSingleton
-    ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
-        return impl;
     }
 }
 
