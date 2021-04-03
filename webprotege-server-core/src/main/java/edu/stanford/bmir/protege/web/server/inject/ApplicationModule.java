@@ -11,8 +11,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
-import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepository;
-import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -206,9 +204,4 @@ public class ApplicationModule {
         return impl;
     }
 
-    @Provides
-    EntityFormSelectorRepository provideFormSelectorRepository(EntityFormSelectorRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
-    }
 }
