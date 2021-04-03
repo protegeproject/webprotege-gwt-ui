@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
-import edu.stanford.bmir.protege.web.server.access.RoleOracle;
-import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -37,7 +33,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -105,18 +100,6 @@ public class ApplicationModule {
     @Provides
     public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
         return handler;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public AccessManager provideAccessManager(AccessManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public RoleOracle provideRoleOracle() {
-        return RoleOracleImpl.get();
     }
 
     @Provides
