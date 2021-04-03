@@ -6,7 +6,6 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.issues.CommentNotificationEmailTemplate;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
@@ -49,19 +48,7 @@ public class FileSystemConfigurationModule {
     public MustacheFactory providesMustacheFactory() {
         return new DefaultMustacheFactory();
     }
-
-    @Provides
-    @CommentNotificationEmailTemplate
-    public OverridableFile provideCommentNotificationTemplateFile(OverridableFileFactory factory) {
-        return factory.getOverridableFile("templates/comment-notification-email-template.html" );
-    }
-
-    @Provides
-    @CommentNotificationEmailTemplate
-    public FileContents providesCommentNotificationTemplate(@CommentNotificationEmailTemplate OverridableFile file) {
-        return new FileContents(file);
-    }
-
+    
     @Provides
     @PasswordResetEmailTemplate
     public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
