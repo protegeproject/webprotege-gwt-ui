@@ -25,7 +25,7 @@ public class WebProtegeProperties implements Serializable {
 
     public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
 
-    /**
+    /*
      * Initialises WebProtegeProperties with property values from a {@link java.util.Properties} object.
      * @param properties A {@link Properties} object which contains the properties to be used in the initialization.
      * Not {@code null}.  Only property values whose property names are equal to the property names specified

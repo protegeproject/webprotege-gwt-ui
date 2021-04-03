@@ -98,13 +98,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @MailProperties
-    @ApplicationSingleton
-    public Properties provideMailProperties(MailPropertiesProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     public SendMail provideSendMail(SendMailImpl manager) {
         return manager;
     }

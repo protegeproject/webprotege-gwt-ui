@@ -22,7 +22,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
         ApplicationModule.class,
         SharedApplicationModule.class,
         FileSystemConfigurationModule.class,
-        ConfigurationTasksModule.class,
         DbModule.class,
         ServerModule.class,
         ApiModule.class
@@ -45,8 +44,6 @@ public interface ServerComponent {
     ProjectDownloadServlet getProjectDownloadServlet();
 
     DispatchServlet getDispatchServlet();
-
-    WebProtegeConfigurationChecker getWebProtegeConfigurationChecker();
 
     ProjectComponent getProjectComponent(ProjectModule module);
 
