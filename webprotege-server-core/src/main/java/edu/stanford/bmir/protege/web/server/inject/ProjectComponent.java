@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Subcomponent;
-import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataComponent;
-import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataModule;
-import edu.stanford.bmir.protege.web.server.form.FormDescriptorDtoTranslatorComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -27,9 +24,5 @@ public interface ProjectComponent {
     ProjectId getProjectId();
 
     ProjectDisposablesManager getDisposablesManager();
-
-    EntityFrameFormDataComponent getEntityFrameFormDataComponentBuilder(EntityFrameFormDataModule module);
-
-    FormDescriptorDtoTranslatorComponent getFormDescriptorDtoTranslatorComponent(EntityFrameFormDataModule module);
 }
 
