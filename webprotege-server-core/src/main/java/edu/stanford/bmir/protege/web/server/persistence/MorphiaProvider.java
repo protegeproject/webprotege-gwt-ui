@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import edu.stanford.bmir.protege.web.server.api.ApiKeyIdConverter;
 import edu.stanford.bmir.protege.web.server.api.HashedApiKeyConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
-import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import org.mongodb.morphia.Morphia;
@@ -37,9 +36,6 @@ public class MorphiaProvider implements Provider<Morphia> {
     private final CommentIdConverter commentIdConverter;
 
     @Nonnull
-    private final FormIdConverter formIdConverter;
-
-    @Nonnull
     private final TagIdConverter tagIdConverter;
 
     @Nonnull
@@ -52,7 +48,6 @@ public class MorphiaProvider implements Provider<Morphia> {
                            @Nonnull ProjectIdConverter projectIdConverter,
                            @Nonnull ThreadIdConverter threadIdConverter,
                            @Nonnull CommentIdConverter commentIdConverter,
-                           @Nonnull FormIdConverter formIdConverter,
                            @Nonnull TagIdConverter tagIdConverter,
                            @Nonnull ColorConverter colorConverter) {
         this.userIdConverter = userIdConverter;
@@ -60,7 +55,6 @@ public class MorphiaProvider implements Provider<Morphia> {
         this.projectIdConverter = projectIdConverter;
         this.threadIdConverter = threadIdConverter;
         this.commentIdConverter = commentIdConverter;
-        this.formIdConverter = formIdConverter;
         this.tagIdConverter = tagIdConverter;
         this.colorConverter = colorConverter;
     }
@@ -78,7 +72,6 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
         converters.addConverter(commentIdConverter);
-        converters.addConverter(formIdConverter);
         converters.addConverter(tagIdConverter);
         converters.addConverter(colorConverter);
         converters.addConverter(new HashedApiKeyConverter());

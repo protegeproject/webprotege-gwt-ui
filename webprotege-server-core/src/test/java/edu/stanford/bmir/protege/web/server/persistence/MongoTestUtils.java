@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
-import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -35,7 +34,6 @@ public class MongoTestUtils {
                 new ProjectIdConverter(),
                 new ThreadIdConverter(),
                 new CommentIdConverter(),
-                new FormIdConverter(),
                 new TagIdConverter(),
                 new ColorConverter()).get();
     }
