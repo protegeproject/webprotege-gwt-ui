@@ -67,7 +67,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module(includes = {IndexModule.class, ShortFormModule.class})
+@Module(includes = {ShortFormModule.class})
 public class ProjectModule {
 
     private final ProjectId projectId;

@@ -21,7 +21,6 @@ import edu.stanford.bmir.protege.web.server.form.EntityFormRepository;
 import edu.stanford.bmir.protege.web.server.form.EntityFormRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepository;
 import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -170,19 +169,6 @@ public class ApplicationModule {
             return thread;
         });
         executorsRegistry.registerService(executor, "Download-Streaming-Service");
-        return executor;
-    }
-
-    @Provides
-    @IndexUpdatingService
-    @ApplicationSingleton
-    public ExecutorService provideIndexUpdatingExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
-        var executor = Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
-            Thread thread = Executors.defaultThreadFactory().newThread(r);
-            thread.setName(thread.getName().replace("thread", "Index-Updater"));
-            return thread;
-        });
-        executorsRegistry.registerService(executor, "Index-Updater");
         return executor;
     }
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -22,14 +21,10 @@ public class EagerProjectSingletons {
 
     private final RevisionManager revisionManager;
 
-    private final IndexUpdater indexUpdater;
-
     @Inject
     public EagerProjectSingletons(ProjectId projectId,
-                                  RevisionManager revisionManager,
-                                  IndexUpdater indexUpdater) {
+                                  RevisionManager revisionManager) {
         this.projectId = projectId;
         this.revisionManager = revisionManager;
-        this.indexUpdater = indexUpdater;
     }
 }
