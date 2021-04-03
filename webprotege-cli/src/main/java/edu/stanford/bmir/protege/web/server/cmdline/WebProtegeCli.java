@@ -44,7 +44,6 @@ public class WebProtegeCli {
         return new WebProtegeCli(asList(
                 new CreateAdminAccountCmd(),
                 new RebuildPermissionsCmd(),
-                new GenerateApiKeyCmd(),
                 new SetPermissionsCmd()
         ));
     }
