@@ -2,11 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 
 /**
@@ -16,12 +12,6 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
  */
 @Module(includes = LuceneModule.class)
 public class ShortFormModule {
-
-
-    @Provides
-    ActiveLanguagesManager provideActiveLanguagesManager(ActiveLanguagesManagerImpl impl) {
-        return impl;
-    }
 
     @Provides
     ShortFormCache provideShortFormCache() {
