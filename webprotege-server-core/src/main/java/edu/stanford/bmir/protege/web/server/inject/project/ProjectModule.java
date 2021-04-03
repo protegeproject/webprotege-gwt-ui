@@ -264,11 +264,6 @@ public class ProjectModule {
     }
 
     @Provides
-    Comparator<PropertyValue> providePropertyValueComparator(PropertyValueComparator propertyValueComparator) {
-        return propertyValueComparator;
-    }
-
-    @Provides
     Comparator<OWLAxiom> providesAxiomComparator(AxiomComparatorImpl impl) {
         return impl;
     }
@@ -367,11 +362,6 @@ public class ProjectModule {
     }
 
     @Provides
-    FrameComponentRenderer provideFrameComponentRenderer(FrameComponentRendererImpl impl) {
-        return impl;
-    }
-
-    @Provides
     RelationshipMatcherFactory provideRelationshipMatcherFactory(MatcherFactory matcherFactory) {
         return matcherFactory;
     }
@@ -384,11 +374,6 @@ public class ProjectModule {
     @Provides
     EntityMatcherFactory provideEntityMatcherFactory(MatcherFactory matcherFactory) {
         return matcherFactory;
-    }
-
-    @Provides
-    ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
-        return impl;
     }
 
     @Provides
