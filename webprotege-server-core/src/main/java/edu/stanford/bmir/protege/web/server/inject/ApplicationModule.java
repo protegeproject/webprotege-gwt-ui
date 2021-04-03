@@ -29,9 +29,6 @@ import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.upload.*;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
-import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
-import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepository;
-import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -257,21 +254,8 @@ public class ApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
-    EntityGraphSettingsRepository provideProjectEntityGraphSettingsRepository(
-            EntityGraphSettingsRepositoryImpl impl) {
-        return impl;
-    }
-
-    @Provides
     EntityFormSelectorRepository provideFormSelectorRepository(EntityFormSelectorRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
-    }
-
-    @Provides
-    @EntityGraphEdgeLimit
-    int provideEntityGraphEdgeLimit(WebProtegeProperties properties) {
-        return properties.getEntityGraphEdgeLimit().orElse(3000);
     }
 }
