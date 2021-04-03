@@ -294,11 +294,6 @@ public class ProjectModule {
     }
 
     @Provides
-    PropertyValueSubsumptionChecker providePropertyValueSubsumptionChecker(StructuralPropertyValueSubsumptionChecker impl) {
-        return impl;
-    }
-
-    @Provides
     HierarchyPositionMatchingEngine provideHierarchyPositionMatchingEngine(HierarchyPositionMatchingEngineImpl impl) {
         return impl;
     }
