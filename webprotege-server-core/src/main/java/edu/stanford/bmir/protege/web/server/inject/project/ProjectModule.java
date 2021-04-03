@@ -147,86 +147,6 @@ public class ProjectModule {
                        .collect(toImmutableSet());
     }
 
-    @Provides
-    @ClassHierarchyRoot
-    public OWLClass providesClassHierarchyRoot(ClassHierarchyRootProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @ObjectPropertyHierarchyRoot
-    public OWLObjectProperty providesObjectPropertyHierarchyRoot(ObjectPropertyHierarchyRootProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @DataPropertyHierarchyRoot
-    public OWLDataProperty providesDataPropertyHierarchyRoot(DataPropertyHierarchyRootProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    public HierarchyProvider<OWLObjectProperty>
-    provideHierarchyProviderOfObjectProperty(ObjectPropertyHierarchyProvider provider) {
-        return provider;
-    }
-
-
-    @Provides
-    public HierarchyProvider<OWLDataProperty>
-    provideHierarchyProviderOfDataProperty(
-            DataPropertyHierarchyProvider provider) {
-        return provider;
-    }
-
-    @Provides
-    DataPropertyHierarchyProvider provideDataPropertyHierarchyProvider(DataPropertyHierarchyProviderImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public HierarchyProvider<OWLAnnotationProperty>
-    provideHierarchyProviderOfAnnotationProperty(
-            AnnotationPropertyHierarchyProvider provider) {
-        return provider;
-    }
-
-    @Provides
-    AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(
-            AnnotationPropertyHierarchyProviderImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
-        return hierarchyProvider;
-    }
-
-    @Provides
-    public ClassHierarchyProvider getClassHierarchyProvider(ClassHierarchyProviderImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
-        return hierarchyProvider;
-    }
-
-    @Provides
-    public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
-        return hierarchyProvider;
-    }
-
-    @Provides
-    public ObjectPropertyHierarchyProvider provideObjectPropertyHierarchyProvider(ObjectPropertyHierarchyProviderImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
-        return hierarchyProvider;
-    }
-
     @ProjectSingleton
     @Provides
     public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
@@ -285,12 +205,6 @@ public class ProjectModule {
 //    HasImportsClosure providesHasImportsClosure(RootOntologyProvider provider) {
 //        return provider.get();
 //    }
-
-    @Provides
-    @ProjectSingleton
-    HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProviderImpl provider) {
-        return provider;
-    }
 
     @Provides
     OWLObjectSelector<OWLClassExpression> provideClassExpressionSelector(OWLClassExpressionSelector selector) {
@@ -396,30 +310,6 @@ public class ProjectModule {
     @Provides
     PropertyValueSubsumptionChecker providePropertyValueSubsumptionChecker(StructuralPropertyValueSubsumptionChecker impl) {
         return impl;
-    }
-
-    @Provides
-    HasHasAncestor<OWLClass, OWLClass> provideClassClassHasAncestor(ClassClassAncestorChecker checker) {
-        return checker;
-    }
-
-    @Provides
-    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(
-            ObjectPropertyObjectPropertyAncestorChecker checker) {
-        return checker;
-    }
-
-
-    @Provides
-    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(
-            DataPropertyDataPropertyAncestorChecker checker) {
-        return checker;
-    }
-
-    @Provides
-    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(
-            NamedIndividualClassAncestorChecker checker) {
-        return checker;
     }
 
     @Provides
