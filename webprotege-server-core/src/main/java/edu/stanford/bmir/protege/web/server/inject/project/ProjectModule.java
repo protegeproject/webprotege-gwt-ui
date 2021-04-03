@@ -96,13 +96,7 @@ public class ProjectModule {
     public File provideProjectDirectory(ProjectDirectoryProvider provider) {
         return provider.get();
     }
-
-    @Provides
-    @ChangeHistoryFile
-    public File provideChangeHistoryFile(ChangeHistoryFileProvider provider) {
-        return provider.get();
-    }
-
+    
     @Provides
     @ProjectSpecificUiConfigurationDataDirectory
     public File provideProjectSpecificUiConfigurationDataDirectory(ProjectSpecificUiConfigurationDataDirectoryProvider provider) {
