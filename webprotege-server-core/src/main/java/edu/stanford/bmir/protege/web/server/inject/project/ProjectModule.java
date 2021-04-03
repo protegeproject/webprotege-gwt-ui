@@ -1,21 +1,13 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
-import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UuidEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
@@ -30,7 +22,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendere
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
-import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -41,7 +32,6 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -490,32 +480,6 @@ public class ProjectModule {
     @Provides
     LiteralLangTagTransformer provideLangTagTransformer() {
         return langTag -> langTag;
-    }
-
-    @Provides
-    @IntoSet
-    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UuidEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @IntoSet
-    public EntityCrudKitPlugin<?, ?, ?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @IntoSet
-    public EntityCrudKitPlugin<?, ?, ?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
-
-    @Provides
-    @ProjectSingleton
-    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
-            MongoDatabase database, ObjectMapper objectMapper) {
-        return new ProjectEntityCrudKitSettingsRepository(database, objectMapper);
     }
 
     @Provides
