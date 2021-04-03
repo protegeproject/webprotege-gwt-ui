@@ -72,13 +72,6 @@ public class ApplicationModule {
         return Collections::emptySet;
     }
 
-    @ApplicationSingleton
-    @Provides
-    public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {
-        projectAccessManager.ensureIndexes();
-        return projectAccessManager;
-    }
-
     @Provides
     public DispatchServiceExecutor provideDispatchServiceExecutor(DispatchServiceExecutorImpl impl) {
         return impl;
