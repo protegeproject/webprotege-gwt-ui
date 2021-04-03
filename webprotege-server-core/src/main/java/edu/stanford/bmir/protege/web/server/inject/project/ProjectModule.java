@@ -402,14 +402,13 @@ public class ProjectModule {
     @Provides
     public Set<EventTranslator> providesEventTranslators(
             BrowserTextChangedEventComputer c0,
-            HighLevelEventGenerator c1,
             OWLClassHierarchyChangeComputer c2,
             OWLObjectPropertyHierarchyChangeComputer c3,
             OWLDataPropertyHierarchyChangeComputer c4,
             OWLAnnotationPropertyHierarchyChangeComputer c5,
             EntityDeprecatedChangedEventTranslator c6,
             EntityTagsChangedEventComputer c7) {
-        return ImmutableSet.of(c0, c1, c2, c3, c4, c5, c6, c7);
+        return ImmutableSet.of(c0, c2, c3, c4, c5, c6, c7);
     }
 
     @Provides
