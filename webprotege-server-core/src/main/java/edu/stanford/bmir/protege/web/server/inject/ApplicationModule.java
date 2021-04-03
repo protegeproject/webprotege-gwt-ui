@@ -35,10 +35,6 @@ import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepository;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
-import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
-import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -69,12 +65,6 @@ public class ApplicationModule {
     @Provides
     public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public ProjectDetailsManager provideProjectDetailsManager(ProjectDetailsManagerImpl impl) {
-        return impl;
     }
 
     @Provides
@@ -203,18 +193,6 @@ public class ApplicationModule {
         var executor = Executors.newSingleThreadScheduledExecutor();
         executorsRegistry.registerService(executor, "Uploaded-Ontologies-Cache-Service");
         return executor;
-    }
-
-    @Provides
-    public WebhookRepository providesWebhookRepository(WebhookRepositoryImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public SlackWebhookRepository provideSlackWebhookRepository(SlackWebhookRepositoryImpl impl) {
-        impl.ensureIndexes();
-        return impl;
     }
 
     @Provides

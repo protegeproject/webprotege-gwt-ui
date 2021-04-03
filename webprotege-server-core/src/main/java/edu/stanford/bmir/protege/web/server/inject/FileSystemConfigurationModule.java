@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatc
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
-import edu.stanford.bmir.protege.web.server.webhook.CommentNotificationSlackTemplate;
 
 import java.io.File;
 
@@ -67,18 +66,6 @@ public class FileSystemConfigurationModule {
     @PasswordResetEmailTemplate
     public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
         return factory.getOverridableFile("templates/password-reset-email-template.html" );
-    }
-
-    @Provides
-    @CommentNotificationSlackTemplate
-    public OverridableFile provideCommentNotificationSlackTemplate(OverridableFileFactory factory) {
-        return factory.getOverridableFile("templates/comment-notification-slack-template.json");
-    }
-
-    @Provides
-    @CommentNotificationSlackTemplate
-    public FileContents providesCommentNotificationSlackTemplate(@CommentNotificationSlackTemplate OverridableFile file) {
-        return new FileContents(file);
     }
 
     @Provides
