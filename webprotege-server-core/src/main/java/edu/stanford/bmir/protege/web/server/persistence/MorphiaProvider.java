@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.api.HashedApiKeyConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
-import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.Converters;
@@ -86,7 +85,6 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(new HashedApiKeyConverter());
         converters.addConverter(new ApiKeyIdConverter());
         morphia.map(EntityDiscussionThread.class);
-        morphia.map(UserActivityRecord.class);
         morphia.map(RoleAssignment.class);
 
         return morphia;
