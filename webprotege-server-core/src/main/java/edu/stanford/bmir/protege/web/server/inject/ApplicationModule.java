@@ -26,8 +26,6 @@ import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
 import edu.stanford.bmir.protege.web.server.project.*;
-import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
-import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.upload.*;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -64,12 +62,6 @@ public class ApplicationModule {
     @Provides
     public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @ApplicationSingleton
-    public ProjectSharingSettingsManager provideProjectSharingSettingsManager(ProjectSharingSettingsManagerImpl impl) {
-        return impl;
     }
 
     @Provides
