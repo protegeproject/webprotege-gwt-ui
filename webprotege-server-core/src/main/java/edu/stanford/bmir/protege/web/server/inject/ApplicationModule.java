@@ -7,8 +7,6 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
@@ -210,11 +208,6 @@ public class ApplicationModule {
         return impl;
     }
 
-
-    @Provides
-    OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
-        return impl;
-    }
 
     @Provides
     EntityFormRepository provideEntityFormRepository(EntityFormRepositoryImpl impl) {

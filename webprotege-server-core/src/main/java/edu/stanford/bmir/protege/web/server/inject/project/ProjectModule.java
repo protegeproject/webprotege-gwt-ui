@@ -165,11 +165,6 @@ public class ProjectModule {
     }
 
     @Provides
-    public HasGetChangeSubjects provideHasGetChangeSubjects(OntologyChangeSubjectProvider provider) {
-        return provider;
-    }
-
-    @Provides
     public DeprecatedEntityChecker provideDeprecatedEntityChecker(DeprecatedEntityCheckerImpl checker) {
         return checker;
     }
