@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import com.google.common.collect.Streams;
-import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -41,10 +40,6 @@ public class TagsManager {
     @Nonnull
     private final TagRepository tagRepository;
 
-    @Nonnull
-    private final HasPostEvents<ProjectEvent<?>> eventBus;
-
-
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock readLock = readWriteLock.readLock();
@@ -58,13 +53,11 @@ public class TagsManager {
     public TagsManager(@Nonnull ProjectId projectId,
                        @Nonnull EntityTagsRepository entityTagsRepository,
                        @Nonnull CriteriaBasedTagsManager criteriaBasedTagsManager,
-                       @Nonnull TagRepository tagRepository,
-                       @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
+                       @Nonnull TagRepository tagRepository) {
         this.projectId = checkNotNull(projectId);
         this.entityTagsRepository = checkNotNull(entityTagsRepository);
         this.criteriaBasedTagsManager = checkNotNull(criteriaBasedTagsManager);
         this.tagRepository = checkNotNull(tagRepository);
-        this.eventBus = checkNotNull(eventBus);
     }
 
     /**
@@ -206,7 +199,6 @@ public class TagsManager {
                 events.add(event);
             }
             events.add(new ProjectTagsChangedEvent(projectId, projectTags));
-            eventBus.postEvents(events);
         }
     }
 
@@ -237,11 +229,6 @@ public class TagsManager {
                                                        new ArrayList<>(nextTagIds));
             entityTagsRepository.save(nextEntityTags);
             boolean changed = !existingTags.equals(Optional.of(nextEntityTags));
-            if (changed) {
-                eventBus.postEvent(new EntityTagsChangedEvent(projectId,
-                                                              entity,
-                                                              getTags(entity)));
-            }
         } finally {
             writeLock.unlock();
         }

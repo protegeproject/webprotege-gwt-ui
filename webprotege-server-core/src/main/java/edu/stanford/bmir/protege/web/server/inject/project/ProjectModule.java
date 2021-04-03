@@ -254,17 +254,6 @@ public class ProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    public EventManager<ProjectEvent<?>> providesEventManager(EventManagerProvider eventManagerProvider) {
-        return eventManagerProvider.get();
-    }
-
-    @Provides
-    public EventLifeTime provideEventLifeTime() {
-        return EventManagerProvider.PROJECT_EVENT_LIFE_TIME;
-    }
-
-    @Provides
     public HasGetChangeSubjects provideHasGetChangeSubjects(OntologyChangeSubjectProvider provider) {
         return provider;
     }
@@ -387,23 +376,6 @@ public class ProjectModule {
     @Provides
     Comparator<OWLObject> providesOWLObjectComparator(OWLObjectComparatorImpl impl) {
         return impl;
-    }
-
-    @Provides
-    public Set<EventTranslator> providesEventTranslators(
-            BrowserTextChangedEventComputer c0,
-            OWLClassHierarchyChangeComputer c2,
-            OWLObjectPropertyHierarchyChangeComputer c3,
-            OWLDataPropertyHierarchyChangeComputer c4,
-            OWLAnnotationPropertyHierarchyChangeComputer c5,
-            EntityDeprecatedChangedEventTranslator c6,
-            EntityTagsChangedEventComputer c7) {
-        return ImmutableSet.of(c0, c2, c3, c4, c5, c6, c7);
-    }
-
-    @Provides
-    HasPostEvents<ProjectEvent<?>> provideHasPostEvents(EventManager<ProjectEvent<?>> eventManager) {
-        return eventManager;
     }
 
     @Provides
