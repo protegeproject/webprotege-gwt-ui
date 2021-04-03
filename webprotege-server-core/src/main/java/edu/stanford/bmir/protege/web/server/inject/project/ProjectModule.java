@@ -105,39 +105,6 @@ public class ProjectModule {
         return factory;
     }
 
-    @Provides
-    public Set<ChangeMatcher> providesChangeMatchers(
-            AnnotationAssertionChangeMatcher annotationAssertionChangeMatcher,
-            PropertyDomainAxiomChangeMatcher propertyDomainAxiomChangeMatcher,
-            PropertyRangeAxiomChangeMatcher propertyRangeAxiomChangeMatcher,
-            EditedAnnotationAssertionChangeMatcher editedAnnotationAssertionChangeMatcher,
-            FunctionalDataPropertyAxiomChangeMatcher functionalDataPropertyAxiomChangeMatcher,
-            ClassAssertionAxiomMatcher classAssertionAxiomMatcher,
-            SubClassOfAxiomMatcher subClassOfAxiomMatcher,
-            ClassMoveChangeMatcher classMoveChangeMatcher,
-            SubClassOfEditChangeMatcher subClassOfEditChangeMatcher,
-            PropertyAssertionAxiomMatcher propertyAssertionAxiomMatcher,
-            SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher,
-            EntityCreationMatcher entityCreationMatcher,
-            EntityDeletionMatcher entityDeletionMatcher) {
-        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher,
-                                                        propertyDomainAxiomChangeMatcher,
-                                                        propertyRangeAxiomChangeMatcher,
-                                                        editedAnnotationAssertionChangeMatcher,
-                                                        functionalDataPropertyAxiomChangeMatcher,
-                                                        classAssertionAxiomMatcher,
-                                                        subClassOfAxiomMatcher,
-                                                        classMoveChangeMatcher,
-                                                        subClassOfEditChangeMatcher,
-                                                        propertyAssertionAxiomMatcher,
-                                                        sameIndividualAxiomChangeMatcher,
-                                                        entityCreationMatcher,
-                                                        entityDeletionMatcher);
-        return matchers.stream()
-                       .map(m -> (ChangeMatcher) m)
-                       .collect(toImmutableSet());
-    }
-
     @ProjectSingleton
     @Provides
     public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
