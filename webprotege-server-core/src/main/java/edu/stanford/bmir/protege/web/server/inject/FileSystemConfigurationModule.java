@@ -48,7 +48,7 @@ public class FileSystemConfigurationModule {
     public MustacheFactory providesMustacheFactory() {
         return new DefaultMustacheFactory();
     }
-    
+
     @Provides
     @PasswordResetEmailTemplate
     public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
