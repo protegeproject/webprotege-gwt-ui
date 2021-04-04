@@ -13,11 +13,8 @@ import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
-import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.upload.*;
-import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -25,11 +22,8 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Matthew Horridge
@@ -110,15 +104,6 @@ public class ApplicationModule {
             return thread;
         });
         executorsRegistry.registerService(executor, "Download-Streaming-Service");
-        return executor;
-    }
-
-    @Provides
-    @UploadedOntologiesCacheService
-    @ApplicationSingleton
-    public ScheduledExecutorService provideUploadedOntologiesCacheService(ApplicationExecutorsRegistry executorsRegistry) {
-        var executor = Executors.newSingleThreadScheduledExecutor();
-        executorsRegistry.registerService(executor, "Uploaded-Ontologies-Cache-Service");
         return executor;
     }
 

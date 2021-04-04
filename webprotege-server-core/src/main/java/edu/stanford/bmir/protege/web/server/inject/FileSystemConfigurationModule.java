@@ -4,8 +4,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
-import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 
 import java.io.File;
 
@@ -30,10 +28,6 @@ public class FileSystemConfigurationModule {
         return provider.get();
     }
 
-    @Provides
-    public TempFileFactory provideTempFileFactory(TempFileFactoryImpl impl) {
-        return impl;
-    }
 
     @Provides
     public MustacheFactory providesMustacheFactory() {
