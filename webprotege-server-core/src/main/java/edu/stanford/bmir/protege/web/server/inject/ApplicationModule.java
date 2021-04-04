@@ -7,11 +7,9 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 /**
  * Matthew Horridge
@@ -30,13 +28,6 @@ public class ApplicationModule {
     @Provides
     public DispatchServiceExecutor provideDispatchServiceExecutor(DispatchServiceExecutorImpl impl) {
         return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    @ApplicationDataFactory
-    public OWLDataFactory provideOWLDataFactory() {
-        return new NonCachingDataFactory(new OWLDataFactoryImpl());
     }
 
     @Provides
