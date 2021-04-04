@@ -147,11 +147,6 @@ public class ProjectModule {
         return DefaultAxiomTypeOrdering.get();
     }
 
-    @Provides
-    HierarchyPositionMatchingEngine provideHierarchyPositionMatchingEngine(HierarchyPositionMatchingEngineImpl impl) {
-        return impl;
-    }
-
     @ProjectSingleton
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
