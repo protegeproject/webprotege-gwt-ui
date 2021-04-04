@@ -6,11 +6,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
-import edu.stanford.bmir.protege.web.server.match.*;
-import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
-import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
@@ -22,7 +18,6 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -138,11 +133,6 @@ public class ProjectModule {
     }
 
     @Provides
-    HasContainsEntityInSignature providesHasContainsEntityInSignature(HasContainsEntityInSignatureImpl impl) {
-        return impl;
-    }
-
-    @Provides
     List<AxiomType<?>> providesAxiomTypeList() {
         return DefaultAxiomTypeOrdering.get();
     }
@@ -151,12 +141,6 @@ public class ProjectModule {
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
         return new ProjectDisposablesManager(disposableObjectManager);
-    }
-
-    @Provides
-    LiteralRenderer provideLiteralRenderer(@Nonnull
-                                                   StringFormatterLiteralRendererImpl impl) {
-        return impl;
     }
 
     @Provides
