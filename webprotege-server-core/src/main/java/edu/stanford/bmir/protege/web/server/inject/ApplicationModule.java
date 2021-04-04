@@ -138,31 +138,6 @@ public class ApplicationModule {
         return manager.getApplicationSettings();
     }
 
-    @Provides
-    LiteralStyle provideDefaultLiteralStyle() {
-        return LiteralStyle.REGULAR;
-    }
-
-    @Provides
-    HttpLinkRenderer provideDefaultHttpLinkRenderer(DefaultHttpLinkRenderer renderer) {
-        return renderer;
-    }
-
-    @Provides
-    LiteralRenderer provideLiteralRenderer(MarkdownLiteralRenderer renderer) {
-        return renderer;
-    }
-
-    @Provides
-    ItemStyleProvider provideItemStyleProvider(DefaultItemStyleProvider provider) {
-        return provider;
-    }
-
-    @Provides
-    NestedAnnotationStyle provideNestedAnnotationStyle() {
-        return NestedAnnotationStyle.COMPACT;
-    }
-
     @ApplicationSingleton
     @Provides
     ApplicationDisposablesManager provideApplicationDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
