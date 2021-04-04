@@ -69,11 +69,6 @@ public class ProjectModule {
     }
 
     @Provides
-    ImmutableList<IRI> providesShortFormOrdering() {
-        return DefaultShortFormAnnotationPropertyIRIs.asImmutableList();
-    }
-
-    @Provides
     OWLObjectSelector<OWLClassExpression> provideClassExpressionSelector(OWLClassExpressionSelector selector) {
         return selector;
     }

@@ -13,17 +13,4 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
 @Module(includes = LuceneModule.class)
 public class ShortFormModule {
 
-    @Provides
-    ShortFormCache provideShortFormCache() {
-        return ShortFormCache.create();
-    }
-
-    @Provides
-    BuiltInShortFormDictionary provideBuiltInShortFormDictionary(ShortFormCache cache, OWLEntityProvider provider) {
-        BuiltInShortFormDictionary dictionary = new BuiltInShortFormDictionary(cache, provider);
-        dictionary.load();
-        return dictionary;
-    }
-
-
 }
