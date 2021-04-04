@@ -16,13 +16,6 @@ import java.io.File;
 public class FileSystemConfigurationModule {
 
     @Provides
-    @DataDirectory
-    public File provideDataDirectory(DataDirectoryProvider provider) {
-        return provider.get();
-    }
-
-
-    @Provides
     @UploadsDirectory
     public File provideUploadsDirectory(UploadsDirectoryProvider provider) {
         return provider.get();
