@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
-import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -83,12 +81,6 @@ public class ProjectModule {
     @Provides
     OWLObjectSelector<SWRLAtom> provideSWRLAtomSelector(SWRLAtomSelector selector) {
         return selector;
-    }
-
-    @Provides
-    @ProjectSingleton
-    EntitySearchFilterIndexesManager provideEntitySearchFilterIndexesManager(LuceneIndexWriterImpl writer) {
-        return writer;
     }
 }
 
