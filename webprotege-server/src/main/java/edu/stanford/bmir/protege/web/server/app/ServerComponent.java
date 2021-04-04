@@ -29,17 +29,9 @@ public interface ServerComponent {
 
     ApplicationSettingsChecker getApplicationSettingsChecker();
 
-    UserDetailsManager getUserDetailsManager();
-
-    AccessManager getAccessManager();
-
     FileUploadServlet getFileUploadServlet();
-
-    ServletContainer getJerseyServletContainer();
 
     ProjectDownloadServlet getProjectDownloadServlet();
 
     DispatchServlet getDispatchServlet();
-
-    ProjectComponent getProjectComponent(ProjectModule module);
 }

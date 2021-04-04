@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplierImpl;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsCheckerImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
@@ -38,7 +42,12 @@ public class ApplicationModule {
     }
 
     @Provides
-    Ticker provideTicker() {
-        return Ticker.systemTicker();
+    ApplicationNameSupplier provideApplicationNameSupplier(ApplicationNameSupplierImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ApplicationSettingsChecker provideApplicationSettingsChecker(ApplicationSettingsCheckerImpl impl) {
+        return impl;
     }
 }
