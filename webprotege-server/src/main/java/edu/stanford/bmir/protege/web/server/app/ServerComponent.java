@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import dagger.Component;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.api.ApiModule;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServlet;
 import edu.stanford.bmir.protege.web.server.download.ProjectDownloadServlet;
 import edu.stanford.bmir.protege.web.server.inject.*;
@@ -21,8 +20,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 @Component(modules = {
         ApplicationModule.class,
         SharedApplicationModule.class,
-        ServerModule.class,
-        ApiModule.class
+        ServerModule.class
 })
 @ApplicationSingleton
 public interface ServerComponent {
