@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
-import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
