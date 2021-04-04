@@ -19,10 +19,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 @ProjectSingleton
 public interface ProjectComponent {
 
-    EagerProjectSingletons init();
-
     ProjectId getProjectId();
-
-    ProjectDisposablesManager getDisposablesManager();
 }
 

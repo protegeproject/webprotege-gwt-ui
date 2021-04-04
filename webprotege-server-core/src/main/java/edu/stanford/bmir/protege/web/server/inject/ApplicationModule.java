@@ -6,7 +6,6 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
@@ -59,17 +58,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
-    public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
-        return povider.get();
-    }
-
-    @Provides
-    public SendMail provideSendMail(SendMailImpl manager) {
-        return manager;
-    }
-
-    @Provides
     public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
         return handler;
     }
@@ -89,10 +77,4 @@ public class ApplicationModule {
     Ticker provideTicker() {
         return Ticker.systemTicker();
     }
-
-    @Provides
-    DocumentResolver provideDocumentResolver(DocumentResolverImpl impl) {
-        return impl;
-    }
-
 }

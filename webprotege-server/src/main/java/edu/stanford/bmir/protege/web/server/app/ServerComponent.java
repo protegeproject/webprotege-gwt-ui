@@ -21,8 +21,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 @Component(modules = {
         ApplicationModule.class,
         SharedApplicationModule.class,
-        FileSystemConfigurationModule.class,
-        DbModule.class,
+
         ServerModule.class,
         ApiModule.class
 })
