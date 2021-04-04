@@ -60,25 +60,7 @@ public class ProjectModule {
     public ProjectId provideProjectId() {
         return projectId;
     }
-
-    @Provides
-    @RootOntologyDocument
-    public File provideRootOntologyDocument(RootOntologyDocumentProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @ProjectDirectory
-    public File provideProjectDirectory(ProjectDirectoryProvider provider) {
-        return provider.get();
-    }
     
-    @Provides
-    @ProjectSpecificUiConfigurationDataDirectory
-    public File provideProjectSpecificUiConfigurationDataDirectory(ProjectSpecificUiConfigurationDataDirectoryProvider provider) {
-        return provider.get();
-    }
-
     @Provides
     public OWLAnnotationPropertyProvider provideAnnotationPropertyProvider(OWLDataFactory factory) {
         return factory;
@@ -99,12 +81,6 @@ public class ProjectModule {
     ImmutableList<IRI> providesShortFormOrdering() {
         return DefaultShortFormAnnotationPropertyIRIs.asImmutableList();
     }
-
-//    @Provides
-//    @ProjectSingleton
-//    HasImportsClosure providesHasImportsClosure(RootOntologyProvider provider) {
-//        return provider.get();
-//    }
 
     @Provides
     OWLObjectSelector<OWLClassExpression> provideClassExpressionSelector(OWLClassExpressionSelector selector) {

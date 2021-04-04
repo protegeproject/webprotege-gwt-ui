@@ -8,10 +8,8 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.persistence.DbName;
 import edu.stanford.bmir.protege.web.server.persistence.MorphiaDatastoreProvider;
-import edu.stanford.bmir.protege.web.server.persistence.MorphiaProvider;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 import java.util.Optional;
 
@@ -73,11 +71,6 @@ public class DbModule {
     @Provides
     @ApplicationSingleton
     public MongoDatabase provideMongoDatabase(MongoDatabaseProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    public Morphia providesMorphia(MorphiaProvider provider) {
         return provider.get();
     }
 
