@@ -13,8 +13,6 @@ import java.util.Optional;
  */
 public interface UserDetailsManager {
 
-    List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit);
-
     /**
      * Gets the {@link UserDetails} for the specified UserId.
      * @param userId The UserId of the user whose details are to be retrieved.
@@ -25,8 +23,4 @@ public interface UserDetailsManager {
     Optional<UserDetails> getUserDetails(UserId userId);
 
     Optional<String> getEmail(UserId userId);
-
-    void setEmail(UserId userId, String email);
-
-
 }

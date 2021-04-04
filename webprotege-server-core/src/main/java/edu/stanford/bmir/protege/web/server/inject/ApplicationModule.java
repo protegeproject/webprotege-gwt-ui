@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplierImpl;
-import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker;
-import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsCheckerImpl;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.app.*;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -48,6 +47,16 @@ public class ApplicationModule {
 
     @Provides
     ApplicationSettingsChecker provideApplicationSettingsChecker(ApplicationSettingsCheckerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    UserDetailsManager provideUserDetailsManager(UserDetailsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AccessManager provideAccessManager(AccessManagerImpl impl) {
         return impl;
     }
 }

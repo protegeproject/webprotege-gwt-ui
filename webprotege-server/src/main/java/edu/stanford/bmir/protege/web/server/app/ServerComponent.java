@@ -34,4 +34,8 @@ public interface ServerComponent {
     ProjectDownloadServlet getProjectDownloadServlet();
 
     DispatchServlet getDispatchServlet();
+
+    UserDetailsManager getUserDetailsManager();
+
+    AccessManager getAccessManager();
 }

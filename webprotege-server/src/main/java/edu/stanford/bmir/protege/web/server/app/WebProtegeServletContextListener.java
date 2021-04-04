@@ -35,7 +35,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             servletContext.addServlet("FileUploadServlet", serverComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
-            
+
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
             logger.info(WebProtegeMarker, "WebProtege initialization complete");
