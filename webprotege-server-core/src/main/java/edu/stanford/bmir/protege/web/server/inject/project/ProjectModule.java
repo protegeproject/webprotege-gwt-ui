@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
@@ -18,9 +17,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
@@ -60,7 +57,7 @@ public class ProjectModule {
     public ProjectId provideProjectId() {
         return projectId;
     }
-    
+
     @Provides
     public OWLAnnotationPropertyProvider provideAnnotationPropertyProvider(OWLDataFactory factory) {
         return factory;
@@ -106,11 +103,6 @@ public class ProjectModule {
     @Provides
     OWLObjectSelector<SWRLAtom> provideSWRLAtomSelector(SWRLAtomSelector selector) {
         return selector;
-    }
-
-    @Provides
-    List<AxiomType<?>> providesAxiomTypeList() {
-        return DefaultAxiomTypeOrdering.get();
     }
 
     @ProjectSingleton
