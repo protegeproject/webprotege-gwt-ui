@@ -51,17 +51,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
-    public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
-        return manager;
-    }
-
-    @Provides
-    public HasUserIds providesHasUserIds() {
-        return Collections::emptySet;
-    }
-
-    @Provides
     public DispatchServiceExecutor provideDispatchServiceExecutor(DispatchServiceExecutorImpl impl) {
         return impl;
     }

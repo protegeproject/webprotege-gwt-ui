@@ -11,7 +11,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface UserDetailsManager extends HasGetUserIdByEmailAddress, HasGetUserIdByUserIdOrEmail {
+public interface UserDetailsManager {
 
     List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit);
 
