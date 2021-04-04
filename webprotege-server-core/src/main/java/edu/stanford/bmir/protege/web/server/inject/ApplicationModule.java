@@ -9,9 +9,7 @@ import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
-import edu.stanford.bmir.protege.web.server.upload.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -26,11 +24,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
  */
 @Module
 public class ApplicationModule {
-
-    private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
-
-    private static final int INDEX_UPDATING_THREADS = 10;
-
 
     @ApplicationSingleton
     @Provides
@@ -55,11 +48,6 @@ public class ApplicationModule {
     @ApplicationSingleton
     public OWLEntityProvider provideOWLProvider(@ApplicationDataFactory OWLDataFactory dataFactory) {
         return dataFactory;
-    }
-
-    @Provides
-    public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
-        return handler;
     }
 
     @Provides
