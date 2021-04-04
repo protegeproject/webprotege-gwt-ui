@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
-import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
-import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -48,17 +44,6 @@ public class ApplicationModule {
     @ApplicationSingleton
     public OWLEntityProvider provideOWLProvider(@ApplicationDataFactory OWLDataFactory dataFactory) {
         return dataFactory;
-    }
-
-    @Provides
-    public ApplicationSettings provideApplicationSettings(ApplicationSettingsManager manager) {
-        return manager.getApplicationSettings();
-    }
-
-    @ApplicationSingleton
-    @Provides
-    ApplicationDisposablesManager provideApplicationDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
-        return new ApplicationDisposablesManager(disposableObjectManager);
     }
 
     @Provides

@@ -21,7 +21,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 @Component(modules = {
         ApplicationModule.class,
         SharedApplicationModule.class,
-
         ServerModule.class,
         ApiModule.class
 })
@@ -45,6 +44,4 @@ public interface ServerComponent {
     DispatchServlet getDispatchServlet();
 
     ProjectComponent getProjectComponent(ProjectModule module);
-
-    ApplicationDisposablesManager getApplicationDisposablesManager();
 }
