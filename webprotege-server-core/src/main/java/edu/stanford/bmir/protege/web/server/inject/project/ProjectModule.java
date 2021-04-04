@@ -63,12 +63,6 @@ public class ProjectModule {
         return factory;
     }
 
-    @ProjectSingleton
-    @Provides
-    public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
-        return shortFormAdapter;
-    }
-
     @Provides
     public HasLang provideHasLang() {
         return () -> "en";

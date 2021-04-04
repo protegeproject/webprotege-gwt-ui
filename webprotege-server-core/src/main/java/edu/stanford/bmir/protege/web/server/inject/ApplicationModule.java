@@ -144,34 +144,9 @@ public class ApplicationModule {
         return new ApplicationDisposablesManager(disposableObjectManager);
     }
 
-    @ApplicationSingleton
-    @Provides
-    BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations(@Nonnull BuiltInPrefixDeclarationsLoader loader) {
-        return loader.getBuiltInPrefixDeclarations();
-    }
-
-    @Provides
-    @DormantProjectTime
-    @ApplicationSingleton
-    long providesProjectDormantTime(WebProtegeProperties properties) {
-        return properties.getProjectDormantTime();
-    }
-
     @Provides
     Ticker provideTicker() {
         return Ticker.systemTicker();
-    }
-
-    @Provides
-    @ApplicationSingleton
-    UploadedOntologiesCache provideUploadedOntologiesCache(UploadedOntologiesProcessor processor,
-                                                           @UploadedOntologiesCacheService ScheduledExecutorService cacheService,
-                                                           Ticker ticker,
-                                                           ApplicationDisposablesManager disposableObjectManager) {
-        var cache = new UploadedOntologiesCache(processor, ticker, cacheService);
-        cache.start();
-        disposableObjectManager.register(cache);
-        return cache;
     }
 
     @Provides

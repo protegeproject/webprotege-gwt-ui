@@ -4,8 +4,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 
@@ -30,11 +28,6 @@ public class FileSystemConfigurationModule {
     @UploadsDirectory
     public File provideUploadsDirectory(UploadsDirectoryProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    public RootOntologyDocumentFileMatcher provideRootOntologyDocumentFileMatcher(RootOntologyDocumentMatcherImpl impl) {
-        return impl;
     }
 
     @Provides
