@@ -101,16 +101,6 @@ public class ProjectModule {
     }
 
     @Provides
-    LiteralLexicalFormTransformer provideLiteralLexicalFormTransformer() {
-        return lexicalForm -> lexicalForm;
-    }
-
-    @Provides
-    LiteralLangTagTransformer provideLangTagTransformer() {
-        return langTag -> langTag;
-    }
-
-    @Provides
     @LuceneIndexesDirectory
     Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
         var dataDirectory = dataDirectoryProvider.get().toPath();
