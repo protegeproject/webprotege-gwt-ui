@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.mongodb.morphia.annotations.Id;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Comment implements IsSerializable {
 
-    @Id
     private CommentId id;
 
     private UserId createdBy;

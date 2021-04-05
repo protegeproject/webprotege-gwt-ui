@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.mongodb.morphia.annotations.Property;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -25,13 +24,10 @@ public class Watch implements IsSerializable {
 
     public static final String TYPE = "type";
 
-    @Property(USER_ID)
     private UserId userId;
 
-    @Property(ENTITY)
     private OWLEntity entity;
 
-    @Property(TYPE)
     private WatchType type;
 
     @GwtSerializationConstructor
