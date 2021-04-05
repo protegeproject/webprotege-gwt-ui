@@ -1,5 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,35 +18,25 @@ import javax.annotation.Nonnull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class AddWatchAction implements ProjectAction<AddWatchResult>, HasUserId {
-
-    private Watch watch;
-
-    private ProjectId projectId;
-
-    private UserId userId;
-
-    public AddWatchAction(Watch watch, ProjectId projectId, UserId userId) {
-        this.watch = watch;
-        this.projectId = projectId;
-        this.userId = userId;
-    }
-
-    private AddWatchAction() {
-    }
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("AddWatch")
+public abstract class AddWatchAction implements ProjectAction<AddWatchResult>, HasUserId {
 
     @Nonnull
     @Override
-    public ProjectId getProjectId() {
-        return projectId;
-    }
+    public abstract ProjectId getProjectId();
 
     @Override
-    public UserId getUserId() {
-        return userId;
-    }
+    public abstract UserId getUserId();
 
-    public Watch getWatch() {
-        return watch;
+    @Nonnull
+    public abstract Watch getWatch();
+
+    @JsonCreator
+    public static AddWatchAction create(@JsonProperty("projectId") ProjectId newProjectId,
+                                        @JsonProperty("userId") UserId newUserId,
+                                        @JsonProperty("watch") Watch newWatch) {
+        return new AutoValue_AddWatchAction(newProjectId, newUserId, newWatch);
     }
 }
