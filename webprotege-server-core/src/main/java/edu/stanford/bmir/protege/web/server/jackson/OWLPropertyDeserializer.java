@@ -29,7 +29,7 @@ public class OWLPropertyDeserializer<P extends OWLProperty> extends StdDeseriali
     public OWLPropertyDeserializer(@Nonnull OWLDataFactory dataFactory,
                                    @Nonnull Class<P> cls) {
         super(OWLProperty.class);
-        deserializer = new OWLEntityDeserializer(dataFactory, cls);
+        deserializer = new OWLEntityDeserializer<>(dataFactory, cls);
         this.cls = checkNotNull(cls);
     }
 
