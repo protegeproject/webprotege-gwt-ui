@@ -27,7 +27,6 @@ import java.util.List;
                 SignUpPlaceTokenizer.class,
                 SharingSettingsPlaceTokenizer.class,
                 AdminPlaceTokenizer.class,
-                CollectionViewPlaceTokenizer.class,
                 LanguageSettingsPlaceTokenizer.class,
                 FormsPlaceTokenizer.class,
                 EditFormPlaceTokenizer.class
@@ -46,7 +45,6 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new AdminPlaceTokenizer());
         tokenizers.add(new ProjectPrefixDeclarationsPlaceTokenizer());
         tokenizers.add(new ProjectTagsPlaceTokenizer());
-        tokenizers.add(new CollectionViewPlaceTokenizer());
         tokenizers.add(new LanguageSettingsPlaceTokenizer());
         tokenizers.add(new FormsPlaceTokenizer());
         tokenizers.add(new EditFormPlaceTokenizer());

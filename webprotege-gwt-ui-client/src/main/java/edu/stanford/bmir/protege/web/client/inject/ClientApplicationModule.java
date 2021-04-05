@@ -376,21 +376,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    CollectionView provideCollectionView(CollectionViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    CollectionItemListView provideCollectionElementsListView(CollectionItemListViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AddCollectionItemPrompt providesAddCollectionItemPrompt(AddCollectionItemPromptImpl impl) {
-        return impl;
-    }
-
-    @Provides
     WindowTitleUpdater providesWindowTitleUpdater(WindowTitleUpdaterImpl impl) {
         return impl;
     }

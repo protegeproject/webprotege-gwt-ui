@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
 import dagger.Subcomponent;
-import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormEditorPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormsManagerPresenter;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPresenter;
@@ -42,8 +41,6 @@ public interface ClientProjectComponent {
     ProjectSettingsPresenter getProjectSettingsPresenter();
 
     ProjectPrefixDeclarationsPresenter getProjectPrefixesPresenter();
-
-    CollectionPresenter getCollectionPresenter();
 
     ProjectTagsPresenter getProjectTagsPresenter();
 
