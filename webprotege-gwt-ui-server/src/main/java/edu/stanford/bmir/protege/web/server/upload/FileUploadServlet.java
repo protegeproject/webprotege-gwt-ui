@@ -1,33 +1,18 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.server.util.FileContentsSizeCalculator;
-import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.upload.FileUploadResponseAttributes;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Iterator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.formatAddr;
 
 /**
