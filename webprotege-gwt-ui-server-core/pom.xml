@@ -3,31 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>webprotege</artifactId>
+        <artifactId>webprotege-gwt-ui</artifactId>
         <groupId>edu.stanford.protege</groupId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>webprotege-server-core</artifactId>
+    <artifactId>webprotege-gwt-ui-server-core</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>webprotege-shared</artifactId>
+            <artifactId>webprotege-gwt-ui-shared</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>webprotege-server-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>edu.stanford.protege</groupId>
-            <artifactId>webprotege-server-lucene</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
