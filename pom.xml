@@ -449,7 +449,7 @@
 
     <modules>
         <module>webprotege-gwt-ui-shared</module>
-        <module>webprotege-server-core</module>
+        <module>webprotege-gwt-ui-server-core</module>
         <module>webprotege-server</module>
         <module>webprotege-gwt-ui-client</module>
         <module>webprotege-gwt-ui-shared-core</module>
