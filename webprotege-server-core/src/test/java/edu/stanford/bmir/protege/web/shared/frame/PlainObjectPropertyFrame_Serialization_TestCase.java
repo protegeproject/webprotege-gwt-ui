@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
 
 import java.io.IOException;
 

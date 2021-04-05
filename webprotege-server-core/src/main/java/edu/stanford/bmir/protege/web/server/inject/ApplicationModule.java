@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;

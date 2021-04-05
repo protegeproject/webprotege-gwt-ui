@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;

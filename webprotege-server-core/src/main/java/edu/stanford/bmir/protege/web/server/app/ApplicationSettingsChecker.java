@@ -1,19 +1,7 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 20 Dec 2017
