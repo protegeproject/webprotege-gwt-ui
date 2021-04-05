@@ -80,18 +80,6 @@
 
         <dependency>
             <groupId>edu.stanford.protege</groupId>
-            <artifactId>protege-owlapi-extensions</artifactId>
-            <version>4.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-distribution</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
             <version>${widgetmap.version}</version>
         </dependency>
