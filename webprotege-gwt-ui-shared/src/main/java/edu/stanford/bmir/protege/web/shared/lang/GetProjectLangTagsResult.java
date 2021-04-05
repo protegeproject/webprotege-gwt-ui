@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;

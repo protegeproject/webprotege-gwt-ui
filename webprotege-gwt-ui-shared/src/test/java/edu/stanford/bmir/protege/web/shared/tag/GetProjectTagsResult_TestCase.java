@@ -1,10 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.tag;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -12,10 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)

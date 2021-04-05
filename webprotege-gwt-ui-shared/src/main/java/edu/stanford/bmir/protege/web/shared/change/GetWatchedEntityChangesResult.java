@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.change;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 

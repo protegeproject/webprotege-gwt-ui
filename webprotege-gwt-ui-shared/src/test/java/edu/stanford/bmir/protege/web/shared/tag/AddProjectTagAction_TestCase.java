@@ -1,8 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.tag;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,9 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)

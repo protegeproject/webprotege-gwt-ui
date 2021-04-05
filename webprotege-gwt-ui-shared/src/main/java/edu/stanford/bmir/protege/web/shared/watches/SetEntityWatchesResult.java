@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
 
 /**
  * Matthew Horridge

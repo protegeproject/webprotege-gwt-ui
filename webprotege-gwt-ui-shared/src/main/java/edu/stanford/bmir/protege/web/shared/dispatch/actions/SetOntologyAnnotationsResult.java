@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import java.util.HashSet;

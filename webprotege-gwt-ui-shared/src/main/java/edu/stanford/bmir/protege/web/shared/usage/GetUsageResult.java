@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.usage;
 
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 

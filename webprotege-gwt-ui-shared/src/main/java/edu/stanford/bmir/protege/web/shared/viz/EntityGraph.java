@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 

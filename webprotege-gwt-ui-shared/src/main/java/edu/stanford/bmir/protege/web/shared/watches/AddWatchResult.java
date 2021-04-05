@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasEventListResult;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 
 /**
  * Author: Matthew Horridge<br>

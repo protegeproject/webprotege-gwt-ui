@@ -7,10 +7,8 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
-import java.io.DataOutput;
 import java.io.Serializable;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;

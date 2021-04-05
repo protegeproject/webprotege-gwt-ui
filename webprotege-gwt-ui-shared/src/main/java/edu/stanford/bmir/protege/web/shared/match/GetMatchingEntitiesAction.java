@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.match;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;

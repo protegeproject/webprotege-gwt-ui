@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 /**

@@ -1,8 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.change;
 
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.hamcrest.MatcherAssert;

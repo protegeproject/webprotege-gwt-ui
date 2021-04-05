@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 

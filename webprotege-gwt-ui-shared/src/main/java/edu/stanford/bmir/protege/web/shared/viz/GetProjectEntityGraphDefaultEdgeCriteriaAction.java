@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

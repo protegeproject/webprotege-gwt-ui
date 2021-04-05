@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -9,10 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge

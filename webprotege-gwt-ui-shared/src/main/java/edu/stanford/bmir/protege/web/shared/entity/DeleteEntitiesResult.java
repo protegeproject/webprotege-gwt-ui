@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;

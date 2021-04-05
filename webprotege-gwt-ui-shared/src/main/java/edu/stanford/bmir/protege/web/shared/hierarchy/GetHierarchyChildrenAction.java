@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;

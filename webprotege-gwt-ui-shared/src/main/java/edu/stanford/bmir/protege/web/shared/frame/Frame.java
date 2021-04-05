@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.HasSignature;
 
 import javax.annotation.Nonnull;
 

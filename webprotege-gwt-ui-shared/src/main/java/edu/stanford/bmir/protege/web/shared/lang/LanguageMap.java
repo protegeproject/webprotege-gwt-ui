@@ -9,7 +9,8 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Matthew Horridge

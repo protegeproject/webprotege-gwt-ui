@@ -5,7 +5,10 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLEntityProvider;
 
 import javax.annotation.Nonnull;
 import java.util.List;

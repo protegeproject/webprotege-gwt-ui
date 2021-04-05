@@ -2,17 +2,11 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>

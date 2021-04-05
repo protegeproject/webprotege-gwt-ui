@@ -7,11 +7,8 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>

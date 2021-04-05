@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

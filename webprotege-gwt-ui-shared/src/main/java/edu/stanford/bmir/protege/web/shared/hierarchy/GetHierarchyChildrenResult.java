@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
-import com.google.common.collect.ImmutableMultimap;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -10,9 +8,6 @@ import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.Serializable;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

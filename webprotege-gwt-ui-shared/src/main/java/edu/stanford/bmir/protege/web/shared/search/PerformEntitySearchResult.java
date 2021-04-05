@@ -2,13 +2,10 @@ package edu.stanford.bmir.protege.web.shared.search;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge

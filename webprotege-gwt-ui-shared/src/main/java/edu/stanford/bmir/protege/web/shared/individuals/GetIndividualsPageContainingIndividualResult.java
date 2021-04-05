@@ -5,7 +5,6 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 

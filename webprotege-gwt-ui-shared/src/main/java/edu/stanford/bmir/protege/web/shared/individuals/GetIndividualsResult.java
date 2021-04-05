@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nullable;

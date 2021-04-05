@@ -6,12 +6,9 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>

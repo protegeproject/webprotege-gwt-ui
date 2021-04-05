@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.pagination;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 
 import java.io.Serializable;

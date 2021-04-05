@@ -2,14 +2,12 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 

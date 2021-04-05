@@ -2,15 +2,12 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 

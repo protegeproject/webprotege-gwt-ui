@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 8 Dec 2017

@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasEventListResult;
-import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 
 /**
  * Author: Matthew Horridge<br>

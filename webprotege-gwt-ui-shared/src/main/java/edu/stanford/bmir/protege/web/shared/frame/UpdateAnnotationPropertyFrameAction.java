@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**

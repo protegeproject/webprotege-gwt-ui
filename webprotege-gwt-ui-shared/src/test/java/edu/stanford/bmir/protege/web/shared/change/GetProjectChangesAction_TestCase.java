@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
-import dagger.Module;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;

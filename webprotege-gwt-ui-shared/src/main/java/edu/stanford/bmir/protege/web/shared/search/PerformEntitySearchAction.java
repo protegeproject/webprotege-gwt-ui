@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
-import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 

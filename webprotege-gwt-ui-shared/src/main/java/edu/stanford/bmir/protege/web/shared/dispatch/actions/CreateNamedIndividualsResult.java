@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
