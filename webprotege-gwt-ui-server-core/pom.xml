@@ -40,19 +40,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.jvnet.mock-javamail</groupId>
-            <artifactId>mock-javamail</artifactId>
-            <version>1.9</version>
-            <scope>test</scope>
-        </dependency>
-
+        
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger-compiler</artifactId>
