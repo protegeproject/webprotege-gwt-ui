@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
-             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>

@@ -6,9 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.HasNodeProperties;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;

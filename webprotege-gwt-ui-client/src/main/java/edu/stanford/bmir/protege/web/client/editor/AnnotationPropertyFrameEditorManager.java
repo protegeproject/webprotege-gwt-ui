@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.AnnotationPropertyFrameEditor;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;

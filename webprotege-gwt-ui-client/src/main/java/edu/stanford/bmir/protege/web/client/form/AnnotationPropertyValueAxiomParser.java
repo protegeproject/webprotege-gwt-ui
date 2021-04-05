@@ -10,9 +10,7 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationImpl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.RegEx;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**

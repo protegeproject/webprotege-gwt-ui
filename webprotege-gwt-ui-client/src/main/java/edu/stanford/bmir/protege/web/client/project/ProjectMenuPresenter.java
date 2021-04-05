@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownl
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

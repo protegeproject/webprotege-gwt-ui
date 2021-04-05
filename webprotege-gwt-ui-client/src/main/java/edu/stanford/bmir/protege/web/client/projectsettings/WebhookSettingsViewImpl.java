@@ -8,14 +8,11 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
-import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.PROJECT_CHANGED;

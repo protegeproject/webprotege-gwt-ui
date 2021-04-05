@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 

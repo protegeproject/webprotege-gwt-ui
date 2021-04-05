@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.LanguageEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 

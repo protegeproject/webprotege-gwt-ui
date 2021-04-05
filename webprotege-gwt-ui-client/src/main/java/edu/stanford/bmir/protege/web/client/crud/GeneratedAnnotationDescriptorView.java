@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

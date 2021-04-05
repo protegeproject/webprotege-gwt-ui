@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form.input;
 
-import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;

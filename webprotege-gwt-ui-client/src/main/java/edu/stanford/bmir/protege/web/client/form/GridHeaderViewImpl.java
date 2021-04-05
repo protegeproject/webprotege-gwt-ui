@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -23,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
 

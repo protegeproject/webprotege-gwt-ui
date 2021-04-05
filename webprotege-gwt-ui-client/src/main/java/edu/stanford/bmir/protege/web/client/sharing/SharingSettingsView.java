@@ -4,7 +4,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 

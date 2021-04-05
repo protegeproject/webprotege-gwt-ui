@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 /**
  * Author: Matthew Horridge<br>

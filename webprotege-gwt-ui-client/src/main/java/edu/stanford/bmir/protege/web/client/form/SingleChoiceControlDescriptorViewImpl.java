@@ -1,20 +1,15 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.List;
 
 /**
  * Matthew Horridge

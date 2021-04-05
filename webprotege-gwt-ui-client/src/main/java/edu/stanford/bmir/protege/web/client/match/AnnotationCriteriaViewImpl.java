@@ -1,26 +1,21 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.primitive.EntityLinkMode;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityAnnotationCriteria;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Matthew Horridge

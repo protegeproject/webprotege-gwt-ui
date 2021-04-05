@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
-import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
-
-import static com.google.gwt.thirdparty.guava.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeHierarchyPositionCriteria;
 
 import javax.annotation.Nonnull;
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.list;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;

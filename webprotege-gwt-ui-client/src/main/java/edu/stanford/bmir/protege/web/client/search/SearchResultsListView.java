@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
-import edu.stanford.bmir.protege.web.client.pagination.HasPages;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 
 import javax.annotation.Nonnull;

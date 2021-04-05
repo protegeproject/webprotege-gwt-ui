@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

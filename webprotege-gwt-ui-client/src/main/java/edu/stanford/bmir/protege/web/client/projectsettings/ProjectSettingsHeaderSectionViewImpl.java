@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;

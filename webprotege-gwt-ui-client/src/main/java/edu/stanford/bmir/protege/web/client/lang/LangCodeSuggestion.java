@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**

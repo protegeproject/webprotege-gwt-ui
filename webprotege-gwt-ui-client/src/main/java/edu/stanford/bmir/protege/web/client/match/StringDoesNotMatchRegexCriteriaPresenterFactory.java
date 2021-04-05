@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringDoesNotContainRegexMatchCriteria;
 
 import javax.annotation.Nonnull;

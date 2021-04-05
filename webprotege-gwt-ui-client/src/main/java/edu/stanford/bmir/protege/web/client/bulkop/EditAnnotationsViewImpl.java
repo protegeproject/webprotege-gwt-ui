@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static javaemul.internal.InternalPreconditions.checkNotNull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

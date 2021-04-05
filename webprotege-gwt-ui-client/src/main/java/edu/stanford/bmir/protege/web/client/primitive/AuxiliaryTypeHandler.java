@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityDataVisitorEx;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collections;
 import java.util.Set;

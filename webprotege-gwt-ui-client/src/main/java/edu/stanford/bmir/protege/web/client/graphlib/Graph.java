@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.dagre.Dagre;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.viz.Edge;
-import jsinterop.annotations.*;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsOverlay;
+import jsinterop.annotations.JsType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 

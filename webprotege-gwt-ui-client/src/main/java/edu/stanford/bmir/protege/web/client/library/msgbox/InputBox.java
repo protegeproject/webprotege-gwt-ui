@@ -1,16 +1,14 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlType;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;

@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import jsinterop.annotations.*;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsProperty;
+import jsinterop.annotations.JsType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;

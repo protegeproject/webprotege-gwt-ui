@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

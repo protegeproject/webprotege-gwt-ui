@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import com.google.auto.factory.AutoFactory;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.shared.match.criteria.NotSubClassOfCriteria;

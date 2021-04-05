@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

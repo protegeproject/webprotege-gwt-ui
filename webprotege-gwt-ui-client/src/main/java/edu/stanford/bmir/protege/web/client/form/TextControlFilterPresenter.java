@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.match.AnnotationValueCriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.match.LiteralCriteriaListPresenter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptorDto;
@@ -16,7 +14,6 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge

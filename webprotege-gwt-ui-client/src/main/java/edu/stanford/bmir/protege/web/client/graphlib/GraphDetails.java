@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
-import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 

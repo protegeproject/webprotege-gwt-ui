@@ -2,16 +2,12 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
-import org.eclipse.jdt.core.search.SearchMatch;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

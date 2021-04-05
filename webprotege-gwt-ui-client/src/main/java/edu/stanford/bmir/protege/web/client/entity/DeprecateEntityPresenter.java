@@ -7,25 +7,23 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
-import edu.stanford.bmir.protege.web.client.form.FormStackPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import edu.stanford.bmir.protege.web.shared.entity.Entity;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubjectDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubjectDto;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge

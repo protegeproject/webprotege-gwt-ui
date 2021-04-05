@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;

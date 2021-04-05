@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 
 /**

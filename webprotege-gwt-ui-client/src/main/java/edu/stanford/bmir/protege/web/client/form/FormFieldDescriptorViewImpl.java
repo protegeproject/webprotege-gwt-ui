@@ -6,7 +6,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
+import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;

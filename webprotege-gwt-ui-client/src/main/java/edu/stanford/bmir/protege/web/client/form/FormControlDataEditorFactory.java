@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 
 import javax.annotation.Nonnull;
 

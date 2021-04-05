@@ -14,7 +14,6 @@ import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilterId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Optional;
 import java.util.function.Consumer;
 

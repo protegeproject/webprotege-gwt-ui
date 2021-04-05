@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
-import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 
 import javax.annotation.Nonnull;

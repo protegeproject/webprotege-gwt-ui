@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntityFromFormDataResult;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityCreationFormsAction;

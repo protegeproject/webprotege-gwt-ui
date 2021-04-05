@@ -1,16 +1,11 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.NewAnnotationData;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Optional;
 
 /**

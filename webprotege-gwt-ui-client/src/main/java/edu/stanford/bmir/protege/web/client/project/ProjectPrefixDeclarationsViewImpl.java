@@ -1,27 +1,22 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge

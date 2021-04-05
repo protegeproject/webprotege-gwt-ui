@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.shortform;
 
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;

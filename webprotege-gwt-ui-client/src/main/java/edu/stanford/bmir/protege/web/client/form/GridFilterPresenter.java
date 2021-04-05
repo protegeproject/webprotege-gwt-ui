@@ -12,8 +12,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;

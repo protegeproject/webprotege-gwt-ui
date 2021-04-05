@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.tooltip;
 
 import elemental.dom.Element;
-import elemental.html.HtmlElement;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 

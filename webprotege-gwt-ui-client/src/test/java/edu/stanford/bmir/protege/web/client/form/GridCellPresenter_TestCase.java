@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

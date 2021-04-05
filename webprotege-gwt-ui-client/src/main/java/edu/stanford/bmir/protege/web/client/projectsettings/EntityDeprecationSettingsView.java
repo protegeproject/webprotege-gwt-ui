@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

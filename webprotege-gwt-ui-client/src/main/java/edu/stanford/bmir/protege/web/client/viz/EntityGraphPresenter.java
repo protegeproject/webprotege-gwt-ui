@@ -30,12 +30,10 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.*;
-import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.WP_GRAPH__G_MUTED;
 import static java.util.stream.Collectors.toSet;
 
 /**

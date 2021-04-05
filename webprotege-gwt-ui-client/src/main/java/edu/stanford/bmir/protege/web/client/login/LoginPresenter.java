@@ -10,11 +10,14 @@ import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCal
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
-import edu.stanford.bmir.protege.web.shared.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
+import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;

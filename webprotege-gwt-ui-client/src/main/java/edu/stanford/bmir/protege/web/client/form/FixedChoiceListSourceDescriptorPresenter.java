@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDesc
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;

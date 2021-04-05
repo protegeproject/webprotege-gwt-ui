@@ -3,11 +3,9 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;

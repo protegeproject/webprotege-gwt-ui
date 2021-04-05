@@ -4,8 +4,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

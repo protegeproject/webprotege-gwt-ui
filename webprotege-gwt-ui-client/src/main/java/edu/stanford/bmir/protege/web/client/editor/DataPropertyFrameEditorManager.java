@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.DataPropertyFrameEditor;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 
 import javax.inject.Inject;

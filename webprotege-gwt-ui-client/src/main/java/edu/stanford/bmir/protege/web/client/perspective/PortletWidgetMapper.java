@@ -10,7 +10,6 @@ import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
 import edu.stanford.protege.widgetmap.client.view.FixedSizeViewHolder;
 import edu.stanford.protege.widgetmap.client.view.ViewHolder;
-import edu.stanford.protege.widgetmap.shared.node.Node;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;

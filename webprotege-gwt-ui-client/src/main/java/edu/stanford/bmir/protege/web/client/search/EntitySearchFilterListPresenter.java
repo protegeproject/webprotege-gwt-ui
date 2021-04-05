@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import edu.stanford.bmir.protege.web.client.form.*;
+import edu.stanford.bmir.protege.web.client.form.ObjectListPresenter;
+import edu.stanford.bmir.protege.web.client.form.ObjectListView;
+import edu.stanford.bmir.protege.web.client.form.ObjectListViewHolder;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 
 import javax.annotation.Nonnull;

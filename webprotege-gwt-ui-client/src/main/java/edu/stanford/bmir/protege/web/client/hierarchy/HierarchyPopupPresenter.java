@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;

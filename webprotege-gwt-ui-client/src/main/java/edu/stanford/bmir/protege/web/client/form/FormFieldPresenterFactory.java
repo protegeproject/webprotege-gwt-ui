@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 
 import javax.annotation.Nonnull;

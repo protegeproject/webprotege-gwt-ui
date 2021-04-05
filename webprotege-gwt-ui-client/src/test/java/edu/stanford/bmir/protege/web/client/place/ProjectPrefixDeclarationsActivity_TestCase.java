@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.place;
 
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

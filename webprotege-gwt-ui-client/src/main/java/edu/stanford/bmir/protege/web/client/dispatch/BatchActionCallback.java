@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.BatchResult;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 import javax.annotation.Nonnull;
 

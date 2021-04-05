@@ -56,7 +56,8 @@ import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
@@ -68,7 +69,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.*;
+import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.FormControlContainer;
 
 /**
  * Matthew Horridge

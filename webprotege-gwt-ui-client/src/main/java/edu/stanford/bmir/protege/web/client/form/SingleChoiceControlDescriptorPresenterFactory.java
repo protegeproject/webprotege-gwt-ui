@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.junit.client.GWTTestCase;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 

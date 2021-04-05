@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.client.library.tokenfield;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 

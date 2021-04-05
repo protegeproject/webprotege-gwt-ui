@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.form.ObjectListPresenter;
 import edu.stanford.bmir.protege.web.client.form.ObjectListView;
 import edu.stanford.bmir.protege.web.client.form.ObjectListViewHolder;
-import edu.stanford.bmir.protege.web.client.form.ObjectPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
 
 import javax.annotation.Nonnull;

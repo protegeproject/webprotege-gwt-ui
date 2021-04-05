@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationValueCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

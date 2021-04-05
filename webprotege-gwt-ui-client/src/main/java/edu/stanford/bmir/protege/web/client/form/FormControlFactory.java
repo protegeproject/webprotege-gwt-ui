@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormFieldDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.*;

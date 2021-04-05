@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 

@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import java.util.List;

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

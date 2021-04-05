@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.viz.FilterName;
 
 import javax.annotation.Nonnull;

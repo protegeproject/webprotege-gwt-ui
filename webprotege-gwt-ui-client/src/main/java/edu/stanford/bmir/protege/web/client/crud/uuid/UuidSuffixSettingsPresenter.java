@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.crud.uuid;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

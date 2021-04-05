@@ -6,7 +6,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 import java.util.ArrayList;
 import java.util.List;

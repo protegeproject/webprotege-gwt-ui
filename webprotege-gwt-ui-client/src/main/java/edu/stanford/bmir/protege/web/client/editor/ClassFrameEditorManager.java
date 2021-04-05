@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import edu.stanford.bmir.protege.web.client.frame.ClassFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameAction;
-import edu.stanford.bmir.protege.web.client.frame.ClassFrameEditor;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 
 import javax.inject.Inject;

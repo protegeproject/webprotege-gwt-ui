@@ -1,7 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor"
-             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
+>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>

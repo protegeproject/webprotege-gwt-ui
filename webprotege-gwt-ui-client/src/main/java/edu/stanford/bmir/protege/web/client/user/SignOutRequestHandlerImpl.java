@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.user;
 
-import com.google.gwt.place.shared.PlaceController;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 

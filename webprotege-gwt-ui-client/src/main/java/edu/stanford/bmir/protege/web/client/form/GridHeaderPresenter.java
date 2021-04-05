@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;

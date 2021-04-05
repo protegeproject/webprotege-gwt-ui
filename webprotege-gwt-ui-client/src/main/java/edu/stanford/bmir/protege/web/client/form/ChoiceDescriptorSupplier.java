@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
@@ -8,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceListSourceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.DynamicChoiceListSourceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDescriptor;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
@@ -17,7 +18,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

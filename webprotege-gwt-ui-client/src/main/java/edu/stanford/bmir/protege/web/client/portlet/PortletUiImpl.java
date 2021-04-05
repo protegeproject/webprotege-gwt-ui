@@ -16,20 +16,19 @@ import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
-import edu.stanford.bmir.protege.web.client.tooltip.TooltipOptions;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
-import elemental.client.Browser;
-import elemental.dom.Element;
-import elemental.html.HtmlElement;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;

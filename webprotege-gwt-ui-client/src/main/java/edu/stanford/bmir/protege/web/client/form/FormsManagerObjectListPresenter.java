@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.client.FormsMessages;
-import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 
 import javax.annotation.Nonnull;

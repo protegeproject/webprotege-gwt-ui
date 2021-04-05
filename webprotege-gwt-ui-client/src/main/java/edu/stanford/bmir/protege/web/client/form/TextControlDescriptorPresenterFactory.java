@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
+import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 

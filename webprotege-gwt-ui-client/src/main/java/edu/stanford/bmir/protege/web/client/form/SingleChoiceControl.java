@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;

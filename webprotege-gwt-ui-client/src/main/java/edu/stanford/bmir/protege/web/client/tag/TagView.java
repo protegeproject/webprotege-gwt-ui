@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.tag;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.HasContextMenuHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;

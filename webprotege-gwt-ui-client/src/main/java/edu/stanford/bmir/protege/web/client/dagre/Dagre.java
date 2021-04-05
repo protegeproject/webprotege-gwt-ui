@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dagre;
 
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
-import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;

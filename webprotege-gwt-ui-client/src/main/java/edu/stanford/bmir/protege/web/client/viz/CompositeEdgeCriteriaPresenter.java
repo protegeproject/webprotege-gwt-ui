@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.CriteriaPresenter;
-import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
 
 import javax.annotation.Nonnull;

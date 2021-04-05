@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="tn" type="edu.stanford.protege.gwt.graphtree.client.TreeNodeViewResources"/>
     <ui:style>

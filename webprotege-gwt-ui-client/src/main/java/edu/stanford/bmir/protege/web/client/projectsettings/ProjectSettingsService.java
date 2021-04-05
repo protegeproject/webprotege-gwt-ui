@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.gwt.http.client.*;
-import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge

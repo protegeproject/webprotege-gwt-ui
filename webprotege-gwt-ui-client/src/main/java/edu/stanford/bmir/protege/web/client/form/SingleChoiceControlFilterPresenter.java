@@ -2,17 +2,13 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.NumericValueCriteria;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Matthew Horridge

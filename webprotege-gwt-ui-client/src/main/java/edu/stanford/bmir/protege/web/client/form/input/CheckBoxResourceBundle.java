@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form.input;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
 
 public interface CheckBoxResourceBundle extends ClientBundle {
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.renderer;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;

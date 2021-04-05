@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.library.suggest;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.primitive.EntitySuggestOracleSuggestLimit;
-import edu.stanford.bmir.protege.web.client.search.SearchResultMatchHighlighter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;

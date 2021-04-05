@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
@@ -9,7 +8,6 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
@@ -19,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;

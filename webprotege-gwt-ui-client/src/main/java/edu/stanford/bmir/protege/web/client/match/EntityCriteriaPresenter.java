@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 

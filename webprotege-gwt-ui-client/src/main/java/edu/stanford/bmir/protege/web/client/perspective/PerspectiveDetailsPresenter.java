@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.form.*;
+import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
+import edu.stanford.bmir.protege.web.client.form.ObjectPresenter;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;

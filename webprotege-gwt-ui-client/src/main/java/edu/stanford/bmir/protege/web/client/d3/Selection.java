@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.d3;
 
-import elemental.dom.Element;
 import elemental.dom.Node;
 import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**

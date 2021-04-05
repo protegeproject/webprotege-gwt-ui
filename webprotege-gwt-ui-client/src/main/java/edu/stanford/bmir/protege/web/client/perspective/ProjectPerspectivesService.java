@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/05/2014

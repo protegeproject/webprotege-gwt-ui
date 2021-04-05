@@ -1,21 +1,14 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogControllerFactory;
-import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
-import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import org.semanticweb.owlapi.model.OWLClass;
-
-import javax.inject.Provider;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 4 Dec 2017

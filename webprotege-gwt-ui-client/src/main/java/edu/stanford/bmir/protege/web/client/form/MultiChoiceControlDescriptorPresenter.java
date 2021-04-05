@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceListSourceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

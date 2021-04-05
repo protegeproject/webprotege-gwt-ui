@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.portlet.HasNodeProperties;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 
 import javax.annotation.Nonnull;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

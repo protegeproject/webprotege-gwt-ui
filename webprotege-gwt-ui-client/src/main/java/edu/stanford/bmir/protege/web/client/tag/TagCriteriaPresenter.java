@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

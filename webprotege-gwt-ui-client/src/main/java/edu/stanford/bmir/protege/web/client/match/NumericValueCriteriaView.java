@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.NumericPredicate;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.OptionalDouble;
 
 /**
  * Matthew Horridge

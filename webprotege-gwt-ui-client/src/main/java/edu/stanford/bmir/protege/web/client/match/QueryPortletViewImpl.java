@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.bmir.protege.web.shared.place.*;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -4,9 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaPresenter;
-import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlDataMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteriaVisitor;
+import edu.stanford.bmir.protege.web.shared.match.criteria.NumericValueCriteria;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

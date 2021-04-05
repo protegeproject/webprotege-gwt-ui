@@ -12,7 +12,6 @@ import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 /**

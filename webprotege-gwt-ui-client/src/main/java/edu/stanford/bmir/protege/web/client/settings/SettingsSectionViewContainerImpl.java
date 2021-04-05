@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

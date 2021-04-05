@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesResult;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;

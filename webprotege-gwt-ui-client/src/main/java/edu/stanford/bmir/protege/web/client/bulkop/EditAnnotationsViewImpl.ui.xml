@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
              xmlns:bulkop="urn:import:edu.stanford.bmir.protege.web.client.bulkop"
-             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
+>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:import field="edu.stanford.bmir.protege.web.shared.bulkop.Operation.*"/>
     <g:HTMLPanel>

@@ -9,11 +9,9 @@ import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.LinkedHashSet;
 import java.util.List;

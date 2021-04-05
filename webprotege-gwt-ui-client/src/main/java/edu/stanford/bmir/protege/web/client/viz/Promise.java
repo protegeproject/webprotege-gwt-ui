@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import jsinterop.annotations.JsType;
 
-import java.util.function.Consumer;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

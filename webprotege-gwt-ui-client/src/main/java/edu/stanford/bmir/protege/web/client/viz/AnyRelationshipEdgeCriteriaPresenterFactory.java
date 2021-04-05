@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import edu.stanford.bmir.protege.web.client.match.CriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.match.CriteriaPresenterFactory;
-import edu.stanford.bmir.protege.web.shared.viz.AnyInstanceOfEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.AnyRelationshipEdgeCriteria;
 
 import javax.annotation.Nonnull;

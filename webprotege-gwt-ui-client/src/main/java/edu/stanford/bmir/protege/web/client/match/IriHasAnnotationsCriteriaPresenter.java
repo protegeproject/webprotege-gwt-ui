@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.IriCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.IriHasAnnotationCriteria;
 
 import javax.annotation.Nonnull;

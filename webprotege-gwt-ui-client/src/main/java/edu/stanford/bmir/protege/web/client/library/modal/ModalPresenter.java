@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;

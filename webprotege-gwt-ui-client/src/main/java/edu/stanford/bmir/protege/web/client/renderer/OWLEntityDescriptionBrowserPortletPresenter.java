@@ -12,8 +12,6 @@ import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResult;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.d3;
 
-import jsinterop.annotations.JsFunction;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;

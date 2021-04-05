@@ -4,11 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPositionCriteriaPresenter;
-import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationDescriptor;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyPositionCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -16,7 +14,6 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

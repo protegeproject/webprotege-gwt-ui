@@ -12,18 +12,17 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.d3.Selection;
 import edu.stanford.bmir.protege.web.client.d3.Transform;
 import edu.stanford.bmir.protege.web.client.d3.Zoom;
+import edu.stanford.bmir.protege.web.client.d3.d3;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.viz.EntityGraphPresenter.DownloadHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.MouseEvent;
 import org.semanticweb.owlapi.model.OWLEntity;
-import edu.stanford.bmir.protege.web.client.d3.d3;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.viz.EntityGraphPresenter.*;
+import static edu.stanford.bmir.protege.web.client.viz.EntityGraphPresenter.ViewSettingsHandler;
 
 /**
  * Matthew Horridge

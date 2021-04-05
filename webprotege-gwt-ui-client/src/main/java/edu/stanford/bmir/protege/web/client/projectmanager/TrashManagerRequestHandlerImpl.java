@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.project.*;
+import edu.stanford.bmir.protege.web.shared.project.MoveProjectsToTrashAction;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.RemoveProjectFromTrashAction;
 
 import javax.inject.Inject;
 

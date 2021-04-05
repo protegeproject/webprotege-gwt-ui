@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Matthew Horridge

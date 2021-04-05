@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsNotCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;

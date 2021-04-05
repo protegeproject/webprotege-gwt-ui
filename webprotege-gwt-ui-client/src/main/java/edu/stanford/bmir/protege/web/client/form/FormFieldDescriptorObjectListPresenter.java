@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import dagger.Provides;
-import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.*;

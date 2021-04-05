@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.gwt.core.client.GWT;
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;

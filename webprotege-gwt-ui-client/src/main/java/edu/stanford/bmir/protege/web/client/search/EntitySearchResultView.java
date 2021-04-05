@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.search;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
 

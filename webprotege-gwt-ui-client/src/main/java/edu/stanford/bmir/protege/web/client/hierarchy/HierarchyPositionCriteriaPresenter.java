@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyPositionCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.InstanceOfCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

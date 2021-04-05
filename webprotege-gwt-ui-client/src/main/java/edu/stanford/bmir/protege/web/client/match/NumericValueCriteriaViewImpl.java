@@ -15,8 +15,6 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.NumericPredicate;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.stream.Stream;
 
 /**
  * Matthew Horridge

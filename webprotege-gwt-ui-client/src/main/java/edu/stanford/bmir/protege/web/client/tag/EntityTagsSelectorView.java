@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import java.util.List;
 

@@ -1,21 +1,17 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.AddTokenCallback;
-import edu.stanford.bmir.protege.web.client.library.tokenfield.AddTokenPrompt;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenFieldPresenter;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraphFilter;
 import edu.stanford.bmir.protege.web.shared.viz.FilterName;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

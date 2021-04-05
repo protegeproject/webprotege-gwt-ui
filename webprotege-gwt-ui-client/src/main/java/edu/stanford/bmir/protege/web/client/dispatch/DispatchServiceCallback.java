@@ -7,8 +7,6 @@ import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
-import javax.inject.Inject;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

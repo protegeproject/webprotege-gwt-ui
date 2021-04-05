@@ -2,18 +2,15 @@ package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.color.ColorSwatchPresenter;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
-import edu.stanford.bmir.protege.web.client.color.ColorSwatchPresenter;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -23,11 +20,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle.QUESTION;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 

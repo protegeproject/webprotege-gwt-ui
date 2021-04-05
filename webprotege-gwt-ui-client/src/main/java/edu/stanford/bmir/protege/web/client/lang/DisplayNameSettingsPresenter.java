@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 
 import javax.annotation.Nonnull;

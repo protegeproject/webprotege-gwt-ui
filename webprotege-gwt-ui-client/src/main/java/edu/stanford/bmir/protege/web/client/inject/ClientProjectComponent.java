@@ -8,11 +8,11 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPrese
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsPresenter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**

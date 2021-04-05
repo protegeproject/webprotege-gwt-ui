@@ -14,7 +14,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBox;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

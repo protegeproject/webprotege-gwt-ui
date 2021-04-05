@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;

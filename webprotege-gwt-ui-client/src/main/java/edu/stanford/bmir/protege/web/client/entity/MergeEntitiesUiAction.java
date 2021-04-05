@@ -7,12 +7,10 @@ import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflow;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflowFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;

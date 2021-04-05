@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.gwt.user.client.rpc.InvocationException;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;

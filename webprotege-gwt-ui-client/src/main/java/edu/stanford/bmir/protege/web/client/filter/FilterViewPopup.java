@@ -4,7 +4,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 
 import javax.annotation.Nonnull;
 
