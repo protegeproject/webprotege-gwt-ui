@@ -109,11 +109,11 @@ public class WatchPresenter {
             case NONE_SELECTED:
                 return Optional.empty();
             case ENTITY_SELECTED:
-                return Optional.of(new Watch(loggedInUserProvider.getCurrentUserId(),
+                return Optional.of(Watch.create(loggedInUserProvider.getCurrentUserId(),
                                              entity,
                                              WatchType.ENTITY));
             case BRANCH_SELECTED:
-                return Optional.of(new Watch(loggedInUserProvider.getCurrentUserId(),
+                return Optional.of(Watch.create(loggedInUserProvider.getCurrentUserId(),
                                              entity,
                                              WatchType.BRANCH));
             default:
