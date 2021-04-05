@@ -24,7 +24,7 @@ public interface ApplicationSettingsChecker {
      * Checks to see whether the application settings is properly configured.
      * @return true if the application settings is properly configured, otherwise false.
      */
-    public boolean isProperlyConfigured();
+    boolean isProperlyConfigured();
 
     /**
      * Gets a list of configuration error messages.
@@ -32,5 +32,5 @@ public interface ApplicationSettingsChecker {
      * then the list will be empty.
      */
     @Nonnull
-    public List<String> getConfigurationErrors();
+    List<String> getConfigurationErrors();
 }
