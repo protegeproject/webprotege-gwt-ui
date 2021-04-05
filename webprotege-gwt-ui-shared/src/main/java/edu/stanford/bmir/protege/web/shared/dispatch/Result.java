@@ -20,7 +20,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "result")
 @JsonSubTypes({
         @Type(AddEntityCommentResult.class),
-        @Type(AddProjectTagResult.class)
+        @Type(AddProjectTagResult.class),
+        @Type(BatchResult.class)
 })
 public interface Result extends IsSerializable {
 

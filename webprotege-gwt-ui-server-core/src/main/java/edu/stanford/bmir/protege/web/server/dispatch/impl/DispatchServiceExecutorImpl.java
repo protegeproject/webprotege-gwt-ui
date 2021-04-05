@@ -31,7 +31,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
             // TODO: Call Service
-            return new DispatchServiceResultContainer(new Result() {});
+            return DispatchServiceResultContainer.create(new Result() {});
         } catch (PermissionDeniedException e) {
             throw e;
         } catch (Exception e) {
