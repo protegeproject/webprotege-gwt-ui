@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
 
 
 /**
@@ -12,6 +16,10 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  *     The basic interface for results which are returned from the dispatch service
  * </p>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "result")
+@JsonSubTypes({
+        @Type(AddEntityCommentResult.class)
+})
 public interface Result extends IsSerializable {
 
 }
