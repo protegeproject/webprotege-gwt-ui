@@ -448,7 +448,7 @@
     </profiles>
 
     <modules>
-        <module>webprotege-shared</module>
+        <module>webprotege-gwt-ui-shared</module>
         <module>webprotege-server-core</module>
         <module>webprotege-server</module>
         <module>webprotege-gwt-ui-client</module>
