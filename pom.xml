@@ -452,6 +452,6 @@
         <module>webprotege-server-core</module>
         <module>webprotege-server</module>
         <module>webprotege-gwt-ui-client</module>
-        <module>webprotege-shared-core</module>
+        <module>webprotege-gwt-ui-shared-core</module>
     </modules>
 </project>
