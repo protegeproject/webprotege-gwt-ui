@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
@@ -24,5 +25,11 @@ public class ChangePassword_TestCase {
                 new Salt(new byte []{1, 2, 3, 4})
         );
         JsonSerializationTestUtil.testSerialization(action, Action.class);
+    }
+
+    @Test
+    public void shouldSerializeResult() throws IOException {
+        var result = new ChangePasswordResult(AuthenticationResponse.SUCCESS);
+        JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
