@@ -20,10 +20,7 @@ They do not need to download or install any software. We encourage end-users to 
 
 https://webprotege.stanford.edu
 
-If you have downloaded the webprotege war file from GitHub, and would like to deploy it on your own server,
-please follow the instructions at:
-
-https://github.com/protegeproject/webprotege/wiki/WebProtégé-4.0.0-beta-x-Installation
+This repository houses the code for the WebProtege GWT User Interface.
 
 Building
 --------
@@ -32,7 +29,7 @@ To build WebProtégé from source
 
 1) Clone the github repository
    ```
-   git clone https://github.com/protegeproject/webprotege.git
+   git clone https://github.com/protegeproject/webprotege-gwt-ui.git
    ```
 2) Open a terminal in the directory where you clone the repository to
 3) Use maven to package WebProtégé
@@ -54,38 +51,6 @@ To run WebProtégé in SuperDev Mode using maven
     ```
     mvn -Denv=dev tomcat7:run
     ```
-3) Browse to WebProtégé in a Web browser by navigating to [http://localhost:8080](http://localhost:8080)
+3) Start the WebProtégé Backend
 
-Running from Docker
--------------------
-
-To run WebProtégé using Docker containers:
-
-1. Enter this following command in the Terminal to start the docker container in the background
-
-   ```bash
-   docker-compose up -d
-   ```
-
-2. Create the admin user (follow the questions prompted to provider username, email and password)
-
-   ```bash
-   docker exec -it webprotege java -jar /webprotege-cli.jar create-admin-account
-   ```
-
-3. Browse to WebProtégé Settings page in a Web browser by navigating to [http://localhost:5000/#application/settings](http://localhost:5000/#application/settings)
-   1. Define the `System notification email address` and `application host URL`
-   2. Enable `User creation`, `Project creation` and `Project import`
-
-To stop WebProtégé and MongoDB:
-
-   ```bash
-   docker-compose down
-   ```
-
-Sharing the volumes used by the WebProtégé app and MongoDB allow to keep persistent data, even when the containers stop. Default shared data storage:
-
-* WebProtégé will store its data in the source code folder at `./.protegedata/protege` where you run `docker-compose`
-* MongoDB will store its data in the source code folder at `./.protegedata/mongodb` where you run `docker-compose`
-
-> Path to the shared volumes can be changed in the `docker-compose.yml` file.
+4) Browse to WebProtégé in a Web browser by navigating to [http://localhost:8080](http://localhost:8080)
