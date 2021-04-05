@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -23,7 +25,12 @@ public class ChangePasswordAction extends AbstractAuthenticationAction<ChangePas
     private ChangePasswordAction() {
     }
 
-    public ChangePasswordAction(UserId userId, ChapSessionId chapSessionId, ChapResponse chapResponse, SaltedPasswordDigest newPassword, Salt newSalt) {
+    @JsonCreator
+    public ChangePasswordAction(@JsonProperty("userId") UserId userId,
+                                @JsonProperty("chapSessionId") ChapSessionId chapSessionId,
+                                @JsonProperty("chapResponse") ChapResponse chapResponse,
+                                @JsonProperty("newPassword") SaltedPasswordDigest newPassword,
+                                @JsonProperty("newSalt") Salt newSalt) {
         super(userId, chapSessionId, chapResponse);
         this.newPassword = checkNotNull(newPassword);
         this.salt = checkNotNull(newSalt);
