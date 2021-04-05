@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.InvalidRequestException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -67,12 +68,7 @@ public class RequestValidationResult {
     public String getInvalidMessage() {
         if(exception.isPresent()) {
             String message = exception.get().getMessage();
-            if(message == null) {
-                return "";
-            }
-            else {
-                return message;
-            }
+            return Objects.requireNonNullElse(message, "");
         }
         else {
             return "";
