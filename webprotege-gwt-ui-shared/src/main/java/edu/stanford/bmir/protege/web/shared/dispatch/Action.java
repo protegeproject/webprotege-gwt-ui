@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
-import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 
 
 /**
@@ -22,7 +21,6 @@ import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 @JsonSubTypes(value = {
         @Type(value = AddEntityCommentAction.class),
         @Type(value = AddProjectTagAction.class),
-        @Type(value = AddWatchAction.class)
 })
 public interface Action<R extends Result> extends IsSerializable {
 }
