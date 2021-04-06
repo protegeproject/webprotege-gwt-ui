@@ -58,7 +58,7 @@ public class FormsManagerService {
     public void deleteForm(@Nonnull FormId formId,
                            @Nonnull HasBusy busyIndicator,
                            @Nonnull Runnable completeHandler) {
-        dispatch.execute(new DeleteFormAction(projectId, formId),
+        dispatch.execute(DeleteFormAction.get(projectId, formId),
                          busyIndicator,
                          result -> completeHandler.run());
     }

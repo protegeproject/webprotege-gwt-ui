@@ -201,7 +201,7 @@ public class ApplicationSettingsPresenter implements Presenter {
     }
 
     private void rebuildPermissions() {
-        dispatchServiceManager.execute(new RebuildPermissionsAction(),
+        dispatchServiceManager.execute(RebuildPermissionsAction.get(),
                                        new DispatchServiceCallbackWithProgressDisplay<RebuildPermissionsResult>(errorDisplay, progressDisplay) {
                                            @Override
                                            public String getProgressDisplayTitle() {
