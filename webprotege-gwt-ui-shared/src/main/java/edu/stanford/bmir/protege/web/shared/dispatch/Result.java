@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
 import edu.stanford.bmir.protege.web.shared.form.DeleteFormResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
-import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
-import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
-import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadResult;
-import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
@@ -61,7 +58,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(DeleteEntitiesResult.class),
         @Type(DeleteEntityCommentResult.class),
         @Type(DeleteFormResult.class),
-        @Type(EditAnnotationsResult.class)
+        @Type(EditAnnotationsResult.class),
+        @Type(EditCommentResult.class)
 })
 public interface Result extends IsSerializable {
 
