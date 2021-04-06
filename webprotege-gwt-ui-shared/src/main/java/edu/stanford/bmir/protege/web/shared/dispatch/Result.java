@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResu
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadResult;
+import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
@@ -55,7 +56,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(LogOutUserResult.class),
         @Type(RebuildPermissionsResult.class),
         @Type(CreateUserAccountResult.class),
-        @Type(DeleteEntitiesResult.class)
+        @Type(DeleteEntitiesResult.class),
+        @Type(DeleteEntityCommentResult.class)
 })
 public interface Result extends IsSerializable {
 

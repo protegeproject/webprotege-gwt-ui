@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectA
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
@@ -56,7 +57,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = LogOutUserAction.class),
         @Type(value = RebuildPermissionsAction.class),
         @Type(value = CreateUserAccountAction.class),
-        @Type(value = DeleteEntitiesAction.class)
+        @Type(value = DeleteEntitiesAction.class),
+        @Type(value = DeleteEntityCommentAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
