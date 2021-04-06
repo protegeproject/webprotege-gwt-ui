@@ -125,7 +125,7 @@ public class ApplicationSettingsPresenter implements Presenter {
             settingsPresenter.addSection(messages.applicationSettings_EmailNotifications()).setWidget(emailNotificationSettingsView);
             settingsPresenter.setApplySettingsHandler(this::applySettings);
             settingsPresenter.setCancelSettingsHandler(this::cancelSettings);
-            dispatchServiceManager.execute(new GetApplicationSettingsAction(),
+            dispatchServiceManager.execute(GetApplicationSettingsAction.create(),
                                            result -> displaySettings(result.getApplicationSettings()));
         }
         // TODO:

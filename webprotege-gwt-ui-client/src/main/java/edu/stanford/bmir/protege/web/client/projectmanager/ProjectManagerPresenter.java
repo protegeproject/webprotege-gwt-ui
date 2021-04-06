@@ -196,9 +196,9 @@ public class ProjectManagerPresenter implements Presenter {
     }
 
     private void reloadFromServer(Optional<ProjectId> selectId) {
-        GetAvailableProjectsAction action = new GetAvailableProjectsAction();
+        GetAvailableProjectsAction action = GetAvailableProjectsAction.create();
         dispatchServiceManager.execute(action, result -> {
-            availableProjectsCache.setAvailableProjects(result.getDetails());
+            availableProjectsCache.setAvailableProjects(result.getAvailableProjects());
             applyFilters();
             selectId.ifPresent(projectManagerView::setSelectedProject);
         });
