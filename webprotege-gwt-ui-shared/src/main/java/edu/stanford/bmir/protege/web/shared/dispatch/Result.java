@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
@@ -59,7 +60,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(CreateUserAccountResult.class),
         @Type(DeleteEntitiesResult.class),
         @Type(DeleteEntityCommentResult.class),
-        @Type(DeleteFormResult.class)
+        @Type(DeleteFormResult.class),
+        @Type(EditAnnotationsResult.class)
 })
 public interface Result extends IsSerializable {
 

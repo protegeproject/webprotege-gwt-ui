@@ -69,7 +69,7 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
     @Nonnull
     @Override
     public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
-        return Optional.of(new EditAnnotationsAction(projectId,
+        return Optional.of(EditAnnotationsAction.create(projectId,
                                                      entities,
                                                      view.getOperation(),
                                                      view.getAnnotationProperty(),
