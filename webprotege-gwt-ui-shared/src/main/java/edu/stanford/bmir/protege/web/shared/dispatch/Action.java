@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
 
@@ -37,7 +38,9 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
         @Type(value = CreateClassesAction.class),
         @Type(value = CreateDataPropertiesAction.class),
         @Type(value = CreateNamedIndividualsAction.class),
-        @Type(value = CreateObjectPropertiesAction.class)
+        @Type(value = CreateObjectPropertiesAction.class),
+        @Type(value = CreateEntityDiscussionThreadAction.class)
+
 })
 public interface Action<R extends Result> extends IsSerializable {
 }

@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -22,7 +19,6 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
-import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.getDiscussionThreads;
@@ -179,7 +175,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public void createThread() {
         displayedEntity.ifPresent(targetEntity -> {
             Consumer<String> handler = body -> dispatch.execute(
-                    createEntityDiscussionThread(projectId, targetEntity, body),
+                    CreateEntityDiscussionThreadAction.create(projectId, targetEntity, body),
                     result -> displayThreads(result.getThreads()));
             commentEditorModal.showModal("", handler);
         });

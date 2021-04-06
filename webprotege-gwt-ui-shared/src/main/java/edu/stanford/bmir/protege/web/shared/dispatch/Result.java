@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadResult;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 
@@ -39,6 +41,7 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
         @Type(CreateDataPropertiesResult.class),
         @Type(CreateNamedIndividualsResult.class),
         @Type(CreateObjectPropertiesResult.class),
+        @Type(CreateEntityDiscussionThreadResult.class)
 })
 public interface Result extends IsSerializable {
 

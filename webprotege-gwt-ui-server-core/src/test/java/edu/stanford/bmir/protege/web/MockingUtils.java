@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.*;
@@ -51,6 +55,10 @@ public class MockingUtils {
 
     public static OWLDatatype mockOWLDatatype() {
         return new OWLDatatypeImpl(mockIRI());
+    }
+
+    public static <E extends WebProtegeEvent<?>> EventList<E> mockEventList() {
+        return EventList.create(EventTag.get(2), ImmutableList.of(), EventTag.get(2));
     }
 
     public HasSignature mockHasSignature(OWLEntity ... entities) {

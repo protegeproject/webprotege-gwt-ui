@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -44,11 +46,12 @@ public class EntityDiscussionThread implements IsSerializable {
 
     private List<Comment> comments;
 
-    @Inject
-    public EntityDiscussionThread(@Nonnull ThreadId id,
-                                  @Nonnull ProjectId projectId,
-                                  @Nonnull OWLEntity entity,
-                                  @Nonnull Status status, @Nonnull ImmutableList<Comment> comments) {
+    @JsonCreator
+    public EntityDiscussionThread(@JsonProperty("id") @Nonnull ThreadId id,
+                                  @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                  @JsonProperty("entity") @Nonnull OWLEntity entity,
+                                  @JsonProperty("status") @Nonnull Status status,
+                                  @JsonProperty("comments") @Nonnull ImmutableList<Comment> comments) {
         this.id = checkNotNull(id);
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
