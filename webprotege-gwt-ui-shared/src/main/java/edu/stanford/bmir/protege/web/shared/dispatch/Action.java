@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
 import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
@@ -54,7 +55,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
         @Type(value = RebuildPermissionsAction.class),
-        @Type(value = CreateUserAccountAction.class)
+        @Type(value = CreateUserAccountAction.class),
+        @Type(value = DeleteEntitiesAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
