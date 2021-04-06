@@ -145,23 +145,23 @@ public class DefaultCreateEntitiesPresenter {
                                                                              String enteredText) {
         if(entityType.equals(EntityType.CLASS)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return new CreateClassesAction(projectId, enteredText, view.getLangTag(), parentClses);
+            return CreateClassesAction.create(projectId, enteredText, view.getLangTag(), parentClses);
         }
         else if(entityType.equals(EntityType.OBJECT_PROPERTY)) {
             ImmutableSet<OWLObjectProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopObjectProperty());
-            return new CreateObjectPropertiesAction(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateObjectPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
         }
         else if(entityType.equals(EntityType.DATA_PROPERTY)) {
             ImmutableSet<OWLDataProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopDataProperty());
-            return new CreateDataPropertiesAction(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateDataPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
         }
         else if(entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
             ImmutableSet<OWLAnnotationProperty> parentProperties = getParentsSet(parent, ImmutableSet::of);
-            return new CreateAnnotationPropertiesAction(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateAnnotationPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
         }
         else if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return new CreateNamedIndividualsAction(projectId, parentClses, enteredText, view.getLangTag());
+            return CreateNamedIndividualsAction.create(projectId, enteredText, view.getLangTag(), parentClses);
         }
         else {
             throw new RuntimeException("Unsupported entity type: " + entityType);

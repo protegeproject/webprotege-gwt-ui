@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableCollection;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -15,15 +19,16 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-09-30
  */
-public class CreateEntityFromFormDataResult extends AbstractCreateEntityResult<OWLEntity> {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("CreateEntityFromFormData")
+public abstract class CreateEntityFromFormDataResult implements AbstractCreateEntityResult<OWLEntity> {
 
-    public CreateEntityFromFormDataResult(@Nonnull ProjectId projectId,
+    @JsonCreator
+    public static CreateEntityFromFormDataResult create(@Nonnull ProjectId projectId,
                                           @Nonnull EventList<ProjectEvent<?>> eventList,
                                           ImmutableCollection<EntityNode> entities) {
-        super(projectId, eventList, entities);
-    }
 
-    @GwtSerializationConstructor
-    private CreateEntityFromFormDataResult() {
+        return new AutoValue_CreateEntityFromFormDataResult(projectId, eventList, entities);
     }
 }

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserResult;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
@@ -32,7 +33,12 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
         @Type(ChangePasswordResult.class),
         @Type(CheckManchesterSyntaxFrameResult.class),
         @Type(ComputeProjectMergeResult.class),
-        @Type(CopyFormDescriptorsFromProjectResult.class)
+        @Type(CopyFormDescriptorsFromProjectResult.class),
+        @Type(CreateAnnotationPropertiesResult.class),
+        @Type(CreateClassesResult.class),
+        @Type(CreateDataPropertiesResult.class),
+        @Type(CreateNamedIndividualsResult.class),
+        @Type(CreateObjectPropertiesResult.class),
 })
 public interface Result extends IsSerializable {
 
