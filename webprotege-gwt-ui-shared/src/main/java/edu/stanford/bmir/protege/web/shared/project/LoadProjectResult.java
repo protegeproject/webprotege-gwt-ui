@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -16,11 +19,13 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("LoadProject")
 public abstract class LoadProjectResult implements Result, HasUserId, HasProjectId {
 
-    public static LoadProjectResult get(@Nonnull ProjectId projectId,
-                                        @Nonnull UserId loadedBy,
-                                        @Nonnull ProjectDetails projectDetails) {
+    @JsonCreator
+    public static LoadProjectResult get(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                        @JsonProperty("userId") @Nonnull UserId loadedBy,
+                                        @JsonProperty("projectDetails") @Nonnull ProjectDetails projectDetails) {
         return new AutoValue_LoadProjectResult(projectId,
                                                loadedBy,
                                                projectDetails);

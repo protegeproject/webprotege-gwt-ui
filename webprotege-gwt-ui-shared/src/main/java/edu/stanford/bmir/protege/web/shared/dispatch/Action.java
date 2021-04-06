@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
 
 
@@ -44,7 +45,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
         @Type(value = CreateEntityDiscussionThreadAction.class),
         @Type(value = CreateEntityFromFormDataAction.class),
         @Type(value = CreateNewProjectAction.class),
-        @Type(value = GetChapSessionAction.class)
+        @Type(value = GetChapSessionAction.class),
+        @Type(value = LoadProjectAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
