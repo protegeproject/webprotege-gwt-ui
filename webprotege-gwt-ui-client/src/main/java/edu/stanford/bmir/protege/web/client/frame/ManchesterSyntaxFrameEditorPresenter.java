@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -178,7 +179,8 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         }
         else {
             String newRendering = editor.getValue().get();
-            dsm.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
+            dsm.execute(CheckManchesterSyntaxFrameAction.create(projectId, currentSubject.get(), pristineValue.get(), newRendering,
+                                                                ImmutableSet.copyOf(freshEntities)),
                         new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>(errorDisplay) {
 
                         @Override

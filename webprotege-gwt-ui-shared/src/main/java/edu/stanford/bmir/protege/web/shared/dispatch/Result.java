@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserResult;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
+import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 
@@ -20,13 +21,14 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
  *     The basic interface for results which are returned from the dispatch service
  * </p>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "result")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "action")
 @JsonSubTypes({
         @Type(AddEntityCommentResult.class),
         @Type(AddProjectTagResult.class),
         @Type(AuthenticateUserResult.class),
         @Type(BatchResult.class),
-        @Type(ChangePasswordResult.class)
+        @Type(ChangePasswordResult.class),
+        @Type(CheckManchesterSyntaxFrameResult.class)
 })
 public interface Result extends IsSerializable {
 
