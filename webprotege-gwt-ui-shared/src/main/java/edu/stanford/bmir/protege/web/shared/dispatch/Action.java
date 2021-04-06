@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.EditCommentAction;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
+import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
@@ -66,7 +67,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = DeleteFormAction.class),
         @Type(value = EditAnnotationsAction.class),
         @Type(value = EditCommentAction.class),
-        @Type(value = ExistingOntologyMergeAddAction.class)
+        @Type(value = ExistingOntologyMergeAddAction.class),
+        @Type(value = GetAllOntologiesAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {

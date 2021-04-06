@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddResult;
+import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
+import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
@@ -62,7 +64,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(DeleteFormResult.class),
         @Type(EditAnnotationsResult.class),
         @Type(EditCommentResult.class),
-        @Type(ExistingOntologyMergeAddResult.class)
+        @Type(ExistingOntologyMergeAddResult.class),
+        @Type(GetAllOntologiesResult.class)
 })
 public interface Result extends IsSerializable {
 
