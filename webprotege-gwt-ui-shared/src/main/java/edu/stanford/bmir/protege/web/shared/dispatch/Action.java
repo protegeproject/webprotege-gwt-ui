@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
+import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 
 
 /**
@@ -46,7 +47,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
         @Type(value = CreateEntityFromFormDataAction.class),
         @Type(value = CreateNewProjectAction.class),
         @Type(value = GetChapSessionAction.class),
-        @Type(value = LoadProjectAction.class)
+        @Type(value = LoadProjectAction.class),
+        @Type(value = LogOutUserAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
