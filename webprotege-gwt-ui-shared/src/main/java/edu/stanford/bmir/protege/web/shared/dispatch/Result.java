@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 
@@ -51,7 +52,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(GetChapSessionResult.class),
         @Type(LoadProjectResult.class),
         @Type(LogOutUserResult.class),
-        @Type(RebuildPermissionsResult.class)
+        @Type(RebuildPermissionsResult.class),
+        @Type(CreateUserAccountResult.class)
 })
 public interface Result extends IsSerializable {
 

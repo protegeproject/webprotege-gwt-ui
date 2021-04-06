@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 
 
@@ -51,7 +53,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = GetChapSessionAction.class),
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
-        @Type(value = RebuildPermissionsAction.class)
+        @Type(value = RebuildPermissionsAction.class),
+        @Type(value = CreateUserAccountAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
