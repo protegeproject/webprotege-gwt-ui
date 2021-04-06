@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
+import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
@@ -42,7 +43,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
         @Type(value = CreateObjectPropertiesAction.class),
         @Type(value = CreateEntityDiscussionThreadAction.class),
         @Type(value = CreateEntityFromFormDataAction.class),
-        @Type(value = CreateNewProjectAction.class)
+        @Type(value = CreateNewProjectAction.class),
+        @Type(value = GetChapSessionAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
-import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserResult;
-import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
@@ -44,7 +42,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
         @Type(CreateObjectPropertiesResult.class),
         @Type(CreateEntityDiscussionThreadResult.class),
         @Type(CreateEntityFromFormDataResult.class),
-        @Type(CreateNewProjectResult.class)
+        @Type(CreateNewProjectResult.class),
+        @Type(GetChapSessionResult.class)
 })
 public interface Result extends IsSerializable {
 
