@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserResult;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 
 
@@ -28,7 +29,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
         @Type(AuthenticateUserResult.class),
         @Type(BatchResult.class),
         @Type(ChangePasswordResult.class),
-        @Type(CheckManchesterSyntaxFrameResult.class)
+        @Type(CheckManchesterSyntaxFrameResult.class),
+        @Type(ComputeProjectMergeResult.class)
 })
 public interface Result extends IsSerializable {
 

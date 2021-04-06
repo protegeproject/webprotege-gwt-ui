@@ -54,7 +54,7 @@ public class MergeUploadedProjectWorkflow {
 
 
     private void computeMerge(final ProjectId projectId, final DocumentId uploadedProjectDocumentId) {
-        dispatchServiceManager.execute(new ComputeProjectMergeAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<ComputeProjectMergeResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(ComputeProjectMergeAction.create(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<ComputeProjectMergeResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading and merging ontologies";
