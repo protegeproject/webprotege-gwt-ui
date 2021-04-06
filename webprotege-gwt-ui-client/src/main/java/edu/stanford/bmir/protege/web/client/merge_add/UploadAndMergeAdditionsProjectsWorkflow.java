@@ -67,7 +67,7 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     }
 
     private void getOntologies(ProjectId projectId, DocumentId documentId){
-        dispatchServiceManager.execute(new GetAllOntologiesAction(projectId, documentId), new DispatchServiceCallbackWithProgressDisplay<GetAllOntologiesResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(GetAllOntologiesAction.create(projectId, documentId), new DispatchServiceCallbackWithProgressDisplay<GetAllOntologiesResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading Ontologies";
