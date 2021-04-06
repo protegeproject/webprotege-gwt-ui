@@ -21,10 +21,10 @@ import java.util.List;
 @JsonTypeName("ComputeProjectMerge")
 public abstract class ComputeProjectMergeResult implements Result {
 
-    public abstract List<DiffElement<String, SafeHtml>> getDiff();
+    public abstract List<DiffElement<String, String>> getDiff();
 
     @JsonCreator
-    public static ComputeProjectMergeResult create(@JsonProperty("diff") List<DiffElement<String, SafeHtml>> diff) {
+    public static ComputeProjectMergeResult create(@JsonProperty("diff") List<DiffElement<String, String>> diff) {
         return new AutoValue_ComputeProjectMergeResult(diff);
     }
 }

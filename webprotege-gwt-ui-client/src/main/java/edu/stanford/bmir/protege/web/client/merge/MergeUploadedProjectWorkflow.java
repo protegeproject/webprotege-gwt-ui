@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -74,8 +76,13 @@ public class MergeUploadedProjectWorkflow {
 
     private void confirmMerge(ComputeProjectMergeResult mergeResult, final ProjectId projectId, final DocumentId documentId) {
         final ApplyChangesView view = new ApplyChangesViewImpl();
-        List<DiffElement<String, SafeHtml>> diff = mergeResult.getDiff();
-        view.setDiff(diff);
+        List<DiffElement<String, String>> diff = mergeResult.getDiff();
+        List<DiffElement<String, SafeHtml>> htmlDiff = diff.stream()
+            .map(element -> new DiffElement<>(element.getDiffOperation(),
+                                            element.getSourceDocument(),
+                                            new SafeHtmlBuilder().appendHtmlConstant(element.getLineElement()).toSafeHtml()))
+            .collect(Collectors.toList());
+        view.setDiff(htmlDiff);
         if(diff.isEmpty()) {
             view.displayEmptyDiffMessage();
         }
