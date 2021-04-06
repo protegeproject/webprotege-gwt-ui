@@ -62,6 +62,8 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addDeserializer(OWLLiteral.class, new OWLLiteralDeserializer(dataFactory));
         module.addDeserializer(PrimitiveFormControlData.class, new FormControlValueDeserializer(dataFactory));
         module.addSerializer(IRI.class, new IriSerializer());
+        module.addSerializer(OWLOntologyID.class, new OWLOntologyIDSerializer());
+        module.addDeserializer(OWLOntologyID.class, new OWLOntologyIDDeserializer());
         mapper.registerModule(module);
 
         return mapper;

@@ -62,7 +62,7 @@ public class ExistingOntologyMergeProjectWorkflow {
     }
 
     private void mergeIntoExistingOntology(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> selectedOntologies, OWLOntologyID targetOntology){
-        dispatchServiceManager.execute(new ExistingOntologyMergeAddAction(projectId, documentId, selectedOntologies, targetOntology), new DispatchServiceCallbackWithProgressDisplay<ExistingOntologyMergeAddResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(ExistingOntologyMergeAddAction.create(projectId, documentId, selectedOntologies, targetOntology), new DispatchServiceCallbackWithProgressDisplay<ExistingOntologyMergeAddResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading and Merging Ontologies";

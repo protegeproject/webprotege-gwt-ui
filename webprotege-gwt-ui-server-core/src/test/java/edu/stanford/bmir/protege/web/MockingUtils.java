@@ -61,6 +61,10 @@ public class MockingUtils {
         return EventList.create(EventTag.get(2), ImmutableList.of(), EventTag.get(2));
     }
 
+    public static OWLOntologyID mockOWLOntologyID() {
+        return new OWLOntologyID(IRI.create("http://example.org/test", "http://example.org/test/v1"));
+    }
+
     public HasSignature mockHasSignature(OWLEntity ... entities) {
         HasSignature hasSignature = mock(HasSignature.class);
         when(hasSignature.getSignature()).thenReturn(new HashSet<OWLEntity>(Arrays.asList(entities)));
