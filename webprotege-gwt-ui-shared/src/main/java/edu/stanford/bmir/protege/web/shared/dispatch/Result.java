@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
@@ -65,7 +66,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(EditAnnotationsResult.class),
         @Type(EditCommentResult.class),
         @Type(ExistingOntologyMergeAddResult.class),
-        @Type(GetAllOntologiesResult.class)
+        @Type(GetAllOntologiesResult.class),
+        @Type(GetApplicationSettingsResult.class)
 })
 public interface Result extends IsSerializable {
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticateUserAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
 import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
@@ -68,7 +69,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = EditAnnotationsAction.class),
         @Type(value = EditCommentAction.class),
         @Type(value = ExistingOntologyMergeAddAction.class),
-        @Type(value = GetAllOntologiesAction.class)
+        @Type(value = GetAllOntologiesAction.class),
+        @Type(value = GetApplicationSettingsAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
