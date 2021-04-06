@@ -23,9 +23,9 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
 @JsonSubTypes(value = {
         @Type(value = AddEntityCommentAction.class),
         @Type(value = AddProjectTagAction.class),
+        @Type(value = AuthenticateUserAction.class),
         @Type(value = BatchAction.class),
-        @Type(value = ChangePasswordAction.class),
-        @Type(value = AuthenticateUserAction.class)
+        @Type(value = ChangePasswordAction.class)
 })
 public interface Action<R extends Result> extends IsSerializable {
 }
