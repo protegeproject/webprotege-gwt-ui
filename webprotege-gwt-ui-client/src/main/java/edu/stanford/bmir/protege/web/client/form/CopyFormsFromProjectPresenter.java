@@ -69,7 +69,7 @@ public class CopyFormsFromProjectPresenter {
     public void copySelectedForms(@Nonnull FormsCopiedHandler formsCopiedHandler) {
         view.getSelectedProjectId()
             .ifPresent(projectIdToCopyFrom -> {
-                dispatch.execute(new CopyFormDescriptorsFromProjectAction(projectId,
+                dispatch.execute(CopyFormDescriptorsFromProjectAction.create(projectId,
                                                                           projectIdToCopyFrom,
                                                                           getSelectedFormIds()),
                                  result -> handleFormsCopied(formsCopiedHandler, result));
