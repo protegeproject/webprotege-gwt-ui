@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadResult;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
+import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 
 
@@ -41,7 +42,9 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
         @Type(CreateDataPropertiesResult.class),
         @Type(CreateNamedIndividualsResult.class),
         @Type(CreateObjectPropertiesResult.class),
-        @Type(CreateEntityDiscussionThreadResult.class)
+        @Type(CreateEntityDiscussionThreadResult.class),
+        @Type(CreateEntityFromFormDataResult.class),
+        @Type(CreateNewProjectResult.class)
 })
 public interface Result extends IsSerializable {
 
