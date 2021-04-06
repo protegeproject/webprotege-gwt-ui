@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -25,9 +26,9 @@ import javax.annotation.Nonnull;
 public abstract class CreateEntityFromFormDataResult implements AbstractCreateEntityResult<OWLEntity> {
 
     @JsonCreator
-    public static CreateEntityFromFormDataResult create(@Nonnull ProjectId projectId,
-                                          @Nonnull EventList<ProjectEvent<?>> eventList,
-                                          ImmutableCollection<EntityNode> entities) {
+    public static CreateEntityFromFormDataResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                        @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList,
+                                                        @JsonProperty("entities") ImmutableCollection<EntityNode> entities) {
 
         return new AutoValue_CreateEntityFromFormDataResult(projectId, eventList, entities);
     }

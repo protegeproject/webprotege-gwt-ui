@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
@@ -37,6 +39,7 @@ public class FormDescriptor implements IsSerializable {
         this.elements = new ArrayList<>();
     }
 
+    @JsonCreator
     public FormDescriptor(FormId id,
                           LanguageMap label,
                           List<FormFieldDescriptor> formFieldDescriptors,

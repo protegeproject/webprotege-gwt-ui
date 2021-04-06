@@ -141,7 +141,7 @@ public class CreateEntityFormPresenter {
             return;
         }
         formPresenter.getFormData().ifPresent(formData -> {
-            dispatch.execute(new CreateEntityFromFormDataAction(projectId, entityType, freshEntityIri, formData),
+            dispatch.execute(CreateEntityFromFormDataAction.create(projectId, entityType, freshEntityIri, formData),
                              result -> {
                                  entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
                                  closer.closeModal();

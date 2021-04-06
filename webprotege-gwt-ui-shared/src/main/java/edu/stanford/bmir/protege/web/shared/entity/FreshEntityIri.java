@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Splitter;
@@ -63,11 +65,12 @@ public abstract class FreshEntityIri {
      *                   IRIs are annotation property IRIs.  For datatypes, parent IRIs are datatype IRIs.
      * @return A fresh entity IRI containing the supplied information.
      */
+    @JsonCreator
     @Nonnull
-    public static FreshEntityIri get(@Nonnull String suppliedName,
-                                     @Nonnull String langTag,
-                                     @Nonnull String discriminator,
-                                     @Nonnull ImmutableSet<IRI> parentIris) {
+    public static FreshEntityIri get(@JsonProperty("suppliedName") @Nonnull String suppliedName,
+                                     @JsonProperty("langTag") @Nonnull String langTag,
+                                     @JsonProperty("discriminator") @Nonnull String discriminator,
+                                     @JsonProperty("parentIris") @Nonnull ImmutableSet<IRI> parentIris) {
         return new AutoValue_FreshEntityIri(suppliedName, langTag, discriminator, parentIris);
     }
 

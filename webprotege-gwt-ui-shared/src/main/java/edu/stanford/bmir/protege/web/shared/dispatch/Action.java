@@ -39,7 +39,8 @@ import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
         @Type(value = CreateDataPropertiesAction.class),
         @Type(value = CreateNamedIndividualsAction.class),
         @Type(value = CreateObjectPropertiesAction.class),
-        @Type(value = CreateEntityDiscussionThreadAction.class)
+        @Type(value = CreateEntityDiscussionThreadAction.class),
+        @Type(value = CreateEntityFromFormDataAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
