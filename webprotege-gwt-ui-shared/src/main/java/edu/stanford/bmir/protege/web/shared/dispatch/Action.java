@@ -14,10 +14,7 @@ import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.DeleteFormAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
-import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
-import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
-import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
-import edu.stanford.bmir.protege.web.shared.issues.EditCommentAction;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
@@ -72,7 +69,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = ExistingOntologyMergeAddAction.class),
         @Type(value = GetAllOntologiesAction.class),
         @Type(value = GetApplicationSettingsAction.class),
-        @Type(value = GetAvailableProjectsAction.class)
+        @Type(value = GetAvailableProjectsAction.class),
+        @Type(value = GetCommentedEntitiesAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {

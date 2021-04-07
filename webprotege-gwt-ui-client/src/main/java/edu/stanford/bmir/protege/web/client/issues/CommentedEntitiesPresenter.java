@@ -135,7 +135,7 @@ public class CommentedEntitiesPresenter {
 
     public void reload() {
         GWT.log("[CommentedEntitiesPresenter] Reloading list data");
-        dispatchServiceManager.execute(new GetCommentedEntitiesAction(projectId,
+        dispatchServiceManager.execute(GetCommentedEntitiesAction.create(projectId,
                                                                       "",
                                                                       of(OPEN, CLOSED),
                                                                       view.getSelectedSortingKey(),

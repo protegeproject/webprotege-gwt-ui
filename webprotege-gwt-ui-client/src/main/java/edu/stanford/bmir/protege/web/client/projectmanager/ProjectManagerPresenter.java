@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -117,7 +118,17 @@ public class ProjectManagerPresenter implements Presenter {
     }
 
     private void handleProjectCreated(ProjectCreatedEvent event) {
-        AvailableProject availableProject = AvailableProject.get(event.getProjectDetails(), true, true, UNKNOWN);
+        ProjectDetails projectDetails = event.getProjectDetails();
+        AvailableProject availableProject = AvailableProject.get(projectDetails.getProjectId(),
+                                                                 projectDetails.getDisplayName(),
+                                                                 projectDetails.getDescription(),
+                                                                 projectDetails.getOwner(),
+                                                                 projectDetails.isInTrash(),
+                                                                 projectDetails.getCreatedAt(),
+                                                                 projectDetails.getCreatedBy(),
+                                                                 projectDetails.getLastModifiedAt(),
+                                                                 projectDetails.getLastModifiedBy(),
+                                                                 true, true, UNKNOWN);
         insertAndSelectAvailableProject(availableProject, event.getProjectId());
     }
 

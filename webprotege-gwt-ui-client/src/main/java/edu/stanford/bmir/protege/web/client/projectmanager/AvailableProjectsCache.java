@@ -19,7 +19,7 @@ public class AvailableProjectsCache {
     private Map<ProjectId, AvailableProject> cache = Maps.newHashMap();
 
     public void add(AvailableProject availableProject) {
-        cache.put(availableProject.getProjectDetails().getProjectId(), availableProject);
+        cache.put(availableProject.getProjectId(), availableProject);
     }
 
     public boolean remove(ProjectId projectId) {
@@ -29,7 +29,7 @@ public class AvailableProjectsCache {
     public void setAvailableProjects(Collection<AvailableProject> availableProjects) {
         cache.clear();
         for(AvailableProject availableProject : availableProjects) {
-            cache.put(availableProject.getProjectDetails().getProjectId(), availableProject);
+            cache.put(availableProject.getProjectId(), availableProject);
         }
     }
 
@@ -47,13 +47,24 @@ public class AvailableProjectsCache {
         if(availableProject == null) {
             return false;
         }
-        if(availableProject.getProjectDetails().isInTrash() == inTrash) {
+        if(availableProject.isInTrash() == inTrash) {
             return false;
         }
-        ProjectDetails replacementDetails = availableProject.getProjectDetails()
-                                                            .withInTrash(inTrash);
-        cache.put(projectId, AvailableProject.get(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
-                                                  availableProject.getLastOpenedAt()));
+        AvailableProject replacement = AvailableProject.get(
+                availableProject.getProjectId(),
+                availableProject.getDisplayName(),
+                availableProject.getDescription(),
+                availableProject.getOwner(),
+                inTrash,
+                availableProject.getCreatedAt(),
+                availableProject.getCreatedBy(),
+                availableProject.getLastModifiedAt(),
+                availableProject.getLastModifiedBy(),
+                availableProject.isDownloadable(),
+                availableProject.isTrashable(),
+                availableProject.getLastOpenedAt()
+        );
+        cache.put(projectId, replacement);
         return true;
     }
 

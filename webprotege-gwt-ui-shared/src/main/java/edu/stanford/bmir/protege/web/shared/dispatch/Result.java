@@ -67,7 +67,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(EditCommentResult.class),
         @Type(ExistingOntologyMergeAddResult.class),
         @Type(GetAllOntologiesResult.class),
-        @Type(GetApplicationSettingsResult.class)
+        @Type(GetApplicationSettingsResult.class),
+        @Type(GetCommentedEntitiesResult.class)
 })
 public interface Result extends IsSerializable {
 
