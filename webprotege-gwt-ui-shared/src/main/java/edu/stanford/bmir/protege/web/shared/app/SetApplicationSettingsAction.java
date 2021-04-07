@@ -20,8 +20,12 @@ public class SetApplicationSettingsAction implements Action<SetApplicationSettin
     private SetApplicationSettingsAction() {
     }
 
-    public SetApplicationSettingsAction(@Nonnull ApplicationSettings applicationSettings) {
+    private SetApplicationSettingsAction(@Nonnull ApplicationSettings applicationSettings) {
         this.applicationSettings = checkNotNull(applicationSettings);
+    }
+
+    public static SetApplicationSettingsAction create(@Nonnull ApplicationSettings applicationSettings) {
+        return new SetApplicationSettingsAction(applicationSettings);
     }
 
     public ApplicationSettings getApplicationSettings() {

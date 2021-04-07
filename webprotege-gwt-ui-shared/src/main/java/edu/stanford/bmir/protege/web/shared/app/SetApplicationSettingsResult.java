@@ -9,4 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetApplicationSettingsResult implements Result {
 
+    private SetApplicationSettingsResult() {
+    }
+
+    public static SetApplicationSettingsResult create() {
+        return new SetApplicationSettingsResult();
+    }
 }

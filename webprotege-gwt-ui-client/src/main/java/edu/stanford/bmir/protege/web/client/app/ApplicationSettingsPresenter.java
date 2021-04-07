@@ -178,7 +178,7 @@ public class ApplicationSettingsPresenter implements Presenter {
                 emailNotificationSettingsView.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
                 parseMaxUploadSize()
         );
-        dispatchServiceManager.execute(new SetApplicationSettingsAction(applicationSettings),
+        dispatchServiceManager.execute(SetApplicationSettingsAction.create(applicationSettings),
                                        result -> messageBox.showMessage("Settings applied",
                                                                         "The application settings have successfully been applied",
                                                                         settingsPresenter::goToNextPlace));
