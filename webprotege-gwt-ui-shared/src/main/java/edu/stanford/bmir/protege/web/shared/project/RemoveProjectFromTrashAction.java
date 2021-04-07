@@ -8,15 +8,19 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class RemoveProjectFromTrashAction implements Action<RemoveProjectsFromTrashResult> {
+public class RemoveProjectFromTrashAction implements Action<RemoveProjectFromTrashResult> {
 
     private ProjectId projectId;
 
     private RemoveProjectFromTrashAction() {
     }
 
-    public RemoveProjectFromTrashAction(ProjectId projectId) {
+    private RemoveProjectFromTrashAction(ProjectId projectId) {
         this.projectId = projectId;
+    }
+
+    public static RemoveProjectFromTrashAction create(ProjectId projectId) {
+        return new RemoveProjectFromTrashAction(projectId);
     }
 
     public ProjectId getProjectId() {

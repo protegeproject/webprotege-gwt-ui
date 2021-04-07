@@ -10,12 +10,16 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class RemoveProjectsFromTrashResult extends AbstractHasEventListResult<ProjectMovedFromTrashEvent> {
+public class RemoveProjectFromTrashResult extends AbstractHasEventListResult<ProjectMovedFromTrashEvent> {
 
-    private RemoveProjectsFromTrashResult() {
+    private RemoveProjectFromTrashResult() {
     }
 
-    public RemoveProjectsFromTrashResult(EventList<ProjectMovedFromTrashEvent> eventList) {
+    private RemoveProjectFromTrashResult(EventList<ProjectMovedFromTrashEvent> eventList) {
         super(eventList);
+    }
+
+    public static RemoveProjectFromTrashResult create(EventList<ProjectMovedFromTrashEvent> eventList) {
+        return new RemoveProjectFromTrashResult(eventList);
     }
 }
