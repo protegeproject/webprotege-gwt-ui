@@ -80,7 +80,7 @@ public class FormEditorPresenter implements Presenter {
     }
 
     public void setFormId(@Nonnull FormId formId) {
-        dispatch.execute(new GetEntityFormDescriptorAction(projectId, formId),
+        dispatch.execute(GetEntityFormDescriptorAction.create(projectId, formId),
                          settingsPresenter,
                          result -> {
                              formDescriptorPresenter.clear();

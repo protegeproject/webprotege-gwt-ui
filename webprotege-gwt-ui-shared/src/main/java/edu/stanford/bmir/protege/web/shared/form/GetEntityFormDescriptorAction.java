@@ -19,14 +19,17 @@ public class GetEntityFormDescriptorAction implements ProjectAction<GetEntityFor
 
     private FormId formId;
 
-    public GetEntityFormDescriptorAction(ProjectId projectId,
-                                         FormId formId) {
+    private GetEntityFormDescriptorAction(ProjectId projectId, FormId formId) {
         this.projectId = checkNotNull(projectId);
         this.formId = checkNotNull(formId);
     }
 
     @GwtSerializationConstructor
     private GetEntityFormDescriptorAction() {
+    }
+
+    public static GetEntityFormDescriptorAction create(ProjectId projectId, FormId formId) {
+        return new GetEntityFormDescriptorAction(projectId, formId);
     }
 
     @Nonnull
