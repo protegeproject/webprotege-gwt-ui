@@ -119,9 +119,9 @@ public class EntityGraphSettingsPresenter {
                 filterListPresenter.getFilters(),
                 view.getRankSpacing()
         );
-        dispatchServiceManager.execute(new SetUserProjectEntityGraphSettingsAction(projectId,
-                                                                                   userId,
-                                                                                   settings),
+        dispatchServiceManager.execute(SetUserProjectEntityGraphSettingsAction.create(projectId,
+                                                                                      userId,
+                                                                                      settings),
                                        hasBusy,
                                        result -> {
                                             if(userId != null) {

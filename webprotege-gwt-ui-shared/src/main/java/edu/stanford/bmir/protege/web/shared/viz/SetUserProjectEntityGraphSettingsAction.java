@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-10
  */
-public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphResult> {
+public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphSettingsResult> {
 
     @Nullable
     private UserId userId;
@@ -25,9 +25,9 @@ public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<Se
 
     private EntityGraphSettings settings;
 
-    public SetUserProjectEntityGraphSettingsAction(@Nonnull ProjectId projectId,
-                                                   @Nullable UserId userId,
-                                                   @Nonnull EntityGraphSettings settings) {
+    private SetUserProjectEntityGraphSettingsAction(@Nonnull ProjectId projectId,
+                                                    @Nullable UserId userId,
+                                                    @Nonnull EntityGraphSettings settings) {
         this.projectId = checkNotNull(projectId);
         this.settings = checkNotNull(settings);
         this.userId = userId;
@@ -35,6 +35,12 @@ public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<Se
 
     @GwtSerializationConstructor
     private SetUserProjectEntityGraphSettingsAction() {
+    }
+
+    public static SetUserProjectEntityGraphSettingsAction create(@Nonnull ProjectId projectId,
+                                                                 @Nullable UserId userId,
+                                                                 @Nonnull EntityGraphSettings settings) {
+        return new SetUserProjectEntityGraphSettingsAction(projectId, userId, settings);
     }
 
     @Nonnull
