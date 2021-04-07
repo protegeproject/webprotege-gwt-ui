@@ -121,7 +121,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                     projectId,
                                     largeNumberOfChangesHandler);
         container.setWidget(view);
-        dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+        dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
                                        r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
         dispatchServiceManager.executeCurrentBatch();
     }

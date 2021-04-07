@@ -29,13 +29,13 @@ public class GetProjectTagsResult_TestCase {
     public void setUp() {
         tags = Collections.singletonList(mock(Tag.class));
         tagUsage = ImmutableMap.of(mock(TagId.class), 1);
-        result = new GetProjectTagsResult(tags, tagUsage);
+        result = GetProjectTagsResult.create(tags, tagUsage);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tags_IsNull() {
-        new GetProjectTagsResult(null, tagUsage);
+        GetProjectTagsResult.create(null, tagUsage);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class GetProjectTagsResult_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tagUsage_IsNull() {
-        new GetProjectTagsResult(tags, null);
+        GetProjectTagsResult.create(tags, null);
     }
 
     @Test
@@ -67,22 +67,22 @@ public class GetProjectTagsResult_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(result, is(new GetProjectTagsResult(tags, tagUsage)));
+        assertThat(result, is(GetProjectTagsResult.create(tags, tagUsage)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tags() {
-        assertThat(result, is(not(new GetProjectTagsResult(ImmutableList.of(mock(Tag.class)), tagUsage))));
+        assertThat(result, is(not(GetProjectTagsResult.create(ImmutableList.of(mock(Tag.class)), tagUsage))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tagUsage() {
-        assertThat(result, is(not(new GetProjectTagsResult(tags, ImmutableMap.of(mock(TagId.class), 2)))));
+        assertThat(result, is(not(GetProjectTagsResult.create(tags, ImmutableMap.of(mock(TagId.class), 2)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(result.hashCode(), is(new GetProjectTagsResult(tags, tagUsage).hashCode()));
+        assertThat(result.hashCode(), is(GetProjectTagsResult.create(tags, tagUsage).hashCode()));
     }
 
     @Test

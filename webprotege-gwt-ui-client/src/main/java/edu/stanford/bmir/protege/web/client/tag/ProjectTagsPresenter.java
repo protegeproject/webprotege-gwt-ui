@@ -137,7 +137,7 @@ public class ProjectTagsPresenter implements Presenter {
     }
 
     private void displayProjectTags(AcceptsOneWidget container) {
-        dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+        dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
                                        result -> displayProjectTags(result, container));
     }
 

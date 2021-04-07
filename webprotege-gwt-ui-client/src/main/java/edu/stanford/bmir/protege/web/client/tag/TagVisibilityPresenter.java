@@ -68,7 +68,7 @@ public class TagVisibilityPresenter {
         this.filterView = Optional.of(checkNotNull(filterView));
         this.tagsView = Optional.of(checkNotNull(tagsView));
         resetCurrentStyles();
-        dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+        dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
                                        result -> {
                                            filterView.addFilterGroup(messages.tags_displayedTags());
                                             result.getTags().forEach(tag -> {
