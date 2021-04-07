@@ -17,12 +17,16 @@ public class GetSearchSettingsAction implements ProjectAction<GetSearchSettingsR
 
     private ProjectId projectId;
 
-    public GetSearchSettingsAction(ProjectId projectId) {
+    private GetSearchSettingsAction(ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     private GetSearchSettingsAction() {
+    }
+
+    public static GetSearchSettingsAction create(ProjectId projectId) {
+        return new GetSearchSettingsAction(projectId);
     }
 
     @Nonnull

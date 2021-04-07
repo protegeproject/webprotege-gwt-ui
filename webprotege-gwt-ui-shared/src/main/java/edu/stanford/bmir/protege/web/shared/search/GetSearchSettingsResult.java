@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class GetSearchSettingsResult implements Result {
 
     @Nonnull
-    public static GetSearchSettingsResult get(@Nonnull ImmutableList<EntitySearchFilter> filters) {
+    public static GetSearchSettingsResult create(@Nonnull ImmutableList<EntitySearchFilter> filters) {
         return new AutoValue_GetSearchSettingsResult(filters);
     }
 

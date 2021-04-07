@@ -104,7 +104,7 @@ public class SearchPresenter implements HasInitialFocusable {
                                        this::handleProjectLangTags);
         entitySearchFilterTokenFieldPresenter.start(view.getSearchFilterContainer());
         entitySearchFilterTokenFieldPresenter.setSearchFiltersChangedHandler(this::performSearch);
-        dispatchServiceManager.execute(new GetSearchSettingsAction(projectId),
+        dispatchServiceManager.execute(GetSearchSettingsAction.create(projectId),
                                        this::handleSearchSettings);
         dispatchServiceManager.executeCurrentBatch();
         entitySearchFilterTokenFieldPresenter.setPlaceholder("");

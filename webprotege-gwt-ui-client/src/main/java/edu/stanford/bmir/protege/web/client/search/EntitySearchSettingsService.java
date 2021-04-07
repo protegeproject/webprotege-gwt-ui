@@ -33,7 +33,7 @@ public class EntitySearchSettingsService {
     }
 
     public void getFilters(Consumer<ImmutableList<EntitySearchFilter>> filters) {
-        dispatch.execute(new GetSearchSettingsAction(projectId),
+        dispatch.execute(GetSearchSettingsAction.create(projectId),
                          result -> filters.accept(result.getFilters()));
     }
 
