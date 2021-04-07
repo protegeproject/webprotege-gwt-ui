@@ -36,18 +36,32 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
     private PerformEntitySearchAction() {
     }
 
-    public PerformEntitySearchAction(@Nonnull ProjectId projectId,
-                                     @Nonnull String searchString,
-                                     @Nonnull Set<EntityType<?>> entityTypes,
-                                     @Nonnull LangTagFilter langTagFilter,
-                                     @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
-                                     @Nonnull PageRequest pageRequest) {
+    private PerformEntitySearchAction(@Nonnull ProjectId projectId,
+                                      @Nonnull String searchString,
+                                      @Nonnull Set<EntityType<?>> entityTypes,
+                                      @Nonnull LangTagFilter langTagFilter,
+                                      @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
+                                      @Nonnull PageRequest pageRequest) {
         this.projectId = checkNotNull(projectId);
         this.searchString = checkNotNull(searchString);
         this.entityTypes = checkNotNull(entityTypes);
         this.langTagFilter = checkNotNull(langTagFilter);
         this.searchFilters = checkNotNull(searchFilters);
         this.pageRequest = checkNotNull(pageRequest);
+    }
+
+    public static PerformEntitySearchAction create(@Nonnull ProjectId projectId,
+                                                   @Nonnull String searchString,
+                                                   @Nonnull Set<EntityType<?>> entityTypes,
+                                                   @Nonnull LangTagFilter langTagFilter,
+                                                   @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
+                                                   @Nonnull PageRequest pageRequest) {
+        return new PerformEntitySearchAction(projectId,
+                                             searchString,
+                                             entityTypes,
+                                             langTagFilter,
+                                             searchFilters,
+                                             pageRequest);
     }
 
     @Nonnull

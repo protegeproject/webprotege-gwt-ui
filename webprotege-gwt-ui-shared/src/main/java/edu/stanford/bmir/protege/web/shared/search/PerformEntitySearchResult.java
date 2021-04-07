@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class PerformEntitySearchResult implements Result {
 
     @Nonnull
-    public static PerformEntitySearchResult get(String searchString, Page<EntitySearchResult> page) {
+    public static PerformEntitySearchResult create(String searchString, Page<EntitySearchResult> page) {
         return new AutoValue_PerformEntitySearchResult(searchString, page);
     }
 
