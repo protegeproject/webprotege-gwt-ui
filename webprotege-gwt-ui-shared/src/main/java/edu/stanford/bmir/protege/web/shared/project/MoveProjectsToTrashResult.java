@@ -15,7 +15,11 @@ public class MoveProjectsToTrashResult extends AbstractHasEventListResult<Projec
     private MoveProjectsToTrashResult() {
     }
 
-    public MoveProjectsToTrashResult(EventList<ProjectMovedToTrashEvent> eventList) {
+    private MoveProjectsToTrashResult(EventList<ProjectMovedToTrashEvent> eventList) {
         super(eventList);
+    }
+
+    public static MoveProjectsToTrashResult create(EventList<ProjectMovedToTrashEvent> eventList) {
+        return new MoveProjectsToTrashResult(eventList);
     }
 }

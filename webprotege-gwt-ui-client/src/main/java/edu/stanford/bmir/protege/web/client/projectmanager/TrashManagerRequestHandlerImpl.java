@@ -24,7 +24,7 @@ public class TrashManagerRequestHandlerImpl implements TrashManagerRequestHandle
 
     @Override
     public void handleMoveProjectToTrash(final ProjectId projectId) {
-        dispatchServiceManager.execute(new MoveProjectsToTrashAction(projectId), result -> {});
+        dispatchServiceManager.execute(MoveProjectsToTrashAction.create(projectId), result -> {});
     }
 
     @Override

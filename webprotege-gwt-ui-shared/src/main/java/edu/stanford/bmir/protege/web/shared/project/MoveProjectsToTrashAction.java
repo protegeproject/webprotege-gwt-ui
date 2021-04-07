@@ -15,8 +15,12 @@ public class MoveProjectsToTrashAction implements Action<MoveProjectsToTrashResu
     private MoveProjectsToTrashAction() {
     }
 
-    public MoveProjectsToTrashAction(ProjectId projectId) {
+    private MoveProjectsToTrashAction(ProjectId projectId) {
         this.projectId = projectId;
+    }
+
+    public static MoveProjectsToTrashAction create(ProjectId projectId) {
+        return new MoveProjectsToTrashAction(projectId);
     }
 
     public ProjectId getProjectId() {
