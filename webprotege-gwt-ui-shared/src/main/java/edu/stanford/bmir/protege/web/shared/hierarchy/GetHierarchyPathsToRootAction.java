@@ -20,9 +20,9 @@ public class GetHierarchyPathsToRootAction extends AbstractHasProjectAction<GetH
 
     private HierarchyId hierarchyId;
 
-    public GetHierarchyPathsToRootAction(@Nonnull ProjectId projectId,
-                                         @Nonnull OWLEntity entity,
-                                         @Nonnull HierarchyId hierarchyId) {
+    private GetHierarchyPathsToRootAction(@Nonnull ProjectId projectId,
+                                          @Nonnull OWLEntity entity,
+                                          @Nonnull HierarchyId hierarchyId) {
         super(projectId);
         this.entity = checkNotNull(entity);
         this.hierarchyId = checkNotNull(hierarchyId);
@@ -30,6 +30,12 @@ public class GetHierarchyPathsToRootAction extends AbstractHasProjectAction<GetH
 
     @GwtSerializationConstructor
     private GetHierarchyPathsToRootAction() {
+    }
+
+    public static GetHierarchyPathsToRootAction create(@Nonnull ProjectId projectId,
+                                                       @Nonnull OWLEntity entity,
+                                                       @Nonnull HierarchyId hierarchyId) {
+        return new GetHierarchyPathsToRootAction(projectId, entity, hierarchyId);
     }
 
     @Nonnull

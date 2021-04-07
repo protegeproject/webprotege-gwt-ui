@@ -16,12 +16,16 @@ public class GetHierarchyPathsToRootResult implements Result {
 
     private Collection<Path<GraphNode<EntityNode>>> paths;
 
-    public GetHierarchyPathsToRootResult(Collection<Path<GraphNode<EntityNode>>> paths) {
+    private GetHierarchyPathsToRootResult(Collection<Path<GraphNode<EntityNode>>> paths) {
         this.paths = new ArrayList<>(paths);
     }
 
     @GwtSerializationConstructor
     private GetHierarchyPathsToRootResult() {
+    }
+
+    public static GetHierarchyPathsToRootResult create(Collection<Path<GraphNode<EntityNode>>> paths) {
+        return new GetHierarchyPathsToRootResult(paths);
     }
 
     public Collection<Path<GraphNode<EntityNode>>> getPaths() {

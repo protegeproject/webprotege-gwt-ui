@@ -188,9 +188,9 @@ public class HierarchyFieldPresenter {
     private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity, UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create((pageRequest, consumer) -> {
-                    dispatch.execute(new GetHierarchyPathsToRootAction(projectId,
-                                                                       entity,
-                                                                       id),
+                    dispatch.execute(GetHierarchyPathsToRootAction.create(projectId,
+                                                                          entity,
+                                                                          id),
                                      result -> {
                                          List<EntityNode> data = result.getPaths()
                                                  .stream()

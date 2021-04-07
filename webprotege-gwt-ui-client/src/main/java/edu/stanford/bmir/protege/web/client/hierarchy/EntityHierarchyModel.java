@@ -143,7 +143,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     @Override
     public void getPathsFromRootNodes(@Nonnull OWLEntity node,
                                       @Nonnull GetPathsBetweenNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyPathsToRootAction(projectId, node, hierarchyId),
+        dispatchServiceManager.execute(GetHierarchyPathsToRootAction.create(projectId, node, hierarchyId),
                                        result -> {
                                            try {
                                                dispatchServiceManager.beginBatch();
