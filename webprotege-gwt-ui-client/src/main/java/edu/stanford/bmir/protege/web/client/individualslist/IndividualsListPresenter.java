@@ -183,11 +183,11 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     private void updateList() {
         Optional<PageRequest> pageRequest = Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
                                                                                         PAGE_SIZE));
-        GetIndividualsAction action = new GetIndividualsAction(projectId,
-                                                               currentType,
-                                                               view.getSearchString(),
-                                                               view.getRetrievalMode(),
-                                                               pageRequest);
+        GetIndividualsAction action = GetIndividualsAction.create(projectId,
+                                                                  currentType,
+                                                                  view.getSearchString(),
+                                                                  view.getRetrievalMode(),
+                                                                  pageRequest);
         dsm.execute(action, view, result -> {
             Page<EntityNode> page = result.getPaginatedResult();
             displayPageOfIndividuals(page);

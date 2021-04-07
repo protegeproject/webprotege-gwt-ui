@@ -31,11 +31,16 @@ public class GetIndividualsResult implements Result {
     private GetIndividualsResult() {
     }
 
-    public GetIndividualsResult(Optional<OWLClassData> type,
-                                Page<EntityNode> result, long totalIndividuals) {
+    private GetIndividualsResult(Optional<OWLClassData> type, Page<EntityNode> result, long totalIndividuals) {
         this.type = type.orElse(null);
         this.result = result;
         this.totalIndividuals = totalIndividuals;
+    }
+
+    public static GetIndividualsResult create(Optional<OWLClassData> type,
+                                              Page<EntityNode> result,
+                                              long totalIndividuals) {
+        return new GetIndividualsResult(type, result, totalIndividuals);
     }
 
     public Optional<OWLClassData> getType() {
