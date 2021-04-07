@@ -37,7 +37,7 @@ public class LoadProjectRequestHandlerImpl implements LoadProjectRequestHandler 
 
     @Override
     public void handleProjectLoadRequest(ProjectId projectId) {
-        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, loggedInUserProvider.getCurrentUserId()),
+        dispatchServiceManager.execute(GetPerspectivesAction.create(projectId, loggedInUserProvider.getCurrentUserId()),
                                        result -> handlePerspectives(result, projectId));
 
     }

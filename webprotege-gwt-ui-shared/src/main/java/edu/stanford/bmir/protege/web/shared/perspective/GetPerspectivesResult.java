@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
 public abstract class GetPerspectivesResult implements Result {
 
     @Nonnull
-    public static GetPerspectivesResult get(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives,
-                                            @Nonnull ImmutableSet<PerspectiveId> resettablePerspectives) {
+    public static GetPerspectivesResult create(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives,
+                                               @Nonnull ImmutableSet<PerspectiveId> resettablePerspectives) {
         return new AutoValue_GetPerspectivesResult(perspectives, resettablePerspectives);
     }
 

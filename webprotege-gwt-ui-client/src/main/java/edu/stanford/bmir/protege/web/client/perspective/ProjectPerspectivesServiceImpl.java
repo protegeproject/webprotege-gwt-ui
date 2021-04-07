@@ -42,7 +42,7 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
 
     public void getPerspectives(final PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatch.execute(new GetPerspectivesAction(projectId, userId), result -> {
+        dispatch.execute(GetPerspectivesAction.create(projectId, userId), result -> {
             ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
             callback.handlePerspectives(perspectiveIds, result.getResettablePerspectives());
         });

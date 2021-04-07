@@ -39,7 +39,7 @@ public class LoadProjectInNewWindowRequestHandlerImpl implements LoadProjectInNe
     @Override
     public void handleLoadProjectInNewWindow(final ProjectId projectId) {
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
+        dispatchServiceManager.execute(GetPerspectivesAction.create(projectId, userId), result -> {
             handleOpenInNewWindow(result.getPerspectives(), projectId);
         });
     }

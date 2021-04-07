@@ -20,9 +20,13 @@ public class GetPerspectivesAction implements Action<GetPerspectivesResult> {
     private GetPerspectivesAction() {
     }
 
-    public GetPerspectivesAction(ProjectId projectId, UserId userId) {
+    private GetPerspectivesAction(ProjectId projectId, UserId userId) {
         this.projectId = projectId;
         this.userId = userId;
+    }
+
+    public static GetPerspectivesAction create(ProjectId projectId, UserId userId) {
+        return new GetPerspectivesAction(projectId, userId);
     }
 
     @Nonnull
