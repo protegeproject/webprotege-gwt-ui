@@ -64,8 +64,8 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        entity.ifPresent(owlEntity -> dsm.execute(new GetEntityHtmlRenderingAction(getProjectId(),
-                                                                                   owlEntity),
+        entity.ifPresent(owlEntity -> dsm.execute(GetEntityHtmlRenderingAction.create(getProjectId(),
+                                                                                      owlEntity),
                                                   this,
                                                   this::handleRenderingResult));
     }

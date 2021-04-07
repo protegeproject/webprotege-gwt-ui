@@ -23,10 +23,13 @@ public class GetEntityHtmlRenderingResult implements Result {
     private GetEntityHtmlRenderingResult() {
     }
 
-    public GetEntityHtmlRenderingResult(OWLEntityData entityData,
-                                        @Nonnull String rendering) {
+    private GetEntityHtmlRenderingResult(OWLEntityData entityData, @Nonnull String rendering) {
         this.entityData = checkNotNull(entityData);
         this.rendering = checkNotNull(rendering);
+    }
+
+    public static GetEntityHtmlRenderingResult create(OWLEntityData entityData, @Nonnull String rendering) {
+        return new GetEntityHtmlRenderingResult(entityData, rendering);
     }
 
     @Nonnull

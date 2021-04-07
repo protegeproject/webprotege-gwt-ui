@@ -25,10 +25,13 @@ public class GetEntityHtmlRenderingAction implements ProjectAction<GetEntityHtml
     private GetEntityHtmlRenderingAction() {
     }
 
-    public GetEntityHtmlRenderingAction(@Nonnull ProjectId projectId,
-                                        @Nonnull OWLEntity entity) {
+    private GetEntityHtmlRenderingAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+    }
+
+    public static GetEntityHtmlRenderingAction create(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        return new GetEntityHtmlRenderingAction(projectId, entity);
     }
 
     @Nonnull
