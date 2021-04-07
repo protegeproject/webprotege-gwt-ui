@@ -20,14 +20,19 @@ public class SetEntityGraphActiveFiltersAction implements ProjectAction<SetEntit
 
     private ImmutableList<FilterName> activeFilters;
 
-    public SetEntityGraphActiveFiltersAction(@Nonnull ProjectId projectId,
-                                             @Nonnull ImmutableList<FilterName> activeFilters) {
+    private SetEntityGraphActiveFiltersAction(@Nonnull ProjectId projectId,
+                                              @Nonnull ImmutableList<FilterName> activeFilters) {
         this.projectId = checkNotNull(projectId);
         this.activeFilters = checkNotNull(activeFilters);
     }
 
     @GwtSerializationConstructor
     private SetEntityGraphActiveFiltersAction() {
+    }
+
+    public static SetEntityGraphActiveFiltersAction create(@Nonnull ProjectId projectId,
+                                                           @Nonnull ImmutableList<FilterName> activeFilters) {
+        return new SetEntityGraphActiveFiltersAction(projectId, activeFilters);
     }
 
     @Nonnull

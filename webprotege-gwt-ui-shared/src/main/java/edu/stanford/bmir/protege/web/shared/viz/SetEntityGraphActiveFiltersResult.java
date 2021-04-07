@@ -9,4 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetEntityGraphActiveFiltersResult implements Result {
 
+    private SetEntityGraphActiveFiltersResult() {
+    }
+
+    public static SetEntityGraphActiveFiltersResult create() {
+        return new SetEntityGraphActiveFiltersResult();
+    }
 }

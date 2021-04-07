@@ -118,8 +118,8 @@ public class EntityGraphPresenter {
 
     private void handleActiveFiltersChanged() {
         List<FilterName> activeFilters = filterTokenPresenter.getActiveFilters();
-        dispatch.execute(new SetEntityGraphActiveFiltersAction(projectId,
-                                                               ImmutableList.copyOf(activeFilters)),
+        dispatch.execute(SetEntityGraphActiveFiltersAction.create(projectId,
+                                                                  ImmutableList.copyOf(activeFilters)),
                          hasBusy,
                          result -> redisplayCurrentEntity());
     }
