@@ -109,8 +109,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         }
         Optional<Set<PropertyAnnotationValue>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent() && currentOntologyId.isPresent()) {
-            dispatchServiceManager.execute(
-                    new SetOntologyAnnotationsAction(getProjectId(), currentOntologyId.get(), new HashSet<>(lastSet.get()), annotations.get()),
+            dispatchServiceManager.execute(SetOntologyAnnotationsAction.create(getProjectId(), currentOntologyId.get(), new HashSet<>(lastSet.get()), annotations.get()),
                     result -> {
                     });
         }

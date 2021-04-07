@@ -24,9 +24,14 @@ public class SetOntologyAnnotationsResult implements Result, HasEventList<Projec
     private SetOntologyAnnotationsResult() {
     }
 
-    public SetOntologyAnnotationsResult(Set<OWLAnnotation> ontologyAnnotations, EventList<ProjectEvent<?>> eventList) {
+    private SetOntologyAnnotationsResult(Set<OWLAnnotation> ontologyAnnotations, EventList<ProjectEvent<?>> eventList) {
         this.ontologyAnnotations = new HashSet<OWLAnnotation>(ontologyAnnotations);
         this.eventList = eventList;
+    }
+
+    public static SetOntologyAnnotationsResult create(Set<OWLAnnotation> ontologyAnnotations,
+                                                      EventList<ProjectEvent<?>> eventList) {
+        return new SetOntologyAnnotationsResult(ontologyAnnotations, eventList);
     }
 
     public Set<OWLAnnotation> getOntologyAnnotations() {

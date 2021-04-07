@@ -29,13 +29,21 @@ public class SetOntologyAnnotationsAction extends AbstractHasProjectAction<SetOn
     private SetOntologyAnnotationsAction() {
     }
 
-    public SetOntologyAnnotationsAction(ProjectId projectId,
-                                        OWLOntologyID ontologyID,
-                                        Set<PropertyAnnotationValue> fromAnnotations, Set<PropertyAnnotationValue> toAnnotations) {
+    private SetOntologyAnnotationsAction(ProjectId projectId,
+                                         OWLOntologyID ontologyID,
+                                         Set<PropertyAnnotationValue> fromAnnotations,
+                                         Set<PropertyAnnotationValue> toAnnotations) {
         super(projectId);
         this.owlOntologyId = checkNotNull(ontologyID);
         this.fromAnnotations = new HashSet<>(fromAnnotations);
         this.toAnnotations = new HashSet<>(toAnnotations);
+    }
+
+    public static SetOntologyAnnotationsAction create(ProjectId projectId,
+                                                      OWLOntologyID ontologyID,
+                                                      Set<PropertyAnnotationValue> fromAnnotations,
+                                                      Set<PropertyAnnotationValue> toAnnotations) {
+        return new SetOntologyAnnotationsAction(projectId, ontologyID, fromAnnotations, toAnnotations);
     }
 
     public OWLOntologyID getOntologyId() {
