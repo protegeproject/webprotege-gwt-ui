@@ -27,14 +27,17 @@ public class GetOboTermIdAction implements ProjectAction<GetOboTermIdResult> {
     private GetOboTermIdAction() {
     }
 
-    public GetOboTermIdAction(@Nonnull ProjectId projectId,
-                              @Nonnull OWLEntity term) {
+    private GetOboTermIdAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity term) {
         this.projectId = checkNotNull(projectId);
         this.term = checkNotNull(term);
     }
 
     public static GetOboTermIdAction getOboTermId(@Nonnull ProjectId projectId,
                                                   @Nonnull OWLEntity term) {
+        return create(projectId, term);
+    }
+
+    public static GetOboTermIdAction create(@Nonnull ProjectId projectId, @Nonnull OWLEntity term) {
         return new GetOboTermIdAction(projectId, term);
     }
 

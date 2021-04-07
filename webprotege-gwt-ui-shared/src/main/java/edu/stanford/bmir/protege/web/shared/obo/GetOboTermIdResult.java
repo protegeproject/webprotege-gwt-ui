@@ -25,9 +25,13 @@ public class GetOboTermIdResult implements Result {
     private GetOboTermIdResult() {
     }
 
-    public GetOboTermIdResult(@Nonnull OWLEntity entity, @Nonnull OBOTermId termId) {
+    private GetOboTermIdResult(@Nonnull OWLEntity entity, @Nonnull OBOTermId termId) {
         this.entity = checkNotNull(entity);
         this.termId = checkNotNull(termId);
+    }
+
+    public static GetOboTermIdResult create(@Nonnull OWLEntity entity, @Nonnull OBOTermId termId) {
+        return new GetOboTermIdResult(entity, termId);
     }
 
     @Nonnull
