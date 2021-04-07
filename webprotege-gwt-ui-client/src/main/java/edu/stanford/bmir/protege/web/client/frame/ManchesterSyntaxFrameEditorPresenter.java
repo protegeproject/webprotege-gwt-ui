@@ -232,7 +232,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         final Optional<String> editorText = editor.getValue();
         if(!isPristine() && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
             String text = editorText.get();
-            dsm.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>(errorDisplay) {
+            dsm.execute(SetManchesterSyntaxFrameAction.create(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>(errorDisplay) {
                 @Override
                 public void handleSuccess(SetManchesterSyntaxFrameResult result) {
                     if(reformatText) {

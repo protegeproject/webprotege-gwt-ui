@@ -22,9 +22,13 @@ public class SetManchesterSyntaxFrameResult implements Result, HasEventList<Proj
     private SetManchesterSyntaxFrameResult() {
     }
 
-    public SetManchesterSyntaxFrameResult(EventList<ProjectEvent<?>> eventList, String frameText) {
+    private SetManchesterSyntaxFrameResult(EventList<ProjectEvent<?>> eventList, String frameText) {
         this.eventList = checkNotNull(eventList);
         this.frameText = checkNotNull(frameText);
+    }
+
+    public static SetManchesterSyntaxFrameResult create(EventList<ProjectEvent<?>> eventList, String frameText) {
+        return new SetManchesterSyntaxFrameResult(eventList, frameText);
     }
 
     public String getFrameText() {
