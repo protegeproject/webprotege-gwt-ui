@@ -106,7 +106,7 @@ public class ChangeListPresenter {
         this.pageNumberChangedHandler = pageNumber -> displayChangesForProject();
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
-        GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.empty(), pageRequest);
+        GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.empty(), pageRequest);
         lastAction = Optional.of(action);
         dispatch.execute(action,
                          hasBusy,
@@ -118,7 +118,7 @@ public class ChangeListPresenter {
         this.pageNumberChangedHandler = pageNumber -> displayChangesForEntity(entity);
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
-        GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.of(entity), pageRequest);
+        GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.of(entity), pageRequest);
         dispatch.execute(action,
                          hasBusy,
                          this::fillView);

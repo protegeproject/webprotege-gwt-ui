@@ -42,19 +42,19 @@ public class GetProjectChangesAction_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        action = new GetProjectChangesAction(projectId, subject, pageRequest);
-        otherAction = new GetProjectChangesAction(projectId, subject, pageRequest);
+        action = GetProjectChangesAction.create(projectId, subject, pageRequest);
+        otherAction = GetProjectChangesAction.create(projectId, subject, pageRequest);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectId_IsNull() {
-        new GetProjectChangesAction(null, subject, pageRequest);
+        GetProjectChangesAction.create(null, subject, pageRequest);
     }
 
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Subject_IsNull() {
-        new GetProjectChangesAction(projectId, null, pageRequest);
+        GetProjectChangesAction.create(projectId, null, pageRequest);
     }
 
     @Test

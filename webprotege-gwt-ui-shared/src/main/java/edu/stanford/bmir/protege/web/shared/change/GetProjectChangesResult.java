@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class GetProjectChangesResult implements Result, HasProjectChanges {
 
     @Nonnull
-    public static GetProjectChangesResult get(Page<ProjectChange> changes) {
+    public static GetProjectChangesResult create(Page<ProjectChange> changes) {
         return new AutoValue_GetProjectChangesResult(changes);
     }
 
