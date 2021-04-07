@@ -26,10 +26,14 @@ public class GetOntologyAnnotationsResult implements Result {
     private GetOntologyAnnotationsResult() {
     }
 
-    public GetOntologyAnnotationsResult(OWLOntologyID ontologyID,
-                                        ImmutableList<PropertyAnnotationValue> annotations) {
+    private GetOntologyAnnotationsResult(OWLOntologyID ontologyID, ImmutableList<PropertyAnnotationValue> annotations) {
         this.ontologyID = checkNotNull(ontologyID);
         this.annotations = checkNotNull(annotations);
+    }
+
+    public static GetOntologyAnnotationsResult create(OWLOntologyID ontologyID,
+                                                      ImmutableList<PropertyAnnotationValue> annotations) {
+        return new GetOntologyAnnotationsResult(ontologyID, annotations);
     }
 
     @Nonnull

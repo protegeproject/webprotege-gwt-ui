@@ -22,10 +22,14 @@ public class GetOntologyAnnotationsAction extends AbstractHasProjectAction<GetOn
     private GetOntologyAnnotationsAction() {
     }
 
-    public GetOntologyAnnotationsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull Optional<OWLOntologyID> ontologyId) {
+    private GetOntologyAnnotationsAction(@Nonnull ProjectId projectId, @Nonnull Optional<OWLOntologyID> ontologyId) {
         super(projectId);
         this.ontologyId = checkNotNull(ontologyId).orElse(null);
+    }
+
+    public static GetOntologyAnnotationsAction create(@Nonnull ProjectId projectId,
+                                                      @Nonnull Optional<OWLOntologyID> ontologyId) {
+        return new GetOntologyAnnotationsAction(projectId, ontologyId);
     }
 
     @Nonnull

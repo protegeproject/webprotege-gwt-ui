@@ -79,7 +79,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
     }
 
     private void updateView() {
-        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId(), Optional.empty()),
+        dispatchServiceManager.execute(GetOntologyAnnotationsAction.create(getProjectId(), Optional.empty()),
                 result -> {
                     LinkedHashSet<PropertyAnnotationValue> object = new LinkedHashSet<>(result.getAnnotations());
                     if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
