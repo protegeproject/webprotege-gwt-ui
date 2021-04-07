@@ -51,7 +51,7 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
     @Override
     public void setPerspectives(List<PerspectiveDescriptor> perspectives, PerspectiveServiceCallback callback) {
         UserId user = loggedInUserProvider.getCurrentUserId();
-        dispatch.execute(new SetPerspectivesAction(projectId, user, ImmutableList.copyOf(perspectives)), result -> {
+        dispatch.execute(SetPerspectivesAction.create(projectId, user, ImmutableList.copyOf(perspectives)), result -> {
             callback.handlePerspectives(result.getPerspectives(), result.getResettablePerspectives());
         });
     }

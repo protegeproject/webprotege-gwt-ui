@@ -24,8 +24,8 @@ public abstract class SetPerspectivesResult implements Result {
     public abstract ImmutableSet<PerspectiveId> getResettablePerspectives();
 
     @Nonnull
-    public static SetPerspectivesResult get(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives,
-                                            @Nonnull ImmutableSet<PerspectiveId> resettablePerspectives) {
+    public static SetPerspectivesResult create(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives,
+                                               @Nonnull ImmutableSet<PerspectiveId> resettablePerspectives) {
         return new AutoValue_SetPerspectivesResult(perspectives, resettablePerspectives);
     }
 

@@ -28,9 +28,9 @@ public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResul
     private SetPerspectivesAction() {
     }
 
-    public SetPerspectivesAction(@Nonnull ProjectId projectId,
-                                 @Nonnull UserId userId,
-                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
+    private SetPerspectivesAction(@Nonnull ProjectId projectId,
+                                  @Nonnull UserId userId,
+                                  @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.perspectiveIds = checkNotNull(perspectiveIds);
@@ -46,6 +46,12 @@ public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResul
         this.projectId = checkNotNull(projectId);
         this.userId = null;
         this.perspectiveIds = checkNotNull(perspectiveIds);
+    }
+
+    public static SetPerspectivesAction create(@Nonnull ProjectId projectId,
+                                               @Nonnull UserId userId,
+                                               @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
+        return new SetPerspectivesAction(projectId, userId, perspectiveIds);
     }
 
     @Nonnull
