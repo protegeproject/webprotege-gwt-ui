@@ -25,12 +25,14 @@ public class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntit
 
     private PageRequest pageRequest;
 
-    public GetMatchingEntitiesAction(Criteria criteria,
-                                     ProjectId projectId,
-                                     PageRequest pageRequest) {
+    private GetMatchingEntitiesAction(Criteria criteria, ProjectId projectId, PageRequest pageRequest) {
         this.criteria = checkNotNull(criteria);
         this.projectId = checkNotNull(projectId);
         this.pageRequest = checkNotNull(pageRequest);
+    }
+
+    public static GetMatchingEntitiesAction create(Criteria criteria, ProjectId projectId, PageRequest pageRequest) {
+        return new GetMatchingEntitiesAction(criteria, projectId, pageRequest);
     }
 
     @Nonnull
@@ -57,6 +59,6 @@ public class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntit
     public static GetMatchingEntitiesAction getMatchingEntities(@Nonnull ProjectId projectId,
                                                                 @Nonnull Criteria criteria,
                                                                 @Nonnull PageRequest pageRequest) {
-        return new GetMatchingEntitiesAction(criteria, projectId, pageRequest);
+        return create(criteria, projectId, pageRequest);
     }
 }

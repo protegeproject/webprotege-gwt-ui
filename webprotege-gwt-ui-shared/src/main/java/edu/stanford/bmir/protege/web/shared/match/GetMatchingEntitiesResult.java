@@ -21,7 +21,7 @@ public abstract class GetMatchingEntitiesResult implements Result {
     public abstract Page<EntityNode> getEntities();
 
     @Nonnull
-    public static GetMatchingEntitiesResult get(@Nonnull Page<EntityNode> entities) {
+    public static GetMatchingEntitiesResult create(@Nonnull Page<EntityNode> entities) {
         return new AutoValue_GetMatchingEntitiesResult(entities);
     }
 }
