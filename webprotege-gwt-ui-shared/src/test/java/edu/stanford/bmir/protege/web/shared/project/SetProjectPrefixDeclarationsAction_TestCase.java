@@ -29,13 +29,13 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
         prefixDeclarations = new ArrayList<>();
         prefixDeclarations.add(mock(PrefixDeclaration.class));
-        action = new SetProjectPrefixDeclarationsAction(projectId, prefixDeclarations);
+        action = SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new SetProjectPrefixDeclarationsAction(null, prefixDeclarations);
+        SetProjectPrefixDeclarationsAction.create(null, prefixDeclarations);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_prefixDeclarations_IsNull() {
-        new SetProjectPrefixDeclarationsAction(projectId, null);
+        SetProjectPrefixDeclarationsAction.create(projectId, null);
     }
 
     @Test
@@ -67,24 +67,24 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(new SetProjectPrefixDeclarationsAction(projectId, prefixDeclarations)));
+        assertThat(action, is(SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(Matchers.not(new SetProjectPrefixDeclarationsAction(mock(ProjectId.class), prefixDeclarations))));
+        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(mock(ProjectId.class), prefixDeclarations))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_prefixDeclarations() {
         List<PrefixDeclaration> otherDecls = new ArrayList<>();
         otherDecls.add(mock(PrefixDeclaration.class));
-        assertThat(action, is(Matchers.not(new SetProjectPrefixDeclarationsAction(projectId, otherDecls))));
+        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(projectId, otherDecls))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(new SetProjectPrefixDeclarationsAction(projectId, prefixDeclarations).hashCode()));
+        assertThat(action.hashCode(), is(SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations).hashCode()));
     }
 
     @Test

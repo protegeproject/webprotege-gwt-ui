@@ -183,7 +183,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     }
 
     private void applyChanges() {
-        dispatchServiceManager.execute(new SetProjectPrefixDeclarationsAction(projectId, view.getPrefixDeclarations()),
+        dispatchServiceManager.execute(SetProjectPrefixDeclarationsAction.create(projectId, view.getPrefixDeclarations()),
                                        result -> handleChangesApplied());
     }
 
