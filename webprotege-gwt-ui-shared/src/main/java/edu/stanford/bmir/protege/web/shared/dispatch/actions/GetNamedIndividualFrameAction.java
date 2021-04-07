@@ -27,9 +27,13 @@ public class GetNamedIndividualFrameAction implements ProjectAction<GetNamedIndi
     }
 
 
-    public GetNamedIndividualFrameAction(ProjectId projectId, OWLNamedIndividual subject) {
+    private GetNamedIndividualFrameAction(ProjectId projectId, OWLNamedIndividual subject) {
         this.projectId = projectId;
         this.subject = subject;
+    }
+
+    public static GetNamedIndividualFrameAction create(ProjectId projectId, OWLNamedIndividual subject) {
+        return new GetNamedIndividualFrameAction(projectId, subject);
     }
 
     /**

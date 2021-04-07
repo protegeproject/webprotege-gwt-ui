@@ -20,8 +20,12 @@ public class GetNamedIndividualFrameResult implements Result, GetObjectResult<Na
     private GetNamedIndividualFrameResult() {
     }
 
-    public GetNamedIndividualFrameResult(NamedIndividualFrame frame) {
+    private GetNamedIndividualFrameResult(NamedIndividualFrame frame) {
         this.frame = checkNotNull(frame);
+    }
+
+    public static GetNamedIndividualFrameResult create(NamedIndividualFrame frame) {
+        return new GetNamedIndividualFrameResult(frame);
     }
 
     public NamedIndividualFrame getFrame() {

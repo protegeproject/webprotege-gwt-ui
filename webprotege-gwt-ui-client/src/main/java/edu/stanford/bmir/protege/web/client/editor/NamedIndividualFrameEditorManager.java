@@ -30,7 +30,7 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     @Override
     public GetNamedIndividualFrameAction createAction(OWLEntityContext editorContext) {
-        return new GetNamedIndividualFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLNamedIndividual());
+        return GetNamedIndividualFrameAction.create(editorContext.getProjectId(), editorContext.getEntity().asOWLNamedIndividual());
     }
 
     @Override
