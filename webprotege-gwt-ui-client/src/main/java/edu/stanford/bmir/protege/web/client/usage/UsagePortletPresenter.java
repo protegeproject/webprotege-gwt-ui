@@ -142,7 +142,7 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void showUsageForEntity(final OWLEntity entity) {
-        final GetUsageAction action = new GetUsageAction(entity, getProjectId(), filter);
+        final GetUsageAction action = GetUsageAction.create(entity, getProjectId(), filter);
         dispatchServiceManager.execute(action, result -> {
             final Collection<UsageReference> references = result.getUsageReferences();
             final int visibleReferences = references.size();

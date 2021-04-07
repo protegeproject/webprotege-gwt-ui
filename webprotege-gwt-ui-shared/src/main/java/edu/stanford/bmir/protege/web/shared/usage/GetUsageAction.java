@@ -26,9 +26,13 @@ public class GetUsageAction extends AbstractHasProjectIdAndSubject<OWLEntity> im
     private GetUsageAction() {
     }
 
-    public GetUsageAction(OWLEntity subject, ProjectId projectId, Optional<UsageFilter> usageFilter) {
+    private GetUsageAction(OWLEntity subject, ProjectId projectId, Optional<UsageFilter> usageFilter) {
         super(subject, projectId);
         this.usageFilter = usageFilter.orElse(null);
+    }
+
+    public static GetUsageAction create(OWLEntity subject, ProjectId projectId, Optional<UsageFilter> usageFilter) {
+        return new GetUsageAction(subject, projectId, usageFilter);
     }
 
     public UsageFilter getUsageFilter() {

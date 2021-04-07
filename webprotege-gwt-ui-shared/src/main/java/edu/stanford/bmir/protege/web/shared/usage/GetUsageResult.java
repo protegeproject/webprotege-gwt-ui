@@ -31,11 +31,21 @@ public class GetUsageResult implements Result, HasSignature, HasProjectId {
     private GetUsageResult() {
     }
 
-    public GetUsageResult(ProjectId projectId, EntityNode entityNode, Collection<UsageReference> usageReferences, int totalUsageCount) {
+    private GetUsageResult(ProjectId projectId,
+                           EntityNode entityNode,
+                           Collection<UsageReference> usageReferences,
+                           int totalUsageCount) {
         this.projectId = checkNotNull(projectId);
         this.entityNode = checkNotNull(entityNode);
         this.usageReferences = checkNotNull(usageReferences);
         this.totalUsageCount = checkNotNull(totalUsageCount);
+    }
+
+    public static GetUsageResult create(ProjectId projectId,
+                                        EntityNode entityNode,
+                                        Collection<UsageReference> usageReferences,
+                                        int totalUsageCount) {
+        return new GetUsageResult(projectId, entityNode, usageReferences, totalUsageCount);
     }
 
     @Nonnull
