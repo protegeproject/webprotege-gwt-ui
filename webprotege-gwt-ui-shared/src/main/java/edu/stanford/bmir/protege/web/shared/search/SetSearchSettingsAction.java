@@ -22,9 +22,9 @@ public class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsR
 
     private ImmutableList<EntitySearchFilter> to;
 
-    public SetSearchSettingsAction(@Nonnull ProjectId projectId,
-                                   @Nonnull ImmutableList<EntitySearchFilter> from,
-                                   @Nonnull ImmutableList<EntitySearchFilter> to) {
+    private SetSearchSettingsAction(@Nonnull ProjectId projectId,
+                                    @Nonnull ImmutableList<EntitySearchFilter> from,
+                                    @Nonnull ImmutableList<EntitySearchFilter> to) {
         this.projectId = checkNotNull(projectId);
         this.from = checkNotNull(from);
         this.to = checkNotNull(to);
@@ -32,6 +32,12 @@ public class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsR
 
     @GwtSerializationConstructor
     private SetSearchSettingsAction() {
+    }
+
+    public static SetSearchSettingsAction create(@Nonnull ProjectId projectId,
+                                                 @Nonnull ImmutableList<EntitySearchFilter> from,
+                                                 @Nonnull ImmutableList<EntitySearchFilter> to) {
+        return new SetSearchSettingsAction(projectId, from, to);
     }
 
     @Nonnull

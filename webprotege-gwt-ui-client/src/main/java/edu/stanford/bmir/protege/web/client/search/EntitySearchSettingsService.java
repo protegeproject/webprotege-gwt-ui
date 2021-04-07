@@ -38,9 +38,9 @@ public class EntitySearchSettingsService {
     }
 
     public void setFilters(@Nonnull ImmutableList<EntitySearchFilter> filters) {
-        dispatch.execute(new SetSearchSettingsAction(projectId,
-                                                     ImmutableList.of(),
-                                                     filters),
+        dispatch.execute(SetSearchSettingsAction.create(projectId,
+                                                        ImmutableList.of(),
+                                                        filters),
                          result -> {});
     }
 }

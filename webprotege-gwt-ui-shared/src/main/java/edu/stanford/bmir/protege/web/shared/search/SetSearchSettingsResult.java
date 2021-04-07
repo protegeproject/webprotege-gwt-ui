@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetSearchSettingsResult implements Result {
 
-    public SetSearchSettingsResult() {
+    private SetSearchSettingsResult() {
+    }
+
+    public static SetSearchSettingsResult create() {
+        return new SetSearchSettingsResult();
     }
 }
