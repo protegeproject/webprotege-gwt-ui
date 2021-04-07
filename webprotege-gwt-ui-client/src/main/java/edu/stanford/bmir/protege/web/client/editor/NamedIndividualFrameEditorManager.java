@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.client.frame.NamedIndividualFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 
 import javax.inject.Inject;
@@ -40,9 +40,9 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     @Override
     public UpdateNamedIndividualFrameAction createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateNamedIndividualFrameAction(editorContext.getProjectId(),
-                                                    pristineObject.toPlainFrame(),
-                                                    editedObject.toPlainFrame());
+        return UpdateNamedIndividualFrameAction.create(editorContext.getProjectId(),
+                                                       pristineObject.toPlainFrame(),
+                                                       editedObject.toPlainFrame());
     }
 
     @Override
