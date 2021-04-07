@@ -16,7 +16,7 @@ import java.io.IOException;
  * Stanford Center for Biomedical Informatics Research
  * 2021-04-07
  */
-public class GetEntityCrudKits_Serialization_TestCase {
+public abstract class GetEntityCrudKits_Serialization_TestCase {
 
 
     @Test
