@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -17,14 +21,18 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("GetEntityFormDescriptor")
 public abstract class GetEntityFormDescriptorResult implements Result {
 
+    public static final String SELECTOR_CRITERIA = "selectorCriteria";
+
+    @JsonCreator
     @Nonnull
-    public static GetEntityFormDescriptorResult get(@Nonnull ProjectId projectId,
-                                                    @Nonnull FormId formId,
-                                                    @Nullable FormDescriptor formDescriptor,
-                                                    @Nonnull FormPurpose purpose,
-                                                    @Nullable CompositeRootCriteria formSelector) {
+    public static GetEntityFormDescriptorResult get(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                    @JsonProperty("formId") @Nonnull FormId formId,
+                                                    @JsonProperty("formDescriptor") @Nullable FormDescriptor formDescriptor,
+                                                    @JsonProperty("purpose") @Nonnull FormPurpose purpose,
+                                                    @JsonProperty(SELECTOR_CRITERIA) @Nullable CompositeRootCriteria formSelector) {
         return new AutoValue_GetEntityFormDescriptorResult(projectId,
                                                            formId,
                                                            formDescriptor,
@@ -49,9 +57,11 @@ public abstract class GetEntityFormDescriptorResult implements Result {
     @Nonnull
     public abstract FormPurpose getPurpose();
 
+    @JsonProperty(SELECTOR_CRITERIA)
     @Nullable
     protected abstract CompositeRootCriteria getFormSelectorCriteriaInternal();
 
+    @JsonIgnore
     @Nonnull
     public Optional<CompositeRootCriteria> getFormSelectorCriteria() {
         return Optional.ofNullable(getFormSelectorCriteriaInternal());
