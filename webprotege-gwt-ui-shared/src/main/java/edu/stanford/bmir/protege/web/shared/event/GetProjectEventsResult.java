@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -16,7 +18,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 @JsonTypeName("GetProjectEvents")
 public abstract class GetProjectEventsResult implements Result {
 
-    public static GetProjectEventsResult create(EventList<?> events) {
+    @JsonCreator
+    public static GetProjectEventsResult create(@JsonProperty("events") EventList<?> events) {
         return new AutoValue_GetProjectEventsResult(events);
     }
 
