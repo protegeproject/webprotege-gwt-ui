@@ -19,11 +19,11 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GetIndividualsPageContainingIndividualResult implements Result {
 
-    public static GetIndividualsPageContainingIndividualResult get(@Nonnull OWLNamedIndividual individual,
-                                                                   @Nonnull Page<EntityNode> page,
-                                                                   @Nonnull EntityNode actualType,
-                                                                   @Nonnull InstanceRetrievalMode actualMode,
-                                                                   @Nonnull ImmutableSet<EntityNode> types) {
+    public static GetIndividualsPageContainingIndividualResult create(@Nonnull OWLNamedIndividual individual,
+                                                                      @Nonnull Page<EntityNode> page,
+                                                                      @Nonnull EntityNode actualType,
+                                                                      @Nonnull InstanceRetrievalMode actualMode,
+                                                                      @Nonnull ImmutableSet<EntityNode> types) {
         return new AutoValue_GetIndividualsPageContainingIndividualResult(individual,
                                                                           actualType,
                                                                           actualMode,

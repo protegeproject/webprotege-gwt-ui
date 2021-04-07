@@ -28,10 +28,10 @@ public class GetIndividualsPageContainingIndividualAction implements ProjectActi
 
     private InstanceRetrievalMode preferredMode;
 
-    public GetIndividualsPageContainingIndividualAction(@Nonnull ProjectId projectId,
-                                                        @Nonnull OWLNamedIndividual individual,
-                                                        @Nonnull Optional<OWLClass> preferredType,
-                                                        @Nullable InstanceRetrievalMode preferredMode) {
+    private GetIndividualsPageContainingIndividualAction(@Nonnull ProjectId projectId,
+                                                         @Nonnull OWLNamedIndividual individual,
+                                                         @Nonnull Optional<OWLClass> preferredType,
+                                                         @Nullable InstanceRetrievalMode preferredMode) {
         this.projectId = checkNotNull(projectId);
         this.individual = checkNotNull(individual);
         this.preferredType = checkNotNull(preferredType).orElse(null);
@@ -40,6 +40,13 @@ public class GetIndividualsPageContainingIndividualAction implements ProjectActi
 
     @GwtSerializationConstructor
     private GetIndividualsPageContainingIndividualAction() {
+    }
+
+    public static GetIndividualsPageContainingIndividualAction create(@Nonnull ProjectId projectId,
+                                                                      @Nonnull OWLNamedIndividual individual,
+                                                                      @Nonnull Optional<OWLClass> preferredType,
+                                                                      @Nullable InstanceRetrievalMode preferredMode) {
+        return new GetIndividualsPageContainingIndividualAction(projectId, individual, preferredType, preferredMode);
     }
 
     @Nonnull

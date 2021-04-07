@@ -313,7 +313,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     private GetIndividualsPageContainingIndividualAction getPageContaining(@Nonnull OWLNamedIndividual individual) {
-        return new GetIndividualsPageContainingIndividualAction(
+        return GetIndividualsPageContainingIndividualAction.create(
                 projectId,
                 individual,
                 hierarchyFieldPresenter
