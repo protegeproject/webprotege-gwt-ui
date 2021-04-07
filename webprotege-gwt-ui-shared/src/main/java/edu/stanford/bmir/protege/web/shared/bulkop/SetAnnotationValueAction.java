@@ -29,11 +29,11 @@ public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValu
 
     private String commitMessage;
 
-    public SetAnnotationValueAction(@Nonnull ProjectId projectId,
-                                    @Nonnull ImmutableSet<OWLEntity> entities,
-                                    @Nonnull OWLAnnotationProperty property,
-                                    @Nonnull OWLAnnotationValue value,
-                                    @Nonnull String commitMessage) {
+    private SetAnnotationValueAction(@Nonnull ProjectId projectId,
+                                     @Nonnull ImmutableSet<OWLEntity> entities,
+                                     @Nonnull OWLAnnotationProperty property,
+                                     @Nonnull OWLAnnotationValue value,
+                                     @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
@@ -43,6 +43,14 @@ public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValu
 
     @GwtSerializationConstructor
     private SetAnnotationValueAction() {
+    }
+
+    public static SetAnnotationValueAction create(@Nonnull ProjectId projectId,
+                                                  @Nonnull ImmutableSet<OWLEntity> entities,
+                                                  @Nonnull OWLAnnotationProperty property,
+                                                  @Nonnull OWLAnnotationValue value,
+                                                  @Nonnull String commitMessage) {
+        return new SetAnnotationValueAction(projectId, entities, property, value, commitMessage);
     }
 
     @Nonnull

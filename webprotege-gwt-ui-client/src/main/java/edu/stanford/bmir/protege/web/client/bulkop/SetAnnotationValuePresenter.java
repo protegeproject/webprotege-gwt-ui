@@ -106,10 +106,10 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
                                                   @Nonnull OWLAnnotationProperty prop,
                                                   @Nonnull OWLAnnotationValue val,
                                                   @Nonnull String commitMessage) {
-        return new SetAnnotationValueAction(projectId,
-                                            entities,
-                                            prop,
-                                            val,
-                                            commitMessage);
+        return SetAnnotationValueAction.create(projectId,
+                                               entities,
+                                               prop,
+                                               val,
+                                               commitMessage);
     }
 }

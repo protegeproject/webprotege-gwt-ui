@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class SetAnnotationValueResult implements Result, HasEventList<ProjectEvent<?>> {
 
-    public static SetAnnotationValueResult get(@Nonnull EventList<ProjectEvent<?>> eventList) {
+    public static SetAnnotationValueResult create(@Nonnull EventList<ProjectEvent<?>> eventList) {
         return new AutoValue_SetAnnotationValueResult(eventList);
     }
 }
