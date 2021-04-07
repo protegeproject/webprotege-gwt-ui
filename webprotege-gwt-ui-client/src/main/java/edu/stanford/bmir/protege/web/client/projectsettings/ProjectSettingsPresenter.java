@@ -172,7 +172,7 @@ public class ProjectSettingsPresenter {
 
     private void reloadSettings() {
         settingsPresenter.setBusy(true);
-        dispatchServiceManager.execute(new GetProjectInfoAction(projectId),
+        dispatchServiceManager.execute(GetProjectInfoAction.create(projectId),
                                        result -> {
                                            ProjectSettings projectSettings = result.getProjectDetails();
                                            displayProjectSettings(projectSettings, result.getProjectLanguages());

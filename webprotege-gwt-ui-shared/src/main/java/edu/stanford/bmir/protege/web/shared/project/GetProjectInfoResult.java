@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GetProjectInfoResult implements Result {
 
-    public static GetProjectInfoResult get(@Nonnull ProjectSettings projectSettings,
-                                           @Nonnull ImmutableList<DictionaryLanguageUsage> languageUsage) {
+    public static GetProjectInfoResult create(@Nonnull ProjectSettings projectSettings,
+                                              @Nonnull ImmutableList<DictionaryLanguageUsage> languageUsage) {
         return new AutoValue_GetProjectInfoResult(projectSettings,
                                                   languageUsage);
     }
