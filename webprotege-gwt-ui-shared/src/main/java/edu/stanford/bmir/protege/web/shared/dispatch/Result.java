@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
+import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
 import edu.stanford.bmir.protege.web.shared.form.DeleteFormResult;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
@@ -72,7 +73,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(GetApplicationSettingsResult.class),
         @Type(GetCommentedEntitiesResult.class),
         @Type(GetAvailableProjectsWithPermissionResult.class),
-        @Type(GetCurrentUserInSessionResult.class)
+        @Type(GetCurrentUserInSessionResult.class),
+        @Type(GetDeprecatedEntitiesResult.class)
 })
 public interface Result extends IsSerializable {
 

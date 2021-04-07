@@ -89,14 +89,14 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
     private void refillView() {
         view.setEntities(Collections.emptyList());
         int pageNumber = view.getPageNumber();
-        dispatchServiceManager.execute(new GetDeprecatedEntitiesAction(
+        dispatchServiceManager.execute(GetDeprecatedEntitiesAction.create(
                                                getProjectId(),
                                                PageRequest.requestPageWithSize(pageNumber, PAGE_SIZE),
                                                Sets.newHashSet(EntityType.values())
                                        ),
                                        this,
                                        result -> {
-                                           Page<OWLEntityData> page = result.getDeprecatedEntities();
+                                           Page<OWLEntityData> page = result.getEntities();
                                            view.setEntities(page.getPageElements());
                                            view.setPageNumber(page.getPageNumber());
                                            view.setPageCount(page.getPageCount());

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.DeleteFormAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
@@ -73,7 +74,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = GetAvailableProjectsAction.class),
         @Type(value = GetCommentedEntitiesAction.class),
         @Type(value = GetAvailableProjectsWithPermissionAction.class),
-        @Type(value = GetCurrentUserInSessionAction.class)
+        @Type(value = GetCurrentUserInSessionAction.class),
+        @Type(value = GetDeprecatedEntitiesAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {
