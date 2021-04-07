@@ -1,6 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -8,23 +15,26 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UpdateNamedIndividualFrameAction extends UpdateFrameAction {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("UpdateNamedIndividualFrame")
+public abstract class UpdateNamedIndividualFrameAction extends UpdateFrameAction {
 
-    /**
-     * For serialization purposes only
-     */
-    private UpdateNamedIndividualFrameAction() {
+
+    @JsonCreator
+    public static UpdateNamedIndividualFrameAction create(@JsonProperty("projectId") ProjectId projectId,
+                                                       @JsonProperty("from") PlainNamedIndividualFrame from,
+                                                       @JsonProperty("to") PlainNamedIndividualFrame to) {
+        return new AutoValue_UpdateNamedIndividualFrameAction(projectId, from, to);
     }
 
-    private UpdateNamedIndividualFrameAction(ProjectId projectId,
-                                             PlainNamedIndividualFrame from,
-                                             PlainNamedIndividualFrame to) {
-        super(projectId, from, to);
-    }
+    @Nonnull
+    @Override
+    public abstract ProjectId getProjectId();
 
-    public static UpdateNamedIndividualFrameAction create(ProjectId projectId,
-                                                          PlainNamedIndividualFrame from,
-                                                          PlainNamedIndividualFrame to) {
-        return new UpdateNamedIndividualFrameAction(projectId, from, to);
-    }
+    @Override
+    public abstract PlainNamedIndividualFrame getFrom();
+
+    @Override
+    public abstract PlainNamedIndividualFrame getTo();
 }
