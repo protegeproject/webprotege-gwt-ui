@@ -29,8 +29,12 @@ public class LookupEntitiesResult implements Result {
      * @param entityLookupResult The match result.  Not {@code null}.
      * @throws NullPointerException if {@code entityLookupResult} is {@code null}.
      */
-    public LookupEntitiesResult(Collection<EntityLookupResult> entityLookupResult) {
+    private LookupEntitiesResult(Collection<EntityLookupResult> entityLookupResult) {
         this.entityLookupResult = new ArrayList<EntityLookupResult>(checkNotNull(entityLookupResult));
+    }
+
+    public static LookupEntitiesResult create(Collection<EntityLookupResult> entityLookupResult) {
+        return new LookupEntitiesResult(entityLookupResult);
     }
 
     /**

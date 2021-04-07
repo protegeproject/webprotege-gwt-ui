@@ -116,9 +116,8 @@ public class CommentAutoCompleter {
             callback.completionsReady(new AutoCompletionResult());
             return;
         }
-        dispatchServiceManager.execute(
-                new LookupEntitiesAction(projectId,
-                                         lookUpEntities(wordFragment)),
+        dispatchServiceManager.execute(LookupEntitiesAction.create(projectId,
+                                                           lookUpEntities(wordFragment)),
                 result -> {
                     List<AutoCompletionChoice> choices = new ArrayList<>();
                     EditorPosition pos = new EditorPosition(caretPos.getLineNumber(),

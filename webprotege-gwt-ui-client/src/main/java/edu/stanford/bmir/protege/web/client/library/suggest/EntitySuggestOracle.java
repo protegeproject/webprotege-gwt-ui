@@ -77,7 +77,7 @@ public class EntitySuggestOracle extends SuggestOracle {
             callback.onSuggestionsReady(request, new Response(Collections.emptyList()));
             return;
         }
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes, entityMatchCriteria)), result -> {
+        dispatchServiceManager.execute(LookupEntitiesAction.create(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes, entityMatchCriteria)), result -> {
             List<EntitySuggestion> suggestions = new ArrayList<>();
             for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                 ImmutableList<SearchResultMatchPosition> positions = entity.getMatchResult().getPositions();
