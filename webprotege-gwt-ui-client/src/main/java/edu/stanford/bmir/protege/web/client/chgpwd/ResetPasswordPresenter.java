@@ -76,7 +76,7 @@ public class ResetPasswordPresenter {
     }
 
     private void resetPassword(ResetPasswordData data) {
-        dispatchService.execute(new ResetPasswordAction(data), new DispatchServiceCallback<ResetPasswordResult>(errorDisplay) {
+        dispatchService.execute(ResetPasswordAction.create(data), new DispatchServiceCallback<ResetPasswordResult>(errorDisplay) {
 
             @Override
             public void handleSuccess(ResetPasswordResult result) {

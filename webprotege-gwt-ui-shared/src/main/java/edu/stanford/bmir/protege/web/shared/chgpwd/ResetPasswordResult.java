@@ -18,8 +18,12 @@ public class ResetPasswordResult implements Result {
     private ResetPasswordResult() {
     }
 
-    public ResetPasswordResult(ResetPasswordResultCode resultCode) {
+    private ResetPasswordResult(ResetPasswordResultCode resultCode) {
         this.resultCode = checkNotNull(resultCode);
+    }
+
+    public static ResetPasswordResult create(ResetPasswordResultCode resultCode) {
+        return new ResetPasswordResult(resultCode);
     }
 
     public ResetPasswordResultCode getResultCode() {

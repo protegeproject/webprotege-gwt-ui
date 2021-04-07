@@ -18,8 +18,12 @@ public class ResetPasswordAction implements Action<ResetPasswordResult> {
     private ResetPasswordAction() {
     }
 
-    public ResetPasswordAction(ResetPasswordData resetPasswordData) {
+    private ResetPasswordAction(ResetPasswordData resetPasswordData) {
         this.resetPasswordData = checkNotNull(resetPasswordData);
+    }
+
+    public static ResetPasswordAction create(ResetPasswordData resetPasswordData) {
+        return new ResetPasswordAction(resetPasswordData);
     }
 
     public ResetPasswordData getResetPasswordData() {
