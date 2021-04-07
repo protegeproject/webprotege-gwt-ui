@@ -22,9 +22,9 @@ import javax.annotation.Nonnull;
 public abstract class RevertRevisionResult implements Result, HasProjectId, HasEventList<ProjectEvent<?>> {
 
     @Nonnull
-    public static RevertRevisionResult get(@Nonnull ProjectId projectId,
-                                           @Nonnull RevisionNumber revisionNumber,
-                                           @Nonnull EventList<ProjectEvent<?>> eventList) {
+    public static RevertRevisionResult create(@Nonnull ProjectId projectId,
+                                              @Nonnull RevisionNumber revisionNumber,
+                                              @Nonnull EventList<ProjectEvent<?>> eventList) {
         return new AutoValue_RevertRevisionResult(projectId, revisionNumber, eventList);
     }
 

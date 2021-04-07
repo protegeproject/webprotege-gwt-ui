@@ -27,9 +27,13 @@ public class RevertRevisionAction implements ProjectAction<RevertRevisionResult>
     private RevertRevisionAction() {
     }
 
-    public RevertRevisionAction(ProjectId projectId, RevisionNumber revisionNumber) {
+    private RevertRevisionAction(ProjectId projectId, RevisionNumber revisionNumber) {
         this.projectId = checkNotNull(projectId);
         this.revisionNumber = checkNotNull(revisionNumber);
+    }
+
+    public static RevertRevisionAction create(ProjectId projectId, RevisionNumber revisionNumber) {
+        return new RevertRevisionAction(projectId, revisionNumber);
     }
 
     @Nonnull

@@ -211,7 +211,7 @@ public class ChangeListPresenter {
 
     private void revertChanges(ProjectChange projectChange) {
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
-        dispatch.execute(new RevertRevisionAction(projectId, revisionNumber),
+        dispatch.execute(RevertRevisionAction.create(projectId, revisionNumber),
                          this::handleChangedReverted);
     }
 
