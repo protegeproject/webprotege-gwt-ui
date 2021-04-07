@@ -25,10 +25,13 @@ public class GetWatchedEntityChangesAction implements ProjectAction<GetWatchedEn
     private GetWatchedEntityChangesAction() {
     }
 
-    public GetWatchedEntityChangesAction(ProjectId projectId,
-                                         UserId userId) {
+    private GetWatchedEntityChangesAction(ProjectId projectId, UserId userId) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
+    }
+
+    public static GetWatchedEntityChangesAction create(ProjectId projectId, UserId userId) {
+        return new GetWatchedEntityChangesAction(projectId, userId);
     }
 
     @Nonnull

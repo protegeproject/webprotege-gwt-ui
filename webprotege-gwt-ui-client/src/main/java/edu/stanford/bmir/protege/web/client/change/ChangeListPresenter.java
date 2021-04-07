@@ -128,7 +128,7 @@ public class ChangeListPresenter {
         checkNotNull(userId);
         this.pageNumberChangedHandler = pageNumber -> displayChangesForWatches(userId);
         view.clear();
-        GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
+        GetWatchedEntityChangesAction action = GetWatchedEntityChangesAction.create(projectId, userId);
         dispatch.execute(action,
                          hasBusy,
                          this::fillView);

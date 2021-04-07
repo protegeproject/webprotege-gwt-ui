@@ -21,8 +21,12 @@ public class GetWatchedEntityChangesResult implements Result, HasProjectChanges 
     private GetWatchedEntityChangesResult() {
     }
 
-    public GetWatchedEntityChangesResult(Page<ProjectChange> changes) {
+    private GetWatchedEntityChangesResult(Page<ProjectChange> changes) {
         this.changes = checkNotNull(changes);
+    }
+
+    public static GetWatchedEntityChangesResult create(Page<ProjectChange> changes) {
+        return new GetWatchedEntityChangesResult(changes);
     }
 
     @Nonnull
