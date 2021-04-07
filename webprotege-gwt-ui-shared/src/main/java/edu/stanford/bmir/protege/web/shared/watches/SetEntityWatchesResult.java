@@ -17,8 +17,12 @@ public class SetEntityWatchesResult implements Result, HasEventList<ProjectEvent
     private SetEntityWatchesResult() {
     }
 
-    public SetEntityWatchesResult(EventList<ProjectEvent<?>> eventList) {
+    private SetEntityWatchesResult(EventList<ProjectEvent<?>> eventList) {
         this.eventList = eventList;
+    }
+
+    public static SetEntityWatchesResult create(EventList<ProjectEvent<?>> eventList) {
+        return new SetEntityWatchesResult(eventList);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class WatchPresenter {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         Optional<Watch> watch = getWatchFromType(type, currentEntity);
         ImmutableSet<Watch> watches = watch.map(ImmutableSet::of).orElse(ImmutableSet.of());
-        dispatchServiceManager.execute(new SetEntityWatchesAction(projectId, userId, currentEntity, watches),
+        dispatchServiceManager.execute(SetEntityWatchesAction.create(projectId, userId, currentEntity, watches),
                                        result -> modalCloser.closeModal());
     }
 
