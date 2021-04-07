@@ -63,7 +63,7 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        editor.getValue().ifPresent(def -> dispatch.execute(new SetOboTermDefinitionAction(getProjectId(), entity, def),
+        editor.getValue().ifPresent(def -> dispatch.execute(SetOboTermDefinitionAction.create(getProjectId(), entity, def),
                                                             result -> {}));
     }
 

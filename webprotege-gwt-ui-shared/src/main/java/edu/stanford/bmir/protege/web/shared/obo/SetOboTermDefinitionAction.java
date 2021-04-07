@@ -23,9 +23,9 @@ public class SetOboTermDefinitionAction implements ProjectAction<SetOboTermDefin
 
     private OBOTermDefinition def;
 
-    public SetOboTermDefinitionAction(@Nonnull ProjectId projectId,
-                                      @Nonnull OWLEntity entity,
-                                      @Nonnull OBOTermDefinition def) {
+    private SetOboTermDefinitionAction(@Nonnull ProjectId projectId,
+                                       @Nonnull OWLEntity entity,
+                                       @Nonnull OBOTermDefinition def) {
         this.projectId = projectId;
         this.entity = entity;
         this.def = def;
@@ -33,6 +33,12 @@ public class SetOboTermDefinitionAction implements ProjectAction<SetOboTermDefin
 
     @GwtSerializationConstructor
     private SetOboTermDefinitionAction() {
+    }
+
+    public static SetOboTermDefinitionAction create(@Nonnull ProjectId projectId,
+                                                    @Nonnull OWLEntity entity,
+                                                    @Nonnull OBOTermDefinition def) {
+        return new SetOboTermDefinitionAction(projectId, entity, def);
     }
 
     @Nonnull
