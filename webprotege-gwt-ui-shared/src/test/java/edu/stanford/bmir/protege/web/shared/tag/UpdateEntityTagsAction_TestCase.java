@@ -38,13 +38,13 @@ public class UpdateEntityTagsAction_TestCase {
     public void setUp() {
         fromTagIds = Collections.singleton(mock(TagId.class));
         toTagIds = Collections.singleton(mock(TagId.class));
-        action = new UpdateEntityTagsAction(projectId, entity, fromTagIds, toTagIds);
+        action = UpdateEntityTagsAction.create(projectId, entity, fromTagIds, toTagIds);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new UpdateEntityTagsAction(null, entity, fromTagIds, toTagIds);
+        UpdateEntityTagsAction.create(null, entity, fromTagIds, toTagIds);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class UpdateEntityTagsAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new UpdateEntityTagsAction(projectId, null, fromTagIds, toTagIds);
+        UpdateEntityTagsAction.create(projectId, null, fromTagIds, toTagIds);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class UpdateEntityTagsAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_fromTagIds_IsNull() {
-        new UpdateEntityTagsAction(projectId, entity, null, toTagIds);
+        UpdateEntityTagsAction.create(projectId, entity, null, toTagIds);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class UpdateEntityTagsAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_toTagIds_IsNull() {
-        new UpdateEntityTagsAction(projectId, entity, fromTagIds, null);
+        UpdateEntityTagsAction.create(projectId, entity, fromTagIds, null);
     }
 
     @Test
@@ -98,32 +98,32 @@ public class UpdateEntityTagsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(new UpdateEntityTagsAction(projectId, entity, fromTagIds, toTagIds)));
+        assertThat(action, is(UpdateEntityTagsAction.create(projectId, entity, fromTagIds, toTagIds)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(Matchers.not(new UpdateEntityTagsAction(mock(ProjectId.class), entity, fromTagIds, toTagIds))));
+        assertThat(action, is(Matchers.not(UpdateEntityTagsAction.create(mock(ProjectId.class), entity, fromTagIds, toTagIds))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(action, is(Matchers.not(new UpdateEntityTagsAction(projectId, mock(OWLEntity.class), fromTagIds, toTagIds))));
+        assertThat(action, is(Matchers.not(UpdateEntityTagsAction.create(projectId, mock(OWLEntity.class), fromTagIds, toTagIds))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_fromTagIds() {
-        assertThat(action, is(Matchers.not(new UpdateEntityTagsAction(projectId, entity, Collections.singleton(mock(TagId.class)), toTagIds))));
+        assertThat(action, is(Matchers.not(UpdateEntityTagsAction.create(projectId, entity, Collections.singleton(mock(TagId.class)), toTagIds))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_toTagIds() {
-        assertThat(action, is(Matchers.not(new UpdateEntityTagsAction(projectId, entity, fromTagIds, Collections.singleton(mock(TagId.class))))));
+        assertThat(action, is(Matchers.not(UpdateEntityTagsAction.create(projectId, entity, fromTagIds, Collections.singleton(mock(TagId.class))))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(new UpdateEntityTagsAction(projectId, entity, fromTagIds, toTagIds).hashCode()));
+        assertThat(action.hashCode(), is(UpdateEntityTagsAction.create(projectId, entity, fromTagIds, toTagIds).hashCode()));
     }
 
     @Test

@@ -37,9 +37,9 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityCo
 
     @Override
     public UpdateFrameAction createUpdateObjectAction(DataPropertyFrame pristineObject, DataPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateDataPropertyFrameAction(editorContext.getProjectId(),
-                                                 pristineObject.toPlainFrame(),
-                                                 editedObject.toPlainFrame());
+        return UpdateDataPropertyFrameAction.create(editorContext.getProjectId(),
+                                                    pristineObject.toPlainFrame(),
+                                                    editedObject.toPlainFrame());
     }
 
     @Override

@@ -14,7 +14,13 @@ public class UpdateDataPropertyFrameAction extends UpdateFrameAction implements 
     private UpdateDataPropertyFrameAction() {
     }
 
-    public UpdateDataPropertyFrameAction(ProjectId projectId, PlainDataPropertyFrame from, PlainDataPropertyFrame to) {
+    private UpdateDataPropertyFrameAction(ProjectId projectId, PlainDataPropertyFrame from, PlainDataPropertyFrame to) {
         super(projectId, from, to);
+    }
+
+    public static UpdateDataPropertyFrameAction create(ProjectId projectId,
+                                                       PlainDataPropertyFrame from,
+                                                       PlainDataPropertyFrame to) {
+        return new UpdateDataPropertyFrameAction(projectId, from, to);
     }
 }

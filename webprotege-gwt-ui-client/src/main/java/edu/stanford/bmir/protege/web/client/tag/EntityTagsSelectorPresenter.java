@@ -77,10 +77,10 @@ public class EntityTagsSelectorPresenter {
         List<Tag> tags = getSelectedTags();
         Set<TagId> fromTagIds = selectedTags.stream().map(Tag::getTagId).collect(toSet());
         Set<TagId> toTagIds = tags.stream().map(Tag::getTagId).collect(toSet());
-        dispatchServiceManager.execute(new UpdateEntityTagsAction(projectId,
-                                                                  entity,
-                                                                  fromTagIds,
-                                                                  toTagIds),
+        dispatchServiceManager.execute(UpdateEntityTagsAction.create(projectId,
+                                                                     entity,
+                                                                     fromTagIds,
+                                                                     toTagIds),
                                        result -> {});
     }
 

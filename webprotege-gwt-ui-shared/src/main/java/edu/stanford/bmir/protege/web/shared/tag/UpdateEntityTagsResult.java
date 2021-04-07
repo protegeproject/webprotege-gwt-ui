@@ -20,12 +20,16 @@ public class UpdateEntityTagsResult implements Result, HasEventList<ProjectEvent
     private EventList<ProjectEvent<?>> eventList;
 
     @Nonnull
-    public UpdateEntityTagsResult(EventList<ProjectEvent<?>> eventList) {
+    private UpdateEntityTagsResult(EventList<ProjectEvent<?>> eventList) {
         this.eventList = checkNotNull(eventList);
     }
 
     @GwtSerializationConstructor
     private UpdateEntityTagsResult() {
+    }
+
+    public static UpdateEntityTagsResult create(EventList<ProjectEvent<?>> eventList) {
+        return new UpdateEntityTagsResult(eventList);
     }
 
     @Override
