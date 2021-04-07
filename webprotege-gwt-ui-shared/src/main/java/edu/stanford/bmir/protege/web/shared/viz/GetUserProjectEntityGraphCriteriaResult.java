@@ -18,9 +18,9 @@ import javax.annotation.Nonnull;
 public abstract class GetUserProjectEntityGraphCriteriaResult implements Result {
 
 
-    public static GetUserProjectEntityGraphCriteriaResult get(@Nonnull ProjectId projectId,
-                                                              @Nonnull UserId userId,
-                                                              @Nonnull EntityGraphSettings settings) {
+    public static GetUserProjectEntityGraphCriteriaResult create(@Nonnull ProjectId projectId,
+                                                                 @Nonnull UserId userId,
+                                                                 @Nonnull EntityGraphSettings settings) {
         return new AutoValue_GetUserProjectEntityGraphCriteriaResult(projectId,
                                                                      userId,
                                                                      settings);

@@ -17,12 +17,16 @@ public class GetUserProjectEntityGraphCriteriaAction implements ProjectAction<Ge
 
     private ProjectId projectId;
 
-    public GetUserProjectEntityGraphCriteriaAction(@Nonnull ProjectId projectId) {
+    private GetUserProjectEntityGraphCriteriaAction(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     private GetUserProjectEntityGraphCriteriaAction() {
+    }
+
+    public static GetUserProjectEntityGraphCriteriaAction create(@Nonnull ProjectId projectId) {
+        return new GetUserProjectEntityGraphCriteriaAction(projectId);
     }
 
     @Nonnull

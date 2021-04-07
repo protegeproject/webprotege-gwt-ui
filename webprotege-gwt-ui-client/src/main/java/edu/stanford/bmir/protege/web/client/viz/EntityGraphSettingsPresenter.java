@@ -75,7 +75,7 @@ public class EntityGraphSettingsPresenter {
         filterListPresenter.start(view.getFilterListContainer());
         view.setApplySettingsHandler(this::handleApplySettings);
         view.setCancelSettingsHandler(this::handleCancel);
-        dispatchServiceManager.execute(new GetUserProjectEntityGraphCriteriaAction(projectId),
+        dispatchServiceManager.execute(GetUserProjectEntityGraphCriteriaAction.create(projectId),
                                        hasBusy,
                                        this::displaySettings);
         permissionChecker.hasPermission(BuiltInAction.EDIT_DEFAULT_VISUALIZATION_SETTINGS,
