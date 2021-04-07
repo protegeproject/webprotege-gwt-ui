@@ -25,10 +25,10 @@ public class MoveEntitiesToParentAction implements ProjectAction<MoveEntitiesToP
 
     private String commitMessage;
 
-    public MoveEntitiesToParentAction(@Nonnull ProjectId projectId,
-                                      @Nonnull ImmutableSet<OWLClass> entities,
-                                      @Nonnull OWLClass entity,
-                                      @Nonnull String commitMessage) {
+    private MoveEntitiesToParentAction(@Nonnull ProjectId projectId,
+                                       @Nonnull ImmutableSet<OWLClass> entities,
+                                       @Nonnull OWLClass entity,
+                                       @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.entity = checkNotNull(entity);
@@ -36,6 +36,13 @@ public class MoveEntitiesToParentAction implements ProjectAction<MoveEntitiesToP
     }
 
     private MoveEntitiesToParentAction() {
+    }
+
+    public static MoveEntitiesToParentAction create(@Nonnull ProjectId projectId,
+                                                    @Nonnull ImmutableSet<OWLClass> entities,
+                                                    @Nonnull OWLClass entity,
+                                                    @Nonnull String commitMessage) {
+        return new MoveEntitiesToParentAction(projectId, entities, entity, commitMessage);
     }
 
     @Nonnull

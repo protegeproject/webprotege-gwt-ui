@@ -8,4 +8,11 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * 26/01/15
  */
 public class MergeUploadedProjectResult implements Result {
+
+    private MergeUploadedProjectResult() {
+    }
+
+    public static MergeUploadedProjectResult create() {
+        return new MergeUploadedProjectResult();
+    }
 }

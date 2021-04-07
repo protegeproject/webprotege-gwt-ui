@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class MoveEntitiesToParentResult implements Result, HasEventList<ProjectEvent<?>> {
 
-    public static MoveEntitiesToParentResult get(@Nonnull EventList<ProjectEvent<?>> eventList) {
+    public static MoveEntitiesToParentResult create(@Nonnull EventList<ProjectEvent<?>> eventList) {
         return new AutoValue_MoveEntitiesToParentResult(eventList);
     }
 

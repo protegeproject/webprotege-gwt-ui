@@ -100,7 +100,7 @@ public class MergeUploadedProjectWorkflow {
 
     private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId, String commitMessage) {
 
-        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(MergeUploadedProjectAction.create(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>(errorDisplay, progressDisplay) {
 
             @Override
             public String getProgressDisplayTitle() {

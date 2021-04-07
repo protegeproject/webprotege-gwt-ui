@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -41,6 +42,10 @@ public class MockingUtils {
 
     public static ProjectId mockProjectId() {
         return ProjectId.get(UUID.randomUUID().toString());
+    }
+
+    public static DocumentId mockDocumentId() {
+        return new DocumentId(UUID.randomUUID().toString());
     }
 
     public static OWLClass mockOWLClass() {

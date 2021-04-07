@@ -101,10 +101,10 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
                 .collect(toImmutableSet());
         return hierarchyFieldPresenter.getEntity()
                 .map(OWLEntityData::getEntity)
-                .map(entity -> new MoveEntitiesToParentAction(projectId,
-                                                              clses,
-                                                              entity.asOWLClass(),
-                                                              commitMessage));
+                .map(entity -> MoveEntitiesToParentAction.create(projectId,
+                                                                 clses,
+                                                                 entity.asOWLClass(),
+                                                                 commitMessage));
     }
 
     @Override
