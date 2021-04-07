@@ -9,10 +9,7 @@ import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
-import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
-import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
-import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
-import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
+import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
@@ -166,6 +163,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetUserIdCompletionsResult.class),
         @Type(GetUserProjectEntityGraphCriteriaResult.class),
         @Type(GetWatchesResult.class),
+        @Type(GetWatchedEntityChangesResult.class),
         @Type(LoadProjectResult.class),
         @Type(LogOutUserResult.class),
         @Type(LookupEntitiesResult.class),

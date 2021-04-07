@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
+import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
@@ -168,6 +169,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetUserIdCompletionsAction.class),
         @Type(value = GetUserProjectEntityGraphCriteriaAction.class),
         @Type(value = GetWatchesAction.class),
+        @Type(value = GetWatchedEntityChangesAction.class),
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
         @Type(value = LookupEntitiesAction.class),

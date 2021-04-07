@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -14,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/02/15
  */
+@JsonTypeName("GetWatchedEntityChanges")
 public class GetWatchedEntityChangesResult implements Result, HasProjectChanges {
 
     private Page<ProjectChange> changes;
@@ -25,7 +29,8 @@ public class GetWatchedEntityChangesResult implements Result, HasProjectChanges 
         this.changes = checkNotNull(changes);
     }
 
-    public static GetWatchedEntityChangesResult create(Page<ProjectChange> changes) {
+    @JsonCreator
+    public static GetWatchedEntityChangesResult create(@JsonProperty("projectChanges") Page<ProjectChange> changes) {
         return new GetWatchedEntityChangesResult(changes);
     }
 
