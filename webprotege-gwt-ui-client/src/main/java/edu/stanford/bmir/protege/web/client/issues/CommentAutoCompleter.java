@@ -63,7 +63,7 @@ public class CommentAutoCompleter {
                             .getGroup(0)
                             .length());
 
-            dispatchServiceManager.execute(new GetUserIdCompletionsAction(matchedPartialName),
+            dispatchServiceManager.execute(GetUserIdCompletionsAction.create(matchedPartialName),
                                            userIdsResult -> {
                                                List<AutoCompletionChoice> suggestions = new ArrayList<>();
                                                List<UserId> userIds = userIdsResult.getPossibleItemCompletions();

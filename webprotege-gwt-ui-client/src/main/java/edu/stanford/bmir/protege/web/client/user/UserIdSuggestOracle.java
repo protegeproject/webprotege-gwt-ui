@@ -30,7 +30,7 @@ public class UserIdSuggestOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
-        dispatchServiceManager.execute(new GetUserIdCompletionsAction(request.getQuery()), result -> {
+        dispatchServiceManager.execute(GetUserIdCompletionsAction.create(request.getQuery()), result -> {
             Collection<Suggestion> suggestions = new ArrayList<>();
             for(final UserId userId : result.getPossibleItemCompletions()) {
                 suggestions.add(new Suggestion() {
