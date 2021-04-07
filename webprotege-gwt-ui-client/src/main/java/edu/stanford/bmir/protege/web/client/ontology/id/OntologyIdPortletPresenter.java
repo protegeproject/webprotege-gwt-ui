@@ -50,7 +50,7 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
     }
 
     private void updateDisplay() {
-        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()),
+        dispatchServiceManager.execute(GetRootOntologyIdAction.create(getProjectId()),
                                        result -> editor.setValue(result.getObject()));
     }
 

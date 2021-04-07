@@ -25,9 +25,13 @@ public class GetRootOntologyIdResult implements Result, HasProjectId {
     private GetRootOntologyIdResult() {
     }
 
-    public GetRootOntologyIdResult(ProjectId projectId, OWLOntologyID owlOntologyID) {
+    private GetRootOntologyIdResult(ProjectId projectId, OWLOntologyID owlOntologyID) {
         this.projectId = projectId;
         this.ontologyID = owlOntologyID;
+    }
+
+    public static GetRootOntologyIdResult create(ProjectId projectId, OWLOntologyID owlOntologyID) {
+        return new GetRootOntologyIdResult(projectId, owlOntologyID);
     }
 
     /**

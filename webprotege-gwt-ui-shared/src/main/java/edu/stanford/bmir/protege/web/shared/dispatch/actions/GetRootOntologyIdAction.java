@@ -18,7 +18,11 @@ public class GetRootOntologyIdAction extends AbstractHasProjectAction<GetRootOnt
     private GetRootOntologyIdAction() {
     }
 
-    public GetRootOntologyIdAction(ProjectId projectId) {
+    private GetRootOntologyIdAction(ProjectId projectId) {
         super(projectId);
+    }
+
+    public static GetRootOntologyIdAction create(ProjectId projectId) {
+        return new GetRootOntologyIdAction(projectId);
     }
 }
