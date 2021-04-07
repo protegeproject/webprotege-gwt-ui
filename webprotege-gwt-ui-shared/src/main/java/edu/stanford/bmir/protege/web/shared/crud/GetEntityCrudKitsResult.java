@@ -22,9 +22,14 @@ public class GetEntityCrudKitsResult implements Result {
     private GetEntityCrudKitsResult() {
     }
 
-    public GetEntityCrudKitsResult(List<EntityCrudKit<?>> kits, EntityCrudKitSettings<?> currentSettings) {
+    private GetEntityCrudKitsResult(List<EntityCrudKit<?>> kits, EntityCrudKitSettings<?> currentSettings) {
         this.kits = checkNotNull(kits);
         this.currentSettings = checkNotNull(currentSettings);
+    }
+
+    public static GetEntityCrudKitsResult create(List<EntityCrudKit<?>> kits,
+                                                 EntityCrudKitSettings<?> currentSettings) {
+        return new GetEntityCrudKitsResult(kits, currentSettings);
     }
 
     public List<EntityCrudKit<?>> getKits() {

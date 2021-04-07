@@ -177,7 +177,7 @@ public class ProjectSettingsPresenter {
                                            ProjectSettings projectSettings = result.getProjectDetails();
                                            displayProjectSettings(projectSettings, result.getProjectLanguages());
                                        });
-        dispatchServiceManager.execute(new GetEntityCrudKitsAction(projectId),
+        dispatchServiceManager.execute(GetEntityCrudKitsAction.create(projectId),
                                        result -> {
                                             entityCrudKitSettingsPresenter.setSettings(result.getCurrentSettings());
                                        });
