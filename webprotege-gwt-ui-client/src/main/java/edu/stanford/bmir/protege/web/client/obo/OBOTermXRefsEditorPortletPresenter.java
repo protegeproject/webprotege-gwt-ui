@@ -75,7 +75,7 @@ public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPr
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        dispatch.execute(new GetOboTermXRefsAction(getProjectId(), entity),
+        dispatch.execute(GetOboTermXRefsAction.create(getProjectId(), entity),
                          this,
                          result -> editor.setValue(result.getxRefs()));
     }
