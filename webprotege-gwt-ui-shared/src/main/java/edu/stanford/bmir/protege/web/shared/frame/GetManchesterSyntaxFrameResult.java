@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 public abstract class GetManchesterSyntaxFrameResult implements Result {
 
     @Nonnull
-    public static GetManchesterSyntaxFrameResult get(@Nonnull OWLEntityData frameSubject,
-                                                     @Nonnull String frameRendering) {
+    public static GetManchesterSyntaxFrameResult create(@Nonnull OWLEntityData frameSubject,
+                                                        @Nonnull String frameRendering) {
         return new AutoValue_GetManchesterSyntaxFrameResult(frameSubject,
                                                             frameRendering);
     }

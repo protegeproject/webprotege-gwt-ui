@@ -267,7 +267,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private void replaceTextWithFrameRendering(final OWLEntity subject) {
         editor.setApplyChangesViewVisible(false);
         freshEntities.clear();
-        dsm.execute(new GetManchesterSyntaxFrameAction(projectId, subject), result -> {
+        dsm.execute(GetManchesterSyntaxFrameAction.create(projectId, subject), result -> {
             editor.setValue(result.getFrameManchesterSyntax());
             entityDisplay.setDisplayedEntity(Optional.of(result.getFrameSubject()));
             pristineValue = Optional.of(result.getFrameManchesterSyntax());

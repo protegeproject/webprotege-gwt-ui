@@ -9,12 +9,14 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,6 +37,10 @@ public class MockingUtils {
 
     public static IRI mockIRI() {
         return IRI.create("http://stuff.com/I" + nextInt());
+    }
+
+    public static ProjectId mockProjectId() {
+        return ProjectId.get(UUID.randomUUID().toString());
     }
 
     public static OWLClass mockOWLClass() {
