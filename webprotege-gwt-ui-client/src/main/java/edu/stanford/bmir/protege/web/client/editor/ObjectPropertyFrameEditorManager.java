@@ -30,7 +30,7 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     @Override
     public GetObjectPropertyFrameAction createAction(OWLEntityContext editorContext) {
-        return new GetObjectPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLObjectProperty());
+        return GetObjectPropertyFrameAction.create(editorContext.getProjectId(), editorContext.getEntity().asOWLObjectProperty());
     }
 
     @Override

@@ -18,8 +18,12 @@ public class GetObjectPropertyFrameResult implements GetObjectResult<ObjectPrope
     private GetObjectPropertyFrameResult() {
     }
 
-    public GetObjectPropertyFrameResult(ObjectPropertyFrame frame) {
+    private GetObjectPropertyFrameResult(ObjectPropertyFrame frame) {
         this.frame = checkNotNull(frame);
+    }
+
+    public static GetObjectPropertyFrameResult create(ObjectPropertyFrame frame) {
+        return new GetObjectPropertyFrameResult(frame);
     }
 
     public ObjectPropertyFrame getFrame() {

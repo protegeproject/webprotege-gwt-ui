@@ -24,9 +24,13 @@ public class GetObjectPropertyFrameAction implements ProjectAction<GetObjectProp
 
     }
 
-    public GetObjectPropertyFrameAction(ProjectId projectId, OWLObjectProperty subject) {
+    private GetObjectPropertyFrameAction(ProjectId projectId, OWLObjectProperty subject) {
         this.projectId = projectId;
         this.subject = subject;
+    }
+
+    public static GetObjectPropertyFrameAction create(ProjectId projectId, OWLObjectProperty subject) {
+        return new GetObjectPropertyFrameAction(projectId, subject);
     }
 
     @Nonnull
