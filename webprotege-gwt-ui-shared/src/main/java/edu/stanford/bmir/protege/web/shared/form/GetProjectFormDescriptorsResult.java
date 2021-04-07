@@ -19,9 +19,9 @@ import javax.annotation.Nonnull;
 public abstract class GetProjectFormDescriptorsResult implements Result, HasProjectId {
 
     @Nonnull
-    public static GetProjectFormDescriptorsResult get(@Nonnull ProjectId projectId,
-                                                      @Nonnull ImmutableList<FormDescriptor> formDescriptors,
-                                                      @Nonnull ImmutableList<EntityFormSelector> selectionCriteria) {
+    public static GetProjectFormDescriptorsResult create(@Nonnull ProjectId projectId,
+                                                         @Nonnull ImmutableList<FormDescriptor> formDescriptors,
+                                                         @Nonnull ImmutableList<EntityFormSelector> selectionCriteria) {
         return new AutoValue_GetProjectFormDescriptorsResult(projectId, formDescriptors, selectionCriteria);
     }
 

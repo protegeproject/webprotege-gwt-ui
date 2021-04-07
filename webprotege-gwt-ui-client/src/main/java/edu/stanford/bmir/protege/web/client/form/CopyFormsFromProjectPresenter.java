@@ -151,7 +151,7 @@ public class CopyFormsFromProjectPresenter {
     }
 
     private void updateFormsListForProject(ProjectId projectId) {
-        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
+        dispatch.execute(GetProjectFormDescriptorsAction.create(projectId),
                          this::updateFormsList);
     }
 

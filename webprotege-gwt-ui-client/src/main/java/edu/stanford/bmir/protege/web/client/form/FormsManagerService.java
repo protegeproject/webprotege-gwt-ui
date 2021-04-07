@@ -34,7 +34,7 @@ public class FormsManagerService {
 
     public void getForms(@Nonnull HasBusy busyIndicator,
                          @Nonnull BiConsumer<ImmutableList<FormDescriptor>, ImmutableList<EntityFormSelector>> forms) {
-        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
+        dispatch.execute(GetProjectFormDescriptorsAction.create(projectId),
                          busyIndicator,
                          result -> forms.accept(result.getFormDescriptors(), result.getFormSelectors()));
     }
