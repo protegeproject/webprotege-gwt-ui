@@ -40,9 +40,9 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     @Override
     public UpdateObjectPropertyFrameAction createUpdateObjectAction(ObjectPropertyFrame pristineObject, ObjectPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateObjectPropertyFrameAction(editorContext.getProjectId(),
-                                                   pristineObject.toPlainFrame(),
-                                                   editedObject.toPlainFrame());
+        return UpdateObjectPropertyFrameAction.create(editorContext.getProjectId(),
+                                                      pristineObject.toPlainFrame(),
+                                                      editedObject.toPlainFrame());
     }
 
     @Override
