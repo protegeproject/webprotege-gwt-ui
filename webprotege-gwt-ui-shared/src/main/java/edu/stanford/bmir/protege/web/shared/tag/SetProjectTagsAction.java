@@ -23,8 +23,7 @@ public class SetProjectTagsAction implements ProjectAction<SetProjectTagsResult>
 
     private List<TagData> tagData;
 
-    public SetProjectTagsAction(@Nonnull ProjectId projectId,
-                                @Nonnull List<TagData> tagData) {
+    private SetProjectTagsAction(@Nonnull ProjectId projectId, @Nonnull List<TagData> tagData) {
         this.projectId = checkNotNull(projectId);
         this.tagData = new ArrayList<>(checkNotNull(tagData));
     }
@@ -35,6 +34,10 @@ public class SetProjectTagsAction implements ProjectAction<SetProjectTagsResult>
 
     public static SetProjectTagsAction setProjectTags(@Nonnull ProjectId projectId,
                                                       @Nonnull List<TagData> tagData) {
+        return create(projectId, tagData);
+    }
+
+    public static SetProjectTagsAction create(@Nonnull ProjectId projectId, @Nonnull List<TagData> tagData) {
         return new SetProjectTagsAction(projectId, tagData);
     }
 

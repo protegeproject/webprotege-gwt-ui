@@ -19,12 +19,16 @@ public class SetProjectTagsResult implements Result, HasEventList<ProjectEvent<?
 
     private EventList<ProjectEvent<?>> eventList;
 
-    public SetProjectTagsResult(@Nonnull EventList<ProjectEvent<?>> eventList) {
+    private SetProjectTagsResult(@Nonnull EventList<ProjectEvent<?>> eventList) {
         this.eventList = checkNotNull(eventList);
     }
 
     @GwtSerializationConstructor
     private SetProjectTagsResult() {
+    }
+
+    public static SetProjectTagsResult create(@Nonnull EventList<ProjectEvent<?>> eventList) {
+        return new SetProjectTagsResult(eventList);
     }
 
     @Nonnull
