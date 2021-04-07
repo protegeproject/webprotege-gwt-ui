@@ -29,7 +29,7 @@ public abstract class MoveEntitiesToParentAction implements ProjectAction<MoveEn
     @JsonCreator
     public static MoveEntitiesToParentAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                     @JsonProperty("entities") @Nonnull ImmutableSet<OWLClass> entities,
-                                                    @JsonProperty("entity") @Nonnull OWLClass entity,
+                                                    @JsonProperty("parentEntity") @Nonnull OWLClass entity,
                                                     @JsonProperty("commitMessage") @Nonnull String commitMessage) {
         return new AutoValue_MoveEntitiesToParentAction(projectId, entities, entity, commitMessage);
     }
@@ -42,7 +42,7 @@ public abstract class MoveEntitiesToParentAction implements ProjectAction<MoveEn
     public abstract ImmutableSet<? extends OWLEntity> getEntities();
 
     @Nonnull
-    public abstract OWLEntity getEntity();
+    public abstract OWLEntity getParentEntity();
 
     @Nonnull
     @Override
