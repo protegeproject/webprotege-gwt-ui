@@ -72,7 +72,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = GetApplicationSettingsAction.class),
         @Type(value = GetAvailableProjectsAction.class),
         @Type(value = GetCommentedEntitiesAction.class),
-        @Type(value = GetAvailableProjectsWithPermissionAction.class)
+        @Type(value = GetAvailableProjectsWithPermissionAction.class),
+        @Type(value = GetCurrentUserInSessionAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {

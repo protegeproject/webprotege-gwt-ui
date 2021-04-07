@@ -71,7 +71,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(GetAllOntologiesResult.class),
         @Type(GetApplicationSettingsResult.class),
         @Type(GetCommentedEntitiesResult.class),
-        @Type(GetAvailableProjectsWithPermissionResult.class)
+        @Type(GetAvailableProjectsWithPermissionResult.class),
+        @Type(GetCurrentUserInSessionResult.class)
 })
 public interface Result extends IsSerializable {
 

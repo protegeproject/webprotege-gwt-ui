@@ -102,7 +102,7 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        dispatchServiceManager.execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorDisplay) {
+        dispatchServiceManager.execute(GetCurrentUserInSessionAction.create(), new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorDisplay) {
             @Override
             public void handleExecutionException(Throwable cause) {
                 callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
