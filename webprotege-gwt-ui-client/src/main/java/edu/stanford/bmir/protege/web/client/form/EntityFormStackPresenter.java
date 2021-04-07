@@ -187,13 +187,12 @@ public class EntityFormStackPresenter {
 
     private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
         currentEntity.ifPresent(entity -> {
-            ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
+            ImmutableSet<FormPageRequest> pageRequests = ImmutableSet.copyOf(formStackPresenter.getPageRequests());
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(GetEntityFormsAction.create(projectId,
                                                          entity,
-                                                         formFilter,
                                                          pageRequests,
                                                          langTagFilter,
                                                          orderings,

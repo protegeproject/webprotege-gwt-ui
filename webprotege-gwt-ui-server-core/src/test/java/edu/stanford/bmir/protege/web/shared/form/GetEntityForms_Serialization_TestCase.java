@@ -27,8 +27,7 @@ public class GetEntityForms_Serialization_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = GetEntityFormsAction.create(ProjectId.getNil(),
                                                  mockOWLClass(),
-                                                 ImmutableList.of(),
-                                                 ImmutableList.of(),
+                                                 ImmutableSet.of(),
                                                  LangTagFilter.get(ImmutableSet.of()),
                                                  ImmutableSet.of(),
                                                  ImmutableSet.of());
