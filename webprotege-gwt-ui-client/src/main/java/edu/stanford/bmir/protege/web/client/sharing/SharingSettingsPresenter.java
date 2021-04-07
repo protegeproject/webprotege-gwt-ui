@@ -113,7 +113,7 @@ public class SharingSettingsPresenter implements Presenter {
     private void applyChangesAndGoToNextPlace() {
         settingsPresenter.goToNextPlace();
         ProjectSharingSettings settings = new ProjectSharingSettings(projectId, view.getLinkSharingPermission(), view.getSharingSettings());
-        dispatchServiceManager.execute(new SetProjectSharingSettingsAction(settings), new DispatchServiceCallbackWithProgressDisplay<SetProjectSharingSettingsResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(SetProjectSharingSettingsAction.create(settings), new DispatchServiceCallbackWithProgressDisplay<SetProjectSharingSettingsResult>(errorDisplay, progressDisplay) {
             @Override
             public void handleSuccess(SetProjectSharingSettingsResult result) {
                 permissionManager.firePermissionsChanged();

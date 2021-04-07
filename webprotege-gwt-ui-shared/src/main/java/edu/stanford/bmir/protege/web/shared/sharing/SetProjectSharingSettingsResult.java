@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetProjectSharingSettingsResult implements Result {
 
-    public SetProjectSharingSettingsResult() {
+    private SetProjectSharingSettingsResult() {
+    }
+
+    public static SetProjectSharingSettingsResult create() {
+        return new SetProjectSharingSettingsResult();
     }
 }
