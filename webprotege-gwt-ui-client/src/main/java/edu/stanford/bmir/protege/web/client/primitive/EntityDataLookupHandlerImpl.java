@@ -78,7 +78,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             return Optional.empty();
         }
         EntityLookupResult lookupResult = result.get(0);
-        final OWLEntityData lookedUpEntityData = lookupResult.getOWLEntityData();
+        final OWLEntityData lookedUpEntityData = lookupResult.getMatchResult().getEntity().getEntityData();
         EntityType<?> entityType = lookedUpEntityData.getEntity().getEntityType();
         if (lookedUpEntityData.getBrowserText().equalsIgnoreCase(text) && allowedEntityTypes.contains(entityType)) {
             return Optional.of(lookedUpEntityData);

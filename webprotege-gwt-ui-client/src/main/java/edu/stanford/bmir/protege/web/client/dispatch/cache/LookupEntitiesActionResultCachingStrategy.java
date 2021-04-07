@@ -38,7 +38,7 @@ public class LookupEntitiesActionResultCachingStrategy extends AbstractResultCac
     public Collection<OWLEntity> getInvalidationKeys(LookupEntitiesAction action, LookupEntitiesResult result) {
         List<OWLEntity> entities = new ArrayList<OWLEntity>();
         for(EntityLookupResult res : result.getEntityLookupResults()) {
-            OWLEntity entity = res.getOWLEntityData().getEntity();
+            OWLEntity entity = res.getMatchResult().getEntity().getEntity();
             entities.add(entity);
         }
         return entities;

@@ -125,7 +125,7 @@ public class CommentAutoCompleter {
                     for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                         choices.add(new AutoCompletionChoice(
                                 formatReplacementTest(entity),
-                                entity.getOWLEntityData().getBrowserText(),
+                                entity.getMatchResult().getEntity().getBrowserText(),
                                 "",
                                 pos,
                                 caretPos
@@ -144,6 +144,6 @@ public class CommentAutoCompleter {
 
     private static String formatReplacementTest(EntityLookupResult result) {
         String directLink = result.getDirectLink().replace("(", "%28").replace(")", "%29");
-        return "[" + result.getOWLEntityData().getBrowserText() + "](" + directLink + ")";
+        return "[" + result.getMatchResult().getEntity().getBrowserText() + "](" + directLink + ")";
     }
 }

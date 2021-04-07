@@ -81,14 +81,14 @@ public class EntitySuggestOracle extends SuggestOracle {
             List<EntitySuggestion> suggestions = new ArrayList<>();
             for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                 ImmutableList<SearchResultMatchPosition> positions = entity.getMatchResult().getPositions();
-                renderer.setPrimaryDisplayLanguage(entity.getLanguage());
+                renderer.setPrimaryDisplayLanguage(entity.getMatchResult().getLanguage());
                 if(!positions.isEmpty()) {
                     SearchResultMatchPosition firstPosition = positions.get(0);
                     renderer.setHighlight(firstPosition.getStart(),
                                           firstPosition.getEnd());
                 }
-                String rendering = renderer.getHtmlRendering(entity.getEntityNode());
-                suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),
+                String rendering = renderer.getHtmlRendering(entity.getMatchResult().getEntity());
+                suggestions.add(new EntitySuggestion(entity.getMatchResult().getEntity().getEntityData(),
                                                      rendering));
             }
             callback.onSuggestionsReady(request, new Response(suggestions));

@@ -34,11 +34,9 @@ public class LookupEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = LookupEntitiesResult.create(ImmutableSet.of(
-                EntityLookupResult.get(DictionaryLanguage.localName(),
-                                       mockOWLClassNode(),
-                                       SearchResultMatch.get(mockOWLClassNode(),
-                                                             DictionaryLanguage.localName(), ImmutableMap.of(),
+        var result = LookupEntitiesResult.create(ImmutableList.of(
+                EntityLookupResult.get(SearchResultMatch.get(mockOWLClassNode(),
+                                                             DictionaryLanguage.localName(),
                                                              "Search",
                                                              ImmutableList.of(SearchResultMatchPosition.get(2, 4))),
                                        "link")
