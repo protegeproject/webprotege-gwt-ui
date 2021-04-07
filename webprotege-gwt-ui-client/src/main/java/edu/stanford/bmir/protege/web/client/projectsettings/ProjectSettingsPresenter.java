@@ -257,7 +257,7 @@ public class ProjectSettingsPresenter {
                 webhookSettings,
                 entityDeprecationSettingsPresenter.getValue()
         );
-        dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), result -> {
+        dispatchServiceManager.execute(SetProjectSettingsAction.create(projectSettings), result -> {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
             settingsPresenter.goToNextPlace();
         });
