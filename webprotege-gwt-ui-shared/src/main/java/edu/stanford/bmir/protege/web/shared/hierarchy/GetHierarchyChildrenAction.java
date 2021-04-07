@@ -23,10 +23,10 @@ public class GetHierarchyChildrenAction extends AbstractHasProjectAction<GetHier
 
     private PageRequest pageRequest;
 
-    public GetHierarchyChildrenAction(@Nonnull ProjectId projectId,
-                                      @Nonnull OWLEntity entity,
-                                      @Nonnull HierarchyId hierarchyId,
-                                      @Nonnull PageRequest pageRequest) {
+    private GetHierarchyChildrenAction(@Nonnull ProjectId projectId,
+                                       @Nonnull OWLEntity entity,
+                                       @Nonnull HierarchyId hierarchyId,
+                                       @Nonnull PageRequest pageRequest) {
         super(projectId);
         this.entity = checkNotNull(entity);
         this.hierarchyId = checkNotNull(hierarchyId);
@@ -41,6 +41,13 @@ public class GetHierarchyChildrenAction extends AbstractHasProjectAction<GetHier
 
     @GwtSerializationConstructor
     private GetHierarchyChildrenAction() {
+    }
+
+    public static GetHierarchyChildrenAction create(@Nonnull ProjectId projectId,
+                                                    @Nonnull OWLEntity entity,
+                                                    @Nonnull HierarchyId hierarchyId,
+                                                    @Nonnull PageRequest pageRequest) {
+        return new GetHierarchyChildrenAction(projectId, entity, hierarchyId, pageRequest);
     }
 
     @Nonnull

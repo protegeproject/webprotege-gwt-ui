@@ -21,8 +21,8 @@ public class GetHierarchyChildrenResult implements Result {
 
     private Page<GraphNode<EntityNode>> children;
 
-    public GetHierarchyChildrenResult(@Nonnull GraphNode<EntityNode> parent,
-                                      @Nonnull Page<GraphNode<EntityNode>> children) {
+    private GetHierarchyChildrenResult(@Nonnull GraphNode<EntityNode> parent,
+                                       @Nonnull Page<GraphNode<EntityNode>> children) {
         this.parent = checkNotNull(parent);
         this.children = checkNotNull(children);
     }
@@ -30,6 +30,11 @@ public class GetHierarchyChildrenResult implements Result {
     public GetHierarchyChildrenResult() {
         parent = null;
         children = Page.emptyPage();
+    }
+
+    public static GetHierarchyChildrenResult create(@Nonnull GraphNode<EntityNode> parent,
+                                                    @Nonnull Page<GraphNode<EntityNode>> children) {
+        return new GetHierarchyChildrenResult(parent, children);
     }
 
     @Nonnull

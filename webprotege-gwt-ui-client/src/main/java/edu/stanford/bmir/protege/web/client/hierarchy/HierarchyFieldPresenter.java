@@ -163,10 +163,10 @@ public class HierarchyFieldPresenter {
             view.setMoveToParentButtonEnabled(!e.isTopEntity());
             view.setMoveToSiblingButtonEnabled(!e.isTopEntity() && !e.isBottomEntity());
             hierarchyId.ifPresent(id -> {
-                dispatch.execute(new GetHierarchyChildrenAction(projectId,
-                                                                e,
-                                                                id,
-                                                                PageRequest.requestPageWithSize(1, 1)),
+                dispatch.execute(GetHierarchyChildrenAction.create(projectId,
+                                                                   e,
+                                                                   id,
+                                                                   PageRequest.requestPageWithSize(1, 1)),
                                  result -> view.setMoveToChildButtonEnabled(!result
                                          .getChildren()
                                          .getPageElements()
@@ -245,10 +245,10 @@ public class HierarchyFieldPresenter {
                                            @Nonnull UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create(((pageRequest, consumer) -> {
-                    dispatch.execute(new GetHierarchyChildrenAction(projectId,
-                                                                    entity,
-                                                                    id,
-                                                                    pageRequest),
+                    dispatch.execute(GetHierarchyChildrenAction.create(projectId,
+                                                                       entity,
+                                                                       id,
+                                                                       pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getChildren()
                                                  .transform(GraphNode::getUserObject);
