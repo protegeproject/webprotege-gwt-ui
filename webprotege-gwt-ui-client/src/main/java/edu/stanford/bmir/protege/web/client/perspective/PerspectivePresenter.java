@@ -154,7 +154,7 @@ public class PerspectivePresenter implements HasDispose {
         perspectiveView.setWidget(new BusyViewImpl());
         GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),
+        dispatchServiceManager.execute(GetPerspectiveLayoutAction.create(projectId, userId, perspectiveId),
                 result -> {
                     GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspective());
                     installPerspective(result.getPerspective());
