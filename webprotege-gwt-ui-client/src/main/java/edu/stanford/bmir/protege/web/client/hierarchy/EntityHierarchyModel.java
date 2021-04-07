@@ -100,7 +100,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
 
     @Override
     public void getRootNodes(GetRootNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyRootsAction(projectId, hierarchyId), result -> {
+        dispatchServiceManager.execute(GetHierarchyRootsAction.create(projectId, hierarchyId), result -> {
             cacheRootNodes(result);
             try {
                 dispatchServiceManager.beginBatch();

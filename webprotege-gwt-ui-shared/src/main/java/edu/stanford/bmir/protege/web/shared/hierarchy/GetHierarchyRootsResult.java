@@ -19,13 +19,13 @@ import java.util.List;
 public abstract class GetHierarchyRootsResult implements Result {
 
     @NotNull
-    public static GetHierarchyRootsResult get(@Nonnull List<GraphNode<EntityNode>> rootNodes) {
+    public static GetHierarchyRootsResult create(@Nonnull List<GraphNode<EntityNode>> rootNodes) {
         return new AutoValue_GetHierarchyRootsResult(ImmutableList.copyOf(rootNodes));
     }
 
     @NotNull
     public static GetHierarchyRootsResult empty() {
-        return get(ImmutableList.of());
+        return create(ImmutableList.of());
     }
 
     @Nonnull

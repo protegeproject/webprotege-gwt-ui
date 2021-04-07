@@ -19,14 +19,17 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
 
     private HierarchyId hierarchyId;
 
-    public GetHierarchyRootsAction(@Nonnull ProjectId projectId,
-                                   @Nonnull HierarchyId hierarchyId) {
+    private GetHierarchyRootsAction(@Nonnull ProjectId projectId, @Nonnull HierarchyId hierarchyId) {
         this.projectId = checkNotNull(projectId);
         this.hierarchyId = checkNotNull(hierarchyId);
     }
 
     @GwtSerializationConstructor
     private GetHierarchyRootsAction() {
+    }
+
+    public static GetHierarchyRootsAction create(@Nonnull ProjectId projectId, @Nonnull HierarchyId hierarchyId) {
+        return new GetHierarchyRootsAction(projectId, hierarchyId);
     }
 
     @Nonnull
