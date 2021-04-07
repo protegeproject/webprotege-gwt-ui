@@ -19,14 +19,18 @@ public class PerformLoginResult extends AbstractAuthenticationResult {
 
     private UserInSession userInSession;
 
-    public PerformLoginResult(@Nonnull AuthenticationResponse result,
-                              @Nonnull UserInSession userInSession) {
+    private PerformLoginResult(@Nonnull AuthenticationResponse result, @Nonnull UserInSession userInSession) {
         super(result);
         this.userInSession = checkNotNull(userInSession);
     }
 
     @GwtSerializationConstructor
     private PerformLoginResult() {
+    }
+
+    public static PerformLoginResult create(@Nonnull AuthenticationResponse result,
+                                            @Nonnull UserInSession userInSession) {
+        return new PerformLoginResult(result, userInSession);
     }
 
     /**
