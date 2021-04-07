@@ -70,8 +70,8 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
             return;
         }
         List<OBORelationship> relationships = editor.getValue().orElse(Collections.emptyList());
-        dispatch.execute(new SetOboTermRelationshipsAction(getProjectId(), entity,
-                                                           new OBOTermRelationships(Sets.newHashSet(relationships))),
+        dispatch.execute(SetOboTermRelationshipsAction.create(getProjectId(), entity,
+                                                              new OBOTermRelationships(Sets.newHashSet(relationships))),
                          result -> {});
 
     }

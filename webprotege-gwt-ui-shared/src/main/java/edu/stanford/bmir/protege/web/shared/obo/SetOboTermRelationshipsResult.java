@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetOboTermRelationshipsResult implements Result {
 
-    public SetOboTermRelationshipsResult() {
+    private SetOboTermRelationshipsResult() {
+    }
+
+    public static SetOboTermRelationshipsResult create() {
+        return new SetOboTermRelationshipsResult();
     }
 }
