@@ -124,7 +124,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     @Override
     public void getSuccessorNodes(@Nonnull OWLEntity parent,
                                   @Nonnull GetSuccessorNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId, parent, hierarchyId),
+        dispatchServiceManager.execute(GetHierarchyChildrenAction.create(projectId, parent, hierarchyId),
                                        result -> {
                                            cacheEdges(parent, result);
                                            callback.handleSuccessorNodes(result.getSuccessorMap());
