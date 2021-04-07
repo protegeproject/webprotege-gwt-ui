@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -37,9 +38,14 @@ public class GetEmailAddressResult implements Result {
      * @param emailAddress The email address of the user identified by the specified {@link UserId}.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    public GetEmailAddressResult(UserId userId, Optional<EmailAddress> emailAddress) {
+    private GetEmailAddressResult(UserId userId, Optional<EmailAddress> emailAddress) {
         this.userId = checkNotNull(userId);
         this.emailAddress = checkNotNull(emailAddress).orElse(null);
+    }
+
+    @JsonCreator
+    public static GetEmailAddressResult create(UserId userId, Optional<EmailAddress> emailAddress) {
+        return new GetEmailAddressResult(userId, emailAddress);
     }
 
     /**

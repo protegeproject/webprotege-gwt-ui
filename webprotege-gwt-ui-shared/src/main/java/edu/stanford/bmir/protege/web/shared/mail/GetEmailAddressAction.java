@@ -26,11 +26,15 @@ public class GetEmailAddressAction implements Action<GetEmailAddressResult> {
      * @param userId The {@link UserId} that identifies the user whose email address is to be retrieved.  Not {@code null}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public GetEmailAddressAction(UserId userId) {
+    private GetEmailAddressAction(UserId userId) {
         this.userId = checkNotNull(userId);
         if(userId.isGuest()) {
             throw new IllegalArgumentException("userId must not be guest");
         }
+    }
+
+    public static GetEmailAddressAction create(UserId userId) {
+        return new GetEmailAddressAction(userId);
     }
 
     /**

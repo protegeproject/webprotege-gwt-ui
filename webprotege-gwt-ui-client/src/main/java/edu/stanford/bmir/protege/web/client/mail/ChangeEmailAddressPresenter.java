@@ -63,7 +63,7 @@ public class ChangeEmailAddressPresenter {
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        dispatchServiceManager.execute(new GetEmailAddressAction(userId), result -> {
+        dispatchServiceManager.execute(GetEmailAddressAction.create(userId), result -> {
             showDialog(result.getEmailAddress());
             ProgressMonitor.get().hideProgressMonitor();
         });
