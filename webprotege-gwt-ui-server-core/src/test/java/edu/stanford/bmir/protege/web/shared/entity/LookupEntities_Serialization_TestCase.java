@@ -1,8 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
+import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,7 +34,15 @@ public class LookupEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = LookupEntitiesResult.create(Collections.emptySet());
+        var result = LookupEntitiesResult.create(ImmutableSet.of(
+                EntityLookupResult.get(DictionaryLanguage.localName(),
+                                       mockOWLClassNode(),
+                                       SearchResultMatch.get(mockOWLClassNode(),
+                                                             DictionaryLanguage.localName(), ImmutableMap.of(),
+                                                             "Search",
+                                                             ImmutableList.of(SearchResultMatchPosition.get(2, 4))),
+                                       "link")
+        ));
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
