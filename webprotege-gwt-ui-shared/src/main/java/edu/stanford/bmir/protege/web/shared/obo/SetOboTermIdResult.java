@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetOboTermIdResult implements Result {
 
-    public SetOboTermIdResult() {
+    private SetOboTermIdResult() {
+    }
+
+    public static SetOboTermIdResult create() {
+        return new SetOboTermIdResult();
     }
 }

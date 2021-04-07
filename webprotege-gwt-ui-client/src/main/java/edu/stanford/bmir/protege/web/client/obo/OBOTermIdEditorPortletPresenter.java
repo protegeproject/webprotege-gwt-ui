@@ -87,7 +87,7 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
     protected void commitChangesForEntity(OWLEntity entity) {
         Optional<OBOTermId> editedTermId = editor.getValue();
         if (editedTermId.isPresent()) {
-            dispatch.execute(new SetOboTermIdAction(getProjectId(), entity, editedTermId.get()),
+            dispatch.execute(SetOboTermIdAction.create(getProjectId(), entity, editedTermId.get()),
                              result -> {
                              });
         }
