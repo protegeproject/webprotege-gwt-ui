@@ -33,7 +33,13 @@ public class GetManchesterSyntaxFrameCompletionsAction implements ProjectAction<
     private GetManchesterSyntaxFrameCompletionsAction() {
     }
 
-    public GetManchesterSyntaxFrameCompletionsAction(ProjectId projectId, OWLEntity subject, EditorPosition fromPos, String syntax, int from, Set<OWLEntityData> freshEntities, int entityTypeSuggestLimit) {
+    private GetManchesterSyntaxFrameCompletionsAction(ProjectId projectId,
+                                                      OWLEntity subject,
+                                                      EditorPosition fromPos,
+                                                      String syntax,
+                                                      int from,
+                                                      Set<OWLEntityData> freshEntities,
+                                                      int entityTypeSuggestLimit) {
         this.projectId = projectId;
         this.subject = subject;
         this.syntax = syntax;
@@ -41,6 +47,22 @@ public class GetManchesterSyntaxFrameCompletionsAction implements ProjectAction<
         this.fromPos = fromPos;
         this.freshEntities = Sets.newHashSet(freshEntities);
         this.entityTypeSuggestLimit = entityTypeSuggestLimit;
+    }
+
+    public static GetManchesterSyntaxFrameCompletionsAction create(ProjectId projectId,
+                                                                   OWLEntity subject,
+                                                                   EditorPosition fromPos,
+                                                                   String syntax,
+                                                                   int from,
+                                                                   Set<OWLEntityData> freshEntities,
+                                                                   int entityTypeSuggestLimit) {
+        return new GetManchesterSyntaxFrameCompletionsAction(projectId,
+                                                             subject,
+                                                             fromPos,
+                                                             syntax,
+                                                             from,
+                                                             freshEntities,
+                                                             entityTypeSuggestLimit);
     }
 
     @Nonnull

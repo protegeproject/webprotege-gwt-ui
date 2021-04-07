@@ -13,8 +13,12 @@ public class GetManchesterSyntaxFrameCompletionsResult implements Result {
     private GetManchesterSyntaxFrameCompletionsResult() {
     }
 
-    public GetManchesterSyntaxFrameCompletionsResult(AutoCompletionResult autoCompletionResult) {
+    private GetManchesterSyntaxFrameCompletionsResult(AutoCompletionResult autoCompletionResult) {
         this.autoCompletionResult = autoCompletionResult;
+    }
+
+    public static GetManchesterSyntaxFrameCompletionsResult create(AutoCompletionResult autoCompletionResult) {
+        return new GetManchesterSyntaxFrameCompletionsResult(autoCompletionResult);
     }
 
     public AutoCompletionResult getAutoCompletionResult() {
