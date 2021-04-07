@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
+import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagAction;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
@@ -70,7 +71,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
         @Type(value = GetAllOntologiesAction.class),
         @Type(value = GetApplicationSettingsAction.class),
         @Type(value = GetAvailableProjectsAction.class),
-        @Type(value = GetCommentedEntitiesAction.class)
+        @Type(value = GetCommentedEntitiesAction.class),
+        @Type(value = GetAvailableProjectsWithPermissionAction.class)
 
 })
 public interface Action<R extends Result> extends IsSerializable {

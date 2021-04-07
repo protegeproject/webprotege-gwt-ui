@@ -21,6 +21,8 @@ import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
+import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
+import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.tag.AddProjectTagResult;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
@@ -68,7 +70,8 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
         @Type(ExistingOntologyMergeAddResult.class),
         @Type(GetAllOntologiesResult.class),
         @Type(GetApplicationSettingsResult.class),
-        @Type(GetCommentedEntitiesResult.class)
+        @Type(GetCommentedEntitiesResult.class),
+        @Type(GetAvailableProjectsWithPermissionResult.class)
 })
 public interface Result extends IsSerializable {
 
