@@ -55,7 +55,7 @@ public class MergeEntitiesAction_TestCase {
 
     @Test
     public void shouldReturnSupplied_sourceEntity() {
-        assertThat(action.getSourceEntity(), is(this.sourceEntities));
+        assertThat(action.getSourceEntities(), is(this.sourceEntities));
     }
 
     @SuppressWarnings("ConstantConditions")
