@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
+import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
@@ -176,6 +177,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(PerformLoginResult.class),
         @Type(RebuildPermissionsResult.class),
         @Type(RemoveProjectFromTrashResult.class),
+        @Type(ResetPasswordResult.class),
         @Type(ResetPerspectivesResult.class),
         @Type(ResetPerspectiveLayoutResult.class),
         @Type(ResetPerspectivesResult.class),

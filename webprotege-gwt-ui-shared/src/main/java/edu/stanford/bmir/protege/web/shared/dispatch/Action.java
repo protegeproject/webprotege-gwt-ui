@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
+import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
+import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
@@ -182,6 +184,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = PerformLoginAction.class),
         @Type(value = RebuildPermissionsAction.class),
         @Type(value = RemoveProjectFromTrashAction.class),
+        @Type(value = ResetPasswordAction.class),
         @Type(value = ResetPerspectivesAction.class),
         @Type(value = ResetPerspectiveLayoutAction.class),
         @Type(value = ResetPerspectivesAction.class),

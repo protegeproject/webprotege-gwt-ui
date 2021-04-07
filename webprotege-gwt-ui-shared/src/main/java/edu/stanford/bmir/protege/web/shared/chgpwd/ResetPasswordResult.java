@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.chgpwd;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
@@ -8,6 +9,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@JsonTypeName("ResetPassword")
 public class ResetPasswordResult implements Result {
 
     private ResetPasswordResultCode resultCode;
