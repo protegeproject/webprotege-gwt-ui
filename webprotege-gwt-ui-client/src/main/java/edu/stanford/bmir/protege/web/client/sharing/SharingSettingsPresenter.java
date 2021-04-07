@@ -97,7 +97,7 @@ public class SharingSettingsPresenter implements Presenter {
 
 
     private void displaySharingSettings(AcceptsOneWidget container) {
-        dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), result -> {
+        dispatchServiceManager.execute(GetProjectSharingSettingsAction.create(projectId), result -> {
             ProjectSharingSettings settings = result.getProjectSharingSettings();
             settingsPresenter.start(container);
             settingsPresenter.setSettingsTitle(messages.share());
