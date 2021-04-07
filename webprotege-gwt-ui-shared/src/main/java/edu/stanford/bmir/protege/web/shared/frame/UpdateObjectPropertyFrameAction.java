@@ -1,6 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -8,23 +15,26 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class UpdateObjectPropertyFrameAction extends UpdateFrameAction {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("UpdateObjectPropertyFrame")
+public abstract class UpdateObjectPropertyFrameAction extends UpdateFrameAction {
 
-    /**
-     * For serialization purposes only
-     */
-    private UpdateObjectPropertyFrameAction() {
+
+    @JsonCreator
+    public static UpdateObjectPropertyFrameAction create(@JsonProperty("projectId") ProjectId projectId,
+                                                       @JsonProperty("from") PlainObjectPropertyFrame from,
+                                                       @JsonProperty("to") PlainObjectPropertyFrame to) {
+        return new AutoValue_UpdateObjectPropertyFrameAction(projectId, from, to);
     }
 
-    private UpdateObjectPropertyFrameAction(ProjectId projectId,
-                                            PlainObjectPropertyFrame from,
-                                            PlainObjectPropertyFrame to) {
-        super(projectId, from, to);
-    }
+    @Nonnull
+    @Override
+    public abstract ProjectId getProjectId();
 
-    public static UpdateObjectPropertyFrameAction create(ProjectId projectId,
-                                                         PlainObjectPropertyFrame from,
-                                                         PlainObjectPropertyFrame to) {
-        return new UpdateObjectPropertyFrameAction(projectId, from, to);
-    }
+    @Override
+    public abstract PlainObjectPropertyFrame getFrom();
+
+    @Override
+    public abstract PlainObjectPropertyFrame getTo();
 }
