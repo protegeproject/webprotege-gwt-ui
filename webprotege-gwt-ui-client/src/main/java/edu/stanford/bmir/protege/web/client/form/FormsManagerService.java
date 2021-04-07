@@ -50,7 +50,7 @@ public class FormsManagerService {
     public void updateForm(@Nonnull FormDescriptor formDescriptor,
                            @Nonnull HasBusy busyIndicator,
                            @Nonnull Runnable completeHandler) {
-        dispatch.execute(new UpdateFormDescriptorAction(projectId, formDescriptor),
+        dispatch.execute(UpdateFormDescriptorAction.create(projectId, formDescriptor),
                          busyIndicator,
                          result -> completeHandler.run());
     }

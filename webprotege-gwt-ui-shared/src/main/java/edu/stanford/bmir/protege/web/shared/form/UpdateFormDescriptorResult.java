@@ -8,4 +8,11 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * 2020-08-22
  */
 public class UpdateFormDescriptorResult implements Result {
+
+    private UpdateFormDescriptorResult() {
+    }
+
+    public static UpdateFormDescriptorResult create() {
+        return new UpdateFormDescriptorResult();
+    }
 }

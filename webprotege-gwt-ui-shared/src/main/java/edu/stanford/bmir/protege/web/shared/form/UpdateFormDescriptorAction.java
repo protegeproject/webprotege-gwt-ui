@@ -18,13 +18,16 @@ public class UpdateFormDescriptorAction implements ProjectAction<UpdateFormDescr
 
     private FormDescriptor formDescriptor;
 
-    public UpdateFormDescriptorAction(@Nonnull ProjectId projectId,
-                                      @Nonnull FormDescriptor descriptor) {
+    private UpdateFormDescriptorAction(@Nonnull ProjectId projectId, @Nonnull FormDescriptor descriptor) {
         this.projectId = checkNotNull(projectId);
         this.formDescriptor = checkNotNull(descriptor);
     }
 
     private UpdateFormDescriptorAction() {
+    }
+
+    public static UpdateFormDescriptorAction create(@Nonnull ProjectId projectId, @Nonnull FormDescriptor descriptor) {
+        return new UpdateFormDescriptorAction(projectId, descriptor);
     }
 
     @Nonnull
