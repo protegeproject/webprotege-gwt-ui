@@ -56,7 +56,7 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        dispatch.execute(new GetOboTermDefinitionAction(getProjectId(), entity),
+        dispatch.execute(GetOboTermDefinitionAction.create(getProjectId(), entity),
                          this,
                          result -> editor.setValue(result.getDefinition()));
     }

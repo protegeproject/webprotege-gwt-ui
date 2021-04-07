@@ -22,9 +22,13 @@ public class GetOboTermDefinitionAction extends AbstractHasProjectAction<GetOboT
     private GetOboTermDefinitionAction() {
     }
 
-    public GetOboTermDefinitionAction(ProjectId projectId, OWLEntity term) {
+    private GetOboTermDefinitionAction(ProjectId projectId, OWLEntity term) {
         super(projectId);
         this.term = checkNotNull(term);
+    }
+
+    public static GetOboTermDefinitionAction create(ProjectId projectId, OWLEntity term) {
+        return new GetOboTermDefinitionAction(projectId, term);
     }
 
     public OWLEntity getTerm() {
