@@ -104,7 +104,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
         settingsPresenter.setCancelSettingsHandler(this::cancelChanges);
         settingsPresenter.setNextPlace(getNextPlace());
-        dispatchServiceManager.execute(new GetProjectPrefixDeclarationsAction(projectId),
+        dispatchServiceManager.execute(GetProjectPrefixDeclarationsAction.create(projectId),
                                        new DispatchServiceCallbackWithProgressDisplay<GetProjectPrefixDeclarationsResult>(errorDisplay, progressDisplay) {
                                            @Override
                                            public String getProgressDisplayTitle() {

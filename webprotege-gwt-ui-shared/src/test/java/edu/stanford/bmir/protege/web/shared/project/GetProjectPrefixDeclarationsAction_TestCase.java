@@ -20,13 +20,13 @@ public class GetProjectPrefixDeclarationsAction_TestCase {
 
     @Before
     public void setUp() {
-        action = new GetProjectPrefixDeclarationsAction(projectId);
+        action = GetProjectPrefixDeclarationsAction.create(projectId);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new GetProjectPrefixDeclarationsAction(null);
+        GetProjectPrefixDeclarationsAction.create(null);
     }
 
     @Test
@@ -47,18 +47,18 @@ public class GetProjectPrefixDeclarationsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(new GetProjectPrefixDeclarationsAction(projectId)));
+        assertThat(action, is(GetProjectPrefixDeclarationsAction.create(projectId)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
         ProjectId otherProjectId = ProjectId.get("12345678-abcd-abcd-abcd-123456789abc");
-        assertThat(action, is(Matchers.not(new GetProjectPrefixDeclarationsAction(otherProjectId))));
+        assertThat(action, is(Matchers.not(GetProjectPrefixDeclarationsAction.create(otherProjectId))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(new GetProjectPrefixDeclarationsAction(projectId).hashCode()));
+        assertThat(action.hashCode(), is(GetProjectPrefixDeclarationsAction.create(projectId).hashCode()));
     }
 
     @Test
