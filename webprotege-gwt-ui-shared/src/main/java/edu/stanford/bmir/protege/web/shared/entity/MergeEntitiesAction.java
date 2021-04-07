@@ -35,11 +35,11 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
      * @param treatment    The treatment.
      * @param commitMessage
      */
-    public MergeEntitiesAction(@Nonnull ProjectId projectId,
-                               @Nonnull ImmutableSet<OWLEntity> sourceEntities,
-                               @Nonnull OWLEntity targetEntity,
-                               @Nonnull MergedEntityTreatment treatment,
-                               @Nonnull String commitMessage) {
+    private MergeEntitiesAction(@Nonnull ProjectId projectId,
+                                @Nonnull ImmutableSet<OWLEntity> sourceEntities,
+                                @Nonnull OWLEntity targetEntity,
+                                @Nonnull MergedEntityTreatment treatment,
+                                @Nonnull String commitMessage) {
         super(projectId);
         this.sourceEntities = checkNotNull(sourceEntities);
         this.targetEntity = checkNotNull(targetEntity);
@@ -66,6 +66,14 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
                                                     @Nonnull OWLEntity targetEntity,
                                                     @Nonnull MergedEntityTreatment treatment,
                                                     @Nonnull String commitMessage) {
+        return create(projectId, sourceEntities, targetEntity, treatment, commitMessage);
+    }
+
+    public static MergeEntitiesAction create(@Nonnull ProjectId projectId,
+                                             @Nonnull ImmutableSet<OWLEntity> sourceEntities,
+                                             @Nonnull OWLEntity targetEntity,
+                                             @Nonnull MergedEntityTreatment treatment,
+                                             @Nonnull String commitMessage) {
         return new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment, commitMessage);
     }
 

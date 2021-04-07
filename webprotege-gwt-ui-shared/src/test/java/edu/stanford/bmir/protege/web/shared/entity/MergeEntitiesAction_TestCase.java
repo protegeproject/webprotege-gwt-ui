@@ -33,13 +33,13 @@ public class MergeEntitiesAction_TestCase {
 
     @Before
     public void setUp() {
-        action = new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment, commitMessage);
+        action = MergeEntitiesAction.create(projectId, sourceEntities, targetEntity, treatment, commitMessage);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new MergeEntitiesAction(null, sourceEntities, targetEntity, treatment, commitMessage);
+        MergeEntitiesAction.create(null, sourceEntities, targetEntity, treatment, commitMessage);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class MergeEntitiesAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_sourceEntity_IsNull() {
-        new MergeEntitiesAction(projectId, null, targetEntity, treatment, commitMessage);
+        MergeEntitiesAction.create(projectId, null, targetEntity, treatment, commitMessage);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MergeEntitiesAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_targetEntity_IsNull() {
-        new MergeEntitiesAction(projectId, sourceEntities, null, treatment, commitMessage);
+        MergeEntitiesAction.create(projectId, sourceEntities, null, treatment, commitMessage);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class MergeEntitiesAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_treatment_IsNull() {
-        new MergeEntitiesAction(projectId, sourceEntities, targetEntity, null, commitMessage);
+        MergeEntitiesAction.create(projectId, sourceEntities, targetEntity, null, commitMessage);
     }
 
     @Test
@@ -93,32 +93,33 @@ public class MergeEntitiesAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment, commitMessage)));
+        assertThat(action, is(MergeEntitiesAction.create(projectId, sourceEntities, targetEntity, treatment, commitMessage)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(not(new MergeEntitiesAction(mock(ProjectId.class), sourceEntities, targetEntity, treatment, commitMessage))));
+        assertThat(action, is(not(MergeEntitiesAction.create(mock(ProjectId.class), sourceEntities, targetEntity, treatment, commitMessage))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sourceEntity() {
-        assertThat(action, is(not(new MergeEntitiesAction(projectId, ImmutableSet.of(mock(OWLEntity.class)), targetEntity, treatment, commitMessage))));
+        assertThat(action, is(not(MergeEntitiesAction.create(projectId, ImmutableSet.of(mock(OWLEntity.class)), targetEntity, treatment, commitMessage))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_targetEntity() {
-        assertThat(action, is(not(new MergeEntitiesAction(projectId, sourceEntities, mock(OWLEntity.class), treatment, commitMessage))));
+        assertThat(action, is(not(MergeEntitiesAction.create(projectId, sourceEntities, mock(OWLEntity.class), treatment, commitMessage))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_treatment() {
-        assertThat(action, is(not(new MergeEntitiesAction(projectId, sourceEntities, targetEntity, MergedEntityTreatment.DEPRECATE_MERGED_ENTITY, commitMessage))));
+        assertThat(action, is(not(MergeEntitiesAction.create(projectId, sourceEntities, targetEntity, MergedEntityTreatment.DEPRECATE_MERGED_ENTITY, commitMessage))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment, commitMessage).hashCode()));
+        assertThat(action.hashCode(), is(MergeEntitiesAction.create(projectId, sourceEntities, targetEntity, treatment, commitMessage)
+                                                            .hashCode()));
     }
 
     @Test

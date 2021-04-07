@@ -106,7 +106,7 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     private MergeEntitiesAction createMergeAction(@Nonnull ImmutableSet<OWLEntity> entities,
                                                   @Nonnull OWLEntityData target,
                                                   @Nonnull String commitMessage) {
-        return new MergeEntitiesAction(projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY, commitMessage);
+        return MergeEntitiesAction.create(projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY, commitMessage);
     }
 
     private void displayConfirmationMessage() {
