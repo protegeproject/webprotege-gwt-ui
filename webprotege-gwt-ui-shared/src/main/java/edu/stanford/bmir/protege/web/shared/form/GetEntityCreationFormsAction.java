@@ -25,9 +25,9 @@ public class GetEntityCreationFormsAction implements ProjectAction<GetEntityCrea
 
     private EntityType<?> entityType;
 
-    public GetEntityCreationFormsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull OWLEntity parentEntity,
-                                        @Nonnull EntityType<?> entityType) {
+    private GetEntityCreationFormsAction(@Nonnull ProjectId projectId,
+                                         @Nonnull OWLEntity parentEntity,
+                                         @Nonnull EntityType<?> entityType) {
         this.projectId = checkNotNull(projectId);
         this.parentEntity = checkNotNull(parentEntity);
         this.entityType = checkNotNull(entityType);
@@ -35,6 +35,12 @@ public class GetEntityCreationFormsAction implements ProjectAction<GetEntityCrea
 
     @GwtSerializationConstructor
     private GetEntityCreationFormsAction() {
+    }
+
+    public static GetEntityCreationFormsAction create(@Nonnull ProjectId projectId,
+                                                      @Nonnull OWLEntity parentEntity,
+                                                      @Nonnull EntityType<?> entityType) {
+        return new GetEntityCreationFormsAction(projectId, parentEntity, entityType);
     }
 
     @Nonnull

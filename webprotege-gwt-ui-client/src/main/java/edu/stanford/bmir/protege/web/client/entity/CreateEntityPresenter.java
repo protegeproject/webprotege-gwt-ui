@@ -47,9 +47,9 @@ public class CreateEntityPresenter {
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
-        parentEntity.ifPresent(owlEntity -> dispatch.execute(new GetEntityCreationFormsAction(projectId,
-                                                                                              owlEntity,
-                                                                                              entityType), result -> {
+        parentEntity.ifPresent(owlEntity -> dispatch.execute(GetEntityCreationFormsAction.create(projectId,
+                                                                                                 owlEntity,
+                                                                                                 entityType), result -> {
             handleEntityCreationFormsResult(entityType,
                                             parentEntity,
                                             entitiesCreatedHandler,
