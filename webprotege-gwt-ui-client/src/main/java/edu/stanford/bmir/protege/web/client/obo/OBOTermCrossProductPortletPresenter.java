@@ -61,7 +61,7 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
             editor.clearValue();
         }
         else {
-            dispatch.execute(new GetOboTermCrossProductAction(getProjectId(), entity.asOWLClass()),
+            dispatch.execute(GetOboTermCrossProductAction.create(getProjectId(), entity.asOWLClass()),
                              this,
                              result -> {
                                  pristineValue = Optional.of(result.getCrossProduct());
