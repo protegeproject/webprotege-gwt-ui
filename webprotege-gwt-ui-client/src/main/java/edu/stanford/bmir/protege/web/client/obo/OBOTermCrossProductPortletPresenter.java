@@ -85,9 +85,9 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
             return;
         }
         editor.getValue()
-              .ifPresent(crossProduct -> dispatch.execute(new SetOboTermCrossProductAction(getProjectId(),
-                                                                                           entity.asOWLClass(),
-                                                                                           crossProduct),
+              .ifPresent(crossProduct -> dispatch.execute(SetOboTermCrossProductAction.create(getProjectId(),
+                                                                                              entity.asOWLClass(),
+                                                                                              crossProduct),
                                                           result -> {}));
     }
 

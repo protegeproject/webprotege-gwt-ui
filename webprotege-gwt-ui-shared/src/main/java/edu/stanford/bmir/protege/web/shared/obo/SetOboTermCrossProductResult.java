@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetOboTermCrossProductResult implements Result {
 
-    public SetOboTermCrossProductResult() {
+    private SetOboTermCrossProductResult() {
+    }
+
+    public static SetOboTermCrossProductResult create() {
+        return new SetOboTermCrossProductResult();
     }
 }
