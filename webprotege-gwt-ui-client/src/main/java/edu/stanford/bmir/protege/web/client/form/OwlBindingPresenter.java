@@ -59,8 +59,8 @@ public class OwlBindingPresenter {
         view.clear();
         binding.getOwlProperty()
                .ifPresent(property -> {
-                   dispatchServiceManager.execute(new GetEntityRenderingAction(projectId,
-                                                                               property),
+                   dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId,
+                                                                                  property),
                                                   result -> view.setProperty(result.getEntityData()));
                    ((OwlPropertyBinding) binding).getValuesCriteria()
                                                  .ifPresent(relationshipValueCriteriaListPresenter::setCriteria);

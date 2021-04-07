@@ -59,7 +59,7 @@ public class RelationshipEdgePropertyEqualsCriteriaPresenter implements Criteria
 
     @Override
     public void setCriteria(@Nonnull RelationshipEdgePropertyEqualsCriteria criteria) {
-        dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, criteria.getProperty()),
+        dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, criteria.getProperty()),
                                        result -> view.setProperty((OWLPropertyData) result.getEntityData()));
     }
 }

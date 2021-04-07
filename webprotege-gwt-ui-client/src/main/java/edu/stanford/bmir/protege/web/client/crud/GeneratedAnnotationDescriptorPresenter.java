@@ -70,7 +70,7 @@ public class GeneratedAnnotationDescriptorPresenter {
     }
 
     public void setValue(@Nonnull GeneratedAnnotationDescriptor descriptor) {
-        dispatch.execute(new GetEntityRenderingAction(projectId, descriptor.getProperty()),
+        dispatch.execute(GetEntityRenderingAction.create(projectId, descriptor.getProperty()),
                          result -> view.setProperty((OWLAnnotationPropertyData) result.getEntityData()));
         GeneratedValueDescriptor valueDescriptor = descriptor.getValueDescriptor();
         displayValueDescriptor(valueDescriptor);

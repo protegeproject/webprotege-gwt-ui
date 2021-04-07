@@ -45,7 +45,7 @@ public class ClassIriRendererImpl implements ClassIriRenderer {
             return;
         }
         pending.put(iri, renderingConsumer);
-        dispatchService.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLClass(iri)),
+        dispatchService.execute(GetEntityRenderingAction.create(projectId, DataFactory.getOWLClass(iri)),
                                 result -> {
                                     OWLClassData ed = (OWLClassData) result.getEntityData();
                                     pending.removeAll(iri).forEach(consumer -> consumer.accept(ed));

@@ -69,7 +69,7 @@ public class AnnotationAssertionPathDictionaryLanguagePresenter implements Dicti
             final int index = i;
             propertyDataPath.add(null);
             OWLAnnotationProperty property = DataFactory.getOWLAnnotationProperty(propertyPathIris.get(i));
-            dispatch.execute(new GetEntityRenderingAction(projectId, property),
+            dispatch.execute(GetEntityRenderingAction.create(projectId, property),
                              result -> {
                                  OWLAnnotationPropertyData annotationPropertyData = (OWLAnnotationPropertyData) result.getEntityData();
                                  propertyDataPath.set(index, annotationPropertyData);

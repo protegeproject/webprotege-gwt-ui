@@ -59,7 +59,7 @@ public class DeprecateEntityModal {
     public void showModal(@Nonnull OWLEntity entity,
                           @Nonnull Runnable entityDeprecatedHandler,
                           @Nonnull Runnable cancelHandler) {
-        dispatch.execute(new GetEntityRenderingAction(projectId, entity),
+        dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                          result -> showModalForEntity(result, entityDeprecatedHandler, cancelHandler));
     }
 

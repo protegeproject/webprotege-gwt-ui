@@ -19,8 +19,12 @@ public class GetEntityRenderingResult implements Result {
     private GetEntityRenderingResult() {
     }
 
-    public GetEntityRenderingResult(@Nonnull OWLEntityData entityData) {
+    private GetEntityRenderingResult(@Nonnull OWLEntityData entityData) {
         this.entityData = checkNotNull(entityData);
+    }
+
+    public static GetEntityRenderingResult create(@Nonnull OWLEntityData entityData) {
+        return new GetEntityRenderingResult(entityData);
     }
 
     @Nonnull

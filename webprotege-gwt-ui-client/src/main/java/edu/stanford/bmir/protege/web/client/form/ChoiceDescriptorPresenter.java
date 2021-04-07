@@ -61,7 +61,7 @@ public class ChoiceDescriptorPresenter implements ValueEditor<ChoiceDescriptor>,
     public void setValue(ChoiceDescriptor object) {
         view.setLabel(object.getLabel());
         object.getValue().asEntity().ifPresent(entity -> {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, entity),
+            dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, entity),
                                            result -> view.setPrimitiveData(result.getEntityData()));
         });
         object.getValue().asIri().ifPresent(iri -> {

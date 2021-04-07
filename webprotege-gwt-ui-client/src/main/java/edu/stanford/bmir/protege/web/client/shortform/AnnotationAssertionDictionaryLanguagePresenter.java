@@ -57,7 +57,7 @@ public class AnnotationAssertionDictionaryLanguagePresenter implements Dictionar
         OWLAnnotationProperty annotationProperty = DataFactory.getOWLAnnotationProperty(propertyIri);
         view.clearAnnotationProperty();
         view.setLanguageTag(dictionaryLanguage.getLang());
-        dispatch.execute(new GetEntityRenderingAction(projectId, annotationProperty),
+        dispatch.execute(GetEntityRenderingAction.create(projectId, annotationProperty),
                          result -> view.setAnnotationProperty((OWLAnnotationPropertyData) result.getEntityData()));
     }
 

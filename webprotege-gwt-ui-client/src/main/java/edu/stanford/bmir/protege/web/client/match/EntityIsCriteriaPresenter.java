@@ -57,7 +57,7 @@ public class EntityIsCriteriaPresenter implements CriteriaPresenter<EntityIsCrit
 
     @Override
     public void setCriteria(@Nonnull EntityIsCriteria criteria) {
-        dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, criteria.getEntity()),
+        dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, criteria.getEntity()),
                                        result -> view.setEntity(result.getEntityData()));
     }
 }

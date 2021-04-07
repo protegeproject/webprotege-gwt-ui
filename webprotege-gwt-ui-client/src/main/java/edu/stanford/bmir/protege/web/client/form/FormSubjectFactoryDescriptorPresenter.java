@@ -46,7 +46,7 @@ public class FormSubjectFactoryDescriptorPresenter {
     public void setDescriptor(@Nonnull FormSubjectFactoryDescriptor descriptor) {
         view.setEntityType(descriptor.getEntityType());
         descriptor.getParent().ifPresent(p -> {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, p),
+            dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, p),
                                            result -> view.setParentClass((OWLClassData) result.getEntityData()));
         });
     }

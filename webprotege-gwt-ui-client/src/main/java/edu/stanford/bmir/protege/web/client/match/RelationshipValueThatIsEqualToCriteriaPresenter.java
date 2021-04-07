@@ -75,7 +75,7 @@ public class RelationshipValueThatIsEqualToCriteriaPresenter implements Criteria
     public void setCriteria(@Nonnull RelationshipValueEqualsCriteria criteria) {
         OWLPrimitive value = criteria.getValue();
         if(value instanceof OWLEntity) {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, (OWLEntity) value),
+            dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, (OWLEntity) value),
                                            result -> view.setValue(result.getEntityData()));
         }
         else if(value instanceof OWLLiteral) {

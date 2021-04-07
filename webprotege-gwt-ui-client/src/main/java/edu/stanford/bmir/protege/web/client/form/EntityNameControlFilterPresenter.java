@@ -75,7 +75,7 @@ public class EntityNameControlFilterPresenter implements FormControlFilterPresen
             return;
         }
         OWLEntity entity = ((EntityIsCriteria) entityMatchCriteria).getEntity();
-        dispatch.execute(new GetEntityRenderingAction(projectId, entity),
+        dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                          result -> view.setEntity(result.getEntityData()));
     }
 

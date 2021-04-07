@@ -20,9 +20,13 @@ public class GetEntityRenderingAction implements ProjectAction<GetEntityRenderin
     private GetEntityRenderingAction() {
     }
 
-    public GetEntityRenderingAction(ProjectId projectId, OWLEntity entity) {
+    private GetEntityRenderingAction(ProjectId projectId, OWLEntity entity) {
         this.projectId = projectId;
         this.entity = entity;
+    }
+
+    public static GetEntityRenderingAction create(ProjectId projectId, OWLEntity entity) {
+        return new GetEntityRenderingAction(projectId, entity);
     }
 
     @Nonnull

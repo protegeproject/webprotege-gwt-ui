@@ -64,28 +64,28 @@ public class EntityDeprecationSettingsPresenter {
             view.clear();
             dispatch.beginBatch();
             settings.getReplacedByPropertyIri().ifPresent(iri -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLAnnotationProperty(iri)),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, DataFactory.getOWLAnnotationProperty(iri)),
                                  result -> view.setReplacedByProperty((OWLAnnotationPropertyData) result.getEntityData()));
             });
             settings.getDeprecatedClassesParent().ifPresent(classesParent -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, classesParent),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, classesParent),
                                  result -> view.setDeprecatedClassesParent((OWLClassData) result.getEntityData()));
             });
             settings.getDeprecatedObjectPropertiesParent().ifPresent(objectPropertiesParent -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, objectPropertiesParent),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, objectPropertiesParent),
                                  result -> view.setDeprecatedObjectPropertiesParent((OWLObjectPropertyData) result.getEntityData()));
             });
             settings.getDeprecatedDataPropertiesParent().ifPresent(dataPropertiesParent -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, dataPropertiesParent),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, dataPropertiesParent),
                                  result -> view.setDeprecatedDataPropertiesParent((OWLDataPropertyData) result.getEntityData()));
             });
             settings.getDeprecatedAnnotationPropertiesParent().ifPresent(annotationPropertiesParent -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, annotationPropertiesParent),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, annotationPropertiesParent),
                                  result -> view.setDeprecatedAnnotationPropertiesParent((OWLAnnotationPropertyData) result
                                          .getEntityData()));
             });
             settings.getDeprecatedIndividualsParent().ifPresent(individualsParent -> {
-                dispatch.execute(new GetEntityRenderingAction(projectId, individualsParent),
+                dispatch.execute(GetEntityRenderingAction.create(projectId, individualsParent),
                                  result -> view.setDeprecatedIndividualsParent((OWLClassData) result.getEntityData()));
             });
             replacedByCriteriaPresenter.clear();

@@ -57,7 +57,7 @@ public class AnnotationPropertyIriRendererImpl implements AnnotationPropertyIriR
             propagateToPending(DataFactory.getSkosPrefLabelData());
         }
         else {
-            dispatchService.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLAnnotationProperty(iri)),
+            dispatchService.execute(GetEntityRenderingAction.create(projectId, DataFactory.getOWLAnnotationProperty(iri)),
                                     result -> {
                                         OWLAnnotationPropertyData ed = (OWLAnnotationPropertyData) result.getEntityData();
                                         propagateToPending(ed);

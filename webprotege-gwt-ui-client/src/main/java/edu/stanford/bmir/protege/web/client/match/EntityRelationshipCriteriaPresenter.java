@@ -92,7 +92,7 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
         relationshipPropertyCriteria.accept(new RelationshipPropertyCriteriaVisitor<Void>() {
             @Override
             public Void visit(RelationshipPropertyEqualsCriteria criteria) {
-                dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, criteria.getProperty()),
+                dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, criteria.getProperty()),
                                                result -> view.setProperty((OWLPropertyData) result.getEntityData()));
                 return null;
             }
