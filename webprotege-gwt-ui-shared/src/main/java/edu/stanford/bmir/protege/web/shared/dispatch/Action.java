@@ -137,7 +137,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetIndividualsAction.class),
         @Type(value = GetIndividualsPageContainingIndividualResult.class),
         @Type(value = GetManchesterSyntaxFrameAction.class),
-        @Type(value = GetManchesterSyntaxFrameCompletionsResult.class),
+        @Type(value = GetManchesterSyntaxFrameCompletionsAction.class),
         @Type(value = GetMatchingEntitiesAction.class),
         @Type(value = GetNamedIndividualFrameAction.class),
         @Type(value = GetObjectPropertyFrameAction.class),

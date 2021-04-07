@@ -43,7 +43,7 @@ public class ManchesterSyntaxFrameAutoCompletionHandler implements AutoCompletio
     @Override
     public void getCompletions(String text, EditorPosition editorPosition, int editorIndex, final AutoCompletionCallback callback) {
         dispatchServiceManager.execute(GetManchesterSyntaxFrameCompletionsAction.create(
-                projectId, hasSubject.getSubject(), editorPosition, text, editorIndex, hasFreshEntities.getFreshEntities(), 25),
+                projectId, hasSubject.getSubject(), text, editorPosition, editorIndex, hasFreshEntities.getFreshEntities(), 25),
                 new DispatchServiceCallback<GetManchesterSyntaxFrameCompletionsResult>(errorDisplay) {
 
                     @Override

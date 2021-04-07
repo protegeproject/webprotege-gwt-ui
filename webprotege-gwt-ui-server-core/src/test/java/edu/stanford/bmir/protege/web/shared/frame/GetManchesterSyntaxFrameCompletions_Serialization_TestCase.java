@@ -24,8 +24,8 @@ public class GetManchesterSyntaxFrameCompletions_Serialization_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = GetManchesterSyntaxFrameCompletionsAction.create(mockProjectId(),
                                                                       mockOWLClass(),
-                                                                      new EditorPosition(1, 2),
                                                                       "Blah",
+                                                                      new EditorPosition(1, 2),
                                                                       2, Collections.emptySet(),
                                                                       10);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
