@@ -20,14 +20,17 @@ public class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult>
 
     private OWLEntity entity;
 
-    public GetEntityGraphAction(@Nonnull ProjectId projectId,
-                                @Nonnull OWLEntity entity) {
+    private GetEntityGraphAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
     }
 
     @GwtSerializationConstructor
     private GetEntityGraphAction() {
+    }
+
+    public static GetEntityGraphAction create(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        return new GetEntityGraphAction(projectId, entity);
     }
 
     @Nonnull

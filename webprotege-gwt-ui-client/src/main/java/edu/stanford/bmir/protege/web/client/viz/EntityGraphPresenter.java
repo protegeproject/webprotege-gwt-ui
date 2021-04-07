@@ -183,7 +183,7 @@ public class EntityGraphPresenter {
     private void redisplayCurrentEntity() {
         currentEntityGraph = null;
         currentEntity.ifPresent(entity -> {
-            dispatch.execute(new GetEntityGraphAction(projectId, entity),
+            dispatch.execute(GetEntityGraphAction.create(projectId, entity),
                              hasBusy,
                              this::handleEntityGraph);
         });
