@@ -22,15 +22,19 @@ public class GetEntityDiscussionThreadsResult implements Result {
 
     private ImmutableList<EntityDiscussionThread> threads;
 
-    @Inject
-    public GetEntityDiscussionThreadsResult(@Nonnull OWLEntityData entityData,
-                                            @Nonnull ImmutableList<EntityDiscussionThread> threads) {
+    private GetEntityDiscussionThreadsResult(@Nonnull OWLEntityData entityData,
+                                             @Nonnull ImmutableList<EntityDiscussionThread> threads) {
         this.entityData = checkNotNull(entityData);
         this.threads = checkNotNull(threads);
     }
 
     @GwtSerializationConstructor
     private GetEntityDiscussionThreadsResult() {
+    }
+
+    public static GetEntityDiscussionThreadsResult create(@Nonnull OWLEntityData entityData,
+                                                          @Nonnull ImmutableList<EntityDiscussionThread> threads) {
+        return new GetEntityDiscussionThreadsResult(entityData, threads);
     }
 
     @Nonnull

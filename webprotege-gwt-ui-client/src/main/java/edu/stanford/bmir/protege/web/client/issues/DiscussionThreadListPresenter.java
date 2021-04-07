@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.getDiscussionThreads;
+import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.create;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -138,7 +138,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public void reload() {
         displayedEntity.ifPresent(e -> {
             dispatch.execute(
-                    getDiscussionThreads(projectId, e),
+                    create(projectId, e),
                     hasBusy,
                     result -> {
                         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
