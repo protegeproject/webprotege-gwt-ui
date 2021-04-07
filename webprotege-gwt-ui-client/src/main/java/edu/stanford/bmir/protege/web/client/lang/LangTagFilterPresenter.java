@@ -82,7 +82,7 @@ public class LangTagFilterPresenter {
     private void handleAddLangTag(ClickEvent event, AddTokenCallback<LangTag> callback) {
         Set<LangTag> existingLangTags = ImmutableSet.copyOf(langTagTokenPresenter.getTokenObjects());
         PopupMenu popupMenu = new PopupMenu();
-        dispatchServiceManager.execute(new GetProjectLangTagsAction(projectId),
+        dispatchServiceManager.execute(GetProjectLangTagsAction.create(projectId),
                                        result -> {
                                            result.getLangTags()
                                                  .stream()

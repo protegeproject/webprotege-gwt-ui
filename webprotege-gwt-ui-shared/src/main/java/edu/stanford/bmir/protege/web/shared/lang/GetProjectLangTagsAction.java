@@ -18,12 +18,16 @@ public class GetProjectLangTagsAction implements ProjectAction<GetProjectLangTag
 
     private ProjectId projectId;
 
-    public GetProjectLangTagsAction(@Nonnull ProjectId projectId) {
+    private GetProjectLangTagsAction(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     private GetProjectLangTagsAction() {
+    }
+
+    public static GetProjectLangTagsAction create(@Nonnull ProjectId projectId) {
+        return new GetProjectLangTagsAction(projectId);
     }
 
     @Nonnull

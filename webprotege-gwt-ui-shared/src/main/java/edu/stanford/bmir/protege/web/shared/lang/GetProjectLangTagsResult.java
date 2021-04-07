@@ -22,14 +22,18 @@ public class GetProjectLangTagsResult implements Result {
 
     private ImmutableSet<LangTag> langTags;
 
-    public GetProjectLangTagsResult(@Nonnull ProjectId projectId,
-                                    @Nonnull ImmutableSet<LangTag> langTags) {
+    private GetProjectLangTagsResult(@Nonnull ProjectId projectId, @Nonnull ImmutableSet<LangTag> langTags) {
         this.projectId = checkNotNull(projectId);
         this.langTags = checkNotNull(langTags);
     }
 
     @GwtSerializationConstructor
     private GetProjectLangTagsResult() {
+    }
+
+    public static GetProjectLangTagsResult create(@Nonnull ProjectId projectId,
+                                                  @Nonnull ImmutableSet<LangTag> langTags) {
+        return new GetProjectLangTagsResult(projectId, langTags);
     }
 
     @Nonnull
