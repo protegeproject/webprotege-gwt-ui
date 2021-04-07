@@ -9,6 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetOboTermSynonymsResult implements Result {
 
-    public SetOboTermSynonymsResult() {
+    private SetOboTermSynonymsResult() {
+    }
+
+    public static SetOboTermSynonymsResult create() {
+        return new SetOboTermSynonymsResult();
     }
 }

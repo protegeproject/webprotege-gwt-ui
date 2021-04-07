@@ -80,7 +80,7 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
         editor.getValue().ifPresent(synonyms -> {
-            dispatch.execute(new SetOboTermSynonymsAction(getProjectId(), entity, synonyms),
+            dispatch.execute(SetOboTermSynonymsAction.create(getProjectId(), entity, synonyms),
                              result -> {});
         });
     }
