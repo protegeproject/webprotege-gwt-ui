@@ -23,15 +23,21 @@ public class GetEntityFormsResult implements Result {
 
     private ImmutableList<FormDataDto> formData;
 
-    public GetEntityFormsResult(@Nonnull OWLEntityData entityData,
-                                @Nonnull ImmutableList<FormId> filteredFormIds,
-                                @Nonnull ImmutableList<FormDataDto> formData) {
+    private GetEntityFormsResult(@Nonnull OWLEntityData entityData,
+                                 @Nonnull ImmutableList<FormId> filteredFormIds,
+                                 @Nonnull ImmutableList<FormDataDto> formData) {
         this.entityData = checkNotNull(entityData);
         this.filteredFormIds = checkNotNull(filteredFormIds);
         this.formData = checkNotNull(formData);
     }
 
     private GetEntityFormsResult() {
+    }
+
+    public static GetEntityFormsResult create(@Nonnull OWLEntityData entityData,
+                                              @Nonnull ImmutableList<FormId> filteredFormIds,
+                                              @Nonnull ImmutableList<FormDataDto> formData) {
+        return new GetEntityFormsResult(entityData, filteredFormIds, formData);
     }
 
     @Nonnull

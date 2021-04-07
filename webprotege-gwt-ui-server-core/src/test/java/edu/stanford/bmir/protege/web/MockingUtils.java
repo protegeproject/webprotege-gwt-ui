@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
@@ -73,6 +76,10 @@ public class MockingUtils {
 
     public static UserId mockUserId() {
         return UserId.getUserId("User" + nextInt());
+    }
+
+    public static OWLEntityData mockOWLClassData() {
+        return OWLClassData.get(mockOWLClass(), ImmutableMap.of(), false);
     }
 
 }

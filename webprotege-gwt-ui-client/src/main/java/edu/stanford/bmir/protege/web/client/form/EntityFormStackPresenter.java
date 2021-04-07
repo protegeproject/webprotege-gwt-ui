@@ -191,13 +191,13 @@ public class EntityFormStackPresenter {
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-            dispatch.execute(new GetEntityFormsAction(projectId,
-                                                      entity,
-                                                      formFilter,
-                                                      pageRequests,
-                                                      langTagFilter,
-                                                      orderings,
-                                                      filters), hasBusy, this::handleGetEntityFormsResult);
+            dispatch.execute(GetEntityFormsAction.create(projectId,
+                                                         entity,
+                                                         formFilter,
+                                                         pageRequests,
+                                                         langTagFilter,
+                                                         orderings,
+                                                         filters), hasBusy, this::handleGetEntityFormsResult);
         });
         if (!currentEntity.isPresent()) {
             entityDisplay.setDisplayedEntity(Optional.empty());

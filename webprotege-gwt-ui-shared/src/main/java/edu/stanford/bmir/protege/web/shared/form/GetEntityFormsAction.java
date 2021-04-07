@@ -48,12 +48,13 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
      * @param orderings A set of region orderings that can be used to specify the ordering of specific regions of
      * @param filters A set of region filters that can be used to filter values
      */
-    public GetEntityFormsAction(@Nonnull ProjectId projectId,
-                                @Nonnull OWLEntity entity,
-                                @Nonnull ImmutableList<FormId> formFilter,
-                                @Nonnull ImmutableList<FormPageRequest> formPageRequests,
-                                @Nonnull LangTagFilter langTagFilter,
-                                @Nonnull ImmutableSet<FormRegionOrdering> orderings, ImmutableSet<FormRegionFilter> filters) {
+    private GetEntityFormsAction(@Nonnull ProjectId projectId,
+                                 @Nonnull OWLEntity entity,
+                                 @Nonnull ImmutableList<FormId> formFilter,
+                                 @Nonnull ImmutableList<FormPageRequest> formPageRequests,
+                                 @Nonnull LangTagFilter langTagFilter,
+                                 @Nonnull ImmutableSet<FormRegionOrdering> orderings,
+                                 ImmutableSet<FormRegionFilter> filters) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
         this.formFilter = checkNotNull(formFilter);
@@ -65,6 +66,22 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
 
     @GwtSerializationConstructor
     private GetEntityFormsAction() {
+    }
+
+    public static GetEntityFormsAction create(@Nonnull ProjectId projectId,
+                                              @Nonnull OWLEntity entity,
+                                              @Nonnull ImmutableList<FormId> formFilter,
+                                              @Nonnull ImmutableList<FormPageRequest> formPageRequests,
+                                              @Nonnull LangTagFilter langTagFilter,
+                                              @Nonnull ImmutableSet<FormRegionOrdering> orderings,
+                                              ImmutableSet<FormRegionFilter> filters) {
+        return new GetEntityFormsAction(projectId,
+                                        entity,
+                                        formFilter,
+                                        formPageRequests,
+                                        langTagFilter,
+                                        orderings,
+                                        filters);
     }
 
     @Nonnull
