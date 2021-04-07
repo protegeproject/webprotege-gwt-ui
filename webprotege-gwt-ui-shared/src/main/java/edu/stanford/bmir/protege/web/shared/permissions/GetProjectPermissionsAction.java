@@ -28,10 +28,13 @@ public class GetProjectPermissionsAction implements Action<GetProjectPermissions
     private GetProjectPermissionsAction() {
     }
 
-    public GetProjectPermissionsAction(@Nonnull ProjectId projectId,
-                                       @Nonnull UserId userId) {
+    private GetProjectPermissionsAction(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
+    }
+
+    public static GetProjectPermissionsAction create(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        return new GetProjectPermissionsAction(projectId, userId);
     }
 
     @Nonnull

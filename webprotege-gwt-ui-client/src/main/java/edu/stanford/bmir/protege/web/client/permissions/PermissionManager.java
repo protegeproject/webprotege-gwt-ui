@@ -73,7 +73,7 @@ public class PermissionManager implements HasDispose {
             return;
         }
         final ProjectId theProjectId = projectId.get();
-        dispatchServiceManager.execute(new GetProjectPermissionsAction(projectId.get(), userId), result -> {
+        dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId.get(), userId), result -> {
             UserIdProjectIdKey key = new UserIdProjectIdKey(userId, theProjectId);
             permittedActionCache.putAll(key, result.getAllowedActions());
             GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
@@ -99,7 +99,7 @@ public class PermissionManager implements HasDispose {
             callback.onSuccess(permittedActionCache.get(key).contains(actionId));
             return;
         }
-        dispatchServiceManager.execute(new GetProjectPermissionsAction(projectId, userId),
+        dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId, userId),
                                        new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(GetProjectPermissionsResult result) {
