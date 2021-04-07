@@ -40,10 +40,10 @@ public class FormDescriptor implements IsSerializable {
     }
 
     @JsonCreator
-    public FormDescriptor(FormId id,
-                          LanguageMap label,
-                          List<FormFieldDescriptor> formFieldDescriptors,
-                          Optional<FormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
+    public FormDescriptor(@JsonProperty("id") FormId id,
+                          @JsonProperty("label") LanguageMap label,
+                          @JsonProperty("fields") List<FormFieldDescriptor> formFieldDescriptors,
+                          @JsonProperty("subjectFactoryDescriptor") Optional<FormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
         this.formId = id;
         this.label = label;
         this.elements = new ArrayList<>(formFieldDescriptors);
