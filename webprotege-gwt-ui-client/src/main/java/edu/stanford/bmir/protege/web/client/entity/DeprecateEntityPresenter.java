@@ -61,7 +61,7 @@ public class DeprecateEntityPresenter {
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
-        dispatch.execute(new GetEntityDeprecationFormsAction(projectId, entity),
+        dispatch.execute(GetEntityDeprecationFormsAction.create(projectId, entity),
                          this::displayForm);
         EntityType<?> entityType = entity.getEntityType();
         if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {

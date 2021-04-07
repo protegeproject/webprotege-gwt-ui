@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSetting
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityCreationFormsResult;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;

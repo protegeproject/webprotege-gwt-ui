@@ -24,10 +24,13 @@ public class GetEntityDeprecationFormsAction implements ProjectAction<GetEntityD
     private GetEntityDeprecationFormsAction() {
     }
 
-    public GetEntityDeprecationFormsAction(@Nonnull ProjectId projectId,
-                                           @Nonnull OWLEntity entity) {
+    private GetEntityDeprecationFormsAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+    }
+
+    public static GetEntityDeprecationFormsAction create(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        return new GetEntityDeprecationFormsAction(projectId, entity);
     }
 
     @Nonnull

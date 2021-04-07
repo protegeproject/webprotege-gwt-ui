@@ -20,7 +20,7 @@ import java.util.Optional;
 public abstract class GetEntityDeprecationFormsResult implements Result {
 
     @Nonnull
-    public static GetEntityDeprecationFormsResult get(@Nonnull ImmutableList<FormDescriptorDto> formDtos,
+    public static GetEntityDeprecationFormsResult create(@Nonnull ImmutableList<FormDescriptorDto> formDtos,
                                                       long referencesCount,
                                                       @Nullable CompositeRootCriteria replacementEntityCriteria) {
         return new AutoValue_GetEntityDeprecationFormsResult(formDtos, referencesCount, replacementEntityCriteria);
