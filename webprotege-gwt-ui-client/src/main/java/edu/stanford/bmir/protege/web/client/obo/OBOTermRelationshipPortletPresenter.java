@@ -89,7 +89,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
             pristineValue = Optional.empty();
             return;
         }
-        dispatch.execute(new GetOboTermRelationshipsAction(getProjectId(), entity.asOWLClass()),
+        dispatch.execute(GetOboTermRelationshipsAction.create(getProjectId(), entity.asOWLClass()),
                          this,
                          result -> {
                              List<OBORelationship> listOfRels = new ArrayList<>(result.getRelationships().getRelationships());
