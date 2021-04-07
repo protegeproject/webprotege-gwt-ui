@@ -61,7 +61,7 @@ public class NewOntologyMergeProjectWorkflow {
     }
 
     private void mergeAdd(ProjectId projectId, DocumentId documentId, String iri, List<OWLOntologyID> ontologyList){
-        dispatchServiceManager.execute(new NewOntologyMergeAddAction(projectId, documentId, iri, ontologyList), new DispatchServiceCallbackWithProgressDisplay<NewOntologyMergeAddResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(NewOntologyMergeAddAction.create(projectId, documentId, iri, ontologyList), new DispatchServiceCallbackWithProgressDisplay<NewOntologyMergeAddResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading and Merging Ontologies";

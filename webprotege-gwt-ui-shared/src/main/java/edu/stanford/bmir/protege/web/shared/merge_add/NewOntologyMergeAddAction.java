@@ -19,11 +19,21 @@ public class NewOntologyMergeAddAction extends AbstractHasProjectAction<NewOntol
     }
 
 
-    public NewOntologyMergeAddAction(ProjectId projectId, DocumentId documentId, String iri, List<OWLOntologyID> ontologyList) {
+    private NewOntologyMergeAddAction(ProjectId projectId,
+                                      DocumentId documentId,
+                                      String iri,
+                                      List<OWLOntologyID> ontologyList) {
         super(projectId);
         this.documentId = documentId;
         this.iri = iri;
         this.ontologyList = ontologyList;
+    }
+
+    public static NewOntologyMergeAddAction create(ProjectId projectId,
+                                                   DocumentId documentId,
+                                                   String iri,
+                                                   List<OWLOntologyID> ontologyList) {
+        return new NewOntologyMergeAddAction(projectId, documentId, iri, ontologyList);
     }
 
     public DocumentId getDocumentId() {
