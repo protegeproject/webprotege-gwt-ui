@@ -76,8 +76,8 @@ public class TagListPresenter {
      */
     public void setEntity(@Nonnull OWLEntity entity) {
         currentEntity = Optional.of(entity);
-        dispatchServiceManager.execute(new GetEntityTagsAction(projectId,
-                                                               entity),
+        dispatchServiceManager.execute(GetEntityTagsAction.create(projectId,
+                                                                  entity),
                                        result -> setTags(result.getEntityTags()));
     }
 

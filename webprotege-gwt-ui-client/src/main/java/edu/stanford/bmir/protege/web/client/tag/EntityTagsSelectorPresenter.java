@@ -50,7 +50,7 @@ public class EntityTagsSelectorPresenter {
 
     public void start(@Nonnull OWLEntity entity) {
         this.entity = entity;
-        dispatchServiceManager.execute(new GetEntityTagsAction(projectId, entity),
+        dispatchServiceManager.execute(GetEntityTagsAction.create(projectId, entity),
                                        view,
                                        this::displayTags);
     }
