@@ -15,7 +15,15 @@ public class UpdateAnnotationPropertyFrameAction extends UpdateFrameAction {
     private UpdateAnnotationPropertyFrameAction() {
     }
 
-    public UpdateAnnotationPropertyFrameAction(ProjectId projectId, PlainAnnotationPropertyFrame from, PlainAnnotationPropertyFrame to) {
+    private UpdateAnnotationPropertyFrameAction(ProjectId projectId,
+                                                PlainAnnotationPropertyFrame from,
+                                                PlainAnnotationPropertyFrame to) {
         super(projectId, from, to);
+    }
+
+    public static UpdateAnnotationPropertyFrameAction create(ProjectId projectId,
+                                                             PlainAnnotationPropertyFrame from,
+                                                             PlainAnnotationPropertyFrame to) {
+        return new UpdateAnnotationPropertyFrameAction(projectId, from, to);
     }
 }
