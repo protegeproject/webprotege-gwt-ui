@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 @GwtCompatible(serializable = true)
 public abstract class ResetPerspectivesResult implements Result {
 
-    public static ResetPerspectivesResult get() {
+    public static ResetPerspectivesResult create() {
         return new AutoValue_ResetPerspectivesResult();
     }
 }

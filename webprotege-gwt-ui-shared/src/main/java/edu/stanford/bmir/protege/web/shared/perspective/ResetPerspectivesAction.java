@@ -17,12 +17,16 @@ public class ResetPerspectivesAction implements ProjectAction<ResetPerspectivesR
 
     private ProjectId projectId;
 
-    public ResetPerspectivesAction(@Nonnull ProjectId projectId) {
+    private ResetPerspectivesAction(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     private ResetPerspectivesAction() {
+    }
+
+    public static ResetPerspectivesAction create(@Nonnull ProjectId projectId) {
+        return new ResetPerspectivesAction(projectId);
     }
 
     @Nonnull

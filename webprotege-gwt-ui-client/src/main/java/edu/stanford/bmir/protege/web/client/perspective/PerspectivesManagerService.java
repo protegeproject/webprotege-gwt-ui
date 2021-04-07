@@ -62,7 +62,7 @@ public class PerspectivesManagerService {
     }
 
     public void resetPerspectives(@Nonnull Runnable completionHandler) {
-        dispatch.execute(new ResetPerspectivesAction(projectId),
+        dispatch.execute(ResetPerspectivesAction.create(projectId),
                          result -> completionHandler.run());
     }
 }
