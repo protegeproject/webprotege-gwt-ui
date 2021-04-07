@@ -153,7 +153,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         runBeforeExpand();
         ImmutableList<FormControlData> formControlData = stackPresenter.getValue();
 
-        Page<FormControlData> controlDataPage = new Page<>(1, 1, formControlData, formControlData.size());
+        Page<FormControlData> controlDataPage = Page.create(1, 1, formControlData, formControlData.size());
         return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), controlDataPage);
     }
 

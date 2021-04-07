@@ -110,7 +110,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
                 .stream()
                 .map(GridRowPresenter::getFormDataValue)
                 .collect(toImmutableList());
-        Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
+        Page<GridRowData> page = Page.create(1, 1, rows, rows.size());
         return GridControlData.get(descriptor.toFormControlDescriptor(), page, ImmutableSet.of());
     }
 

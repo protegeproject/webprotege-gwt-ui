@@ -200,7 +200,7 @@ public class HierarchyFieldPresenter {
                                                  .distinct()
                                                  .map(GraphNode::getUserObject)
                                                  .collect(toList());
-                                         Page<EntityNode> page = new Page<>(1, 1, data, data.size());
+                                         Page<EntityNode> page = Page.create(1, 1, data, data.size());
                                          consumer.consumeListData(page);
                                      });
                 });
