@@ -27,11 +27,11 @@ public class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeR
     private DropType dropType;
 
 
-    public MoveHierarchyNodeAction(@Nonnull ProjectId projectId,
-                                   @Nonnull HierarchyId hierarchyId,
-                                   @Nonnull Path<EntityNode> fromNodePath,
-                                   @Nonnull Path<EntityNode> toNodeParentPath,
-                                   @Nonnull DropType dropType) {
+    private MoveHierarchyNodeAction(@Nonnull ProjectId projectId,
+                                    @Nonnull HierarchyId hierarchyId,
+                                    @Nonnull Path<EntityNode> fromNodePath,
+                                    @Nonnull Path<EntityNode> toNodeParentPath,
+                                    @Nonnull DropType dropType) {
         this.projectId = checkNotNull(projectId);
         this.hierarchyId = checkNotNull(hierarchyId);
         this.fromNodePath = checkNotNull(fromNodePath);
@@ -41,6 +41,14 @@ public class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeR
 
     @GwtSerializationConstructor
     private MoveHierarchyNodeAction() {
+    }
+
+    public static MoveHierarchyNodeAction create(@Nonnull ProjectId projectId,
+                                                 @Nonnull HierarchyId hierarchyId,
+                                                 @Nonnull Path<EntityNode> fromNodePath,
+                                                 @Nonnull Path<EntityNode> toNodeParentPath,
+                                                 @Nonnull DropType dropType) {
+        return new MoveHierarchyNodeAction(projectId, hierarchyId, fromNodePath, toNodeParentPath, dropType);
     }
 
     @Nonnull

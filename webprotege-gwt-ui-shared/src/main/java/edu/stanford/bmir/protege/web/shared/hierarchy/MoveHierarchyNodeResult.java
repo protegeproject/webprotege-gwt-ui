@@ -15,13 +15,17 @@ public class MoveHierarchyNodeResult implements Result, HasEventList<ProjectEven
 
     private EventList<ProjectEvent<?>> eventList;
 
-    public MoveHierarchyNodeResult(boolean moved, EventList<ProjectEvent<?>> eventList) {
+    private MoveHierarchyNodeResult(boolean moved, EventList<ProjectEvent<?>> eventList) {
         this.moved = moved;
         this.eventList = eventList;
     }
 
     @GwtSerializationConstructor
     private MoveHierarchyNodeResult() {
+    }
+
+    public static MoveHierarchyNodeResult create(boolean moved, EventList<ProjectEvent<?>> eventList) {
+        return new MoveHierarchyNodeResult(moved, eventList);
     }
 
     @Override

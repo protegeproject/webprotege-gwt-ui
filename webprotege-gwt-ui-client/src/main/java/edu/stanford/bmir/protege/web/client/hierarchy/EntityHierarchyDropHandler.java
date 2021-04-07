@@ -86,11 +86,11 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        dispatchServiceManager.execute(new MoveHierarchyNodeAction(projectId,
-                                                                   hierarchyId.get(),
-                                                                   nodePath,
-                                                                   targetPath,
-                                                                   dropType),
+        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+                                                                      hierarchyId.get(),
+                                                                      nodePath,
+                                                                      targetPath,
+                                                                      dropType),
                                        moveResult -> {
                                             if(moveResult.isMoved()) {
                                                 dropEndHandler.handleDropComplete();
