@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -14,10 +17,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("GetProjectChanges")
 public abstract class GetProjectChangesResult implements Result, HasProjectChanges {
 
     @Nonnull
-    public static GetProjectChangesResult create(Page<ProjectChange> changes) {
+    @JsonCreator
+    public static GetProjectChangesResult create(@JsonProperty("projectChanges") Page<ProjectChange> changes) {
         return new AutoValue_GetProjectChangesResult(changes);
     }
 
