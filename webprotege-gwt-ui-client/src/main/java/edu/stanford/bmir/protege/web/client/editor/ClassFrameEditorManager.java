@@ -41,9 +41,9 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
 
     @Override
     public UpdateFrameAction createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateClassFrameAction(editorContext.getProjectId(),
-                                          pristineObject.toPlainFrame(),
-                                          editedObject.toPlainFrame());
+        return UpdateClassFrameAction.create(editorContext.getProjectId(),
+                                             pristineObject.toPlainFrame(),
+                                             editedObject.toPlainFrame());
     }
 
     @Override

@@ -17,7 +17,11 @@ public class UpdateClassFrameAction extends UpdateFrameAction {
     private UpdateClassFrameAction() {
     }
 
-    public UpdateClassFrameAction(ProjectId projectId, PlainClassFrame from, PlainClassFrame to) {
+    private UpdateClassFrameAction(ProjectId projectId, PlainClassFrame from, PlainClassFrame to) {
         super(projectId, from, to);
+    }
+
+    public static UpdateClassFrameAction create(ProjectId projectId, PlainClassFrame from, PlainClassFrame to) {
+        return new UpdateClassFrameAction(projectId, from, to);
     }
 }
