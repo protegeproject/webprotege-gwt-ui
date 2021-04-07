@@ -9,4 +9,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class SetPerspectiveLayoutResult implements Result {
 
+    private SetPerspectiveLayoutResult() {
+    }
+
+    public static SetPerspectiveLayoutResult create() {
+        return new SetPerspectiveLayoutResult();
+    }
 }

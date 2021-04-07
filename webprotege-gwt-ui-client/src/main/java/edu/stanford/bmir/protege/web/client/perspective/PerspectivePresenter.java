@@ -245,7 +245,7 @@ public class PerspectivePresenter implements HasDispose {
                 return;
             }
             PerspectiveLayout layout = PerspectiveLayout.get(perspectiveId, node);
-            dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), result -> {});
+            dispatchServiceManager.execute(SetPerspectiveLayoutAction.create(projectId, currentUserId, layout), result -> {});
         }
     }
 }
