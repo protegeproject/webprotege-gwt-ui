@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 18 Jul 2018
  */
-public class ProjectDetails_Serialization_TestCase {
+public class GetProjectDetails_Serialization_TestCase {
 
     private ProjectDetails projectDetails;
 
