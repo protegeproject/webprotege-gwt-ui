@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GetProjectSettingsResult implements Result {
 
-    public static GetProjectSettingsResult get(@Nonnull ProjectSettings settings) {
+    public static GetProjectSettingsResult create(@Nonnull ProjectSettings settings) {
         return new AutoValue_GetProjectSettingsResult(settings);
     }
 
