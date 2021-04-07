@@ -32,10 +32,13 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
     private GetProjectEventsAction() {
     }
 
-    public GetProjectEventsAction(@Nonnull EventTag sinceTag,
-                                  @Nonnull ProjectId projectId) {
+    private GetProjectEventsAction(@Nonnull EventTag sinceTag, @Nonnull ProjectId projectId) {
         this.sinceTag = checkNotNull(sinceTag);
         this.projectId = checkNotNull(projectId);
+    }
+
+    public static GetProjectEventsAction create(@Nonnull EventTag sinceTag, @Nonnull ProjectId projectId) {
+        return new GetProjectEventsAction(sinceTag, projectId);
     }
 
     public EventTag getSinceTag() {

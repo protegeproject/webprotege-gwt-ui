@@ -79,7 +79,7 @@ public class EventPollingManager {
     public void pollForProjectEvents() {
         GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetProjectEventsAction(nextTag, projectId), result -> dispatchEvents(result.getEvents()));
+        dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId), result -> dispatchEvents(result.getEvents()));
     }
 
 
