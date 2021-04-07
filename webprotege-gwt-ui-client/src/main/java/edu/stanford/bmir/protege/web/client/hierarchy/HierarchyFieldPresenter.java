@@ -219,10 +219,10 @@ public class HierarchyFieldPresenter {
                                              @Nonnull UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create((pageRequest, consumer) -> {
-                    dispatch.execute(new GetHierarchySiblingsAction(projectId,
-                                                                    entity,
-                                                                    id,
-                                                                    pageRequest),
+                    dispatch.execute(GetHierarchySiblingsAction.create(projectId,
+                                                                       entity,
+                                                                       id,
+                                                                       pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getSiblingsPage()
                                                  .transform(GraphNode::getUserObject);

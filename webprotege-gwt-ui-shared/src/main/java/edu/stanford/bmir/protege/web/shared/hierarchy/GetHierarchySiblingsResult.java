@@ -17,13 +17,17 @@ public class GetHierarchySiblingsResult implements Result {
 
     private Page<GraphNode<EntityNode>> siblingsPage;
 
-    public GetHierarchySiblingsResult(Page<GraphNode<EntityNode>> siblingsPage) {
+    private GetHierarchySiblingsResult(Page<GraphNode<EntityNode>> siblingsPage) {
         this.siblingsPage = checkNotNull(siblingsPage);
     }
 
     @GwtSerializationConstructor
     private GetHierarchySiblingsResult() {
 
+    }
+
+    public static GetHierarchySiblingsResult create(Page<GraphNode<EntityNode>> siblingsPage) {
+        return new GetHierarchySiblingsResult(siblingsPage);
     }
 
     public Page<GraphNode<EntityNode>> getSiblingsPage() {
