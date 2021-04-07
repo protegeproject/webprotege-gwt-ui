@@ -31,7 +31,7 @@ public class GetWatchesAction implements ProjectAction<GetWatchesResult>, HasUse
      * @param entity The entity.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public GetWatchesAction(ProjectId projectId, UserId userId, OWLEntity entity) {
+    private GetWatchesAction(ProjectId projectId, UserId userId, OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.entity = entity;
@@ -41,6 +41,10 @@ public class GetWatchesAction implements ProjectAction<GetWatchesResult>, HasUse
      * For serialization only
      */
     private GetWatchesAction() {
+    }
+
+    public static GetWatchesAction create(ProjectId projectId, UserId userId, OWLEntity entity) {
+        return new GetWatchesAction(projectId, userId, entity);
     }
 
     /**

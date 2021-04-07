@@ -22,8 +22,12 @@ public class GetWatchesResult implements Result {
     private GetWatchesResult() {
     }
 
-    public GetWatchesResult(Set<Watch> watches) {
+    private GetWatchesResult(Set<Watch> watches) {
         this.watches = new HashSet<>(watches);
+    }
+
+    public static GetWatchesResult create(Set<Watch> watches) {
+        return new GetWatchesResult(watches);
     }
 
     public Set<Watch> getWatches() {

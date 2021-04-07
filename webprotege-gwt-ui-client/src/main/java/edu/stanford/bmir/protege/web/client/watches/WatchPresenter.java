@@ -64,7 +64,7 @@ public class WatchPresenter {
     public void start(@Nonnull OWLEntity forEntity) {
         this.currentEntity = checkNotNull(forEntity);
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetWatchesAction(projectId, userId, forEntity),
+        dispatchServiceManager.execute(GetWatchesAction.create(projectId, userId, forEntity),
                                        this::handleRetrivedWatches);
     }
 
