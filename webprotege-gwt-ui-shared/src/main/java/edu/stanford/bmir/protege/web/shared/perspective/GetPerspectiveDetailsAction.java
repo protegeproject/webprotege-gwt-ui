@@ -17,12 +17,16 @@ public class GetPerspectiveDetailsAction implements ProjectAction<GetPerspective
 
     private ProjectId projectId;
 
-    public GetPerspectiveDetailsAction(@Nonnull ProjectId projectId) {
+    private GetPerspectiveDetailsAction(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     public GetPerspectiveDetailsAction() {
+    }
+
+    public static GetPerspectiveDetailsAction create(@Nonnull ProjectId projectId) {
+        return new GetPerspectiveDetailsAction(projectId);
     }
 
     @Nonnull

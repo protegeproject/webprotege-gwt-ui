@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class GetPerspectiveDetailsResult implements Result {
 
     @Nonnull
-    public static GetPerspectiveDetailsResult get(@Nonnull ImmutableList<PerspectiveDetails> perspectiveDetails) {
+    public static GetPerspectiveDetailsResult create(@Nonnull ImmutableList<PerspectiveDetails> perspectiveDetails) {
         return new AutoValue_GetPerspectiveDetailsResult(perspectiveDetails);
     }
 

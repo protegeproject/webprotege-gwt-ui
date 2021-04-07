@@ -40,7 +40,7 @@ public class PerspectivesManagerService {
     }
 
     public void getPerspectiveDetails(Consumer<List<PerspectiveDetails>> details) {
-        dispatch.execute(new GetPerspectiveDetailsAction(projectId),
+        dispatch.execute(GetPerspectiveDetailsAction.create(projectId),
                          result -> {
                              ImmutableList<PerspectiveDetails> perspectiveDetails = result.getPerspectiveDetails();
                              details.accept(perspectiveDetails);
