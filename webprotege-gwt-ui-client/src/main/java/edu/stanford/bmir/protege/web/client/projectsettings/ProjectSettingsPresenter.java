@@ -174,7 +174,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setBusy(true);
         dispatchServiceManager.execute(GetProjectInfoAction.create(projectId),
                                        result -> {
-                                           ProjectSettings projectSettings = result.getProjectDetails();
+                                           ProjectSettings projectSettings = result.getProjectSettings();
                                            displayProjectSettings(projectSettings, result.getProjectLanguages());
                                        });
         dispatchServiceManager.execute(GetEntityCrudKitsAction.create(projectId),
