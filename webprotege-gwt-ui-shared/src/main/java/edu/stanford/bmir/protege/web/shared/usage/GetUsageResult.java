@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("GetUsage")
-public abstract class GetUsageResult implements Result, HasSignature, HasProjectId {
+public abstract class GetUsageResult implements Result, HasProjectId {
 
     @JsonCreator
     public static GetUsageResult create(@JsonProperty("projectId") ProjectId projectId,
@@ -48,15 +48,4 @@ public abstract class GetUsageResult implements Result, HasSignature, HasProject
     public abstract Collection<UsageReference> getUsageReferences();
 
     public abstract int getTotalUsageCount();
-
-    @JsonIgnore
-    @Override
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> result = new HashSet<OWLEntity>();
-        for(UsageReference usageReference : getUsageReferences()) {
-            final Optional<OWLEntity> axiomSubject = usageReference.getAxiomSubject();
-            axiomSubject.ifPresent(result::add);
-        }
-        return result;
-    }
 }
