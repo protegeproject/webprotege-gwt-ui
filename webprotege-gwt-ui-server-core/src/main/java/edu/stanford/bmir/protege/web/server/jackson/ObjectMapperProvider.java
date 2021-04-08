@@ -66,6 +66,9 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addSerializer(OWLOntologyID.class, new OWLOntologyIDSerializer());
         module.addDeserializer(OWLOntologyID.class, new OWLOntologyIDDeserializer());
 
+        module.addSerializer(AxiomType.class, new AxiomTypeSerializer());
+        module.addDeserializer(AxiomType.class, new AxiomTypeDeserializer());
+
         mapper.registerModule(module);
 
         return mapper;
