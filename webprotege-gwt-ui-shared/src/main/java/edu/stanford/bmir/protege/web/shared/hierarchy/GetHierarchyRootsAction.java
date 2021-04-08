@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
  */
+@JsonTypeName("GetHierarchyRoots")
 public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsResult> {
 
     private ProjectId projectId;
