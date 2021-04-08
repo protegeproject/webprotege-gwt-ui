@@ -47,6 +47,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsResult;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResult;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
@@ -129,6 +130,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetHierarchyPathsToRootResult.class),
         @Type(GetHierarchyRootsResult.class),
         @Type(GetHierarchySiblingsResult.class),
+        @Type(GetEntityHtmlRenderingResult.class),
         @Type(GetIndividualsResult.class),
         @Type(GetIndividualsPageContainingIndividualResult.class),
         @Type(GetManchesterSyntaxFrameResult.class),
