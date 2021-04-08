@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 /**
@@ -7,12 +11,13 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * Stanford Center for Biomedical Informatics Research
  * 22 Jun 2017
  */
-public class SetOboTermXRefsResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("SetOboTermXRefs")
+public abstract class SetOboTermXRefsResult implements Result {
 
-    private SetOboTermXRefsResult() {
-    }
-
+    @JsonCreator
     public static SetOboTermXRefsResult create() {
-        return new SetOboTermXRefsResult();
+        return new AutoValue_SetOboTermXRefsResult();
     }
 }

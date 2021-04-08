@@ -15,7 +15,7 @@ import static edu.stanford.bmir.protege.web.MockingUtils.*;
  * Stanford Center for Biomedical Informatics Research
  * 2021-04-07
  */
-public class SetOboTermId_Serialization_TestCase {
+public abstract class SetOboTermId_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
