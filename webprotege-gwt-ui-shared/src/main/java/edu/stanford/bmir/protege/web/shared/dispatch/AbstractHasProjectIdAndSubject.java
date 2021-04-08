@@ -42,7 +42,7 @@ public abstract class AbstractHasProjectIdAndSubject<S> implements HasProjectId,
      */
     @Nonnull
     @Override
-    final public ProjectId getProjectId() {
+    public ProjectId getProjectId() {
         return projectId;
     }
 

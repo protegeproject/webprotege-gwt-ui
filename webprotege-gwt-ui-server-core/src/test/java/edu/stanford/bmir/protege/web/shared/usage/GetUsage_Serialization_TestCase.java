@@ -21,7 +21,7 @@ public class GetUsage_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = GetUsageAction.create(mockOWLClass(), mockProjectId(), Optional.empty());
+        var action = GetUsageAction.create(mockOWLClass(), mockProjectId());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 
