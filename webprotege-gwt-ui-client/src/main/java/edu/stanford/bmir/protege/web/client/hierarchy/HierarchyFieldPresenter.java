@@ -224,7 +224,7 @@ public class HierarchyFieldPresenter {
                                                                        id,
                                                                        pageRequest),
                                      result -> {
-                                         Page<EntityNode> data = result.getSiblingsPage()
+                                         Page<EntityNode> data = result.getSiblings()
                                                  .transform(GraphNode::getUserObject);
                                          consumer.consumeListData(data);
                                      });
