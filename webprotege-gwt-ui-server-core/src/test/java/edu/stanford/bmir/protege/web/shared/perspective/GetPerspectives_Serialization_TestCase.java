@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -17,7 +20,7 @@ import static edu.stanford.bmir.protege.web.MockingUtils.*;
  * Stanford Center for Biomedical Informatics Research
  * 2021-04-07
  */
-public class GetPerspectives_Serialization_TestCase {
+public abstract class GetPerspectives_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
