@@ -2,11 +2,10 @@ package edu.stanford.bmir.protege.web;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
@@ -88,6 +87,10 @@ public class MockingUtils {
         return new OWLLiteralImpl("Literal" + counter, "", new OWLDatatypeImpl(XSDVocabulary.STRING.getIRI()));
     }
 
+    public static OWLNamedIndividualData mockOWLNamedIndividualData() {
+        return OWLNamedIndividualData.get(mockOWLNamedIndividual(), ImmutableList.of(), false);
+    }
+
     public HasSignature mockHasSignature(OWLEntity ... entities) {
         HasSignature hasSignature = mock(HasSignature.class);
         when(hasSignature.getSignature()).thenReturn(new HashSet<OWLEntity>(Arrays.asList(entities)));
@@ -98,8 +101,20 @@ public class MockingUtils {
         return UserId.getUserId("User" + nextInt());
     }
 
-    public static OWLEntityData mockOWLClassData() {
+    public static OWLClassData mockOWLClassData() {
         return OWLClassData.get(mockOWLClass(), ImmutableMap.of(), false);
+    }
+
+    public static OWLObjectPropertyData mockOWLObjectPropertyData() {
+        return OWLObjectPropertyData.get(mockOWLObjectProperty(), ImmutableMap.of(), false);
+    }
+
+    public static OWLDataPropertyData mockOWLDataPropertyData() {
+        return OWLDataPropertyData.get(mockOWLDataProperty(), ImmutableMap.of(), false);
+    }
+
+    public static OWLAnnotationPropertyData mockOWLAnnotationPropertyData() {
+        return OWLAnnotationPropertyData.get(mockOWLAnnotationProperty(), ImmutableMap.of(), false);
     }
 
     public static EntityNode mockOWLClassNode() {
