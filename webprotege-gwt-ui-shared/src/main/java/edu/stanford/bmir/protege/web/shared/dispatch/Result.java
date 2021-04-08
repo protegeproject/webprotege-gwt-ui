@@ -135,6 +135,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetMatchingEntitiesResult.class),
         @Type(GetNamedIndividualFrameResult.class),
         @Type(GetObjectPropertyFrameResult.class),
+        @Type(GetOboTermIdResult.class),
         @Type(GetOboNamespacesResult.class),
         @Type(GetOboTermCrossProductResult.class),
         @Type(GetOboTermDefinitionResult.class),

@@ -143,6 +143,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetNamedIndividualFrameAction.class),
         @Type(value = GetObjectPropertyFrameAction.class),
         @Type(value = GetOboNamespacesAction.class),
+        @Type(value = GetOboTermIdAction.class),
         @Type(value = GetOboTermCrossProductAction.class),
         @Type(value = GetOboTermDefinitionAction.class),
         @Type(value = GetOboTermSynonymsAction.class),

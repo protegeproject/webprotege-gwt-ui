@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -19,7 +20,6 @@ import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.obo.GetOboNamespacesAction.getOboNamespaces;
-import static edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction.getOboTermId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -71,7 +71,7 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        dispatch.execute(getOboTermId(getProjectId(), entity),
+        dispatch.execute(GetOboTermIdAction.create(getProjectId(), entity),
                          this,
                          result -> editor.setValue(result.getTermId()));
 
