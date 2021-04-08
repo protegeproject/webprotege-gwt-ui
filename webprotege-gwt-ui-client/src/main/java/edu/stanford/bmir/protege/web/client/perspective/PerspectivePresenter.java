@@ -156,8 +156,8 @@ public class PerspectivePresenter implements HasDispose {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(GetPerspectiveLayoutAction.create(projectId, userId, perspectiveId),
                 result -> {
-                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspective());
-                    installPerspective(result.getPerspective());
+                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getLayout());
+                    installPerspective(result.getLayout());
                 });
     }
 
