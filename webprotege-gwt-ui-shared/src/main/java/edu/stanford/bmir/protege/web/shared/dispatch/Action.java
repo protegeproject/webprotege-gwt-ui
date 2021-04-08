@@ -31,6 +31,7 @@ import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsAction;
@@ -135,7 +136,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetHierarchyRootsAction.class),
         @Type(value = GetHierarchySiblingsAction.class),
         @Type(value = GetIndividualsAction.class),
-        @Type(value = GetIndividualsPageContainingIndividualResult.class),
+        @Type(value = GetIndividualsPageContainingIndividualAction.class),
         @Type(value = GetManchesterSyntaxFrameAction.class),
         @Type(value = GetManchesterSyntaxFrameCompletionsAction.class),
         @Type(value = GetMatchingEntitiesAction.class),

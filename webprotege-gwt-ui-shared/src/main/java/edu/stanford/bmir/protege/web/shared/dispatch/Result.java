@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.issues.*;

@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.individuals;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -17,13 +20,15 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("GetIndividualsPageContainingIndividual")
 public abstract class GetIndividualsPageContainingIndividualResult implements Result {
 
-    public static GetIndividualsPageContainingIndividualResult create(@Nonnull OWLNamedIndividual individual,
-                                                                      @Nonnull Page<EntityNode> page,
-                                                                      @Nonnull EntityNode actualType,
-                                                                      @Nonnull InstanceRetrievalMode actualMode,
-                                                                      @Nonnull ImmutableSet<EntityNode> types) {
+    @JsonCreator
+    public static GetIndividualsPageContainingIndividualResult create(@JsonProperty("individual") @Nonnull OWLNamedIndividual individual,
+                                                                      @JsonProperty("page") @Nonnull Page<EntityNode> page,
+                                                                      @JsonProperty("actualType") @Nonnull EntityNode actualType,
+                                                                      @JsonProperty("actualMode") @Nonnull InstanceRetrievalMode actualMode,
+                                                                      @JsonProperty("types") @Nonnull ImmutableSet<EntityNode> types) {
         return new AutoValue_GetIndividualsPageContainingIndividualResult(individual,
                                                                           actualType,
                                                                           actualMode,
