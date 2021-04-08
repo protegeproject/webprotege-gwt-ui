@@ -189,7 +189,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                                                   view.getRetrievalMode(),
                                                                   pageRequest);
         dsm.execute(action, view, result -> {
-            Page<EntityNode> page = result.getPaginatedResult();
+            Page<EntityNode> page = result.getIndividuals();
             displayPageOfIndividuals(page);
             selectionModel.getSelection().ifPresent(curSel -> {
                 if (!view.getSelectedIndividuals().equals(curSel)) {

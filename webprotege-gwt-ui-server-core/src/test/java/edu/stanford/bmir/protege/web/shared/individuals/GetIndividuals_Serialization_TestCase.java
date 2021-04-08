@@ -10,9 +10,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Optional;
 
-
-import static edu.stanford.bmir.protege.web.MockingUtils.*;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -32,8 +29,7 @@ public class GetIndividuals_Serialization_TestCase {
     @Test
     public void shouldSerializeResult() throws IOException {
         var result = GetIndividualsResult.create(Optional.empty(),
-                                                 Page.emptyPage(),
-                                                 22);
+                                                 Page.emptyPage());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
