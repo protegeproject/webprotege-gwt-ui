@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableCollection;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -32,7 +33,7 @@ public abstract class GetUsageResult implements Result, HasProjectId {
     @JsonCreator
     public static GetUsageResult create(@JsonProperty("projectId") ProjectId projectId,
                                         @JsonProperty("entityNode") EntityNode entityNode,
-                                        @JsonProperty("usageReferences") Collection<UsageReference> usageReferences,
+                                        @JsonProperty("usageReferences") List<UsageReference> usageReferences,
                                         @JsonProperty("totalUsageCount") int totalUsageCount) {
         return new AutoValue_GetUsageResult(projectId, entityNode, usageReferences, totalUsageCount);
     }
@@ -45,7 +46,7 @@ public abstract class GetUsageResult implements Result, HasProjectId {
     public abstract EntityNode getEntityNode();
 
     @Nonnull
-    public abstract Collection<UsageReference> getUsageReferences();
+    public abstract List<UsageReference> getUsageReferences();
 
     public abstract int getTotalUsageCount();
 }

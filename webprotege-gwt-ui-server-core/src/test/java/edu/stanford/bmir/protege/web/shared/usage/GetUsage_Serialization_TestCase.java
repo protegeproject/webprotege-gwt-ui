@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.usage;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -31,7 +32,7 @@ public class GetUsage_Serialization_TestCase {
     public void shouldSerializeResult() throws IOException {
         var result = GetUsageResult.create(mockProjectId(),
                                            mockOWLClassNode(),
-                                           ImmutableSet.of(
+                                           ImmutableList.of(
                                                    new UsageReference(AxiomType.DECLARATION,
                                                                       "Declaration(Class(http://example.org/A))",
                                                                       Optional.empty(),
