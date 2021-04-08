@@ -90,7 +90,7 @@ public class ChoiceDescriptorPresenter implements ValueEditor<ChoiceDescriptor>,
         view.getDataValue().ifPresent(value -> {
             if(view.getLabel().asMap().isEmpty()) {
                 LanguageMap.LanguageMapBuilder builder = LanguageMap.builder();
-                value.getShortForms().forEach((dictLang, shortForm) -> {
+                value.getShortFormsMap().forEach((dictLang, shortForm) -> {
                     builder.put(dictLang.getLang(), shortForm);
                 });
                 view.setLabel(builder.build());

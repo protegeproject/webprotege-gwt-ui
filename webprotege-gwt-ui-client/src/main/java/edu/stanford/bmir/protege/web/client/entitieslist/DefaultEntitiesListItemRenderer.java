@@ -13,7 +13,7 @@ public class DefaultEntitiesListItemRenderer<E extends OWLEntityData> implements
     @Override
     public void render(E entity, StringBuilder sb) {
         StringBuilder title = new StringBuilder();
-        entity.getShortForms().forEach((lang, sf) -> {
+        entity.getShortFormsMap().forEach((lang, sf) -> {
             title.append(lang.getLang()).append(": ").append(sf).append("\n");
         });
         sb.append("<span title='").append(title.toString()).append("'>");

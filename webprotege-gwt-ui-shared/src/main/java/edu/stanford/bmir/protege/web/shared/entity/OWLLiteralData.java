@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -24,7 +25,7 @@ import java.util.Optional;
 public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexicalForm {
 
     public static OWLLiteralData get(@Nonnull OWLLiteral literal) {
-        return new AutoValue_OWLLiteralData(ImmutableMap.of(), literal);
+        return new AutoValue_OWLLiteralData(ImmutableList.of(), literal);
     }
 
     @Nonnull

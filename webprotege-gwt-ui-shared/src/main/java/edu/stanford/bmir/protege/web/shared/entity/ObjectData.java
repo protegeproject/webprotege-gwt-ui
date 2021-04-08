@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -22,6 +23,7 @@ public abstract class ObjectData implements HasBrowserText, HasSignature {
     /**
      * Gets the core object that is decorated with data
      */
+    @JsonIgnore
     @Nonnull
     public abstract Object getObject();
 
@@ -29,6 +31,7 @@ public abstract class ObjectData implements HasBrowserText, HasSignature {
      * Gets the signature of this object.
      * @return A (possibly empty) set representing the signature of this object.
      */
+    @JsonIgnore
     @Override
     public Set<OWLEntity> getSignature() {
         if(getObject() instanceof HasSignature) {

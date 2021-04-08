@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.util.Arrays;
@@ -78,6 +81,11 @@ public class MockingUtils {
 
     public static OWLOntologyID mockOWLOntologyID() {
         return new OWLOntologyID(IRI.create("http://example.org/test", "http://example.org/test/v1"));
+    }
+
+    public static OWLLiteral mockLiteral() {
+        counter = counter + 1;
+        return new OWLLiteralImpl("Literal" + counter, "en", new OWLDatatypeImpl(XSDVocabulary.STRING.getIRI()));
     }
 
     public HasSignature mockHasSignature(OWLEntity ... entities) {

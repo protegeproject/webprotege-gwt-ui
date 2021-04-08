@@ -25,7 +25,7 @@ public class DisplayNameRenderer {
         return displayNameSettingsManager.getLocalDisplayNameSettings()
                                          .getPrimaryDisplayNameLanguages()
                                          .stream()
-                                         .map(l -> primitiveData.getShortForms().get(l))
+                                         .map(l -> primitiveData.getShortFormsMap().get(l))
                                          .filter(Objects::nonNull)
                                          .findFirst()
                                          .orElse(primitiveData.getBrowserText());

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -386,7 +387,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         }
         String text = getTrimmedText();
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
-        ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortForms)
+        ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortFormsMap)
                                                                          .orElse(ImmutableMap.of());
         boolean deprecated = currentData.map(OWLPrimitiveData::isDeprecated).orElse(false);
         OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms, deprecated);
