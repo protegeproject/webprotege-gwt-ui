@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 /**
@@ -7,12 +11,13 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-10
  */
-public class SetUserProjectEntityGraphSettingsResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("SetUserProjectEntityGraphSettings")
+public abstract class SetUserProjectEntityGraphSettingsResult implements Result {
 
-    private SetUserProjectEntityGraphSettingsResult() {
-    }
-
+    @JsonCreator
     public static SetUserProjectEntityGraphSettingsResult create() {
-        return new SetUserProjectEntityGraphSettingsResult();
+        return new AutoValue_SetUserProjectEntityGraphSettingsResult();
     }
 }
