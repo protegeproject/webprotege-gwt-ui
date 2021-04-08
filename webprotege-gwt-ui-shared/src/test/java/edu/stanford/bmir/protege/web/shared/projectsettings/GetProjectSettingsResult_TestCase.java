@@ -35,7 +35,7 @@ public class GetProjectSettingsResult_TestCase {
 
     @Test
     public void shouldReturnSupplied_ProjectSettings() {
-        assertThat(result.getProjectSettings(), is(settings));
+        assertThat(result.getSettings(), is(settings));
     }
 
     @Test
