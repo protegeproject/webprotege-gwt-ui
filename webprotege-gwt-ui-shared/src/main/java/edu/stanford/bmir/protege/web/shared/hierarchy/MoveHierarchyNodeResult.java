@@ -27,7 +27,7 @@ public abstract class MoveHierarchyNodeResult implements Result, HasEventList<Pr
     }
 
     public abstract boolean isMoved();
-    
+
     @Override
     public abstract EventList<ProjectEvent<?>> getEventList();
 

@@ -69,6 +69,8 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addSerializer(AxiomType.class, new AxiomTypeSerializer());
         module.addDeserializer(AxiomType.class, new AxiomTypeDeserializer());
 
+        mapper.addMixIn(Path.class, PathMixin.class);
+
         mapper.registerModule(module);
 
         return mapper;
