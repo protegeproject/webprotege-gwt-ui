@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
-import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsResult;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
-import edu.stanford.bmir.protege.web.shared.tag.TagData;
+import edu.stanford.bmir.protege.web.shared.tag.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -26,7 +23,6 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
-import static edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction.setProjectTags;
 
 /**
  * Matthew Horridge
@@ -109,7 +105,7 @@ public class ProjectTagsPresenter implements Presenter {
 
     private void handleApplyChanges() {
         getTagData().ifPresent(tagData -> {
-            dispatchServiceManager.execute(setProjectTags(projectId, tagData),
+            dispatchServiceManager.execute(SetProjectTagsAction.create(projectId, tagData),
                                            result -> settingsPresenter.goToNextPlace());
         });
     }

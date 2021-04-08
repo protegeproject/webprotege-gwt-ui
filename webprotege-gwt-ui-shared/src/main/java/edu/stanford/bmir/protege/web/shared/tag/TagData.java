@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -31,13 +32,13 @@ public abstract class TagData implements IsSerializable {
     }
 
     @JsonCreator
-    public static TagData get(@Nullable TagId tagId,
-                              @Nonnull String label,
-                              @Nonnull String description,
-                              @Nonnull Color color,
-                              @Nonnull Color backgroundColor,
-                              @Nonnull ImmutableList<RootCriteria> criteria,
-                              int usageCount) {
+    public static TagData get(@JsonProperty("tagId") @Nullable TagId tagId,
+                              @JsonProperty("label") @Nonnull String label,
+                              @JsonProperty("description") @Nonnull String description,
+                              @JsonProperty("color") @Nonnull Color color,
+                              @JsonProperty("backgroundColor") @Nonnull Color backgroundColor,
+                              @JsonProperty("criteria") @Nonnull ImmutableList<RootCriteria> criteria,
+                              @JsonProperty("usageCount") int usageCount) {
         return new AutoValue_TagData(tagId, label, description, color, backgroundColor, criteria, usageCount);
     }
 
