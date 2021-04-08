@@ -1,5 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 /**
@@ -8,22 +13,16 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class RemoveProjectFromTrashAction implements Action<RemoveProjectFromTrashResult> {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("RemoveProjectFromTrash")
+public abstract class RemoveProjectFromTrashAction implements Action<RemoveProjectFromTrashResult> {
 
-    private ProjectId projectId;
 
-    private RemoveProjectFromTrashAction() {
+    @JsonCreator
+    public static RemoveProjectFromTrashAction create(@JsonProperty("projectId") ProjectId projectId) {
+        return new AutoValue_RemoveProjectFromTrashAction(projectId);
     }
 
-    private RemoveProjectFromTrashAction(ProjectId projectId) {
-        this.projectId = projectId;
-    }
-
-    public static RemoveProjectFromTrashAction create(ProjectId projectId) {
-        return new RemoveProjectFromTrashAction(projectId);
-    }
-
-    public ProjectId getProjectId() {
-        return projectId;
-    }
+    public abstract ProjectId getProjectId();
 }
