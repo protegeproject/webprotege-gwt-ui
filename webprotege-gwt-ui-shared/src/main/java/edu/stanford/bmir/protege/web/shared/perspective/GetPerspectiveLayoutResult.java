@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 /**
@@ -7,25 +11,16 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public class GetPerspectiveLayoutResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("GetPerspectiveLayout")
+public abstract class GetPerspectiveLayoutResult implements Result {
 
-    private PerspectiveLayout perspective;
 
-    /**
-     * For serialization only
-     */
-    private GetPerspectiveLayoutResult() {
-    }
-
-    private GetPerspectiveLayoutResult(PerspectiveLayout perspective) {
-        this.perspective = perspective;
-    }
-
+    @JsonCreator
     public static GetPerspectiveLayoutResult create(PerspectiveLayout perspective) {
-        return new GetPerspectiveLayoutResult(perspective);
+        return new AutoValue_GetPerspectiveLayoutResult(perspective);
     }
 
-    public PerspectiveLayout getPerspective() {
-        return perspective;
-    }
+    public abstract PerspectiveLayout getPerspective();
 }
