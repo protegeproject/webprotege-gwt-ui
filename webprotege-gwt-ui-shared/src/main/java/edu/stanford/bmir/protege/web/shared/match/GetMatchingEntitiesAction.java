@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.match;
 
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -15,50 +19,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-//@AutoValue
-//@GwtCompatible(serializable = true)
-public class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntitiesResult> {
+@AutoValue
+@GwtCompatible(serializable = true)
+@JsonTypeName("GetMatchingEntities")
+public abstract class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntitiesResult> {
 
-    private Criteria criteria;
-
-    private ProjectId projectId;
-
-    private PageRequest pageRequest;
-
-    private GetMatchingEntitiesAction(Criteria criteria, ProjectId projectId, PageRequest pageRequest) {
-        this.criteria = checkNotNull(criteria);
-        this.projectId = checkNotNull(projectId);
-        this.pageRequest = checkNotNull(pageRequest);
-    }
-
-    public static GetMatchingEntitiesAction create(Criteria criteria, ProjectId projectId, PageRequest pageRequest) {
-        return new GetMatchingEntitiesAction(criteria, projectId, pageRequest);
+    @JsonCreator
+    public static GetMatchingEntitiesAction create(@JsonProperty("projectId") ProjectId projectId,
+                                                   @JsonProperty("criteria") Criteria criteria,
+                                                   @JsonProperty("pageRequest") PageRequest pageRequest) {
+        return new AutoValue_GetMatchingEntitiesAction(projectId, criteria, pageRequest);
     }
 
     @Nonnull
     @Override
-    public ProjectId getProjectId() {
-        return projectId;
-    }
+    public abstract ProjectId getProjectId();
 
     @Nonnull
-    public PageRequest getPageRequest() {
-        return pageRequest;
-    }
-
-    @GwtSerializationConstructor
-    private GetMatchingEntitiesAction() {
-    }
+    public abstract Criteria getCriteria();
 
     @Nonnull
-    public Criteria getCriteria() {
-        return criteria;
-    }
-
-    @Nonnull
-    public static GetMatchingEntitiesAction getMatchingEntities(@Nonnull ProjectId projectId,
-                                                                @Nonnull Criteria criteria,
-                                                                @Nonnull PageRequest pageRequest) {
-        return create(criteria, projectId, pageRequest);
-    }
+    public abstract PageRequest getPageRequest();
 }

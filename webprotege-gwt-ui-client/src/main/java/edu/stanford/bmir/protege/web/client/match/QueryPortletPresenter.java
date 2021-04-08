@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -18,7 +19,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction.getMatchingEntities;
 import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 
 /**
@@ -84,7 +84,7 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
         criteria.ifPresent(c -> {
             PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), PAGE_SIZE);
             view.setExecuteEnabled(false);
-            dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c, pageRequest),
+            dispatchServiceManager.execute(GetMatchingEntitiesAction.create(getProjectId(), c, pageRequest),
                                            this::displayResult);
         });
     }

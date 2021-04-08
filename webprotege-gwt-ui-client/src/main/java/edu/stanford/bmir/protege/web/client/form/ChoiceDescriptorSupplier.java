@@ -68,8 +68,8 @@ public class ChoiceDescriptorSupplier {
             handler.handleChoices(ImmutableList.copyOf(cachedChoices));
             return;
         }
-        dispatchServiceManager.execute(GetMatchingEntitiesAction.create(sourceDescriptor.getCriteria(),
-                                                                        projectId,
+        dispatchServiceManager.execute(GetMatchingEntitiesAction.create(projectId,
+                                                                        sourceDescriptor.getCriteria(),
                                                                         PageRequest.requestPageWithSize(1, 200)),
                                        result -> {
                                            ImmutableList<ChoiceDescriptor> choiceDescriptors = getChoiceDescriptors(result);

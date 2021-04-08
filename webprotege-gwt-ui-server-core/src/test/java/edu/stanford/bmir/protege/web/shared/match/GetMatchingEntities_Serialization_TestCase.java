@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.match;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -24,8 +23,8 @@ public class GetMatchingEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = GetMatchingEntitiesAction.create(CompositeRootCriteria.get(ImmutableList.of(), MultiMatchType.ALL),
-                                                      mockProjectId(),
+        var action = GetMatchingEntitiesAction.create(mockProjectId(),
+                                                      CompositeRootCriteria.get(ImmutableList.of(), MultiMatchType.ALL),
                                                       PageRequest.requestFirstPage());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
