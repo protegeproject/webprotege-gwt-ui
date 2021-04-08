@@ -177,6 +177,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(MergeUploadedProjectResult.class),
         @Type(MoveEntitiesToParentResult.class),
         @Type(MoveHierarchyNodeResult.class),
+        @Type(MoveProjectsToTrashResult.class),
         @Type(NewOntologyMergeAddResult.class),
         @Type(PerformEntitySearchResult.class),
         @Type(PerformLoginResult.class),
