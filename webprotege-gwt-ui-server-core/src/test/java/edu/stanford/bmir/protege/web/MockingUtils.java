@@ -85,7 +85,7 @@ public class MockingUtils {
 
     public static OWLLiteral mockLiteral() {
         counter = counter + 1;
-        return new OWLLiteralImpl("Literal" + counter, "en", new OWLDatatypeImpl(XSDVocabulary.STRING.getIRI()));
+        return new OWLLiteralImpl("Literal" + counter, "", new OWLDatatypeImpl(XSDVocabulary.STRING.getIRI()));
     }
 
     public HasSignature mockHasSignature(OWLEntity ... entities) {
