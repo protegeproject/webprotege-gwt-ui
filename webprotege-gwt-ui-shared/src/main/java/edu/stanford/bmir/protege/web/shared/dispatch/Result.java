@@ -183,6 +183,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(ResetPerspectivesResult.class),
         @Type(ResetPerspectiveLayoutResult.class),
         @Type(ResetPerspectivesResult.class),
+        @Type(SetPerspectivesResult.class),
         @Type(RevertRevisionResult.class),
         @Type(SetAnnotationValueResult.class),
         @Type(SetApplicationSettingsResult.class),

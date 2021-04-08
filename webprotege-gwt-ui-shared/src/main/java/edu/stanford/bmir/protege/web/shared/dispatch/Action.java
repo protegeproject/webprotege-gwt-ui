@@ -189,6 +189,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = ResetPasswordAction.class),
         @Type(value = ResetPerspectivesAction.class),
         @Type(value = ResetPerspectiveLayoutAction.class),
+        @Type(value = SetPerspectivesAction.class),
         @Type(value = ResetPerspectivesAction.class),
         @Type(value = RevertRevisionAction.class),
         @Type(value = SetAnnotationValueAction.class),
