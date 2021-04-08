@@ -65,6 +65,7 @@ import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.tag.*;
+import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
@@ -174,6 +175,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetSearchSettingsAction.class),
         @Type(value = GetUserIdCompletionsAction.class),
         @Type(value = GetUserProjectEntityGraphCriteriaAction.class),
+        @Type(value = GetUsageAction.class),
         @Type(value = GetWatchesAction.class),
         @Type(value = GetWatchedEntityChangesAction.class),
         @Type(value = LoadProjectAction.class),

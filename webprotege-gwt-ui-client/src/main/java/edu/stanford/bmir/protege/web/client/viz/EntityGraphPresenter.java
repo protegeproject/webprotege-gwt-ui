@@ -363,16 +363,16 @@ public class EntityGraphPresenter {
     }
 
     private void handleEntityGraph(@Nonnull GetEntityGraphResult result) {
-        if(result.getEntityGraph().equals(currentEntityGraph)) {
+        if(result.getGraph().equals(currentEntityGraph)) {
             return;
         }
-        EntityGraphSettings entityGraphSettings = result.getEntityGraphSettings();
+        EntityGraphSettings entityGraphSettings = result.getSettings();
         this.rankSpacing = (int)(20 * entityGraphSettings
                                             .getRankSpacing());
-        currentEntityGraph = result.getEntityGraph();
+        currentEntityGraph = result.getGraph();
         view.setPrunedToLimit(currentEntityGraph.isPrunedToEdgeLimit());
         if (entityDisplay != null) {
-            entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
+            entityDisplay.setDisplayedEntity(Optional.of(result.getGraph().getRoot()));
         }
         ImmutableList<FilterName> activeFilters = entityGraphSettings.getActiveFilterNames();
         filterTokenPresenter.setActiveFilters(activeFilters);
@@ -381,7 +381,7 @@ public class EntityGraphPresenter {
     }
 
     private Boolean isGraphForCurrentEntity(@Nonnull GetEntityGraphResult result) {
-        return Objects.equals(currentEntityGraph, result.getEntityGraph());
+        return Objects.equals(currentEntityGraph, result.getGraph());
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
