@@ -141,7 +141,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
                     create(projectId, e),
                     hasBusy,
                     result -> {
-                        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
+                        entityDisplay.setDisplayedEntity(Optional.of(result.getEntity()));
                         displayThreads(result.getThreads());
                     }
             );
