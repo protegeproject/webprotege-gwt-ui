@@ -27,6 +27,7 @@ import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
+import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -111,7 +112,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetCommentedEntitiesResult.class),
         @Type(GetAvailableProjectsWithPermissionResult.class),
         @Type(GetCurrentUserInSessionResult.class),
-        @Type(GetDeprecatedEntitiesResult.class),@Type(value = GetEmailAddressAction.class),
+        @Type(GetDeprecatedEntitiesResult.class),
+        @Type(GetEmailAddressResult.class),
         @Type(GetEntityCreationFormsResult.class),
         @Type(GetEntityCrudKitsResult.class),
         @Type(GetEntityDeprecationFormsResult.class),
