@@ -8,10 +8,15 @@ import edu.stanford.bmir.protege.web.server.app.*;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.server.rpc.JsonRpcEndPoint;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.time.Duration;
 
 /**
  * Matthew Horridge
@@ -58,4 +63,21 @@ public class ApplicationModule {
     AccessManager provideAccessManager(AccessManagerImpl impl) {
         return impl;
     }
+
+    @ApplicationSingleton
+    @Provides
+    HttpClient provideHttpClient() {
+        return HttpClient.newBuilder()
+                         .version(HttpClient.Version.HTTP_1_1)
+                         .followRedirects(HttpClient.Redirect.NORMAL)
+                         .connectTimeout(Duration.ofSeconds(20))
+                         .build();
+    }
+
+    @Provides
+    JsonRpcEndPoint provideJsonRpcEndPoint() {
+        var address = "http://localhost:8082/gwtui/rpc";
+        return JsonRpcEndPoint.get(URI.create(address));
+    }
+
 }

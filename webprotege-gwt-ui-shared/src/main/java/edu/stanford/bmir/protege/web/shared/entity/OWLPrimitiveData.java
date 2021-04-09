@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
