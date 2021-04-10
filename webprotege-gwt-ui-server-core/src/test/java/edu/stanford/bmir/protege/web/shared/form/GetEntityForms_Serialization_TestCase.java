@@ -30,6 +30,7 @@ public class GetEntityForms_Serialization_TestCase {
                                                  ImmutableSet.of(),
                                                  LangTagFilter.get(ImmutableSet.of()),
                                                  ImmutableSet.of(),
+                                                 ImmutableSet.of(),
                                                  ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }

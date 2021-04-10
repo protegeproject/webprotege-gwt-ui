@@ -185,7 +185,7 @@ public class EntityFormStackPresenter {
         formStackPresenter.collapseAllFields();
     }
 
-    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
+    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilters) {
         currentEntity.ifPresent(entity -> {
             ImmutableSet<FormPageRequest> pageRequests = ImmutableSet.copyOf(formStackPresenter.getPageRequests());
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
@@ -196,6 +196,7 @@ public class EntityFormStackPresenter {
                                                          pageRequests,
                                                          langTagFilter,
                                                          orderings,
+                                                         ImmutableSet.copyOf(formFilters),
                                                          filters), hasBusy, this::handleGetEntityFormsResult);
         });
         if (!currentEntity.isPresent()) {
