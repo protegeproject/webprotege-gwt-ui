@@ -15,5 +15,5 @@ public interface DispatchService extends RemoteService {
 
     DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException;
 
-
+    RpcWhiteList getRpcWhiteList(RpcWhiteList list);
 }

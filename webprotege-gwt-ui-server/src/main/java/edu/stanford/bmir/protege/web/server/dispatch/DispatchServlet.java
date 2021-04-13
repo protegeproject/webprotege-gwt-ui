@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
-import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
-import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
+import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -50,5 +47,10 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         final RequestContext requestContext = new RequestContext(userId);
         final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));
         return executor.execute(action, requestContext, executionContext);
+    }
+
+    @Override
+    public RpcWhiteList getRpcWhiteList(RpcWhiteList list) {
+        return new RpcWhiteList();
     }
 }
