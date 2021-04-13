@@ -226,6 +226,7 @@
                             <moduleShortName>webprotege</moduleShortName>
                             <classpathScope>compile+runtime</classpathScope>
                             <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
+                            <extra>target/gwt-extra</extra>
                         </configuration>
                     </plugin>
                             <plugin>
