@@ -27,8 +27,8 @@ public class CreateUserAccountResult_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        result = new CreateUserAccountResult();
-        otherResult = new CreateUserAccountResult();
+        result = CreateUserAccountResult.create();
+        otherResult = CreateUserAccountResult.create();
     }
 
     @Test

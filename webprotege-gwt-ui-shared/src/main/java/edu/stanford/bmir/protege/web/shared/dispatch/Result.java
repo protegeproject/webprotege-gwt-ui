@@ -85,7 +85,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 @JsonSubTypes({
         @Type(AddEntityCommentResult.class),
         @Type(AddProjectTagResult.class),
-        @Type(AuthenticateUserResult.class),
         @Type(BatchResult.class),
         @Type(ChangePasswordResult.class),
         @Type(CheckManchesterSyntaxFrameResult.class),

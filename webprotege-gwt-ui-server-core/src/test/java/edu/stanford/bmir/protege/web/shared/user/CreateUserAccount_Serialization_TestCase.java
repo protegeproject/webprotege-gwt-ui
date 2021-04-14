@@ -27,7 +27,7 @@ public class CreateUserAccount_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = new CreateUserAccountResult();
+        var result = CreateUserAccountResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

@@ -97,10 +97,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     AddProjectTagResult _AddProjectTagResult;
 
-    AuthenticateUserAction _AuthenticateUserAction;
-
-    AuthenticateUserResult _AuthenticateUserResult;
-
     AvailableProject _AvailableProject;
 
     BatchAction _BatchAction;
