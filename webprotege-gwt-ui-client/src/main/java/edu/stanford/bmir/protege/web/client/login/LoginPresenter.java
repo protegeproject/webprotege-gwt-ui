@@ -8,14 +8,10 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
-import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -38,7 +34,7 @@ public class LoginPresenter implements Presenter {
 
     private final LoginView view;
 
-    private final AuthenticatedActionExecutor loginExecutor;
+    private final DispatchServiceManager dispatch;
 
     private final LoggedInUserManager loggedInUserManager;
 
@@ -55,12 +51,14 @@ public class LoginPresenter implements Presenter {
 
     @Inject
     public LoginPresenter(@Nonnull LoginView view,
-                          @Nonnull AuthenticatedActionExecutor loginExecutor,
+                          @Nonnull DispatchServiceManager dispatch,
                           @Nonnull LoggedInUserManager loggedInUserManager,
                           @Nonnull PlaceController placeController,
-                          @Nonnull ResetPasswordPresenter resetPasswordPresenter, DispatchErrorMessageDisplay errorDisplay, ProgressDisplay progressDisplay) {
+                          @Nonnull ResetPasswordPresenter resetPasswordPresenter,
+                          DispatchErrorMessageDisplay errorDisplay,
+                          ProgressDisplay progressDisplay) {
         this.view = checkNotNull(view);
-        this.loginExecutor = checkNotNull(loginExecutor);
+        this.dispatch = dispatch;
         this.loggedInUserManager = checkNotNull(loggedInUserManager);
         this.placeController = checkNotNull(placeController);
         this.resetPasswordPresenter = checkNotNull(resetPasswordPresenter);
@@ -110,35 +108,29 @@ public class LoginPresenter implements Presenter {
 
     private void handleSignIn(SignInDetails signInDetails) {
         final UserId userId = UserId.getUserId(signInDetails.getUserName());
-        loginExecutor.execute(userId, signInDetails.getClearTextPassword(),
-                new PerformLoginActionFactory(),
-                new AuthenticatedDispatchServiceCallback<PerformLoginResult>(errorDisplay, progressDisplay) {
-                    @Override
-                    public void handleAuthenticationResponse(@Nonnull AuthenticationResponse authenticationResponse) {
-                        if(authenticationResponse == AuthenticationResponse.FAIL) {
-                            view.showLoginFailedErrorMessage();
-                        }
-                    }
+        final Pwd pwd = Pwd.create(signInDetails.getClearTextPassword());
+        dispatch.execute(PerformLoginAction.create(userId, pwd),
+                         new DispatchServiceCallbackWithProgressDisplay<PerformLoginResult>(errorDisplay,
+                                                                                            progressDisplay) {
+                             @Override
+                             public String getProgressDisplayTitle() {
+                                 return "Signing In";
+                             }
 
-                    @Override
-                    public void handleSuccess(@Nonnull PerformLoginResult result) {
-                        handlePerformLoginResult(result);
-                    }
+                             @Override
+                             public String getProgressDisplayMessage() {
+                                 return "Please wait.";
+                             }
 
-                    @Override
-                    public String getProgressDisplayTitle() {
-                        return "Logging in";
-                    }
-
-                    @Override
-                    public String getProgressDisplayMessage() {
-                        return "Please wait.";
-                    }
-                });
+                             @Override
+                             public void handleSuccess(PerformLoginResult performLoginResult) {
+                                 handlePerformLoginResult(performLoginResult);
+                             }
+                         });
     }
 
     private void handlePerformLoginResult(@Nonnull PerformLoginResult result) {
-        if(result.getResponse() == AuthenticationResponse.SUCCESS) {
+        if(result.getAuthenticationResponse() == AuthenticationResponse.SUCCESS) {
             UserInSession userInSession = result.getUserInSession();
             loggedInUserManager.setLoggedInUser(userInSession);
             nextPlace.ifPresent(placeController::goTo);

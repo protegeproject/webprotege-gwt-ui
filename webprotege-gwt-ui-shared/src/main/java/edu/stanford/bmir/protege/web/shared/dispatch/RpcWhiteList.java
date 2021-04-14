@@ -665,6 +665,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PropertyValueDescriptor _PropertyValueDescriptor;
 
+    Pwd _Pwd;
+
     RebuildPermissionsAction _RebuildPermissionsAction;
 
     RebuildPermissionsResult _RebuildPermissionsResult;
