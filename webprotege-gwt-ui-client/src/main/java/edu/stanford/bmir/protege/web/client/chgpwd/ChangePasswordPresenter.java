@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.chgpwd;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
-import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -17,7 +15,6 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
