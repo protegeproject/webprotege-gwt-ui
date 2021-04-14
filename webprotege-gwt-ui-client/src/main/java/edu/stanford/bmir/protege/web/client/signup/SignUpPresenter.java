@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.shared.auth.Pwd;
+import edu.stanford.bmir.protege.web.shared.auth.Password;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.shared.user.*;
@@ -141,7 +141,7 @@ public class SignUpPresenter implements Presenter {
         UserId userId = UserId.getUserId(data.getUserName());
         dispatchServiceManager.execute(CreateUserAccountAction.create(userId,
                                                                       data.getEmailAddress(),
-                                                                      Pwd.create(data.getPassword())),
+                                                                      Password.create(data.getPassword())),
                                        new DispatchServiceCallback<CreateUserAccountResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(CreateUserAccountResult createUserAccountResult) {

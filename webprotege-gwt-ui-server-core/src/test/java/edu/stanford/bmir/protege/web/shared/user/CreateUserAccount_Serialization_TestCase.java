@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
-import edu.stanford.bmir.protege.web.shared.auth.Pwd;
+import edu.stanford.bmir.protege.web.shared.auth.Password;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
@@ -18,7 +18,7 @@ public class CreateUserAccount_Serialization_TestCase {
     @Test
     public void shouldSerializeAction() throws IOException {
         var action = CreateUserAccountAction.create(UserId.getGuest(),
-                                                    new EmailAddress("m@m"), Pwd.create("ThePwd"));
+                                                    new EmailAddress("m@m"), Password.create("ThePwd"));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

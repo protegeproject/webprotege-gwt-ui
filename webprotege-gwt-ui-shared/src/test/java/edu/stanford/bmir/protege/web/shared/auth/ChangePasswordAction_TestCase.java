@@ -9,9 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Matthew Horridge
@@ -28,7 +26,7 @@ public class ChangePasswordAction_TestCase {
     private UserId userId;
 
     @Mock
-    private Pwd currentPassword, newPassword;
+    private Password currentPassword, newPassword;
 
     @Before
     public void setUp() throws Exception {

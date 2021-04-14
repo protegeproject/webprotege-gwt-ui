@@ -25,7 +25,7 @@ public class PerformLogin_Serialization_TestCase {
     @Test
     public void shouldSerializeAction() throws IOException {
         var action = PerformLoginAction.create(mockUserId(),
-                                               Pwd.create("Hello"));
+                                               Password.create("Hello"));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

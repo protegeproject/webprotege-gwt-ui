@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -24,14 +23,14 @@ public abstract class ChangePasswordAction implements Action<ChangePasswordResul
 
     @JsonCreator
     public static ChangePasswordAction create(@JsonProperty("userId") UserId userId,
-                                @JsonProperty("currentPassword") Pwd currentPassword,
-                                @JsonProperty("newPassword") Pwd newPassword) {
+                                @JsonProperty("currentPassword") Password currentPassword,
+                                @JsonProperty("newPassword") Password newPassword) {
         return new AutoValue_ChangePasswordAction(userId, currentPassword, newPassword);
     }
 
     public abstract UserId getUserId();
 
-    public abstract Pwd getCurrentPassword();
+    public abstract Password getCurrentPassword();
 
-    public abstract Pwd getNewPassword();
+    public abstract Password getNewPassword();
 }

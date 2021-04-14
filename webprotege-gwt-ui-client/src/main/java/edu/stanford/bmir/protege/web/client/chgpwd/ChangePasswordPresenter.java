@@ -108,8 +108,8 @@ public class ChangePasswordPresenter {
 
 
     private void executeChangePassword(final ModalCloser closer) {
-        Pwd currentPassword = Pwd.create(changePasswordView.getOldPassword());
-        Pwd newPassword = Pwd.create(changePasswordView.getNewPassword());
+        Password currentPassword = Password.create(changePasswordView.getOldPassword());
+        Password newPassword = Password.create(changePasswordView.getNewPassword());
         dispatchServiceManager.execute(ChangePasswordAction.create(userId, currentPassword, newPassword),
                                        new DispatchServiceCallbackWithProgressDisplay<ChangePasswordResult>(errorDisplay,
                                                                                                             progressDisplay) {

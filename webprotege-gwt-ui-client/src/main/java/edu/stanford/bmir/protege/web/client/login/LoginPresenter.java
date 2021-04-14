@@ -106,8 +106,8 @@ public class LoginPresenter implements Presenter {
 
     private void handleSignIn(SignInDetails signInDetails) {
         final UserId userId = UserId.getUserId(signInDetails.getUserName());
-        final Pwd pwd = Pwd.create(signInDetails.getClearTextPassword());
-        dispatch.execute(PerformLoginAction.create(userId, pwd),
+        final Password password = Password.create(signInDetails.getClearTextPassword());
+        dispatch.execute(PerformLoginAction.create(userId, password),
                          new DispatchServiceCallbackWithProgressDisplay<PerformLoginResult>(errorDisplay,
                                                                                             progressDisplay) {
                              @Override

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.auth.Pwd;
+import edu.stanford.bmir.protege.web.shared.auth.Password;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -24,7 +24,7 @@ public abstract class CreateUserAccountAction implements Action<CreateUserAccoun
     @JsonCreator
     public static CreateUserAccountAction create(@JsonProperty("userId") UserId userId,
                                    @JsonProperty("emailAddress") EmailAddress emailAddress,
-                                   @JsonProperty("password") Pwd password) {
+                                   @JsonProperty("password") Password password) {
         return new AutoValue_CreateUserAccountAction(userId, emailAddress, password);
     }
 
@@ -32,5 +32,5 @@ public abstract class CreateUserAccountAction implements Action<CreateUserAccoun
 
     public abstract EmailAddress getEmailAddress();
 
-    public abstract Pwd getPassword();
+    public abstract Password getPassword();
 }

@@ -19,8 +19,8 @@ public class ChangePassword_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = ChangePasswordAction.create(
                 UserId.getGuest(),
-                Pwd.create("Hello"),
-                Pwd.create("World")
+                Password.create("Hello"),
+                Password.create("World")
         );
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
