@@ -98,7 +98,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(CreateEntityDiscussionThreadResult.class),
         @Type(CreateEntityFromFormDataResult.class),
         @Type(CreateNewProjectResult.class),
-        @Type(GetChapSessionResult.class),
         @Type(LoadProjectResult.class),
         @Type(LogOutUserResult.class),
         @Type(RebuildPermissionsResult.class),

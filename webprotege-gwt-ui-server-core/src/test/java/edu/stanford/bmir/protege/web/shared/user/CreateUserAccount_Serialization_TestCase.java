@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 import edu.stanford.bmir.protege.web.shared.auth.Pwd;
-import edu.stanford.bmir.protege.web.shared.auth.Salt;
-import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;

@@ -7,7 +7,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
-import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
@@ -95,7 +94,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = CreateEntityDiscussionThreadAction.class),
         @Type(value = CreateEntityFromFormDataAction.class),
         @Type(value = CreateNewProjectAction.class),
-        @Type(value = GetChapSessionAction.class),
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
         @Type(value = RebuildPermissionsAction.class),

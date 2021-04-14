@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.auth.Pwd;
-import edu.stanford.bmir.protege.web.shared.auth.Salt;
-import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
