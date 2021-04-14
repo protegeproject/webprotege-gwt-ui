@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
+import edu.stanford.bmir.protege.web.shared.auth.Pwd;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -18,10 +19,8 @@ public class CreateUserAccount_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = new CreateUserAccountAction(UserId.getGuest(),
-                                                 new EmailAddress("m@m"),
-                                                 new SaltedPasswordDigest(new byte [] {1, 2, 3, 4}),
-                                                 new Salt(new byte [] {1, 2, 3, 4}));
+        var action = CreateUserAccountAction.create(UserId.getGuest(),
+                                                    new EmailAddress("m@m"), Pwd.create("ThePwd"));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

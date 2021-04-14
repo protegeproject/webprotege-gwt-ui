@@ -10,14 +10,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.user.CreateUserAccountExecutor;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
-import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
-import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
+import edu.stanford.bmir.protege.web.shared.auth.Pwd;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.shared.user.*;
@@ -63,7 +60,8 @@ public class SignUpPresenter implements Presenter {
                            @Nonnull SignUpView view,
                            @Nonnull ForbiddenView forbiddenView,
                            @Nonnull PlaceController placeController,
-                           @Nonnull MessageBox messageBox, DispatchErrorMessageDisplay errorDisplay) {
+                           @Nonnull MessageBox messageBox,
+                           DispatchErrorMessageDisplay errorDisplay) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);
         this.forbiddenView = checkNotNull(forbiddenView);
@@ -77,7 +75,7 @@ public class SignUpPresenter implements Presenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        if(!loggedInUserManager.isAllowedApplicationAction(CREATE_ACCOUNT)) {
+        if (!loggedInUserManager.isAllowedApplicationAction(CREATE_ACCOUNT)) {
             container.setWidget(forbiddenView);
         }
         else {
@@ -98,33 +96,31 @@ public class SignUpPresenter implements Presenter {
         view.clearErrorMessages();
 
         String userName = view.getUserName();
-        if(userName.isEmpty()) {
+        if (userName.isEmpty()) {
             view.displayEnterUserNameErrorMessage();
             return;
         }
 
         String emailAddress = view.getEmailAddress();
-        if(emailAddress.isEmpty()) {
+        if (emailAddress.isEmpty()) {
             view.displayEnterEmailAddressErrorMessage();
             return;
         }
 
         String password = view.getPassword();
-        if(password.isEmpty()) {
+        if (password.isEmpty()) {
             view.displayEnterPasswordErrorMessage();
             return;
         }
         String confirmPassword = view.getConfirmPassword();
-        if(confirmPassword.isEmpty() || !confirmPassword.equals(password)) {
+        if (confirmPassword.isEmpty() || !confirmPassword.equals(password)) {
             view.displayConfirmPasswordDoesNotMatchErrorMessage();
             return;
         }
-        final SignupInfo data = new SignupInfo(
-                new EmailAddress(emailAddress),
-                userName,
-                password,
-                new NullHumanVerificationServiceProvider()
-        );
+        final SignupInfo data = new SignupInfo(new EmailAddress(emailAddress),
+                                               userName,
+                                               password,
+                                               new NullHumanVerificationServiceProvider());
 
         HumanVerificationServiceProvider verificationServiceProvider = data.getVerificationServiceProvider();
         verificationServiceProvider.runVerification(new HumanVerificationHandler() {
@@ -142,52 +138,46 @@ public class SignUpPresenter implements Presenter {
 
 
     private void handleSuccess(final SignupInfo data) {
-        CreateUserAccountExecutor executor = new CreateUserAccountExecutor(
-                dispatchServiceManager,
-                new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()),
-                new SaltProvider()
-        );
-
         UserId userId = UserId.getUserId(data.getUserName());
-        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new DispatchServiceCallback<CreateUserAccountResult>(errorDisplay) {
-            @Override
-            public void handleSuccess(CreateUserAccountResult createUserAccountResult) {
-                messageBox.showMessage("Registration complete",
-                        "You have successfully registered.");
-                goToNextPlace();
-            }
+        dispatchServiceManager.execute(CreateUserAccountAction.create(userId,
+                                                                      data.getEmailAddress(),
+                                                                      Pwd.create(data.getPassword())),
+                                       new DispatchServiceCallback<CreateUserAccountResult>(errorDisplay) {
+                                           @Override
+                                           public void handleSuccess(CreateUserAccountResult createUserAccountResult) {
+                                               messageBox.showMessage("Registration complete",
+                                                                      "You have successfully registered.");
+                                               goToNextPlace();
+                                           }
 
-            @Override
-            public void handleExecutionException(Throwable cause) {
-                if (cause instanceof UserNameAlreadyExistsException) {
-                    String username = ((UserNameAlreadyExistsException) cause).getUsername();
-                    messageBox.showAlert("User name already taken", "A user named "
-                            + username
-                            + " is already registered.  Please choose another name.");
-                }
-                else if (cause instanceof UserEmailAlreadyExistsException) {
-                    String email = ((UserEmailAlreadyExistsException) cause).getEmailAddress();
-                    messageBox.showAlert("Email address already taken", "The email address "
-                            + email
-                            + " is already taken.  Please choose a different email address.");
-                }
-                else if (cause instanceof UserRegistrationException) {
-                    messageBox.showAlert(cause.getMessage());
-                }
-                else {
-                    messageBox.showAlert("Error registering account",
-                            "There was a problem registering the specified user account.  " +
-                                    "Please contact administrator.");
-                }
-            }
-        });
+                                           @Override
+                                           public void handleExecutionException(Throwable cause) {
+                                               if (cause instanceof UserNameAlreadyExistsException) {
+                                                   String username = ((UserNameAlreadyExistsException) cause).getUsername();
+                                                   messageBox.showAlert("User name already taken",
+                                                                        "A user named " + username + " is already registered.  Please choose another name.");
+                                               }
+                                               else if (cause instanceof UserEmailAlreadyExistsException) {
+                                                   String email = ((UserEmailAlreadyExistsException) cause).getEmailAddress();
+                                                   messageBox.showAlert("Email address already taken",
+                                                                        "The email address " + email + " is already taken.  Please choose a different email address.");
+                                               }
+                                               else if (cause instanceof UserRegistrationException) {
+                                                   messageBox.showAlert(cause.getMessage());
+                                               }
+                                               else {
+                                                   messageBox.showAlert("Error registering account",
+                                                                        "There was a problem registering the specified user account.  " + "Please contact administrator.");
+                                               }
+                                           }
+                                       });
     }
 
     private void goToNextPlace() {
-        if(continueTo.isPresent()) {
+        if (continueTo.isPresent()) {
             placeController.goTo(continueTo.get());
         }
-        else if(loggedInUserManager.getLoggedInUserId().isGuest()) {
+        else if (loggedInUserManager.getLoggedInUserId().isGuest()) {
             // Take guests back to the login place so that they can sign in
             placeController.goTo(new LoginPlace());
         }
@@ -196,10 +186,10 @@ public class SignUpPresenter implements Presenter {
 
     private void handleCancel() {
         view.clear();
-        if(backTo.isPresent()) {
+        if (backTo.isPresent()) {
             placeController.goTo(backTo.get());
         }
-        else if(loggedInUserManager.getLoggedInUserId().isGuest()) {
+        else if (loggedInUserManager.getLoggedInUserId().isGuest()) {
             // Take guests back to the login place
             placeController.goTo(new LoginPlace());
         }
