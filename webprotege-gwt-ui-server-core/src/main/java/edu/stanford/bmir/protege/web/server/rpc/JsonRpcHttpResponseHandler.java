@@ -44,6 +44,10 @@ public class JsonRpcHttpResponseHandler {
     public <R extends Result> R getResultForResponse(HttpResponse<String> httpResponse,
                                                                           UserId userId) throws PermissionDeniedException, ActionExecutionException {
         try {
+            if(httpResponse.statusCode() != 200) {
+                throw new ActionExecutionException(new Exception("Internal Server Error: HTTP " + httpResponse.statusCode()));
+            }
+
             var responseBody = httpResponse.body();
             var jsonRpcResponse = objectMapper.readValue(responseBody, JsonRpcResponse.class);
             if(jsonRpcResponse.getError().isPresent()) {
