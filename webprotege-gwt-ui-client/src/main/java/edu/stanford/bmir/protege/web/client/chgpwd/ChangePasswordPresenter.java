@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -110,33 +111,33 @@ public class ChangePasswordPresenter {
 
 
     private void executeChangePassword(final ModalCloser closer) {
-        AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(dispatchServiceManager, new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()), new ChapResponseDigestAlgorithm(new Md5DigestAlgorithmProvider()), errorDisplay);
-        String currentPassword = changePasswordView.getOldPassword();
-        String newPassword = changePasswordView.getNewPassword();
-        ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());
-        executor.execute(userId, currentPassword, actionFactory, new AuthenticatedDispatchServiceCallback<ChangePasswordResult>(errorDisplay, progressDisplay) {
+        Pwd currentPassword = Pwd.create(changePasswordView.getOldPassword());
+        Pwd newPassword = Pwd.create(changePasswordView.getNewPassword());
+        dispatchServiceManager.execute(ChangePasswordAction.create(userId, currentPassword, newPassword),
+                                       new DispatchServiceCallbackWithProgressDisplay<ChangePasswordResult>(errorDisplay,
+                                                                                                            progressDisplay) {
+                                           @Override
+                                           public String getProgressDisplayTitle() {
+                                               return "Changing password";
+                                           }
 
-            @Override
-            public void handleAuthenticationResponse(@Nonnull AuthenticationResponse response) {
-                if(response == AuthenticationResponse.SUCCESS) {
-                    messageBox.showMessage(messages.password_change_passwordChanged_Title(),
-                                           messages.password_change_passwordChanged_Body(),
-                                           closer::closeModal);
-                }
-                else {
-                    handleIncorrectCurrentPassword();
-                }
-            }
+                                           @Override
+                                           public String getProgressDisplayMessage() {
+                                               return "Please wait.";
+                                           }
 
-            @Override
-            public String getProgressDisplayTitle() {
-                return "Changing password";
-            }
-
-            @Override
-            public String getProgressDisplayMessage() {
-                return "Please wait.";
-            }
-        });
+                                           @Override
+                                           public void handleSuccess(ChangePasswordResult changePasswordResult) {
+                                               AuthenticationResponse response = changePasswordResult.getResponse();
+                                               if(response == AuthenticationResponse.SUCCESS) {
+                                                   messageBox.showMessage(messages.password_change_passwordChanged_Title(),
+                                                                          messages.password_change_passwordChanged_Body(),
+                                                                          closer::closeModal);
+                                               }
+                                               else {
+                                                   handleIncorrectCurrentPassword();
+                                               }
+                                           }
+                                       });
     }
 }

@@ -29,13 +29,13 @@ public class ChangePasswordResult_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        result = new ChangePasswordResult(authenticationResponse);
-        otherResult = new ChangePasswordResult(authenticationResponse);
+        result = ChangePasswordResult.create(authenticationResponse);
+        otherResult = ChangePasswordResult.create(authenticationResponse);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new ChangePasswordResult(null);
+        ChangePasswordResult.create(null);
     }
 
     @Test

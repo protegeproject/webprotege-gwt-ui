@@ -17,19 +17,17 @@ public class ChangePassword_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = new ChangePasswordAction(
+        var action = ChangePasswordAction.create(
                 UserId.getGuest(),
-                new ChapSessionId("id"),
-                new ChapResponse(new byte[]{1, 2, 3, 4}),
-                new SaltedPasswordDigest(new byte []{1, 2, 3, 4}),
-                new Salt(new byte []{1, 2, 3, 4})
+                Pwd.create("Hello"),
+                Pwd.create("World")
         );
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = new ChangePasswordResult(AuthenticationResponse.SUCCESS);
+        var result = ChangePasswordResult.create(AuthenticationResponse.SUCCESS);
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
