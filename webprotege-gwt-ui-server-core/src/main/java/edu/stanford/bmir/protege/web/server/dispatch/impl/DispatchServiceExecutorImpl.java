@@ -79,7 +79,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
             if(httpResponse.statusCode() == 400) {
-                logger.error("Bad request when executing action: {}", action.getClass().getSimpleName());
+                logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 if(action instanceof BatchAction) {
                     ((BatchAction) action).getActions()
                                           .stream()
@@ -87,7 +87,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                           .forEach(a -> logger.error("    Nested action: {}", a));
                 }
             }
-            else if(httpResponse.statusCode() == 404) {
+            else if(httpResponse.statusCode() == 401) {
                 throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));
             }
             return responseHandler.getResultForResponse(httpResponse, userId);
