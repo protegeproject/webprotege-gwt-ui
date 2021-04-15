@@ -103,6 +103,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = DeleteFormAction.class),
         @Type(value = EditAnnotationsAction.class),
         @Type(value = GetClassFrameAction.class),
+        @Type(value = GetDataPropertyFrameAction.class),
         @Type(value = EditCommentAction.class),
         @Type(value = ExistingOntologyMergeAddAction.class),
         @Type(value = GetAllOntologiesAction.class),

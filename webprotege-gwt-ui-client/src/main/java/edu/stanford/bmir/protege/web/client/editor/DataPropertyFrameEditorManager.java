@@ -27,7 +27,7 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityCo
 
     @Override
     public GetDataPropertyFrameAction createAction(OWLEntityContext editorContext) {
-        return new GetDataPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLDataProperty());
+        return GetDataPropertyFrameAction.create(editorContext.getProjectId(), editorContext.getEntity().asOWLDataProperty());
     }
 
     @Override

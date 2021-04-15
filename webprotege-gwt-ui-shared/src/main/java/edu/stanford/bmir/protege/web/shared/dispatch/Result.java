@@ -115,6 +115,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetAvailableProjectsWithPermissionResult.class),
         @Type(GetAnnotationPropertyFrameResult.class),
         @Type(GetClassFrameResult.class),
+        @Type(GetDataPropertyFrameResult.class),
         @Type(GetCurrentUserInSessionResult.class),
         @Type(GetDeprecatedEntitiesResult.class),
         @Type(GetEmailAddressResult.class),
