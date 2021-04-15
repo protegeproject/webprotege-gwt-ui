@@ -843,6 +843,12 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PrimitiveFormControlData primitiveFormControlData;
 
+    PerspectiveLayout _PerspectiveLayout;
+
+    PerspectiveDescriptor _PerspectiveDescriptor;
+
+    EntityDeprecationSettings _EntityDeprecationSettings;
+
     public RpcWhiteList() {
     }
 }
