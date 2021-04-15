@@ -106,6 +106,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = EditCommentAction.class),
         @Type(value = ExistingOntologyMergeAddAction.class),
         @Type(value = GetAllOntologiesAction.class),
+        @Type(value = GetAnnotationPropertyFrameAction.class),
         @Type(value = GetApplicationSettingsAction.class),
         @Type(value = GetAvailableProjectsAction.class),
         @Type(value = GetCommentedEntitiesAction.class),

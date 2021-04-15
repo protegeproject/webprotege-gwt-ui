@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
-import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.slf4j.Logger;
@@ -83,6 +80,12 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                                HttpResponse.BodyHandlers.ofString());
             if(httpResponse.statusCode() == 400) {
                 logger.error("Bad request when executing action: {}", action.getClass().getSimpleName());
+                if(action instanceof BatchAction) {
+                    ((BatchAction) action).getActions()
+                                          .stream()
+                                          .map(a -> a.getClass().getSimpleName())
+                                          .forEach(a -> logger.error("    Nested action: {}", a));
+                }
             }
             else if(httpResponse.statusCode() == 404) {
                 throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));

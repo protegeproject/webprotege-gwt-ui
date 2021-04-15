@@ -892,6 +892,18 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     IRIData _IRIData;
 
+    SortingKey _SortingKey;
+
+    Status _Status;
+
+    EntityDiscussionThread _EntityDiscussionThread;
+
+    Comment _Comment;
+
+    CommentId _CommentId;
+
+    GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
+
     public RpcWhiteList() {
     }
 }

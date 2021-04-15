@@ -35,7 +35,7 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
 
     @Override
     public GetAnnotationPropertyFrameAction createAction(OWLEntityContext editorContext) {
-        return new GetAnnotationPropertyFrameAction(editorContext.getEntity().asOWLAnnotationProperty(), editorContext.getProjectId());
+        return GetAnnotationPropertyFrameAction.create(editorContext.getEntity().asOWLAnnotationProperty(), editorContext.getProjectId());
     }
 
     @Override
