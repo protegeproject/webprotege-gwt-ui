@@ -31,7 +31,7 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
 
     @Override
     public GetClassFrameAction createAction(OWLEntityContext editorContext) {
-        return new GetClassFrameAction(editorContext.getEntity().asOWLClass(), editorContext.getProjectId());
+        return GetClassFrameAction.create(editorContext.getEntity().asOWLClass(), editorContext.getProjectId());
     }
 
     @Override

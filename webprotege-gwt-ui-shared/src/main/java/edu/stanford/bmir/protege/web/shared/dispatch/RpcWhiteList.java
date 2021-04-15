@@ -294,6 +294,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetClassFrameAction _GetClassFrameAction;
 
+    GetClassFrameResult _GetClassFrameResult;
+
     GetCommentedEntitiesAction _GetCommentedEntitiesAction;
 
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
@@ -863,6 +865,32 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ShortForm _ShortForm;
 
     Path<EntityNode> _Path;
+
+    ClassFrame _ClassFrame;
+
+    ObjectPropertyFrame _ObjectPropertyFrame;
+
+    DataPropertyFrame _DataPropertyFrame;
+
+    AnnotationPropertyFrame _AnnotationPropertyFrame;
+
+    NamedIndividualFrame _NamedIndividualFrame;
+
+    OWLClassData _OWLClassData;
+
+    OWLObjectPropertyData _OwlObjectPropertyData;
+
+    OWLDataPropertyData _OWLDataPropertyData;
+
+    OWLAnnotationPropertyData _OWLAnnotationPropertyData;
+
+    OWLNamedIndividualData _OWLNamedIndividualData;
+
+    OWLDatatypeData _OWLDatatypeData;
+
+    OWLLiteralData _OWLLiteralData;
+
+    IRIData _IRIData;
 
     public RpcWhiteList() {
     }
