@@ -1,19 +1,23 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
+import edu.stanford.bmir.protege.web.server.auth.PerformLoginHandler;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.session.UserToken;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionFactory;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,23 +34,36 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
     @Nonnull
     private final DispatchServiceExecutor executor;
 
+    @Nonnull
+    private final PerformLoginHandler performLoginHandler;
+
     @Inject
-    public DispatchServlet(
-            @Nonnull WebProtegeLogger logger,
-            @Nonnull DispatchServiceExecutor executor) {
+    public DispatchServlet(@Nonnull WebProtegeLogger logger,
+                           @Nonnull DispatchServiceExecutor executor,
+                           @Nonnull PerformLoginHandler performLoginHandler) {
         super(logger);
         this.executor = checkNotNull(executor);
+        this.performLoginHandler = checkNotNull(performLoginHandler);
     }
 
     @Override
     public DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException {
-        UserId userId = getUserInSession();
-        HttpServletRequest request = getThreadLocalRequest();
-        var locales = ImmutableList.copyOf(Collections.list(request.getLocales()));
-        HttpSession session = request.getSession();
-        final RequestContext requestContext = new RequestContext(userId);
-        final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));
-        return executor.execute(action, requestContext, executionContext);
+        // Special treatment of login action
+        if(action instanceof PerformLoginAction) {
+           // Login via the authenticate endpoint
+           // Get the session id and set this as the usertoken in a session cookie
+            var result = performLoginHandler.performLogin((PerformLoginAction) action, userToken -> {
+                getThreadLocalResponse().addCookie(new Cookie(UserToken.COOKIE_NAME, userToken.getToken()));
+            });
+            return DispatchServiceResultContainer.create(result);
+        }
+        else {
+            var webProtegeSession = WebProtegeSessionFactory.getSession(getThreadLocalRequest());
+            var userId = webProtegeSession.getUserInSession();
+            var requestContext = new RequestContext(userId);
+            var executionContext = new ExecutionContext(webProtegeSession);
+            return executor.execute(action, requestContext, executionContext);
+        }
     }
 
     @Override

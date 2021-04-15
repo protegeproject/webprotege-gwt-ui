@@ -4,15 +4,21 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.session.UserToken;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionFactory;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,10 +47,13 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      *         will be returned.
      */
     public UserId getUserInSession() {
-        HttpServletRequest request = getThreadLocalRequest();
-        final HttpSession session = request.getSession();
-        return new WebProtegeSessionImpl(session).getUserInSession();
+        return WebProtegeSessionFactory.getSession(getThreadLocalRequest())
+                                       .getUserInSession();
     }
+
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

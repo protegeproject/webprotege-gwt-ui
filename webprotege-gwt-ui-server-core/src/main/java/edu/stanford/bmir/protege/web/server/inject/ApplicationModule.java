@@ -76,7 +76,7 @@ public class ApplicationModule {
 
     @Provides
     JsonRpcEndPoint provideJsonRpcEndPoint() {
-        var address = "http://localhost:8082/gwtui/rpc";
+        var address = "http://localhost:8082/api/rpc";
         return JsonRpcEndPoint.get(URI.create(address));
     }
 

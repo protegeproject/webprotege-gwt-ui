@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionFactory;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
+        WebProtegeSession webProtegeSession = WebProtegeSessionFactory.getSession(req);
         logger.info("Received upload request from {} at {}",
                     webProtegeSession.getUserInSession(),
                     formatAddr(req));

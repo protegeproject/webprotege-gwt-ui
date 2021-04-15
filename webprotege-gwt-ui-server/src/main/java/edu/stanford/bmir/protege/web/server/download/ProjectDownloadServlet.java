@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.download;
 
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionFactory;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -36,7 +37,7 @@ public class ProjectDownloadServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
+        final WebProtegeSession webProtegeSession = WebProtegeSessionFactory.getSession(req);
         UserId userId = webProtegeSession.getUserInSession();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(!downloadParameters.isProjectDownload()) {

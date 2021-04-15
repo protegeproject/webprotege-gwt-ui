@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 
 import javax.annotation.Nonnull;
 
@@ -14,6 +15,7 @@ import javax.annotation.Nonnull;
  * Represents a password in the clear
  */
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class Password {
 
     /**

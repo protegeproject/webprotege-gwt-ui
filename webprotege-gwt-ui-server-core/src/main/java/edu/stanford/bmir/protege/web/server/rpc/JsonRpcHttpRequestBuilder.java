@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.rpc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
@@ -32,13 +33,15 @@ public class JsonRpcHttpRequestBuilder {
         this.jsonRpcEndPoint = checkNotNull(jsonRpcEndPoint);
     }
 
-    public  <A extends Action<R>, R extends Result> HttpRequest getHttpRequestForAction(A action) throws com.fasterxml.jackson.core.JsonProcessingException {
+    public  <A extends Action<R>, R extends Result> HttpRequest getHttpRequestForAction(A action,
+                                                                                        ExecutionContext executionContext) throws com.fasterxml.jackson.core.JsonProcessingException {
         var jsonRpcRequest = JsonRpcRequest.create(action);
         var requestBody = objectMapper.writeValueAsString(jsonRpcRequest);
         return HttpRequest.newBuilder()
                           .uri(jsonRpcEndPoint.getUri())
                           .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                           .setHeader(CONTENT_TYPE, APPLICATION_JSON)
+                          .setHeader("Cookie", "JSESSIONID=" + executionContext.getUserToken().getToken())
                           .build();
     }
 }

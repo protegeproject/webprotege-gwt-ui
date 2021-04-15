@@ -61,7 +61,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
-            var result = sendRequest(action, executionContext.getUserId());
+            var result = sendRequest(action, executionContext);
             return DispatchServiceResultContainer.create(result);
         }
         // Rethrow directly
@@ -74,9 +74,11 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     }
 
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
-                                                                  UserId userId) throws IOException, InterruptedException {
+                                                                  ExecutionContext executionContext) throws IOException, InterruptedException {
         try {
-            var httpRequest = requestBuilder.getHttpRequestForAction(action);
+            var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
+            logger.info("Making request: {}  Headers: {}", httpRequest, httpRequest.headers());
+            var userId = executionContext.getUserId();
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
             return responseHandler.getResultForResponse(httpResponse, userId);

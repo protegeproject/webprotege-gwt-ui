@@ -47,13 +47,13 @@ public class WebProtegeSessionImpl_TestCase<T> {
 
     @Before
     public void setUp() throws Exception {
-        session = new WebProtegeSessionImpl(httpSession);
+        session = new WebProtegeSessionImpl(httpSession, null);
         when(attribute.getAttributeName()).thenReturn(ATTRIBUTE_NAME);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new WebProtegeSessionImpl(null);
+        new WebProtegeSessionImpl(null, null);
     }
 
 

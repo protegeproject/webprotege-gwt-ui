@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.session;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -18,9 +20,14 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
 
     private final HttpSession httpSession;
 
+    @Nullable
+    private UserToken userToken;
+
     @Inject
-    public WebProtegeSessionImpl(HttpSession httpSession) {
+    public WebProtegeSessionImpl(@Nonnull HttpSession httpSession,
+                                 @Nullable UserToken userToken) {
         this.httpSession = checkNotNull(httpSession);
+        this.userToken = userToken;
     }
 
 
@@ -64,5 +71,10 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
     @Override
     public void clearUserInSession() {
         removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+    }
+
+    @Override
+    public Optional<UserToken> getUserSessionToken() {
+        return Optional.ofNullable(userToken);
     }
 }

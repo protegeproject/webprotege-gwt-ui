@@ -136,7 +136,7 @@
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session, null);
         UserId userId = webProtegeSession.getUserInSession();
         final UserInSession userInSession;
         final UserDetails userDetails;

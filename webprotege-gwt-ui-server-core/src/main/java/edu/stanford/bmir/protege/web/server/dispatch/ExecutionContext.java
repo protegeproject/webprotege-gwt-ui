@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.common.base.MoreObjects;
+import edu.stanford.bmir.protege.web.server.session.UserToken;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,6 +47,10 @@ public class ExecutionContext implements HasUserId {
      */
     public WebProtegeSession getSession() {
         return session;
+    }
+
+    public UserToken getUserToken() {
+        return session.getUserSessionToken().orElseThrow();
     }
 
     @Override

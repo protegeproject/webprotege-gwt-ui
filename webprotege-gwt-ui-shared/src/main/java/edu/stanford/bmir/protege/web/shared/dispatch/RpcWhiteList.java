@@ -97,6 +97,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     AddProjectTagResult _AddProjectTagResult;
 
+    AuthenticationResponse _AUAuthenticationResponse;
+
     AvailableProject _AvailableProject;
 
     BatchAction _BatchAction;
@@ -627,6 +629,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     OwlSubClassBinding _OwlSubClassBinding;
 
+    Password _Password;
+
     PerformEntitySearchAction _PerformEntitySearchAction;
 
     PerformEntitySearchResult _PerformEntitySearchResult;
@@ -656,8 +660,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PropertyValue _PropertyValue;
 
     PropertyValueDescriptor _PropertyValueDescriptor;
-
-    Password _Password;
 
     RebuildPermissionsAction _RebuildPermissionsAction;
 
