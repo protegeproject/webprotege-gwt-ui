@@ -904,6 +904,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
 
+    GetDataPropertyFrameResult _GetDataPropertyFrameResult;
+
     public RpcWhiteList() {
     }
 }
