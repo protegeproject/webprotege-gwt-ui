@@ -73,6 +73,11 @@ import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
+import edu.stanford.protege.widgetmap.shared.node.Node;
+import edu.stanford.protege.widgetmap.shared.node.ParentNode;
+import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
@@ -848,6 +853,16 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PerspectiveDescriptor _PerspectiveDescriptor;
 
     EntityDeprecationSettings _EntityDeprecationSettings;
+
+    ParentNode _ParentNode;
+
+    TerminalNode _TerminalNode;
+
+    GraphNode<EntityNode> _GraphNode;
+
+    ShortForm _ShortForm;
+
+    Path<EntityNode> _Path;
 
     public RpcWhiteList() {
     }

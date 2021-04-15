@@ -81,6 +81,12 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             var userId = executionContext.getUserId();
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
+            if(httpResponse.statusCode() == 400) {
+                logger.error("Bad request when executing action: {}", action.getClass().getSimpleName());
+            }
+            else if(httpResponse.statusCode() == 404) {
+                throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));
+            }
             return responseHandler.getResultForResponse(httpResponse, userId);
         } catch (ConnectException e) {
             logger.error("Could not connect to action execution service", e);
