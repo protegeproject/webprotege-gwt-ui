@@ -912,6 +912,18 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     SearchResultMatchPosition _SearchResultMatchPosition;
 
+    PlainClassFrame _PlainClassFrame;
+
+    PlainObjectPropertyFrame _PlainObjectPropertyFrame;
+
+    PlainDataPropertyFrame _PlainDataPropertyFrame;
+
+    PlainAnnotationPropertyFrame _PlainAnnotationPropertyFrame;
+
+    PlainNamedIndividualFrame _PlainNamedIndividualFrame;
+
+    PlainPropertyValue get_PlainPropertyValue;
+
     public RpcWhiteList() {
     }
 }
