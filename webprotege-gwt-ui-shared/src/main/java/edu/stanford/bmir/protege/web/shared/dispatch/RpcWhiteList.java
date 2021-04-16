@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -132,6 +133,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     Comment _Comment;
 
     CommentId _CommentId;
+
+    CommentedEntityData _CommentedEntityData;
 
     CompositeRelationshipValueCriteria _CompositeRelationshipValueCriteria;
 
@@ -922,6 +925,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     UpdateObjectResult _UpdateObjectResult;
 
     UuidFormat _UuidFormat;
+
+    WebProtegeEvent _WebProtegeEvent;
 
     WebhookSetting _WebhookSetting;
 
