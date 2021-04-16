@@ -195,7 +195,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void handleDisplayLanguageChanged(@Nonnull DisplayNameSettingsChangedEvent event) {
-        setPreferredDisplayLanguage(event.getDisplayLanguage());
+        setPreferredDisplayLanguage(event.getDisplayNameSettings());
     }
 
     private void setPreferredDisplayLanguage(@Nonnull DisplayNameSettings lang) {

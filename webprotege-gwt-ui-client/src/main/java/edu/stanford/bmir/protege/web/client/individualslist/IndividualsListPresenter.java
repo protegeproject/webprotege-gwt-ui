@@ -124,7 +124,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         container.setWidget(view.asWidget());
         eventBus.addProjectEventHandler(projectId,
                                         ON_DISPLAY_LANGUAGE_CHANGED,
-                                        event -> setDisplayLanguage(event.getDisplayLanguage()));
+                                        event -> setDisplayLanguage(event.getDisplayNameSettings()));
         entityNodeUpdater.start(eventBus, this);
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);

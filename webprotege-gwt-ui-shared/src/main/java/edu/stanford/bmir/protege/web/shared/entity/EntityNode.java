@@ -107,7 +107,6 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     @JsonIgnore
     @Nonnull
-    @Override
     public String getText() {
         return getBrowserText();
     }

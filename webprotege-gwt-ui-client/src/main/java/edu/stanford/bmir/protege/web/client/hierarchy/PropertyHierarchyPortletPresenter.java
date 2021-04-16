@@ -214,7 +214,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         eventBus.addProjectEventHandler(getProjectId(),
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> {
-                                            renderer.setDisplayLanguage(event.getDisplayLanguage());
+                                            renderer.setDisplayLanguage(event.getDisplayNameSettings());
                                             treeWidget.setRenderer(renderer);
                                         });
         treeWidget.setRenderer(renderer);

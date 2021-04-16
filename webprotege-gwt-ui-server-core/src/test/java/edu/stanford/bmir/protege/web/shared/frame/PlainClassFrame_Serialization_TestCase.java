@@ -7,8 +7,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static edu.stanford.bmir.protege.web.MockingUtils.mockOWLClass;
-import static edu.stanford.bmir.protege.web.MockingUtils.mockOWLObjectProperty;
+import static edu.stanford.bmir.protege.web.MockingUtils.*;
 
 public class PlainClassFrame_Serialization_TestCase {
 
@@ -19,7 +18,9 @@ public class PlainClassFrame_Serialization_TestCase {
         var subject = mockOWLClass();
         var parents = ImmutableSet.of(mockOWLClass(), mockOWLClass());
         var propertyValues = ImmutableSet.<PlainPropertyValue>of(
-                PlainPropertyClassValue.get(mockOWLObjectProperty(), mockOWLClass())
+                PlainPropertyClassValue.get(mockOWLObjectProperty(), mockOWLClass()),
+                PlainPropertyAnnotationValue.get(mockOWLAnnotationProperty(),
+                                                 mockLiteral())
         );
         plainClassFrame = PlainClassFrame.get(subject, parents, propertyValues);
     }
