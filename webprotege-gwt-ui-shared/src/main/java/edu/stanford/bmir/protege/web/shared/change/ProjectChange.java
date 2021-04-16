@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -21,8 +23,14 @@ import java.io.Serializable;
 @GwtCompatible(serializable = true)
 public abstract class ProjectChange implements IsSerializable, Serializable {
 
+    @JsonCreator
     @Nonnull
-    public static ProjectChange get(@Nonnull RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
+    public static ProjectChange get(@JsonProperty("revisionNumber") @Nonnull RevisionNumber revisionNumber,
+                                    @JsonProperty("userId") UserId author,
+                                    @JsonProperty("timestamp") long timestamp,
+                                    @JsonProperty("summary") String summary,
+                                    @JsonProperty("changeCount") int changeCount,
+                                    @JsonProperty("diff") Page<DiffElement<String, String>> diff) {
         return new AutoValue_ProjectChange(changeCount,
                                            revisionNumber,
                                            author,
@@ -41,5 +49,5 @@ public abstract class ProjectChange implements IsSerializable, Serializable {
 
     public abstract long getTimestamp();
 
-    public abstract Page<DiffElement<String, SafeHtml>> getDiff();
+    public abstract Page<DiffElement<String, String>> getDiff();
 }
