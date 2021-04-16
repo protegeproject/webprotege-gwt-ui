@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.google.common.collect.ImmutableSetMultimap;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
@@ -759,6 +760,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     RevertRevisionResult _RevertRevisionResult;
 
     RpcWhiteList _RpcWhiteList;
+
+    SafeHtml _SafeHtml;
 
     SearchResultMatch _SearchResultMatch;
 

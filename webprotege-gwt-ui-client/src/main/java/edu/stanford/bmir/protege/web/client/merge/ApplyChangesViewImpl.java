@@ -65,11 +65,11 @@ public class ApplyChangesViewImpl extends Composite implements ApplyChangesView,
     }
 
     @Override
-    public void setDiff(List<DiffElement<String, SafeHtml>> diff) {
-        diffView.setDiff(diff, new DiffLineElementRenderer<SafeHtml>() {
+    public void setDiff(List<DiffElement<String, String>> diff) {
+        diffView.setDiff(diff, new DiffLineElementRenderer<String>() {
             @Override
-            public SafeHtml getRendering(SafeHtml lineElement) {
-                return lineElement;
+            public SafeHtml getRendering(String lineElement) {
+                return new SafeHtmlBuilder().appendHtmlConstant(lineElement).toSafeHtml();
             }
         }, new DiffSourceDocumentRenderer<String>() {
             @Override

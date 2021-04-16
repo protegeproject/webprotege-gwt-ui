@@ -77,10 +77,10 @@ public class MergeUploadedProjectWorkflow {
     private void confirmMerge(ComputeProjectMergeResult mergeResult, final ProjectId projectId, final DocumentId documentId) {
         final ApplyChangesView view = new ApplyChangesViewImpl();
         List<DiffElement<String, String>> diff = mergeResult.getDiff();
-        List<DiffElement<String, SafeHtml>> htmlDiff = diff.stream()
+        List<DiffElement<String, String>> htmlDiff = diff.stream()
             .map(element -> new DiffElement<>(element.getDiffOperation(),
                                             element.getSourceDocument(),
-                                            new SafeHtmlBuilder().appendHtmlConstant(element.getLineElement()).toSafeHtml()))
+                                            new SafeHtmlBuilder().appendHtmlConstant(element.getLineElement()).toSafeHtml().asString()))
             .collect(Collectors.toList());
         view.setDiff(htmlDiff);
         if(diff.isEmpty()) {
