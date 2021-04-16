@@ -92,6 +92,8 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  */
 public class RpcWhiteList implements IsSerializable, Action, Result {
 
+    AuthenticationResponse _AUAuthenticationResponse;
+
     ActionExecutionResult _ActionExecutionResult;
 
     AddEntityCommentAction _AddEntityCommentAction;
@@ -102,7 +104,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     AddProjectTagResult _AddProjectTagResult;
 
-    AuthenticationResponse _AUAuthenticationResponse;
+    AnnotationPropertyFrame _AnnotationPropertyFrame;
 
     AvailableProject _AvailableProject;
 
@@ -124,7 +126,13 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     ChoiceListSourceDescriptor _ChoiceListSourceDescriptor;
 
+    ClassFrame _ClassFrame;
+
     Color _Color;
+
+    Comment _Comment;
+
+    CommentId _CommentId;
 
     CompositeRelationshipValueCriteria _CompositeRelationshipValueCriteria;
 
@@ -178,6 +186,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     Criteria _Criteria;
 
+    DataPropertyFrame _DataPropertyFrame;
+
     DeleteEntitiesAction _DeleteEntitiesAction;
 
     DeleteEntitiesResult _DeleteEntitiesResult;
@@ -216,6 +226,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     EntityCrudKitSuffixSettings _EntityCrudKitSuffixSettings;
 
+    EntityDeprecationSettings _EntityDeprecationSettings;
+
+    EntityDiscussionThread _EntityDiscussionThread;
+
     EntityFormSelector _EntityFormSelector;
 
     EntityGraph _EntityGraph;
@@ -223,6 +237,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     EntityGraphFilter _EntityGraphFilter;
 
     EntityGraphSettings _EntityGraphSettings;
+
+    EntityLookupResult _EntityLookupResult;
 
     EntityNameControlDescriptor _EntityNameControlDescriptor;
 
@@ -280,6 +296,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetAnnotationPropertyFrameAction _GetAnnotationPropertyFrameAction;
 
+    GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
+
     GetApplicationSettingsAction _GetApplicationSettingsAction;
 
     GetApplicationSettingsResult _GetApplicationSettingsResult;
@@ -305,6 +323,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetCurrentUserInSessionResult _GetCurrentUserInSessionResult;
 
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
+
+    GetDataPropertyFrameResult _GetDataPropertyFrameResult;
 
     GetDeprecatedEntitiesAction _GetDeprecatedEntitiesAction;
 
@@ -534,6 +554,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetWatchesResult _GetWatchesResult;
 
+    GraphNode<EntityNode> _GraphNode;
+
     GridCellData _GridCellData;
 
     GridCellDataDto _GridCellDataDto;
@@ -559,6 +581,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     HierarchyPositionCriteria _HierarchyPositionCriteria;
 
     IRI _IRI;
+
+    IRIData _IRIData;
 
     ImageControlDescriptor _ImageControlDescriptor;
 
@@ -610,19 +634,35 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     MultiMatchType _MultiMatchType;
 
+    NamedIndividualFrame _NamedIndividualFrame;
+
     NewOntologyMergeAddAction _NewOntologyMergeAddAction;
 
     NewOntologyMergeAddResult _NewOntologyMergeAddResult;
 
     NumberControlDescriptor _NumberControlDescriptor;
 
+    OWLAnnotationPropertyData _OWLAnnotationPropertyData;
+
+    OWLClassData _OWLClassData;
+
+    OWLDataPropertyData _OWLDataPropertyData;
+
+    OWLDatatypeData _OWLDatatypeData;
+
     OWLLiteral _OWLLiteral;
 
+    OWLLiteralData _OWLLiteralData;
+
     OWLLiteralImplPlain _OWLLiteralImplPlain;
+
+    OWLNamedIndividualData _OWLNamedIndividualData;
 
     OWLPrimitiveData _OWLPrimitiveData;
 
     ObjectPropertyCharacteristic _ObjectPropertyCharacteristic;
+
+    ObjectPropertyFrame _ObjectPropertyFrame;
 
     Operation _Operation;
 
@@ -632,11 +672,17 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     OwlClassBinding _OwlClassBinding;
 
+    OWLObjectPropertyData _OwlObjectPropertyData;
+
     OwlPropertyBinding _OwlPropertyBinding;
 
     OwlSubClassBinding _OwlSubClassBinding;
 
+    ParentNode _ParentNode;
+
     Password _Password;
+
+    Path<EntityNode> _Path;
 
     PerformEntitySearchAction _PerformEntitySearchAction;
 
@@ -645,6 +691,20 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PerformLoginAction _PerformLoginAction;
 
     PerformLoginResult _PerformLoginResult;
+
+    PerspectiveDescriptor _PerspectiveDescriptor;
+
+    PerspectiveLayout _PerspectiveLayout;
+
+    PlainAnnotationPropertyFrame _PlainAnnotationPropertyFrame;
+
+    PlainClassFrame _PlainClassFrame;
+
+    PlainDataPropertyFrame _PlainDataPropertyFrame;
+
+    PlainNamedIndividualFrame _PlainNamedIndividualFrame;
+
+    PlainObjectPropertyFrame _PlainObjectPropertyFrame;
 
     PlainPropertyValue _PlainPropertyValue;
 
@@ -699,6 +759,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     RevertRevisionResult _RevertRevisionResult;
 
     RpcWhiteList _RpcWhiteList;
+
+    SearchResultMatch _SearchResultMatch;
+
+    SearchResultMatchPosition _SearchResultMatchPosition;
 
     SetAnnotationValueAction _SetAnnotationValueAction;
 
@@ -804,17 +868,25 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     SetUserProjectEntityGraphSettingsResult _SetUserProjectEntityGraphSettingsResult;
 
+    ShortForm _ShortForm;
+
     SingleChoiceControlDescriptor _SingleChoiceControlDescriptor;
 
     SingleChoiceControlType _SingleChoiceControlType;
 
     SlackIntegrationSettings _SlackIntegrationSettings;
 
+    SortingKey _SortingKey;
+
     State _State;
+
+    Status _Status;
 
     SubFormControlDescriptor _SubFormControlDescriptor;
 
     Tag _Tag;
+
+    TerminalNode _TerminalNode;
 
     TextControlDescriptor _TextControlDescriptor;
 
@@ -840,6 +912,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     UpdateObjectPropertyFrameAction _UpdateObjectPropertyFrameAction;
 
+    UpdateObjectResult _UpdateObjectResult;
+
     UuidFormat _UuidFormat;
 
     WebhookSetting _WebhookSetting;
@@ -848,83 +922,9 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     WhiteSpaceTreatment _WhiteSpaceTreatment;
 
-    PrimitiveFormControlData primitiveFormControlData;
-
-    PerspectiveLayout _PerspectiveLayout;
-
-    PerspectiveDescriptor _PerspectiveDescriptor;
-
-    EntityDeprecationSettings _EntityDeprecationSettings;
-
-    ParentNode _ParentNode;
-
-    TerminalNode _TerminalNode;
-
-    GraphNode<EntityNode> _GraphNode;
-
-    ShortForm _ShortForm;
-
-    Path<EntityNode> _Path;
-
-    ClassFrame _ClassFrame;
-
-    ObjectPropertyFrame _ObjectPropertyFrame;
-
-    DataPropertyFrame _DataPropertyFrame;
-
-    AnnotationPropertyFrame _AnnotationPropertyFrame;
-
-    NamedIndividualFrame _NamedIndividualFrame;
-
-    OWLClassData _OWLClassData;
-
-    OWLObjectPropertyData _OwlObjectPropertyData;
-
-    OWLDataPropertyData _OWLDataPropertyData;
-
-    OWLAnnotationPropertyData _OWLAnnotationPropertyData;
-
-    OWLNamedIndividualData _OWLNamedIndividualData;
-
-    OWLDatatypeData _OWLDatatypeData;
-
-    OWLLiteralData _OWLLiteralData;
-
-    IRIData _IRIData;
-
-    SortingKey _SortingKey;
-
-    Status _Status;
-
-    EntityDiscussionThread _EntityDiscussionThread;
-
-    Comment _Comment;
-
-    CommentId _CommentId;
-
-    GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
-
-    GetDataPropertyFrameResult _GetDataPropertyFrameResult;
-
-    EntityLookupResult _EntityLookupResult;
-
-    SearchResultMatch _SearchResultMatch;
-
-    SearchResultMatchPosition _SearchResultMatchPosition;
-
-    PlainClassFrame _PlainClassFrame;
-
-    PlainObjectPropertyFrame _PlainObjectPropertyFrame;
-
-    PlainDataPropertyFrame _PlainDataPropertyFrame;
-
-    PlainAnnotationPropertyFrame _PlainAnnotationPropertyFrame;
-
-    PlainNamedIndividualFrame _PlainNamedIndividualFrame;
-
     PlainPropertyValue get_PlainPropertyValue;
 
-    UpdateObjectResult _UpdateObjectResult;
+    PrimitiveFormControlData primitiveFormControlData;
 
     public RpcWhiteList() {
     }
