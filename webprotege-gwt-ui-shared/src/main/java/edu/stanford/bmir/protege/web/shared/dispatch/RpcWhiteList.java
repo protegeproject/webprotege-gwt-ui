@@ -75,7 +75,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
-import edu.stanford.protege.widgetmap.shared.node.Node;
 import edu.stanford.protege.widgetmap.shared.node.ParentNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import org.semanticweb.owlapi.model.IRI;
@@ -89,6 +88,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  * <p>
  * Do not use this class in any client code.  It is here to whitelist objects
  * that don't get added to the serialization whitelist.
+ * @noinspection unused
  */
 public class RpcWhiteList implements IsSerializable, Action, Result {
 
@@ -264,9 +264,13 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     FormControlDataDto _FormControlDataDto;
 
+    FormControlDescriptor _FormControlDescriptor;
+
     FormControlDescriptorDto _FormControlDescriptorDto;
 
     FormDataDto _FormDataDto;
+
+    FormDescriptor _FormDescriptor;
 
     FormDescriptorDto _FormDescriptorDto;
 
@@ -278,13 +282,21 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     FormFieldDataDto _FormFieldDataDto;
 
+    FormFieldDeprecationStrategy _FormFieldDeprecationStrategy;
+
+    FormFieldDescriptor _FormFieldDescriptor;
+
     FormFieldDescriptorDto _FormFieldDescriptorDto;
 
     FormFieldId _FormFieldId;
 
+    FormId _FormId;
+
     FormPageRequest _FormPageRequest;
 
     FormPageRequest.SourceType _FormPageRequest_SourceType;
+
+    FormPurpose _FormPurpose;
 
     FormRegionFilter _FormRegionFilter;
 
@@ -933,6 +945,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     WebhookSettings _WebhookSettings;
 
     WhiteSpaceTreatment _WhiteSpaceTreatment;
+
+    OwlBinding get_OwlBinding;
 
     PlainPropertyValue get_PlainPropertyValue;
 
