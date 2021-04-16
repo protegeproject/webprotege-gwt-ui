@@ -924,6 +924,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PlainPropertyValue get_PlainPropertyValue;
 
+    UpdateObjectResult _UpdateObjectResult;
+
     public RpcWhiteList() {
     }
 }

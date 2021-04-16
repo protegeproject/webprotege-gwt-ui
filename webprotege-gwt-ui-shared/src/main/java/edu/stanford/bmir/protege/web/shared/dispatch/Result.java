@@ -220,6 +220,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(SetUserProjectEntityGraphSettingsResult.class),
         @Type(UpdateEntityTagsResult.class),
         @Type(UpdateFormDescriptorResult.class),
+        @Type(UpdateObjectResult.class)
 })
 public interface Result extends IsSerializable {
 
