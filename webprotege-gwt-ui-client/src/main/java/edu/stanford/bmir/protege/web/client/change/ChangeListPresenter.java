@@ -185,8 +185,8 @@ public class ChangeListPresenter {
                 downloader.download();
             });
             view.setDownloadRevisionVisible(downloadVisible);
-            Page<DiffElement<String, SafeHtml>> page = projectChange.getDiff();
-            List<DiffElement<String, SafeHtml>> pageElements = page.getPageElements();
+            Page<DiffElement<String, String>> page = projectChange.getDiff();
+            List<DiffElement<String, String>> pageElements = page.getPageElements();
             view.setDiff(pageElements, (int) page.getTotalElements());
             view.setChangeCount(projectChange.getChangeCount());
             view.setTimestamp(changeTimeStamp);

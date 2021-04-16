@@ -43,6 +43,7 @@ public abstract class ProjectChange implements IsSerializable, Serializable {
 
     public abstract RevisionNumber getRevisionNumber();
 
+    @JsonProperty("userId")
     public abstract UserId getAuthor();
     
     public abstract String getSummary();

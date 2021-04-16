@@ -189,9 +189,9 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     }
 
     @Override
-    public void setDiff(List<DiffElement<String, SafeHtml>> diff, int totalChanges) {
+    public void setDiff(List<DiffElement<String, String>> diff, int totalChanges) {
         diffView.setDiff(diff,
-                         lineElement -> lineElement,
+                         lineElement -> new SafeHtmlBuilder().appendHtmlConstant(lineElement).toSafeHtml(),
                          document -> new SafeHtmlBuilder().appendHtmlConstant(document).toSafeHtml());
         if (diff.size() < totalChanges) {
             tooManyChangesMessage.setText(messages.showing() + " " + format(diff.size()) + " "+messages.pagination_of()+" " + format(totalChanges) + " " + messages.change_changes());

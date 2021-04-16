@@ -25,7 +25,7 @@ public interface ChangeDetailsView extends IsWidget {
 
     void setAuthor(UserId author);
 
-    void setDiff(List<DiffElement<String, SafeHtml>> diff, int totalChanges);
+    void setDiff(List<DiffElement<String, String>> diff, int totalChanges);
 
     void setTimestamp(long timestamp);
 

@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
+import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -54,10 +55,7 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingActio
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResult;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
-import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
-import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
-import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
-import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
+import edu.stanford.bmir.protege.web.shared.revision.*;
 import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
@@ -208,6 +206,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     DictionaryLanguageData _DictionaryLanguageData;
 
     DictionaryLanguageUsage _DictionaryLanguageUsage;
+
+    DiffElement<String, String> _DiffElement;
 
     DisplayNameSettings _DisplayNameSettings;
 
@@ -717,6 +717,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     ProjectAction _ProjectAction;
 
+    ProjectChange _ProjectChange;
+
     ProjectDetails _ProjectDetails;
 
     ProjectSettings _ProjectSettings;
@@ -758,6 +760,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     RevertRevisionAction _RevertRevisionAction;
 
     RevertRevisionResult _RevertRevisionResult;
+
+    RevisionNumber _RevisionNumber;
 
     RpcWhiteList _RpcWhiteList;
 
