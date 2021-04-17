@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,9 @@ public class JsonRpcHttpResponseHandler {
     public <R extends Result> R getResultForResponse(HttpResponse<String> httpResponse,
                                                                           UserId userId) throws PermissionDeniedException, ActionExecutionException {
         try {
+            if(httpResponse.statusCode() == HttpStatus.SC_UNAUTHORIZED) {
+                throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));
+            }
             if(httpResponse.statusCode() != 200) {
                 throw new ActionExecutionException(new Exception("Internal Server Error: HTTP " + httpResponse.statusCode()));
             }
