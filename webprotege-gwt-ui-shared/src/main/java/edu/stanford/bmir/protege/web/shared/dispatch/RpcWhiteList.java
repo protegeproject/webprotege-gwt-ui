@@ -250,6 +250,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     EntityNameMatchType _EntityNameMatchType;
 
+    EntitySearchResult _EntitySearchResult;
+
     ExistingOntologyMergeAddAction _ExistingOntologyMergeAddAction;
 
     ExistingOntologyMergeAddResult _ExistingOntologyMergeAddResult;

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -21,6 +22,7 @@ public abstract class EntitySearchResult {
 
     public static final String MATCHES = "matches";
 
+    @JsonCreator
     @Nonnull
     public static EntitySearchResult get(@JsonProperty(ENTITY) @Nonnull EntityNode entity,
                                          @JsonProperty(MATCHES) @Nonnull ImmutableList<SearchResultMatch> matches) {
