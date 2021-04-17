@@ -956,6 +956,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PrimitiveFormControlData primitiveFormControlData;
 
+    TagData _TagData;
+
     public RpcWhiteList() {
     }
 }
