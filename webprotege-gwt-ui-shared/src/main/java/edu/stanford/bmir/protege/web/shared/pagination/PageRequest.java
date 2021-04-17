@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.pagination;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -73,6 +74,7 @@ public class PageRequest implements Serializable, IsSerializable {
      * Gets the number of entities to skip over for this page request.
      * @return The number of entities to skip over.
      */
+    @JsonIgnore
     public int getSkip() {
         return (pageNumber - 1) * pageSize;
     }
