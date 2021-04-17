@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
+import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -93,6 +94,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = CreateObjectPropertiesAction.class),
         @Type(value = CreateEntityDiscussionThreadAction.class),
         @Type(value = CreateEntityFromFormDataAction.class),
+        @Type(value = GetAnnotationPropertyFrameAction.class),
         @Type(value = CreateNewProjectAction.class),
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
@@ -102,14 +104,13 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = DeleteEntityCommentAction.class),
         @Type(value = DeleteFormAction.class),
         @Type(value = EditAnnotationsAction.class),
-        @Type(value = GetClassFrameAction.class),
-        @Type(value = GetDataPropertyFrameAction.class),
         @Type(value = EditCommentAction.class),
         @Type(value = ExistingOntologyMergeAddAction.class),
         @Type(value = GetAllOntologiesAction.class),
-        @Type(value = GetAnnotationPropertyFrameAction.class),
         @Type(value = GetApplicationSettingsAction.class),
         @Type(value = GetAvailableProjectsAction.class),
+        @Type(value = GetClassFrameAction.class),
+        @Type(value = GetDataPropertyFrameAction.class),
         @Type(value = GetCommentedEntitiesAction.class),
         @Type(value = GetAvailableProjectsWithPermissionAction.class),
         @Type(value = GetCurrentUserInSessionAction.class),
@@ -162,6 +163,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetProjectSettingsAction.class),
         @Type(value = GetProjectSharingSettingsAction.class),
         @Type(value = GetProjectTagsAction.class),
+        @Type(value = GetProjectLangTagsAction.class),
         @Type(value = GetRevisionSummariesAction.class),
         @Type(value = GetRootOntologyIdAction.class),
         @Type(value = GetSearchSettingsAction.class),

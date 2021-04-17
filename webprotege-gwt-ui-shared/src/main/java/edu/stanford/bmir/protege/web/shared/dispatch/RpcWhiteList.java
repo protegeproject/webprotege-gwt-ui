@@ -518,6 +518,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetProjectLangTagsAction _GetProjectLangTagsAction;
 
+    GetProjectLangTagsResult _GetProjectLangTagsResult;
+
     GetProjectPermissionsAction _GetProjectPermissionsAction;
 
     GetProjectPermissionsResult _GetProjectPermissionsResult;

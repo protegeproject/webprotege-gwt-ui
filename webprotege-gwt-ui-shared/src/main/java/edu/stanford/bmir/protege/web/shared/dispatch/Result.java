@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContai
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
+import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
@@ -113,8 +114,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetCommentedEntitiesResult.class),
         @Type(GetAvailableProjectsResult.class),
         @Type(GetAvailableProjectsWithPermissionResult.class),
-        @Type(GetAnnotationPropertyFrameResult.class),
         @Type(GetClassFrameResult.class),
+        @Type(GetDataPropertyFrameResult.class),
+        @Type(GetAnnotationPropertyFrameResult.class),
         @Type(GetDataPropertyFrameResult.class),
         @Type(GetCurrentUserInSessionResult.class),
         @Type(GetDeprecatedEntitiesResult.class),
@@ -166,6 +168,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(GetProjectSettingsResult.class),
         @Type(GetProjectSharingSettingsResult.class),
         @Type(GetProjectTagsResult.class),
+        @Type(GetProjectLangTagsResult.class),
         @Type(GetRevisionSummariesResult.class),
         @Type(GetRootOntologyIdResult.class),
         @Type(GetSearchSettingsResult.class),
@@ -220,7 +223,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @Type(SetUserProjectEntityGraphSettingsResult.class),
         @Type(UpdateEntityTagsResult.class),
         @Type(UpdateFormDescriptorResult.class),
-        @Type(UpdateObjectResult.class)
 })
 public interface Result extends IsSerializable {
 
