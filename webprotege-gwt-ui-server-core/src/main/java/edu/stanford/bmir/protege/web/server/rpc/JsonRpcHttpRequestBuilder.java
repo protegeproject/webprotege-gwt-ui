@@ -37,11 +37,15 @@ public class JsonRpcHttpRequestBuilder {
                                                                                         ExecutionContext executionContext) throws com.fasterxml.jackson.core.JsonProcessingException {
         var jsonRpcRequest = JsonRpcRequest.create(action);
         var requestBody = objectMapper.writeValueAsString(jsonRpcRequest);
-        return HttpRequest.newBuilder()
+        var builder = HttpRequest.newBuilder()
                           .uri(jsonRpcEndPoint.getUri())
                           .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                          .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-                          .setHeader("Cookie", "JSESSIONID=" + executionContext.getUserToken().getToken())
-                          .build();
+                          .setHeader(CONTENT_TYPE, APPLICATION_JSON);
+
+        executionContext.getUserToken()
+                        .ifPresent(userToken -> {
+                            builder.setHeader("Cookie", "JSESSIONID=" + userToken.getToken());
+                        });
+        return builder.build();
     }
 }

@@ -49,8 +49,8 @@ public class ExecutionContext implements HasUserId {
         return session;
     }
 
-    public UserToken getUserToken() {
-        return session.getUserSessionToken().orElseThrow();
+    public Optional<UserToken> getUserToken() {
+        return session.getUserSessionToken();
     }
 
     @Override
