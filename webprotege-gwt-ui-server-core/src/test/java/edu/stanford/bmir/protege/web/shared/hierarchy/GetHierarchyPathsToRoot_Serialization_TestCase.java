@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
@@ -32,7 +33,7 @@ public class GetHierarchyPathsToRoot_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = GetHierarchyPathsToRootResult.create(Collections.emptySet());
+        var result = GetHierarchyPathsToRootResult.create(ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

@@ -25,12 +25,4 @@ public class FormRegionId_Serialization_TestCase {
     public void shouldSerializeGridColumnId() throws IOException {
         JsonSerializationTestUtil.testSerialization(GridColumnId.get(UUID.randomUUID().toString()), FormRegionId.class);
     }
-
-    @Test
-    public void shouldDesearializeStringAsFormFieldId() throws IOException {
-        String serialization = UUID.randomUUID().toString();
-        JsonSerializationTestUtil.testDeserialization(serialization,
-                                                      FormFieldId.get(serialization),
-                                                      FormRegionId.class);
-    }
 }

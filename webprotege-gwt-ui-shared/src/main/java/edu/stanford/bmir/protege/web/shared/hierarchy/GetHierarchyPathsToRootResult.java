@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -23,7 +24,7 @@ import java.util.Collection;
 public abstract class GetHierarchyPathsToRootResult implements Result {
 
     @JsonCreator
-    public static GetHierarchyPathsToRootResult create(@JsonProperty("paths") Collection<Path<GraphNode<EntityNode>>> paths) {
+    public static GetHierarchyPathsToRootResult create(@JsonProperty("paths") ImmutableSet<Path<GraphNode<EntityNode>>> paths) {
         return new AutoValue_GetHierarchyPathsToRootResult(paths);
     }
 
