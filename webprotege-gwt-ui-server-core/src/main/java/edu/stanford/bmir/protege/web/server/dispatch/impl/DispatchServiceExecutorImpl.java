@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.rmi.activation.ActivateFailedException;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,10 +28,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     public static final int HTTP_403_FORBIDDEN = 403;
 
-    private final ObjectMapper objectMapper;
-
-    private final UserInSessionFactory userInSessionFactory;
-
     private final HttpClient httpClient;
 
     private final JsonRpcHttpRequestBuilder requestBuilder;
@@ -43,13 +35,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     private final JsonRpcHttpResponseHandler responseHandler;
 
     @Inject
-    public DispatchServiceExecutorImpl(ObjectMapper objectMapper,
-                                       UserInSessionFactory userInSessionFactory,
-                                       HttpClient httpClient,
+    public DispatchServiceExecutorImpl(HttpClient httpClient,
                                        JsonRpcHttpRequestBuilder requestBuilder,
                                        JsonRpcHttpResponseHandler responseHandler) {
-        this.objectMapper = objectMapper;
-        this.userInSessionFactory = userInSessionFactory;
         this.httpClient = httpClient;
         this.requestBuilder = requestBuilder;
         this.responseHandler = responseHandler;
@@ -88,7 +76,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 }
             }
             else if(httpResponse.statusCode() == 401) {
-                throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));
+                throw new PermissionDeniedException("Permission denied", executionContext.getUserId());
             }
             return responseHandler.getResultForResponse(httpResponse, userId);
         } catch (ConnectException e) {

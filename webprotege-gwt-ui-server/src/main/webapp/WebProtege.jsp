@@ -1,20 +1,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.filemanager.StyleCustomizationFileManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.access.ActionId" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
 <%@ page import="java.io.IOException" %>
-<%@ page import="java.util.HashSet" %>
-<%@ page import="java.util.Optional" %>
-<%@ page import="java.util.Set" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ServerComponent" %>
 <!DOCTYPE html>
@@ -46,13 +32,6 @@
     <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js"></script>
     <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
 
-
-
-    <script>
-        <%
-            writeUserInSession(session, out);
-        %>
-    </script>
 
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
 
@@ -133,29 +112,5 @@
 
     private String getStyleCustomization() {
         return styleCustomizationFileManager.getStyleCustomization();
-    }
-
-    private void writeUserInSession(HttpSession session, JspWriter out) {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session, null);
-        UserId userId = webProtegeSession.getUserInSession();
-        final UserInSession userInSession;
-        final UserDetails userDetails;
-        if (userId.isGuest()) {
-            userDetails = UserDetails.getGuestUserDetails();
-        }
-        else {
-            UserDetailsManager userDetailsManager = getServerComponent().getUserDetailsManager();
-            Optional<String> email = userDetailsManager.getEmail(userId);
-            if (email.isPresent()) {
-                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.of(email.get()));
-            }
-            else {
-                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.<String>empty());
-            }
-        }
-        Set<ActionId> allowedApplicationActions = new HashSet<ActionId>(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
-        userInSession = new UserInSession(userDetails, allowedApplicationActions);
-        ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
-                          .writeVariableDeclaration(userInSession, out);
     }
 %>

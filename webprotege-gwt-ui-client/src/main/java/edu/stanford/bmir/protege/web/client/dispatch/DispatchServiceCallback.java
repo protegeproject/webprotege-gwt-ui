@@ -90,7 +90,7 @@ public class DispatchServiceCallback<T> {
         // Only display the permission denied message if the user is not the guest user.  This
         // is because when a guest user gets a permission denied error message they are first
         // redirected to the login in page
-        if (!e.getUserInSession().isGuest()) {
+        if (!e.getUserId().isGuest()) {
             if(e.getMessage() != null) {
                 errorMessageDisplay.displayPermissionDeniedErrorMessage(e.getMessage());
             }

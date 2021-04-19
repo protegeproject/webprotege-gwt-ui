@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.rpc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.net.http.HttpResponse;
 
 import static edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl.HTTP_403_FORBIDDEN;
@@ -31,22 +28,17 @@ public class JsonRpcHttpResponseHandler {
     @Nonnull
     private final ObjectMapper objectMapper;
 
-    @Nonnull
-    private final UserInSessionFactory userInSessionFactory;
-
 
     @Inject
-    public JsonRpcHttpResponseHandler(@Nonnull ObjectMapper objectMapper,
-                                      @Nonnull UserInSessionFactory userInSessionFactory) {
+    public JsonRpcHttpResponseHandler(@Nonnull ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.userInSessionFactory = userInSessionFactory;
     }
 
     public <R extends Result> R getResultForResponse(HttpResponse<String> httpResponse,
                                                                           UserId userId) throws PermissionDeniedException, ActionExecutionException {
         try {
             if(httpResponse.statusCode() == HttpStatus.SC_UNAUTHORIZED) {
-                throw new PermissionDeniedException("Permission denied", userInSessionFactory.getUserInSession(userId));
+                throw new PermissionDeniedException(userId);
             }
             if(httpResponse.statusCode() != 200) {
                 throw new ActionExecutionException(new Exception("Internal Server Error: HTTP " + httpResponse.statusCode()));
@@ -57,9 +49,8 @@ public class JsonRpcHttpResponseHandler {
             if(jsonRpcResponse.getError().isPresent()) {
                 var error = jsonRpcResponse.getError().get();
                 if(error.getCode() == HTTP_403_FORBIDDEN) {
-                    var userInSession = userInSessionFactory.getUserInSession(userId);
                     throw new PermissionDeniedException(error.getMessage(),
-                                                        userInSession);
+                                                        userId);
                 }
                 else {
                     throw new ActionExecutionException(new Exception(error.getMessage()));

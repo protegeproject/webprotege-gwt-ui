@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.permissions;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 
@@ -20,19 +21,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PermissionDeniedException extends RuntimeException implements IsSerializable {
 
-    private UserInSession userInSession;
+    private UserId userId;
 
     @GwtSerializationConstructor
     private PermissionDeniedException() {
     }
 
-    public PermissionDeniedException(@Nonnull String message, @Nonnull UserInSession userInSession) {
+
+    public PermissionDeniedException(UserId userId) {
+        this("Permission denied", userId);
+    }
+
+    public PermissionDeniedException(@Nonnull String message, UserId userId) {
         super(message);
-        this.userInSession = checkNotNull(userInSession);
+        this.userId = userId;
     }
 
     @Nonnull
-    public UserInSession getUserInSession() {
-        return userInSession;
+    public UserId getUserId() {
+        return userId;
     }
 }

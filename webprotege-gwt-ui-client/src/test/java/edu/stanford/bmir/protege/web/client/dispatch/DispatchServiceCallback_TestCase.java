@@ -54,7 +54,6 @@ public class DispatchServiceCallback_TestCase<T> {
         PermissionDeniedException exception = mock(PermissionDeniedException.class);
         UserInSession userInSession = mock(UserInSession.class);
         when(userInSession.isGuest()).thenReturn(false);
-        when(exception.getUserInSession()).thenReturn(userInSession);
         callback.onFailure(exception);
         verify(callback, times(1)).handlePermissionDeniedException(exception);
         verify(messageDisplay, times(1)).displayPermissionDeniedErrorMessage();

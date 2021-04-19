@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
-import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -47,14 +45,6 @@ public class LoggedInUserManager {
         this.loggedInUser = loggedInUser;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.errorDisplay = checkNotNull(errorDisplay);
-    }
-
-    /**
-     * Reads the initial logged in user from the web page source.
-     * This should really only be called once on page load.
-     */
-    public void readInitialUserInSession() {
-        readUserInSession();
     }
 
     /**
@@ -115,11 +105,5 @@ public class LoggedInUserManager {
             }
 
         });
-    }
-
-    private void readUserInSession() {
-        UserInSessionDecoder decoder = new UserInSessionDecoder();
-        UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
-        loggedInUser.setLoggedInUser(userInSession);
     }
 }

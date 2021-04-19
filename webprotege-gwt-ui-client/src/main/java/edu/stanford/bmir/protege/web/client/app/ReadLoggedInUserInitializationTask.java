@@ -37,7 +37,6 @@ public class ReadLoggedInUserInitializationTask implements ApplicationInitManage
 
     @Override
     public void run(ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        loggedInUserManager.readInitialUserInSession();
         dispatch.execute(GetCurrentUserInSessionAction.create(),
                          new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorMessageDisplay) {
                              @Override

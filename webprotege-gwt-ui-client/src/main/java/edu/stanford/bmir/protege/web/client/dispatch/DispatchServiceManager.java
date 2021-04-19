@@ -24,6 +24,8 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -263,11 +265,11 @@ public class DispatchServiceManager {
     private void handleError(final Throwable throwable, final Action<?> action, final DispatchServiceCallback<?> callback) {
         if (throwable instanceof PermissionDeniedException) {
             // Try to determine if the user is logged in.  The session might have expired.
-            UserInSession userInSession = ((PermissionDeniedException) throwable).getUserInSession();
-            if(userInSession.isGuest()) {
+            UserId userId = ((PermissionDeniedException) throwable).getUserId();
+            if(userId.isGuest()) {
                 // Set up next place
                 Place continueTo = placeController.getWhere();
-                loggedInUser.setLoggedInUser(userInSession);
+                loggedInUser.setLoggedInUser(new UserInSession(UserDetails.getGuestUserDetails(), Collections.emptySet()));
                 GWT.log("[Dispatch] Permission denied.  User is the guest user so redirecting to login.");
                 signInRequiredHandler.handleSignInRequired(continueTo);
             }
