@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataDto;
@@ -11,9 +14,10 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class ChoiceDescriptorDto {
 
+    @JsonCreator
     @Nonnull
-    public static ChoiceDescriptorDto get(@Nonnull PrimitiveFormControlDataDto value,
-                                          @Nonnull LanguageMap label) {
+    public static ChoiceDescriptorDto get(@JsonProperty("value") @Nonnull PrimitiveFormControlDataDto value,
+                                          @JsonProperty("label") @Nonnull LanguageMap label) {
         return new AutoValue_ChoiceDescriptorDto(label, value);
     }
 

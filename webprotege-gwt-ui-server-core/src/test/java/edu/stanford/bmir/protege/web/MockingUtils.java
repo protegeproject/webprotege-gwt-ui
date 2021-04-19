@@ -99,6 +99,10 @@ public class MockingUtils {
         return OWLLiteralData.get(mockLiteral());
     }
 
+    public static IRIData mockIriData() {
+        return IRIData.get(mockIRI(), ImmutableList.of());
+    }
+
     public HasSignature mockHasSignature(OWLEntity ... entities) {
         HasSignature hasSignature = mock(HasSignature.class);
         when(hasSignature.getSignature()).thenReturn(new HashSet<OWLEntity>(Arrays.asList(entities)));
