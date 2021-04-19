@@ -3,7 +3,12 @@ package edu.stanford.bmir.protege.web.client.app;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,7 +53,6 @@ public class WebProtegeInitializer {
         if(properlyInitialized) {
             throw new IllegalStateException("Application has already been initialized");
         }
-
         GWT.setUncaughtExceptionHandler(e -> {
             // Consider logging and posting to server.
             GWT.log("Uncaught exception", e);
