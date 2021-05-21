@@ -508,7 +508,7 @@
     font-weight: bold;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
-    border-radius: 3px;
+    border-radius: literal("var(--grid-header--border-radius)");
     color: literal("var(--grid-header--color)");
     position: relative;
     min-height: 1rem;
