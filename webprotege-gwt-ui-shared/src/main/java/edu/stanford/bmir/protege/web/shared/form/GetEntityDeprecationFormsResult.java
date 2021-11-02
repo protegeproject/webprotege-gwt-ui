@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityDeprecationForms")
+@JsonTypeName("webprotege.forms.GetEntityDeprecationForms")
 public abstract class GetEntityDeprecationFormsResult implements Result {
 
     private static final String REPLACEMENT_ENTITY_CRITERIA = "replacementEntityCriteria";

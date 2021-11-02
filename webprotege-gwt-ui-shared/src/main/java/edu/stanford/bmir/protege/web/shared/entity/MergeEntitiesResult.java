@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -17,30 +18,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 Mar 2018
  */
-public class MergeEntitiesResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.entities.MergeEntities")
+public class MergeEntitiesResult implements Result {
 
-    private EventList<ProjectEvent<?>> eventList;
 
-    private MergeEntitiesResult(@Nonnull EventList<ProjectEvent<?>> eventList) {
-        this.eventList = checkNotNull(eventList);
-    }
-
-    @GwtSerializationConstructor
     private MergeEntitiesResult() {
     }
 
-    public static MergeEntitiesResult create(@Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new MergeEntitiesResult(eventList);
-    }
-
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return eventList;
+    public static MergeEntitiesResult create() {
+        return new MergeEntitiesResult();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(eventList);
+        return 33;
     }
 
     @Override
@@ -51,8 +42,7 @@ public class MergeEntitiesResult implements Result, HasEventList<ProjectEvent<?>
         if (!(obj instanceof MergeEntitiesResult)) {
             return false;
         }
-        MergeEntitiesResult other = (MergeEntitiesResult) obj;
-        return this.eventList.equals(other.eventList);
+        return true;
     }
 
 

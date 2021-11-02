@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
  * Stanford Center for Biomedical Informatics Research
  * 25/11/14
  */
+@JsonTypeName("webprotege.projects.SetProjectSettings")
 public class SetProjectSettingsAction extends AbstractHasProjectAction<SetProjectSettingsResult> {
 
     private ProjectSettings projectSettings;

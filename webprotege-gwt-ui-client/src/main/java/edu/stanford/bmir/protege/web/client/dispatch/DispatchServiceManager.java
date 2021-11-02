@@ -132,15 +132,16 @@ public class DispatchServiceManager {
                 return;
             }
         }
-        if(batch > 0) {
-            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
-            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
-            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
-            pendingActionExecutions.add(actionExecution);
-        }
-        else {
+
+//        if(batch > 0) {
+//            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
+//            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
+//            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
+//            pendingActionExecutions.add(actionExecution);
+//        }
+//        else {
             execAction(action, callback);
-        }
+//        }
     }
 
     @SuppressWarnings("unchecked")

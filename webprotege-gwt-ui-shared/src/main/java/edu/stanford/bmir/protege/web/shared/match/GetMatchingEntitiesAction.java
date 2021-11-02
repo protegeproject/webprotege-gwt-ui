@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetMatchingEntities")
+@JsonTypeName("webprotege.entities.GetMatchingEntities")
 public abstract class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntitiesResult> {
 
     @JsonCreator

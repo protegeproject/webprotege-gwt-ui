@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MergeEntities")
+@JsonTypeName("webprotege.entities.MergeEntities")
 public abstract class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesResult> implements HasCommitMessage {
 
 

@@ -31,7 +31,7 @@ public class SetManchesterSyntaxFrame_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = SetManchesterSyntaxFrameResult.create(mockEventList(), "Frame");
+        var result = SetManchesterSyntaxFrameResult.create("Frame");
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

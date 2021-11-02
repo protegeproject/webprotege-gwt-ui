@@ -10,10 +10,13 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLObjectPropertyData")
+@JsonTypeName("ObjectPropertyData")
 public abstract class OWLObjectPropertyData extends OWLPropertyData {
 
 
@@ -39,11 +42,20 @@ public abstract class OWLObjectPropertyData extends OWLPropertyData {
         return get(property, toShortFormList(shortForms), deprecated);
     }
 
-    @JsonCreator
     public static OWLObjectPropertyData get(@JsonProperty("entity") OWLObjectProperty property,
                                             @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms,
                                             @JsonProperty("deprecated") boolean deprecated) {
         return new AutoValue_OWLObjectPropertyData(shortForms, deprecated, property);
+    }
+
+
+
+    @JsonCreator
+    private static OWLObjectPropertyData get(@JsonProperty("iri") String iri,
+                                             @JsonProperty(value = "shortForms", defaultValue = "[]") ImmutableList<ShortForm> shortForms,
+                                             @JsonProperty(value = "deprecated", defaultValue = "false")  boolean deprecated) {
+        return new AutoValue_OWLObjectPropertyData(shortForms != null ? shortForms : ImmutableList.of(), deprecated, new OWLObjectPropertyImpl(
+                IRI.create(iri)));
     }
 
     @Nonnull

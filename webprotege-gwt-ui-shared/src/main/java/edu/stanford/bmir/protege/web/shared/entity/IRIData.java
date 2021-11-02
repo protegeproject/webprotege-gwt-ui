@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -31,10 +32,17 @@ public abstract class IRIData extends OWLPrimitiveData {
         return get(iri, toShortFormList(shortForms));
     }
 
-    @JsonCreator
     public static IRIData get(@JsonProperty("iri") IRI iri,
                               @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms) {
         return new AutoValue_IRIData(shortForms, iri);
+    }
+
+    @JsonCreator
+    private static IRIData get(@JsonProperty("iri") String iri,
+                               @JsonProperty(value = "shortForms", defaultValue = "[]") ImmutableList<ShortForm> shortForms,
+                               @JsonProperty(value = "deprecated", defaultValue = "false") boolean deprecated) {
+        return new AutoValue_IRIData(shortForms != null ? shortForms : ImmutableList.of(),
+                                     IRI.create(iri));
     }
 
     @Nonnull

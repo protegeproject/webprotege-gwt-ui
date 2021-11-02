@@ -41,10 +41,7 @@ public class AddEntityComment_TestCase {
                                                   1000, Optional.empty(),
                                                   THE_COMMENT,
                                                   THE_COMMENT),
-                                      THE_COMMENT,
-                                      EventList.create(EventTag.get(3),
-                                                       ImmutableList.of(),
-                                                       EventTag.get(3)));
+                                      THE_COMMENT);
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

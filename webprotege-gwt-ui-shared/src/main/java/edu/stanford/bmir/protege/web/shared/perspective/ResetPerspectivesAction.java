@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("ResetPerspectives")
+@JsonTypeName("webprotege.perspectives.ResetPerspectives")
 public abstract class ResetPerspectivesAction implements ProjectAction<ResetPerspectivesResult> {
 
 

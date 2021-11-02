@@ -25,7 +25,7 @@ public class GetIndividualsPageContainingIndividual_Serialization_TestCase {
     @Test
     public void shouldSerializeAction() throws IOException {
         var action = GetIndividualsPageContainingIndividualAction.create(ProjectId.getNil(),
-                                                                         mockOWLNamedIndividual(), Optional.empty(),
+                                                                         mockOWLNamedIndividual(), null,
                                                                          InstanceRetrievalMode.ALL_INSTANCES);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }

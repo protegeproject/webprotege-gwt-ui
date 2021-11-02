@@ -25,8 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("AddEntityComment")
-public abstract class AddEntityCommentResult implements Result, HasProjectId, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.discussions.AddComment")
+public abstract class AddEntityCommentResult implements Result, HasProjectId {
 
     @Nonnull
     @Override
@@ -38,19 +38,14 @@ public abstract class AddEntityCommentResult implements Result, HasProjectId, Ha
 
     public abstract String getCommentRendering();
 
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
-
     @JsonCreator
     public static AddEntityCommentResult create(@JsonProperty("projectId") ProjectId newProjectId,
                                                 @JsonProperty("threadId") ThreadId newThreadId,
                                                 @JsonProperty("comment") Comment newComment,
-                                                @JsonProperty("commentRendering") String newCommentRendering,
-                                                @JsonProperty("eventList") EventList<ProjectEvent<?>> newEventList) {
+                                                @JsonProperty("commentRendering") String newCommentRendering) {
         return new AutoValue_AddEntityCommentResult(newProjectId,
                                                     newThreadId,
                                                     newComment,
-                                                    newCommentRendering,
-                                                    newEventList);
+                                                    newCommentRendering);
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.individuals;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
@@ -20,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
+@JsonTypeName("webprotege.entities.GetIndividuals")
 public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividualsResult> {
 
     @Nullable

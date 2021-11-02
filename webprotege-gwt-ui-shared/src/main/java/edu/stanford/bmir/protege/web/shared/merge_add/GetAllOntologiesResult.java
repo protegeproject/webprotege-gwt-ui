@@ -12,7 +12,7 @@ import java.util.List;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAllOntologies")
+@JsonTypeName("webprotege.uploads.GetUploadedOntologies")
 public abstract class GetAllOntologiesResult implements Result {
 
     @JsonCreator

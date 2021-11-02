@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
@@ -16,6 +17,5 @@ public abstract class JsonRpcParams {
         return new AutoValue_JsonRpcParams(action);
     }
 
-    @JsonProperty("action")
     public abstract Action getAction();
 }

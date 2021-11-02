@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetUserProjectEntityGraphSettings")
+@JsonTypeName("webprotege.graphs.SetUserProjectEntityGraphSettings")
 public abstract class SetUserProjectEntityGraphSettingsResult implements Result {
 
     @JsonCreator

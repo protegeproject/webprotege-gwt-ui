@@ -11,10 +11,14 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -27,7 +31,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLClassData")
+@JsonTypeName("ClassData")
 public abstract class OWLClassData extends OWLEntityData {
 
 
@@ -43,11 +47,25 @@ public abstract class OWLClassData extends OWLEntityData {
         return get(cls, toShortFormList(shortForms), deprecated);
     }
 
-    @JsonCreator
     public static OWLClassData get(@JsonProperty("entity") @Nonnull OWLClass cls,
                                    @JsonProperty("shortForms") @Nonnull ImmutableList<ShortForm> shortForms,
                                    @JsonProperty("deprecated") boolean deprecated) {
         return new AutoValue_OWLClassData(shortForms, deprecated, cls);
+    }
+
+    /**
+     * For deserialization from JSON only
+     * @param iri The lexical representation of the IRI
+     * @param shortForms A nullable list of short forms
+     * @param deprecated
+     * @return
+     */
+    @JsonCreator
+    protected static OWLClassData get(@JsonProperty("iri") @Nonnull String iri,
+                                      @JsonProperty(value = "shortForms") @Nullable ImmutableList<ShortForm> shortForms,
+                                      @JsonProperty("deprecated") boolean deprecated) {
+        return new AutoValue_OWLClassData(shortForms != null ? shortForms : ImmutableList.of(), deprecated, new OWLClassImpl(
+                IRI.create(iri)));
     }
 
     @Override

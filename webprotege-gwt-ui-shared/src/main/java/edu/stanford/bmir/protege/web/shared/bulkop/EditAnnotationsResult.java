@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EditAnnotations")
-public abstract class EditAnnotationsResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.bulkop.EditAnnotations")
+public abstract class EditAnnotationsResult implements Result {
 
     @JsonCreator
     @Nonnull
-    public static EditAnnotationsResult get(@JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_EditAnnotationsResult(eventList);
+    public static EditAnnotationsResult get() {
+        return new AutoValue_EditAnnotationsResult();
     }
 }

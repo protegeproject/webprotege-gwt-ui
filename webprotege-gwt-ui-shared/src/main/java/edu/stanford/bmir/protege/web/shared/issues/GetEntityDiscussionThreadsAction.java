@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -16,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
+@JsonTypeName("webprotege.discussions.GetEntityDiscussionThreads")
 public class GetEntityDiscussionThreadsAction implements ProjectAction<GetEntityDiscussionThreadsResult> {
 
     private ProjectId projectId;

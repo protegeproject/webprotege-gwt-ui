@@ -16,8 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ActionExecutionException extends RuntimeException implements IsSerializable {
 
-    private Throwable serializedCause;
-
     /**
      * For serialization purposes only
      */
@@ -29,13 +27,7 @@ public class ActionExecutionException extends RuntimeException implements IsSeri
      * an action.
      * @param cause The cause.  Not {@code null}.
      */
-    public ActionExecutionException(Throwable cause) {
-        super(checkNotNull(cause));
-        this.serializedCause = cause;
-    }
-
-    @Override
-    public synchronized Throwable getCause() {
-        return serializedCause;
+    public ActionExecutionException(String message) {
+        super(message);
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -16,6 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("webprotege.forms.DeprecateEntityByForm")
 public abstract class DeprecateEntityByFormResult implements Result, HasEventList<ProjectEvent<?>> {
 
     public static DeprecateEntityByFormResult get(EventList<ProjectEvent<?>> eventList) {

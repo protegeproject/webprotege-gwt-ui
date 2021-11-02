@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 May 2017
  */
-@JsonTypeName("DeleteEntities")
+@JsonTypeName("webprotege.entities.DeleteEntities")
 public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult> {
 
     private ProjectId projectId;

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateEntityFromFormData")
+@JsonTypeName("webprotege.forms.CreateEntityFromFormData")
 public abstract class CreateEntityFromFormDataAction implements ProjectAction<CreateEntityFromFormDataResult> {
 
     @JsonCreator

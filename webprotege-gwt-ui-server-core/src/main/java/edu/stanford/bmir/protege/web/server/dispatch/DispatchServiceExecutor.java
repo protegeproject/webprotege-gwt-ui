@@ -15,5 +15,5 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
  */
 public interface DispatchServiceExecutor {
 
-    <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException;
+    <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException;
 }

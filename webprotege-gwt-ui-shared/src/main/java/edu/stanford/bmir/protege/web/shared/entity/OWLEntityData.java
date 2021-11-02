@@ -18,7 +18,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
         @Type(OWLClassData.class),
         @Type(OWLObjectPropertyData.class),

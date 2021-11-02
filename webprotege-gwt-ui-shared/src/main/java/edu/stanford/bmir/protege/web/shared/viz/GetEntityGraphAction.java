@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityGraph")
+@JsonTypeName("webprotege.graphs.GetEntityGraph")
 public abstract class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult> {
 
     @JsonCreator

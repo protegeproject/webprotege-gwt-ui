@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetSearchSettings")
+@JsonTypeName("webprotege.search.SetSearchSettings")
 public abstract class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsResult> {
 
     @JsonCreator

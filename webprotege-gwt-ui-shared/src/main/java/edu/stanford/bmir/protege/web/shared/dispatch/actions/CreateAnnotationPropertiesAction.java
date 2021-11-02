@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateAnnotationProperties")
+@JsonTypeName("webprotege.entities.CreateAnnotationProperties")
 public abstract class CreateAnnotationPropertiesAction implements CreateEntitiesInHierarchyAction<CreateAnnotationPropertiesResult, OWLAnnotationProperty> {
 
     @JsonCreator

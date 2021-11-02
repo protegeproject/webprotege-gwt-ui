@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MoveProjectsToTrash")
+@JsonTypeName("webprotege.projects.MoveProjectToTrash")
 public abstract class MoveProjectsToTrashAction implements Action<MoveProjectsToTrashResult> {
 
     @JsonCreator

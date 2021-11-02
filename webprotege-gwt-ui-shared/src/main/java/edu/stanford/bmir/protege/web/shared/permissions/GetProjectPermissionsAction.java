@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -18,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
+@JsonTypeName("webprotege.auth.GetProjectPermissions")
 public class GetProjectPermissionsAction implements Action<GetProjectPermissionsResult>, HasProjectId, HasUserId {
 
     private ProjectId projectId;

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -14,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     An action that sets the email address of a user.
  * </p>
  */
+@JsonTypeName("webprotege.users.SetEmailAddress")
 public class SetEmailAddressAction implements Action<SetEmailAddressResult> {
 
     private UserId userId;

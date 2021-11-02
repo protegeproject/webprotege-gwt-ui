@@ -14,11 +14,11 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetCurrentUserInSession")
-public abstract class GetCurrentUserInSessionAction implements Action<GetCurrentUserInSessionResult> {
+@JsonTypeName("webprotege.users.GetAuthenticatedUserDetails")
+public abstract class GetAuthenticatedUserDetailsAction implements Action<GetAuthenticatedUserDetailsResult> {
 
     @JsonCreator
-    public static GetCurrentUserInSessionAction create() {
-        return new AutoValue_GetCurrentUserInSessionAction();
+    public static GetAuthenticatedUserDetailsAction create() {
+        return new AutoValue_GetAuthenticatedUserDetailsAction();
     }
 }

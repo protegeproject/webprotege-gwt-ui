@@ -24,18 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EditComment")
-public abstract class EditCommentResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.discussions.UpdateComment")
+public abstract class EditCommentResult implements Result {
 
     @JsonCreator
-    public static EditCommentResult create(@JsonProperty("editedComment") @Nonnull Optional<Comment> editedComment,
-                             @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> projectEventList) {
-        return new AutoValue_EditCommentResult(editedComment, projectEventList);
+    public static EditCommentResult create(@JsonProperty("editedComment") @Nonnull Optional<Comment> editedComment) {
+        return new AutoValue_EditCommentResult(editedComment);
     }
 
     @Nonnull
     public abstract Optional<Comment> getEditedComment();
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
 }

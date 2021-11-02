@@ -21,13 +21,12 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateClasses")
+@JsonTypeName("webprotege.entities.CreateClasses")
 public abstract class CreateClassesResult implements CreateEntitiesInHierarchyResult<OWLClass> {
 
     @JsonCreator
     public static CreateClassesResult create(@JsonProperty("projectId") ProjectId projectId,
-                               @JsonProperty("entities") ImmutableSet<EntityNode> classes,
-                               @JsonProperty("eventList") EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_CreateClassesResult(projectId, eventList, classes);
+                               @JsonProperty("entities") ImmutableSet<EntityNode> classes) {
+        return new AutoValue_CreateClassesResult(projectId, classes);
     }
 }

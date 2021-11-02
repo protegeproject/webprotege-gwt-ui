@@ -19,11 +19,11 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetAnnotationValue")
-public abstract class SetAnnotationValueResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.bulkop.SetAnnotationValue")
+public abstract class SetAnnotationValueResult implements Result {
 
     @JsonCreator
-    public static SetAnnotationValueResult create(@JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_SetAnnotationValueResult(eventList);
+    public static SetAnnotationValueResult create() {
+        return new AutoValue_SetAnnotationValueResult();
     }
 }

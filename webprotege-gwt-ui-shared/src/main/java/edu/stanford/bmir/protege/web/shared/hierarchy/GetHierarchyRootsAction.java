@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
  */
-@JsonTypeName("GetHierarchyRoots")
+@JsonTypeName("webprotege.hierarchies.GetHierarchyRoots")
 public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsResult> {
 
     private ProjectId projectId;

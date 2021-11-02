@@ -30,7 +30,7 @@ public class UpdateEntityTags_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = UpdateEntityTagsResult.create(mockEventList());
+        var result = UpdateEntityTagsResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

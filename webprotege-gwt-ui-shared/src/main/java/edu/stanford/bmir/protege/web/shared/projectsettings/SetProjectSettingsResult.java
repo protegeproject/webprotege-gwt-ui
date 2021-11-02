@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25/11/14
  */
+@JsonTypeName("webprotege.projects.SetProjectSettings")
 public class SetProjectSettingsResult implements Result {
 
     private ProjectSettings projectSettings;

@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetMatchingEntitiesResult")
+@JsonTypeName("webprotege.entities.GetMatchingEntities")
 public abstract class GetMatchingEntitiesResult implements Result {
 
     @Nonnull

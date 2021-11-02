@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetPerspectivesResult")
+@JsonTypeName("webprotege.perspectives.GetPerspectives")
 public abstract class GetPerspectivesResult implements Result {
 
     @JsonCreator

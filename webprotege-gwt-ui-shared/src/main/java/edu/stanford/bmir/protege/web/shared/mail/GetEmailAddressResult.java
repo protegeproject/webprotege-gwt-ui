@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEmailAddress")
+@JsonTypeName("webprotege.users.GetEmailAddress")
 public abstract class GetEmailAddressResult implements Result {
 
     @JsonCreator

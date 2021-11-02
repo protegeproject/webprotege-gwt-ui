@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAnnotationPropertyFrame")
+@JsonTypeName("webprotege.frames.GetAnnotationPropertyFrame")
 public abstract class GetAnnotationPropertyFrameResult implements Result, GetObjectResult<AnnotationPropertyFrame> {
 
     @JsonCreator

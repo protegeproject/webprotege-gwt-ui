@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName(value = "GetAvailableProjectsWithPermission")
+@JsonTypeName(value = "webprotege.projects.GetAvailableProjectsWithPermission")
 public abstract class GetAvailableProjectsWithPermissionResult implements Result {
 
     @JsonCreator

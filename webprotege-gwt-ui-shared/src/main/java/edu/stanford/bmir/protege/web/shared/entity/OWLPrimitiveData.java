@@ -40,7 +40,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
         @Type(OWLLiteralData.class)
 
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public abstract class OWLPrimitiveData extends ObjectData implements Comparable<OWLPrimitiveData> {
 
 

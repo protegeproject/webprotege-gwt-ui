@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("PerformEntitySearch")
+@JsonTypeName("webprotege.search.PerformEntitySearch")
 public abstract class PerformEntitySearchResult implements Result {
 
     @JsonCreator

@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MergeUploadedProject")
+@JsonTypeName("webprotege.projects.MergeUploadedProject")
 public abstract class MergeUploadedProjectAction extends AbstractHasProjectAction<MergeUploadedProjectResult> {
 
     @JsonCreator

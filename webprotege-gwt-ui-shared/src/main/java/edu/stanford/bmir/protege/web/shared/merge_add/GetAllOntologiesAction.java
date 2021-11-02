@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAllOntologies")
+@JsonTypeName("webprotege.uploads.GetUploadedOntologies")
 public abstract class GetAllOntologiesAction implements ProjectAction<GetAllOntologiesResult> {
 
     @JsonCreator

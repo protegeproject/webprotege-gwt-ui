@@ -25,12 +25,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 May 2017
  */
-@JsonTypeName("DeleteEntities")
-public class DeleteEntitiesResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.entities.DeleteEntities")
+public class DeleteEntitiesResult implements Result {
 
     private Set<OWLEntity> deletedEntities;
-
-    private EventList<ProjectEvent<?>> events;
 
     @GwtSerializationConstructor
     private DeleteEntitiesResult() {
@@ -38,17 +36,11 @@ public class DeleteEntitiesResult implements Result, HasEventList<ProjectEvent<?
 
 
     @JsonCreator
-    public DeleteEntitiesResult(@JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> events,
-                                @JsonProperty("deletedEntities") @Nonnull Set<OWLEntity> deletedEntities) {
-        this.events = checkNotNull(events);
+    public DeleteEntitiesResult(@JsonProperty("deletedEntities") @Nonnull Set<OWLEntity> deletedEntities) {
         this.deletedEntities = new HashSet<>(deletedEntities);
     }
 
-    @Nonnull
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return events;
-    }
+
 
     public Set<OWLEntity> getDeletedEntities() {
         return new HashSet<>(deletedEntities);
@@ -56,7 +48,7 @@ public class DeleteEntitiesResult implements Result, HasEventList<ProjectEvent<?
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(events, deletedEntities);
+        return Objects.hashCode(deletedEntities);
     }
 
     @Override
@@ -68,8 +60,7 @@ public class DeleteEntitiesResult implements Result, HasEventList<ProjectEvent<?
             return false;
         }
         DeleteEntitiesResult other = (DeleteEntitiesResult) obj;
-        return this.deletedEntities.equals(other.deletedEntities)
-                && this.events.equals(other.events);
+        return this.deletedEntities.equals(other.deletedEntities);
     }
 
 

@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-26
  */
-@JsonTypeName("GetProjectLangTags")
+@JsonTypeName("webprotege.projects.GetProjectLangTags")
 public class GetProjectLangTagsResult implements Result {
 
     private ProjectId projectId;

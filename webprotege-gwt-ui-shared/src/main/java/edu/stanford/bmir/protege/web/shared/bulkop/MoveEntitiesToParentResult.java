@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MoveEntitiesToParent")
-public abstract class MoveEntitiesToParentResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.entities.MoveEntitiesToParent")
+public abstract class MoveEntitiesToParentResult implements Result {
 
     @JsonCreator
-    public static MoveEntitiesToParentResult create(@JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_MoveEntitiesToParentResult(eventList);
+    public static MoveEntitiesToParentResult create() {
+        return new AutoValue_MoveEntitiesToParentResult();
     }
 
 }

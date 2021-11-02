@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAnnotationPropertyFrame")
+@JsonTypeName("webprotege.frames.GetAnnotationPropertyFrame")
 public abstract class GetAnnotationPropertyFrameAction implements ProjectAction<GetAnnotationPropertyFrameResult> {
 
     @JsonCreator

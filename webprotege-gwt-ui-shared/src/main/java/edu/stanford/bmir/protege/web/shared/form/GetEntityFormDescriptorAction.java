@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityFormDescriptor")
+@JsonTypeName("webprotege.forms.GetEntityFormDescriptor")
 public abstract class GetEntityFormDescriptorAction implements ProjectAction<GetEntityFormDescriptorResult> {
 
     @JsonCreator

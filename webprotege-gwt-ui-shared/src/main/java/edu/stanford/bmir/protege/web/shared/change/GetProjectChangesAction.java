@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24/02/15
  */
+@JsonTypeName("webprotege.history.GetProjectChanges")
 public class GetProjectChangesAction implements ProjectAction<GetProjectChangesResult> {
 
     private ProjectId projectId;

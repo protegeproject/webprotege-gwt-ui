@@ -30,7 +30,7 @@ public class DispatchServiceCallback<T> {
 
     public final void onFailure(Throwable throwable) {
         if (throwable instanceof ActionExecutionException) {
-            handleExecutionException(throwable.getCause());
+            handleExecutionException(throwable);
         } else if (throwable instanceof PermissionDeniedException) {
             handlePermissionDeniedException((PermissionDeniedException) throwable);
         } else if (throwable instanceof IncompatibleRemoteServiceException) {

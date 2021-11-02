@@ -25,7 +25,7 @@ public class MoveProjectsToTrash_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = MoveProjectsToTrashResult.create(mockEventList());
+        var result = MoveProjectsToTrashResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
@@ -13,20 +14,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class SetEntityFormDataResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.forms.SetEntityFormData")
+public class SetEntityFormDataResult implements Result {
 
-    private EventList<ProjectEvent<?>> eventList;
-
-    public SetEntityFormDataResult(EventList<ProjectEvent<?>> eventList) {
-        this.eventList = checkNotNull(eventList);
-    }
-
-    @GwtSerializationConstructor
-    private SetEntityFormDataResult() {
-    }
-
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return eventList;
+    public SetEntityFormDataResult() {
     }
 }

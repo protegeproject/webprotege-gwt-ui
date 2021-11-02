@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityFormDescriptor")
+@JsonTypeName("webprotege.forms.GetEntityFormDescriptor")
 public abstract class GetEntityFormDescriptorResult implements Result {
 
     public static final String SELECTOR_CRITERIA = "selectorCriteria";

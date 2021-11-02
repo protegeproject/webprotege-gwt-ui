@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -78,7 +77,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
  *     The basic interface for actions that are sent to the dispatch service
  * </p>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "action")
 @JsonSubTypes(value = {
         @Type(value = AddEntityCommentAction.class),
         @Type(value = AddProjectTagAction.class),
@@ -113,7 +111,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetDataPropertyFrameAction.class),
         @Type(value = GetCommentedEntitiesAction.class),
         @Type(value = GetAvailableProjectsWithPermissionAction.class),
-        @Type(value = GetCurrentUserInSessionAction.class),
+        @Type(value = GetAuthenticatedUserDetailsAction.class),
         @Type(value = GetDeprecatedEntitiesAction.class),
         @Type(value = GetEmailAddressAction.class),
         @Type(value = GetEntityCreationFormsAction.class),

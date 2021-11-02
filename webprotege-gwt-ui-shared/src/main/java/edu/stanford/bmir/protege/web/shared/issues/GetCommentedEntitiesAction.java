@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetCommentedEntities")
+@JsonTypeName("webprotege.discussions.GetCommentedEntities")
 public abstract class GetCommentedEntitiesAction implements ProjectAction<GetCommentedEntitiesResult> {
 
     @JsonCreator

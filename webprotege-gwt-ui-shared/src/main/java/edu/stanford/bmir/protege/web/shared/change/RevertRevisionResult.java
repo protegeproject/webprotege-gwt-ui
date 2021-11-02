@@ -22,15 +22,14 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("RevertRevision")
-public abstract class RevertRevisionResult implements Result, HasProjectId, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.history.RevertRevision")
+public abstract class RevertRevisionResult implements Result, HasProjectId {
 
     @JsonCreator
     @Nonnull
     public static RevertRevisionResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                              @JsonProperty("revisionNumber") @Nonnull RevisionNumber revisionNumber,
-                                              @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_RevertRevisionResult(projectId, revisionNumber, eventList);
+                                              @JsonProperty("revisionNumber") @Nonnull RevisionNumber revisionNumber) {
+        return new AutoValue_RevertRevisionResult(projectId, revisionNumber);
     }
 
     @Nonnull
@@ -39,9 +38,4 @@ public abstract class RevertRevisionResult implements Result, HasProjectId, HasE
 
     @Nonnull
     public abstract RevisionNumber getRevisionNumber();
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
-
-
 }

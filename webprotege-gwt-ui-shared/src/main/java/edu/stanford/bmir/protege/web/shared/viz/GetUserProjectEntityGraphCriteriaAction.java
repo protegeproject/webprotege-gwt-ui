@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetUserProjectEntityGraphCriteria")
+@JsonTypeName("webprotege.graphs.GetProjectEntityGraphDefaultEdgeCriteria")
 public abstract class GetUserProjectEntityGraphCriteriaAction implements ProjectAction<GetUserProjectEntityGraphCriteriaResult> {
 
     @JsonCreator

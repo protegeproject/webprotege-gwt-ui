@@ -21,10 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public interface AbstractCreateEntityResult<E extends OWLEntity> extends Result, HasProjectId, HasEventList<ProjectEvent<?>> {
-
-    @Override
-    EventList<ProjectEvent<?>> getEventList();
+public interface AbstractCreateEntityResult<E extends OWLEntity> extends Result, HasProjectId {
 
     ImmutableCollection<EntityNode> getEntities();
 }

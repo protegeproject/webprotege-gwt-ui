@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("LookupEntities")
+@JsonTypeName("webprotege.entities.LookupEntities")
 public abstract class LookupEntitiesResult implements Result {
 
     /**
@@ -30,7 +30,7 @@ public abstract class LookupEntitiesResult implements Result {
      * @throws NullPointerException if {@code entityLookupResult} is {@code null}.
      */
     @JsonCreator
-    public static LookupEntitiesResult create(@JsonProperty("entityLookupResults") List<EntityLookupResult> entityLookupResult) {
+    public static LookupEntitiesResult create(@JsonProperty("results") List<EntityLookupResult> entityLookupResult) {
         return new AutoValue_LookupEntitiesResult(entityLookupResult);
     }
 

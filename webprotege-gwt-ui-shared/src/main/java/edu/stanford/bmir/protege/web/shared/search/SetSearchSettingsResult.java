@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetSearchSettings")
+@JsonTypeName("webprotege.search.SetSearchSettings")
 public class SetSearchSettingsResult implements Result {
 
     @JsonCreator

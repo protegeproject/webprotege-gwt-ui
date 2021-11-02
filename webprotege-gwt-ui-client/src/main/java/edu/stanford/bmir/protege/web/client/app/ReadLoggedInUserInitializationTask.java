@@ -6,8 +6,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetAuthenticatedUserDetailsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetAuthenticatedUserDetailsResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,19 +37,20 @@ public class ReadLoggedInUserInitializationTask implements ApplicationInitManage
 
     @Override
     public void run(ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        dispatch.execute(GetCurrentUserInSessionAction.create(),
-                         new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorMessageDisplay) {
+        dispatch.execute(GetAuthenticatedUserDetailsAction.create(),
+                         new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorMessageDisplay) {
                              @Override
-                             public void handleSuccess(GetCurrentUserInSessionResult result) {
-                                 loggedInUserManager.setLoggedInUser(result.getUserInSession());
+                             public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
+                                 loggedInUserManager.setLoggedInUser(new UserInSession(result.getUserDetails(),
+                                                                                       result.getPermittedActions()));
                                  callback.taskComplete();
                              }
 
                              @Override
                              public void handleExecutionException(Throwable cause) {
-//                                 callback.taskFailed(cause);
-                                 GWT.log("Task failed");
-                                 callback.taskComplete();
+                                 callback.taskFailed(cause);
+//                                 GWT.log("Task failed");
+//                                 callback.taskComplete();
                              }
                          });
     }

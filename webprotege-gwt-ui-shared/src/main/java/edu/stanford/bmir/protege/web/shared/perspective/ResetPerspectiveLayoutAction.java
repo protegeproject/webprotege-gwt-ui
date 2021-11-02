@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -14,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2017
  */
+@JsonTypeName("webprotege.perspectives.ResetPerspectiveLayout")
 public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
 
     private ProjectId projectId;

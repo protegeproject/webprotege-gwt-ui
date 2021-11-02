@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetApplicationSettings")
+@JsonTypeName("webprotege.application.GetApplicationSettings")
 public abstract class GetApplicationSettingsAction implements Action<GetApplicationSettingsResult> {
 
     @JsonCreator

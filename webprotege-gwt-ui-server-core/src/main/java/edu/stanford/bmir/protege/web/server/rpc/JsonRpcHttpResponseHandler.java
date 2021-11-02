@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.rpc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -34,32 +35,34 @@ public class JsonRpcHttpResponseHandler {
         this.objectMapper = objectMapper;
     }
 
-    public <R extends Result> R getResultForResponse(HttpResponse<String> httpResponse,
-                                                                          UserId userId) throws PermissionDeniedException, ActionExecutionException {
+    public <R extends Result> R getResultForResponse(Action action,
+                                                     HttpResponse<String> httpResponse,
+                                                     UserId userId) throws PermissionDeniedException, ActionExecutionException {
         try {
             if(httpResponse.statusCode() == HttpStatus.SC_UNAUTHORIZED) {
                 throw new PermissionDeniedException(userId);
             }
             if(httpResponse.statusCode() != 200) {
-                throw new ActionExecutionException(new Exception("Internal Server Error: HTTP " + httpResponse.statusCode()));
+                throw new ActionExecutionException("Internal Server Error (" + httpResponse.statusCode() + ")");
             }
 
             var responseBody = httpResponse.body();
             var jsonRpcResponse = objectMapper.readValue(responseBody, JsonRpcResponse.class);
             if(jsonRpcResponse.getError().isPresent()) {
                 var error = jsonRpcResponse.getError().get();
+                logger.error("An exception occurred when executing an action ({}): {} Code: {}", action.getClass().getSimpleName(), error.getMessage(), error.getCode());
                 if(error.getCode() == HTTP_403_FORBIDDEN) {
                     throw new PermissionDeniedException(error.getMessage(),
                                                         userId);
                 }
                 else {
-                    throw new ActionExecutionException(new Exception(error.getMessage()));
+                    throw new ActionExecutionException(error.getMessage() + "(" + error.getCode() + ")");
                 }
             }
             return (R) jsonRpcResponse.getResult().get();
         } catch (JsonProcessingException e) {
-            logger.error("Error whilst deserializing response", e);
-            throw new ActionExecutionException(new Exception("Internal server error"));
+            logger.error("Error whilst deserializing response.  Body: {}", httpResponse.body(), e);
+            throw new ActionExecutionException("Internal server error (JSON Deserialization Error)");
         }
     }
 }

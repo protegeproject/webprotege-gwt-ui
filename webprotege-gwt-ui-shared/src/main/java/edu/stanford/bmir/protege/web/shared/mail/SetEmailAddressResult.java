@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
@@ -12,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/11/2013
  */
+@JsonTypeName("webprotege.users.SetEmailAddress")
 public class SetEmailAddressResult implements Result {
 
     public enum Result {

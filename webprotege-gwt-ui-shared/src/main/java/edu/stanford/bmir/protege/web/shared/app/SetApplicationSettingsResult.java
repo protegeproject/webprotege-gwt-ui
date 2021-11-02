@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetApplicationSettings")
+@JsonTypeName("webprotege.application.SetApplicationSettings")
 public abstract class SetApplicationSettingsResult implements Result {
 
     @JsonCreator

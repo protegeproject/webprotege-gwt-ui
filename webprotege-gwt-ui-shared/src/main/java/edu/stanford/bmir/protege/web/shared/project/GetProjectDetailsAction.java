@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10/03/16
  */
-@JsonTypeName("GetProjectDetails")
+@JsonTypeName("webprotege.projects.GetProjectDetails")
 public class GetProjectDetailsAction implements Action<GetProjectDetailsResult>, HasProjectId {
 
     private ProjectId projectId;

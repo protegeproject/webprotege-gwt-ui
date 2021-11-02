@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetUsage")
+@JsonTypeName("webprotege.entities.GetEntityUsage")
 public abstract class GetUsageResult implements Result, HasProjectId {
 
     @JsonCreator

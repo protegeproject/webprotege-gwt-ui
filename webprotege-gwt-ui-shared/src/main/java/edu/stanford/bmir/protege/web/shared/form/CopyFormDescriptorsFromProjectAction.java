@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CopyFormDescriptorsFromProject")
+@JsonTypeName("webprotege.forms.CopyFormDescriptors")
 public abstract class CopyFormDescriptorsFromProjectAction implements ProjectAction<CopyFormDescriptorsFromProjectResult> {
 
     @Nonnull

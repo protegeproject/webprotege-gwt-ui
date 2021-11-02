@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
@@ -34,8 +30,8 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     @Nonnull
     public ImmutableList<FormId> getSelectedForms() {
         return formTabBarPresenter.getSelectedForm()
-                .map(ImmutableList::of)
-                .orElse(ImmutableList.of());
+                                  .map(ImmutableList::of)
+                                  .orElse(ImmutableList.of());
     }
 
     public enum FormUpdate {
@@ -119,14 +115,13 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
                                   .collect(toImmutableList());
     }
 
-    /** @noinspection OptionalGetWithoutIsPresent*/
     @Nonnull
-    public ImmutableMap<FormId, FormData> getForms() {
-        return formPresenters.entrySet()
-                      .stream()
-                      .filter(e -> e.getValue().getFormData().isPresent())
-                      .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey,
-                                                           e -> e.getValue().getFormData().get()));
+    public FormDataByFormId getFormData() {
+        Map<FormId, FormData> resultMap = new LinkedHashMap<>();
+        formPresenters.forEach((formId, formPresenter) -> {
+            resultMap.put(formId, formPresenter.getFormData().orElse(null));
+        });
+        return new FormDataByFormId(resultMap);
     }
 
     public void expandAllFields() {
@@ -234,8 +229,8 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     @Nonnull
     public ImmutableSet<FormRegionFilter> getRegionFilters() {
         return getFormPresenters().stream()
-                .flatMap(formPresenter -> formPresenter.getFilters().stream())
-                .collect(toImmutableSet());
+                                  .flatMap(formPresenter -> formPresenter.getFilters().stream())
+                                  .collect(toImmutableSet());
     }
 
     @Override

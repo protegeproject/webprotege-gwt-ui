@@ -29,8 +29,7 @@ public class SetOntologyAnnotations_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = SetOntologyAnnotationsResult.create(Collections.emptySet(),
-                                                         mockEventList());
+        var result = SetOntologyAnnotationsResult.create(Collections.emptySet());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
 @AutoValue
-@JsonTypeName("GetManchesterSyntaxFrameCompletions")
+@JsonTypeName("webprotege.frames.GetManchesterSyntaxFrameCompletions")
 public abstract class GetManchesterSyntaxFrameCompletionsAction implements ProjectAction<GetManchesterSyntaxFrameCompletionsResult>, HasSubject<OWLEntity>, HasFreshEntities {
 
     @JsonCreator

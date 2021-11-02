@@ -1,22 +1,16 @@
 package edu.stanford.bmir.protege.web.client.user;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
-import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -91,19 +85,19 @@ public class LoggedInUserManager {
         return isAllowedApplicationAction(action.getActionId());
     }
 
-    private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        dispatchServiceManager.execute(GetCurrentUserInSessionAction.create(), new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorDisplay) {
-            @Override
-            public void handleExecutionException(Throwable cause) {
-                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
-            }
-
-            @Override
-            public void handleSuccess(GetCurrentUserInSessionResult result) {
-                loggedInUser.setLoggedInUser(result.getUserInSession());
-                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onSuccess(result.getUserInSession().getUserDetails()));
-            }
-
-        });
-    }
+//    private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
+//        dispatchServiceManager.execute(GetAuthenticatedUserDetailsAction.create(), new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorDisplay) {
+//            @Override
+//            public void handleExecutionException(Throwable cause) {
+//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
+//            }
+//
+//            @Override
+//            public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
+//                loggedInUser.setLoggedInUser(result.getUserInSession());
+//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onSuccess(result.getUserInSession().getUserDetails()));
+//            }
+//
+//        });
+//    }
 }

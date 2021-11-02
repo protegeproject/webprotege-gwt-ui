@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetIndividuals")
+@JsonTypeName("webprotege.entities.GetIndividuals")
 public abstract class GetIndividualsResult implements Result {
 
     @JsonCreator

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetIndividualsPageContainingIndividual")
+@JsonTypeName("webprotege.entities.GetIndividualsPageContainingIndividual")
 public abstract class GetIndividualsPageContainingIndividualResult implements Result {
 
     @JsonCreator

@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EditComment")
+@JsonTypeName("webprotege.discussions.UpdateComment")
 public abstract class EditCommentAction implements ProjectAction<EditCommentResult> {
 
     @JsonCreator

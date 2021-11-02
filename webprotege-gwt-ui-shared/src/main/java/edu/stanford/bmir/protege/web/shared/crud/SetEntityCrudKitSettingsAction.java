@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
+@JsonTypeName("webprotege.projects.SetEntityCrudKitSettings")
 public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCrudKitSettingsResult> {
 
     private ProjectId projectId;

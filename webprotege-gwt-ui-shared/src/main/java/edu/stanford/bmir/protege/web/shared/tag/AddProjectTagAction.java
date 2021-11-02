@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 18 Mar 2018
  */
-@JsonTypeName("AddProjectTag")
+@JsonTypeName("webprotege.tags.AddProjectTag")
 @AutoValue
 @GwtCompatible(serializable = true)
 public abstract class AddProjectTagAction implements ProjectAction<AddProjectTagResult> {

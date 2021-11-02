@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetProjectChanges")
+@JsonTypeName("webprotege.history.GetProjectChanges")
 public abstract class GetProjectChangesResult implements Result, HasProjectChanges {
 
     @Nonnull

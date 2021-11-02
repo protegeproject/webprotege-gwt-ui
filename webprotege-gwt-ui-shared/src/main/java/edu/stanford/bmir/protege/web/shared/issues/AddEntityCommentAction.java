@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("AddEntityComment")
+@JsonTypeName("webprotege.discussions.AddComment")
 public abstract class AddEntityCommentAction implements ProjectAction<AddEntityCommentResult>, HasProjectId {
 
     @JsonCreator

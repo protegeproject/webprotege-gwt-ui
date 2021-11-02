@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -12,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25/07/15
  */
+@JsonTypeName("webprotege.frames.GetOntologyFrames")
 public class GetOntologyFramesResult implements Result {
 
     private ImmutableList<OntologyFrame> ontologyFrames;

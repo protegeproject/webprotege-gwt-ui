@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetPerspectiveDetails")
+@JsonTypeName("webprotege.perspectives.GetPerspectiveDetails")
 public abstract class GetPerspectiveDetailsAction implements ProjectAction<GetPerspectiveDetailsResult> {
 
     @JsonCreator

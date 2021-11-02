@@ -24,7 +24,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetClassFrame")
+@JsonTypeName("webprotege.frames.GetClassFrame")
 public abstract class GetClassFrameAction implements ProjectAction<GetClassFrameResult>, HasProjectId, HasSubject<OWLClass> {
 
     @JsonCreator

@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
  *     A marker interface for entity frames.
  * </p>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property="type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
         @Type(ClassFrame.class),
         @Type(ObjectPropertyFrame.class),

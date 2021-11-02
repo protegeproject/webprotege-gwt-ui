@@ -70,7 +70,8 @@ public class ApplicationModule {
 
     @Provides
     JsonRpcEndPoint provideJsonRpcEndPoint() {
-        var address = "http://localhost:8082/api/rpc";
+        // API Gateway
+        var address = "http://localhost:7777/api/execute";
         return JsonRpcEndPoint.get(URI.create(address));
     }
 

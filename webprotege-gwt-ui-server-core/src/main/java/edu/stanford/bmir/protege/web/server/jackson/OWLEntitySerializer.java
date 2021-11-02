@@ -21,7 +21,7 @@ public class OWLEntitySerializer extends StdSerializer<OWLEntity> {
     @Override
     public void serialize(OWLEntity entity, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeFieldName("type");
+        jsonGenerator.writeFieldName("@type");
         jsonGenerator.writeObject(entity.getEntityType());
         jsonGenerator.writeFieldName("iri");
         jsonGenerator.writeObject(entity.getIRI());

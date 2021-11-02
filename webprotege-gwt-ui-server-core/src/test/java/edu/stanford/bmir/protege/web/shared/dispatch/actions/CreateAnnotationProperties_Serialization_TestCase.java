@@ -32,8 +32,7 @@ public class CreateAnnotationProperties_Serialization_TestCase {
     @Test
     public void shouldSerializeResult() throws IOException {
         var result = CreateAnnotationPropertiesResult.create(ProjectId.getNil(),
-                                                          ImmutableSet.of(),
-                                                          EventList.create(EventTag.get(2), ImmutableList.of(), EventTag.get(2)));
+                                                          ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

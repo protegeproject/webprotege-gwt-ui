@@ -20,6 +20,6 @@ public class EntityTypeSerializer extends StdSerializer<EntityType> {
 
     @Override
     public void serialize(EntityType entityType, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(entityType.getPrefixedName());
+        jsonGenerator.writeString(entityType.getName());
     }
 }

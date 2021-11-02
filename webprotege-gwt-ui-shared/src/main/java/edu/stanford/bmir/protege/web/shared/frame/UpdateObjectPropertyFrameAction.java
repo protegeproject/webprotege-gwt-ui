@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("UpdateObjectPropertyFrame")
+@JsonTypeName("webprotege.frames.UpdateObjectPropertyFrame")
 public abstract class UpdateObjectPropertyFrameAction extends UpdateFrameAction {
 
 

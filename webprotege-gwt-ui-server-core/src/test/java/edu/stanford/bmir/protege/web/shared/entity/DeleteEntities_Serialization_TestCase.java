@@ -27,8 +27,7 @@ public class DeleteEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = new DeleteEntitiesResult(MockingUtils.mockEventList(),
-                                              ImmutableSet.of());
+        var result = new DeleteEntitiesResult(ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

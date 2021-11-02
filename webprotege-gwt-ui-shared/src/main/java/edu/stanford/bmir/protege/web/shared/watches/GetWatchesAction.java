@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetWatches")
+@JsonTypeName("webprotege.watches.GetWatches")
 public abstract class GetWatchesAction implements ProjectAction<GetWatchesResult>, HasUserId {
 
     @JsonCreator

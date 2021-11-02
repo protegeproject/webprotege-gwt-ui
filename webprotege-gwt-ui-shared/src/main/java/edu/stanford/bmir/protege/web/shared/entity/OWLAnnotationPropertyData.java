@@ -10,11 +10,14 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLAnnotationPropertyData")
+@JsonTypeName("AnnotationPropertyData")
 public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
 
     public static final int BEFORE = -1;
@@ -41,11 +44,19 @@ public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
         return get(property, toShortFormList(shortForms), deprecated);
     }
 
-    @JsonCreator
     public static OWLAnnotationPropertyData get(@JsonProperty("entity") OWLAnnotationProperty property,
                                             @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms,
                                             @JsonProperty("deprecated") boolean deprecated) {
         return new AutoValue_OWLAnnotationPropertyData(shortForms, deprecated, property);
+    }
+
+
+    @JsonCreator
+    private static OWLAnnotationPropertyData get(@JsonProperty("iri") String iri,
+                                                 @JsonProperty(value = "shortForms", defaultValue = "[]") ImmutableList<ShortForm> shortForms,
+                                                 @JsonProperty(value = "deprecated", defaultValue = "false") boolean deprecated) {
+        return new AutoValue_OWLAnnotationPropertyData(shortForms != null ? shortForms : ImmutableList.of(), deprecated, new OWLAnnotationPropertyImpl(
+                IRI.create(iri)));
     }
 
     @Nonnull

@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetDeprecatedEntities")
+@JsonTypeName("webprotege.entities.GetDeprecatedEntities")
 public abstract class GetDeprecatedEntitiesAction implements ProjectAction<GetDeprecatedEntitiesResult> {
 
     @JsonCreator

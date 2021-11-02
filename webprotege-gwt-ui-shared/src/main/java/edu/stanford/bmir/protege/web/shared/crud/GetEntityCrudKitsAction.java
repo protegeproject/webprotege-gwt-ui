@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -15,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
+@JsonTypeName("webprotege.entities.GetEntityCrudKits")
 public class GetEntityCrudKitsAction implements ProjectAction<GetEntityCrudKitsResult> {
 
     private ProjectId projectId;

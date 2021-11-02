@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("DeleteEntityComment")
+@JsonTypeName("webprotege.discussions.DeleteComment")
 public abstract class DeleteEntityCommentResult implements Result {
 
     @JsonCreator

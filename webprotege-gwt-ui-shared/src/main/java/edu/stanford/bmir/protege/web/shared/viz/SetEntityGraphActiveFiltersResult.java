@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetEntityGraphActiveFilters")
+@JsonTypeName("webprotege.graphs.SetEntityGraphActiveFilters")
 public abstract class SetEntityGraphActiveFiltersResult implements Result {
 
     @JsonCreator

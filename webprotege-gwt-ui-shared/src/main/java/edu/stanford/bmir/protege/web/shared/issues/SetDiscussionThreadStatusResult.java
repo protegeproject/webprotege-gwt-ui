@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
@@ -15,7 +16,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2016
  */
-public class SetDiscussionThreadStatusResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.discussions.SetDiscussionThreadStatus")
+public class SetDiscussionThreadStatusResult implements Result {
 
     private ThreadId threadId;
 
@@ -24,8 +26,7 @@ public class SetDiscussionThreadStatusResult implements Result, HasEventList<Pro
     private EventList<ProjectEvent<?>> eventList;
 
     public SetDiscussionThreadStatusResult(@Nonnull ThreadId threadId,
-                                           @Nonnull Status result,
-                                           @Nonnull EventList<ProjectEvent<?>> eventList) {
+                                           @Nonnull Status result) {
         this.threadId = checkNotNull(threadId);
         this.result = checkNotNull(result);
         this.eventList = checkNotNull(eventList);
@@ -43,10 +44,5 @@ public class SetDiscussionThreadStatusResult implements Result, HasEventList<Pro
     @Nonnull
     public Status getResult() {
         return result;
-    }
-
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return eventList;
     }
 }

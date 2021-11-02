@@ -28,8 +28,7 @@ public class EditComment_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = EditCommentResult.create(Optional.empty(),
-                                              MockingUtils.mockEventList());
+        var result = EditCommentResult.create(Optional.empty());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

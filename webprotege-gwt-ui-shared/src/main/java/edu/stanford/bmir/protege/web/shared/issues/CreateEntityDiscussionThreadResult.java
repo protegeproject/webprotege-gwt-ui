@@ -23,17 +23,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateEntityDiscussionThread")
-public abstract class CreateEntityDiscussionThreadResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.discussions.CreateEntityDiscussionThread")
+public abstract class CreateEntityDiscussionThreadResult implements Result {
 
     @JsonCreator
-    public static CreateEntityDiscussionThreadResult create(@JsonProperty("threads") @Nonnull ImmutableList<EntityDiscussionThread> threads,
-                                              @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_CreateEntityDiscussionThreadResult(threads, eventList);
+    public static CreateEntityDiscussionThreadResult create(@JsonProperty("threads") @Nonnull ImmutableList<EntityDiscussionThread> threads) {
+        return new AutoValue_CreateEntityDiscussionThreadResult(threads);
     }
 
     public abstract ImmutableList<EntityDiscussionThread> getThreads();
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
 }

@@ -27,27 +27,18 @@ public class SetManchesterSyntaxFrameResult_TestCase {
 
     private SetManchesterSyntaxFrameResult otherSetManchesterSyntaxFrameResult;
 
-    @Mock
-    private EventList<ProjectEvent<?>> eventList;
-
     private String frameText;
 
     @Before
     public void setUp() throws Exception {
         frameText = "FRAME TEXT";
-        setManchesterSyntaxFrameResult = SetManchesterSyntaxFrameResult.create(eventList, frameText);
-        otherSetManchesterSyntaxFrameResult = SetManchesterSyntaxFrameResult.create(eventList, frameText);
+        setManchesterSyntaxFrameResult = SetManchesterSyntaxFrameResult.create(frameText);
+        otherSetManchesterSyntaxFrameResult = SetManchesterSyntaxFrameResult.create(frameText);
     }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_EventList_IsNull() {
-        SetManchesterSyntaxFrameResult.create(null, frameText);
-    }
-
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_FrameText_IsNull() {
-        SetManchesterSyntaxFrameResult.create(eventList, null);
+        SetManchesterSyntaxFrameResult.create(null);
     }
 
     @Test
@@ -78,10 +69,5 @@ public class SetManchesterSyntaxFrameResult_TestCase {
     @Test
     public void shouldReturnSuppliedFrameText() {
         assertThat(setManchesterSyntaxFrameResult.getFrameText(), is(frameText));
-    }
-
-    @Test
-    public void shouldReturnSuppliedEventList() {
-        assertThat(setManchesterSyntaxFrameResult.getEventList(), is(eventList));
     }
 }

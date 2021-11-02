@@ -22,13 +22,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateAnnotationProperties")
+@JsonTypeName("webprotege.entities.CreateAnnotationProperties")
 public abstract class CreateAnnotationPropertiesResult implements CreateEntitiesInHierarchyResult<OWLAnnotationProperty> {
 
     @JsonCreator
     public static CreateAnnotationPropertiesResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                            @JsonProperty("entities") @Nonnull ImmutableSet<EntityNode> entities,
-                                            @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_CreateAnnotationPropertiesResult(projectId, eventList, entities);
+                                            @JsonProperty("entities") @Nonnull ImmutableSet<EntityNode> entities) {
+        return new AutoValue_CreateAnnotationPropertiesResult(projectId, entities);
     }
 }

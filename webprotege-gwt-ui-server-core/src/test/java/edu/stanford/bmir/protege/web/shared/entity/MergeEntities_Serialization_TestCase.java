@@ -29,7 +29,7 @@ public class MergeEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = MergeEntitiesResult.create(mockEventList());
+        var result = MergeEntitiesResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

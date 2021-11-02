@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -14,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 07/02/15
  */
+@JsonTypeName("webprotege.sharing.SetProjectSharingSettings")
 public class SetProjectSharingSettingsAction implements ProjectAction<SetProjectSharingSettingsResult> {
 
     private ProjectSharingSettings projectSharingSettings;

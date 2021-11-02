@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityGraph")
+@JsonTypeName("webprotege.entities.GetEntityUsage")
 public abstract class GetEntityGraphResult implements Result {
 
     @JsonCreator

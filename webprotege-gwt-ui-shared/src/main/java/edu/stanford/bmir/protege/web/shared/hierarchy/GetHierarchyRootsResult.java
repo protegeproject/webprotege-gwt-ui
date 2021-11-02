@@ -19,7 +19,7 @@ import java.util.List;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetHierarchyRoots")
+@JsonTypeName("webprotege.hierarchies.GetHierarchyRoots")
 public abstract class GetHierarchyRootsResult implements Result {
 
     @NotNull

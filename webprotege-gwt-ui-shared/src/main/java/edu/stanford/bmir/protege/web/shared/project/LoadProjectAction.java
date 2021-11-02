@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2013
  */
-@JsonTypeName("LoadProject")
+@JsonTypeName("webprotege.projects.LoadProject")
 public class LoadProjectAction implements Action<LoadProjectResult>, HasProjectId {
 
     private ProjectId projectId;

@@ -10,11 +10,14 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import uk.ac.manchester.cs.owl.owlapi.OWLNamedIndividualImpl;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLNamedIndividualData")
+@JsonTypeName("NamedIndividualData")
 public abstract class OWLNamedIndividualData extends OWLEntityData {
 
 
@@ -40,11 +43,19 @@ public abstract class OWLNamedIndividualData extends OWLEntityData {
         return get(individual, toShortFormList(shortForms), deprecated);
     }
 
-    @JsonCreator
     public static OWLNamedIndividualData get(@JsonProperty("entity") OWLNamedIndividual individual,
                                             @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms,
                                             @JsonProperty("deprecated") boolean deprecated) {
         return new AutoValue_OWLNamedIndividualData(shortForms, deprecated, individual);
+    }
+
+
+    @JsonCreator
+    private static OWLNamedIndividualData get(@JsonProperty("iri") String iri,
+                                              @JsonProperty(value = "shortForms", defaultValue = "[]") ImmutableList<ShortForm> shortForms,
+                                              @JsonProperty(value = "deprecated", defaultValue = "false") boolean deprecated) {
+        return new AutoValue_OWLNamedIndividualData(shortForms != null ? shortForms : ImmutableList.of(), deprecated, new OWLNamedIndividualImpl(
+                IRI.create(iri)));
     }
 
     @Nonnull

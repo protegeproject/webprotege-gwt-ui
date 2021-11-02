@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.itemlist;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -10,6 +11,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 12/05/15
  */
+@JsonTypeName("webprotege.users.GetUserIdCompletions")
 public class GetUserIdCompletionsAction extends GetPossibleItemCompletionsAction<UserId> {
 
     /**

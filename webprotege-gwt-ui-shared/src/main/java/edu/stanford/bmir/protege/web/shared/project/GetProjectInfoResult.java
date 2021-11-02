@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetProjectInfo")
+@JsonTypeName("webprotege.projects.GetProjectInfo")
 public abstract class GetProjectInfoResult implements Result {
 
     @JsonCreator

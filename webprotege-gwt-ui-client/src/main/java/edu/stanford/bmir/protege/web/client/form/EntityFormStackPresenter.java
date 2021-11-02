@@ -24,12 +24,12 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static java.util.Map.Entry;
 
 /**
  * Matthew Horridge
@@ -116,8 +116,8 @@ public class EntityFormStackPresenter {
     private void handleSelectedFormChanged() {
         ImmutableList<FormId> selectedForms = formStackPresenter.getSelectedForms();
         ImmutableList<FormId> selectedFormsToUpdate = selectedForms.stream()
-                                           .filter(formId -> !pristineDataManager.containsPristineFormData(formId))
-                                           .collect(toImmutableList());
+                                                                   .filter(formId -> !pristineDataManager.containsPristineFormData(formId))
+                                                                   .collect(toImmutableList());
         if (selectedFormsToUpdate.isEmpty()) {
             return;
         }
@@ -185,19 +185,19 @@ public class EntityFormStackPresenter {
         formStackPresenter.collapseAllFields();
     }
 
-    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilters) {
+    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
         currentEntity.ifPresent(entity -> {
-            ImmutableSet<FormPageRequest> pageRequests = ImmutableSet.copyOf(formStackPresenter.getPageRequests());
+            ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(GetEntityFormsAction.create(projectId,
-                                                         entity,
-                                                         pageRequests,
-                                                         langTagFilter,
-                                                         orderings,
-                                                         ImmutableSet.copyOf(formFilters),
-                                                         filters), hasBusy, this::handleGetEntityFormsResult);
+                                                      entity,
+                                                      ImmutableSet.copyOf(pageRequests),
+                                                      langTagFilter,
+                                                      orderings,
+                                                      ImmutableSet.copyOf(formFilter),
+                                                      filters), hasBusy, this::handleGetEntityFormsResult);
         });
         if (!currentEntity.isPresent()) {
             entityDisplay.setDisplayedEntity(Optional.empty());
@@ -269,16 +269,8 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms()
-                                                                          .entrySet()
-                .stream()
-                .filter(e -> pristineDataManager.containsPristineFormData(e.getValue().getFormId()))
-                .collect(toImmutableMap(Entry::getKey, Entry::getValue));
-        if(editedFormData.isEmpty()) {
-            return;
-        }
-        ImmutableSet<FormId> editedFormIds = editedFormData.keySet();
-        GWT.log("[EntityFormStackPresenter] Committing edits for " + editedFormIds);
+        FormDataByFormId editedFormData = formStackPresenter.getFormData();
+        Collection<FormId> editedFormIds = editedFormData.getFormIds();
         ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
         dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
                          // Refresh the pristine data to what was committed

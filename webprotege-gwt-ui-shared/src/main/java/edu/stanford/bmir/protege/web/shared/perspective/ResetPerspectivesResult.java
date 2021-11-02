@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("ResetPerspectives")
+@JsonTypeName("webprotege.perspectives.ResetPerspectives")
 public abstract class ResetPerspectivesResult implements Result {
 
     @JsonCreator

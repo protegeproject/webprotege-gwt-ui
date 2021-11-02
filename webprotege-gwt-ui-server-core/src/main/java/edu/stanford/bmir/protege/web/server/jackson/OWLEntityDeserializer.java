@@ -42,7 +42,7 @@ public class OWLEntityDeserializer<E extends OWLEntity> extends StdDeserializer<
         IRI iri = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String fieldname = jsonParser.getCurrentName();
-            if ("type".equals(fieldname)) {
+            if ("@type".equals(fieldname)) {
                 jsonParser.nextToken();
                 type = jsonParser.readValueAs(EntityType.class);
             }
@@ -62,7 +62,7 @@ public class OWLEntityDeserializer<E extends OWLEntity> extends StdDeserializer<
         }
         else {
             if(type == null) {
-                throw new JsonParseException(jsonParser, "type field is missing");
+                throw new JsonParseException(jsonParser, "@type field is missing");
             }
             else {
                 throw new JsonParseException(jsonParser, "iri field is missing");

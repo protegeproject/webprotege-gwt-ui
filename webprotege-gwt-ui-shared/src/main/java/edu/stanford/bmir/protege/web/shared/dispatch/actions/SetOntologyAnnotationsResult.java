@@ -22,17 +22,13 @@ import java.util.Set;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetOntologyAnnotations")
-public abstract class SetOntologyAnnotationsResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.ontologies.SetOntologyAnnotations")
+public abstract class SetOntologyAnnotationsResult implements Result {
 
     @JsonCreator
-    public static SetOntologyAnnotationsResult create(@JsonProperty("ontologyAnnotations") Set<OWLAnnotation> ontologyAnnotations,
-                                                      @JsonProperty("eventList") EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_SetOntologyAnnotationsResult(ontologyAnnotations, eventList);
+    public static SetOntologyAnnotationsResult create(@JsonProperty("ontologyAnnotations") Set<OWLAnnotation> ontologyAnnotations) {
+        return new AutoValue_SetOntologyAnnotationsResult(ontologyAnnotations);
     }
 
     public abstract Set<OWLAnnotation> getOntologyAnnotations();
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
 }

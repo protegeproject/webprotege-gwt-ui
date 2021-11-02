@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-10-22
  */
+@JsonTypeName("webprotege.forms.DeprecateEntityByFormAction")
 public class DeprecateEntityByFormAction implements ProjectAction<DeprecateEntityByFormResult> {
 
     private OWLEntity entity;

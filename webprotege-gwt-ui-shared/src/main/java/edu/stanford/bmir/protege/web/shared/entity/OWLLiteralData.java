@@ -11,10 +11,9 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -27,12 +26,18 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLLiteralData")
+@JsonTypeName("LiteralData")
 public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexicalForm {
 
-    @JsonCreator
     public static OWLLiteralData get(@JsonProperty("literal") @Nonnull OWLLiteral literal) {
         return new AutoValue_OWLLiteralData(literal);
+    }
+
+    @JsonCreator
+    private static OWLLiteralData get(@JsonProperty("value") String value,
+                                      @JsonProperty("lang") String lang,
+                                      @JsonProperty(value = "datatype") String iri) {
+        return get(new OWLLiteralImpl(value, lang == null ? "" : lang, Optional.ofNullable(iri).map(IRI::create).map(OWLDatatypeImpl::new).orElse(null)));
     }
 
     @JsonIgnore

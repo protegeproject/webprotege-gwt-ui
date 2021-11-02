@@ -86,6 +86,8 @@ public class DefaultLogger implements WebProtegeLogger {
         }
         pw.println();
         pw.println();
+        pw.println(t.getClass().getName());
+        pw.println();
         pw.print("Message: ");
         pw.println(t.getMessage());
         pw.println();

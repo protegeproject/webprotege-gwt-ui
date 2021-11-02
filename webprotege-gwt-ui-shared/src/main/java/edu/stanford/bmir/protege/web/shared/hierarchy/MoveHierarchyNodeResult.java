@@ -16,19 +16,14 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MoveHierarchyNode")
-public abstract class MoveHierarchyNodeResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.hierarchies.MoveHierarchyNode")
+public abstract class MoveHierarchyNodeResult implements Result {
 
 
     @JsonCreator
-    public static MoveHierarchyNodeResult create(@JsonProperty("moved") boolean moved,
-                                                 @JsonProperty("eventList") EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_MoveHierarchyNodeResult(moved, eventList);
+    public static MoveHierarchyNodeResult create(@JsonProperty("moved") boolean moved) {
+        return new AutoValue_MoveHierarchyNodeResult(moved);
     }
 
     public abstract boolean isMoved();
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
-
 }

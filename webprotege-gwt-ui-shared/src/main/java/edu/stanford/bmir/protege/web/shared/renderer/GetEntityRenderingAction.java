@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityRendering")
+@JsonTypeName("webprotege.entities.GetEntityRendering")
 public abstract class GetEntityRenderingAction implements ProjectAction<GetEntityRenderingResult> {
 
     @JsonCreator

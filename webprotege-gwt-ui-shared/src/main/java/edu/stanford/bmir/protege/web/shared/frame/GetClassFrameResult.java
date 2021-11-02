@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetClassFrame")
+@JsonTypeName("webprotege.frames.GetClassFrame")
 public abstract class GetClassFrameResult implements GetObjectResult<ClassFrame> {
 
 

@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.pagination.PageRequest.DEFAUL
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetUsage")
+@JsonTypeName("webprotege.entities.GetEntityUsage")
 public abstract class GetUsageAction implements ProjectAction<GetUsageResult> {
 
     public static GetUsageAction create(OWLEntity subject,

@@ -39,7 +39,7 @@ public class EditAnnotations_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = EditAnnotationsResult.get(MockingUtils.mockEventList());
+        var result = EditAnnotationsResult.get();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

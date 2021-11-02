@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetProjectSharingSettings")
+@JsonTypeName("webprotege.sharing.SetProjectSharingSettings")
 public abstract class SetProjectSharingSettingsResult implements Result {
 
     @JsonCreator

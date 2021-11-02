@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetProjectTags")
+@JsonTypeName("webprotege.tags.SetProjectTags")
 public abstract class SetProjectTagsAction implements ProjectAction<SetProjectTagsResult> {
 
     @JsonCreator

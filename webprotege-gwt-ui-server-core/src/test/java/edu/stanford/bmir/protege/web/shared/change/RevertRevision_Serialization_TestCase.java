@@ -28,8 +28,7 @@ public class RevertRevision_Serialization_TestCase {
     @Test
     public void shouldSerializeResult() throws IOException {
         var result = RevertRevisionResult.create(mockProjectId(),
-                                                 RevisionNumber.getHeadRevisionNumber(),
-                                                 mockEventList());
+                                                 RevisionNumber.getHeadRevisionNumber());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

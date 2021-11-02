@@ -32,8 +32,7 @@ public class CreateDataProperties_Serialization_TestCase {
     @Test
     public void shouldSerializeResult() throws IOException {
         var result = CreateDataPropertiesResult.create(ProjectId.getNil(),
-                                                             ImmutableSet.of(),
-                                                             EventList.create(EventTag.get(2), ImmutableList.of(), EventTag.get(2)));
+                                                             ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

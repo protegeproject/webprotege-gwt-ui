@@ -30,8 +30,7 @@ public class MoveHierarchyNode_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = MoveHierarchyNodeResult.create(true,
-                                                    mockEventList());
+        var result = MoveHierarchyNodeResult.create(true);
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

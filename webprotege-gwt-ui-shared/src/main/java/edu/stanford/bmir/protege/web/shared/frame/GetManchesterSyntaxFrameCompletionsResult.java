@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetManchesterSyntaxFrameCompletions")
+@JsonTypeName("webprotege.frames.GetManchesterSyntaxFrameCompletions")
 public abstract class GetManchesterSyntaxFrameCompletionsResult implements Result {
 
     @JsonCreator

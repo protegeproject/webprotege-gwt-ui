@@ -23,33 +23,25 @@ public class DeleteEntitiesResult_TestCase {
 
     private DeleteEntitiesResult deleteEntitiesResult;
 
-    @Mock
-    private EventList<ProjectEvent<?>> events;
-
     private Set<OWLEntity> deletedEntities;
 
     @Before
     public void setUp() {
         deletedEntities = new HashSet<>();
         deletedEntities.add(mock(OWLEntity.class));
-        deleteEntitiesResult = new DeleteEntitiesResult(events, deletedEntities);
+        deleteEntitiesResult = new DeleteEntitiesResult(deletedEntities);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_events_IsNull() {
-        new DeleteEntitiesResult(null, deletedEntities);
-    }
-
-    @Test
-    public void shouldReturnSupplied_events() {
-        assertThat(deleteEntitiesResult.getEventList(), is(this.events));
+        new DeleteEntitiesResult(deletedEntities);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_deletedEntities_IsNull() {
-        new DeleteEntitiesResult(events, null);
+        new DeleteEntitiesResult(null);
     }
 
     @Test
@@ -70,22 +62,22 @@ public class DeleteEntitiesResult_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(deleteEntitiesResult, is(new DeleteEntitiesResult(events, deletedEntities)));
+        assertThat(deleteEntitiesResult, is(new DeleteEntitiesResult(deletedEntities)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_events() {
-        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(mock(EventList.class), deletedEntities))));
+        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(deletedEntities))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_deletedEntities() {
-        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(events, new HashSet<>()))));
+        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(new HashSet<>()))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(deleteEntitiesResult.hashCode(), is(new DeleteEntitiesResult(events, deletedEntities).hashCode()));
+        assertThat(deleteEntitiesResult.hashCode(), is(new DeleteEntitiesResult(deletedEntities).hashCode()));
     }
 
     @Test

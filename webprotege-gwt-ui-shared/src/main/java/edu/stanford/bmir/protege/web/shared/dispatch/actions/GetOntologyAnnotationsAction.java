@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetOntologyAnnotations")
+@JsonTypeName("webprotege.ontologies.GetOntologyAnnotations")
 public abstract class GetOntologyAnnotationsAction extends AbstractHasProjectAction<GetOntologyAnnotationsResult> {
 
     @JsonCreator

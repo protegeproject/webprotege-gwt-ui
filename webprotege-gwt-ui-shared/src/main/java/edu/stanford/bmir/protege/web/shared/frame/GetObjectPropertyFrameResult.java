@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetObjectPropertyFrame")
+@JsonTypeName("webprotege.frames.GetObjectPropertyFrame")
 public abstract class GetObjectPropertyFrameResult implements GetObjectResult<ObjectPropertyFrame> {
 
     @JsonCreator

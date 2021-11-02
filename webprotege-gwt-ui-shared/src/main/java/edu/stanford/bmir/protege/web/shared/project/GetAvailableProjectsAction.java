@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAvailableProjects")
+@JsonTypeName("webprotege.projects.GetAvailableProjects")
 public abstract class GetAvailableProjectsAction implements Action<GetAvailableProjectsResult> {
 
     @JsonCreator

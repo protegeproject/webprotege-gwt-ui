@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetRootOntologyId")
+@JsonTypeName("webprotege.ontologies.GetRootOntologyId")
 public abstract class GetRootOntologyIdAction extends AbstractHasProjectAction<GetRootOntologyIdResult> {
 
     @JsonCreator

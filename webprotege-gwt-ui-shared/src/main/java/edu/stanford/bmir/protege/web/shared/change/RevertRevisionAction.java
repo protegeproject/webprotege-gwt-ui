@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
-@JsonTypeName("RevertRevision")
+@JsonTypeName("webprotege.history.RevertRevision")
 public class RevertRevisionAction implements ProjectAction<RevertRevisionResult> {
 
     private RevisionNumber revisionNumber;

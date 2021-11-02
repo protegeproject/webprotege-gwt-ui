@@ -18,7 +18,7 @@ import java.util.List;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("ComputeProjectMerge")
+@JsonTypeName("webprotege.projects.ComputeProjectMerge")
 public abstract class ComputeProjectMergeResult implements Result {
 
     public abstract List<DiffElement<String, String>> getDiff();

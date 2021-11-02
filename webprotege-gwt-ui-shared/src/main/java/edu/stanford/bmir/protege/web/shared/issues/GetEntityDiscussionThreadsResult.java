@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityDiscussionThreads")
+@JsonTypeName("webprotege.discussions.GetEntityDiscussionThreads")
 public abstract class GetEntityDiscussionThreadsResult implements Result {
 
     @JsonCreator

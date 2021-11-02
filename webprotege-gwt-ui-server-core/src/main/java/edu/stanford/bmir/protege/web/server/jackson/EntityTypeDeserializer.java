@@ -21,22 +21,22 @@ public class EntityTypeDeserializer extends StdDeserializer<EntityType<?>> {
     @Override
     public EntityType<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         String typeName = jsonParser.getValueAsString();
-        if(EntityType.CLASS.getPrefixedName().equals(typeName)) {
+        if(EntityType.CLASS.getName().equals(typeName)) {
             return EntityType.CLASS;
         }
-        else if(EntityType.OBJECT_PROPERTY.getPrefixedName().equals(typeName)) {
+        else if(EntityType.OBJECT_PROPERTY.getName().equals(typeName)) {
             return EntityType.OBJECT_PROPERTY;
         }
-        else if(EntityType.DATA_PROPERTY.getPrefixedName().equals(typeName)) {
+        else if(EntityType.DATA_PROPERTY.getName().equals(typeName)) {
             return EntityType.DATA_PROPERTY;
         }
-        else if(EntityType.ANNOTATION_PROPERTY.getPrefixedName().equals(typeName)) {
+        else if(EntityType.ANNOTATION_PROPERTY.getName().equals(typeName)) {
             return EntityType.ANNOTATION_PROPERTY;
         }
-        else if(EntityType.NAMED_INDIVIDUAL.getPrefixedName().equals(typeName)) {
+        else if(EntityType.NAMED_INDIVIDUAL.getName().equals(typeName)) {
             return EntityType.NAMED_INDIVIDUAL;
         }
-        else if(EntityType.DATATYPE.getPrefixedName().equals(typeName)) {
+        else if(EntityType.DATATYPE.getName().equals(typeName)) {
             return EntityType.DATATYPE;
         }
         throw new IOException("Unrecognized entity type name: " + typeName);

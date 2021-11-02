@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetObjectPropertyFrame")
+@JsonTypeName("webprotege.frames.GetObjectPropertyFrame")
 public abstract class GetObjectPropertyFrameAction implements ProjectAction<GetObjectPropertyFrameResult>, HasSubject<OWLObjectProperty> {
 
     @JsonCreator

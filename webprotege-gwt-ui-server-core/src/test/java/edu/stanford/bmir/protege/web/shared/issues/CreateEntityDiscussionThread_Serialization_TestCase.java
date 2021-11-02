@@ -31,8 +31,7 @@ public class CreateEntityDiscussionThread_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = CreateEntityDiscussionThreadResult.create(ImmutableList.of(),
-                                                MockingUtils.mockEventList());
+        var result = CreateEntityDiscussionThreadResult.create(ImmutableList.of());
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

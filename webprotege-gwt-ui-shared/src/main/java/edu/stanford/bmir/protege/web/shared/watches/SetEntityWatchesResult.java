@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetEntityWatches")
+@JsonTypeName("webprotege.watches.SetEntityWatches")
 public abstract class SetEntityWatchesResult implements Result, HasEventList<ProjectEvent<?>> {
 
     @JsonCreator

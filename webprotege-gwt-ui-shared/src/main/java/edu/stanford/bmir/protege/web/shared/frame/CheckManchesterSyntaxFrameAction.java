@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-@JsonTypeName("CheckManchesterSyntax")
+@JsonTypeName("webprotege.frames.CheckManchesterSyntax")
 @AutoValue
 @GwtCompatible(serializable = true)
 public abstract class CheckManchesterSyntaxFrameAction implements ProjectAction<CheckManchesterSyntaxFrameResult>, HasSubject<OWLEntity>, HasFreshEntities {

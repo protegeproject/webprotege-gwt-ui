@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
@@ -14,6 +15,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
+@JsonTypeName("webprotege.auth.GetProjectPermissions")
 public class GetProjectPermissionsResult implements Result {
 
     private Set<ActionId> allowedActions;

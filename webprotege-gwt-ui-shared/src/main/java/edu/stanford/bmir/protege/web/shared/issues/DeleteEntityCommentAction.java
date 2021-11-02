@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 Oct 2016
  */
-@JsonTypeName("DeleteEntityComment")
+@JsonTypeName("webprotege.discussions.DeleteComment")
 public class DeleteEntityCommentAction implements ProjectAction<DeleteEntityCommentResult> {
 
     private ProjectId projectId;

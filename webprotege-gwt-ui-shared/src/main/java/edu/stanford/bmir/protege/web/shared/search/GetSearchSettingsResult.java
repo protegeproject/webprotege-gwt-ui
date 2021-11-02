@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetSearchSettings")
+@JsonTypeName("webprotege.search.GetSearchSettings")
 public abstract class GetSearchSettingsResult implements Result {
 
     @JsonCreator

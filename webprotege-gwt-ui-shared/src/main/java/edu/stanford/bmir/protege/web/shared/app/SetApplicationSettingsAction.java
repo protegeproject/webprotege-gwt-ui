@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetApplicationSettings")
+@JsonTypeName("webprotege.application.SetApplicationSettings")
 public abstract class SetApplicationSettingsAction implements Action<SetApplicationSettingsResult> {
 
     @JsonCreator

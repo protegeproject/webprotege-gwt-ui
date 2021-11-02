@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -18,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21 Mar 2018
  */
+@JsonTypeName("webprotege.tags.UpdateEntityTags")
 public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsResult> {
 
     private ProjectId projectId;

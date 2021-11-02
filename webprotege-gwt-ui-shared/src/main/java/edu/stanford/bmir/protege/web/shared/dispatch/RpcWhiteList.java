@@ -336,9 +336,9 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
 
-    GetCurrentUserInSessionAction _GetCurrentUserInSessionAction;
+    GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
 
-    GetCurrentUserInSessionResult _GetCurrentUserInSessionResult;
+    GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
 
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
 
@@ -957,6 +957,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PrimitiveFormControlData primitiveFormControlData;
 
     TagData _TagData;
+
+    FormDataByFormId _FormDataByFormId;
+
+    InternalServerError _InternalServerError;
 
     public RpcWhiteList() {
     }

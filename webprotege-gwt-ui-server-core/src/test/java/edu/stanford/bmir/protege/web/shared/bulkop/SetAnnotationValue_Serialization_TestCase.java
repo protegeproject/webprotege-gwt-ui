@@ -29,7 +29,7 @@ public class SetAnnotationValue_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = SetAnnotationValueResult.create(mockEventList());
+        var result = SetAnnotationValueResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

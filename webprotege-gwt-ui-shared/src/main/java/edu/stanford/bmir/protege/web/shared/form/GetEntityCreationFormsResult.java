@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityCreationForms")
+@JsonTypeName("webprotege.forms.GetEntityCreationForms")
 public abstract class GetEntityCreationFormsResult implements Result {
 
     @JsonCreator

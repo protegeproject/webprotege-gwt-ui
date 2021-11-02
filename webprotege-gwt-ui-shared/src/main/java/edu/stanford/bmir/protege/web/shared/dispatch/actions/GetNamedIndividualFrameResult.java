@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetNamedIndividualFrame")
+@JsonTypeName("webprotege.frames.GetNamedIndividualFrame")
 public abstract class GetNamedIndividualFrameResult implements Result, GetObjectResult<NamedIndividualFrame> {
 
     @JsonCreator

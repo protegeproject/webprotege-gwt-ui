@@ -41,11 +41,8 @@ public class JsonRpcHttpRequestBuilder {
                           .uri(jsonRpcEndPoint.getUri())
                           .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                           .setHeader(CONTENT_TYPE, APPLICATION_JSON);
-
-        executionContext.getUserToken()
-                        .ifPresent(userToken -> {
-                            builder.setHeader("Cookie", "JSESSIONID=" + userToken.getToken());
-                        });
+        var jwt = executionContext.getToken();
+        builder.setHeader("Authorization", "Bearer " + jwt);
         return builder.build();
     }
 }

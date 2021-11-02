@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MergeUploadedProject")
+@JsonTypeName("webprotege.projects.MergeUploadedProject")
 public abstract class MergeUploadedProjectResult implements Result {
 
     @JsonCreator

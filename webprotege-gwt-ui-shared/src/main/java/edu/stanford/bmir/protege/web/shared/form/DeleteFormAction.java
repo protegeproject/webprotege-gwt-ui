@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("DeleteForm")
+@JsonTypeName("webprotege.forms.DeleteForm")
 public abstract class DeleteFormAction implements ProjectAction<DeleteFormResult> {
 
     @JsonCreator

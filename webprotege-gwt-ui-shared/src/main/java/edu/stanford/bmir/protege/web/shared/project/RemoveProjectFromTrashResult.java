@@ -20,11 +20,11 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("RemoveProjectFromTrash")
-public abstract class RemoveProjectFromTrashResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.projects.RemoveProjectFromTrash")
+public abstract class RemoveProjectFromTrashResult implements Result {
 
     @JsonCreator
-    public static RemoveProjectFromTrashResult create(@JsonProperty("eventList") EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_RemoveProjectFromTrashResult(eventList);
+    public static RemoveProjectFromTrashResult create() {
+        return new AutoValue_RemoveProjectFromTrashResult();
     }
 }

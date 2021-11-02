@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("UpdateFormDescriptor")
+@JsonTypeName("webprotege.forms.UpdateFormDescriptor")
 public abstract class UpdateFormDescriptorAction implements ProjectAction<UpdateFormDescriptorResult> {
 
     @JsonCreator

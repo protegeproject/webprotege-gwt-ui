@@ -22,14 +22,13 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CreateEntityFromFormData")
+@JsonTypeName("webprotege.forms.CreateEntityFromFormData")
 public abstract class CreateEntityFromFormDataResult implements AbstractCreateEntityResult<OWLEntity> {
 
     @JsonCreator
     public static CreateEntityFromFormDataResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                        @JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList,
                                                         @JsonProperty("entities") ImmutableCollection<EntityNode> entities) {
 
-        return new AutoValue_CreateEntityFromFormDataResult(projectId, eventList, entities);
+        return new AutoValue_CreateEntityFromFormDataResult(projectId, entities);
     }
 }

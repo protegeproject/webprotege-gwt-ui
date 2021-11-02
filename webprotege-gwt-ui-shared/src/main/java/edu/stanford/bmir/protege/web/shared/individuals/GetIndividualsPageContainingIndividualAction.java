@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.individuals;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
@@ -24,14 +25,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetIndividualsPageContainingIndividual")
+@JsonTypeName("webprotege.entities.GetIndividualsPageContainingIndividual")
 public abstract class GetIndividualsPageContainingIndividualAction implements ProjectAction<GetIndividualsPageContainingIndividualResult> {
 
 
     @JsonCreator
     public static GetIndividualsPageContainingIndividualAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                                       @JsonProperty("individual") @Nonnull OWLNamedIndividual individual,
-                                                                      @JsonProperty("preferredType") @Nonnull Optional<OWLClass> preferredType,
+                                                                      @JsonProperty("preferredType") @Nullable OWLClass preferredType,
                                                                       @JsonProperty("preferredMode") @Nullable InstanceRetrievalMode preferredMode) {
         return new AutoValue_GetIndividualsPageContainingIndividualAction(projectId, individual, preferredType, preferredMode);
     }
@@ -44,7 +45,14 @@ public abstract class GetIndividualsPageContainingIndividualAction implements Pr
     public abstract OWLNamedIndividual getIndividual();
 
     @Nonnull
-    public abstract Optional<OWLClass> getPreferredType();
+    public Optional<OWLClass> getPreferredType() {
+        return Optional.ofNullable(getPreferredTypeInternal());
+    }
+
+    @JsonIgnore
+    @Nullable
+    public abstract OWLClass getPreferredTypeInternal();
+
 
     @Nonnull
     public abstract InstanceRetrievalMode getPreferredMode();

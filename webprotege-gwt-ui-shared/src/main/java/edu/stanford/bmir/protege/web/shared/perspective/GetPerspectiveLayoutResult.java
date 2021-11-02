@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetPerspectiveLayout")
+@JsonTypeName("webprotege.perspectives.GetPerspectiveLayout")
 public abstract class GetPerspectiveLayoutResult implements Result {
 
 

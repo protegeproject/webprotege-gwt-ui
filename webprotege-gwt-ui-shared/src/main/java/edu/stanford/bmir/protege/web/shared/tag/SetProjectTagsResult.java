@@ -22,12 +22,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SetProjectTags")
-public abstract class SetProjectTagsResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.tags.SetProjectTags")
+public abstract class SetProjectTagsResult implements Result {
 
 
     @JsonCreator
-    public static SetProjectTagsResult create(@JsonProperty("eventList") @Nonnull EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_SetProjectTagsResult(eventList);
+    public static SetProjectTagsResult create() {
+        return new AutoValue_SetProjectTagsResult();
     }
 }

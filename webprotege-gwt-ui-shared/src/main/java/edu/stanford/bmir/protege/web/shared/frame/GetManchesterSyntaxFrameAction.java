@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
+@JsonTypeName("webprotege.frames.GetManchesterSyntaxFrame")
 public class GetManchesterSyntaxFrameAction implements ProjectAction<GetManchesterSyntaxFrameResult>, HasSubject<OWLEntity> {
 
     private ProjectId projectId;

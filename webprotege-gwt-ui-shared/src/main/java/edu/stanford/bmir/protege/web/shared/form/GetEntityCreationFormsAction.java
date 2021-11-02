@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityCreationForms")
+@JsonTypeName("webprotege.forms.GetEntityCreationForms")
 public abstract class GetEntityCreationFormsAction implements ProjectAction<GetEntityCreationFormsResult> {
 
     @JsonCreator

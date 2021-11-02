@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetEntityCrudKits")
+@JsonTypeName("webprotege.entities.GetEntityCrudKits")
 public abstract class GetEntityCrudKitsResult implements Result {
 
 

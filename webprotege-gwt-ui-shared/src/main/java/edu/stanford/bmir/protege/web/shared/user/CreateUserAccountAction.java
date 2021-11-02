@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("CreateUserAccount")
+@Deprecated
 public abstract class CreateUserAccountAction implements Action<CreateUserAccountResult> {
 
     @JsonCreator

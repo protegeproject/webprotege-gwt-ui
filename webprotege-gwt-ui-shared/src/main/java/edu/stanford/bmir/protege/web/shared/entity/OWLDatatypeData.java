@@ -10,11 +10,16 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("OWLDatatypeData")
+@JsonTypeName("DatatypeData")
 public abstract class OWLDatatypeData extends OWLEntityData {
 
     public static OWLDatatypeData get(@Nonnull OWLDatatype datatype,
@@ -39,12 +44,21 @@ public abstract class OWLDatatypeData extends OWLEntityData {
         return get(datatype, toShortFormList(shortForms), deprecated);
     }
 
-    @JsonCreator
     public static OWLDatatypeData get(@JsonProperty("entity") OWLDatatype datatype,
                                              @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms,
                                              @JsonProperty("deprecated") boolean deprecated) {
         return new AutoValue_OWLDatatypeData(shortForms, deprecated, datatype);
     }
+
+
+
+    @JsonCreator
+    private static OWLDatatypeData get(@JsonProperty("iri") String iri,
+                                       @JsonProperty(value = "shortForms", defaultValue = "[]") ImmutableList<ShortForm> shortForms,
+                                       @JsonProperty(value = "deprecated", defaultValue = "false") boolean deprecated) {
+        return new AutoValue_OWLDatatypeData(shortForms != null ? shortForms : ImmutableList.of(), deprecated, new OWLDatatypeImpl(IRI.create(iri)));
+    }
+
 
     @Nonnull
     @Override

@@ -22,14 +22,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("UpdateEntityTags")
-public abstract class UpdateEntityTagsResult implements Result, HasEventList<ProjectEvent<?>> {
+@JsonTypeName("webprotege.tags.UpdateEntityTags")
+public abstract class UpdateEntityTagsResult implements Result {
 
     @JsonCreator
-    public static UpdateEntityTagsResult create(@JsonProperty("eventList") EventList<ProjectEvent<?>> eventList) {
-        return new AutoValue_UpdateEntityTagsResult(eventList);
+    public static UpdateEntityTagsResult create() {
+        return new AutoValue_UpdateEntityTagsResult();
     }
-
-    @Override
-    public abstract EventList<ProjectEvent<?>> getEventList();
 }

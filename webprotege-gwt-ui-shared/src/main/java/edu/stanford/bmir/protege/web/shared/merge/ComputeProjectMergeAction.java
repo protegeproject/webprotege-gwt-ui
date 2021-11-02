@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("ComputeProjectMerge")
+@JsonTypeName("webprotege.projects.ComputeProjectMerge")
 public abstract class ComputeProjectMergeAction implements ProjectAction<ComputeProjectMergeResult> {
 
     

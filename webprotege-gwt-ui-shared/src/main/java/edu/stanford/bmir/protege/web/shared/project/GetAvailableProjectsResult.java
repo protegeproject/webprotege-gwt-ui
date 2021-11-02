@@ -20,7 +20,7 @@ import java.util.List;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetAvailableProjects")
+@JsonTypeName("webprotege.projects.GetAvailableProjects")
 public abstract class GetAvailableProjectsResult implements Result {
 
     @JsonCreator

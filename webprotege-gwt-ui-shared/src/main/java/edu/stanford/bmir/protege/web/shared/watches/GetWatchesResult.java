@@ -19,7 +19,7 @@ import java.util.Set;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetWatches")
+@JsonTypeName("webprotege.watches.GetWatches")
 public abstract class GetWatchesResult implements Result {
 
     @JsonCreator

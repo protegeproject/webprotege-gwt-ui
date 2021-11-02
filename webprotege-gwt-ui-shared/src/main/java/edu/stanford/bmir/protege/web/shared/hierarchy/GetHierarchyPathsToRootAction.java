@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetHierarchyPathsToRoot")
+@JsonTypeName("webprotege.hierarchies.GetHierarchyPathsToRoot")
 public abstract class GetHierarchyPathsToRootAction extends AbstractHasProjectAction<GetHierarchyPathsToRootResult> {
 
     @JsonCreator

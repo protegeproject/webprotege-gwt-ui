@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetProjectFormDescriptors")
+@JsonTypeName("webprotege.forms.GetProjectFormDescriptors")
 public abstract class GetProjectFormDescriptorsResult implements Result, HasProjectId {
 
     @JsonCreator

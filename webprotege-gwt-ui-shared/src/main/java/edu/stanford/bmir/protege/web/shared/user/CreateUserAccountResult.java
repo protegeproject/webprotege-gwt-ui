@@ -16,6 +16,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("CreateUserAccount")
+@Deprecated
 public abstract class CreateUserAccountResult implements Result {
 
     @JsonCreator

@@ -24,7 +24,7 @@ import java.util.Optional;
 public abstract class NewProjectSettings implements IsSerializable {
 
 
-    private static final String PROJECT_OWNER = "projectOwner";
+    private static final String PROJECT_OWNER = "owner";
 
     private static final String DISPLAY_NAME = "displayName";
 

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-23
  */
+@JsonTypeName("webprotege.forms.SetProjectFormDescriptors")
 public class SetProjectFormDescriptorsAction implements ProjectAction<SetProjectFormDescriptorsResult> {
 
     private ProjectId projectId;

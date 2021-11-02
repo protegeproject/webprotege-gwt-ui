@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetHierarchySiblings")
+@JsonTypeName("webprotege.hierarchies.GetHierarchySiblings")
 public abstract class GetHierarchySiblingsAction extends AbstractHasProjectAction<GetHierarchySiblingsResult> {
 
     @JsonCreator

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
@@ -16,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-16
  */
+@JsonTypeName("webprotege.forms.SetEntityFormDescriptor")
 public class SetEntityFormDescriptorAction implements ProjectAction<SetEntityFormDescriptorResult> {
 
     private ProjectId projectId;

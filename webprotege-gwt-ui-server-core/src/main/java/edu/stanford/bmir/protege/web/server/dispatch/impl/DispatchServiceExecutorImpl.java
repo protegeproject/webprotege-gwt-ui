@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
+import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,28 +48,41 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     }
 
     @Override
-    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
+    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
             var result = sendRequest(action, executionContext);
+            logger.info("Returning {}", result.toString());
             return DispatchServiceResultContainer.create(result);
         }
         // Rethrow directly
-        catch (PermissionDeniedException | ActionExecutionException e) {
+        catch (PermissionDeniedException e) {
+            logger.error("An exception was thrown when executing {} {}", action.getClass().getName(), e.getMessage(), e);
             throw e;
+        }
+        catch(ActionExecutionException e) {
+            throw new ActionExecutionException(e.getMessage());
         } catch (Exception e) {
             logger.error("An error occurred whilst executing an action", e);
-            throw new ActionExecutionException(e);
+            throw new ActionExecutionException(e.getMessage());
         }
     }
 
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
                                                                   ExecutionContext executionContext) throws IOException, InterruptedException {
+        // Workaround
+        if(action instanceof GetProjectEventsAction) {
+            return (R) GetProjectEventsResult.create(EventList.create(((GetProjectEventsAction) action).getSinceTag(),
+                                                                  ImmutableList.of(),
+                                                                  EventTag.get(100)));
+        }
+
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
-            logger.info("Making request: {}  Headers: {}", httpRequest, httpRequest.headers());
-            var userId = executionContext.getUserId();
+
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
+
+            var userId = executionContext.getUserId();
             if(httpResponse.statusCode() == 400) {
                 logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 if(action instanceof BatchAction) {
@@ -78,10 +95,14 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             else if(httpResponse.statusCode() == 401) {
                 throw new PermissionDeniedException("Permission denied", executionContext.getUserId());
             }
-            return responseHandler.getResultForResponse(httpResponse, userId);
+            else if(httpResponse.statusCode() == 504) {
+                logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
+                throw new ActionExecutionException("Gateway Timeout (505)");
+            }
+            return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
-            logger.error("Could not connect to action execution service", e);
-            throw new ActionExecutionException(new Exception("Internal server error"));
+            logger.error("Could not connect to API Gateway", e);
+            throw new ActionExecutionException("Internal Server Error");
         }
     }
 

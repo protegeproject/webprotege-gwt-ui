@@ -318,7 +318,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                 individual,
                 hierarchyFieldPresenter
                         .getEntity()
-                        .map(ed -> (OWLClass) ed.getEntity()),
+                        .map(ed -> (OWLClass) ed.getEntity()).orElse(null),
                 view.getRetrievalMode());
     }
 

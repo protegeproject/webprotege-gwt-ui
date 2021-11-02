@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("MoveHierarchyNode")
+@JsonTypeName("webprotege.hierarchies.MoveHierarchyNode")
 public abstract class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeResult> {
 
     @JsonCreator

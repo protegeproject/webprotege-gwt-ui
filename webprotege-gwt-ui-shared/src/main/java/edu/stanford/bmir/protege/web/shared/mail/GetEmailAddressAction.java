@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/11/2013
  */
-@JsonTypeName("GetEmailAddress")
+@JsonTypeName("webprotege.users.GetEmailAddress")
 public class GetEmailAddressAction implements Action<GetEmailAddressResult> {
 
     private UserId userId;
