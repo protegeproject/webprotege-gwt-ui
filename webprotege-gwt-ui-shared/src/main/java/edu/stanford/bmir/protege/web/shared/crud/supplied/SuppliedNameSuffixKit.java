@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.supplied;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * Date: 14/08/2013
  */
 @ApplicationSingleton
+@JsonTypeName("SuppliedName")
 public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSettings> {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("SuppliedNameSuffix");

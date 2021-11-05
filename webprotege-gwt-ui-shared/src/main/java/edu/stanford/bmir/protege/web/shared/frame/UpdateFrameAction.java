@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class UpdateFrameAction extends AbstractHasProjectAction<Result> {
+public abstract class UpdateFrameAction<R extends Result> extends AbstractHasProjectAction<R> {
 
     public abstract PlainEntityFrame getFrom();
 

@@ -199,6 +199,11 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetUserProjectEntityGraphSettingsResult.class),
         @JsonSubTypes.Type(UpdateEntityTagsResult.class),
         @JsonSubTypes.Type(UpdateFormDescriptorResult.class),
+        @JsonSubTypes.Type(UpdateClassFrameResult.class),
+        @JsonSubTypes.Type(UpdateObjectPropertyFrameResult.class),
+        @JsonSubTypes.Type(UpdateDataPropertyFrameResult.class),
+        @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
+        @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class)
 })
 public interface Result extends IsSerializable {
 

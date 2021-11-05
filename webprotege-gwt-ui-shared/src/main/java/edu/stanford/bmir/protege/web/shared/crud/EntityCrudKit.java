@@ -1,8 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.Serializable;
@@ -23,6 +29,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     the display name.
  * </p>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+@JsonSubTypes({
+        @JsonSubTypes.Type(OBOIdSuffixKit.class),
+        @JsonSubTypes.Type(UuidSuffixKit.class),
+        @JsonSubTypes.Type(SuppliedNameSuffixKit.class)
+})
 public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> implements HasKitId, HasDisplayName, Serializable, IsSerializable {
 
     private EntityCrudKitId kitId;

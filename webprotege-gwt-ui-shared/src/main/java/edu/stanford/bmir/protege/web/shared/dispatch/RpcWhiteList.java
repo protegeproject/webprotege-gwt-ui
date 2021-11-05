@@ -962,6 +962,16 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     InternalServerError _InternalServerError;
 
+    UpdateClassFrameResult _UpdateClassFrameResult;
+
+    UpdateObjectPropertyFrameResult _UpdateObjectPropertyFrameResult;
+
+    UpdateDataPropertyFrameResult _UpdateDataPropertyFrameResult;
+
+    UpdateAnnotationPropertyFrameResult _UpdateAnnotationPropertyFrameResult;
+
+    UpdateNamedIndividualFrameResult _UpdateNamedIndividualFrameResult;
+
     public RpcWhiteList() {
     }
 }

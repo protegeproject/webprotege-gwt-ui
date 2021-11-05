@@ -117,6 +117,7 @@ public class CreateNewProjectPresenter {
     private void uploadSourcesAndCreateProject(@Nonnull ProjectCreatedHandler projectCreatedHandler) {
         checkNotNull(projectCreatedHandler);
         String postUrl = GWT.getModuleBaseURL() + "submitfile";
+
         view.setFileUploadPostUrl(postUrl);
         ProgressMonitor.get().showProgressMonitor("Uploading sources", "Uploading file");
         view.setSubmitCompleteHandler(event -> {

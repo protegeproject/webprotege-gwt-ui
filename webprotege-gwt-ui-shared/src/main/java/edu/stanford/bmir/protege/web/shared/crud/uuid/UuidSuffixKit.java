@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * Date: 13/08/2013
  */
 @ApplicationSingleton
+@JsonTypeName("Uuid")
 public class UuidSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
 
     public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";

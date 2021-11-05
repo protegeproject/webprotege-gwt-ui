@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.frame.PlainPropertyLiteralVal
         @JsonSubTypes.Type(value = PlainPropertyDatatypeValue.class, name = PROPERTY_DATATYPE_VALUE),
         @JsonSubTypes.Type(value = PlainPropertyAnnotationValue.class, name = PROPERTY_ANNOTATION_VALUE)
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public abstract class PlainPropertyValue {
 
     public static final String PROPERTY = "property";

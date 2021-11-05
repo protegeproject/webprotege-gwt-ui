@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * Date: 14/08/2013
  */
 @ApplicationSingleton
+@JsonTypeName("OboId")
 public class OBOIdSuffixKit extends EntityCrudKit<OboIdSuffixSettings> {
 
     public static final String DEFAULT_PREFIX = "http://purl.obolibrary.org/obo/ONT_";

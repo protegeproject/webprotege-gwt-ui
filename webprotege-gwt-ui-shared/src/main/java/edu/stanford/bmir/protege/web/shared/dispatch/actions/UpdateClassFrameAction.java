@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.frames.UpdateClassFrame")
-public abstract class UpdateClassFrameAction extends UpdateFrameAction {
+public abstract class UpdateClassFrameAction extends UpdateFrameAction<UpdateClassFrameResult> {
 
     @JsonCreator
     public static UpdateClassFrameAction create(@JsonProperty("projectId") ProjectId projectId,

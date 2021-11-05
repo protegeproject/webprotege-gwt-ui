@@ -23,7 +23,7 @@ import java.io.Serializable;
         @Type(PropertyLiteralValue.class),
         @Type(PropertyAnnotationValue.class)
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public abstract class PropertyValue implements Comparable<PropertyValue>, Serializable {
 
 
