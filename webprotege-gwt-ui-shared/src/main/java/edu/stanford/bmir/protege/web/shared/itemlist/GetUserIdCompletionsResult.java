@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.itemlist;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -26,8 +28,9 @@ public class GetUserIdCompletionsResult extends GetPossibleItemCompletionsResult
         super(possibleItemCompletions);
     }
 
-    public static GetUserIdCompletionsResult create(List<UserId> possibleItemCompletions) {
-        return new GetUserIdCompletionsResult(possibleItemCompletions);
+    @JsonCreator
+    public static GetUserIdCompletionsResult create(@JsonProperty("completions") List<UserId> completions) {
+        return new GetUserIdCompletionsResult(completions);
     }
 
     @Override
