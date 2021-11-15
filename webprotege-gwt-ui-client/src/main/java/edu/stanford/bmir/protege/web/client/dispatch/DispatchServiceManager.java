@@ -281,6 +281,9 @@ public class DispatchServiceManager {
             errorMessage.ifPresent(this::displayAlert);
             return;
         }
+        if(throwable instanceof ActionExecutionException) {
+            displayAlert(throwable.getMessage());
+        }
         callback.onFailure(throwable);
     }
 
