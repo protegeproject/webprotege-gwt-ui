@@ -42,10 +42,6 @@ public class JsonRpcHttpResponseHandler {
             if(httpResponse.statusCode() == HttpStatus.SC_UNAUTHORIZED) {
                 throw new PermissionDeniedException(userId);
             }
-            if(httpResponse.statusCode() != 200) {
-                throw new ActionExecutionException("Internal Server Error (" + httpResponse.statusCode() + ")");
-            }
-
             var responseBody = httpResponse.body();
             var jsonRpcResponse = objectMapper.readValue(responseBody, JsonRpcResponse.class);
             if(jsonRpcResponse.getError().isPresent()) {
@@ -56,7 +52,7 @@ public class JsonRpcHttpResponseHandler {
                                                         userId);
                 }
                 else {
-                    throw new ActionExecutionException(error.getMessage() + "(" + error.getCode() + ")");
+                    throw new ActionExecutionException(error.getMessage() + "(" + error.getCode() + "  " + ")");
                 }
             }
             return (R) jsonRpcResponse.getResult().get();

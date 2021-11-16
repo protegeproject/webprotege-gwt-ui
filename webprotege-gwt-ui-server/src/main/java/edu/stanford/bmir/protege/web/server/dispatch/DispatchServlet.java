@@ -44,8 +44,10 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         var principal = (KeycloakPrincipal) request.getUserPrincipal();
         var context = principal.getKeycloakSecurityContext();
         var idToken = context.getIdToken();
-        var executionContext = new ExecutionContext(UserId.valueOf(idToken.getPreferredUsername()),
+        var userId = UserId.valueOf(idToken.getPreferredUsername());
+        var executionContext = new ExecutionContext(userId,
                                                     context.getTokenString());
+        logger.warn("Execution Context: {}", executionContext);
         return executor.execute(action, executionContext);
     }
 

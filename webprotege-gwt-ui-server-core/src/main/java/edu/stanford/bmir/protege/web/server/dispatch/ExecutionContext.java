@@ -47,6 +47,7 @@ public class ExecutionContext {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper("ExecutionContext")
+                .addValue(userId)
                           .toString();
     }
 }
