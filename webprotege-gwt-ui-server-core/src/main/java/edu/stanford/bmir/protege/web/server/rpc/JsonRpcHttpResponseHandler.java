@@ -52,7 +52,7 @@ public class JsonRpcHttpResponseHandler {
                                                         userId);
                 }
                 else {
-                    throw new ActionExecutionException(error.getMessage() + "(" + error.getCode() + "  " + ")");
+                    throw new ActionExecutionException(error.getMessage() + "(" + error.getCode() + ")");
                 }
             }
             return (R) jsonRpcResponse.getResult().get();
