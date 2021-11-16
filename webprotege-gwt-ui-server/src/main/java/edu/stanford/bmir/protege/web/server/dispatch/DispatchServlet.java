@@ -47,7 +47,6 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         var userId = UserId.valueOf(idToken.getPreferredUsername());
         var executionContext = new ExecutionContext(userId,
                                                     context.getTokenString());
-        logger.warn("Execution Context: {}", executionContext);
         return executor.execute(action, executionContext);
     }
 

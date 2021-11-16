@@ -100,7 +100,6 @@ public class FileUploadServlet extends HttpServlet {
                         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
                         item.write(tempFile.toFile());
                         var fileId = storageService.storeUpload(tempFile);
-                        Files.delete(tempFile);
                         long sizeInBytes = Files.size(tempFile);
                         logger.info("File size is {} bytes. Stored uploaded file with ID {}", sizeInBytes, fileId.getId());
                         resp.setStatus(HttpServletResponse.SC_CREATED);

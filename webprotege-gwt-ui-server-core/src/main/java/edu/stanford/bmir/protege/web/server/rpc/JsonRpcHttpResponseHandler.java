@@ -46,7 +46,7 @@ public class JsonRpcHttpResponseHandler {
             var jsonRpcResponse = objectMapper.readValue(responseBody, JsonRpcResponse.class);
             if(jsonRpcResponse.getError().isPresent()) {
                 var error = jsonRpcResponse.getError().get();
-                logger.error("An exception occurred when executing an action ({}): {} Code: {}", action.getClass().getSimpleName(), error.getMessage(), error.getCode());
+                logger.error("An exception occurred when executing an action. Code: {},  Message: {}, UserId: {},  Action: {}", error.getCode(), error.getMessage(), userId, action);
                 if(error.getCode() == HTTP_403_FORBIDDEN) {
                     throw new PermissionDeniedException(error.getMessage(),
                                                         userId);
