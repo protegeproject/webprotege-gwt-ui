@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.csv;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
  *     Identifies a document that exists on a WebProtege server.
  * </p>
  */
-public class DocumentId implements Serializable {
+public class DocumentId implements Serializable, IsSerializable {
 
     private String documentId;
 

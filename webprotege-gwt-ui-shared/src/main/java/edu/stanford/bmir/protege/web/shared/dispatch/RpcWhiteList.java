@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -971,6 +972,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     UpdateAnnotationPropertyFrameResult _UpdateAnnotationPropertyFrameResult;
 
     UpdateNamedIndividualFrameResult _UpdateNamedIndividualFrameResult;
+
+    DocumentId _DocumentId;
 
     public RpcWhiteList() {
     }
