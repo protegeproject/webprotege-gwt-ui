@@ -51,7 +51,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
             var result = sendRequest(action, executionContext);
-            logger.info("Returning {}", result.toString());
             return DispatchServiceResultContainer.create(result);
         }
         // Rethrow directly
@@ -97,7 +96,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             }
             else if(httpResponse.statusCode() == 504) {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                throw new ActionExecutionException("Gateway Timeout (505)");
+                throw new ActionExecutionException("Gateway Timeout (504)");
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
