@@ -1,8 +1,9 @@
 {
   "realm": "webprotege",
-  "auth-server-url": "http://localhost:8180/auth/",
+  "auth-server-url": "http://keycloak:8080/auth/",
   "ssl-required": "external",
   "resource": "webprotege",
   "public-client": true,
-  "confidential-port": 0
+  "confidential-port": 0,
+  "expose-token" : true
 }

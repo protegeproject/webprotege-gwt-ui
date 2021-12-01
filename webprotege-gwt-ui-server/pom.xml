@@ -213,6 +213,7 @@
                         <addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
                         <path>/</path>
                         <uriEncoding>UTF-8</uriEncoding>
+                        <finalName>webprotege</finalName>
                     </configuration>
                 </plugin>
             </plugins>

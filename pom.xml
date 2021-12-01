@@ -256,6 +256,7 @@
                         <style>DETAILED</style>
                         <devmodeArgs>
                             <arg>-style</arg><arg>DETAILED</arg>
+                            <arg>-port</arg><arg>8765</arg>
                         </devmodeArgs>
                     </configuration>
                 </plugin>
@@ -287,8 +288,16 @@
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
                     <configuration>
-                        <port>8888</port>
+                        <port>8080</port>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.keycloak</groupId>
+                            <artifactId>keycloak-tomcat7-adapter-dist</artifactId>
+                            <version>15.0.2</version>
+                            <type>pom</type>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -374,6 +383,7 @@
                     <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
                     <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
                     <classpathScope>compile+runtime</classpathScope>
+                    <port>8765</port>
                 </configuration>
             </plugin>
         </plugins>

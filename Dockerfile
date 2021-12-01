@@ -1,30 +1,13 @@
-FROM maven:3.6.0-jdk-11-slim AS build
+FROM tomcat:9-jdk11-openjdk
 
-RUN apt-get update && \
-    apt-get install -y git mongodb
+ARG keycloakAdapterUrl=https://github.com/keycloak/keycloak/releases/download/15.0.2/keycloak-oidc-tomcat-adapter-15.0.2.zip
 
-COPY . /webprotege
+# Download and unzip the keycloak adapter into the tomcat lib directory and then clean up.
+# Note that the --location flag makes curl follow redirects
+RUN curl --location "${keycloakAdapterUrl}" -o /usr/local/tomcat/lib/kk.zip \
+&& unzip /usr/local/tomcat/lib/kk.zip -d /usr/local/tomcat/lib \
+&& rm /usr/local/tomcat/lib/kk.zip
 
-WORKDIR /webprotege
+COPY ./webprotege-gwt-ui-server/target/webprotege-gwt-ui-server-5.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/webprotege.war
 
-RUN mkdir -p /data/db \
-    && mongod --fork --syslog \
-    && mvn clean package
-
-FROM tomcat:8-jre11-slim
-
-RUN rm -rf /usr/local/tomcat/webapps/* \
-    && mkdir -p /srv/webprotege \
-    && mkdir -p /usr/local/tomcat/webapps/ROOT
-
-WORKDIR /usr/local/tomcat/webapps/ROOT
-
-# Here WEBPROTEGE_VERSION is coming from the custom build args WEBPROTEGE_VERSION=$DOCKER_TAG hooks/build script.
-# Ref: https://docs.docker.com/docker-hub/builds/advanced/
-ARG WEBPROTEGE_VERSION
-
-ENV WEBPROTEGE_VERSION $WEBPROTEGE_VERSION
-COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-${WEBPROTEGE_VERSION}.jar /webprotege-cli.jar
-COPY --from=build /webprotege/webprotege-server/target/webprotege-server-${WEBPROTEGE_VERSION}.war ./webprotege.war
-RUN unzip webprotege.war \
-    && rm webprotege.war
+EXPOSE 8080
