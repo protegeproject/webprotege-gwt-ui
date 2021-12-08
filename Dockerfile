@@ -8,6 +8,6 @@ RUN curl --location "${keycloakAdapterUrl}" -o /usr/local/tomcat/lib/kk.zip \
 && unzip /usr/local/tomcat/lib/kk.zip -d /usr/local/tomcat/lib \
 && rm /usr/local/tomcat/lib/kk.zip
 
-COPY ./webprotege-gwt-ui-server/target/webprotege-gwt-ui-server-5.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/webprotege.war
+COPY ./webprotege-gwt-ui-server/target/webprotege-gwt-ui-server-*.war /usr/local/tomcat/webapps/webprotege.war
 
 EXPOSE 8080
