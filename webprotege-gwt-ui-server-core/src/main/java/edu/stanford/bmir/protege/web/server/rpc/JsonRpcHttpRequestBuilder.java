@@ -45,4 +45,8 @@ public class JsonRpcHttpRequestBuilder {
         builder.setHeader("Authorization", "Bearer " + jwt);
         return builder.build();
     }
+
+    public JsonRpcEndPoint getJsonRpcEndPoint() {
+        return jsonRpcEndPoint;
+    }
 }
