@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.util.stream.Collectors;
 
 /**
  * Author: Matthew Horridge<br>
@@ -92,9 +93,17 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 }
             }
             else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
-                logger.info("Permission denied for {} when executing {}.  User: {}, Token: {}", executionContext.getUserId(),
+                var headers = httpResponse.headers()
+                        .map()
+                        .entrySet()
+                        .stream()
+                        .map(e -> e.getKey() + ": " +  e.getValue())
+                        .collect(Collectors.joining("  &&  "));
+                var reason = httpResponse.headers().firstValue("www-authenticate");
+                logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
                             action.getClass().getSimpleName(),
                             executionContext.getUserId(),
+                            headers,
                             executionContext.getToken());
                 throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
             }
