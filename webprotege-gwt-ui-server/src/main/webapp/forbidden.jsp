@@ -23,7 +23,7 @@
 <body>
 
 <div class="main">
-    <img src="img/protege-blender-monochrome.png" alt="Forbidden" style="width: 100px; position: relative; left: -10px;">
+    <img src="images/protege-blender-monochrome.png" alt="Forbidden" style="width: 100px; position: relative; left: -10px;">
     <h1>Forbidden</h1>
 </div>
 </body>
