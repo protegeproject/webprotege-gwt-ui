@@ -91,9 +91,12 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                           .forEach(a -> logger.error("    Nested action: {}", a));
                 }
             }
-            else if(httpResponse.statusCode() == 401) {
-                logger.info("Permission denied for {} when executing {}", executionContext.getUserId(), action.getClass().getSimpleName());
-                throw new PermissionDeniedException("Permission denied", executionContext.getUserId());
+            else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+                logger.info("Permission denied for {} when executing {}.  User: {}, Token: {}", executionContext.getUserId(),
+                            action.getClass().getSimpleName(),
+                            executionContext.getUserId(),
+                            executionContext.getToken());
+                throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
             }
             else if(httpResponse.statusCode() == 504) {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
