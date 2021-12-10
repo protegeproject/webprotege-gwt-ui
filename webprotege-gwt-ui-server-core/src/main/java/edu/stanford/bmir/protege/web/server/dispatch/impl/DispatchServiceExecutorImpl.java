@@ -92,6 +92,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 }
             }
             else if(httpResponse.statusCode() == 401) {
+                logger.info("Permission denied for {} when executing {}", executionContext.getUserId(), action.getClass().getSimpleName());
                 throw new PermissionDeniedException("Permission denied", executionContext.getUserId());
             }
             else if(httpResponse.statusCode() == 504) {
@@ -100,7 +101,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
-            logger.error("Could not connect to API Gateway", e);
+            logger.error("Could not connect to API Gateway at {}", requestBuilder.getJsonRpcEndPoint().getUri(), e);
             throw new ActionExecutionException("Internal Server Error");
         }
     }
