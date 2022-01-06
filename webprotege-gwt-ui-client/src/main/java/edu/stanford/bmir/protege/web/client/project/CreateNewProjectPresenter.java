@@ -12,9 +12,11 @@ import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.*;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -148,7 +150,9 @@ public class CreateNewProjectPresenter {
 
     private void submitCreateNewProjectRequest(@Nonnull NewProjectSettings newProjectSettings,
                                                @Nonnull ProjectCreatedHandler projectCreatedHandler) {
-        dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings),
+        String uuid = UuidV4.uuidv4();
+        ProjectId newProjectId = ProjectId.get(uuid);
+        dispatchServiceManager.execute(new CreateNewProjectAction(newProjectId, newProjectSettings),
                 new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>(errorDisplay,
                                                                                        progressDisplay) {
                     @Override

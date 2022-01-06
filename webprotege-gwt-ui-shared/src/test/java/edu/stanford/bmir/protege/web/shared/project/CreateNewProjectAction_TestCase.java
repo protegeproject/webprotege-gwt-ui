@@ -28,16 +28,18 @@ public class CreateNewProjectAction_TestCase {
     @Mock
     private NewProjectSettings newProjectSettings;
 
+    ProjectId projectId = ProjectId.getNil();
+
 
     @Before
     public void setUp() throws Exception {
-        action = new CreateNewProjectAction(newProjectSettings);
-        otherAction = new CreateNewProjectAction(newProjectSettings);
+        action = new CreateNewProjectAction(projectId, newProjectSettings);
+        otherAction = new CreateNewProjectAction(projectId, newProjectSettings);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new CreateNewProjectAction(null);
+        new CreateNewProjectAction(projectId, null);
     }
 
     @Test

@@ -17,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.projects.CreateNewProject")
 public class CreateNewProjectAction implements Action<CreateNewProjectResult> {
 
+    private ProjectId newProjectId;
+
     private NewProjectSettings newProjectSettings;
 
     /**
@@ -26,8 +28,14 @@ public class CreateNewProjectAction implements Action<CreateNewProjectResult> {
     }
 
     @JsonCreator
-    public CreateNewProjectAction(@JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings) {
+    public CreateNewProjectAction(@JsonProperty("projectId") ProjectId newProjectId,
+                                  @JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings) {
+        this.newProjectId = newProjectId;
         this.newProjectSettings = checkNotNull(newProjectSettings);
+    }
+
+    public ProjectId getNewProjectId() {
+        return newProjectId;
     }
 
     public NewProjectSettings getNewProjectSettings() {
@@ -36,7 +44,7 @@ public class CreateNewProjectAction implements Action<CreateNewProjectResult> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(newProjectSettings);
+        return Objects.hashCode(newProjectId, newProjectSettings);
     }
 
     @Override
@@ -48,12 +56,13 @@ public class CreateNewProjectAction implements Action<CreateNewProjectResult> {
             return false;
         }
         CreateNewProjectAction other = (CreateNewProjectAction) obj;
-        return this.newProjectSettings.equals(other.newProjectSettings);
+        return this.newProjectId.equals(other.newProjectId) && this.newProjectSettings.equals(other.newProjectSettings);
     }
 
     @Override
     public String toString() {
         return toStringHelper("CreateNewProjectAction")
+                .addValue(newProjectId)
                 .addValue(newProjectSettings)
                 .toString();
     }
