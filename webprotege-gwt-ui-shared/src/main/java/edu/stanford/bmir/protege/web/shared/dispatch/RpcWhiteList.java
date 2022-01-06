@@ -74,6 +74,7 @@ import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
+import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import edu.stanford.protege.widgetmap.shared.node.ParentNode;
@@ -974,6 +975,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     UpdateNamedIndividualFrameResult _UpdateNamedIndividualFrameResult;
 
     DocumentId _DocumentId;
+
+    DropType _DropType;
 
     public RpcWhiteList() {
     }
