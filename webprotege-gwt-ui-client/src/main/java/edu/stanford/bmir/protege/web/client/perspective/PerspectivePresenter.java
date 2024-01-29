@@ -13,9 +13,11 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.shared.node.Node;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
 import static edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutAction.resetPerspective;
@@ -33,6 +36,7 @@ import static edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveL
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/05/2014
  */
 public class PerspectivePresenter implements HasDispose {
+    private final static Logger logger = Logger.getLogger("PerspectivePresenter");
 
     private final ProjectId projectId;
 
@@ -238,14 +242,17 @@ public class PerspectivePresenter implements HasDispose {
         }
 
         public void savePerspective() {
-            GWT.log("[PerspectivePresenter] Saving perspective: " + perspectiveId);
-            GWT.log("[PerspectivePresenter]        perspective: " + node.toString());
+
             UserId currentUserId = loggedInUserProvider.getCurrentUserId();
             if(currentUserId.isGuest()) {
                 return;
             }
             PerspectiveLayout layout = PerspectiveLayout.get(perspectiveId, node);
-            dispatchServiceManager.execute(SetPerspectiveLayoutAction.create(projectId, currentUserId, layout), result -> {});
+            String uuid = UuidV4.uuidv4();
+            SetPerspectiveLayoutAction perspectiveLayoutAction =  SetPerspectiveLayoutAction.create(ChangeRequestId.get(uuid), projectId, currentUserId, layout);
+            logger.info("[PerspectivePresenter] Saving perspective: " + perspectiveId + " and uuid: " + uuid);
+            logger.info("[PerspectivePresenter]        perspective: " + perspectiveLayoutAction);
+            dispatchServiceManager.execute(perspectiveLayoutAction, result -> {});
         }
     }
 }

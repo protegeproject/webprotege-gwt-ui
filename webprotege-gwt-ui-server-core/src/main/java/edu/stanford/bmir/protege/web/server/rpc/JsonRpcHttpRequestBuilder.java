@@ -2,8 +2,11 @@ package edu.stanford.bmir.protege.web.server.rpc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2021-04-09
  */
 public class JsonRpcHttpRequestBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(JsonRpcHttpRequestBuilder.class.getName());
 
     private static final String CONTENT_TYPE = "Content-Type";
 

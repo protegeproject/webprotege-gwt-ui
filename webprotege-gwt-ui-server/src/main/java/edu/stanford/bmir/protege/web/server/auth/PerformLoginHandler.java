@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.session.UserToken;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
