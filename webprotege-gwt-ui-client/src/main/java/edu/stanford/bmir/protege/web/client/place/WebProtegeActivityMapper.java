@@ -36,6 +36,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -43,6 +44,7 @@ import java.util.Optional;
  * 12/02/16
  */
 public class WebProtegeActivityMapper implements ActivityMapper {
+    Logger logger = Logger.getLogger("WebProtegeActivityMapper");
 
     private final ClientApplicationComponent applicationComponent;
 
@@ -132,6 +134,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         GWT.log("[WebProtegeActivityMapper] Map place: " + place);
         if (shouldRedirectToLogin(place)) {
             GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
+            logger.info("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
             loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(loginPresenter);
@@ -165,6 +168,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         if (place instanceof LoginPlace) {
             if (!loggedInUserProvider.getCurrentUserId().isGuest()) {
+                logger.info("[WebProtegeActivityMapper] Schedule to project list after login.");
+
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
             else {
@@ -188,6 +193,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
 
         if (place instanceof ProjectListPlace) {
+            logger.info("[WebProtegeActivityMapper] Route to project list activity");
             return new ProjectListActivity(projectManagerPresenter);
         }
 
