@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.filter;
 
 import edu.stanford.bmir.protege.web.server.app.GwtResourceCachingStrategy;
 import edu.stanford.bmir.protege.web.server.app.ResourceCachingManager;
+import edu.stanford.bmir.protege.web.server.filemanager.ConfigInputStreamSupplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +18,7 @@ import java.io.IOException;
  * Date: 07/01/2013
  */
 public class WebProtegeWebAppFilter implements Filter {
+    private static final Logger logger = LoggerFactory.getLogger(WebProtegeWebAppFilter.class);
 
     public ResourceCachingManager cachingManager = new ResourceCachingManager(new GwtResourceCachingStrategy());
 
@@ -60,6 +64,8 @@ public class WebProtegeWebAppFilter implements Filter {
         if(request instanceof HttpServletRequest) {
             HttpServletRequest httpReq = (HttpServletRequest) request;
             HttpServletResponse httpRes = (HttpServletResponse) response;
+            logger.info("ALEX " + httpReq.getUserPrincipal().toString());
+
             doHttpFilter(httpReq, httpRes);
         }
     }

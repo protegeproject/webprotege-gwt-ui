@@ -51,6 +51,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
+            logger.info("ALEX din executroIMpl " + action.getClass());
             var result = sendRequest(action, executionContext);
             return DispatchServiceResultContainer.create(result);
         }
@@ -70,6 +71,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
                                                                   ExecutionContext executionContext) throws IOException, InterruptedException {
         // Workaround
+        logger.info("ALEX in send request " + action.getClass());
         if(action instanceof GetProjectEventsAction) {
             return (R) GetProjectEventsResult.create(EventList.create(((GetProjectEventsAction) action).getSinceTag(),
                                                                   ImmutableList.of(),
@@ -78,6 +80,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
+            logger.info("ALEX in send request httpRequest " + httpRequest);
 
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());

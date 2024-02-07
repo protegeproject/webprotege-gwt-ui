@@ -7,11 +7,12 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.keycloak.KeycloakPrincipal;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,24 +23,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 20/01/2013
  */
 @ApplicationSingleton
-@SuppressWarnings("GwtServiceNotRegistered")
 public class DispatchServlet extends WebProtegeRemoteServiceServlet implements DispatchService  {
+    private final static java.util.logging.Logger logger = Logger.getLogger("DispatchServiceManager");
 
     @Nonnull
     private final DispatchServiceExecutor executor;
 
-    @Nonnull
-    private static Logger logger = LoggerFactory.getLogger(DispatchServlet.class);
-
     @Inject
     public DispatchServlet(@Nonnull WebProtegeLogger logger,
                            @Nonnull DispatchServiceExecutor executor) {
-        super(logger);
         this.executor = checkNotNull(executor);
     }
 
     @Override
     public DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException {
+        logger.info("Alex tocmai ce intru in execute action " + action.getClass());
         var request = getThreadLocalRequest();
         var principal = (KeycloakPrincipal<?>) request.getUserPrincipal();
         var context = principal.getKeycloakSecurityContext();
@@ -47,6 +45,7 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         var userId = UserId.valueOf(idToken.getPreferredUsername());
         var executionContext = new ExecutionContext(userId,
                                                     context.getTokenString());
+        logger.info("ALEX execute with executor " + executor.getClass() + " principal " + principal + " request " + request + " userid " + userId + "context " + executionContext + " action " + action.getClass()) ;
         return executor.execute(action, executionContext);
     }
 

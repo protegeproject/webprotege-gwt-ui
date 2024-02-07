@@ -19,7 +19,8 @@ public class SetPerspectiveLayout_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetPerspectiveLayoutAction.create(mockProjectId(),
+        var action = SetPerspectiveLayoutAction.create(ChangeRequestId.get("123"),
+                                                        mockProjectId(),
                                                        mockUserId(),
                                                        PerspectiveLayout.get(PerspectiveId.generate()));
         JsonSerializationTestUtil.testSerialization(action, Action.class);

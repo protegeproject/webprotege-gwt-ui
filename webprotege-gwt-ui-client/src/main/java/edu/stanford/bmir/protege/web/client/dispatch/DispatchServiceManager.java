@@ -26,12 +26,14 @@ import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,6 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ApplicationSingleton
 public class DispatchServiceManager {
+    private final static java.util.logging.Logger logger = Logger.getLogger("DispatchServiceManager");
 
     @Nonnull
     private final DispatchServiceAsync async;
@@ -148,6 +151,7 @@ public class DispatchServiceManager {
     private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
         logAction(action);
+        logger.info("ALEX din execAction " + action.getClass() + " async " + async.getClass());
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
 
@@ -160,6 +164,7 @@ public class DispatchServiceManager {
         }
         else {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
+            logger.info("[Dispatch] Executing action " + requestCount + "    " + action);
         }
     }
 
