@@ -49,7 +49,7 @@ public class SetPerspectiveLayoutAction_TestCase {
 
     @Test
     public void shouldReturnSupplied_userId() {
-        assertThat(setPerspectiveLayoutAction.userId(), is(this.userId));
+        assertThat(setPerspectiveLayoutAction.getUserId(), is(this.userId));
     }
 
     @Test(expected = NullPointerException.class)
@@ -59,7 +59,7 @@ public class SetPerspectiveLayoutAction_TestCase {
 
     @Test
     public void shouldReturnSupplied_layout() {
-        assertThat(setPerspectiveLayoutAction.layout(), is(this.layout));
+        assertThat(setPerspectiveLayoutAction.getLayout(), is(this.layout));
     }
 
     @Test

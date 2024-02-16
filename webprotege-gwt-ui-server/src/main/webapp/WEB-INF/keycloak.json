@@ -1,6 +1,6 @@
 {
   "realm": "webprotege",
-  "auth-server-url": "http://keycloak:8080/auth/",
+  "auth-server-url": "http://webprotege-local.edu/auth/",
   "ssl-required": "external",
   "resource": "webprotege",
   "public-client": true,
