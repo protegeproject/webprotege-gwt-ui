@@ -37,7 +37,6 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
 
     @Override
     public DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException {
-        logger.info("Alex tocmai ce intru in execute action " + action.getClass());
         var request = getThreadLocalRequest();
         var principal = (KeycloakPrincipal<?>) request.getUserPrincipal();
         var context = principal.getKeycloakSecurityContext();
@@ -45,7 +44,6 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         var userId = UserId.valueOf(idToken.getPreferredUsername());
         var executionContext = new ExecutionContext(userId,
                                                     context.getTokenString());
-        logger.info("ALEX execute with executor " + executor.getClass() + " principal " + principal + " request " + request + " userid " + userId + "context " + executionContext + " action " + action.getClass()) ;
         return executor.execute(action, executionContext);
     }
 

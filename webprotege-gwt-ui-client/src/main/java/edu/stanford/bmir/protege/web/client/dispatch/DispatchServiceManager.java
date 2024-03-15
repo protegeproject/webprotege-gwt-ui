@@ -151,7 +151,6 @@ public class DispatchServiceManager {
     private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
         logAction(action);
-        logger.info("ALEX din execAction " + action.getClass() + " async " + async.getClass());
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
 

@@ -64,7 +64,6 @@ public class WebProtegeWebAppFilter implements Filter {
         if(request instanceof HttpServletRequest) {
             HttpServletRequest httpReq = (HttpServletRequest) request;
             HttpServletResponse httpRes = (HttpServletResponse) response;
-            logger.info("ALEX " + httpReq.getUserPrincipal().toString());
 
             doHttpFilter(httpReq, httpRes);
         }

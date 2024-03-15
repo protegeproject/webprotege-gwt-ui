@@ -47,8 +47,6 @@ public class JsonRpcHttpRequestBuilder {
                           .setHeader(CONTENT_TYPE, APPLICATION_JSON);
         var jwt = executionContext.getToken();
         builder.setHeader("Authorization", "Bearer " + jwt);
-        logger.info("ALEX action " + action.getClass() + " body " + requestBody + " uri " + jsonRpcEndPoint.getUri() + " builder "  +builder);
-
         return builder.build();
     }
 
