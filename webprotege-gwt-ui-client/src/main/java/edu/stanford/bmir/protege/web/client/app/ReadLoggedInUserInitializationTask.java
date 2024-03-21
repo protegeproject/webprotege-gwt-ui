@@ -11,11 +11,13 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetAuthenticatedUse
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 22 Dec 2017
  */
 public class ReadLoggedInUserInitializationTask implements ApplicationInitManager.ApplicationInitializationTask {
+    Logger logger = Logger.getLogger("ReadLoggedInUserInitializationTask");
 
     @Nonnull
     private final LoggedInUserManager loggedInUserManager;
@@ -41,6 +43,8 @@ public class ReadLoggedInUserInitializationTask implements ApplicationInitManage
                          new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorMessageDisplay) {
                              @Override
                              public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
+                                 logger.info("[ReadLoggedInUserInitializationTask] set logged user: " + result);
+
                                  loggedInUserManager.setLoggedInUser(new UserInSession(result.getUserDetails(),
                                                                                        result.getPermittedActions()));
                                  callback.taskComplete();

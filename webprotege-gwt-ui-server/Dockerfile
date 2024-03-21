@@ -9,5 +9,7 @@ RUN curl --location "${keycloakAdapterUrl}" -o /usr/local/tomcat/lib/kk.zip \
 && rm /usr/local/tomcat/lib/kk.zip
 
 COPY ./target/webprotege-gwt-ui-server-*.war /usr/local/tomcat/webapps/webprotege.war
+COPY logging.properties $CATALINA_HOME/conf/logging.properties
+
 
 EXPOSE 8080

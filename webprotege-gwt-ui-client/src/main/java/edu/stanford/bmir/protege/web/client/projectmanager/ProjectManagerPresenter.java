@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
@@ -43,6 +44,7 @@ import static java.util.Comparator.*;
  */
 @ApplicationSingleton
 public class ProjectManagerPresenter implements Presenter {
+    Logger logger = Logger.getLogger("ProjectManagerPresenter");
 
     private final DispatchServiceManager dispatchServiceManager;
 

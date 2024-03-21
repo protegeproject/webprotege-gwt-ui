@@ -53,9 +53,9 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     protected ListBox sortByListBox;
 
 
-    private CreateProjectRequestHandler createProjectRequestHandler = () -> {};
+    private CreateProjectRequestHandler createProjectRequestHandler = () -> {throw new RuntimeException("Not implemented");};
 
-    private ViewFilterChangedHandler viewFilterChangedHandler = () -> {};
+    private ViewFilterChangedHandler viewFilterChangedHandler = () -> {throw new RuntimeException("Not implemented");};
 
     @Inject
     public ProjectManagerViewImpl(AvailableProjectsListViewImpl projectListView) {

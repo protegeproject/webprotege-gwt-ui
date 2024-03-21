@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,6 +44,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ApplicationSingleton
 public class DispatchServiceManager {
+    private final static java.util.logging.Logger logger = Logger.getLogger("DispatchServiceManager");
 
     @Nonnull
     private final DispatchServiceAsync async;
@@ -160,6 +162,7 @@ public class DispatchServiceManager {
         }
         else {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
+            logger.info("[Dispatch] Executing action " + requestCount + "    " + action);
         }
     }
 

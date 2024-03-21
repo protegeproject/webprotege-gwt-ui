@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -15,9 +17,10 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class DictionaryLanguageUsage {
 
-    public static DictionaryLanguageUsage get(@Nonnull DictionaryLanguage language,
-                                              int referenceCount) {
-        return new AutoValue_DictionaryLanguageUsage(language, referenceCount);
+    @JsonCreator
+    public static DictionaryLanguageUsage get(@Nonnull @JsonProperty("dictionaryLanguage") DictionaryLanguage dictionaryLanguage,
+                                              @JsonProperty("referenceCount") int referenceCount) {
+        return new AutoValue_DictionaryLanguageUsage(dictionaryLanguage, referenceCount);
     }
 
     @Nonnull
