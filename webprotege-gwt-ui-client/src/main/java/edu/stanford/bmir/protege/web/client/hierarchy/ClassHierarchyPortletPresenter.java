@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdModal;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -51,11 +52,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final SearchModal searchModal;
 
+    @Nonnull
+    private final SearchIcdModal searchIcdModal;
+
     private final Messages messages;
 
     private final EntityHierarchyModel hierarchyModel;
     @Nonnull
     private final EntityNodeHtmlRenderer renderer;
+
+    private final UIAction searchActionIcd;
 
     private final UIAction createClassAction;
 
@@ -100,6 +106,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
                                           @Nonnull SearchModal searchModal,
+                                          @Nonnull SearchIcdModal searchIcdModal,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
@@ -117,6 +124,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull DispatchServiceManager dispatch) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.searchModal = searchModal;
+        this.searchIcdModal = searchIcdModal;
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
         this.contextMenuPresenterFactory = checkNotNull(contextMenuPresenterFactory);
@@ -132,6 +140,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                                    "wp-btn-g--delete-class wp-btn-g--delete",
                                                    this::handleDelete);
 
+        this.searchActionIcd = new PortletAction(messages.searchIcd(),
+                "wp-btn-g--search",
+                this::handleIcdSearch);
         this.searchAction = new PortletAction(messages.search(),
                                               "wp-btn-g--search",
                                               this::handleSearch);
@@ -163,6 +174,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                              @Nonnull WebProtegeEventBus eventBus) {
         portletUi.addAction(createClassAction);
         portletUi.addAction(deleteClassAction);
+        portletUi.addAction(searchActionIcd);
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);
@@ -247,6 +259,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private void handleSearch() {
         searchModal.setEntityTypes(CLASS);
         searchModal.showModal();
+    }
+
+    private void handleIcdSearch() {
+        searchIcdModal.setEntityTypes(CLASS);
+        searchIcdModal.showModal();
     }
 
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {

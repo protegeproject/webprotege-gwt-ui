@@ -816,6 +816,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search")
     String search();
 
+    @DefaultMessage("Search Icd")
+    @Key("searchIcd")
+    String searchIcd();
+
     
     @DefaultMessage("Search for Class")
     @Key("search.class")
