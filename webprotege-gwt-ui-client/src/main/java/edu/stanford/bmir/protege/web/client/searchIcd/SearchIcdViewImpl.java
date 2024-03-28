@@ -70,26 +70,31 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         element.setPropertyString("autocorrect", "off");
         element.setPropertyString("autocapitalize", "off");
         element.setPropertyString("spellcheck", "off");
-
+        element.setPropertyString("data-ctw-ino", "1");
         ectElement.getElement().setAttribute("data-ctw-ino", "1");
     }
 
-    public native void initEct(); /*-{
+    public native void logSomething() /*-{
+         console.log("i'm here in initECT");
+         $wnd.console.log("i'm here in initECT");
 
-        console.log("i'm here in initECT");
+    }-*/;
 
-        const mySettings = {
+    public native void initEct() /*-{
+        $wnd.console.log("i'm here in initECT");
+        $wnd.console.log("ECT2 este " + $wnd.ECT);
+
+
+        $wnd.ECT.Handler.configure({
             apiServerUrl: "https://icd11restapi-developer-test.azurewebsites.net",
             simplifiedMode: false,
             popupMode: false,
             icdLinearization: "foundation",
-            autoBind: false,
+            autoBind: true,
             apiSecured: false
-        };
+        });
 
-// configure the ECT Handler
-        ECT.Handler.configure(mySettings);
-    }-*/
+    }-*/;
 
     @UiHandler("searchStringField")
     protected void handleSearchStringFileKeyUp(KeyUpEvent event) {
@@ -154,19 +159,21 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     }
 
     @Override
-    protected void onAttach() {
-        super.onAttach();
-        searchStringField.setFocus(true);
-        initEct();
-        logger.info("sunt apelat searchview");
-    }
-
-    @Override
     public void setBusy(boolean busy) {
         busyView.setVisible(busy);
     }
 
     interface SearchViewIcdImplUiBinder extends UiBinder<HTMLPanel, SearchIcdViewImpl> {
 
+    }
+
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        GWT.log("SUnt apelat");
+        logger.info("Sunt mega apelat in on load");
+        initEct();
+        logger.info("sunt apelat searchview");
     }
 }
