@@ -29,7 +29,7 @@ import java.util.Optional;
 @JsonTypeName("LiteralData")
 public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexicalForm {
 
-    public static OWLLiteralData get(@JsonProperty("literal") @Nonnull OWLLiteral literal) {
+    public static OWLLiteralData get(@JsonProperty("value") @Nonnull OWLLiteral literal) {
         return new AutoValue_OWLLiteralData(literal);
     }
 
@@ -45,13 +45,24 @@ public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexi
     @Override
     public abstract OWLLiteral getObject();
 
+    @JsonProperty("value")
+    public String getValue() {
+        return getLiteral().getLiteral();
+    }
+
+    @JsonProperty("datatype")
+    public String getDatatype() {
+        OWLDatatype datatype = getLiteral().getDatatype();
+        return datatype.getIRI().toString();
+    }
+
     @JsonIgnore
     @Override
     public PrimitiveType getType() {
         return PrimitiveType.LITERAL;
     }
 
-
+    @JsonIgnore
     public OWLLiteral getLiteral() {
         return getObject();
     }
@@ -80,7 +91,6 @@ public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexi
         return getLiteral().hasLang();
     }
 
-    @JsonIgnore
     @Nonnull
     public String getLang() {
         return getLiteral().getLang();

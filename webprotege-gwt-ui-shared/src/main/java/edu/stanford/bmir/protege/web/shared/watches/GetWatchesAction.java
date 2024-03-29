@@ -48,5 +48,6 @@ public abstract class GetWatchesAction implements ProjectAction<GetWatchesResult
     @Override
     public abstract UserId getUserId();
 
+    @JsonProperty("entity")
     public abstract OWLEntity getEntity();
 }

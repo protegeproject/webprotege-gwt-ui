@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.itemlist;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public abstract class GetPossibleItemCompletionsResult<T> implements Result {
         this.possibleItemCompletions = new ArrayList<>(checkNotNull(possibleItemCompletions));
     }
 
+    @JsonProperty("completions")
     public List<T> getPossibleItemCompletions() {
         return new ArrayList<>(possibleItemCompletions);
     }

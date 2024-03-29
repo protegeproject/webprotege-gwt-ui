@@ -63,11 +63,6 @@ public class RevertRevisionResult_TestCase {
     }
 
     @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_eventList() {
-        MatcherAssert.assertThat(revertRevisionResult, Matchers.is(Matchers.not(RevertRevisionResult.create(projectId, revisionNumber))));
-    }
-
-    @Test
     public void shouldBeEqualToOtherHashCode() {
         MatcherAssert.assertThat(revertRevisionResult.hashCode(), Matchers.is(RevertRevisionResult.create(projectId, revisionNumber).hashCode()));
     }

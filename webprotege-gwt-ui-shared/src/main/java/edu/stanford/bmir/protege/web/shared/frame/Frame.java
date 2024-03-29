@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * </p>
  */
 @JsonSubTypes(@JsonSubTypes.Type(EntityFrame.class))
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Frame<S> extends IsSerializable {
 
     /**

@@ -34,12 +34,6 @@ public class DeleteEntitiesResult_TestCase {
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_events_IsNull() {
-        new DeleteEntitiesResult(deletedEntities);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_deletedEntities_IsNull() {
         new DeleteEntitiesResult(null);
     }
@@ -63,11 +57,6 @@ public class DeleteEntitiesResult_TestCase {
     @Test
     public void shouldBeEqualToOther() {
         assertThat(deleteEntitiesResult, is(new DeleteEntitiesResult(deletedEntities)));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_events() {
-        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(deletedEntities))));
     }
 
     @Test
