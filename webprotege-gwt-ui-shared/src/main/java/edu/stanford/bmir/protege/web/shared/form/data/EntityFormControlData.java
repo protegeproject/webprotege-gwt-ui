@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.IRI;
@@ -18,14 +18,27 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("entity")
 public abstract class EntityFormControlData implements PrimitiveFormControlData {
 
     public static EntityFormControlData get(@Nonnull OWLEntity entity) {
         return new AutoValue_EntityFormControlData(entity);
     }
 
-    @JsonValue
     @Nonnull
+    @JsonProperty("@type")
+    String type() {
+        return getEntity().getEntityType().getPrefixedName();
+    }
+
+    @Nonnull
+    @JsonProperty("iri")
+    String iri() {
+        return getEntity().getIRI().toString();
+    }
+
+    @Nonnull
+    @JsonIgnore
     public abstract OWLEntity getEntity();
 
     @Nonnull

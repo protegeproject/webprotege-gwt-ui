@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,11 +35,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServlet {
 
-    public final WebProtegeLogger logger;
 
-    public WebProtegeRemoteServiceServlet(@Nonnull  WebProtegeLogger logger) {
-        this.logger = checkNotNull(logger);
-    }
+    private final static java.util.logging.Logger logger = Logger.getLogger("WebProtegeRemoteServiceServlet");
 
     /**
      * Gets the userId for the client associated with the current thread local request.
@@ -75,7 +73,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        logger.error(e, getUserInSession(), request);
+        logger.info(e.getMessage());
         if(e instanceof SerializationException) {
             HttpServletResponse response = getThreadLocalResponse();
             response.reset();
@@ -83,7 +81,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
                 response.setContentType("text/plain");
                 response.sendError(StatusCodes.UPDATED, "WebProtege has been updated. Please refresh your browser");
             } catch (IOException ex) {
-                logger.error(ex);
+                logger.info(ex.getMessage());
             }
         }
         else {

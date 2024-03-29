@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -91,4 +92,9 @@ public abstract class OWLEntityData extends OWLPrimitiveData {
     }
 
     public abstract boolean isDeprecated();
+
+    @JsonProperty("iri")
+    public IRI getIri() {
+        return getEntity().getIRI();
+    }
 }

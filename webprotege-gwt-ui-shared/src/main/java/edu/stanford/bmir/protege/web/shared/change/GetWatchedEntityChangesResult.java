@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/02/15
  */
-@JsonTypeName("webprotege.watches.GetWatches")
+@JsonTypeName("webprotege.watches.GetWatchedEntities")
 public class GetWatchedEntityChangesResult implements Result, HasProjectChanges {
 
     private Page<ProjectChange> changes;

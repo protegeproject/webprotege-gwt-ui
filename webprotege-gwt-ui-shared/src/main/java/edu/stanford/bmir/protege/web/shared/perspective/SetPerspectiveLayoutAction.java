@@ -2,11 +2,14 @@ package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+
+import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 28/02/16
  */
 @JsonTypeName("webprotege.perspectives.SetPerspectiveLayout")
-public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveLayoutResult> {
+public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveLayoutResult>, Serializable, IsSerializable {
 
     private ProjectId projectId;
 
@@ -25,20 +28,26 @@ public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveL
 
     private PerspectiveLayout layout;
 
+    private ChangeRequestId changeRequestId;
+
     /**
      * For serialization only
      */
     private SetPerspectiveLayoutAction() {
     }
 
-    private SetPerspectiveLayoutAction(ProjectId projectId, UserId userId, PerspectiveLayout layout) {
+    private SetPerspectiveLayoutAction(ChangeRequestId changeRequestId, ProjectId projectId, UserId userId, PerspectiveLayout layout) {
+        this.changeRequestId = checkNotNull(changeRequestId);
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.layout = checkNotNull(layout);
     }
 
     public static SetPerspectiveLayoutAction create(ProjectId projectId, UserId userId, PerspectiveLayout layout) {
-        return new SetPerspectiveLayoutAction(projectId, userId, layout);
+        return new SetPerspectiveLayoutAction(ChangeRequestId.get("123"), projectId, userId, layout);
+    }
+    public static SetPerspectiveLayoutAction create(ChangeRequestId changeRequestId, ProjectId projectId, UserId userId, PerspectiveLayout layout) {
+        return new SetPerspectiveLayoutAction(changeRequestId, projectId, userId, layout);
     }
 
     @Nonnull
@@ -52,6 +61,14 @@ public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveL
 
     public PerspectiveLayout getLayout() {
         return layout;
+    }
+
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
+    }
+
+    public void setChangeRequestId(ChangeRequestId changeRequestId) {
+        this.changeRequestId = changeRequestId;
     }
 
     @Override
@@ -70,6 +87,7 @@ public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveL
         SetPerspectiveLayoutAction other = (SetPerspectiveLayoutAction) obj;
         return this.projectId.equals(other.projectId)
                 && this.userId.equals(other.userId)
+                && this.changeRequestId.equals(other.changeRequestId)
                 && this.layout.equals(other.layout);
     }
 
@@ -80,6 +98,7 @@ public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveL
                 .addValue(projectId)
                 .addValue(userId)
                 .addValue(layout)
+                .addValue(changeRequestId)
                 .toString();
     }
 }

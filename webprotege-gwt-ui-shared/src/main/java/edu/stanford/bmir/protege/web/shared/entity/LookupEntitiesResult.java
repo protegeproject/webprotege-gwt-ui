@@ -38,5 +38,6 @@ public abstract class LookupEntitiesResult implements Result {
      * Gets the entity matches.
      * @return The EntityLookupResult that describes the matched entities.  Not {@code null}.
      */
+    @JsonProperty("results")
     public abstract List<EntityLookupResult> getEntityLookupResults();
 }
