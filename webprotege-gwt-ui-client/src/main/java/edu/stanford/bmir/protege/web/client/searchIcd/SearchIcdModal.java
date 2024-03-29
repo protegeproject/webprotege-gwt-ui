@@ -59,6 +59,7 @@ public class SearchIcdModal {
         });
         searchIcdPresenter.start();
         searchIcdPresenter.setAcceptKeyHandler(modalPresenter::accept);
+        searchIcdPresenter.setSearchResultChosenHandler(result -> modalPresenter.accept());
         modalManager.showModal(modalPresenter);
     }
 }

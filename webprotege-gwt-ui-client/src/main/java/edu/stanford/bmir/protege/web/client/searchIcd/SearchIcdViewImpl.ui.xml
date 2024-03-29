@@ -46,16 +46,24 @@
             flex-direction: row;
         }
 
+        @external .ctw-window;
+        .ctw-window {}
+
         @external .ctw-eb-window;
         .ctw-eb-window {}
+
+        @external .ctw-input;
+        .ctw-input {}
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}"
-                                 addStyleNames="{style.searchField}"/>
+                                 addStyleNames="{style.searchField} {style.ctw-input}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
 
-        <g:HTMLPanel addStyleNames="{style.ctw-eb-window}" ui:field="ectElement">
+        <g:TextArea ui:field="selection"></g:TextArea>
+
+        <g:HTMLPanel addStyleNames="{style.ctw-window}" ui:field="ectElement">
         </g:HTMLPanel>
 
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>

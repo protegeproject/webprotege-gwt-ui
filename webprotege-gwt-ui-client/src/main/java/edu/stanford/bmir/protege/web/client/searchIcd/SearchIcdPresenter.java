@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
@@ -74,6 +75,7 @@ public class SearchIcdPresenter implements HasInitialFocusable {
 
     public void start() {
         view.setSearchStringChangedHandler(() -> {
+//            triggerSearch(view.getSearchString());
             restartSearchTimer();
         });
         view.setAcceptKeyHandler(this::handleAcceptKey);
@@ -121,11 +123,7 @@ public class SearchIcdPresenter implements HasInitialFocusable {
     }
 
     private void performSearch() {
-        if(view.getSearchString().length() < 1) {
-            triggerSearch(view.getSearchString());
-//            ect.triggerSearch("1", view.getSearchString());
-//            ECT.triggerSearch("1", view.getSearchString());
-        }
+//        triggerSearch(view.getSearchString());
     }
 
     private void displaySearchResult(PerformEntitySearchResult result) {
@@ -134,7 +132,8 @@ public class SearchIcdPresenter implements HasInitialFocusable {
         }
     }
 
-    public static native void triggerSearch(String query) /*-{
+    public native void triggerSearch(String query) /*-{
+    $wnd.alert("s-a facut search");
         $wnd.ECT.Handler.search("1", query);
     }-*/;
 

@@ -10,10 +10,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
+import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 
 import javax.annotation.Nonnull;
@@ -62,6 +65,14 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     @UiField
     HTMLPanel ectElement;
 
+    @UiField
+    TextArea selection;
+
+
+    private SearchIcdResultChosenHandler searchResultChosenHandler;
+
+    private String selectedURI = "";
+
     @Inject
     public SearchIcdViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -70,9 +81,23 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         element.setPropertyString("autocorrect", "off");
         element.setPropertyString("autocapitalize", "off");
         element.setPropertyString("spellcheck", "off");
-        element.setPropertyString("data-ctw-ino", "1");
+        element.setAttribute("data-ctw-ino", "1");
         ectElement.getElement().setAttribute("data-ctw-ino", "1");
+
+        selection.getElement().setId("selectionTextArea");
     }
+
+    public void setSelection(String selection){
+        this.selectedURI = selection;
+        this.selection.setText(selection);
+    }
+
+    public native void exportSetSelection() /*-{
+        var that = this;
+        $wnd.setSelection = $entry(function(code) {
+            that.@SearchIcdViewImpl::setSelection(Ljava/lang/String;)(code);
+        });
+    }-*/;
 
     public native void logSomething() /*-{
          console.log("i'm here in initECT");
@@ -84,16 +109,31 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         $wnd.console.log("i'm here in initECT");
         $wnd.console.log("ECT2 este " + $wnd.ECT);
 
-
-        $wnd.ECT.Handler.configure({
+        var settings = {
             apiServerUrl: "https://icd11restapi-developer-test.azurewebsites.net",
             simplifiedMode: false,
             popupMode: false,
             icdLinearization: "foundation",
-            autoBind: true,
+            autoBind: false,
             apiSecured: false
-        });
+        };
 
+        var callbacks ={
+            selectedEntityFunction: function(selectedEntity)  {
+            // paste the code into the <input>
+                $wnd.console.log("Selected iNo: " + selectedEntity.iNo + " selectedEntity: " + selectedEntity.title +" selectedId: "+selectedEntity.id +" selectedUri: "+selectedEntity.uri + " selectedEntity: "+selectedEntity);
+                $wnd.setSelection(selectedEntity.uri);
+        }
+    };
+
+        $wnd.ECT.Handler.configure(settings,callbacks);
+
+        $wnd.ECT.Handler.bind("1");
+
+    }-*/;
+
+    public native void triggerSearch(String query) /*-{
+        $wnd.ECT.Handler.search("1", query);
     }-*/;
 
     @UiHandler("searchStringField")
@@ -167,12 +207,20 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     }
 
+    private void chooseSearchResult() {
+        if(!this.selectedURI.isEmpty()) {
+            searchResultChosenHandler.handleSearchResultChosen(selectedURI);
+            acceptKeyHandler.handleAcceptKey();
+        }
+    }
+
 
     @Override
     public void onLoad() {
         super.onLoad();
         GWT.log("SUnt apelat");
         logger.info("Sunt mega apelat in on load");
+        exportSetSelection();
         initEct();
         logger.info("sunt apelat searchview");
     }
