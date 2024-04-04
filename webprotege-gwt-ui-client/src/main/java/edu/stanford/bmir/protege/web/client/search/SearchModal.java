@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
@@ -9,6 +10,7 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -31,6 +33,8 @@ public class SearchModal {
 
     @Nonnull
     private String title;
+
+    Logger logger = java.util.logging.Logger.getLogger("SearchModal");
 
     @Inject
     public SearchModal(@Nonnull ModalManager modalManager, @Nonnull SearchPresenter searchPresenter, @Nonnull Messages messages, @Nonnull SelectionModel selectionModel) {
@@ -66,6 +70,10 @@ public class SearchModal {
 
     private void selectChosenEntity() {
         searchPresenter.getSelectedSearchResult()
-                .ifPresent(sel -> selectionModel.setSelection(sel.getEntity()));
+                .ifPresent(sel -> {
+                    logger.info("selectedEntity: "+sel.getEntity()+" raw: "+sel.toString());
+                    GWT.log("selectedEntity: "+sel.getEntity());
+                    selectionModel.setSelection(sel.getEntity());
+                });
     }
 }

@@ -1,23 +1,18 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,48 +36,26 @@ public class SearchIcdPresenter implements HasInitialFocusable {
 
     private final Set<EntityType<?>> entityTypes = new HashSet<>();
 
-    private final DispatchServiceManager dispatchServiceManager;
 
-    private final Timer searchTimer = new Timer() {
-        @Override
-        public void run() {
-            performSearch();
-        }
+    private SearchIcdResultChosenHandler searchResultChosenHandler;
+
+    private AcceptKeyHandler acceptKeyHandler = () -> {
     };
-
-    private final Timer pageChangeTimer = new Timer() {
-        @Override
-        public void run() {
-            performSearch();
-        }
-    };
-
-
-    private SearchResultChosenHandler searchResultChosenHandler;
-
-    private AcceptKeyHandler acceptKeyHandler = () -> {};
-
 
 
     @Inject
     public SearchIcdPresenter(@Nonnull ProjectId projectId,
-                              @Nonnull SearchIcdView view,
-                              @Nonnull DispatchServiceManager dispatchServiceManager) {
+                              @Nonnull SearchIcdView view) {
         this.projectId = projectId;
         this.view = view;
-        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void start() {
-        view.setSearchStringChangedHandler(() -> {
-//            triggerSearch(view.getSearchString());
-            restartSearchTimer();
-        });
         view.setAcceptKeyHandler(this::handleAcceptKey);
-//        Map<String, Object> opts = new HashMap<>();
-//
-//        opts.put("apiServerUrl", "https://icd11restapi-developer-test.azurewebsites.net");
-//        ECT.configure(opts);
+    }
+
+    public void setSubTreeFilter(Optional<OWLEntity> selectedOption) {
+        selectedOption.ifPresent((selectedOptPres) -> this.view.setSubtreeFilter(selectedOptPres.toStringID()));
     }
 
     public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
@@ -93,18 +66,7 @@ public class SearchIcdPresenter implements HasInitialFocusable {
         this.acceptKeyHandler.handleAcceptKey();
     }
 
-
-    private void restartSearchTimer() {
-        searchTimer.cancel();
-        searchTimer.schedule(SEARCH_DELAY_MILLIS);
-    }
-
-    private void restartPageChangeTimer() {
-        pageChangeTimer.cancel();
-        pageChangeTimer.schedule(PAGE_CHANGE_DELAY_MILLIS);
-    }
-
-    public void setSearchResultChosenHandler(SearchResultChosenHandler handler) {
+    public void setSearchResultChosenHandler(SearchIcdResultChosenHandler handler) {
         searchResultChosenHandler = checkNotNull(handler);
     }
 
@@ -117,25 +79,15 @@ public class SearchIcdPresenter implements HasInitialFocusable {
         return view.getInitialFocusable();
     }
 
-    public void setEntityTypes(EntityType<?> ... entityTypes) {
+    public void setEntityTypes(EntityType<?>... entityTypes) {
         this.entityTypes.clear();
         this.entityTypes.addAll(Arrays.asList(entityTypes));
     }
 
-    private void performSearch() {
-//        triggerSearch(view.getSearchString());
+
+    //ToDo see how to get entityType
+    @Nonnull
+    public Optional<OWLEntity> getSelectedSearchResult() {
+        return Optional.of(DataFactory.getOWLEntity(EntityType.CLASS, view.getSelectedURI()));
     }
-
-    private void displaySearchResult(PerformEntitySearchResult result) {
-        if(!view.getSearchString().equals(result.getSearchString())) {
-            return;
-        }
-    }
-
-    public native void triggerSearch(String query) /*-{
-    $wnd.alert("s-a facut search");
-        $wnd.ECT.Handler.search("1", query);
-    }-*/;
-
-
 }

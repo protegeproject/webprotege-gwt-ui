@@ -1,22 +1,17 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.filter.FilterCheckBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
-import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 
 import javax.annotation.Nonnull;
@@ -34,20 +29,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
 
-    private final static java.util.logging.Logger logger = Logger.getLogger("DispatchServiceManager");
+    private final static java.util.logging.Logger logger = Logger.getLogger("SearchIcdViewImpl");
 
     private static SearchViewIcdImplUiBinder ourUiBinder = GWT.create(SearchViewIcdImplUiBinder.class);
 
     @UiField
     protected PlaceholderTextBox searchStringField;
-
-    @Nonnull
-    private IncrementSelectionHandler incrementSelectionHandler = () -> {
-    };
-
-    @Nonnull
-    private DecrementSelectionHandler decrementSelectionHandler = () -> {
-    };
 
     @Nonnull
     private SearchStringChangedHandler searchStringChangedHandler = () -> {
@@ -68,10 +55,20 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     @UiField
     TextArea selection;
 
+    @UiField
+    FilterCheckBox filterSubtreeCheckbox;
 
-    private SearchIcdResultChosenHandler searchResultChosenHandler;
+
+    private SearchIcdResultChosenHandler searchResultChosenHandler = result -> {
+    };
 
     private String selectedURI = "";
+
+    public static String TOP_LEVEL_SUBTREE_FILTER =
+            "http://id.who.int/icd/entity/448895267,"   // ICD Entity
+                    + "http://id.who.int/icd/entity/1405434703,"  // ICF Entity
+                    + "http://id.who.int/icd/entity/60347385,"    // ICHI Entity
+                    + "http://id.who.int/icd/entity/1320036174";  // Extension Entities
 
     @Inject
     public SearchIcdViewImpl() {
@@ -87,21 +84,21 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         selection.getElement().setId("selectionTextArea");
     }
 
-    public void setSelection(String selection){
+    public void setSelection(String selection) {
         this.selectedURI = selection;
         this.selection.setText(selection);
     }
 
     public native void exportSetSelection() /*-{
         var that = this;
-        $wnd.setSelection = $entry(function(code) {
+        $wnd.setSelection = $entry(function (code) {
             that.@SearchIcdViewImpl::setSelection(Ljava/lang/String;)(code);
         });
     }-*/;
 
     public native void logSomething() /*-{
-         console.log("i'm here in initECT");
-         $wnd.console.log("i'm here in initECT");
+        console.log("i'm here in initECT");
+        $wnd.console.log("i'm here in initECT");
 
     }-*/;
 
@@ -115,18 +112,20 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
             popupMode: false,
             icdLinearization: "foundation",
             autoBind: false,
-            apiSecured: false
+            apiSecured: false,
+            height: "300px",
+            enableKeyboard: false
         };
 
-        var callbacks ={
-            selectedEntityFunction: function(selectedEntity)  {
-            // paste the code into the <input>
-                $wnd.console.log("Selected iNo: " + selectedEntity.iNo + " selectedEntity: " + selectedEntity.title +" selectedId: "+selectedEntity.id +" selectedUri: "+selectedEntity.uri + " selectedEntity: "+selectedEntity);
+        var callbacks = {
+            selectedEntityFunction: function (selectedEntity) {
+                // paste the code into the <input>
+                $wnd.console.log("Selected iNo: " + selectedEntity.iNo + " selectedEntity: " + selectedEntity.title + " selectedId: " + selectedEntity.id + " selectedUri: " + selectedEntity.uri + " selectedEntity: " + selectedEntity);
                 $wnd.setSelection(selectedEntity.uri);
-        }
-    };
+            }
+        };
 
-        $wnd.ECT.Handler.configure(settings,callbacks);
+        $wnd.ECT.Handler.configure(settings, callbacks);
 
         $wnd.ECT.Handler.bind("1");
 
@@ -136,61 +135,14 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         $wnd.ECT.Handler.search("1", query);
     }-*/;
 
-    @UiHandler("searchStringField")
-    protected void handleSearchStringFileKeyUp(KeyUpEvent event) {
-        int keyCode = event.getNativeEvent().getKeyCode();
-        if (keyCode != KeyCodes.KEY_UP && keyCode != KeyCodes.KEY_DOWN && keyCode != KeyCodes.KEY_ENTER) {
-            performSearchIfChanged();
-        }
-    }
-
-    private void performSearchIfChanged() {
-        String searchString = searchStringField.getText();
-        if (!previousSearchString.equals(searchString)) {
-            previousSearchString = searchString;
-            searchStringChangedHandler.handleSearchStringChanged();
-        }
-    }
-
-    @Override
-    public void setIncrementSelectionHandler(@Nonnull IncrementSelectionHandler handler) {
-        incrementSelectionHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setDecrementSelectionHandler(@Nonnull DecrementSelectionHandler handler) {
-        decrementSelectionHandler = checkNotNull(handler);
-    }
-
     @Override
     public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
         this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
     }
 
-    @UiHandler("searchStringField")
-    protected void handleSearchStringFieldKeyDown(KeyDownEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_DOWN) {
-            event.preventDefault();
-            incrementSelectionHandler.handleIncrementSelection();
-        } else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_UP) {
-            event.preventDefault();
-            decrementSelectionHandler.handleDecrementSelection();
-        } else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            event.preventDefault();
-            acceptKeyHandler.handleAcceptKey();
-        } else {
-            performSearchIfChanged();
-        }
-    }
-
     @Override
     public Optional<HasRequestFocus> getInitialFocusable() {
         return Optional.of(() -> searchStringField.setFocus(true));
-    }
-
-    @Override
-    public String getSearchString() {
-        return searchStringField.getText();
     }
 
     @Override
@@ -208,20 +160,39 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     }
 
     private void chooseSearchResult() {
-        if(!this.selectedURI.isEmpty()) {
+        if (!this.selectedURI.isEmpty()) {
             searchResultChosenHandler.handleSearchResultChosen(selectedURI);
             acceptKeyHandler.handleAcceptKey();
         }
     }
 
 
+    public String getSelectedURI() {
+        return selectedURI;
+    }
+
+
     @Override
     public void onLoad() {
         super.onLoad();
-        GWT.log("SUnt apelat");
-        logger.info("Sunt mega apelat in on load");
         exportSetSelection();
         initEct();
-        logger.info("sunt apelat searchview");
     }
+
+    private native void setJsniSubtreeFilter(String icdSearchFilter) /*-{
+        $wnd.ECT.Handler.overwriteConfiguration("1", {subtreesFilter: icdSearchFilter});
+        $wnd.console.log("icdSearchFilter: " + icdSearchFilter);
+    }-*/;
+
+    public void setSubtreeFilter(String icdSearchFilter) {
+        if (icdSearchFilter == null || icdSearchFilter.length() == 0) {
+            icdSearchFilter = TOP_LEVEL_SUBTREE_FILTER;
+        }
+        setJsniSubtreeFilter(icdSearchFilter);
+        bind("1");
+    }
+
+    public native void bind(String iNo) /*-{
+        $wnd.ECT.Handler.bind(iNo);
+    }-*/;
 }

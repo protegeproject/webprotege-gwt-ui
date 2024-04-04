@@ -15,21 +15,12 @@ import javax.annotation.Nonnull;
  */
 public interface SearchIcdView extends HasBusy, IsWidget, HasInitialFocusable {
 
-    interface IncrementSelectionHandler {
-        void handleIncrementSelection();
-    }
-
-    interface DecrementSelectionHandler {
-        void handleDecrementSelection();
-    }
-
-    void setIncrementSelectionHandler(@Nonnull IncrementSelectionHandler handler);
-
-    void setDecrementSelectionHandler(@Nonnull DecrementSelectionHandler handler);
 
     void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler);
 
-    String getSearchString();
-
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
+
+    String getSelectedURI();
+
+    public void setSubtreeFilter(String icdSearchFilter);
 }

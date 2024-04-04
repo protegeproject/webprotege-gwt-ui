@@ -141,7 +141,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                                    this::handleDelete);
 
         this.searchActionIcd = new PortletAction(messages.searchIcd(),
-                "wp-btn-g--search",
+                "wp-btn-g--searchIcd",
                 this::handleIcdSearch);
         this.searchAction = new PortletAction(messages.search(),
                                               "wp-btn-g--search",
@@ -263,6 +263,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleIcdSearch() {
         searchIcdModal.setEntityTypes(CLASS);
+        searchIcdModal.setHierarchySelectedOption(getSelectedEntity());
         searchIcdModal.showModal();
     }
 

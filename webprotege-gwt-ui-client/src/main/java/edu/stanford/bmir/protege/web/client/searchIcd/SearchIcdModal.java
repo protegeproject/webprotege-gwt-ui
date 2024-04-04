@@ -1,14 +1,18 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -32,20 +36,26 @@ public class SearchIcdModal {
     @Nonnull
     private String title;
 
+    Logger logger = java.util.logging.Logger.getLogger("SearchIcdModal");
+
     @Inject
     public SearchIcdModal(@Nonnull ModalManager modalManager, @Nonnull SearchIcdPresenter searchIcdPresenter, @Nonnull Messages messages, @Nonnull SelectionModel selectionModel) {
         this.modalManager = modalManager;
         this.searchIcdPresenter = searchIcdPresenter;
         this.messages = messages;
         this.selectionModel = selectionModel;
-        title = messages.search();
+        title = messages.searchIcd();
     }
 
     public void setEntityTypes(EntityType<?>... entityTypes) {
         searchIcdPresenter.setEntityTypes(entityTypes);
-        if(entityTypes.length == 1) {
+        if (entityTypes.length == 1) {
             title = messages.searchFor(entityTypes[0].getPrintName());
         }
+    }
+
+    public void setHierarchySelectedOption(Optional<OWLEntity> selectedOption) {
+        searchIcdPresenter.setSubTreeFilter(selectedOption);
     }
 
     public void showModal() {
@@ -56,10 +66,20 @@ public class SearchIcdModal {
         modalPresenter.setPrimaryButton(DialogButton.SELECT);
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
+            selectChosenEntity();
         });
         searchIcdPresenter.start();
         searchIcdPresenter.setAcceptKeyHandler(modalPresenter::accept);
         searchIcdPresenter.setSearchResultChosenHandler(result -> modalPresenter.accept());
         modalManager.showModal(modalPresenter);
+    }
+
+    private void selectChosenEntity() {
+        searchIcdPresenter.getSelectedSearchResult()
+                .ifPresent(sel -> {
+                    logger.info("selectedEntity: " + sel);
+                    GWT.log("selectedEntity: " + sel);
+                    selectionModel.setSelection(sel);
+                });
     }
 }

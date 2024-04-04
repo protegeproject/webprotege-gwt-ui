@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
+             xmlns:filters="urn:import:edu.stanford.bmir.protege.web.client.filter"
 >
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
@@ -47,13 +48,23 @@
         }
 
         @external .ctw-window;
-        .ctw-window {}
+        .ctw-window {
+        }
 
         @external .ctw-eb-window;
-        .ctw-eb-window {}
+        .ctw-eb-window {
+        }
 
         @external .ctw-input;
-        .ctw-input {}
+        .ctw-input {
+        }
+
+        .checkBox input {
+            padding-right: 4px;
+        }
+        .checkBox label {
+            padding-left: 5px;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
@@ -62,6 +73,10 @@
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
 
         <g:TextArea ui:field="selection"></g:TextArea>
+        <filters:FilterCheckBox ui:field="filterSubtreeCheckbox" />
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:CheckBox ui:field="checkBox" addStyleNames="{style.checkBox}"/>
+        </g:HTMLPanel>
 
         <g:HTMLPanel addStyleNames="{style.ctw-window}" ui:field="ectElement">
         </g:HTMLPanel>
