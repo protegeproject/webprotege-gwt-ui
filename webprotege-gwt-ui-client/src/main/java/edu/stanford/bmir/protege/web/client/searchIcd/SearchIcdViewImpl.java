@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -26,10 +29,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
 
     private final static java.util.logging.Logger logger = Logger.getLogger("SearchIcdViewImpl");
+
+    protected static final String SELECTED_ENTITY_STYLE = "selectedEntity";
+
+    protected static final String TARGET_ELEMENT_ATTRIBUTE_NAME = "data-entityindex";
 
     private static SearchViewIcdImplUiBinder ourUiBinder = GWT.create(SearchViewIcdImplUiBinder.class);
 
@@ -44,11 +52,18 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     private AcceptKeyHandler acceptKeyHandler = () -> {
     };
 
+    /*
+     * Member variable for DOM element that holds the selection.  This should be
+     * set with #setSelectedElement(Optional) or #clearLastSelection().
+     */
+    private Optional<elemental.dom.Element> selectedElement = Optional.empty();
+
     private String previousSearchString = "";
 
 
     @UiField
     BusyViewImpl busyView;
+
     @UiField
     HTMLPanel ectElement;
 
@@ -185,14 +200,78 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     }-*/;
 
     public void setSubtreeFilter(String icdSearchFilter) {
-        if (icdSearchFilter == null || icdSearchFilter.length() == 0) {
-            icdSearchFilter = TOP_LEVEL_SUBTREE_FILTER;
-        }
-        setJsniSubtreeFilter(icdSearchFilter);
-        bind("1");
+        // TODO: @Geo
+//        if (icdSearchFilter == null || icdSearchFilter.length() == 0) {
+//            icdSearchFilter = TOP_LEVEL_SUBTREE_FILTER;
+//        }
+//        setJsniSubtreeFilter(icdSearchFilter);
+//        bind("1");
     }
 
     public native void bind(String iNo) /*-{
         $wnd.ECT.Handler.bind(iNo);
     }-*/;
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        setupClickHandlerForUpdatingSelection();
+    }
+
+    /**
+     * Sets up the click handler for updating the selection. This method adds a click event listener
+     * to the ectElement and updates the selected element based on the click event target.
+     */
+    private void setupClickHandlerForUpdatingSelection() {
+        ectElement.sinkEvents(Event.ONCLICK);
+        ectElement.addDomHandler(event -> {
+            clearLastSelection();
+            EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+            if (eventTarget instanceof elemental.dom.Element) {
+                Optional<elemental.dom.Element> toSelect = findSelectedElementForTargetElement((elemental.dom.Element) eventTarget);
+                setSelectedElement(toSelect);
+            }
+        }, ClickEvent.getType());
+    }
+
+    /**
+     * Sets the selected element and updates the UI.
+     *
+     * @param targetElement The target element to select.
+     */
+    private void setSelectedElement(Optional<elemental.dom.Element> targetElement) {
+        clearLastSelection();
+        this.selectedElement = targetElement;
+        this.selectedElement.ifPresent(e -> e.getClassList().add(SELECTED_ENTITY_STYLE));
+    }
+
+    /**
+     * Clears the last selected element by removing the SELECTED_ENTITY_STYLE class from its class list.
+     * If no element is currently selected, this method does nothing.
+     */
+    private void clearLastSelection() {
+        this.selectedElement.ifPresent(e -> {
+            e.getClassList().remove(SELECTED_ENTITY_STYLE);
+        });
+    }
+
+    /**
+     * Finds the element to select that is an ancestor of the given target element.
+     *
+     * @param eventTarget The target element for which to find the element to select.
+     * @return An Optional that contains the element to select, or empty if no selected element is found.
+     */
+    private Optional<elemental.dom.Element> findSelectedElementForTargetElement(elemental.dom.Element eventTarget) {
+        elemental.dom.Element element = eventTarget;
+        while(element != null) {
+            if(element.hasAttribute(TARGET_ELEMENT_ATTRIBUTE_NAME)) {
+                return Optional.of(element);
+            }
+            element = element.getParentElement();
+        }
+        return Optional.empty();
+    }
+
+
 }

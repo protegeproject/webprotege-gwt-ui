@@ -17,6 +17,10 @@
             box-sizing: border-box;
         }
 
+        .searchResults {
+            height: 300px;
+        }
+
         .helpText {
         }
 
@@ -28,6 +32,37 @@
         .busyView {
             width: 100%;
             height: 100%;
+        }
+
+        @external entityInList;
+        .entityInList {
+            cursor: pointer;
+        }
+
+        @external .selectedEntity;
+        .selectedEntity {
+            color: literal("var(--selected-item--color)");
+            background-color: literal("var(--selected-item--background-color)");
+        }
+
+        @external .pvs;
+        @external .entityPv;
+        .selectedEntity .pvs {
+            color: literal("var(--selected-item--color)") !important;
+            background-color: literal("var(--selected-item--background-color)") !important;
+        }
+        .selectedEntity .entityPv {
+            color: literal("var(--selected-item--color)");
+            background-color: literal("var(--selected-item--background-color)");
+            border-color: literal("var(--selected-item--background-color)");
+        }
+        @external .found;
+        .selectedEntity .found {
+            color: literal("var(--selected-item--color)") !important;
+        }
+        @external .showlink;
+        .selectedEntity .showlink {
+            color: literal("var(--selected-item--color)") !important;
         }
 
         .langTagFilter {
@@ -78,7 +113,7 @@
             <g:CheckBox ui:field="checkBox" addStyleNames="{style.checkBox}"/>
         </g:HTMLPanel>
 
-        <g:HTMLPanel addStyleNames="{style.ctw-window}" ui:field="ectElement">
+        <g:HTMLPanel addStyleNames="{style.ctw-window} {style.searchResults}" ui:field="ectElement">
         </g:HTMLPanel>
 
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
