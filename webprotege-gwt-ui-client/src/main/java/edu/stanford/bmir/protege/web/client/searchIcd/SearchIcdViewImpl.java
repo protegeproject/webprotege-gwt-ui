@@ -3,19 +3,20 @@ package edu.stanford.bmir.protege.web.client.searchIcd;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import edu.stanford.bmir.protege.web.client.filter.FilterCheckBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -58,9 +59,6 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
      */
     private Optional<elemental.dom.Element> selectedElement = Optional.empty();
 
-    private String previousSearchString = "";
-
-
     @UiField
     BusyViewImpl busyView;
 
@@ -68,10 +66,11 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     HTMLPanel ectElement;
 
     @UiField
-    TextArea selection;
+    CheckBox filterSubtreeCheckbox;
 
-    @UiField
-    FilterCheckBox filterSubtreeCheckbox;
+    private final String FILTER_CHECKBOX_LABEL_TEXT = "Search only in selected subtree";
+
+    private OWLEntity selectedSubtreeInHierarchy;
 
 
     private SearchIcdResultChosenHandler searchResultChosenHandler = result -> {
@@ -79,7 +78,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     private String selectedURI = "";
 
-    public static String TOP_LEVEL_SUBTREE_FILTER =
+    public static final String TOP_LEVEL_SUBTREE_FILTER =
             "http://id.who.int/icd/entity/448895267,"   // ICD Entity
                     + "http://id.who.int/icd/entity/1405434703,"  // ICF Entity
                     + "http://id.who.int/icd/entity/60347385,"    // ICHI Entity
@@ -96,12 +95,24 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         element.setAttribute("data-ctw-ino", "1");
         ectElement.getElement().setAttribute("data-ctw-ino", "1");
 
-        selection.getElement().setId("selectionTextArea");
+        filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT);
+        filterSubtreeCheckbox.addValueChangeHandler(this::filterSubtreeCheckboxHandler);
+    }
+
+    private void filterSubtreeCheckboxHandler(ValueChangeEvent<Boolean> event) {
+        if(event.getValue()){
+            filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT +": "+selectedSubtreeInHierarchy.getClass().getName());
+            setSubtreeFilter(selectedSubtreeInHierarchy.toStringID());
+        }else {
+            filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT);
+            setSubtreeFilter(TOP_LEVEL_SUBTREE_FILTER);
+        }
+
+        triggerSearch(searchStringField.getText());
     }
 
     public void setSelection(String selection) {
         this.selectedURI = selection;
-        this.selection.setText(selection);
     }
 
     public native void exportSetSelection() /*-{
@@ -111,24 +122,18 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         });
     }-*/;
 
-    public native void logSomething() /*-{
-        console.log("i'm here in initECT");
-        $wnd.console.log("i'm here in initECT");
-
-    }-*/;
-
     public native void initEct() /*-{
         $wnd.console.log("i'm here in initECT");
         $wnd.console.log("ECT2 este " + $wnd.ECT);
 
         var settings = {
-            apiServerUrl: "https://icd11restapi-developer-test.azurewebsites.net",
+            apiServerUrl: "https://icdapilive.azurewebsites.net",
             simplifiedMode: false,
             popupMode: false,
             icdLinearization: "foundation",
             autoBind: false,
             apiSecured: false,
-            height: "300px",
+            height: "290px",
             enableKeyboard: false
         };
 
@@ -199,14 +204,19 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         $wnd.console.log("icdSearchFilter: " + icdSearchFilter);
     }-*/;
 
-    public void setSubtreeFilter(String icdSearchFilter) {
-        // TODO: @Geo
-//        if (icdSearchFilter == null || icdSearchFilter.length() == 0) {
-//            icdSearchFilter = TOP_LEVEL_SUBTREE_FILTER;
-//        }
-//        setJsniSubtreeFilter(icdSearchFilter);
-//        bind("1");
+    public void setSubtreeFilterText(OWLEntity icdEntitySubtree) {
+        selectedSubtreeInHierarchy = icdEntitySubtree;
     }
+
+    private void setSubtreeFilter(String subtreeFilter) {
+        if (subtreeFilter == null || subtreeFilter.length() == 0) {
+            subtreeFilter = TOP_LEVEL_SUBTREE_FILTER;
+        }
+        setJsniSubtreeFilter(subtreeFilter);
+        bind("1");
+    }
+
+
 
     public native void bind(String iNo) /*-{
         $wnd.ECT.Handler.bind(iNo);

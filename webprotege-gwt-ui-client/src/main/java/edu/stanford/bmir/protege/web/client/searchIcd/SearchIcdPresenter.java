@@ -55,7 +55,7 @@ public class SearchIcdPresenter implements HasInitialFocusable {
     }
 
     public void setSubTreeFilter(Optional<OWLEntity> selectedOption) {
-        selectedOption.ifPresent((selectedOptPres) -> this.view.setSubtreeFilter(selectedOptPres.toStringID()));
+        selectedOption.ifPresent((selectedOptPres) -> this.view.setSubtreeFilterText(selectedOptPres));
     }
 
     public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {

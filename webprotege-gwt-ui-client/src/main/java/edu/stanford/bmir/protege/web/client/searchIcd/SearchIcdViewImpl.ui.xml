@@ -40,46 +40,16 @@
         }
 
         @external .selectedEntity;
-        .selectedEntity {
-            color: literal("var(--selected-item--color)");
-            background-color: literal("var(--selected-item--background-color)");
-        }
-
-        @external .pvs;
-        @external .entityPv;
-        .selectedEntity .pvs {
+        @external .entityTitle;
+        .selectedEntity .entityTitle {
             color: literal("var(--selected-item--color)") !important;
             background-color: literal("var(--selected-item--background-color)") !important;
         }
-        .selectedEntity .entityPv {
-            color: literal("var(--selected-item--color)");
-            background-color: literal("var(--selected-item--background-color)");
-            border-color: literal("var(--selected-item--background-color)");
-        }
-        @external .found;
-        .selectedEntity .found {
+
+        @external .entityDetailsCodeAndTitle;
+        .selectedEntity .entityDetailsCodeAndTitle {
             color: literal("var(--selected-item--color)") !important;
-        }
-        @external .showlink;
-        .selectedEntity .showlink {
-            color: literal("var(--selected-item--color)") !important;
-        }
-
-        .langTagFilter {
-            flex-basis: 100px;
-            flex-grow: 1;
-            flex-shrink: 1;
-        }
-
-        .searchFilter {
-            flex-basis: 100px;
-            flex-grow: 1;
-            flex-shrink: 1;
-        }
-
-        .filteringPanel {
-            display: flex;
-            flex-direction: row;
+            background-color: literal("var(--selected-item--background-color)") !important;
         }
 
         @external .ctw-window;
@@ -107,10 +77,8 @@
                                  addStyleNames="{style.searchField} {style.ctw-input}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
 
-        <g:TextArea ui:field="selection"></g:TextArea>
-        <filters:FilterCheckBox ui:field="filterSubtreeCheckbox" />
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:CheckBox ui:field="checkBox" addStyleNames="{style.checkBox}"/>
+            <g:CheckBox ui:field="filterSubtreeCheckbox" addStyleNames="{style.checkBox}"/>
         </g:HTMLPanel>
 
         <g:HTMLPanel addStyleNames="{style.ctw-window} {style.searchResults}" ui:field="ectElement">
