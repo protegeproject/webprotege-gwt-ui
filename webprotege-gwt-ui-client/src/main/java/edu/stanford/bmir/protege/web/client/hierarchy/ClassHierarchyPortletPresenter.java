@@ -133,19 +133,19 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.createEntityPresenter = checkNotNull(createEntityPresenter);
 
         this.createClassAction = new PortletAction(messages.create(),
-                                                   "wp-btn-g--create-class wp-btn-g--create",
-                                                   this::handleCreateSubClasses);
+                "wp-btn-g--create-class wp-btn-g--create",
+                this::handleCreateSubClasses);
 
         this.deleteClassAction = new PortletAction(messages.delete(),
-                                                   "wp-btn-g--delete-class wp-btn-g--delete",
-                                                   this::handleDelete);
+                "wp-btn-g--delete-class wp-btn-g--delete",
+                this::handleDelete);
 
         this.searchActionIcd = new PortletAction(messages.searchIcd(),
                 "wp-btn-g--searchIcd",
                 this::handleIcdSearch);
         this.searchAction = new PortletAction(messages.search(),
-                                              "wp-btn-g--search",
-                                              this::handleSearch);
+                "wp-btn-g--search",
+                this::handleSearch);
         this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.actionStatePresenter = actionStatePresenter;
         this.dropHandler = dropHandler;
@@ -190,14 +190,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         renderer.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
-                                                      node -> node.getEntity()));
+                node -> node.getEntity()));
         treeWidget.setDropHandler(this.dropHandler);
         dropHandler.start(CLASS_HIERARCHY);
         contextMenuPresenterFactory.create(hierarchyModel,
-                                           treeWidget,
-                                           createClassAction,
-                                           deleteClassAction)
-                                   .install();
+                        treeWidget,
+                        createClassAction,
+                        deleteClassAction)
+                .install();
 
         tagVisibilityPresenter.start(filterView, treeWidget);
         setSelectionInTree(getSelectedEntity());
@@ -217,16 +217,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private Optional<OWLClass> getFirstSelectedClass() {
         return treeWidget.getFirstSelectedKey()
-                         .filter(sel -> sel instanceof OWLClass)
-                         .map(sel -> (OWLClass) sel);
+                .filter(sel -> sel instanceof OWLClass)
+                .map(sel -> (OWLClass) sel);
     }
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
         actionStatePresenter.setSelectionPresent(!treeWidget.getSelectedKeys().isEmpty());
-        if(!treeWidget.isAttached()) {
+        if (!treeWidget.isAttached()) {
             return;
         }
-        if(settingSelectionInTree) {
+        if (settingSelectionInTree) {
             return;
         }
         try {
@@ -243,8 +243,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleCreateSubClasses() {
         createEntityPresenter.createEntities(CLASS,
-                                             getFirstSelectedClass(),
-                                             CreateEntitiesInHierarchyHandler.get(treeWidget)
+                getFirstSelectedClass(),
+                CreateEntitiesInHierarchyHandler.get(treeWidget)
         );
     }
 
@@ -263,7 +263,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleIcdSearch() {
         searchIcdModal.setEntityTypes(CLASS);
-        searchIcdModal.setHierarchySelectedOption(getSelectedEntity());
+        searchIcdModal.setHierarchySelectedOptions(treeWidget.getFirstSelectedUserObject());
         searchIcdModal.showModal();
     }
 
@@ -275,7 +275,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         if (transmittingSelectionFromTree) {
             return;
         }
-        if(treeWidget.getSelectedKeys().contains(selection.orElse(null))) {
+        if (treeWidget.getSelectedKeys().contains(selection.orElse(null))) {
             return;
         }
         try {

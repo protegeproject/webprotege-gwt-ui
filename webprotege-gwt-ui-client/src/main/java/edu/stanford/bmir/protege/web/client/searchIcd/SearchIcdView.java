@@ -5,10 +5,9 @@ import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -24,5 +23,5 @@ public interface SearchIcdView extends HasBusy, IsWidget, HasInitialFocusable {
 
     String getSelectedURI();
 
-    public void setSubtreeFilterText(OWLEntity icdSearchFilter);
+    public void setSubtreeFilterText(EntityNode icdSearchFilter);
 }

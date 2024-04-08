@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -54,7 +55,8 @@ public class SearchIcdPresenter implements HasInitialFocusable {
         view.setAcceptKeyHandler(this::handleAcceptKey);
     }
 
-    public void setSubTreeFilter(Optional<OWLEntity> selectedOption) {
+    public void setSubTreeFilter(Optional<EntityNode> selectedOption) {
+
         selectedOption.ifPresent((selectedOptPres) -> this.view.setSubtreeFilterText(selectedOptPres));
     }
 

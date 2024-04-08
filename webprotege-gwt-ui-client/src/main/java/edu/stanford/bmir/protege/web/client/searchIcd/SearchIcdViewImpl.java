@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -70,7 +70,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     private final String FILTER_CHECKBOX_LABEL_TEXT = "Search only in selected subtree";
 
-    private OWLEntity selectedSubtreeInHierarchy;
+    private EntityNode selectedSubtreeInHierarchy;
 
 
     private SearchIcdResultChosenHandler searchResultChosenHandler = result -> {
@@ -100,10 +100,10 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     }
 
     private void filterSubtreeCheckboxHandler(ValueChangeEvent<Boolean> event) {
-        if(event.getValue()){
-            filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT +": "+selectedSubtreeInHierarchy.getClass().getName());
-            setSubtreeFilter(selectedSubtreeInHierarchy.toStringID());
-        }else {
+        if (event.getValue()) {
+            filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT + ": " + selectedSubtreeInHierarchy.getBrowserText());
+            setSubtreeFilter(selectedSubtreeInHierarchy.getEntity().toStringID());
+        } else {
             filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT);
             setSubtreeFilter(TOP_LEVEL_SUBTREE_FILTER);
         }
@@ -204,7 +204,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         $wnd.console.log("icdSearchFilter: " + icdSearchFilter);
     }-*/;
 
-    public void setSubtreeFilterText(OWLEntity icdEntitySubtree) {
+    public void setSubtreeFilterText(EntityNode icdEntitySubtree) {
         selectedSubtreeInHierarchy = icdEntitySubtree;
     }
 
@@ -215,7 +215,6 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         setJsniSubtreeFilter(subtreeFilter);
         bind("1");
     }
-
 
 
     public native void bind(String iNo) /*-{
@@ -274,8 +273,8 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
      */
     private Optional<elemental.dom.Element> findSelectedElementForTargetElement(elemental.dom.Element eventTarget) {
         elemental.dom.Element element = eventTarget;
-        while(element != null) {
-            if(element.hasAttribute(TARGET_ELEMENT_ATTRIBUTE_NAME)) {
+        while (element != null) {
+            if (element.hasAttribute(TARGET_ELEMENT_ATTRIBUTE_NAME)) {
                 return Optional.of(element);
             }
             element = element.getParentElement();

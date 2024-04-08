@@ -6,8 +6,8 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -54,7 +54,8 @@ public class SearchIcdModal {
         }
     }
 
-    public void setHierarchySelectedOption(Optional<OWLEntity> selectedOption) {
+    public void setHierarchySelectedOptions(Optional<EntityNode> selectedOption) {
+
         searchIcdPresenter.setSubTreeFilter(selectedOption);
     }
 
