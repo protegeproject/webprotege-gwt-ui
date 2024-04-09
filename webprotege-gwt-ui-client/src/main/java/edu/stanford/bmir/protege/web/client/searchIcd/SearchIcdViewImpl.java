@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
@@ -21,9 +20,6 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.logging.Logger;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -33,8 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
-
-    private final static java.util.logging.Logger logger = Logger.getLogger("SearchIcdViewImpl");
 
     protected static final String SELECTED_ENTITY_STYLE = "selectedEntity";
 
@@ -47,10 +41,6 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     @Nonnull
     private SearchStringChangedHandler searchStringChangedHandler = () -> {
-    };
-
-    @Nonnull
-    private AcceptKeyHandler acceptKeyHandler = () -> {
     };
 
     /*
@@ -78,6 +68,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     private String selectedURI = "";
 
+
     public static final String TOP_LEVEL_SUBTREE_FILTER =
             "http://id.who.int/icd/entity/448895267,"   // ICD Entity
                     + "http://id.who.int/icd/entity/1405434703,"  // ICF Entity
@@ -86,6 +77,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     @Inject
     public SearchIcdViewImpl() {
+
         initWidget(ourUiBinder.createAndBindUi(this));
         Element element = searchStringField.getElement();
         element.setPropertyString("autocomplete", "off");
@@ -94,6 +86,8 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         element.setPropertyString("spellcheck", "off");
         element.setAttribute("data-ctw-ino", "1");
         ectElement.getElement().setAttribute("data-ctw-ino", "1");
+
+        searchStringField.addValueChangeHandler(event -> searchStringChangedHandler.handleSearchStringChanged());
 
         filterSubtreeCheckbox.setText(FILTER_CHECKBOX_LABEL_TEXT);
         filterSubtreeCheckbox.addValueChangeHandler(this::filterSubtreeCheckboxHandler);
@@ -108,7 +102,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
             setSubtreeFilter(TOP_LEVEL_SUBTREE_FILTER);
         }
 
-        triggerSearch(searchStringField.getText());
+        triggerSearch(getInputFieldValue());
     }
 
     public void setSelection(String selection) {
@@ -152,13 +146,9 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     }-*/;
 
     public native void triggerSearch(String query) /*-{
+        $wnd.console.log("triggered search for: " + query);
         $wnd.ECT.Handler.search("1", query);
     }-*/;
-
-    @Override
-    public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
-        this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
-    }
 
     @Override
     public Optional<HasRequestFocus> getInitialFocusable() {
@@ -179,24 +169,9 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
 
     }
 
-    private void chooseSearchResult() {
-        if (!this.selectedURI.isEmpty()) {
-            searchResultChosenHandler.handleSearchResultChosen(selectedURI);
-            acceptKeyHandler.handleAcceptKey();
-        }
-    }
-
 
     public String getSelectedURI() {
         return selectedURI;
-    }
-
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        exportSetSelection();
-        initEct();
     }
 
     private native void setJsniSubtreeFilter(String icdSearchFilter) /*-{
@@ -224,8 +199,10 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
     @Override
     protected void onAttach() {
         super.onAttach();
-
+        exportSetSelection();
+        initEct();
         setupClickHandlerForUpdatingSelection();
+        triggerSearchIfTextExistsInInput();
     }
 
     /**
@@ -260,9 +237,7 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
      * If no element is currently selected, this method does nothing.
      */
     private void clearLastSelection() {
-        this.selectedElement.ifPresent(e -> {
-            e.getClassList().remove(SELECTED_ENTITY_STYLE);
-        });
+        this.selectedElement.ifPresent(e -> e.getClassList().remove(SELECTED_ENTITY_STYLE));
     }
 
     /**
@@ -282,5 +257,24 @@ public class SearchIcdViewImpl extends Composite implements SearchIcdView {
         return Optional.empty();
     }
 
+
+    @Override
+    public String getInputFieldValue() {
+        return searchStringField.getText();
+    }
+
+    @Override
+    public void setInputFieldValue(String newValue) {
+        this.searchStringField.setValue(newValue);
+    }
+
+    private void triggerSearchIfTextExistsInInput() {
+        String textToSearch = getInputFieldValue();
+        if (textToSearch == null || textToSearch.isEmpty()) {
+            return;
+        }
+
+        triggerSearch(textToSearch);
+    }
 
 }

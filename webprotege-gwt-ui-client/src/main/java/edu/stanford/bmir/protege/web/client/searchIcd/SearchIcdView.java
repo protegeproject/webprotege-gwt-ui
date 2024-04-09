@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-
-import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -17,11 +14,14 @@ import javax.annotation.Nonnull;
 public interface SearchIcdView extends HasBusy, IsWidget, HasInitialFocusable {
 
 
-    void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler);
-
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 
     String getSelectedURI();
 
-    public void setSubtreeFilterText(EntityNode icdSearchFilter);
+    void setSubtreeFilterText(EntityNode icdSearchFilter);
+
+
+    String getInputFieldValue();
+
+    void setInputFieldValue(String newValue);
 }

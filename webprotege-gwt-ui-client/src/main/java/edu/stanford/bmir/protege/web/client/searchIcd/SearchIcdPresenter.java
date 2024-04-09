@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.searchIcd;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -27,12 +25,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SearchIcdPresenter implements HasInitialFocusable {
 
-    private static final int SEARCH_DELAY_MILLIS = 900;
-
-    private static final int PAGE_CHANGE_DELAY_MILLIS = 250;
-
-    private final ProjectId projectId;
-
     private final SearchIcdView view;
 
     private final Set<EntityType<?>> entityTypes = new HashSet<>();
@@ -40,32 +32,25 @@ public class SearchIcdPresenter implements HasInitialFocusable {
 
     private SearchIcdResultChosenHandler searchResultChosenHandler;
 
-    private AcceptKeyHandler acceptKeyHandler = () -> {
-    };
+    private final SearchInputManager searchInputManager;
 
 
     @Inject
-    public SearchIcdPresenter(@Nonnull ProjectId projectId,
-                              @Nonnull SearchIcdView view) {
-        this.projectId = projectId;
+    public SearchIcdPresenter(@Nonnull SearchIcdView view,
+                              @Nonnull SearchInputManager searchInputManager) {
         this.view = view;
+        this.searchInputManager = searchInputManager;
     }
 
     public void start() {
-        view.setAcceptKeyHandler(this::handleAcceptKey);
+        view.setInputFieldValue(searchInputManager.getSearchInputText());
+
+        view.setSearchStringChangedHandler(() -> searchInputManager.setSearchInputText(view.getInputFieldValue()));
     }
 
     public void setSubTreeFilter(Optional<EntityNode> selectedOption) {
 
-        selectedOption.ifPresent((selectedOptPres) -> this.view.setSubtreeFilterText(selectedOptPres));
-    }
-
-    public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
-        this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
-    }
-
-    private void handleAcceptKey() {
-        this.acceptKeyHandler.handleAcceptKey();
+        selectedOption.ifPresent(this.view::setSubtreeFilterText);
     }
 
     public void setSearchResultChosenHandler(SearchIcdResultChosenHandler handler) {
