@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-@JsonTypeName("webprotege.history.GetHeadRevisionNumber")
+@JsonTypeName("webprotege.history.GetRevisionSummaries")
 public class GetRevisionSummariesResult implements Result {
 
     private ImmutableList<RevisionSummary> revisionSummaries;

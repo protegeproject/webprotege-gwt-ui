@@ -66,6 +66,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(AddProjectTagResult.class),
         @JsonSubTypes.Type(BatchResult.class),
         @JsonSubTypes.Type(CheckManchesterSyntaxFrameResult.class),
+        @JsonSubTypes.Type(ChangePasswordResult.class),
         @JsonSubTypes.Type(ComputeProjectMergeResult.class),
         @JsonSubTypes.Type(CopyFormDescriptorsFromProjectResult.class),
         @JsonSubTypes.Type(CreateAnnotationPropertiesResult.class),
@@ -76,6 +77,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(CreateEntityDiscussionThreadResult.class),
         @JsonSubTypes.Type(CreateEntityFromFormDataResult.class),
         @JsonSubTypes.Type(CreateNewProjectResult.class),
+        @JsonSubTypes.Type(CreateUserAccountResult.class),
         @JsonSubTypes.Type(LoadProjectResult.class),
         @JsonSubTypes.Type(LogOutUserResult.class),
         @JsonSubTypes.Type(RebuildPermissionsResult.class),
@@ -205,6 +207,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class)
 })
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {
 
 }

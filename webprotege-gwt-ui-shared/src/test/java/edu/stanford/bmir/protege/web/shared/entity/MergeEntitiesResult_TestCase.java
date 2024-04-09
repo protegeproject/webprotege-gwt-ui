@@ -25,12 +25,6 @@ public class MergeEntitiesResult_TestCase {
         mergeEntitiesResult = MergeEntitiesResult.create();
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_eventList_IsNull() {
-        MergeEntitiesResult.create();
-    }
-
     @Test
     public void shouldBeEqualToSelf() {
         assertThat(mergeEntitiesResult, is(mergeEntitiesResult));

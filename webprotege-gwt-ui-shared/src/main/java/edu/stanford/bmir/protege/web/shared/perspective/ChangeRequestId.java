@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.project.ProjectIdFormatException;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
@@ -26,7 +25,7 @@ public class ChangeRequestId implements Serializable, IsSerializable {
      *           to the regular expression for UUIDs.  See {@link UUIDUtil#getIdRegExp()}
      * @throws NullPointerException if the id parameter is <code>null</code>.
      */
-    private ChangeRequestId(@Nonnull String id) throws ProjectIdFormatException {
+    private ChangeRequestId(@Nonnull String id) throws IllegalArgumentException {
         this.id = checkFormat(checkNotNull(id));
     }
 
@@ -43,12 +42,12 @@ public class ChangeRequestId implements Serializable, IsSerializable {
      *
      * @param id The string to check.
      * @return The specified string.
-     * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
+     * @throws IllegalArgumentException if the specified string does not match the UUID pattern.
      */
     @Nonnull
-    private static String checkFormat(@Nonnull String id) throws ProjectIdFormatException {
+    private static String checkFormat(@Nonnull String id) throws IllegalArgumentException {
         if (!UUIDUtil.isWellFormed(id)) {
-            throw new ProjectIdFormatException(id);
+            throw new IllegalArgumentException("Invalid change id format.  Change Ids must be vallid UUIDs. Provided Id: " + id);
         }
         return id;
     }
@@ -62,11 +61,11 @@ public class ChangeRequestId implements Serializable, IsSerializable {
      *             {@code uuid} must match the pattern specified by the {@link UUIDUtil#UUID_PATTERN} pattern. Not {@code null}.
      * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId} having the specified UUID.  Not {@code null}.
      * @throws NullPointerException     if {@code uuid} is {@code null}.
-     * @throws ProjectIdFormatException if {@code uuid} does not match the UUID pattern specified by {@link UUIDUtil#UUID_PATTERN}.
+     * @throws IllegalArgumentException if {@code uuid} does not match the UUID pattern specified by {@link UUIDUtil#UUID_PATTERN}.
      */
     @Nonnull
     @JsonCreator
-    public static ChangeRequestId get(@Nonnull String uuid) throws ProjectIdFormatException {
+    public static ChangeRequestId get(@Nonnull String uuid) throws IllegalArgumentException {
         return new ChangeRequestId(uuid);
     }
 
@@ -75,13 +74,13 @@ public class ChangeRequestId implements Serializable, IsSerializable {
         return get(UUIDUtil.getNilUuid());
     }
 
-    public static ChangeRequestId valueOf(@Nonnull String uuid) throws ProjectIdFormatException {
+    public static ChangeRequestId valueOf(@Nonnull String uuid) throws IllegalArgumentException {
         return get(uuid);
     }
 
 
     @Nonnull
-    public static Optional<ChangeRequestId> getFromNullable(@Nullable String uuid) throws ProjectIdFormatException {
+    public static Optional<ChangeRequestId> getFromNullable(@Nullable String uuid) throws IllegalArgumentException {
         if (uuid == null || uuid.isEmpty()) {
             return Optional.empty();
         } else {

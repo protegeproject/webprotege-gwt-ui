@@ -45,9 +45,12 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
         }
         else if(node.isObject()) {
             if(node.has("iri")) {
-                if(node.has("type")) {
+                if(node.has("@type") || node.has("type")) {
                     IRI iri = IRI.create(node.get("iri").asText());
-                    String type = node.get("type").asText();
+                    String type = node.get("@type").asText();
+                    if(type == null) {
+                        type = node.get("type").asText();
+                    }
                     switch (type) {
                         case "owl:Class" :
                             return PrimitiveFormControlData.get(df.getOWLClass(iri));

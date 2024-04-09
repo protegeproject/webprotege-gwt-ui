@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.IRI;
@@ -23,6 +27,7 @@ public abstract class IriFormControlData implements PrimitiveFormControlData {
         return new AutoValue_IriFormControlData(iri);
     }
 
+    @JsonProperty("iri")
     @Nonnull
     public abstract IRI getIri();
 

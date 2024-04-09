@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -15,6 +19,19 @@ import java.util.Optional;
  * 2020-01-08
  */
 public interface PrimitiveFormControlData {
+
+    @JsonCreator
+    public static PrimitiveFormControlData get(OWLPrimitive primitive) {
+        if(primitive instanceof OWLEntity) {
+            return get((OWLEntity) primitive);
+        }
+        else if(primitive instanceof IRI) {
+            return get((IRI) primitive);
+        }
+        else {
+            return get((OWLLiteral) primitive);
+        }
+    }
 
     static PrimitiveFormControlData get(OWLEntity entity) {
         return EntityFormControlData.get(entity);
@@ -50,5 +67,6 @@ public interface PrimitiveFormControlData {
     Optional<OWLLiteral> asLiteral();
 
     @Nonnull
+    @JsonIgnore
     OWLPrimitive getPrimitive();
 }
