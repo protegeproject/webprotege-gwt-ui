@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -22,11 +24,17 @@ public class FormDataByFormId implements IsSerializable {
      * Map FormIds to FormData.  This map should not contain null keys, but it
      * may contain null values
      */
+    @JsonCreator
     public FormDataByFormId(Map<FormId, FormData> map) {
         this.map = new LinkedHashMap<>(checkNotNull(map));
     }
 
     private FormDataByFormId() {
+    }
+
+    @JsonValue
+    public Map<FormId, FormData> getMap() {
+        return new HashMap<>(map);
     }
 
     @Nonnull
