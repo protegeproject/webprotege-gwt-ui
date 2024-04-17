@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-@JsonTypeName("webprotege.forms.SetEntityFormData")
+@JsonTypeName("webprotege.forms.SetEntityFormsData")
 public class SetEntityFormDataResult implements Result {
 
     public SetEntityFormDataResult() {

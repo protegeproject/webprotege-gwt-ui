@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
         @Type(SingleChoiceControlData.class),
         @Type(TextControlData.class)
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface FormControlData extends IsSerializable {
 
     <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor);
