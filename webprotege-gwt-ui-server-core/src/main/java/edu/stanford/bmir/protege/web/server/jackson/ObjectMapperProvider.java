@@ -112,6 +112,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
                 ProjectTagsChangedEvent.class,
                 WatchAddedEvent.class,
                 PackagedProjectChangeEvent.class,
+                ProjectMovedFromTrashEvent.class,
                 WatchRemovedEvent.class);
         mapper.registerModule(module);
 

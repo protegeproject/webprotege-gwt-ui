@@ -164,7 +164,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
             stompClient.onConnect = function(frame) {
                 stompClient.subscribe('/topic/project-events/' + projectId, function(message) {
-                    that.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::dispatchEventsFromWebsocket(Ljava / lang / String;)(message.body);
+                    that.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::dispatchEventsFromWebsocket(Ljava/lang/String;)(message.body);
+
                 });
             };
             stompClient.onWebSocketError = function(error) {
