@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -12,6 +13,7 @@ import java.util.Objects;
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2016
  */
+@JsonTypeName("webprotege.events.discussion.DiscussionThreadCreated")
 public class DiscussionThreadCreatedEvent extends ProjectEvent<DiscussionThreadCreatedHandler> implements HasProjectId {
 
     public static final transient Event.Type<DiscussionThreadCreatedHandler> ON_DISCUSSION_THREAD_CREATED = new Event.Type<>();

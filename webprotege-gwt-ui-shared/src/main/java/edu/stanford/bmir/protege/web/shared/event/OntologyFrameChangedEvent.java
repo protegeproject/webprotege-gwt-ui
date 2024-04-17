@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -12,24 +14,36 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/12/2012
  */
-public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChangedEventHandler> implements Serializable {
+
+@JsonTypeName("webprotege.events.projects.OntologyChanged")
+public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChangedEventHandler> implements Serializable, IsSerializable {
 
     public static final transient Event.Type<OntologyFrameChangedEventHandler> TYPE = new Event.Type<OntologyFrameChangedEventHandler>();
 
-    private OWLOntologyID ontologyID;
+    private OntologyChange ontologyChange;
 
-    public OntologyFrameChangedEvent(OWLOntologyID ontologyID, ProjectId projectId) {
+    private OWLOntologyID ontologyId;
+
+    public OntologyFrameChangedEvent(OntologyChange ontologyChange, ProjectId projectId) {
         super(projectId);
-        this.ontologyID = ontologyID;
+        this.ontologyChange = ontologyChange;
+        this.ontologyId = ontologyChange.ontologyId();
     }
 
     private OntologyFrameChangedEvent() {
 
     }
 
+    public void setOntologyChange(OntologyChange ontologyChange) {
+        this.ontologyChange = ontologyChange;
+    }
 
-    public OWLOntologyID getOntologyID() {
-        return ontologyID;
+    public void setOntologyId(OWLOntologyID ontologyId) {
+        this.ontologyId = ontologyId;
+    }
+
+    public OWLOntologyID getOntologyId() {
+        return ontologyId;
     }
 
     /**

@@ -32,7 +32,7 @@ public abstract class EventList<E extends WebProtegeEvent<?>> implements Seriali
 
     @JsonCreator
     public static <E extends WebProtegeEvent<?>> EventList<E> create(@JsonProperty("startTag") EventTag startTag,
-                                                        @JsonProperty("events") ImmutableList<E> events,
+                                                        @JsonProperty("events") ImmutableList<WebProtegeEvent> events,
                                                         @JsonProperty("endTag") EventTag endTag) {
         return new AutoValue_EventList<>(startTag, events, endTag);
     }
@@ -49,7 +49,7 @@ public abstract class EventList<E extends WebProtegeEvent<?>> implements Seriali
 
     public abstract EventTag getStartTag();
 
-    public abstract ImmutableList<E> getEvents();
+    public abstract ImmutableList<WebProtegeEvent> getEvents();
 
     public abstract EventTag getEndTag();
 }

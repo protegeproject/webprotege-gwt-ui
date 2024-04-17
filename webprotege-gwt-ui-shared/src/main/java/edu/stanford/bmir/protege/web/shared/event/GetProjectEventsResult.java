@@ -15,14 +15,14 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("GetProjectEvents")
-public abstract class GetProjectEventsResult implements Result {
+@JsonTypeName("webprotege.hierarchies.GetProjectEvents")
+public abstract class GetProjectEventsResult<E extends WebProtegeEvent<?>> implements Result {
 
     @JsonCreator
-    public static GetProjectEventsResult create(@JsonProperty("events") EventList<?> events) {
+    public static GetProjectEventsResult create(@JsonProperty("events") EventList events) {
         return new AutoValue_GetProjectEventsResult(events);
     }
 
-    public abstract EventList<?> getEvents();
+    public abstract EventList<E> getEvents();
 
 }

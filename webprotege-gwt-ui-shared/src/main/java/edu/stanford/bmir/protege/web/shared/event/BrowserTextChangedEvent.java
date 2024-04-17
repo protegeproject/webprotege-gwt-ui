@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -23,6 +24,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/03/2013
  */
+@JsonTypeName("webprotege.events.entities.BrowserTextChanged")
 public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHandler> {
 
     public transient static final Event.Type<BrowserTextChangedHandler> ON_BROWSER_TEXT_CHANGED = new Event.Type<>();

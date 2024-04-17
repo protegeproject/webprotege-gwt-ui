@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -21,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
+@JsonTypeName("webprotege.events.project.ProjectChanged")
 public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
     public transient static final Event.Type<ProjectChangedHandler> TYPE = new Event.Type<ProjectChangedHandler>();

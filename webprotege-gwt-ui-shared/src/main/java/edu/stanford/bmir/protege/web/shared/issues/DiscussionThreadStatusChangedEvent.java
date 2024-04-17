@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2016
  */
+@JsonTypeName("webprotege.events.discussion.DiscussionThreadStatusChanged")
 public class DiscussionThreadStatusChangedEvent extends ProjectEvent<DiscussionThreadStatusChangedHandler> {
 
     public static final transient Event.Type<DiscussionThreadStatusChangedHandler> ON_STATUS_CHANGED = new Event.Type<>();

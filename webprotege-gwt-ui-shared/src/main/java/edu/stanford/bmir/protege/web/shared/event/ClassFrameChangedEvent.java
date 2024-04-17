@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/12/2012
  */
+@JsonTypeName("webprotege.events.frames.ClassFrameChanged")
 public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, ClassFrameChangedEventHandler> {
 
     @JsonIgnore

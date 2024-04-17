@@ -12,8 +12,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "eventType")
-public abstract class WebProtegeEvent<H> implements IsSerializable {
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME
+)public abstract class WebProtegeEvent<H> implements IsSerializable {
 
     private ProjectId projectId;
 

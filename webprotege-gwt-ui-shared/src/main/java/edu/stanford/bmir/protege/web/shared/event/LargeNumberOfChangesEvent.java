@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Stanford Center for Biomedical Informatics Research
  * 2020-11-04
  */
+@JsonTypeName("webprotege.events.projects.LargeNumberOfChanges")
 public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChangesHandler> {
 
     public static final Event.Type<LargeNumberOfChangesHandler> LARGE_NUMBER_OF_CHANGES = new Event.Type<>();

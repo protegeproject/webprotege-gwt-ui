@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +16,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
+@JsonTypeName("webprotege.events.watches.WatchAdded")
 public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
     public static final transient Event.Type<WatchAddedHandler> ON_WATCH_ADDED = new Event.Type<>();
