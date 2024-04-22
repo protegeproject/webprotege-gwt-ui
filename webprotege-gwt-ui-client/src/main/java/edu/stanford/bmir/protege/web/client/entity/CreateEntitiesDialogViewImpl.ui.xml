@@ -9,15 +9,18 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
+
         .resetButton {
             flex-grow: 0;
             flex-shrink: 0;
             margin-left: 7px;
         }
+
         .langTagPanel {
             display: flex;
             flex-direction: row;
         }
+
         .warningField {
             margin-top: 20px;
         }
@@ -40,10 +43,14 @@
                               addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>
                 </div>
             </g:HTMLPanel>
-            <g:Label text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default." addStyleNames="{wp.style.formHelpText}"/>
+            <g:Label
+                    text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default."
+                    addStyleNames="{wp.style.formHelpText}"/>
             <g:HTML ui:field="noDisplayLangTagWarningField"
-                     visible="false"
-                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
+                    visible="false"
+                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
         </div>
+
+        <g:SimplePanel ui:field="duplicateEntityResultsContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

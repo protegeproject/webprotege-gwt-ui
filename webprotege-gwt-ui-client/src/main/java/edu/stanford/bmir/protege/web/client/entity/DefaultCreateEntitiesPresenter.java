@@ -12,15 +12,26 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -49,9 +60,15 @@ public class DefaultCreateEntitiesPresenter {
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Nonnull
+    private final DuplicateEntityPresenter duplicateEntityPresenter;
+
+
+    @Nonnull
     private final Messages messages;
 
     private Optional<String> currentLangTag = Optional.empty();
+
+    private final static Logger logger = Logger.getLogger(DefaultCreateEntitiesPresenter.class.getName());
 
     @Inject
     public DefaultCreateEntitiesPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
@@ -60,23 +77,35 @@ public class DefaultCreateEntitiesPresenter {
                                           @Nonnull ModalManager modalManager,
                                           @Nonnull ActiveProjectManager activeProjectManager,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                          @Nonnull Messages messages) {
+                                          @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull Messages messages) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.view = view;
         this.modalManager = modalManager;
         this.activeProjectManager = activeProjectManager;
         this.displayNameSettingsManager = displayNameSettingsManager;
+        this.duplicateEntityPresenter = duplicateEntityPresenter;
         this.messages = messages;
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler) {
+        logger.info("..........................................................");
+        logger.info("Suntem in DefaultCreateEtntitiesPresenter.createEntities");
+        logger.info("..........................................................");
         view.clear();
         view.setEntityType(entityType);
         view.setResetLangTagHandler(this::resetLangTag);
         view.setLangTagChangedHandler(this::handleLangTagChanged);
+        duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
+        duplicateEntityPresenter.setEntityTypes(entityType);
+
+
+        GWT.log("..........................................................");
+        GWT.log("Suntem in DefaultCreateEtntitiesPresenter: ");
+        GWT.log("..........................................................");
+        view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
         modalPresenter.setView(view);
@@ -109,6 +138,8 @@ public class DefaultCreateEntitiesPresenter {
                 }
             });
         });
+
+        this.duplicateEntityPresenter.setLangTag(langTag);
     }
 
     private void displayCurrentLangTagOrProjectDefaultLangTag() {

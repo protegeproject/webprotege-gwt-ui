@@ -185,6 +185,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    DuplicateEntitiesView providesDuplicateEntitiesView(DuplicateEntitiesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     BlankCriteriaView provideEntityIsDeprecatedCriteriaView(BlankCriteriaViewImpl impl) {
         return impl;
     }

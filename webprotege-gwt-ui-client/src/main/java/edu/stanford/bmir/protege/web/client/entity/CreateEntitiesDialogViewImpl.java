@@ -2,10 +2,18 @@ package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
@@ -17,6 +25,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,6 +41,8 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
 
     @UiField
     ExpandingTextBoxImpl textBox;
+
+    private String previousEntitiesString = "";
 
     @UiField(provided = true)
     DefaultLanguageEditor langField;
@@ -51,6 +62,14 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
     private ResetLangTagHandler resetLangTagHandler = () -> {};
 
     private LangTagChangedHandler langTagChangedHandler = () -> {};
+
+    @UiField
+    SimplePanel duplicateEntityResultsContainer;
+
+    private EntitiesStringChangedHandler entitiesStringChangedHandler = (value) -> {};
+
+
+    private final static Logger logger = Logger.getLogger(CreateEntitiesDialogViewImpl.class.getName());
 
     @Inject
     public CreateEntitiesDialogViewImpl(DefaultLanguageEditor languageEditor, @Nonnull Messages messages) {
@@ -125,5 +144,31 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
     protected void onAttach() {
         super.onAttach();
         textBox.setFocus(true);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getDuplicateEntityResultsContainer() {
+        return duplicateEntityResultsContainer;
+    }
+
+    @Override
+    public void setEntitiesStringChangedHandler(EntitiesStringChangedHandler handler) {
+        this.entitiesStringChangedHandler = handler;
+    }
+
+    private void performSearchIfChanged(String entitiesText) {
+        if (!previousEntitiesString.equals(entitiesText)) {
+            previousEntitiesString = entitiesText;
+            entitiesStringChangedHandler.handleEntitiesStringChangedHandler(entitiesText);
+        }
+    }
+
+    @UiHandler("textBox")
+    protected void handleEntitiesInputKeyUp(KeyUpEvent event) {
+        int keyCode = event.getNativeEvent().getKeyCode();
+        if (keyCode != KeyCodes.KEY_UP && keyCode != KeyCodes.KEY_DOWN && keyCode != KeyCodes.KEY_ENTER) {
+            performSearchIfChanged(textBox.getText());
+        }
     }
 }

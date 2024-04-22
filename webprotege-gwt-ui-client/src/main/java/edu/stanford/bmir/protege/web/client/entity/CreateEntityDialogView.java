@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import org.semanticweb.owlapi.model.EntityType;
@@ -36,4 +37,9 @@ public interface CreateEntityDialogView extends IsWidget, HasInitialFocusable {
     void setLangTagChangedHandler(@Nonnull LangTagChangedHandler handler);
 
     void setNoDisplayLanguageForLangTagVisible(boolean visible);
+
+    @Nonnull
+    AcceptsOneWidget getDuplicateEntityResultsContainer();
+
+    void setEntitiesStringChangedHandler(EntitiesStringChangedHandler handler);
 }
