@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldPresenter;
 import edu.stanford.bmir.protege.web.client.search.SearchResultsListPresenter;
+import edu.stanford.bmir.protege.web.shared.entity.DuplicateEntitiesUtil;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -52,11 +53,6 @@ public class DuplicateEntityPresenter {
     private final static Logger logger = Logger.getLogger(DuplicateEntityPresenter.class.getName());
 
 
-
-
-
-
-
     @Inject
     public DuplicateEntityPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull SearchResultsListPresenter searchResultsPresenter,
@@ -86,23 +82,27 @@ public class DuplicateEntityPresenter {
 
     private void performDuplicateSearch(String entitiesText) {
         logger.info("..........................................................");
-        logger.info("Suntem in performSearch: "+entitiesText);
+        logger.info("Suntem in performSearch: " + entitiesText);
         logger.info("..........................................................");
 
         GWT.log("..........................................................");
-        GWT.log("Suntem in performSearch: "+entitiesText);
+        GWT.log("Suntem in performSearch: " + entitiesText);
         GWT.log("..........................................................");
 
 
         duplicates.clear();
-        if(entitiesText.length() < 1) {
+        if (entitiesText.length() < 1) {
             searchResultsPresenter.clearSearchResults();
             return;
         }
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
 
-        getEntities(entitiesText).forEach(entityName -> {
+        List<String> entityNames = getEntities(entitiesText);
+
+        Integer searchActionRequestCount = entityNames.size();
+
+        entityNames.forEach(entityName -> {
             dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
                             entityName,
                             entityTypes,
@@ -110,20 +110,20 @@ public class DuplicateEntityPresenter {
                             searchFilters,
                             PageRequest.requestPage(pageNumber)),
                     view,
-                    this::addToDuplicatesList);
+                    result -> this.processSearchActionResponses(result, searchActionRequestCount));
         });
 
     }
 
-    private List<String> getEntities(String entitiesText){
-        return Arrays.stream(entitiesText.split("/n")).collect(Collectors.toList());
+    private List<String> getEntities(String entitiesText) {
+        return Arrays.stream(entitiesText.split("\\s+")).collect(Collectors.toList());
     }
 
     private LangTagFilter getLangTagFilter() {
         return LangTagFilter.get(ImmutableSet.of(LangTag.get(this.langTag)));
     }
 
-    public void handleEntitiesStringChanged(String value){
+    public void handleEntitiesStringChanged(String value) {
         this.performDuplicateSearch(value);
     }
 
@@ -132,8 +132,26 @@ public class DuplicateEntityPresenter {
         this.langTag = langTag;
     }
 
-    private void addToDuplicatesList(PerformEntitySearchResult result){
+    private void processSearchActionResponses(PerformEntitySearchResult result, Integer searchActionRequestCount) {
+        logger.info(result.getResults().iterator().next().getEntity().getBrowserText());
         duplicates.add(result);
+        searchActionRequestCount--;
+        logger.info("duplicates are dimensiunea:" + duplicates.size());
+        logger.info("primul element din duplicates are atatea elemente: " + duplicates.get(0).getResults().getTotalElements());
+
+        if (searchActionRequestCount == 0) {
+            populateDuplicateResultContainer();
+        }
+    }
+
+    private void populateDuplicateResultContainer() {
+        if (duplicates.isEmpty()) {
+            logger.info("lista duplicatelor. este goala");
+            return;
+        }
+        logger.info("lista duplicatelor. element 1:" + duplicates.get(0));
+
+        this.searchResultsPresenter.displaySearchResult(DuplicateEntitiesUtil.concatenateDuplicateSearchResults(duplicates));
     }
 
 }
