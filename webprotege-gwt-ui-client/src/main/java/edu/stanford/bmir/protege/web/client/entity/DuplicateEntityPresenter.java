@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -98,25 +99,39 @@ public class DuplicateEntityPresenter {
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
 
-        List<String> entityNames = getEntities(entitiesText);
+//        Set<String> entityNames = getEntities(entitiesText);
+//
+//        AtomicInteger searchActionRequestCount = new AtomicInteger(entityNames.size());
 
-        Integer searchActionRequestCount = entityNames.size();
+//        entityNames.forEach(entityName -> {
+//            dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
+//                            entityName,
+//                            entityTypes,
+//                            getLangTagFilter(),
+//                            searchFilters,
+//                            PageRequest.requestPage(pageNumber)),
+//                    view,
+//                    result -> {
+//                        logger.info("result for "+entityName+" is: " + result.getResults());
+//
+//                        this.processSearchActionResult(result, searchActionRequestCount);
+//                        logger.info("executie pentru entityName:" + entityName);
+//                    });
+//        });
 
-        entityNames.forEach(entityName -> {
-            dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
-                            entityName,
-                            entityTypes,
-                            getLangTagFilter(),
-                            searchFilters,
-                            PageRequest.requestPage(pageNumber)),
-                    view,
-                    result -> this.processSearchActionResponses(result, searchActionRequestCount));
-        });
+        dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
+                        entitiesText,
+                        entityTypes,
+                        getLangTagFilter(),
+                        searchFilters,
+                        PageRequest.requestPage(pageNumber)),
+                view,
+                this::processSearchActionResult);
 
     }
 
-    private List<String> getEntities(String entitiesText) {
-        return Arrays.stream(entitiesText.split("\\s+")).collect(Collectors.toList());
+    private Set<String> getEntities(String entitiesText) {
+        return Arrays.stream(entitiesText.split("\\s+")).collect(Collectors.toSet());
     }
 
     private LangTagFilter getLangTagFilter() {
@@ -132,20 +147,37 @@ public class DuplicateEntityPresenter {
         this.langTag = langTag;
     }
 
-    private void processSearchActionResponses(PerformEntitySearchResult result, Integer searchActionRequestCount) {
+//    private void processSearchActionResult(PerformEntitySearchResult result, AtomicInteger searchActionRequestCount) {
+//        if(result.getResults().getTotalElements() == 0){
+//            searchActionRequestCount.decrementAndGet();
+//        }
+//        logger.info(result.getResults().iterator().next().getEntity().getBrowserText());
+//        duplicates.add(result);
+//        searchActionRequestCount.decrementAndGet();
+//        logger.info("duplicates are dimensiunea:" + duplicates.size());
+//        logger.info("primul element din duplicates are atatea elemente: " + duplicates.get(0).getResults().getTotalElements());
+//        logger.info("primul rezultat din primul element din lista de duplicate " + duplicates.get(0).getResults().getPageElements().get(0));
+//        logger.info("searchActionRequestCount: " + searchActionRequestCount);
+//
+//        if (searchActionRequestCount.get() == 0) {
+//            populateDuplicateResultContainer();
+//        }
+//    }
+
+    private void processSearchActionResult(PerformEntitySearchResult result) {
+
         logger.info(result.getResults().iterator().next().getEntity().getBrowserText());
         duplicates.add(result);
-        searchActionRequestCount--;
         logger.info("duplicates are dimensiunea:" + duplicates.size());
         logger.info("primul element din duplicates are atatea elemente: " + duplicates.get(0).getResults().getTotalElements());
+        logger.info("primul rezultat din primul element din lista de duplicate " + duplicates.get(0).getResults().getPageElements().get(0));
 
-        if (searchActionRequestCount == 0) {
-            populateDuplicateResultContainer();
-        }
+        this.searchResultsPresenter.displaySearchResult(result.getResults());
     }
 
     private void populateDuplicateResultContainer() {
         if (duplicates.isEmpty()) {
+            this.searchResultsPresenter.clearSearchResults();
             logger.info("lista duplicatelor. este goala");
             return;
         }

@@ -185,6 +185,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    WhoCreateEntityDialogView providesWhoCreateEntityDialogView(WhoCreateEntitiesDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     DuplicateEntitiesView providesDuplicateEntitiesView(DuplicateEntitiesViewImpl impl) {
         return impl;
     }

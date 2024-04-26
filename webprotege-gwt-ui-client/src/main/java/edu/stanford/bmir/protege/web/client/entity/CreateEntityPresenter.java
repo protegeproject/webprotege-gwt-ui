@@ -30,7 +30,7 @@ public class CreateEntityPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
+    private final WhoDefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
 
     @Nonnull
     private final CreateEntityFormPresenter createEntityFormPresenter;
@@ -41,7 +41,7 @@ public class CreateEntityPresenter {
     @Inject
     public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatch,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
+                                 @Nonnull WhoDefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
                                  @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
         this.dispatch = checkNotNull(dispatch);
         this.projectId = checkNotNull(projectId);

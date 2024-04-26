@@ -9,15 +9,18 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
+
         .resetButton {
             flex-grow: 0;
             flex-shrink: 0;
             margin-left: 7px;
         }
+
         .langTagPanel {
             display: flex;
             flex-direction: row;
         }
+
         .warningField {
             margin-top: 20px;
         }
@@ -26,8 +29,9 @@
         <div class="{wp.style.formGroup}">
             <g:Label text="Names" ui:field="entityNamesLabel" addStyleNames="{wp.style.formLabel}"/>
             <text:ExpandingTextBoxImpl ui:field="textBox"
-                                       mode="MULTI_LINE"
                                        anchorVisible="false"/>
+
+            <!--                                       mode="MULTI_LINE"-->
             <g:Label addStyleNames="{wp.style.formHelpText}"
                      text="{msg.createEntityInstructions}"/>
         </div>
@@ -40,10 +44,20 @@
                               addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>
                 </div>
             </g:HTMLPanel>
-            <g:Label text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default." addStyleNames="{wp.style.formHelpText}"/>
+            <g:Label
+                    text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default."
+                    addStyleNames="{wp.style.formHelpText}"/>
             <g:HTML ui:field="noDisplayLangTagWarningField"
-                     visible="false"
-                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
+                    visible="false"
+                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
         </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
+            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
+                                       mode="MULTI_LINE"
+                                       anchorVisible="false"/>
+        </div>
+
+        <g:SimplePanel ui:field="duplicateEntityResultsContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>
