@@ -22,6 +22,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
+        <g:Label text="Possible duplicates" addStyleNames="{wp.style.formLabel}"/>
         <g:SimplePanel ui:field="duplicateResultsContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

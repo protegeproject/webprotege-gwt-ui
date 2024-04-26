@@ -45,4 +45,6 @@ public interface WhoCreateEntityDialogView extends IsWidget, HasInitialFocusable
     AcceptsOneWidget getDuplicateEntityResultsContainer();
 
     void setEntitiesStringChangedHandler(EntitiesStringChangedHandler handler);
+
+    boolean checkReasonIsSet();
 }

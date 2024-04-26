@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldPresenter;
 import edu.stanford.bmir.protege.web.client.search.SearchResultsListPresenter;
-import edu.stanford.bmir.protege.web.shared.entity.DuplicateEntitiesUtil;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -19,14 +18,10 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,8 +38,6 @@ public class DuplicateEntityPresenter {
     private final EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter;
 
     private final DispatchServiceManager dispatchServiceManager;
-
-    private List<PerformEntitySearchResult> duplicates = new ArrayList<>();
 
     private DuplicateEntitiesView view;
 
@@ -72,6 +65,7 @@ public class DuplicateEntityPresenter {
         logger.info("..........................................................");
         logger.info("Suntem in start");
         logger.info("..........................................................");
+        hideSearchDuplicatesPanel();
         searchResultsPresenter.start(this.view.getDuplicateResultsContainer());
     }
 
@@ -91,33 +85,13 @@ public class DuplicateEntityPresenter {
         GWT.log("..........................................................");
 
 
-        duplicates.clear();
         if (entitiesText.length() < 1) {
+            hideSearchDuplicatesPanel();
             searchResultsPresenter.clearSearchResults();
             return;
         }
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
-
-//        Set<String> entityNames = getEntities(entitiesText);
-//
-//        AtomicInteger searchActionRequestCount = new AtomicInteger(entityNames.size());
-
-//        entityNames.forEach(entityName -> {
-//            dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
-//                            entityName,
-//                            entityTypes,
-//                            getLangTagFilter(),
-//                            searchFilters,
-//                            PageRequest.requestPage(pageNumber)),
-//                    view,
-//                    result -> {
-//                        logger.info("result for "+entityName+" is: " + result.getResults());
-//
-//                        this.processSearchActionResult(result, searchActionRequestCount);
-//                        logger.info("executie pentru entityName:" + entityName);
-//                    });
-//        });
 
         dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
                         entitiesText,
@@ -128,10 +102,6 @@ public class DuplicateEntityPresenter {
                 view,
                 this::processSearchActionResult);
 
-    }
-
-    private Set<String> getEntities(String entitiesText) {
-        return Arrays.stream(entitiesText.split("\\s+")).collect(Collectors.toSet());
     }
 
     private LangTagFilter getLangTagFilter() {
@@ -147,43 +117,20 @@ public class DuplicateEntityPresenter {
         this.langTag = langTag;
     }
 
-//    private void processSearchActionResult(PerformEntitySearchResult result, AtomicInteger searchActionRequestCount) {
-//        if(result.getResults().getTotalElements() == 0){
-//            searchActionRequestCount.decrementAndGet();
-//        }
-//        logger.info(result.getResults().iterator().next().getEntity().getBrowserText());
-//        duplicates.add(result);
-//        searchActionRequestCount.decrementAndGet();
-//        logger.info("duplicates are dimensiunea:" + duplicates.size());
-//        logger.info("primul element din duplicates are atatea elemente: " + duplicates.get(0).getResults().getTotalElements());
-//        logger.info("primul rezultat din primul element din lista de duplicate " + duplicates.get(0).getResults().getPageElements().get(0));
-//        logger.info("searchActionRequestCount: " + searchActionRequestCount);
-//
-//        if (searchActionRequestCount.get() == 0) {
-//            populateDuplicateResultContainer();
-//        }
-//    }
-
     private void processSearchActionResult(PerformEntitySearchResult result) {
+        if(result.getResults() == null || result.getResults().getTotalElements() == 0){
+            hideSearchDuplicatesPanel();
+            return;
+        }
 
-        logger.info(result.getResults().iterator().next().getEntity().getBrowserText());
-        duplicates.add(result);
-        logger.info("duplicates are dimensiunea:" + duplicates.size());
-        logger.info("primul element din duplicates are atatea elemente: " + duplicates.get(0).getResults().getTotalElements());
-        logger.info("primul rezultat din primul element din lista de duplicate " + duplicates.get(0).getResults().getPageElements().get(0));
+        this.view.asWidget().setVisible(true);
+        logger.info("Ressults for: "+result.getResults().iterator().next().getEntity().getBrowserText()+"\n"+result.getResults());
 
         this.searchResultsPresenter.displaySearchResult(result.getResults());
     }
 
-    private void populateDuplicateResultContainer() {
-        if (duplicates.isEmpty()) {
-            this.searchResultsPresenter.clearSearchResults();
-            logger.info("lista duplicatelor. este goala");
-            return;
-        }
-        logger.info("lista duplicatelor. element 1:" + duplicates.get(0));
-
-        this.searchResultsPresenter.displaySearchResult(DuplicateEntitiesUtil.concatenateDuplicateSearchResults(duplicates));
+    private void hideSearchDuplicatesPanel(){
+        this.view.asWidget().setVisible(false);
     }
 
 }

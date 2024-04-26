@@ -113,8 +113,10 @@ public class WhoDefaultCreateEntitiesPresenter {
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            handleCreateEntities(entityType, view.getText(), view.getReasonForChange(), parentEntity, entitiesCreatedHandler);
-            closer.closeModal();
+            if(view.checkReasonIsSet()){
+                handleCreateEntities(entityType, view.getText(), view.getReasonForChange(), parentEntity, entitiesCreatedHandler);
+                closer.closeModal();
+            }
         });
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
@@ -172,8 +174,9 @@ public class WhoDefaultCreateEntitiesPresenter {
                 result -> {
                     dispatchServiceManager.execute(
                             CreateEntityDiscussionThreadAction.create(projectId, result.getEntities().stream().findFirst().get().getEntity(), reasonForChange),
-                            threadActionResult -> {});
-                    entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
+                            threadActionResult -> {
+                                entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
+                            });
                 });
 
     }
@@ -211,9 +214,4 @@ public class WhoDefaultCreateEntitiesPresenter {
         return parent.map(p -> ImmutableSet.of((E) p)).orElseGet(defaultSupplier);
     }
 
-
-    public interface EntitiesCreatedHandler {
-
-        void handleEntitiesCreated(ImmutableCollection<EntityNode> entities);
-    }
 }

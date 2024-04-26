@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 7 Dec 2017
  */
-public class WhoCreateEntitiesDialogViewImpl extends Composite implements  WhoCreateEntityDialogView, HasAcceptKeyHandler {
+public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCreateEntityDialogView, HasAcceptKeyHandler {
 
     interface CreateEntitiesDialogViewImplUiBinder extends UiBinder<HTMLPanel, WhoCreateEntitiesDialogViewImpl> {
     }
@@ -62,14 +63,23 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements  WhoCr
     @Nonnull
     private final Messages messages;
 
-    private ResetLangTagHandler resetLangTagHandler = () -> {};
+    private ResetLangTagHandler resetLangTagHandler = () -> {
+    };
 
-    private LangTagChangedHandler langTagChangedHandler = () -> {};
+    private LangTagChangedHandler langTagChangedHandler = () -> {
+    };
 
     @UiField
     SimplePanel duplicateEntityResultsContainer;
 
-    private EntitiesStringChangedHandler entitiesStringChangedHandler = (value) -> {};
+    @UiField
+    Label reasonForChangeErrorLabel;
+
+    private String reasonForChangeErrorMessage = "A reason for the change was not provided.\n" +
+            "Please fill in the Reason for change field.";
+
+    private EntitiesStringChangedHandler entitiesStringChangedHandler = (value) -> {
+    };
 
 
     private final static Logger logger = Logger.getLogger(WhoCreateEntitiesDialogViewImpl.class.getName());
@@ -103,6 +113,7 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements  WhoCr
     public void clear() {
         textBox.setText("");
         reasonForChangeTextBox.setText("");
+        clearErrors();
     }
 
     @Override
@@ -118,7 +129,7 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements  WhoCr
     @Override
     public void setNoDisplayLanguageForLangTagVisible(boolean visible) {
         noDisplayLangTagWarningField.setVisible(visible);
-        if(visible) {
+        if (visible) {
             String langTag = langField.getValue().orElse("");
             noDisplayLangTagWarningField.setHTML(messages.displayName_noDisplayNameForLangTag(langTag));
         }
@@ -180,5 +191,24 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements  WhoCr
         if (keyCode != KeyCodes.KEY_UP && keyCode != KeyCodes.KEY_DOWN && keyCode != KeyCodes.KEY_ENTER) {
             performSearchIfChanged(textBox.getText());
         }
+    }
+
+
+    @Override
+    public boolean checkReasonIsSet() {
+        if (reasonForChangeTextBox.getText().isEmpty()) {
+            reasonForChangeErrorLabel.setText(reasonForChangeErrorMessage);
+            reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+            textBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
+            return false;
+        }
+        clearErrors();
+        return true;
+    }
+
+    public void clearErrors(){
+        reasonForChangeErrorLabel.setText("");
+        textBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
+        reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
     }
 }

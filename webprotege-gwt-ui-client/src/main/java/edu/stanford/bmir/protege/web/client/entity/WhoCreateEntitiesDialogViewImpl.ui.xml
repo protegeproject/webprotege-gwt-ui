@@ -24,6 +24,10 @@
         .warningField {
             margin-top: 20px;
         }
+
+        .mandatoryField {
+            color: red;
+        }
     </ui:style>
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
@@ -56,6 +60,7 @@
             <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
                                        mode="MULTI_LINE"
                                        anchorVisible="false"/>
+            <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
         </div>
 
         <g:SimplePanel ui:field="duplicateEntityResultsContainer"/>
