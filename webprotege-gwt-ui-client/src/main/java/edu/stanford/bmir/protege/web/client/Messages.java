@@ -230,6 +230,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("dialog.yes")
     String dialog_yes();
 
+
+    @DefaultMessage("Show Hierarchy")
+    @Key("dialog.show_hierarchy")
+    String dialog_show_hierarchy();
+
     
     @DefaultMessage("Direct Link")
     @Key("directLink")

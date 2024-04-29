@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
@@ -18,7 +18,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -63,6 +62,9 @@ public class WhoDefaultCreateEntitiesPresenter {
     @Nonnull
     private final DuplicateEntityPresenter duplicateEntityPresenter;
 
+    @Nonnull
+    private final SelectionModel selectionModel;
+
 
     @Nonnull
     private final Messages messages;
@@ -78,7 +80,7 @@ public class WhoDefaultCreateEntitiesPresenter {
                                              @Nonnull ModalManager modalManager,
                                              @Nonnull ActiveProjectManager activeProjectManager,
                                              @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                             @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull Messages messages) {
+                                             @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull SelectionModel selectionModel, @Nonnull Messages messages) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.view = view;
@@ -86,6 +88,7 @@ public class WhoDefaultCreateEntitiesPresenter {
         this.activeProjectManager = activeProjectManager;
         this.displayNameSettingsManager = displayNameSettingsManager;
         this.duplicateEntityPresenter = duplicateEntityPresenter;
+        this.selectionModel = selectionModel;
         this.messages = messages;
     }
 
@@ -110,13 +113,19 @@ public class WhoDefaultCreateEntitiesPresenter {
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
         modalPresenter.setView(view);
+        modalPresenter.addButton(DialogButton.SHOW_HIERACHY);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            if(view.checkReasonIsSet()){
+            if (view.checkReasonIsSet()) {
                 handleCreateEntities(entityType, view.getText(), view.getReasonForChange(), parentEntity, entitiesCreatedHandler);
                 closer.closeModal();
             }
+        });
+
+        modalPresenter.setButtonHandler(DialogButton.SHOW_HIERACHY, closer -> {
+            closer.closeModal();
+            selectChosenEntity();
         });
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
@@ -146,17 +155,15 @@ public class WhoDefaultCreateEntitiesPresenter {
     }
 
     private void displayCurrentLangTagOrProjectDefaultLangTag() {
-        activeProjectManager.getActiveProjectDetails(details -> {
-            details.ifPresent(d -> {
-                currentLangTag.ifPresent(view::setLangTag);
-                if (!currentLangTag.isPresent()) {
-                    String defaultLangTag = d.getDefaultDictionaryLanguage().getLang();
-                    currentLangTag = Optional.of(defaultLangTag);
-                    view.setLangTag(defaultLangTag);
-                    handleLangTagChanged();
-                }
-            });
-        });
+        activeProjectManager.getActiveProjectDetails(details -> details.ifPresent(d -> {
+            currentLangTag.ifPresent(view::setLangTag);
+            if (!currentLangTag.isPresent()) {
+                String defaultLangTag = d.getDefaultDictionaryLanguage().getLang();
+                currentLangTag = Optional.of(defaultLangTag);
+                view.setLangTag(defaultLangTag);
+                handleLangTagChanged();
+            }
+        }));
     }
 
     private <E extends OWLEntity> void handleCreateEntities(@Nonnull EntityType<?> entityType,
@@ -213,5 +220,13 @@ public class WhoDefaultCreateEntitiesPresenter {
                                                                        Supplier<ImmutableSet<E>> defaultSupplier) {
         return parent.map(p -> ImmutableSet.of((E) p)).orElseGet(defaultSupplier);
     }
+
+
+    private void selectChosenEntity() {
+        duplicateEntityPresenter.getSelectedSearchResult()
+                .ifPresent(sel -> selectionModel.setSelection(sel.getEntity()));
+    }
+
+
 
 }

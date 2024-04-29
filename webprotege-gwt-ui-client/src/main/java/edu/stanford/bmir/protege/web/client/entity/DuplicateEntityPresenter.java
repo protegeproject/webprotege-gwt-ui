@@ -6,7 +6,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldPresenter;
+import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
 import edu.stanford.bmir.protege.web.client.search.SearchResultsListPresenter;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -20,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -131,6 +134,10 @@ public class DuplicateEntityPresenter {
 
     private void hideSearchDuplicatesPanel(){
         this.view.asWidget().setVisible(false);
+    }
+
+    public Optional<OWLEntityData> getSelectedSearchResult() {
+        return searchResultsPresenter.getSelectedSearchResult();
     }
 
 }

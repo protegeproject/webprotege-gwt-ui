@@ -35,6 +35,8 @@ public final class DialogButton {
 
     public static final DialogButton SELECT = new DialogButton(getMessages().dialog_select());
 
+    public static final DialogButton SHOW_HIERACHY = new DialogButton(getMessages().dialog_show_hierarchy());
+
     public static Messages getMessages() {
         return messages;
     }

@@ -206,7 +206,7 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCre
         return true;
     }
 
-    public void clearErrors(){
+    public void clearErrors() {
         reasonForChangeErrorLabel.setText("");
         textBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
         reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
