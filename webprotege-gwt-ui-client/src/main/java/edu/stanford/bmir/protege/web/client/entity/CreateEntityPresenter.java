@@ -30,7 +30,10 @@ public class CreateEntityPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final WhoDefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
+    private final DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
+
+    @Nonnull
+    private final WhoCreateClassPresenter whoCreateClassPresenter;
 
     @Nonnull
     private final CreateEntityFormPresenter createEntityFormPresenter;
@@ -41,11 +44,12 @@ public class CreateEntityPresenter {
     @Inject
     public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatch,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull WhoDefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
-                                 @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
+                                 @Nonnull DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
+                                 @Nonnull WhoCreateClassPresenter whoCreateClassPresenter, @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
         this.dispatch = checkNotNull(dispatch);
         this.projectId = checkNotNull(projectId);
         this.defaultCreateEntitiesPresenter = checkNotNull(defaultCreateEntitiesPresenter);
+        this.whoCreateClassPresenter = checkNotNull(whoCreateClassPresenter);
         this.createEntityFormPresenter = checkNotNull(createEntityFormPresenter);
     }
 
@@ -77,28 +81,35 @@ public class CreateEntityPresenter {
                                                  @Nonnull Optional<? extends OWLEntity> parentEntity,
                                                  @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
                                                  @Nonnull ImmutableList<FormDescriptorDto> createEntityForms) {
-        logger.info("..........................................................");
-        logger.info("Suntem in CreateEntitiesPresenter.handleEntityCreationFormsResult ");
-        logger.info("..........................................................");
-        if (createEntityForms.isEmpty()) {
-            logger.info("..........................................................");
-            logger.info("Suntem in CreateEntitiesPresenter.handleEntityCreationFormsResult: if() ");
-            logger.info("..........................................................");
-            defaultCreateEntitiesPresenter.createEntities(entityType,
-                                                          parentEntity,
-                                                          entitiesCreatedHandler);
 
-        }
-        else {
-            logger.info("..........................................................");
-            logger.info("Suntem in CreateEntitiesPresenter.handleEntityCreationFormsResult: else() ");
-            logger.info("..........................................................");
+        if (isImmutableListNotEmpty(createEntityForms)) {
 
             createEntityFormPresenter.createEntities(entityType,
-                                                     parentEntity,
-                                                     entitiesCreatedHandler,
-                                                     createEntityForms);
+                    parentEntity,
+                    entitiesCreatedHandler,
+                    createEntityForms);
+
+            return;
         }
+        if(isEntityTypeClass(entityType)){
+            whoCreateClassPresenter.createEntities(entityType,
+                    parentEntity,
+                    entitiesCreatedHandler);
+
+            return;
+        }
+
+        defaultCreateEntitiesPresenter.createEntities(entityType,
+                parentEntity,
+                entitiesCreatedHandler);
+    }
+
+    private <T> boolean  isImmutableListNotEmpty(ImmutableList<T> listToCheck){
+        return !listToCheck.isEmpty();
+    }
+
+    private boolean isEntityTypeClass(EntityType entityType){
+        return entityType.equals(EntityType.CLASS);
     }
 
     public interface EntitiesCreatedHandler {

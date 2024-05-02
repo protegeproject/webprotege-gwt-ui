@@ -2,8 +2,11 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -46,6 +49,12 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
+
+    @UiField
+    Button showInHierarchyButton;
+
+    SearchPopUpHierarchyHandler searchPopUpHierarchyHandler = (uiObject) -> {};
+
     @Inject
     public EntitySearchResultViewImpl(@Nonnull EntityNodeHtmlRenderer renderer,
                                       @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
@@ -81,5 +90,15 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     public void setOboId(@Nonnull String oboId) {
         oboIdField.setText(oboId);
         oboIdField.setVisible(true);
+    }
+
+    @UiHandler("showInHierarchyButton")
+    public void showHierarchyButtonClicked(ClickEvent event){
+        this.searchPopUpHierarchyHandler.showPupUpHierarchy(showInHierarchyButton);
+    }
+
+    @Override
+    public void setPopUpHierarchyHandler(SearchPopUpHierarchyHandler handler) {
+        this.searchPopUpHierarchyHandler = handler;
     }
 }

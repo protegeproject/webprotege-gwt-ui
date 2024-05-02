@@ -33,9 +33,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 7 Dec 2017
  */
-public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCreateEntityDialogView, HasAcceptKeyHandler {
+public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreateClassDialogView, HasAcceptKeyHandler {
 
-    interface CreateEntitiesDialogViewImplUiBinder extends UiBinder<HTMLPanel, WhoCreateEntitiesDialogViewImpl> {
+    interface CreateEntitiesDialogViewImplUiBinder extends UiBinder<HTMLPanel, WhoCreateClassDialogViewImpl> {
     }
 
     private static CreateEntitiesDialogViewImplUiBinder ourUiBinder = GWT.create(CreateEntitiesDialogViewImplUiBinder.class);
@@ -75,6 +75,8 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCre
     @UiField
     Label reasonForChangeErrorLabel;
 
+    private EntityType entityType;
+
     private String reasonForChangeErrorMessage = "A reason for the change was not provided.\n" +
             "Please fill in the Reason for change field.";
 
@@ -82,10 +84,10 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCre
     };
 
 
-    private final static Logger logger = Logger.getLogger(WhoCreateEntitiesDialogViewImpl.class.getName());
+    private final static Logger logger = Logger.getLogger(WhoCreateClassDialogViewImpl.class.getName());
 
     @Inject
-    public WhoCreateEntitiesDialogViewImpl(DefaultLanguageEditor languageEditor, @Nonnull Messages messages) {
+    public WhoCreateClassDialogViewImpl(DefaultLanguageEditor languageEditor, @Nonnull Messages messages) {
         this.langField = checkNotNull(languageEditor);
         this.messages = checkNotNull(messages);
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -94,6 +96,7 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCre
 
     @Override
     public void setEntityType(@Nonnull EntityType<?> entityType) {
+        this.entityType = entityType;
         entityNamesLabel.setText(entityType.getPrintName() + " names");
     }
 
@@ -187,15 +190,26 @@ public class WhoCreateEntitiesDialogViewImpl extends Composite implements WhoCre
 
     @UiHandler("textBox")
     protected void handleEntitiesInputKeyUp(KeyUpEvent event) {
+        if(isNotClassEntityType()){
+            return;
+        }
         int keyCode = event.getNativeEvent().getKeyCode();
         if (keyCode != KeyCodes.KEY_UP && keyCode != KeyCodes.KEY_DOWN && keyCode != KeyCodes.KEY_ENTER) {
             performSearchIfChanged(textBox.getText());
         }
     }
 
+    private boolean isClassEntityType(){
+        return this.entityType.equals(EntityType.CLASS);
+    }
+
+    private boolean isNotClassEntityType(){
+        return !isClassEntityType();
+    }
+
 
     @Override
-    public boolean checkReasonIsSet() {
+    public boolean isReasonForChangeSet() {
         if (reasonForChangeTextBox.getText().isEmpty()) {
             reasonForChangeErrorLabel.setText(reasonForChangeErrorMessage);
             reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());

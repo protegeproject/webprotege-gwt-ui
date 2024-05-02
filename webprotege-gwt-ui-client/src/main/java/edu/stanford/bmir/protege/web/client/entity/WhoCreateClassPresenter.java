@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
@@ -38,7 +40,7 @@ import java.util.logging.Logger;
  * Stanford Center for Biomedical Informatics Research
  * 2020-09-29
  */
-public class WhoDefaultCreateEntitiesPresenter {
+public class WhoCreateClassPresenter {
 
 
     @Nonnull
@@ -48,7 +50,7 @@ public class WhoDefaultCreateEntitiesPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final WhoCreateEntityDialogView view;
+    private final WhoCreateClassDialogView view;
 
     @Nonnull
     private final ModalManager modalManager;
@@ -71,16 +73,16 @@ public class WhoDefaultCreateEntitiesPresenter {
 
     private Optional<String> currentLangTag = Optional.empty();
 
-    private final static Logger logger = Logger.getLogger(WhoDefaultCreateEntitiesPresenter.class.getName());
+    private final static Logger logger = Logger.getLogger(WhoCreateClassPresenter.class.getName());
 
     @Inject
-    public WhoDefaultCreateEntitiesPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
-                                             @Nonnull ProjectId projectId,
-                                             @Nonnull WhoCreateEntityDialogView view,
-                                             @Nonnull ModalManager modalManager,
-                                             @Nonnull ActiveProjectManager activeProjectManager,
-                                             @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                             @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull SelectionModel selectionModel, @Nonnull Messages messages) {
+    public WhoCreateClassPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
+                                   @Nonnull ProjectId projectId,
+                                   @Nonnull WhoCreateClassDialogView view,
+                                   @Nonnull ModalManager modalManager,
+                                   @Nonnull ActiveProjectManager activeProjectManager,
+                                   @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
+                                   @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull SelectionModel selectionModel, @Nonnull Messages messages) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.view = view;
@@ -95,37 +97,25 @@ public class WhoDefaultCreateEntitiesPresenter {
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler) {
-        logger.info("..........................................................");
-        logger.info("Suntem in DefaultCreateEtntitiesPresenter.createEntities");
-        logger.info("..........................................................");
+
         view.clear();
         view.setEntityType(entityType);
         view.setResetLangTagHandler(this::resetLangTag);
         view.setLangTagChangedHandler(this::handleLangTagChanged);
         duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
         duplicateEntityPresenter.setEntityTypes(entityType);
-
-
-        GWT.log("..........................................................");
-        GWT.log("Suntem in DefaultCreateEtntitiesPresenter: ");
-        GWT.log("..........................................................");
         view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
+
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
         modalPresenter.setView(view);
-        modalPresenter.addButton(DialogButton.SHOW_HIERACHY);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            if (view.checkReasonIsSet()) {
+            if (view.isReasonForChangeSet()) {
                 handleCreateEntities(entityType, view.getText(), view.getReasonForChange(), parentEntity, entitiesCreatedHandler);
                 closer.closeModal();
             }
-        });
-
-        modalPresenter.setButtonHandler(DialogButton.SHOW_HIERACHY, closer -> {
-            closer.closeModal();
-            selectChosenEntity();
         });
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
@@ -226,7 +216,6 @@ public class WhoDefaultCreateEntitiesPresenter {
         duplicateEntityPresenter.getSelectedSearchResult()
                 .ifPresent(sel -> selectionModel.setSelection(sel.getEntity()));
     }
-
 
 
 }

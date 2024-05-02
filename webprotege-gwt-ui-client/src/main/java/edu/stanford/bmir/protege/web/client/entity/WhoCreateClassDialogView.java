@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 7 Dec 2017
  */
-public interface WhoCreateEntityDialogView extends IsWidget, HasInitialFocusable {
+public interface WhoCreateClassDialogView extends IsWidget, HasInitialFocusable {
 
     interface ResetLangTagHandler {
         void handleResetLangTag();
@@ -46,5 +46,5 @@ public interface WhoCreateEntityDialogView extends IsWidget, HasInitialFocusable
 
     void setEntitiesStringChangedHandler(EntitiesStringChangedHandler handler);
 
-    boolean checkReasonIsSet();
+    boolean isReasonForChangeSet();
 }
