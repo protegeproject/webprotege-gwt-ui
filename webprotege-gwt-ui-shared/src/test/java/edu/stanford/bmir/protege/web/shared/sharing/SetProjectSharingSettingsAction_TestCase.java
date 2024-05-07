@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,16 +34,20 @@ public class SetProjectSharingSettingsAction_TestCase {
     @Mock
     private ProjectId projectId;
 
+    @Mock
+    private ChangeRequestId changeRequestId;
+
+
     @Before
     public void setUp() throws Exception {
-        action = SetProjectSharingSettingsAction.create(projectSharingSettings);
-        otherAction = SetProjectSharingSettingsAction.create(projectSharingSettings);
+        action = SetProjectSharingSettingsAction.create(projectSharingSettings, changeRequestId, projectId);
+        otherAction = SetProjectSharingSettingsAction.create(projectSharingSettings, changeRequestId, projectId);
         when(projectSharingSettings.getProjectId()).thenReturn(projectId);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        SetProjectSharingSettingsAction.create(null);
+        SetProjectSharingSettingsAction.create(null, changeRequestId, projectId);
     }
 
     @Test
@@ -72,7 +77,7 @@ public class SetProjectSharingSettingsAction_TestCase {
 
     @Test
     public void shouldReturnSuppliedSharingSettings() {
-        assertThat(action.getProjectSharingSettings(), is(projectSharingSettings));
+        assertThat(action.getSettings(), is(projectSharingSettings));
     }
 
     @Test

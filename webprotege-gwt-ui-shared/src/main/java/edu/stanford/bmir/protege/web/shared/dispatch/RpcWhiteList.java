@@ -978,6 +978,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     DropType _DropType;
 
+    GetUserInfoResult _GetUserInfoResult;
+
     public RpcWhiteList() {
     }
 }

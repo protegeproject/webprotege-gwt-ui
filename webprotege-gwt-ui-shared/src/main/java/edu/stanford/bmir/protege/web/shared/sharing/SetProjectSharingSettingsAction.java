@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.sharing;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -18,32 +19,42 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.sharing.SetProjectSharingSettings")
 public class SetProjectSharingSettingsAction implements ProjectAction<SetProjectSharingSettingsResult> {
 
-    private ProjectSharingSettings projectSharingSettings;
+    private ProjectSharingSettings settings;
+
+    private ChangeRequestId changeRequestId;
+
+    private ProjectId projectId;
 
     private SetProjectSharingSettingsAction() {
     }
 
-    private SetProjectSharingSettingsAction(ProjectSharingSettings projectSharingSettings) {
-        this.projectSharingSettings = checkNotNull(projectSharingSettings);
+    private SetProjectSharingSettingsAction(ProjectSharingSettings projectSharingSettings, ChangeRequestId changeRequestId, ProjectId projectId) {
+        this.settings = checkNotNull(projectSharingSettings);
+        this.projectId = projectId;
+        this.changeRequestId = changeRequestId;
     }
 
-    public static SetProjectSharingSettingsAction create(ProjectSharingSettings projectSharingSettings) {
-        return new SetProjectSharingSettingsAction(projectSharingSettings);
+    public static SetProjectSharingSettingsAction create(ProjectSharingSettings projectSharingSettings,  ChangeRequestId changeRequestId, ProjectId projectId) {
+        return new SetProjectSharingSettingsAction(projectSharingSettings, changeRequestId, projectId);
     }
 
     @Nonnull
     @Override
     public ProjectId getProjectId() {
-        return projectSharingSettings.getProjectId();
+        return settings.getProjectId();
     }
 
-    public ProjectSharingSettings getProjectSharingSettings() {
-        return projectSharingSettings;
+    public ProjectSharingSettings getSettings() {
+        return settings;
+    }
+
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectSharingSettings);
+        return Objects.hashCode(settings);
     }
 
     @Override
@@ -55,14 +66,14 @@ public class SetProjectSharingSettingsAction implements ProjectAction<SetProject
             return false;
         }
         SetProjectSharingSettingsAction other = (SetProjectSharingSettingsAction) obj;
-        return this.projectSharingSettings.equals(other.projectSharingSettings);
+        return this.settings.equals(other.settings);
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("SetProjectSharingSettingsAction")
-                .addValue(projectSharingSettings)
+                .addValue(settings)
                 .toString();
     }
 }
