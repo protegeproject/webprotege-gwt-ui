@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldPresenter;
+import edu.stanford.bmir.protege.web.client.search.HierarchyPopupElementSelectionHandler;
 import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
 import edu.stanford.bmir.protege.web.client.search.SearchResultsListPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -47,6 +48,8 @@ public class DuplicateEntityPresenter {
 
     private String langTag = "";
 
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {};
+
     private final static Logger logger = Logger.getLogger(DuplicateEntityPresenter.class.getName());
 
 
@@ -69,6 +72,7 @@ public class DuplicateEntityPresenter {
         logger.info("Suntem in start");
         logger.info("..........................................................");
         hideSearchDuplicatesPanel();
+        searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
         searchResultsPresenter.start(this.view.getDuplicateResultsContainer());
     }
 
@@ -138,6 +142,10 @@ public class DuplicateEntityPresenter {
 
     public Optional<OWLEntityData> getSelectedSearchResult() {
         return searchResultsPresenter.getSelectedSearchResult();
+    }
+
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+        this.hierarchySelectionHandler = handler;
     }
 
 }

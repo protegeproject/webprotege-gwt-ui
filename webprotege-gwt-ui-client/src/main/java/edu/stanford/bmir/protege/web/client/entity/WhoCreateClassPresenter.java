@@ -117,8 +117,14 @@ public class WhoCreateClassPresenter {
                 closer.closeModal();
             }
         });
+        duplicateEntityPresenter.setHierarchySelectionHandler(selection -> {
+            selectionModel.setSelection(selection.getEntity());
+            modalPresenter.closeModal();
+        });
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
+
+
 
     }
 

@@ -42,6 +42,8 @@ public class SearchResultsListPresenter {
     @Nonnull
     private PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
 
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+
     @Inject
     public SearchResultsListPresenter(@Nonnull SearchResultsListView view,
                                       @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory,
@@ -72,6 +74,7 @@ public class SearchResultsListPresenter {
                    .stream()
                    .map(r -> {
                        EntitySearchResultPresenter presenter = resultPresenterFactory.create(r, hierarchyPopupPresenterFactory.create(HierarchyId.CLASS_HIERARCHY));
+                       presenter.setHierarchySelectionHandler(hierarchySelectionHandler);
                        presenter.start();
                        return presenter;
                    })
@@ -117,6 +120,10 @@ public class SearchResultsListPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+        this.hierarchySelectionHandler = handler;
     }
 }
 

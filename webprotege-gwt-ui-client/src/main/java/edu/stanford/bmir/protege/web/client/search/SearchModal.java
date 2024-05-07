@@ -43,7 +43,7 @@ public class SearchModal {
 
     public void setEntityTypes(EntityType<?>... entityTypes) {
         searchPresenter.setEntityTypes(entityTypes);
-        if(entityTypes.length == 1) {
+        if (entityTypes.length == 1) {
             title = messages.searchFor(entityTypes[0].getPrintName());
         }
     }
@@ -57,6 +57,10 @@ public class SearchModal {
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
             selectChosenEntity();
+        });
+        searchPresenter.setHierarchySelectionHandler(selection -> {
+            selectionModel.setSelection(selection.getEntity());
+            modalPresenter.closeModal();
         });
         searchPresenter.start();
         searchPresenter.setAcceptKeyHandler(modalPresenter::accept);

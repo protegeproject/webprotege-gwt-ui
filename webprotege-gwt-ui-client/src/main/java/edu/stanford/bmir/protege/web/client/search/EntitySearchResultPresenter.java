@@ -40,6 +40,8 @@ public class EntitySearchResultPresenter {
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+
 
     @AutoFactory
     public EntitySearchResultPresenter(
@@ -73,7 +75,7 @@ public class EntitySearchResultPresenter {
         this.view.setPopUpHierarchyHandler((target -> {
             hierarchyPopupPresenter.start(eventBus);
             hierarchyPopupPresenter.setSelectedEntity(entity.getEntity());
-            hierarchyPopupPresenter.show(target, (sel) -> {});
+            hierarchyPopupPresenter.show(target, hierarchySelectionHandler::handleHierarchySelection);
             hierarchyPopupPresenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
         }));
         Optional<String> oboId = OboId.getOboId(entity.getEntity().getIRI());
@@ -91,5 +93,9 @@ public class EntitySearchResultPresenter {
     @Nonnull
     public EntityNode getEntity() {
         return result.getEntity();
+    }
+
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+        this.hierarchySelectionHandler = handler;
     }
 }

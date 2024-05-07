@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
@@ -69,6 +70,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private SearchResultChosenHandler searchResultChosenHandler;
 
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+
     private AcceptKeyHandler acceptKeyHandler = () -> {};
 
     @Inject
@@ -99,6 +102,7 @@ public class SearchPresenter implements HasInitialFocusable {
             restartPageChangeTimer();
         });
         searchResultsPresenter.start(view.getSearchResultsContainer());
+        searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
         dispatchServiceManager.beginBatch();
         dispatchServiceManager.execute(GetProjectLangTagsAction.create(projectId),
                                        this::handleProjectLangTags);
@@ -193,5 +197,9 @@ public class SearchPresenter implements HasInitialFocusable {
     @Nonnull
     public Optional<OWLEntityData> getSelectedSearchResult() {
         return searchResultsPresenter.getSelectedSearchResult();
+    }
+
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+        this.hierarchySelectionHandler = handler;
     }
 }
