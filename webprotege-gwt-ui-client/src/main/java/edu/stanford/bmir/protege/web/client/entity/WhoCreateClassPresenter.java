@@ -118,6 +118,7 @@ public class WhoCreateClassPresenter {
             }
         });
         duplicateEntityPresenter.setHierarchySelectionHandler(selection -> {
+            logger.info("avem selectie: "+selection);
             selectionModel.setSelection(selection.getEntity());
             modalPresenter.closeModal();
         });

@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -41,6 +42,9 @@ public class EntitySearchResultPresenter {
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+
+    private final static Logger logger = Logger.getLogger(EntitySearchResultPresenter.class.getName());
+
 
 
     @AutoFactory
@@ -73,9 +77,11 @@ public class EntitySearchResultPresenter {
         this.view.setEntity(entity);
         this.view.setResultMatchViews(views);
         this.view.setPopUpHierarchyHandler((target -> {
+            logger.info("------------------------------");
+            logger.info("eventBus value: "+eventBus);
             hierarchyPopupPresenter.start(eventBus);
             hierarchyPopupPresenter.setSelectedEntity(entity.getEntity());
-            hierarchyPopupPresenter.show(target, hierarchySelectionHandler::handleHierarchySelection);
+            hierarchyPopupPresenter.showCustom(target, hierarchySelectionHandler::handleHierarchySelection);
             hierarchyPopupPresenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
         }));
         Optional<String> oboId = OboId.getOboId(entity.getEntity().getIRI());

@@ -80,4 +80,18 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
         renderer.setDisplayLanguage(settings);
         treeWidget.setRenderer(renderer);
     }
+
+    @Override
+    public void setMouseDownHandler(Consumer<EntityNode> entityConsumer) {
+        treeWidget.addMouseDownHandler(event -> treeWidget.getFirstSelectedUserObject()
+                .ifPresent(n -> {
+                    Timer t = new Timer() {
+                        @Override
+                        public void run() {
+                            entityConsumer.accept(n);
+                        }
+                    };
+                    t.schedule(200);
+                }));
+    }
 }

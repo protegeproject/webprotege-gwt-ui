@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,6 +39,9 @@ public class HierarchyPopupPresenter {
 
     private Optional<OWLEntity> selectedEntity = Optional.empty();
 
+    private final static Logger logger = Logger.getLogger(HierarchyPopupPresenter.class.getName());
+
+
     @Inject
     @AutoFactory
     public HierarchyPopupPresenter(@Nonnull HierarchyId hierarchyId,
@@ -53,7 +57,7 @@ public class HierarchyPopupPresenter {
 
     public void start(@Nonnull WebProtegeEventBus eventBus) {
         model.start(eventBus,
-                    hierarchyId);
+                hierarchyId);
         view.setModel(model);
     }
 
@@ -61,12 +65,32 @@ public class HierarchyPopupPresenter {
         popupPanel.setWidget(view);
         popupPanel.showRelativeTo(target);
         view.setSelectionChangedHandler(sel -> {
-            if(!Optional.of(sel.getEntity()).equals(selectedEntity)) {
+            if (!Optional.of(sel.getEntity()).equals(selectedEntity)) {
                 popupPanel.hide();
                 selectedEntity = Optional.of(sel.getEntity());
                 popupClosedHandler.accept(sel);
             }
         });
+    }
+
+    public void showCustom(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler) {
+        popupPanel.setWidget(view);
+        popupPanel.showRelativeTo(target);
+        logger.info("---------------------------------------------");
+        logger.info("selectedEntity is:"+this.selectedEntity);
+        logger.info("---------------------------------------------");
+        view.setMouseDownHandler((entityNode -> {
+            try{
+                popupPanel.hide();
+                selectedEntity = Optional.of(entityNode.getEntity());
+                logger.info("---------------------------------------------");
+                logger.info("entityNode is:" + entityNode);
+                logger.info("---------------------------------------------");
+                popupClosedHandler.accept(entityNode);
+            }catch (Exception e){
+                logger.info(e.getMessage());
+            }
+        }));
     }
 
     public void setSelectedEntity(@Nonnull OWLEntity selectedEntity) {
