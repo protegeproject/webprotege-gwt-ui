@@ -12,14 +12,6 @@ import javax.annotation.Nonnull;
  */
 public interface WhoCreateClassDialogView extends IsWidget, HasInitialFocusable {
 
-    interface ResetLangTagHandler {
-        void handleResetLangTag();
-    }
-
-    interface LangTagChangedHandler {
-        void handleLangTagChanged();
-    }
-
     void setEntityType(@Nonnull EntityType<?> entityType);
 
     @Nonnull
@@ -28,18 +20,7 @@ public interface WhoCreateClassDialogView extends IsWidget, HasInitialFocusable 
     @Nonnull
     String getReasonForChange();
 
-    @Nonnull
-    String getLangTag();
-
-    void setLangTag(@Nonnull String langTag);
-
     void clear();
-
-    void setResetLangTagHandler(@Nonnull ResetLangTagHandler handler);
-
-    void setLangTagChangedHandler(@Nonnull LangTagChangedHandler handler);
-
-    void setNoDisplayLanguageForLangTagVisible(boolean visible);
 
     @Nonnull
     AcceptsOneWidget getDuplicateEntityResultsContainer();

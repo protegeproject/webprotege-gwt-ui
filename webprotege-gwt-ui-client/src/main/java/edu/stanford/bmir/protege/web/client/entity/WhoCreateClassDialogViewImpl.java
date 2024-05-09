@@ -48,26 +48,11 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
 
     private String previousEntitiesString = "";
 
-    @UiField(provided = true)
-    DefaultLanguageEditor langField;
-
     @UiField
     Label entityNamesLabel;
 
-    @UiField
-    Button resetButton;
-
-    @UiField
-    HTML noDisplayLangTagWarningField;
-
     @Nonnull
     private final Messages messages;
-
-    private ResetLangTagHandler resetLangTagHandler = () -> {
-    };
-
-    private LangTagChangedHandler langTagChangedHandler = () -> {
-    };
 
     @UiField
     SimplePanel duplicateEntityResultsContainer;
@@ -87,11 +72,9 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
     private final static Logger logger = Logger.getLogger(WhoCreateClassDialogViewImpl.class.getName());
 
     @Inject
-    public WhoCreateClassDialogViewImpl(DefaultLanguageEditor languageEditor, @Nonnull Messages messages) {
-        this.langField = checkNotNull(languageEditor);
+    public WhoCreateClassDialogViewImpl( @Nonnull Messages messages) {
         this.messages = checkNotNull(messages);
         initWidget(ourUiBinder.createAndBindUi(this));
-        langField.addValueChangeHandler(event -> langTagChangedHandler.handleLangTagChanged());
     }
 
     @Override
@@ -119,24 +102,6 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
         clearErrors();
     }
 
-    @Override
-    public void setResetLangTagHandler(@Nonnull ResetLangTagHandler handler) {
-        this.resetLangTagHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setLangTagChangedHandler(@Nonnull LangTagChangedHandler handler) {
-        this.langTagChangedHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setNoDisplayLanguageForLangTagVisible(boolean visible) {
-        noDisplayLangTagWarningField.setVisible(visible);
-        if (visible) {
-            String langTag = langField.getValue().orElse("");
-            noDisplayLangTagWarningField.setHTML(messages.displayName_noDisplayNameForLangTag(langTag));
-        }
-    }
 
     @Override
     public Optional<HasRequestFocus> getInitialFocusable() {
@@ -146,22 +111,6 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
     @Override
     public void setAcceptKeyHandler(AcceptKeyHandler acceptKey) {
         textBox.setAcceptKeyHandler(acceptKey);
-    }
-
-    @Nonnull
-    @Override
-    public String getLangTag() {
-        return langField.getValue().orElse("");
-    }
-
-    @Override
-    public void setLangTag(@Nonnull String langTag) {
-        langField.setValue(checkNotNull(langTag));
-    }
-
-    @UiHandler("resetButton")
-    public void resetButtonClick(ClickEvent event) {
-        resetLangTagHandler.handleResetLangTag();
     }
 
     @Override

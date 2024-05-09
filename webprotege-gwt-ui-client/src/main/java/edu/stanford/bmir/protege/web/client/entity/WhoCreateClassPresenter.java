@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
@@ -100,8 +97,7 @@ public class WhoCreateClassPresenter {
 
         view.clear();
         view.setEntityType(entityType);
-        view.setResetLangTagHandler(this::resetLangTag);
-        view.setLangTagChangedHandler(this::handleLangTagChanged);
+        setProjectDefaultLangTag();
         duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
         duplicateEntityPresenter.setEntityTypes(entityType);
         view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
@@ -123,43 +119,13 @@ public class WhoCreateClassPresenter {
             modalPresenter.closeModal();
         });
         modalManager.showModal(modalPresenter);
-        displayCurrentLangTagOrProjectDefaultLangTag();
-
-
-
     }
 
-    private void resetLangTag() {
-        currentLangTag = Optional.empty();
-        displayCurrentLangTagOrProjectDefaultLangTag();
-    }
-
-    private void handleLangTagChanged() {
-        String langTag = view.getLangTag();
-        view.setNoDisplayLanguageForLangTagVisible(false);
-        if (displayNameSettingsManager.getLocalDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
-            return;
-        }
-        activeProjectManager.getActiveProjectDetails(details -> {
-            details.ifPresent(d -> {
-                if (!d.getDefaultDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
-                    view.setNoDisplayLanguageForLangTagVisible(true);
-                }
-            });
-        });
-
-        this.duplicateEntityPresenter.setLangTag(langTag);
-    }
-
-    private void displayCurrentLangTagOrProjectDefaultLangTag() {
+    private void setProjectDefaultLangTag() {
         activeProjectManager.getActiveProjectDetails(details -> details.ifPresent(d -> {
-            currentLangTag.ifPresent(view::setLangTag);
-            if (!currentLangTag.isPresent()) {
                 String defaultLangTag = d.getDefaultDictionaryLanguage().getLang();
                 currentLangTag = Optional.of(defaultLangTag);
-                view.setLangTag(defaultLangTag);
-                handleLangTagChanged();
-            }
+                duplicateEntityPresenter.setLangTag(defaultLangTag);
         }));
     }
 
@@ -169,8 +135,6 @@ public class WhoCreateClassPresenter {
                                                             @Nonnull Optional<? extends OWLEntity> parent,
                                                             @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler) {
 
-        GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + view.getLangTag());
-        currentLangTag = Optional.of(view.getLangTag());
         ProjectAction<? extends AbstractCreateEntityResult<?>> action = getAction(entityType,
                 parent,
                 enteredText);
@@ -190,19 +154,19 @@ public class WhoCreateClassPresenter {
                                                                              String enteredText) {
         if (entityType.equals(EntityType.CLASS)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateClassesAction.create(projectId, enteredText, view.getLangTag(), parentClses);
+            return CreateClassesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses);
         } else if (entityType.equals(EntityType.OBJECT_PROPERTY)) {
             ImmutableSet<OWLObjectProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopObjectProperty());
-            return CreateObjectPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateObjectPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
         } else if (entityType.equals(EntityType.DATA_PROPERTY)) {
             ImmutableSet<OWLDataProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopDataProperty());
-            return CreateDataPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateDataPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
         } else if (entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
             ImmutableSet<OWLAnnotationProperty> parentProperties = getParentsSet(parent, ImmutableSet::of);
-            return CreateAnnotationPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
+            return CreateAnnotationPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
         } else if (entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateNamedIndividualsAction.create(projectId, enteredText, view.getLangTag(), parentClses);
+            return CreateNamedIndividualsAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses);
         } else {
             throw new RuntimeException("Unsupported entity type: " + entityType);
         }
