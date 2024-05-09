@@ -98,7 +98,6 @@ public class WhoCreateClassPresenter {
         view.clear();
         view.setEntityType(entityType);
         setProjectDefaultLangTag();
-        duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
         duplicateEntityPresenter.setEntityTypes(entityType);
         view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
 
@@ -118,6 +117,7 @@ public class WhoCreateClassPresenter {
             selectionModel.setSelection(selection.getEntity());
             modalPresenter.closeModal();
         });
+        duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
         modalManager.showModal(modalPresenter);
     }
 
