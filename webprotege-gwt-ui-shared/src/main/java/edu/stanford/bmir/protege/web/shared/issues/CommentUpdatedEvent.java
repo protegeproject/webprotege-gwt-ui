@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2016
  */
+@JsonTypeName("webprotege.events.discussions.CommentUpdated")
 public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> implements HasProjectId {
 
     public static final transient Event.Type<CommentUpdatedHandler> ON_COMMENT_UPDATED = new Event.Type<>();

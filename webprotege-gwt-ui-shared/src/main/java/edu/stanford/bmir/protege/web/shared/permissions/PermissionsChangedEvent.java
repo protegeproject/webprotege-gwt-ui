@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * An event that is fired when the permissions for a project change.
  */
+@JsonTypeName("webprotege.events.projects.PermissionsChanged")
 public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHandler> {
 
     public static final transient Event.Type<PermissionsChangedHandler> ON_PERMISSIONS_CHANGED = new Event.Type<>();

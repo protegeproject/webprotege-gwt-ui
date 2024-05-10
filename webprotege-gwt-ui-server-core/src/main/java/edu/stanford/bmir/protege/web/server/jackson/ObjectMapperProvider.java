@@ -9,8 +9,23 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.stanford.bmir.protege.web.server.form.FormControlValueDeserializer;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.events.PackagedProjectChangeEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.tag.ProjectTagsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
+import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphModelChange;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -62,6 +77,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addSerializer(OWLLiteral.class, new OWLLiteralSerializer());
         module.addDeserializer(OWLLiteral.class, new OWLLiteralDeserializer(dataFactory));
         module.addDeserializer(PrimitiveFormControlData.class, new FormControlValueDeserializer(dataFactory));
+        module.addDeserializer(GraphModelChange.class, new GraphModelChangeDeserializer());
         module.addSerializer(IRI.class, new IriSerializer());
         module.addSerializer(OWLOntologyID.class, new OWLOntologyIDSerializer());
         module.addDeserializer(OWLOntologyID.class, new OWLOntologyIDDeserializer());
@@ -70,7 +86,34 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addDeserializer(AxiomType.class, new AxiomTypeDeserializer());
 
         mapper.addMixIn(Path.class, PathMixin.class);
-
+        module.registerSubtypes(
+                BrowserTextChangedEvent.class,
+                ClassFrameChangedEvent.class,
+                DataPropertyFrameChangedEvent.class,
+                DatatypeFrameChangedEvent.class,
+                NamedIndividualFrameChangedEvent.class,
+                ObjectPropertyFrameChangedEvent.class,
+                EntityDeprecatedChangedEvent.class,
+                AnnotationPropertyFrameChangedEvent.class,
+                LargeNumberOfChangesEvent.class,
+                OntologyBrowserTextChangedEvent.class,
+                PermissionsChangedEvent.class,
+                ProjectChangedEvent.class,
+                ProjectMovedToTrashEvent.class,
+                OntologyFrameChangedEvent.class,
+                EntityHierarchyChangedEvent.class,
+                CommentPostedEvent.class,
+                CommentUpdatedEvent.class,
+                DiscussionThreadCreatedEvent.class,
+                DiscussionThreadStatusChangedEvent.class,
+                DisplayNameSettingsChangedEvent.class,
+                ProjectSettingsChangedEvent.class,
+                EntityTagsChangedEvent.class,
+                ProjectTagsChangedEvent.class,
+                WatchAddedEvent.class,
+                PackagedProjectChangeEvent.class,
+                ProjectMovedFromTrashEvent.class,
+                WatchRemovedEvent.class);
         mapper.registerModule(module);
 
         return mapper;

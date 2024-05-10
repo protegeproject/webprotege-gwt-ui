@@ -17,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -154,9 +153,6 @@ public class DispatchServiceManager {
     }
 
     private <A extends Action<R>, R extends Result> void logAction(A action) {
-        if ((action instanceof GetProjectEventsAction)) {
-            return;
-        }
         if(action instanceof BatchAction) {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName() + "(" + ((BatchAction) action).getActions().size() + " actions)");
         }
@@ -247,7 +243,7 @@ public class DispatchServiceManager {
         if(result instanceof HasEventList<?>) {
             EventList<? extends WebProtegeEvent<?>> eventList = ((HasEventList<? extends WebProtegeEvent<?>>) result).getEventList();
 
-            List<? extends WebProtegeEvent<?>> events = eventList.getEvents();
+            List<WebProtegeEvent> events = eventList.getEvents();
             // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
             // TODO: more than once!
             GWT.log("[Dispatch] Dispatching " + events.size() + " events");

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
@@ -35,11 +34,11 @@ public abstract class GetEntityFormsAction implements ProjectAction<GetEntityFor
 
     public static final String FORM_REGION_FILTERS = "formRegionFilters";
 
-    public static final String PAGE_REQUESTS = "pageRequests";
+    public static final String FORM_PAGE_REQUESTS = "formPageRequests";
 
     public static final String LANG_TAG_FILTER = "langTagFilter";
 
-    public static final String REGION_ORDERINGS = "regionOrderings";
+    public static final String FORM_REGION_ORDERINGS = "formRegionOrderings";
 
     private static final String FORM_FILTERS = "formFilters";
 
@@ -59,9 +58,9 @@ public abstract class GetEntityFormsAction implements ProjectAction<GetEntityFor
     @JsonCreator
     public static GetEntityFormsAction create(@JsonProperty(PROJECT_ID) @Nonnull ProjectId projectId,
                                               @JsonProperty(ENTITY) @Nonnull OWLEntity entity,
-                                              @JsonProperty(PAGE_REQUESTS) @Nonnull ImmutableSet<FormPageRequest> formPageRequests,
+                                              @JsonProperty(FORM_PAGE_REQUESTS) @Nonnull ImmutableSet<FormPageRequest> formPageRequests,
                                               @JsonProperty(LANG_TAG_FILTER) @Nonnull LangTagFilter langTagFilter,
-                                              @JsonProperty(REGION_ORDERINGS) @Nonnull ImmutableSet<FormRegionOrdering> orderings,
+                                              @JsonProperty(FORM_REGION_ORDERINGS) @Nonnull ImmutableSet<FormRegionOrdering> orderings,
                                               @JsonProperty(FORM_FILTERS) @Nonnull ImmutableSet<FormId> filters,
                                               @JsonProperty(FORM_REGION_FILTERS) ImmutableSet<FormRegionFilter> formRegionFilters) {
         return new AutoValue_GetEntityFormsAction(projectId,
@@ -81,7 +80,7 @@ public abstract class GetEntityFormsAction implements ProjectAction<GetEntityFor
     public abstract OWLEntity getEntity();
 
     @Nonnull
-    @JsonProperty(PAGE_REQUESTS)
+    @JsonProperty(FORM_PAGE_REQUESTS)
     public abstract ImmutableSet<FormPageRequest> getFormPageRequests();
 
     @Nonnull
@@ -89,7 +88,7 @@ public abstract class GetEntityFormsAction implements ProjectAction<GetEntityFor
     public abstract LangTagFilter getLangTagFilter();
 
     @Nonnull
-    @JsonProperty(REGION_ORDERINGS)
+    @JsonProperty(FORM_REGION_ORDERINGS)
     public abstract ImmutableSet<FormRegionOrdering> getGridControlOrdering();
 
     @Nonnull

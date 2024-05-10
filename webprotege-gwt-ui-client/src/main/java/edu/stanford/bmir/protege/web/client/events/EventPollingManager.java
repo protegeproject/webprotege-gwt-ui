@@ -5,16 +5,15 @@ import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.EventTag;
-import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.EventPollingPeriod;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ProjectSingleton
 public class EventPollingManager {
+    Logger logger = Logger.getLogger("EventPollingManager");
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -78,32 +78,33 @@ public class EventPollingManager {
 
     public void pollForProjectEvents() {
         GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId), result -> dispatchEvents(result.getEvents()));
+        dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId), (GetProjectEventsResult result) -> dispatchEvents(result.getEvents()));
     }
 
 
     public void dispatchEvents(EventList<?> eventList) {
+        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
+
         if(eventList.isEmpty()) {
             return;
         }
-        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag());
         EventTag eventListStartTag = eventList.getStartTag();
-        if(!eventList.getStartTag().equals(eventList.getEndTag()) && nextTag.isGreaterOrEqualTo(eventListStartTag)) {
+        if(nextTag.isGreaterOrEqualTo(eventListStartTag)) {
             // We haven't missed any events - our next retrieval will be from where we got the event to.
-            nextTag = eventList.getEndTag();
-            GWT.log("[Event Polling Manager] Updated events.  Next tag is " + nextTag);
         }
         if (!eventList.isEmpty()) {
-            GWT.log("[Event Polling Manager] Dispatching events from polling manager...");
-            for(WebProtegeEvent<?> event : eventList.getEvents()) {
-                GWT.log("[Event Polling Manager] Event: " + event.toString());
-                if (event.getSource() != null) {
-                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
+            try {
+                for (WebProtegeEvent<?> event : eventList.getEvents()) {
+                    if (event.getSource() != null) {
+                        eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
+                    } else {
+                        eventBus.fireEvent(event.asGWTEvent());
+                    }
                 }
-                else {
-                    eventBus.fireEvent(event.asGWTEvent());
-                }
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
+            } finally {
+                nextTag = eventList.getEndTag();
             }
         }
     }

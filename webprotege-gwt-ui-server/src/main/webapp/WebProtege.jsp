@@ -34,6 +34,7 @@
     <script type="module" src="https://unpkg.com/uuid@8.3.1/dist/umd/uuidv4.min.js"></script>
     <script src="js/ect/icd11ect-1.7.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.min.js"></script>
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
 
     ${application.analytics}

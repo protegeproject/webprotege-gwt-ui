@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
+@JsonTypeName("webprotege.events.frames.ProjectMovedFromTrash")
 public class ProjectMovedFromTrashEvent extends WebProtegeEvent<ProjectMovedFromTrashHandler> {
 
     public static final transient Event.Type<ProjectMovedFromTrashHandler> ON_PROJECT_MOVED_FROM_TRASH = new Event.Type<>();

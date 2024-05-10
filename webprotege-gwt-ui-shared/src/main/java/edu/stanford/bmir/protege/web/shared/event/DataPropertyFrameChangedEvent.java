@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -11,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/12/2012
  */
+@JsonTypeName("webprotege.events.frames.DataPropertyFrameChanged")
 public class DataPropertyFrameChangedEvent extends EntityFrameChangedEvent<OWLDataProperty, DataPropertyFrameChangedEventHandler> {
 
     public transient static final Event.Type<DataPropertyFrameChangedEventHandler> TYPE = new Event.Type<DataPropertyFrameChangedEventHandler>();

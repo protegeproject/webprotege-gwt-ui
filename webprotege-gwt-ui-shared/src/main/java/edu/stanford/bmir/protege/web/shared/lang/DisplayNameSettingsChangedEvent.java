@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.lang;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
+@JsonTypeName("webprotege.events.projects.DisplayNameSettingsChanged")
 public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSettingsChangedHandler> {
 
     public static final transient Event.Type<DisplayNameSettingsChangedHandler> ON_DISPLAY_LANGUAGE_CHANGED = new Event.Type<>();
