@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -16,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 1 Dec 2017
  */
+@JsonTypeName("webprotege.events.hierarchies.EntityHierarchyChanged")
 public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyChangedHandler> {
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();

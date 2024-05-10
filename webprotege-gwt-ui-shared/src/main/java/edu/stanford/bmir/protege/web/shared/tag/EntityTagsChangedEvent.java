@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.web.bindery.event.shared.Event;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 22 Mar 2018
  */
+@JsonTypeName("webprotege.events.tags.EntityTagsChanged")
 public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandler> {
 
     public static final transient Event.Type<EntityTagsChangedHandler> ON_ENTITY_TAGS_CHANGED = new Event.Type<>();

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -15,6 +16,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
+@JsonTypeName("webprotege.events.watches.WatchRemoved")
 public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> implements HasUserId {
 
     public transient static final Event.Type<WatchRemovedHandler> ON_WATCH_REMOVED = new Event.Type<WatchRemovedHandler>();

@@ -12,8 +12,8 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
@@ -109,6 +109,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
+        subscribeToWebsocket(projectId.getId());
     }
 
     private void handleProjectLoaded(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus, @Nonnull ProjectViewPlace place) {
@@ -116,7 +117,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-        eventPollingManager.start();
+       // eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
                                     projectId,
                                     largeNumberOfChangesHandler);
@@ -140,4 +141,46 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                 .addValue(projectId)
                 .toString();
     }
+
+    public void dispatchEventsFromWebsocket(String data) {
+        dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
+
+    }
+    /*TODO change the hardcoded broker URL and get it from a config class */
+    public native void subscribeToWebsocket(String projectId)/*-{
+        try {
+            var that = this;
+
+            var stompClient = new $wnd.StompJs.Client({
+                brokerURL: 'ws://webprotege-local.edu/wsapps',
+                debug: function(str) {
+                    console.log(str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+            });
+
+
+            stompClient.onConnect = function(frame) {
+                stompClient.subscribe('/topic/project-events/' + projectId, function(message) {
+                    that.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::dispatchEventsFromWebsocket(Ljava/lang/String;)(message.body);
+
+                });
+            };
+            stompClient.onWebSocketError = function(error) {
+                console.error('Error with websocket', error);
+            };
+            stompClient.onStompError = function(frame) {
+                console.error('Broker reported error: ' + frame.headers['message']);
+                console.error('Additional details: ' + frame.body);
+            };
+
+
+            stompClient.activate();
+
+        } catch (e) {
+            $wnd.console.log('An error has occurred in the websocket connection/subscription ' + e)
+        }
+    }-*/;
 }

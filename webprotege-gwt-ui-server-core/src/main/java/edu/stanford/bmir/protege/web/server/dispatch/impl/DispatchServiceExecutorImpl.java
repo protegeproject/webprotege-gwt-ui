@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
-import com.google.common.collect.ImmutableList;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.EventTag;
-import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import org.slf4j.Logger;
@@ -39,6 +38,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     private final JsonRpcHttpResponseHandler responseHandler;
 
+    private final ObjectMapper objectMapper;
+
     @Inject
     public DispatchServiceExecutorImpl(HttpClient httpClient,
                                        JsonRpcHttpRequestBuilder requestBuilder,
@@ -46,11 +47,18 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         this.httpClient = httpClient;
         this.requestBuilder = requestBuilder;
         this.responseHandler = responseHandler;
+        this.objectMapper = new ObjectMapperProvider().get();
     }
 
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
+            if(action instanceof TranslateEventListAction){
+                var translateEventsAction = (TranslateEventListAction) action;
+
+                GetProjectEventsResult result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
+                return DispatchServiceResultContainer.create(result);
+            }
             var result = sendRequest(action, executionContext);
             return DispatchServiceResultContainer.create(result);
         }
@@ -69,13 +77,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
                                                                   ExecutionContext executionContext) throws IOException, InterruptedException {
-        // Workaround
-        if(action instanceof GetProjectEventsAction) {
-            return (R) GetProjectEventsResult.create(EventList.create(((GetProjectEventsAction) action).getSinceTag(),
-                                                                  ImmutableList.of(),
-                                                                  EventTag.get(100)));
-        }
-
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
 

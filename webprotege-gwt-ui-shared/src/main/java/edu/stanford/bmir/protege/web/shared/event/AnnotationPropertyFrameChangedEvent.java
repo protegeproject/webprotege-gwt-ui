@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -11,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/12/2012
  */
+@JsonTypeName("webprotege.events.frames.AnnotationPropertyFrameChanged")
 public class AnnotationPropertyFrameChangedEvent extends EntityFrameChangedEvent<OWLAnnotationProperty, AnnotationPropertyFrameChangedEventHandler> {
 
     public static final transient Event.Type<AnnotationPropertyFrameChangedEventHandler> TYPE = new Event.Type<AnnotationPropertyFrameChangedEventHandler>();

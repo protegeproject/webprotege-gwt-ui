@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -12,6 +13,7 @@ import java.util.Objects;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
+@JsonTypeName("webprotege.events.entities.EntityDeprecationStatusChanged")
 public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedChangedHandler> {
 
     public transient static final Event.Type<EntityDeprecatedChangedHandler> ON_ENTITY_DEPRECATED = new Event.Type<EntityDeprecatedChangedHandler>();
