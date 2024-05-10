@@ -38,7 +38,8 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     @UiField(provided = true)
     TreeWidget<EntityNode, OWLEntity> treeWidget;
 
-    private Consumer<EntityNode> selectionChangedHandler = node -> {};
+    private Consumer<EntityNode> selectionChangedHandler = node -> {
+    };
 
     @Inject
     public HierarchyPopupViewImpl(TreeWidget<EntityNode, OWLEntity> treeWidget,
@@ -81,6 +82,7 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
         treeWidget.setRenderer(renderer);
     }
 
+
     @Override
     public void setMouseDownHandler(Consumer<EntityNode> entityConsumer) {
         treeWidget.addMouseDownHandler(event -> treeWidget.getFirstSelectedUserObject()
@@ -88,7 +90,7 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
                     Timer t = new Timer() {
                         @Override
                         public void run() {
-                            entityConsumer.accept(n);
+                                entityConsumer.accept(n);
                         }
                     };
                     t.schedule(200);

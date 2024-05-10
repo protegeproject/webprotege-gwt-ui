@@ -62,35 +62,34 @@ public class HierarchyPopupPresenter {
     }
 
     public void show(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler) {
-        popupPanel.setWidget(view);
-        popupPanel.showRelativeTo(target);
-        view.setSelectionChangedHandler(sel -> {
-            if (!Optional.of(sel.getEntity()).equals(selectedEntity)) {
-                popupPanel.hide();
-                selectedEntity = Optional.of(sel.getEntity());
-                popupClosedHandler.accept(sel);
-            }
-        });
+        this.show(target, popupClosedHandler, true);
     }
 
-    public void showCustom(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler) {
+    public void show(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler, boolean isCurrSelectionLocked) {
+        setPopUpWidgetAndShowRelativeTo(target);
+        if(isCurrSelectionLocked){
+            view.setSelectionChangedHandler(sel -> {
+                if (!Optional.of(sel.getEntity()).equals(selectedEntity)) {
+                    closePanelAndSendSelection(sel, popupClosedHandler);
+                }
+            });
+            return;
+        }
+
+        view.setMouseDownHandler((entityNode -> {
+            closePanelAndSendSelection(entityNode, popupClosedHandler);
+        }));
+    }
+
+    private void closePanelAndSendSelection(EntityNode entityNode, Consumer<EntityNode> popupClosedHandler) {
+        popupPanel.hide();
+        selectedEntity = Optional.of(entityNode.getEntity());
+        popupClosedHandler.accept(entityNode);
+    }
+
+    private void setPopUpWidgetAndShowRelativeTo(UIObject target) {
         popupPanel.setWidget(view);
         popupPanel.showRelativeTo(target);
-        logger.info("---------------------------------------------");
-        logger.info("selectedEntity is:"+this.selectedEntity);
-        logger.info("---------------------------------------------");
-        view.setMouseDownHandler((entityNode -> {
-            try{
-                popupPanel.hide();
-                selectedEntity = Optional.of(entityNode.getEntity());
-                logger.info("---------------------------------------------");
-                logger.info("entityNode is:" + entityNode);
-                logger.info("---------------------------------------------");
-                popupClosedHandler.accept(entityNode);
-            }catch (Exception e){
-                logger.info(e.getMessage());
-            }
-        }));
     }
 
     public void setSelectedEntity(@Nonnull OWLEntity selectedEntity) {

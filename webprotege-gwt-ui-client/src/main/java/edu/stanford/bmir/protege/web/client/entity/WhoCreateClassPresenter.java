@@ -98,8 +98,7 @@ public class WhoCreateClassPresenter {
         view.clear();
         view.setEntityType(entityType);
         setProjectDefaultLangTag();
-        duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
-        duplicateEntityPresenter.setEntityTypes(entityType);
+
         view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
 
         ModalPresenter modalPresenter = modalManager.createPresenter();
@@ -114,10 +113,11 @@ public class WhoCreateClassPresenter {
             }
         });
         duplicateEntityPresenter.setHierarchySelectionHandler(selection -> {
-            logger.info("avem selectie: "+selection);
             selectionModel.setSelection(selection.getEntity());
             modalPresenter.closeModal();
         });
+        duplicateEntityPresenter.setEntityTypes(entityType);
+        duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
         modalManager.showModal(modalPresenter);
     }
 

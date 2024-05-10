@@ -68,9 +68,6 @@ public class DuplicateEntityPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        logger.info("..........................................................");
-        logger.info("Suntem in start");
-        logger.info("..........................................................");
         hideSearchDuplicatesPanel();
         searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
         searchResultsPresenter.start(this.view.getDuplicateResultsContainer());
@@ -83,15 +80,6 @@ public class DuplicateEntityPresenter {
 
 
     private void performDuplicateSearch(String entitiesText) {
-        logger.info("..........................................................");
-        logger.info("Suntem in performSearch: " + entitiesText);
-        logger.info("..........................................................");
-
-        GWT.log("..........................................................");
-        GWT.log("Suntem in performSearch: " + entitiesText);
-        GWT.log("..........................................................");
-
-
         if (entitiesText.length() < 1) {
             hideSearchDuplicatesPanel();
             searchResultsPresenter.clearSearchResults();
@@ -131,7 +119,6 @@ public class DuplicateEntityPresenter {
         }
 
         this.view.asWidget().setVisible(true);
-        logger.info("Ressults for: "+result.getResults().iterator().next().getEntity().getBrowserText()+"\n"+result.getResults());
 
         this.searchResultsPresenter.displaySearchResult(result.getResults());
     }

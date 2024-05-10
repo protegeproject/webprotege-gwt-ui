@@ -81,7 +81,7 @@ public class EntitySearchResultPresenter {
             logger.info("eventBus value: "+eventBus);
             hierarchyPopupPresenter.start(eventBus);
             hierarchyPopupPresenter.setSelectedEntity(entity.getEntity());
-            hierarchyPopupPresenter.showCustom(target, hierarchySelectionHandler::handleHierarchySelection);
+            hierarchyPopupPresenter.show(target, hierarchySelectionHandler::handleHierarchySelection, false);
             hierarchyPopupPresenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
         }));
         Optional<String> oboId = OboId.getOboId(entity.getEntity().getIRI());
