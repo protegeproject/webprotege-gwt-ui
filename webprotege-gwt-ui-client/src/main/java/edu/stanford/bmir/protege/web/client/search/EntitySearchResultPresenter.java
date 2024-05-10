@@ -36,15 +36,15 @@ public class EntitySearchResultPresenter {
     @Nonnull
     private final HierarchyPopupPresenter hierarchyPopupPresenter;
 
-    private WebProtegeEventBus eventBus;
+    private final WebProtegeEventBus eventBus;
 
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
-    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {
+    };
 
     private final static Logger logger = Logger.getLogger(EntitySearchResultPresenter.class.getName());
-
 
 
     @AutoFactory
@@ -77,8 +77,6 @@ public class EntitySearchResultPresenter {
         this.view.setEntity(entity);
         this.view.setResultMatchViews(views);
         this.view.setPopUpHierarchyHandler((target -> {
-            logger.info("------------------------------");
-            logger.info("eventBus value: "+eventBus);
             hierarchyPopupPresenter.start(eventBus);
             hierarchyPopupPresenter.setSelectedEntity(entity.getEntity());
             hierarchyPopupPresenter.show(target, hierarchySelectionHandler::handleHierarchySelection, false);
@@ -101,7 +99,7 @@ public class EntitySearchResultPresenter {
         return result.getEntity();
     }
 
-    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler) {
         this.hierarchySelectionHandler = handler;
     }
 }

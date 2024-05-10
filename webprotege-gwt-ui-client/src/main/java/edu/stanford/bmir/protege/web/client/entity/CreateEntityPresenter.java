@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
@@ -56,14 +55,6 @@ public class CreateEntityPresenter {
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
-
-        GWT.log("..........................................................");
-        GWT.log("Suntem in CreateEntitiesPresenter: ");
-        GWT.log("..........................................................");
-
-        logger.info("..........................................................");
-        logger.info("Suntem in CreateEntitiesPresenter: ");
-        logger.info("..........................................................");
 
         parentEntity.ifPresent(owlEntity -> dispatch.execute(GetEntityCreationFormsAction.create(projectId,
                                                                                                  owlEntity,
