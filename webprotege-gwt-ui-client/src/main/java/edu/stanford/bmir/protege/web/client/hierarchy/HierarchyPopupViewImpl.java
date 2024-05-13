@@ -85,7 +85,7 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
 
     @Override
     public void setMouseDownHandler(Consumer<EntityNode> entityConsumer) {
-        treeWidget.addMouseDownHandler(event -> treeWidget.getFirstSelectedUserObject()
+        treeWidget.addDoubleClickHandler(event -> treeWidget.getFirstSelectedUserObject()
                 .ifPresent(n -> {
                     Timer t = new Timer() {
                         @Override
