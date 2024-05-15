@@ -25,6 +25,8 @@ import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsView;
+import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsViewImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.*;
@@ -181,6 +183,11 @@ public class ClientProjectModule {
 
     @Provides
     CreateEntityDialogView providesCreateEntityDialogView(CreateEntitiesDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EditParentsView providesEditParentsView(EditParentsViewImpl impl) {
         return impl;
     }
 

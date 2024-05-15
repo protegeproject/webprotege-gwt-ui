@@ -1038,6 +1038,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("merge.mergeInto")
     String merge_mergeInto();
 
+
+    @DefaultMessage("Edit parents")
+    @Key("hierarchy.editParents")
+    String hierarchy_editParents();
+
     @DefaultMessage("Merge {0}")
     @Key("merge.mergeEntity")
     String merge_mergeEntity(String typeName);
