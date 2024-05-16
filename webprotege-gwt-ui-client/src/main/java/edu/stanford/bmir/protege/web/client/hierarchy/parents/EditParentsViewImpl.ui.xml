@@ -15,7 +15,7 @@
                                        anchorVisible="false"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="{msg.frame_domain}" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="{msg.hierarchy_parents}" addStyleNames="{wp.style.formLabel}"/>
             <wp:PrimitiveDataListEditor ui:field="domains"/>
         </div>
     </g:HTMLPanel>

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -17,6 +19,9 @@ public class EditParentsPresenter {
     private final EditParentsView view;
 
     @Nonnull
+    private final DispatchServiceManager dispatch;
+
+    @Nonnull
     private EntityType<?> entityType = EntityType.CLASS;
 
     @Nullable
@@ -24,14 +29,16 @@ public class EditParentsPresenter {
 
     @Inject
     public EditParentsPresenter(@Nonnull ProjectId projectId,
-                                @Nonnull EditParentsView view) {
+                                @Nonnull EditParentsView view, @Nonnull DispatchServiceManager dispatch) {
         this.projectId = projectId;
         this.view = view;
+        this.dispatch = dispatch;
     }
 
     public void start(@Nonnull OWLEntity entity) {
         this.entity = entity;
-        this.view.setOwlEntity(entity);
+        dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
+                result -> view.setOwlEntityData(result.getEntityData()));
     }
 
     @Nonnull

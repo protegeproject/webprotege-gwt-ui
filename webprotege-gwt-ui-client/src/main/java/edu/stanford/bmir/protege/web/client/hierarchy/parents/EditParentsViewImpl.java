@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     ExpandingTextBoxImpl textBox;
 
-    private OWLEntity entity;
+    private OWLEntityData entityData;
 
     private final Messages messages;
 
@@ -41,6 +41,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         this.messages = messages;
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         domains.setPlaceholder(messages.frame_enterAClassName());
+//        domains.setValue(Collections.singletonList(entityData));
         textBox.setEnabled(false);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -52,7 +53,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
     @Override
-    public void setOwlEntity(OWLEntity entity) {
-        this.entity = entity;
+    public void setOwlEntityData(OWLEntityData entity) {
+        this.entityData = entity;
     }
 }

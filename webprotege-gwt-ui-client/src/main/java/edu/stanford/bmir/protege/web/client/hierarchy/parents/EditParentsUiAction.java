@@ -11,8 +11,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class EditParentsUiAction extends AbstractUiAction {
 
     @Nonnull
@@ -44,7 +42,7 @@ public class EditParentsUiAction extends AbstractUiAction {
 
     private void showDialog(OWLEntity entity) {
         ModalPresenter modalPresenter = modalManager.createPresenter();
-        modalPresenter.setTitle(messages.tags_entityTags());
+        modalPresenter.setTitle(messages.hierarchy_editParents());
         modalPresenter.setView(editParentsPresenter.getView());
         editParentsPresenter.start(entity);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
