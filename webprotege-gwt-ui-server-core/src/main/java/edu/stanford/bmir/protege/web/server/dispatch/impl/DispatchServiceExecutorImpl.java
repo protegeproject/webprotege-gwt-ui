@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -57,6 +59,10 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var translateEventsAction = (TranslateEventListAction) action;
 
                 GetProjectEventsResult result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
+                return DispatchServiceResultContainer.create(result);
+            }
+            if(action instanceof GetUserInfoAction) {
+                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);

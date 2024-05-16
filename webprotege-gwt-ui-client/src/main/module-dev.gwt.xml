@@ -45,6 +45,11 @@
 
     <set-property name="locale" value="en"/>
 
+<!--    <set-property name="webprotege.brokerUrl" value="ws://webprotege-local.edu/wsapps"/>
+    <set-property name="webprotege.reconnectDelay" value="5000"/>
+    <set-property name="webprotege.heartbeatIncoming" value="4000"/>
+    <set-property name="webprotege.heartbeatOutgoing" value="4000"/>-->
+
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
     <entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
