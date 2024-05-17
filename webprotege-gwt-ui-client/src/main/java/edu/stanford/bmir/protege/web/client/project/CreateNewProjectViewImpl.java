@@ -22,6 +22,8 @@ import static com.google.gwt.user.client.ui.FormPanel.METHOD_POST;
  */
 public class CreateNewProjectViewImpl extends Composite implements CreateNewProjectView {
 
+    protected static final String FILE_UPLOAD_ID = "fileUpload";
+
     interface CreateNewProjectViewImplUiBinder extends UiBinder<HTMLPanel, CreateNewProjectViewImpl> {
     }
 
@@ -108,6 +110,12 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
         formPanel.submit();
     }
 
+    @Nonnull
+    @Override
+    public String getFileUploadElementId() {
+        return fileUpload.getElement().getId();
+    }
+
     @Override
     public void showProjectNameMissingMessage() {
         messageBox.showAlert("Project name missing", "Please enter a project name");
@@ -128,5 +136,6 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     protected void onAttach() {
         super.onAttach();
         projectNameField.setFocus(true);
+        fileUpload.getElement().setId(FILE_UPLOAD_ID);
     }
 }

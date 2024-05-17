@@ -30,7 +30,7 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
                         ProgressMonitor.get().hideProgressMonitor();
                         GWT.log("Submittion of file is complete");
                         FileUploadResponse result = new FileUploadResponse(event.getResults());
-                        if(result.wasUploadAccepted()) {
+                        if (result.wasUploadAccepted()) {
                             GWT.log("Successful upload");
                             resultHandler.handleFileUploaded(result.getDocumentId());
 

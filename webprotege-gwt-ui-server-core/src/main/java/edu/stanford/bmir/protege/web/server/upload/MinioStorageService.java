@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
+import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -30,13 +31,18 @@ public class MinioStorageService implements StorageService {
 
     private final MinioClient minioClient;
 
+    private final DispatchService dispatchService;
+
     @Inject
-    public MinioStorageService(MinioClient minioClient) {
+    public MinioStorageService(MinioClient minioClient, DispatchService dispatchService) {
         this.minioClient = minioClient;
+        this.dispatchService = dispatchService;
     }
 
     @Override
     public FileSubmissionId storeUpload(Path tempFile) {
+
+
         var fileIdentifier = UUID.randomUUID().toString();
         logger.info("Storing uploaded file ({} MB) with an identifier of {}", getFileSizeInMB(tempFile), fileIdentifier);
         createBucketIfNecessary();

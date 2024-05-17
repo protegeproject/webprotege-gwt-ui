@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogValidato
 public class UploadFileDialogForm extends WebProtegeDialogForm {
 
     private static final String SUBMIT_FILE_URL = GWT.getModuleBaseURL() + "submitfile";
+    //    private static final String SUBMIT_FILE_URL = "/files/submit";
 
     private final FileUpload fileUpload;
 
@@ -24,6 +25,7 @@ public class UploadFileDialogForm extends WebProtegeDialogForm {
         setPostURL(SUBMIT_FILE_URL);
         fileUpload = new FileUpload();
         fileUpload.setName("file");
+
         addWidget(FILE_NAME_FIELD_LABEL, fileUpload);
         fileUpload.setWidth("300px");
         addDialogValidator(new FileNameValidator());
