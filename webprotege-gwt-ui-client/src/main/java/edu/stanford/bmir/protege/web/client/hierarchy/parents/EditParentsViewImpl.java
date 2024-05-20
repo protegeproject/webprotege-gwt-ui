@@ -6,7 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
+import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -18,8 +18,8 @@ import javax.inject.Provider;
 
 public class EditParentsViewImpl extends Composite implements EditParentsView {
 
-    @UiField
-    ExpandingTextBoxImpl textBox;
+    @UiField(provided = true)
+    ExpandingTextBox textBox;
 
     private OWLEntityData entityData;
 
@@ -37,8 +37,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Inject
     public EditParentsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-    @Nonnull Messages messages) {
+                               @Nonnull Messages messages, ExpandingTextBox expandingTextBox) {
         this.messages = messages;
+        this.textBox = expandingTextBox;
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         domains.setPlaceholder(messages.frame_enterAClassName());
 //        domains.setValue(Collections.singletonList(entityData));

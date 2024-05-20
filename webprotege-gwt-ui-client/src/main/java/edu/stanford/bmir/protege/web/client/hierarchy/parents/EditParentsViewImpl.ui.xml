@@ -11,7 +11,7 @@
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="textBox"
+            <text:ExpandingTextBox ui:field="textBox"
                                        anchorVisible="false"/>
         </div>
         <div class="{wp.style.formGroup}">
