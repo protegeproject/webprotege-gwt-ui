@@ -56,7 +56,7 @@
     </turboFilter>
 
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="webprotege-all"/>
     </root>
 

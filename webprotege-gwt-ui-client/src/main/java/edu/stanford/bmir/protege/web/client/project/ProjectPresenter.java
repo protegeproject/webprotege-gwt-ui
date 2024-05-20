@@ -115,7 +115,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), this.loggedInUserProvider.getCurrentUserId().getUserName());
+            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
 
         });
 
@@ -157,12 +157,12 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     }
     /*TODO change the hardcoded broker URL and get it from a config class */
-    public native void subscribeToWebsocket(String projectId, String token, String userId)/*-{
+    public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
-
+            $wnd.console.log('ALEX running ' + websocketUrl);
             var stompClient = new $wnd.StompJs.Client({
-                brokerURL: 'ws://webprotege-local.edu/wsapps',
+                brokerURL: websocketUrl,
                 debug: function(str) {
                     console.log(str);
                 },
