@@ -21,11 +21,14 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 
 public final class PerspectiveImpl extends Composite implements IsWidget, Perspective {
+
+    private static final Logger logger = Logger.getLogger(PerspectiveImpl.class.getName());
 
     private final PerspectiveId perspectiveId;
 
@@ -113,7 +116,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     @Override
     public void setRootNode(Optional<Node> rootNode) {
-        GWT.log("[Perspective] Root node set: " + rootNode);
+        logger.fine("[Perspective] Root node set: " + rootNode);
         this.rootNode = rootNode;
         if (rootNode.isPresent()) {
             dispatchServiceManager.beginBatch();
@@ -124,13 +127,13 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
             }
         }
         else {
-            // TODO:
+            logger.fine("[Perspective] Root node is not present");
         }
     }
 
     @Override
     public void onResize() {
-        GWT.log("[Perspective] onResize");
+        logger.fine("[Perspective] onResize");
         LayoutUtil.setBounds(widgetMapPanel, 0, 0, 0, 0);
         widgetMapPanel.onResize();
 

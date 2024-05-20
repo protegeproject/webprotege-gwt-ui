@@ -22,6 +22,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,6 +31,8 @@ import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent
 
 
 public abstract class AbstractWebProtegePortletPresenter implements WebProtegePortletPresenter, EntityDisplay {
+
+    private final Logger logger = Logger.getLogger(AbstractWebProtegePortletPresenter.class.getName());
 
     private final SelectionModel selectionModel;
 
@@ -86,16 +90,20 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     @Override
     public final void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
-        startPortlet(portletUi, eventBus);
-        eventBus.addProjectEventHandler(projectId,
-                                        ON_BROWSER_TEXT_CHANGED,
-                                        this::handleBrowserTextChanged);
-        eventBus.addProjectEventHandler(projectId,
-                                        DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
-                                        this::handlePrefLangChanged);
-        eventBus.addApplicationEventHandler(PlaceChangeEvent.TYPE, this::handlePlaceChanged);
-        eventBus.addApplicationEventHandler(RefreshUserInterfaceEvent.REFRESH_USER_INTERFACE,
-                                            this::handleRefreshUserInterface);
+        try {
+            startPortlet(portletUi, eventBus);
+            eventBus.addProjectEventHandler(projectId,
+                                            ON_BROWSER_TEXT_CHANGED,
+                                            this::handleBrowserTextChanged);
+            eventBus.addProjectEventHandler(projectId,
+                                            DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
+                                            this::handlePrefLangChanged);
+            eventBus.addApplicationEventHandler(PlaceChangeEvent.TYPE, this::handlePlaceChanged);
+            eventBus.addApplicationEventHandler(RefreshUserInterfaceEvent.REFRESH_USER_INTERFACE,
+                                                this::handleRefreshUserInterface);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "An error occurred starting the portlet: " + e.getMessage(), e);
+        }
     }
 
     private void handleRefreshUserInterface() {

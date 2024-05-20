@@ -26,6 +26,9 @@ import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
@@ -62,6 +65,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     private final LargeNumberOfChangesManager largeNumberOfChangesHandler;
 
     private final LoggedInUserProvider loggedInUserProvider;
+
+    private static final Logger logger = Logger.getLogger(ProjectPresenter.class.getName());
 
 
     @Inject
@@ -101,7 +106,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus,
                       @Nonnull ProjectViewPlace place) {
-        GWT.log("[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
+        logger.log(Level.FINE, "[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
         busyView.setMessage("Loading project.  Please wait.");
         container.setWidget(busyView);
         permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
