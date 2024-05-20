@@ -3,6 +3,7 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -22,8 +23,11 @@ jobs:
           server-id: docker.io
           server-username: DOCKER_USERNAME
           server-password: DOCKER_PASSWORD
-      - name: Publish package
-        run: mvn --batch-mode clean deploy
+      - name: Build package
+        run: mvn --batch-mode clean package
+      - name: Build and push image
+        run: mvn --batch-mode -pl webprotege-gwt-ui-server dockerfile:build dockerfile:push
+
 env:
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
   DOCKER_TOKEN: ${{secrets.DOCKER_PASSWORD}}

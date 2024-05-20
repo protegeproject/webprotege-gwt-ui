@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
+import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogControllerFactory;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
@@ -31,6 +32,9 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
+    private final UploadFileDialogControllerFactory uploadFileDialogControllerFactory;
+
+    @Nonnull
     private final DispatchErrorMessageDisplay errorDisplay;
 
     @Nonnull
@@ -39,10 +43,12 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     @Inject
     public UploadAndMergeAdditionsProjectsWorkflow(@Nonnull SelectOptionForMergeAdditionsWorkflow selectOptionsWorkflow,
                                                    @Nonnull DispatchServiceManager dispatchServiceManager,
+                                                   @Nonnull UploadFileDialogControllerFactory uploadFileDialogControllerFactory,
                                                    @Nonnull DispatchErrorMessageDisplay errorDisplay,
                                                    @Nonnull ProgressDisplay progressDisplay) {
         this.selectOptionsWorkflow = selectOptionsWorkflow;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.uploadFileDialogControllerFactory = uploadFileDialogControllerFactory;
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
     }
@@ -52,7 +58,7 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     }
 
     private void uploadProject(final ProjectId projectId) {
-        UploadFileDialogController uploadFileDialogController = new UploadFileDialogController("Upload ontologies", new UploadFileResultHandler() {
+        UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create("Upload ontologies", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(DocumentId fileDocumentId) {
                 getOntologies(projectId, fileDocumentId);
@@ -90,13 +96,10 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
 
         SelectOntologiesForMergeView view = new SelectOntologiesForMergeViewImpl(list);
         SelectOntologiesForMergeDialogController controller = new SelectOntologiesForMergeDialogController(view);
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<List<OWLOntologyID>>() {
-            @Override
-            public void handleHide(List<OWLOntologyID> data, WebProtegeDialogCloser closer) {
-                List<OWLOntologyID> l = view.getSelectedOntologies();
-                startSelectAdditionsWorkflow(projectId, documentId, list, l);
-                closer.hide();
-            }
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            List<OWLOntologyID> l = view.getSelectedOntologies();
+            startSelectAdditionsWorkflow(projectId, documentId, list, l);
+            closer.hide();
         });
         WebProtegeDialog.showDialog(controller);
     }
