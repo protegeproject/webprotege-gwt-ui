@@ -27,6 +27,8 @@ import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesAction;
+import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -394,6 +396,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityTagsAction _GetEntityTagsAction;
 
     GetEntityTagsResult _GetEntityTagsResult;
+
+    GetGitHubIssuesAction _GetGitHubIssesAction;
+
+    GetGitHubIssuesResult _GetHubIssuesResult;
 
     GetHeadRevisionNumberAction _GetHeadRevisionNumberAction;
 

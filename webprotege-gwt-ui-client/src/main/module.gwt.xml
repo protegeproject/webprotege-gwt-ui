@@ -35,6 +35,10 @@
 
     <inherits name="com.google.gwt.user.RemoteServiceObfuscateTypeNames"/>
 
+    <inherits name="edu.stanford.protege.github.issues.GitHubIssues"/>
+
+    <inherits name="org.jresearch.threetenbp.gwt.time.module"/>
+
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
 
     <!--

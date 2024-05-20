@@ -44,7 +44,7 @@
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt</artifactId>
-                <version>2.8.2</version>
+                <version>2.10.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -134,6 +134,7 @@
                 <artifactId>caffeine</artifactId>
                 <version>2.7.0</version>
             </dependency>
+
 
             <!-- Testing Dependencies -->
 
@@ -255,7 +256,7 @@
                 <plugin>
                     <groupId>net.ltgt.gwt.maven</groupId>
                     <artifactId>gwt-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.1.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sourceLevel>1.8</sourceLevel>
@@ -270,6 +271,7 @@
                             <arg>-style</arg><arg>DETAILED</arg>
                             <arg>-port</arg><arg>8765</arg>
                         </devmodeArgs>
+                        <logLevel>TRACE</logLevel>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -396,6 +398,7 @@
                     <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
                     <classpathScope>compile+runtime</classpathScope>
                     <port>8765</port>
+                    <logLevel>TRACE</logLevel>
                 </configuration>
             </plugin>
         </plugins>

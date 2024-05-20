@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
@@ -110,6 +111,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetEntityGraphResult.class),
         @JsonSubTypes.Type(GetEntityRenderingResult.class),
         @JsonSubTypes.Type(GetEntityTagsResult.class),
+        @JsonSubTypes.Type(GetGitHubIssuesResult.class),
         @JsonSubTypes.Type(GetHeadRevisionNumberResult.class),
         @JsonSubTypes.Type(GetHierarchyChildrenResult.class),
         @JsonSubTypes.Type(GetHierarchyPathsToRootResult.class),

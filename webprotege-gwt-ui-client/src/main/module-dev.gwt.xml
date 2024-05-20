@@ -35,7 +35,11 @@
 
     <inherits name="com.google.gwt.user.RemoteServiceObfuscateTypeNames"/>
 
+    <inherits name="edu.stanford.protege.github.issues.GitHubIssues"/>
+
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
+
+    <inherits name="org.jresearch.threetenbp.gwt.time.module"/>
 
     <!--
     Trim down the permutations that are compiled.  We need CSS3 features and so don't support

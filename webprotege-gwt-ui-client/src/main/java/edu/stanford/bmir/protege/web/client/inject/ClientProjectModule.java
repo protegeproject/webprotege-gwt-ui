@@ -24,6 +24,8 @@ import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
+import edu.stanford.bmir.protege.web.client.gh.GitHubIssuesView;
+import edu.stanford.bmir.protege.web.client.gh.GitHubIssuesViewImpl;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
@@ -941,6 +943,11 @@ public class ClientProjectModule {
 
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GitHubIssuesView provideGitHubIssuesView(GitHubIssuesViewImpl impl) {
         return impl;
     }
 }
