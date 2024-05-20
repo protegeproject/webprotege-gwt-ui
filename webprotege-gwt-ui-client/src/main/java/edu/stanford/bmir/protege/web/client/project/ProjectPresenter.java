@@ -161,6 +161,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         try {
             var that = this;
             $wnd.console.log('ALEX running ' + websocketUrl);
+            console.log('ALEX running ' + websocketUrl);
             var stompClient = new $wnd.StompJs.Client({
                 brokerURL: websocketUrl,
                 debug: function(str) {
@@ -169,6 +170,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                 reconnectDelay: 30000,
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
+                connectHeaders: {
+                    'token' : token
+                }
             });
 
 
