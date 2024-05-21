@@ -1,0 +1,12 @@
+{
+  "url": "https://example.org/reactions",
+  "total_count": 36,
+  "+1": 1,
+  "-1": 2,
+  "laugh": 3,
+  "hooray": 4,
+  "confused": 5,
+  "heart": 6,
+  "rocket": 7,
+  "eyes": 8
+}

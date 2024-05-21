@@ -1,0 +1,8 @@
+{
+  "eventId" : "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+  "projectId" : "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+  "entity" : {
+    "@type" : "Class",
+    "iri" : "https://example.org/A"
+  }
+}

@@ -16,7 +16,7 @@
         <widgetmap.version>4.0.1</widgetmap.version>
         <graphtree.version>1.2.0</graphtree.version>
         <autovalue.version>1.7.1</autovalue.version>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.17.1</jackson.version>
         <commons.io.version>2.7</commons.io.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>

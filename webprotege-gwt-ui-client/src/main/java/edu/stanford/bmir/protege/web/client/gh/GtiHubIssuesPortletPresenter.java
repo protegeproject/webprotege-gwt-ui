@@ -8,8 +8,8 @@ import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesAction;
 import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesResult;
+import edu.stanford.bmir.protege.web.shared.gh.GitHubIssue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.github.issues.shared.GitHubIssue;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
