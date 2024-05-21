@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 public class EditParentsPresenter {
 
@@ -26,6 +27,8 @@ public class EditParentsPresenter {
 
     @Nullable
     private OWLEntity entity;
+
+    private static final Logger logger = Logger.getLogger(EditParentsPresenter.class.getName());
 
     @Inject
     public EditParentsPresenter(@Nonnull ProjectId projectId,

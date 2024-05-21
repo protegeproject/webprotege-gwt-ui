@@ -11,12 +11,19 @@
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBox ui:field="textBox"
+            <text:ExpandingTextBoxImpl ui:field="textBox"
                                        anchorVisible="false"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.hierarchy_parents}" addStyleNames="{wp.style.formLabel}"/>
             <wp:PrimitiveDataListEditor ui:field="domains"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
+            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
+                                       mode="MULTI_LINE"
+                                       anchorVisible="false"/>
+            <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

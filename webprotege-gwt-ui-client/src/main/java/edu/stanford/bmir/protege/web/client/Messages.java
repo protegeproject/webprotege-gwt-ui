@@ -152,6 +152,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("create")
     String create();
 
+    @DefaultMessage("A reason for the change was not provided.\n" +
+            "Please fill in the Reason for change field.")
+    String reasonForChangeError();
+
     
     @DefaultMessage("Enter one name per line (press CTRL+ENTER to accept and close panel)")
     @Key("createEntityInstructions")
