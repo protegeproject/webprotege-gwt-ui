@@ -11,7 +11,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -69,11 +68,11 @@ public abstract class GitHubIssue implements IsSerializable, Serializable {
 
     public abstract @JsonProperty("comments") int comments();
 
-    public abstract @JsonProperty("created_at") Instant createdAt();
+    public abstract @JsonProperty("created_at") GitHubTimeStamp createdAt();
 
-    public abstract @JsonProperty("updated_at") Instant updatedAt();
+    public abstract @JsonProperty("updated_at") GitHubTimeStamp updatedAt();
 
-    public abstract @JsonProperty("closed_at") Instant closedAt();
+    public abstract @JsonProperty("closed_at") GitHubTimeStamp closedAt();
 
     @Nullable
     public abstract @JsonProperty("closed_by") GitHubUser closedBy();
@@ -116,16 +115,16 @@ public abstract class GitHubIssue implements IsSerializable, Serializable {
                        @JsonProperty("title") String title,
                        @JsonProperty("user") GitHubUser user,
                        @JsonProperty("labels") List<GitHubLabel> labels,
-                       @JsonProperty("htmlUrl") String htmlUrl,
+                       @JsonProperty("html_url") String htmlUrl,
                        @JsonProperty("state") GitHubState state,
                        @JsonProperty("locked") boolean locked,
                        @JsonProperty("assignee") @Nullable GitHubUser assignee,
                        @JsonProperty("assignees") List<GitHubUser> assignees,
                        @JsonProperty("milestone") @Nullable GitHubMilestone milestone,
                        @JsonProperty("comments") int comments,
-                       @JsonProperty("created_at") Instant createdAt,
-                       @JsonProperty("updated_at") Instant updatedAt,
-                       @JsonProperty("closed_at") Instant closedAt,
+                       @JsonProperty("created_at") GitHubTimeStamp createdAt,
+                       @JsonProperty("updated_at") GitHubTimeStamp updatedAt,
+                       @JsonProperty("closed_at") GitHubTimeStamp closedAt,
                        @JsonProperty("closed_by") @Nullable GitHubUser closedBy,
                        @JsonProperty("author_association") GitHubAuthorAssociation authorAssociation,
                        @JsonProperty("active_lock_reason") String activeLockReason,
@@ -146,9 +145,9 @@ public abstract class GitHubIssue implements IsSerializable, Serializable {
                                          Helper.requireNonNullElse(assignees, Collections.emptyList()),
                                          milestone,
                                          comments,
-                                         Helper.requireNonNullElse(createdAt, Instant.EPOCH),
-                                         Helper.requireNonNullElse(updatedAt, Instant.EPOCH),
-                                         Helper.requireNonNullElse(closedAt, Instant.EPOCH),
+                                         Helper.requireNonNullElse(createdAt, GitHubTimeStamp.epoch()),
+                                         Helper.requireNonNullElse(updatedAt, GitHubTimeStamp.epoch()),
+                                         Helper.requireNonNullElse(closedAt, GitHubTimeStamp.epoch()),
                                          closedBy,
                                          Helper.requireNonNullElse(authorAssociation, GitHubAuthorAssociation.NONE),
                                          Helper.requireNonNullElse(activeLockReason, ""),

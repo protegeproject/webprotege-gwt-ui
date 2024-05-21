@@ -9,7 +9,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -43,38 +42,38 @@ public abstract class GitHubMilestone implements IsSerializable {
     public abstract @JsonProperty("state") GitHubState state();
 
     @Nullable
-    public abstract @JsonProperty("created_at") Instant createdAt();
+    public abstract @JsonProperty("created_at") GitHubTimeStamp createdAt();
 
     @JsonIgnore
     @Nonnull
-    public Optional<Instant> getCreatedAt() {
+    public Optional<GitHubTimeStamp> getCreatedAt() {
         return Optional.ofNullable(createdAt());
     }
 
     @Nullable
-    public abstract @JsonProperty("updated_at") Instant updatedAt();
+    public abstract @JsonProperty("updated_at") GitHubTimeStamp updatedAt();
 
     @JsonIgnore
     @Nonnull
-    public Optional<Instant> getUpdatedAt() {
+    public Optional<GitHubTimeStamp> getUpdatedAt() {
         return Optional.ofNullable(updatedAt());
     }
 
     @Nullable
-    public abstract @JsonProperty("due_on") Instant dueOn();
+    public abstract @JsonProperty("due_on") GitHubTimeStamp dueOn();
 
     @JsonIgnore
     @Nonnull
-    public Optional<Instant> getDueOn() {
+    public Optional<GitHubTimeStamp> getDueOn() {
         return Optional.ofNullable(dueOn());
     }
 
     @Nullable
-    public abstract @JsonProperty("closed_at") Instant closedAt();
+    public abstract @JsonProperty("closed_at") GitHubTimeStamp closedAt();
 
     @JsonIgnore
     @Nonnull
-    public Optional<Instant> getClosedAt() {
+    public Optional<GitHubTimeStamp> getClosedAt() {
         return Optional.ofNullable(closedAt());
     }
 
@@ -90,10 +89,10 @@ public abstract class GitHubMilestone implements IsSerializable {
                                @JsonProperty("open_issues") int openIssues,
                                @JsonProperty("closed_issues") int closedIssues,
                                @JsonProperty("state") @Nullable GitHubState state,
-                               @JsonProperty("created_at") @Nullable Instant createdAt,
-                               @JsonProperty("updated_at") @Nullable Instant updatedAt,
-                               @JsonProperty("due_on") @Nullable Instant dueOn,
-                               @JsonProperty("closed_at") @Nullable Instant closedAt) {
+                               @JsonProperty("created_at") @Nullable GitHubTimeStamp createdAt,
+                               @JsonProperty("updated_at") @Nullable GitHubTimeStamp updatedAt,
+                               @JsonProperty("due_on") @Nullable GitHubTimeStamp dueOn,
+                               @JsonProperty("closed_at") @Nullable GitHubTimeStamp closedAt) {
         return new AutoValue_GitHubMilestone(
                 Helper.requireNonNullElse(url, ""),
                 id,

@@ -7,7 +7,6 @@ import com.google.auto.value.AutoValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
-import java.time.Instant;
 
 /**
  * Matthew Horridge
@@ -38,10 +37,10 @@ public abstract class GitHubComment implements IsSerializable {
     public abstract GitHubUser user();
 
     @JsonProperty("created_at")
-    public abstract Instant createdAt();
+    public abstract GitHubTimeStamp createdAt();
 
     @JsonProperty("updated_at")
-    public abstract Instant updatedAt();
+    public abstract GitHubTimeStamp updatedAt();
 
     @JsonProperty("issue_url")
     public abstract String issueUrl();
@@ -57,8 +56,8 @@ public abstract class GitHubComment implements IsSerializable {
                                     @JsonProperty("html_url") String htmlUrl,
                                     @JsonProperty("body") String body,
                                     @JsonProperty("user") GitHubUser user,
-                                    @JsonProperty("created_at") Instant createdAt,
-                                    @JsonProperty("updated_at") Instant updatedAt,
+                                    @JsonProperty("created_at") GitHubTimeStamp createdAt,
+                                    @JsonProperty("updated_at") GitHubTimeStamp updatedAt,
                                     @JsonProperty("issue_url") String issueUrl,
                                     @JsonProperty("author_association") GitHubAuthorAssociation authorAssociation) {
         return new AutoValue_GitHubComment(
@@ -68,8 +67,8 @@ public abstract class GitHubComment implements IsSerializable {
                 Helper.requireNonNullElse(htmlUrl, ""),
                 Helper.requireNonNullElse(body, ""),
                 Helper.requireNonNullElse(user, GitHubUser.empty()),
-                Helper.requireNonNullElse(createdAt, Instant.EPOCH),
-                Helper.requireNonNullElse(updatedAt, Instant.EPOCH),
+                Helper.requireNonNullElse(createdAt, GitHubTimeStamp.epoch()),
+                Helper.requireNonNullElse(updatedAt, GitHubTimeStamp.epoch()),
                 Helper.requireNonNullElse(issueUrl, ""),
                 Helper.requireNonNullElse(authorAssociation, GitHubAuthorAssociation.NONE)
         );

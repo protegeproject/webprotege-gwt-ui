@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.json.JacksonTester;
 
 import java.io.IOException;
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,9 +28,9 @@ public class GitHubCommentTest {
 
     protected static final String BODY = "Me too";
 
-    protected static final Instant CREATED_AT = Instant.parse("2011-04-14T16:00:49Z");
+    protected static final GitHubTimeStamp CREATED_AT = GitHubTimeStamp.valueOf("2011-04-14T16:00:49Z");
 
-    protected static final Instant UPDATED_AT = Instant.parse("2011-04-14T16:00:49Z");
+    protected static final GitHubTimeStamp UPDATED_AT = GitHubTimeStamp.valueOf("2011-04-14T16:00:49Z");
 
     protected static final String ISSUE_URL = "https://api.github.com/repos/octocat/Hello-World/issues/1347";
 
@@ -86,8 +85,8 @@ public class GitHubCommentTest {
         assertThat(comment.htmlUrl()).isEmpty();
         assertThat(comment.body()).isEmpty();
         assertThat(comment.user()).isEqualTo(GitHubUser.empty());
-        assertThat(comment.createdAt()).isEqualTo(Instant.EPOCH);
-        assertThat(comment.updatedAt()).isEqualTo(Instant.EPOCH);
+        assertThat(comment.createdAt()).isEqualTo(GitHubTimeStamp.epoch());
+        assertThat(comment.updatedAt()).isEqualTo(GitHubTimeStamp.epoch());
         assertThat(comment.issueUrl()).isEmpty();
         assertThat(comment.authorAssociation()).isEqualTo(GitHubAuthorAssociation.NONE);
     }
@@ -102,8 +101,8 @@ public class GitHubCommentTest {
         assertThat(comment.htmlUrl()).isEmpty();
         assertThat(comment.body()).isEmpty();
         assertThat(comment.user()).isEqualTo(GitHubUser.empty());
-        assertThat(comment.createdAt()).isEqualTo(Instant.EPOCH);
-        assertThat(comment.updatedAt()).isEqualTo(Instant.EPOCH);
+        assertThat(comment.createdAt()).isEqualTo(GitHubTimeStamp.epoch());
+        assertThat(comment.updatedAt()).isEqualTo(GitHubTimeStamp.epoch());
         assertThat(comment.issueUrl()).isEmpty();
         assertThat(comment.authorAssociation()).isEqualTo(GitHubAuthorAssociation.NONE);
     }

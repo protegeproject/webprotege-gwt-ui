@@ -27,8 +27,7 @@ import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesAction;
-import edu.stanford.bmir.protege.web.shared.gh.GetGitHubIssuesResult;
+import edu.stanford.bmir.protege.web.shared.gh.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -85,6 +84,8 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
+
+import java.time.Instant;
 
 /**
  * Matthew Horridge
@@ -398,6 +399,30 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityTagsResult _GetEntityTagsResult;
 
     GetGitHubIssuesAction _GetGitHubIssesAction;
+
+    GitHubIssue _GitHubIssue;
+
+    GitHubUser _GitHubUser;
+
+    GitHubUserType _GitHubUserType;
+
+    GitHubAuthorAssociation _GitHubAuthorAssociation;
+
+    GitHubState _GitHubState;
+
+    GitHubReaction _GitHubReaction;
+
+    GitHubLabel _GitHubLabel;
+
+    GitHubMilestone _GitHubMilestone;
+
+    GitHubReactions _GitHubReactions;
+
+    GitHubStateReason _GitHubStateReason;
+
+    GitHubTimeStamp _GitHubTimeStamp;
+
+
 
     GetGitHubIssuesResult _GetHubIssuesResult;
 

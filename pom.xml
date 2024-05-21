@@ -95,7 +95,6 @@
                 <version>1.2.0</version>
             </dependency>
 
-
             <!-- Use specific version of guava for all subprojects -->
             <dependency>
                 <groupId>com.google.guava</groupId>

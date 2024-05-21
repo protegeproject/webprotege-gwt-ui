@@ -62,7 +62,7 @@ public class GtiHubIssuesPortletPresenter extends AbstractWebProtegePortletPrese
     private void displayIssues(GetGitHubIssuesResult result) {
         List<GitHubIssue> issues = result.getIssues();
         String html = issues.stream()
-                .map(issue -> issue.title() + " -> " + issue.body())
+                .map(issue -> "<a href=\"" + issue.htmlUrl() + "\" target=\"_blank\">" + issue.title() + "</a> -> " + issue.body() + "  on " + issue.createdAt().getValue() )
                 .map(issue -> "<div>" + issue + "<div>")
                 .collect(Collectors.joining("\n"));
         view.setContent(html);

@@ -9,7 +9,6 @@ import org.springframework.boot.test.json.JsonContent;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -37,11 +36,11 @@ class GitHubIssueTest {
 
     private static final int COMMENTS = 0;
 
-    private static final Instant CLOSED_AT = Instant.EPOCH;
+    private static final GitHubTimeStamp CLOSED_AT = GitHubTimeStamp.epoch();
 
-    private static final Instant CREATED_AT = Instant.parse("2011-04-22T13:33:48Z");
+    private static final GitHubTimeStamp CREATED_AT = GitHubTimeStamp.valueOf("2011-04-22T13:33:48Z");
 
-    private static final Instant UPDATED_AT = Instant.parse("2011-04-22T13:33:48Z");
+    private static final GitHubTimeStamp UPDATED_AT = GitHubTimeStamp.valueOf("2011-04-22T13:33:48Z");
 
     private static final GitHubUser CLOSED_BY = GitHubTestUser.getTestUser();
 

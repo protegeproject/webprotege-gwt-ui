@@ -8,19 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.json.JacksonTester;
 
 import java.io.IOException;
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitHubMilestoneTest {
 
-    protected static final Instant CREATED_AT = Instant.parse("2011-04-10T20:09:31Z");
+    protected static final GitHubTimeStamp CREATED_AT = GitHubTimeStamp.valueOf("2011-04-10T20:09:31Z");
 
-    protected static final Instant UPDATED_AT = Instant.parse("2014-03-03T18:58:10Z");
+    protected static final GitHubTimeStamp UPDATED_AT = GitHubTimeStamp.valueOf("2014-03-03T18:58:10Z");
 
-    protected static final Instant CLOSED_AT = Instant.parse("2013-02-12T13:22:01Z");
+    protected static final GitHubTimeStamp CLOSED_AT = GitHubTimeStamp.valueOf("2013-02-12T13:22:01Z");
 
-    protected static final Instant DUE_ON = Instant.parse("2012-10-09T23:39:01Z");
+    protected static final GitHubTimeStamp DUE_ON = GitHubTimeStamp.valueOf("2012-10-09T23:39:01Z");
 
     protected static final String TITLE = "Milestone 1";
 
@@ -73,10 +72,10 @@ public class GitHubMilestoneTest {
             assertThat(milestone.creator()).isEqualTo(CREATOR);
             assertThat(milestone.openIssues()).isEqualTo(4);
             assertThat(milestone.closedIssues()).isEqualTo(8);
-            assertThat(milestone.createdAt()).isEqualTo(Instant.parse("2011-04-10T20:09:31Z"));
-            assertThat(milestone.updatedAt()).isEqualTo(Instant.parse("2014-03-03T18:58:10Z"));
-            assertThat(milestone.closedAt()).isEqualTo(Instant.parse("2013-02-12T13:22:01Z"));
-            assertThat(milestone.dueOn()).isEqualTo(Instant.parse("2012-10-09T23:39:01Z"));
+            assertThat(milestone.createdAt()).isEqualTo(GitHubTimeStamp.valueOf("2011-04-10T20:09:31Z"));
+            assertThat(milestone.updatedAt()).isEqualTo(GitHubTimeStamp.valueOf("2014-03-03T18:58:10Z"));
+            assertThat(milestone.closedAt()).isEqualTo(GitHubTimeStamp.valueOf("2013-02-12T13:22:01Z"));
+            assertThat(milestone.dueOn()).isEqualTo(GitHubTimeStamp.valueOf("2012-10-09T23:39:01Z"));
         }
     }
 
