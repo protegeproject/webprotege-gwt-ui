@@ -236,6 +236,7 @@
                 <configuration>
                     <repository>protegeproject/${project.artifactId}</repository>
                     <tag>${project.version}</tag>
+                    <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
                 </configuration>
             </plugin>
         </plugins>
