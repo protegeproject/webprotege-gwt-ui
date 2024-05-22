@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.gh;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
@@ -10,4 +11,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface GitHubIssuesView extends IsWidget {
 
     void setContent(String html);
+
+    AcceptsOneWidget addIssueContainer();
+
+    void clearIssueContainers();
 }

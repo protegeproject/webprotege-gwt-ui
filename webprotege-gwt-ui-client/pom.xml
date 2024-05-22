@@ -12,6 +12,10 @@
     <artifactId>webprotege-gwt-ui-client</artifactId>
     <packaging>gwt-app</packaging>
 
+    <properties>
+        <gwt.compiler.log-level>INFO</gwt.compiler.log-level>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -40,6 +44,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -238,6 +243,7 @@
                             <compilerArgs>
                                 <arg>-incremental</arg>
                             </compilerArgs>
+                            <logLevel>${gwt.compiler.log-level}</logLevel>
                         </configuration>
                     </plugin>
                             <plugin>

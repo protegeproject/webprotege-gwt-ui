@@ -28,6 +28,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -178,6 +179,7 @@
                 <dependency>
                     <groupId>com.google.gwt</groupId>
                     <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
                 </dependency>
             </dependencies>
             <build>

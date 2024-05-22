@@ -11,6 +11,9 @@ import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -26,12 +29,12 @@ public abstract class GetAuthenticatedUserDetailsResult implements Result {
 
     public abstract UserDetails getUserDetails();
 
-    public abstract ImmutableSet<ActionId> getPermittedActions();
+    public abstract Set<ActionId> getPermittedActions();
 
     @JsonCreator
     public static GetAuthenticatedUserDetailsResult create(@JsonProperty("userDetails") UserDetails userDetails,
-                                                           @JsonProperty("permittedActions")ImmutableSet<ActionId> permittedActions) {
-        return new AutoValue_GetAuthenticatedUserDetailsResult(userDetails, permittedActions);
+                                                           @JsonProperty("permittedActions") Set<ActionId> permittedActions) {
+        return new AutoValue_GetAuthenticatedUserDetailsResult(userDetails, new LinkedHashSet<>(permittedActions));
     }
 
 }

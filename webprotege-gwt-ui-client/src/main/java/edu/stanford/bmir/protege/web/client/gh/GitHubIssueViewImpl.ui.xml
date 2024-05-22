@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .outer {
+            padding: 10px;
+        }
+        .title {
+            font-weight: bolder;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.outer}">
+        <g:Label ui:field="issueTitle" addStyleNames="{style.title}"/>
+        <g:Label ui:field="issueBody" addStyleNames="{wp.discussion.commentBody}"/>
+        <g:HTMLPanel ui:field="labelContainer"/>
+        <g:Anchor target="_blank" ui:field="htmlUrl">View on GitHub</g:Anchor>
+    </g:HTMLPanel>
+</ui:UiBinder>

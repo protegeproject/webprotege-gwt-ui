@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.gh;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -35,19 +36,28 @@ public class GtiHubIssuesPortletPresenter extends AbstractWebProtegePortletPrese
 
     private final GitHubIssuesView view;
 
+    @Nonnull
+    private final GitHubIssuePresenterFactory issuePresenterFactory;
+
+    private WebProtegeEventBus eventBus;
+
     @Inject
     public GtiHubIssuesPortletPresenter(@Nonnull SelectionModel selectionModel,
                                         @Nonnull ProjectId projectId,
                                         @Nonnull DisplayNameRenderer displayNameRenderer,
-                                        @Nonnull DispatchServiceManager dispatch, GitHubIssuesView view) {
+                                        @Nonnull DispatchServiceManager dispatch, 
+                                        GitHubIssuesView view,
+                                        @Nonnull GitHubIssuePresenterFactory issuePresenterFactory) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.view = view;
+        this.issuePresenterFactory = issuePresenterFactory;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -60,12 +70,14 @@ public class GtiHubIssuesPortletPresenter extends AbstractWebProtegePortletPrese
     }
 
     private void displayIssues(GetGitHubIssuesResult result) {
+        view.clearIssueContainers();
         List<GitHubIssue> issues = result.getIssues();
-        String html = issues.stream()
-                .map(issue -> "<a href=\"" + issue.htmlUrl() + "\" target=\"_blank\">" + issue.title() + "</a> -> " + issue.body() + "  on " + issue.createdAt().getValue() )
-                .map(issue -> "<div>" + issue + "<div>")
-                .collect(Collectors.joining("\n"));
-        view.setContent(html);
+        for(GitHubIssue issue : issues) {
+            GitHubIssuePresenter presenter = issuePresenterFactory.create();
+            AcceptsOneWidget issueContainer = view.addIssueContainer();
+            presenter.start(eventBus, issueContainer);
+            presenter.displayIssue(issue);
+        }
     }
 
     @Override

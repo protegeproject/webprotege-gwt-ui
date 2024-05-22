@@ -114,7 +114,7 @@ public class PaginatorViewImpl extends Composite implements PaginatorView {
 
     @Override
     public void setElementCount(long elementCount) {
-        String msg = messages.pagination_rows(elementCount);
+        String msg = messages.pagination_rows((int) elementCount);
         rowCountField.setText(msg);
     }
 }

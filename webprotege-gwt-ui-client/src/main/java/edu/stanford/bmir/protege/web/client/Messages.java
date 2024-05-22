@@ -1282,7 +1282,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("({0,number} rows in total)")
     @AlternateMessage({"one", "(1 row in total)"})
     @Key("pagination.rows")
-    String pagination_rows(long elementCount);
+    String pagination_rows(@PluralCount int elementCount);
 
     @DefaultMessage("Local name")
     @Key("dictionaryLanguage.localName")

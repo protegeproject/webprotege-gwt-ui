@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <guava.version>33.2.0</guava.version>
+        <guava.version>32.1.0</guava.version>
         <dagger.version>2.51.1</dagger.version>
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>4.0.1</widgetmap.version>
@@ -28,6 +28,7 @@
         <auto-factory.version>1.0-beta7</auto-factory.version>
         <junit.version>4.12</junit.version>
         <commonmark.version>0.11.0</commonmark.version>
+        <gwt.version>2.10.0</gwt.version>
     </properties>
 
     <scm>
