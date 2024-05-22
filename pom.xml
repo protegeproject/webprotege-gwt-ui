@@ -10,8 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <guava.version>28.0</guava.version>
-        <dagger.version>2.20</dagger.version>
+        <guava.version>33.2.0</guava.version>
+        <dagger.version>2.51.1</dagger.version>
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>4.0.1</widgetmap.version>
         <graphtree.version>1.2.0</graphtree.version>
@@ -236,7 +236,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <release>11</release>
                         <forceJavacCompilerUse>true</forceJavacCompilerUse>
@@ -270,7 +270,7 @@
                             <arg>-style</arg><arg>DETAILED</arg>
                             <arg>-port</arg><arg>8765</arg>
                         </devmodeArgs>
-                        <logLevel>TRACE</logLevel>
+                        <logLevel>INFO</logLevel>
                     </configuration>
                 </plugin>
                 <plugin>
