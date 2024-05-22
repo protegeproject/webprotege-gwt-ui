@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,7 @@ public class EditParentsUiAction extends AbstractUiAction {
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.hierarchy_editParents());
         modalPresenter.setView(editParentsPresenter.getView());
+        editParentsPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
         editParentsPresenter.start(entity);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.OK);

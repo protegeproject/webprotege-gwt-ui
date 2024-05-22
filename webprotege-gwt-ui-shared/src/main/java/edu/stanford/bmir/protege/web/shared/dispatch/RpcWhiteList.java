@@ -403,6 +403,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetHierarchyChildrenResult _GetHierarchyChildrenResult;
 
+    GetHierarchyParentsAction _GetHierarchyParentsAction;
+
+    GetHierarchyParentsResult _GetHierarchyParentsResult;
+
     GetHierarchyPathsToRootAction _GetHierarchyPathsToRootAction;
 
     GetHierarchyPathsToRootResult _GetHierarchyPathsToRootResult;

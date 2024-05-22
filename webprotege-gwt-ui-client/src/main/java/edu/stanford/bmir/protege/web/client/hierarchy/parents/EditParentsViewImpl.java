@@ -7,19 +7,23 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class EditParentsViewImpl extends Composite implements EditParentsView {
 
@@ -49,12 +53,13 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Inject
     public EditParentsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-            @Nonnull Messages messages) {
+                               @Nonnull Messages messages) {
         this.messages = messages;
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         initWidget(ourUiBinder.createAndBindUi(this));
         domains.setPlaceholder(messages.frame_enterAClassName());
         domains.setValue(new ArrayList<>());
+        domains.setNewRowMode(ValueListEditor.NewRowMode.AUTOMATIC);
         domains.setEnabled(true);
         // domains.setValue(Collections.singletonList(entityData));
         textBox.setEnabled(false);
@@ -72,6 +77,11 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         logger.log(Level.FINE, "[EditParentsViewImpl] setting entityData "
                 + entity);
         // this.domains.setValue(entity.getObject().getObjectPropertiesInSignature());
+    }
+
+    @Override
+    public void setEntityParents(Set<OWLEntityData> entityParents) {
+        this.domains.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
     }
 
 
