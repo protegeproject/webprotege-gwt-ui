@@ -169,6 +169,7 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <release>8</release>
@@ -233,6 +234,10 @@
                             <classpathScope>compile+runtime</classpathScope>
                             <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
                             <extra>target/gwt-extra</extra>
+                            <draftCompile>true</draftCompile>
+                            <compilerArgs>
+                                <arg>-incremental</arg>
+                            </compilerArgs>
                         </configuration>
                     </plugin>
                             <plugin>
