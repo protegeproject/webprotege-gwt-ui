@@ -19,9 +19,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
