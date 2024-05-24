@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface EditParentsView extends IsWidget, HasBusy {
@@ -26,5 +25,5 @@ public interface EditParentsView extends IsWidget, HasBusy {
     @Nonnull
     String getReasonForChange();
 
-    Optional<List<OWLPrimitiveData>> getNewParentList();
+    List<OWLPrimitiveData> getNewParentList();
 }

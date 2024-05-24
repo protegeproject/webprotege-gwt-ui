@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,7 +129,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
     @Override
-    public Optional<List<OWLPrimitiveData>> getNewParentList() {
-        return this.domains.getValue();
+    public List<OWLPrimitiveData> getNewParentList() {
+        return this.domains.getValue().orElseGet(() -> {
+            return new ArrayList<OWLPrimitiveData>();
+        });
     }
 }

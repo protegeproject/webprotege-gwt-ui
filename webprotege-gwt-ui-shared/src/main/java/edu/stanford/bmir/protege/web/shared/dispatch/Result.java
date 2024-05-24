@@ -58,6 +58,7 @@ import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameR
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameResult;
+import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootResult;
@@ -255,6 +256,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(MergeEntitiesResult.class),
         @JsonSubTypes.Type(MergeUploadedProjectResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentResult.class),
+        @JsonSubTypes.Type(ChangeEntityParentsResult.class),
         @JsonSubTypes.Type(MoveHierarchyNodeResult.class),
         @JsonSubTypes.Type(MoveProjectsToTrashResult.class),
         @JsonSubTypes.Type(NewOntologyMergeAddResult.class),

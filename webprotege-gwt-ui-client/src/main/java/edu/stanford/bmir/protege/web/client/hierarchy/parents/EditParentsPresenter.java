@@ -1,16 +1,19 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -21,6 +24,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 public class EditParentsPresenter {
 
@@ -95,7 +99,11 @@ public class EditParentsPresenter {
         this.hierarchyId = Optional.of(hierarchyId);
     }
 
-    private void handleHierarchyChange(OWLEntity entity, Optional<List<OWLPrimitiveData>> parentsList) {
-
+    private void handleHierarchyChange(OWLEntity entity, List<OWLPrimitiveData> parentsList) {
+        ImmutableSet<OWLClass> parentsSet = parentsList.stream()
+                .map(owlPrimitiveData -> owlPrimitiveData.asEntity().get().asOWLClass())
+                .collect(toImmutableSet());
+        dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
+                changeEntityParentsResult -> {});
     }
 }

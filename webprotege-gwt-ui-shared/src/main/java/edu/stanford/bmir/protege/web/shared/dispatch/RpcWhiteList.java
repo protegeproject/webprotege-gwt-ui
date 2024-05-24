@@ -649,6 +649,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     MoveEntitiesToParentResult _MoveEntitiesToParentResult;
 
+    ChangeEntityParentsAction _ChangeEntityParentsAction;
+
+    ChangeEntityParentsResult _ChangeEntityParentsResult;
+
     MoveHierarchyNodeAction _MoveHierarchyNodeAction;
 
     MoveHierarchyNodeResult _MoveHierarchyNodeResult;
