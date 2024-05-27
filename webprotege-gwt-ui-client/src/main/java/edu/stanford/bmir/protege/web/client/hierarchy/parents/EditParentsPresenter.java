@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.EntityType;
@@ -84,10 +85,8 @@ public class EditParentsPresenter {
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                 result -> view.setOwlEntityData(result.getEntityData()));
 
-        hierarchyId.ifPresent(id -> {
-            dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, id),
-                    result -> view.setEntityParents(result.getParents()));
-        });
+        hierarchyId.ifPresent(id -> dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, id),
+                result -> view.setEntityParents(result.getParents())));
     }
 
     @Nonnull
@@ -104,6 +103,9 @@ public class EditParentsPresenter {
                 .map(owlPrimitiveData -> owlPrimitiveData.asEntity().get().asOWLClass())
                 .collect(toImmutableSet());
         dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
-                changeEntityParentsResult -> {});
+                changeEntityParentsResult -> dispatch.execute(
+                        CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
+                        threadActionResult -> {
+                        }));
     }
 }

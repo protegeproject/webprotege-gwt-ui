@@ -130,8 +130,6 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public List<OWLPrimitiveData> getNewParentList() {
-        return this.domains.getValue().orElseGet(() -> {
-            return new ArrayList<OWLPrimitiveData>();
-        });
+        return this.domains.getValue().orElseGet(ArrayList::new);
     }
 }
