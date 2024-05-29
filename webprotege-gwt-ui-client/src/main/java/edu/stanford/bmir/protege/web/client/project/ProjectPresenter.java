@@ -156,12 +156,10 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
 
     }
-    /*TODO change the hardcoded broker URL and get it from a config class */
     public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
-            $wnd.console.log('ALEX running ' + websocketUrl);
-            console.log('ALEX running ' + websocketUrl);
+
             var stompClient = new $wnd.StompJs.Client({
                 brokerURL: websocketUrl,
                 debug: function(str) {
