@@ -31,6 +31,8 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     String getSearchString();
 
+    void setSearchString(String text);
+
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 
     void setLangTagFilterVisible(boolean visible);

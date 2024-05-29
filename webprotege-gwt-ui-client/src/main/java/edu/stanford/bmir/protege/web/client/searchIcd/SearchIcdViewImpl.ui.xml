@@ -1,0 +1,90 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
+             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
+             xmlns:filters="urn:import:edu.stanford.bmir.protege.web.client.filter"
+>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .searchField {
+            box-sizing: border-box;
+        }
+
+        .searchResults {
+            height: 300px;
+        }
+
+        .helpText {
+        }
+
+        .main strong {
+            background-color: #ffea8b;
+            color: #000;
+        }
+
+        .busyView {
+            width: 100%;
+            height: 100%;
+        }
+
+        @external entityInList;
+        .entityInList {
+            cursor: pointer;
+        }
+
+        @external .selectedEntity;
+        @external .entityTitle;
+        .selectedEntity .entityTitle {
+            color: literal("var(--selected-item--color)") !important;
+            background-color: literal("var(--selected-item--background-color)") !important;
+        }
+
+        @external .entityDetailsCodeAndTitle;
+        .selectedEntity .entityDetailsCodeAndTitle {
+            color: literal("var(--selected-item--color)") !important;
+            background-color: literal("var(--selected-item--background-color)") !important;
+        }
+
+        @external .ctw-window;
+        .ctw-window {
+        }
+
+        @external .ctw-eb-window;
+        .ctw-eb-window {
+        }
+
+        @external .ctw-input;
+        .ctw-input {
+        }
+
+        .checkBox input {
+            padding-right: 4px;
+        }
+        .checkBox label {
+            padding-left: 5px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
+        <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}"
+                                 addStyleNames="{style.searchField} {style.ctw-input}"/>
+        <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
+
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:CheckBox ui:field="filterSubtreeCheckbox" addStyleNames="{style.checkBox}"/>
+        </g:HTMLPanel>
+
+        <g:HTMLPanel addStyleNames="{style.ctw-window} {style.searchResults}" ui:field="ectElement">
+        </g:HTMLPanel>
+
+        <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
+
+    </g:HTMLPanel>
+</ui:UiBinder>
