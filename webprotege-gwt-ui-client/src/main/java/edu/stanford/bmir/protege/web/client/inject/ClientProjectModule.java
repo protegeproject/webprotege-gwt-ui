@@ -4,10 +4,35 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.bulkop.AnnotationSimpleMatchingCriteriaView;
+import edu.stanford.bmir.protege.web.client.bulkop.AnnotationSimpleMatchingCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainer;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.CommitMessageInputView;
+import edu.stanford.bmir.protege.web.client.bulkop.CommitMessageInputViewImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsView;
+import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsViewImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentView;
+import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentViewImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueView;
+import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.*;
+import edu.stanford.bmir.protege.web.client.crud.ConditionalIriPrefixPresenter;
+import edu.stanford.bmir.protege.web.client.crud.ConditionalIriPrefixView;
+import edu.stanford.bmir.protege.web.client.crud.ConditionalIriPrefixViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitGeneratedAnnotationsSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitGeneratedAnnotationsSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitPrefixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitPrefixSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.GeneratedAnnotationDescriptorView;
+import edu.stanford.bmir.protege.web.client.crud.GeneratedAnnotationDescriptorViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.IncrementingPatternDescriptorView;
+import edu.stanford.bmir.protege.web.client.crud.IncrementingPatternDescriptorViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
@@ -18,40 +43,168 @@ import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
-import edu.stanford.bmir.protege.web.client.entity.*;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
+import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityView;
+import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
+import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.SimilarEntitiesView;
+import edu.stanford.bmir.protege.web.client.entity.SimilarEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
-import edu.stanford.bmir.protege.web.client.hierarchy.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldViewImpl;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupView;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupViewImpl;
+import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletView;
+import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
-import edu.stanford.bmir.protege.web.client.lang.*;
-import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsView;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.DefaultLanguageTagView;
+import edu.stanford.bmir.protege.web.client.lang.DefaultLanguageTagViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.DictionaryLanguageDataView;
+import edu.stanford.bmir.protege.web.client.lang.DictionaryLanguageDataViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsTopBarView;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsTopBarViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsView;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.LangTagFilterView;
+import edu.stanford.bmir.protege.web.client.lang.LangTagFilterViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.LanguageUsageView;
+import edu.stanford.bmir.protege.web.client.lang.LanguageUsageViewImpl;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenFieldPresenter;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenFieldView;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenFieldViewImpl;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenPresenterFactory;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenView;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenViewImpl;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
-import edu.stanford.bmir.protege.web.client.match.*;
+import edu.stanford.bmir.protege.web.client.match.AnnotationCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.AnnotationCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.AnnotationPropertyCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.AnnotationPropertyCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.AnnotationPropertyPairView;
+import edu.stanford.bmir.protege.web.client.match.AnnotationPropertyPairViewImpl;
+import edu.stanford.bmir.protege.web.client.match.BlankCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.BlankCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.ClassSelectorView;
+import edu.stanford.bmir.protege.web.client.match.ClassSelectorViewImpl;
+import edu.stanford.bmir.protege.web.client.match.CriteriaListCriteriaViewContainer;
+import edu.stanford.bmir.protege.web.client.match.CriteriaListView;
+import edu.stanford.bmir.protege.web.client.match.CriteriaListViewImpl;
+import edu.stanford.bmir.protege.web.client.match.CriteriaListViewViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.match.DateView;
+import edu.stanford.bmir.protege.web.client.match.DateViewImpl;
+import edu.stanford.bmir.protege.web.client.match.EntityIsCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.EntityIsCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.EntityRelationshipCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.EntityRelationshipCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.EntityTypeCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.EntityTypeCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.IriEqualsView;
+import edu.stanford.bmir.protege.web.client.match.IriEqualsViewImpl;
+import edu.stanford.bmir.protege.web.client.match.LangTagMatchesCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.LangTagMatchesCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.QueryPortletView;
+import edu.stanford.bmir.protege.web.client.match.QueryPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.match.RelationValueThatIsEqualToView;
+import edu.stanford.bmir.protege.web.client.match.RelationValueThatIsEqualToViewImpl;
+import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.match.SelectableCriteriaTypeView;
+import edu.stanford.bmir.protege.web.client.match.SelectableCriteriaTypeViewImpl;
+import edu.stanford.bmir.protege.web.client.match.SimpleStringCriteriaView;
+import edu.stanford.bmir.protege.web.client.match.SimpleStringCriteriaViewImpl;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
-import edu.stanford.bmir.protege.web.client.perspective.*;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveDetailsView;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveDetailsViewImpl;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveManagerAdminSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerAdminSettingsView;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerView;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerViewImpl;
+import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesService;
+import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesServiceImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
-import edu.stanford.bmir.protege.web.client.project.*;
-import edu.stanford.bmir.protege.web.client.projectsettings.*;
+import edu.stanford.bmir.protege.web.client.project.ProjectDetailsView;
+import edu.stanford.bmir.protege.web.client.project.ProjectDetailsViewImpl;
+import edu.stanford.bmir.protege.web.client.project.ShowProjectDetailsHandler;
+import edu.stanford.bmir.protege.web.client.project.ShowProjectDetailsHandlerImpl;
+import edu.stanford.bmir.protege.web.client.project.UploadAndMergeAdditionsHandler;
+import edu.stanford.bmir.protege.web.client.project.UploadAndMergeAdditionsHandlerImpl;
+import edu.stanford.bmir.protege.web.client.project.UploadAndMergeHandler;
+import edu.stanford.bmir.protege.web.client.project.UploadAndMergeHandlerImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.EntityDeprecationSettingsView;
+import edu.stanford.bmir.protege.web.client.projectsettings.EntityDeprecationSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.GeneralSettingsView;
+import edu.stanford.bmir.protege.web.client.projectsettings.GeneralSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsHeaderSectionView;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsHeaderSectionViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporterView;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporterViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.SlackWebhookSettingsView;
+import edu.stanford.bmir.protege.web.client.projectsettings.SlackWebhookSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.WebhookSettingsView;
+import edu.stanford.bmir.protege.web.client.projectsettings.WebhookSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
-import edu.stanford.bmir.protege.web.client.search.*;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldView;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldViewImpl;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterView;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterViewImpl;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchResultView;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchResultViewImpl;
+import edu.stanford.bmir.protege.web.client.search.SearchResultMatchView;
+import edu.stanford.bmir.protege.web.client.search.SearchResultMatchViewImpl;
+import edu.stanford.bmir.protege.web.client.search.SearchResultsListView;
+import edu.stanford.bmir.protege.web.client.search.SearchResultsListViewImpl;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchInputManager;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchInputManagerImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
-import edu.stanford.bmir.protege.web.client.tag.*;
-import edu.stanford.bmir.protege.web.client.viz.*;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaListView;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaListViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaView;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaViewContainer;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.tag.TagCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.BlankEdgeCriteriaPresenter;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterListItemView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterListItemViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterListView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterListViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterTokenView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterTokenViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphFilterViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphSettingsView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphView;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageView;
+import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.RelationshipEdgePropertyEqualsCriteriaView;
+import edu.stanford.bmir.protege.web.client.viz.RelationshipEdgePropertyEqualsCriteriaViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.VizView;
+import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
@@ -60,7 +213,11 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.viz.*;
+import edu.stanford.bmir.protege.web.shared.viz.AnyEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.AnyInstanceOfEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.AnyRelationshipEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.AnySubClassOfEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.FilterName;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -592,7 +749,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-        TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+    TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
         return impl;
     }
 
@@ -623,13 +780,13 @@ public class ClientProjectModule {
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
             GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
-                                numberFieldDescriptorPresenterFactory,
-                                choiceFieldDescriptorPresenterFactory,
-                                multiChoiceControlDescriptorPresenterFactory,
-                                imageDescriptorPresenterFactory,
-                                entityNameFieldDescriptorPresenterFactory,
-                                subFormControlDescriptorPresenterFactory,
-                                gridControlDescriptorPresenterFactory);
+                numberFieldDescriptorPresenterFactory,
+                choiceFieldDescriptorPresenterFactory,
+                multiChoiceControlDescriptorPresenterFactory,
+                imageDescriptorPresenterFactory,
+                entityNameFieldDescriptorPresenterFactory,
+                subFormControlDescriptorPresenterFactory,
+                gridControlDescriptorPresenterFactory);
     }
 
     @Provides
@@ -661,7 +818,7 @@ public class ClientProjectModule {
     GridHeaderCellView provideGridColumnHeaderView(GridHeaderCellViewImpl view) {
         return view;
     }
-    
+
     @Provides
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
@@ -758,9 +915,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                                         objectListPresenterProvider,
-                                         objectViewHolderProvider,
-                                         defaultObjectProvider);
+                objectListPresenterProvider,
+                objectViewHolderProvider,
+                defaultObjectProvider);
     }
 
     @Provides
@@ -951,6 +1108,11 @@ public class ClientProjectModule {
 
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchInputManager provideSearchInputManager(SearchInputManagerImpl impl) {
         return impl;
     }
 }

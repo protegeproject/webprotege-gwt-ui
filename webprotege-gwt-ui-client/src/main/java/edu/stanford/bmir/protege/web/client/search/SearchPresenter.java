@@ -9,13 +9,18 @@ import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchInputManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.*;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
+import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsAction;
+import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsResult;
+import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
+import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -72,7 +77,11 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
 
-    private AcceptKeyHandler acceptKeyHandler = () -> {};
+    private AcceptKeyHandler acceptKeyHandler = () -> {
+    };
+
+
+    private final SearchInputManager searchInputManager;
 
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
@@ -81,35 +90,37 @@ public class SearchPresenter implements HasInitialFocusable {
                            @Nonnull DispatchServiceManager dispatchServiceManager,
                            @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory,
                            @Nonnull EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter,
-                           @Nonnull LangTagFilterPresenter langTagFilterPresenter) {
+                           @Nonnull LangTagFilterPresenter langTagFilterPresenter,
+                           @Nonnull SearchInputManager searchInputManager) {
         this.projectId = projectId;
         this.view = view;
         this.searchResultsPresenter = searchResultsPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
         this.entitySearchFilterTokenFieldPresenter = checkNotNull(entitySearchFilterTokenFieldPresenter);
         this.langTagFilterPresenter = langTagFilterPresenter;
+        this.searchInputManager = searchInputManager;
     }
 
     public void start() {
         view.setSearchStringChangedHandler(() -> {
+            setSearchInputText(view.getSearchString());
             searchResultsPresenter.setPageNumber(1);
             restartSearchTimer();
         });
+        view.setSearchString(searchInputManager.getSearchInputText());
         view.setIncrementSelectionHandler(searchResultsPresenter::incrementSelection);
         view.setDecrementSelectionHandler(searchResultsPresenter::decrementSelection);
         view.setAcceptKeyHandler(this::handleAcceptKey);
-        searchResultsPresenter.setPageNumberChangedHandler(pageNumber -> {
-            restartPageChangeTimer();
-        });
+        searchResultsPresenter.setPageNumberChangedHandler(pageNumber -> restartPageChangeTimer());
         searchResultsPresenter.start(view.getSearchResultsContainer());
         searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
         dispatchServiceManager.beginBatch();
         dispatchServiceManager.execute(GetProjectLangTagsAction.create(projectId),
-                                       this::handleProjectLangTags);
+                this::handleProjectLangTags);
         entitySearchFilterTokenFieldPresenter.start(view.getSearchFilterContainer());
         entitySearchFilterTokenFieldPresenter.setSearchFiltersChangedHandler(this::performSearch);
         dispatchServiceManager.execute(GetSearchSettingsAction.create(projectId),
-                                       this::handleSearchSettings);
+                this::handleSearchSettings);
         dispatchServiceManager.executeCurrentBatch();
         entitySearchFilterTokenFieldPresenter.setPlaceholder("");
         langTagFilterPresenter.setPlaceholder("");
@@ -130,7 +141,7 @@ public class SearchPresenter implements HasInitialFocusable {
     private void handleProjectLangTags(GetProjectLangTagsResult result) {
         boolean langTagsPresent = !result.getLangTags().isEmpty();
         view.setLangTagFilterVisible(langTagsPresent);
-        if(langTagsPresent) {
+        if (langTagsPresent) {
             langTagFilterPresenter.start(view.getLangTagFilterContainer());
             langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         }
@@ -164,13 +175,13 @@ public class SearchPresenter implements HasInitialFocusable {
         return view.getInitialFocusable();
     }
 
-    public void setEntityTypes(EntityType<?> ... entityTypes) {
+    public void setEntityTypes(EntityType<?>... entityTypes) {
         this.entityTypes.clear();
         this.entityTypes.addAll(Arrays.asList(entityTypes));
     }
 
     private void performSearch() {
-        if(view.getSearchString().length() < 1) {
+        if (view.getSearchString().length() < 1) {
             searchResultsPresenter.clearSearchResults();
             return;
         }
@@ -178,17 +189,17 @@ public class SearchPresenter implements HasInitialFocusable {
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
         dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
-                                                                        view.getSearchString(),
-                                                                        entityTypes,
-                                                                        langTagFilter,
-                                                                        searchFilters,
-                                                                        PageRequest.requestPage(pageNumber)),
-                                       view,
-                                       this::displaySearchResult);
+                        view.getSearchString(),
+                        entityTypes,
+                        langTagFilter,
+                        searchFilters,
+                        PageRequest.requestPage(pageNumber)),
+                view,
+                this::displaySearchResult);
     }
 
     private void displaySearchResult(PerformEntitySearchResult result) {
-        if(!view.getSearchString().equals(result.getSearchString())) {
+        if (!view.getSearchString().equals(result.getSearchString())) {
             return;
         }
         searchResultsPresenter.displaySearchResult(result.getResults());
@@ -199,7 +210,19 @@ public class SearchPresenter implements HasInitialFocusable {
         return searchResultsPresenter.getSelectedSearchResult();
     }
 
-    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler) {
         this.hierarchySelectionHandler = handler;
+    }
+
+    private void setSearchInputText(String text) {
+        if (text == null) {
+            return;
+        }
+
+        if (this.searchInputManager.getSearchInputText().equals(text)) {
+            return;
+        }
+
+        this.searchInputManager.setSearchInputText(text);
     }
 }

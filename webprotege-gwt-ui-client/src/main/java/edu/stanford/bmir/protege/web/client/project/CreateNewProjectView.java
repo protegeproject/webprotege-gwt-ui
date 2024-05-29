@@ -72,4 +72,7 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
      * Displays a message saying that the project name is missing
      */
     void showProjectNameMissingMessage();
+
+    @Nonnull
+    String getFileUploadElementId();
 }

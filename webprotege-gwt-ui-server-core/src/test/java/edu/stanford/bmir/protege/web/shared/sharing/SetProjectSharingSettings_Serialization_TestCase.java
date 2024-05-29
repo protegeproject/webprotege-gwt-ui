@@ -26,7 +26,7 @@ public class SetProjectSharingSettings_Serialization_TestCase {
                 Optional.of(SharingPermission.EDIT), ImmutableList.of(
                         new SharingSetting(PersonId.get("User"), SharingPermission.EDIT)
         )
-        ));
+        ), null, null);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

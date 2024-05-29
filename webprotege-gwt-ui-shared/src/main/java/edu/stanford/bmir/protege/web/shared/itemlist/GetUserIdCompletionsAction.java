@@ -11,7 +11,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 12/05/15
  */
-@JsonTypeName("webprotege.users.GetUserIdCompletions")
+@JsonTypeName("webprotege.usersquery.QueryUsers")
 public class GetUserIdCompletionsAction extends GetPossibleItemCompletionsAction<UserId> {
 
     /**

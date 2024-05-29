@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
@@ -44,6 +45,7 @@ import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.tag.*;
+import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
@@ -199,13 +201,15 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetProjectTagsResult.class),
         @JsonSubTypes.Type(SetSearchSettingsResult.class),
         @JsonSubTypes.Type(SetUserProjectEntityGraphSettingsResult.class),
+        @JsonSubTypes.Type(SubmitFileResult.class),
         @JsonSubTypes.Type(UpdateEntityTagsResult.class),
         @JsonSubTypes.Type(UpdateFormDescriptorResult.class),
         @JsonSubTypes.Type(UpdateClassFrameResult.class),
         @JsonSubTypes.Type(UpdateObjectPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateDataPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
-        @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class)
+        @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

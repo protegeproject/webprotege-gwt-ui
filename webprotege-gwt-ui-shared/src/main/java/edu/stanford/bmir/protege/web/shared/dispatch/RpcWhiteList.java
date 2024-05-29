@@ -62,6 +62,7 @@ import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.*;
+import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
@@ -912,6 +913,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     SubFormControlDescriptor _SubFormControlDescriptor;
 
+    SubmitFileResult _SubmitFileResult;
+
     Tag _Tag;
 
     TerminalNode _TerminalNode;
@@ -977,6 +980,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     DocumentId _DocumentId;
 
     DropType _DropType;
+
+    GetUserInfoResult _GetUserInfoResult;
 
     public RpcWhiteList() {
     }
