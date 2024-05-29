@@ -163,13 +163,17 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
             var stompClient = new $wnd.StompJs.Client({
                 brokerURL: websocketUrl,
                 debug: function(str) {
+                    $wnd.console.log(str);
                     console.log(str);
                 },
                 reconnectDelay: 30000,
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
                 connectHeaders: {
-                    'token' : token
+                   'token': token,
+                    'userId': userId,
+                    'Authorization' : 'Bearer ' + token,
+                    'login': 'Bearer ' + token
                 }
             });
 

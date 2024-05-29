@@ -64,7 +64,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             if(action instanceof GetUserInfoAction) {
                 var websocketUrl = System.getenv("webprotege.websocketUrl");
                 GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
-                logger.info("ALEX returning websocket info " + result);
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);

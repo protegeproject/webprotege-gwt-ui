@@ -3,14 +3,17 @@ package edu.stanford.bmir.protege.web.shared.crud.oboid;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -21,7 +24,7 @@ import java.util.Optional;
  */
 @ApplicationSingleton
 @JsonTypeName("OboId")
-public class OBOIdSuffixKit extends EntityCrudKit<OboIdSuffixSettings> {
+public class OBOIdSuffixKit extends EntityCrudKit implements Serializable, IsSerializable {
 
     public static final String DEFAULT_PREFIX = "http://purl.obolibrary.org/obo/ONT_";
 
@@ -60,9 +63,10 @@ public class OBOIdSuffixKit extends EntityCrudKit<OboIdSuffixSettings> {
     }
 
     @Override
-    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, OboIdSuffixSettings suffixSettings) {
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, EntityCrudKitSuffixSettings suffixSettings) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < suffixSettings.getTotalDigits() - 1; i++) {
+        OboIdSuffixSettings oboIdSuffixSettings = (OboIdSuffixSettings) suffixSettings;
+        for(int i = 0; i < oboIdSuffixSettings.getTotalDigits() - 1; i++) {
             sb.append("0");
         }
         sb.append("1");
