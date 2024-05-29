@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Matthew Horridge
@@ -15,9 +17,13 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GeneratedAnnotationsSettings {
+public abstract class GeneratedAnnotationsSettings implements Serializable, IsSerializable {
 
     public static final String DESCRIPTORS = "descriptors";
+
+    public GeneratedAnnotationsSettings(){
+
+    }
 
 
     @JsonCreator

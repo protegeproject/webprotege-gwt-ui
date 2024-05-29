@@ -62,7 +62,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 return DispatchServiceResultContainer.create(result);
             }
             if(action instanceof GetUserInfoAction) {
-                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
+                var websocketUrl = System.getenv("webprotege.websocketUrl");
+                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);
@@ -85,7 +86,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                                                   ExecutionContext executionContext) throws IOException, InterruptedException {
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
-
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
 

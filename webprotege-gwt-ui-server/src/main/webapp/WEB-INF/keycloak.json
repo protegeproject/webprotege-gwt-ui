@@ -1,7 +1,7 @@
 {
   "realm": "webprotege",
-  "auth-server-url": "http://webprotege-local.edu/auth/",
-  "ssl-required": "external",
+  "auth-server-url": "${env.KEYCLOAK_AUTH_URL:http://webprotege-local.edu/auth/}",
+  "ssl-required": "none",
   "resource": "webprotege",
   "public-client": true,
   "confidential-port": 0,

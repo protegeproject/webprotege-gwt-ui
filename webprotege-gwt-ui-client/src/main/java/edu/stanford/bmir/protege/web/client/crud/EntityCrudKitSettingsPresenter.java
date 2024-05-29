@@ -51,7 +51,7 @@ public class EntityCrudKitSettingsPresenter {
         generatedAnnotationsSettingsPresenter.start(view.getGeneratedAnnotationsViewContainer());
     }
 
-    public void setSettings(@Nonnull EntityCrudKitSettings<?> settings) {
+    public void setSettings(@Nonnull EntityCrudKitSettings settings) {
         EntityCrudKitPrefixSettings prefixSettings = settings.getPrefixSettings();
         prefixSettingsPresenter.setPrefixSettings(prefixSettings);
         EntityCrudKitSuffixSettings suffixSettings = settings.getSuffixSettings();
@@ -61,7 +61,7 @@ public class EntityCrudKitSettingsPresenter {
     }
 
     @Nonnull
-    public EntityCrudKitSettings<?> getSettings() {
+    public EntityCrudKitSettings getSettings() {
         EntityCrudKitPrefixSettings prefixSettings = prefixSettingsPresenter.getPrefixSettings();
         EntityCrudKitSuffixSettings suffixSettings = suffixSettingsPresenter.getSuffixSettings();
         GeneratedAnnotationsSettings generatedAnnotationsSettings = generatedAnnotationsSettingsPresenter.getSettings();
