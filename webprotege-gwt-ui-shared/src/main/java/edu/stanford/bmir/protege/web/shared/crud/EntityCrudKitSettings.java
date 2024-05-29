@@ -18,7 +18,7 @@ import java.io.Serializable;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implements Serializable {
+public abstract class EntityCrudKitSettings implements Serializable {
 
     public static final String PREFIX_SETTINGS = "prefixSettings";
 
@@ -34,15 +34,15 @@ public abstract class EntityCrudKitSettings<S extends EntityCrudKitSuffixSetting
      * @param suffixSettings The {@link EntityCrudKitSuffixSettings}. Not {@code null}.
      * @throws NullPointerException if any argument is {@code null}.
      */
-    public static <S extends EntityCrudKitSuffixSettings> EntityCrudKitSettings<S> get(@JsonProperty(PREFIX_SETTINGS) @Nonnull EntityCrudKitPrefixSettings prefixSettings,
-                                                                                       @JsonProperty(SUFFIX_SETTINGS) S suffixSettings,
+    public static EntityCrudKitSettings get(@JsonProperty(PREFIX_SETTINGS) @Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                                                                       @JsonProperty(SUFFIX_SETTINGS) EntityCrudKitSuffixSettings suffixSettings,
                                                                                        @JsonProperty(GENERATED_ANNOTATIONS_SETTINGS) @Nonnull GeneratedAnnotationsSettings generatedAnnotationsSettings) {
-        return new AutoValue_EntityCrudKitSettings<S>(prefixSettings, suffixSettings, generatedAnnotationsSettings);
+        return new AutoValue_EntityCrudKitSettings(prefixSettings, suffixSettings, generatedAnnotationsSettings);
     }
 
     @JsonCreator
-    public static <S extends EntityCrudKitSuffixSettings> EntityCrudKitSettings<S> fromJson(@JsonProperty(PREFIX_SETTINGS) @Nonnull EntityCrudKitPrefixSettings prefixSettings,
-                                                                                            @JsonProperty(SUFFIX_SETTINGS) S suffixSettings,
+    public static EntityCrudKitSettings fromJson(@JsonProperty(PREFIX_SETTINGS) @Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                                                                            @JsonProperty(SUFFIX_SETTINGS) EntityCrudKitSuffixSettings suffixSettings,
                                                                                             @JsonProperty(GENERATED_ANNOTATIONS_SETTINGS) @Nullable GeneratedAnnotationsSettings generatedAnnotationsSettings) {
         return get(prefixSettings,
                    suffixSettings,
@@ -63,7 +63,7 @@ public abstract class EntityCrudKitSettings<S extends EntityCrudKitSuffixSetting
      * @return The suffix settings. Not {@code null}.
      */
     @JsonProperty(SUFFIX_SETTINGS)
-    public abstract S getSuffixSettings();
+    public abstract EntityCrudKitSuffixSettings getSuffixSettings();
 
     @JsonProperty(GENERATED_ANNOTATIONS_SETTINGS)
     @Nonnull

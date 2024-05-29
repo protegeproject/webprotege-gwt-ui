@@ -10,9 +10,7 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPrese
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
@@ -135,6 +133,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                     projectId,
                                     largeNumberOfChangesHandler);
         container.setWidget(view);
+
         dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
                                        r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
         dispatchServiceManager.executeCurrentBatch();
@@ -159,19 +158,25 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
 
     }
-    /*TODO change the hardcoded broker URL and get it from a config class */
-    public native void subscribeToWebsocket(String projectId, String token, String userId)/*-{
+    public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
 
             var stompClient = new $wnd.StompJs.Client({
-                brokerURL: 'ws://webprotege-local.edu/wsapps',
+                brokerURL: websocketUrl,
                 debug: function(str) {
+                    $wnd.console.log(str);
                     console.log(str);
                 },
                 reconnectDelay: 30000,
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
+                connectHeaders: {
+                   'token': token,
+                    'userId': userId,
+                    'Authorization' : 'Bearer ' + token,
+                    'login': 'Bearer ' + token
+                }
             });
 
 

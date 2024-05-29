@@ -25,12 +25,12 @@ public abstract class GetEntityCrudKitsResult implements Result {
 
 
     @JsonCreator
-    public static GetEntityCrudKitsResult create(@JsonProperty("kits") List<EntityCrudKit<?>> kits,
-                                                 @JsonProperty("currentSettings") EntityCrudKitSettings<?> currentSettings) {
+    public static GetEntityCrudKitsResult create(@JsonProperty("kits") List<EntityCrudKit> kits,
+                                                 @JsonProperty("currentSettings") EntityCrudKitSettings currentSettings) {
         return new AutoValue_GetEntityCrudKitsResult(kits, currentSettings);
     }
 
-    public abstract List<EntityCrudKit<?>> getKits();
+    public abstract List<EntityCrudKit> getKits();
 
-    public abstract EntityCrudKitSettings<?> getCurrentSettings();
+    public abstract EntityCrudKitSettings getCurrentSettings();
 }

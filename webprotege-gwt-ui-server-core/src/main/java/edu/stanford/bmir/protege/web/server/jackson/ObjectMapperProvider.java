@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.stanford.bmir.protege.web.server.form.FormControlValueDeserializer;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
@@ -113,6 +114,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
                 WatchAddedEvent.class,
                 PackagedProjectChangeEvent.class,
                 ProjectMovedFromTrashEvent.class,
+                GetEntityCrudKitsResult.class,
                 WatchRemovedEvent.class);
         mapper.registerModule(module);
 

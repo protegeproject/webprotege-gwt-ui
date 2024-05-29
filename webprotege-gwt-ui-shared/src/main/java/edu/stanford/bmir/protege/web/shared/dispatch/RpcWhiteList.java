@@ -14,8 +14,10 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
@@ -989,7 +991,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     DropType _DropType;
 
+    EntityCrudKit _EntityCrudKit;
+
     GetUserInfoResult _GetUserInfoResult;
+
+    GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
 
     public RpcWhiteList() {
     }

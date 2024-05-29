@@ -1,15 +1,19 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -20,19 +24,22 @@ import java.util.Optional;
  */
 @ApplicationSingleton
 @JsonTypeName("Uuid")
-public class UuidSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
+public class UuidSuffixKit extends EntityCrudKit implements Serializable, IsSerializable {
 
-    public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
-
-    private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
+    private static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
     @Inject
     public UuidSuffixKit() {
-        super(ID, "Auto-generated Universally Unique Id (UUID)");
+        super(EntityCrudKitId.get("UUID"), "Auto-generated Universally Unique Id (UUID)");
+    }
+
+    @JsonCreator
+    public static UuidSuffixKit get() {
+        return new UuidSuffixKit();
     }
 
     public static EntityCrudKitId getId() {
-        return ID;
+        return EntityCrudKitId.get("UUID");
     }
 
     @Override
@@ -56,7 +63,7 @@ public class UuidSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
     }
 
     @Override
-    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, UuidSuffixSettings suffixSettings) {
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, EntityCrudKitSuffixSettings suffixSettings) {
         return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), EXAMPLE_SUFFIX);
     }
 
