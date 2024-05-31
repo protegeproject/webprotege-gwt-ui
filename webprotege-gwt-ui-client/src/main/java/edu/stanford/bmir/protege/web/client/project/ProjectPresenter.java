@@ -10,7 +10,9 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPrese
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
@@ -107,17 +109,17 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         busyView.setMessage("Loading project.  Please wait.");
         container.setWidget(busyView);
         permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
-                                           container,
-                                           () -> displayProject(container, eventBus, place));
+                container,
+                () -> displayProject(container, eventBus, place));
     }
 
     private void displayProject(@Nonnull AcceptsOneWidget container,
                                 @Nonnull EventBus eventBus,
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
-                                       result -> handleProjectLoaded(container, eventBus, place));
+                result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), this.loggedInUserProvider.getCurrentUserId().getUserName());
+            subscribeToWebsocket(projectId.getId(), r.getToken(), r.getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
 
         });
 
@@ -128,14 +130,14 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-       // eventPollingManager.start();
+        // eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
-                                    projectId,
-                                    largeNumberOfChangesHandler);
+                projectId,
+                largeNumberOfChangesHandler);
         container.setWidget(view);
 
         dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
-                                       r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
+                r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
         dispatchServiceManager.executeCurrentBatch();
     }
 
@@ -158,6 +160,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
 
     }
+
     public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
