@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
         @JsonSubTypes.Type(UuidSuffixKit.class),
         @JsonSubTypes.Type(SuppliedNameSuffixKit.class)
 })
-public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> implements HasKitId, HasDisplayName, Serializable, IsSerializable {
+public abstract class EntityCrudKit implements HasKitId, HasDisplayName, Serializable, IsSerializable {
 
     private EntityCrudKitId kitId;
 
@@ -85,11 +85,11 @@ public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> imple
 
     public abstract EntityCrudKitPrefixSettings getDefaultPrefixSettings();
 
-    public abstract S getDefaultSuffixSettings();
+    public abstract EntityCrudKitSuffixSettings getDefaultSuffixSettings();
 
     public abstract Optional<String> getPrefixValidationMessage(String prefix);
 
-    public abstract IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, S suffixSettings);
+    public abstract IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, EntityCrudKitSuffixSettings suffixSettings);
 
 
     @Override

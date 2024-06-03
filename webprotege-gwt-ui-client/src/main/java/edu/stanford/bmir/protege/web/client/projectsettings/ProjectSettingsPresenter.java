@@ -261,7 +261,7 @@ public class ProjectSettingsPresenter {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
             settingsPresenter.goToNextPlace();
         });
-        EntityCrudKitSettings<?> settings = entityCrudKitSettingsPresenter.getSettings();
+        EntityCrudKitSettings settings = entityCrudKitSettingsPresenter.getSettings();
             dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,
                                                                               settings, settings,
                                                                               IRIPrefixUpdateStrategy.LEAVE_INTACT),
