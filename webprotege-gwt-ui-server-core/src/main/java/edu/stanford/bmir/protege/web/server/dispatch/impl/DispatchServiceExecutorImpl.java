@@ -10,8 +10,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,10 +73,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl);
                 return DispatchServiceResultContainer.create(result);
             }
-            if(action instanceof LogOutUserAction) {
-                logoutUser(executionContext);
-                return DispatchServiceResultContainer.create(new LogOutUserResult());
-            }
             var result = sendRequest(action, executionContext);
             return DispatchServiceResultContainer.create(result);
         }
@@ -136,20 +130,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             logger.error("Could not connect to API Gateway at {}", requestBuilder.getJsonRpcEndPoint().getUri(), e);
             throw new ActionExecutionException("Internal Server Error");
         }
-    }
-
-
-    private void logoutUser(ExecutionContext executionContext) throws IOException, InterruptedException {
-        var uri = System.getenv("webprotege.gwt-api-gateway.endPoint");
-        var builder = HttpRequest.newBuilder()
-                .uri(URI.create(uri + "/logout"))
-                .POST(HttpRequest.BodyPublishers.ofString(""));
-
-        var jwt = executionContext.getToken();
-        builder.setHeader("Authorization", "Bearer " + jwt);
-        HttpRequest request = builder.build();
-        var httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        logger.info(httpResponse.body());
     }
 
     private Optional<String> getEnvVariable(String path) {
