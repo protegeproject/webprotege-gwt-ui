@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,9 +61,12 @@ public class SelectionModel_TestCase {
 
     private OWLClass cls = new OWLClassImpl(IRI.create("urn:entity:cls"));
 
+    private ProjectId projectId = ProjectId.getNil();
+
     @Before
     public void setUp() {
         selectionModel = new SelectionModel(
+                projectId,
                 dispatch, eventBus,
                 placeController,
                 selectedClassManager,
