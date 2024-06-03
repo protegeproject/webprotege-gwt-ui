@@ -10,7 +10,9 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPrese
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
@@ -117,7 +119,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), this.loggedInUserProvider.getCurrentUserId().getUserName());
+            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
 
         });
 
