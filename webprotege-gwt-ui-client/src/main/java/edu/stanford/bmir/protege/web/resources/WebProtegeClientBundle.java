@@ -167,6 +167,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource searchIcon();
 
+
+    @Source("solar--card-search-linear.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource searchIcdIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();

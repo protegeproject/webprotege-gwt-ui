@@ -75,12 +75,7 @@ public class CreateNewProjectPresenter {
 
     public void start() {
         view.clear();
-        if (loggedInUserManager.isAllowedApplicationAction(UPLOAD_PROJECT)) {
-            view.setFileUploadEnabled(true);
-        }
-        else {
-            view.setFileUploadEnabled(false);
-        }
+        view.setFileUploadEnabled(loggedInUserManager.isAllowedApplicationAction(UPLOAD_PROJECT));
     }
 
     private boolean validate() {
