@@ -143,6 +143,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
         eventPollingManager.stop();
+        eventBus.dispose();
     }
 
     @Override
