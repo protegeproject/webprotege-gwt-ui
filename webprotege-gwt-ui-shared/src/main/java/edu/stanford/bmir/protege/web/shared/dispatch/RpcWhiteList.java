@@ -987,6 +987,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetUserInfoResult _GetUserInfoResult;
 
+    AppEnvVariables _AppEnvVariables;
+
     GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
 
     public RpcWhiteList() {

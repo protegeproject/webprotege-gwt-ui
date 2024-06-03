@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 03/01/16
  */
 public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserProjectPermissionChecker {
-
     private final LoggedInUserProvider loggedInUserProvider;
 
     private final ActiveProjectManager activeProjectManager;
@@ -52,7 +51,6 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
             return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        GWT.log("[LoggedInUserProjectPermissionCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
         permissionManager.hasPermissionForProject(userId, actionId, projectId.get(), callback);
     }
 

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.project;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
@@ -63,6 +64,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
+
 
     @Inject
     public ProjectPresenter(ProjectId projectId,
@@ -76,7 +79,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             PermissionScreener permissionScreener,
                             WebProtegeEventBus eventBus,
                             ProjectTagsStyleManager projectTagsStyleManager,
-                            LargeNumberOfChangesManager largeNumberOfChangesHandler, LoggedInUserProvider loggedInUserProvider) {
+                            LargeNumberOfChangesManager largeNumberOfChangesHandler, LoggedInUserProvider loggedInUserProvider,
+                            ApplicationEnvironmentManager applicationEnvironmentManager) {
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
@@ -90,6 +94,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.projectTagsStyleManager = projectTagsStyleManager;
         this.largeNumberOfChangesHandler = largeNumberOfChangesHandler;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
     }
 
     @Nonnull
@@ -115,7 +120,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
+            subscribeToWebsocket(projectId.getId(),  r.getToken(), applicationEnvironmentManager.getAppEnvVariables().getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
 
         });
 

@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>5.0.6-SNAPSHOT</version>
+        <version>5.0.7</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-client</artifactId>
@@ -227,6 +227,7 @@
                             <classpathScope>compile+runtime</classpathScope>
                             <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
                             <extra>target/gwt-extra</extra>
+
                         </configuration>
                     </plugin>
                             <plugin>
@@ -256,6 +257,11 @@
                             <moduleShortName>webprotege</moduleShortName>
                             <classpathScope>compile+runtime</classpathScope>
                             <localWorkers>6</localWorkers>
+                            <compilerArgs>
+                                <arg>-optimize</arg>
+                                <arg>9</arg>
+                                <arg>-compileReport</arg>
+                            </compilerArgs>
                         </configuration>
                     </plugin>
                 </plugins>

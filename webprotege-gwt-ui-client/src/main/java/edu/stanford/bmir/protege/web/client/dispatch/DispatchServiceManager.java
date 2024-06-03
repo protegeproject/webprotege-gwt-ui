@@ -148,18 +148,7 @@ public class DispatchServiceManager {
     @SuppressWarnings("unchecked")
     private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
-        logAction(action);
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
-    }
-
-    private <A extends Action<R>, R extends Result> void logAction(A action) {
-        if(action instanceof BatchAction) {
-            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName() + "(" + ((BatchAction) action).getActions().size() + " actions)");
-        }
-        else {
-            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
-            logger.info("[Dispatch] Executing action " + requestCount + "    " + action);
-        }
     }
 
 
