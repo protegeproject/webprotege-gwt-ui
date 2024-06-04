@@ -7,8 +7,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -16,6 +18,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,7 +28,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 15/05/15
  */
 @ProjectSingleton
-public class SelectionModel {
+public class SelectionModel implements HasDispose {
+
+    private static final Logger logger = Logger.getLogger("SelectionModel");
+
+    private final ProjectId projectId;
 
     private final DispatchServiceManager dispatch;
 
@@ -45,6 +52,8 @@ public class SelectionModel {
 
     private final PlaceController placeController;
 
+    private final HandlerRegistration placeChangeEventHandlerRegistration;
+
     private ItemSelection selection = ItemSelection.empty();
 
     private final Timer selectionTransmitDelayTimer = new Timer() {
@@ -57,7 +66,7 @@ public class SelectionModel {
     private final List<OWLEntity> pendingSelection = new ArrayList<>();
 
     @Inject
-    public SelectionModel(DispatchServiceManager dispatch,
+    public SelectionModel(ProjectId projectId, DispatchServiceManager dispatch,
                           EventBus eventBus,
                           PlaceController placeController,
                           SelectedEntityManager<OWLClass> selectedClassManager,
@@ -66,6 +75,7 @@ public class SelectionModel {
                           SelectedEntityManager<OWLAnnotationProperty> selectedAnnotationPropertyManager,
                           SelectedEntityManager<OWLDatatype> selectedDatatypeManager,
                           SelectedEntityManager<OWLNamedIndividual> selectedIndividualManager) {
+        this.projectId = projectId;
         this.dispatch = dispatch;
         this.eventBus = eventBus;
         this.placeController = placeController;
@@ -75,7 +85,7 @@ public class SelectionModel {
         this.selectedAnnotationPropertyManager = checkNotNull(selectedAnnotationPropertyManager);
         this.selectedDatatypeManager = checkNotNull(selectedDatatypeManager);
         this.selectedIndividualManager = checkNotNull(selectedIndividualManager);
-        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
+        this.placeChangeEventHandlerRegistration = eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
             Place newPlace = event.getNewPlace();
             if(newPlace instanceof ProjectViewPlace) {
                 ProjectViewPlace projectViewPlace = (ProjectViewPlace) newPlace;
@@ -96,6 +106,13 @@ public class SelectionModel {
     }
 
     private void updateSelectionFromPlace(ProjectViewPlace place) {
+        logger.info("Responding to place changed. New place: " + place);
+        ProjectId placeProjectId = place.getProjectId();
+        if(!projectId.equals(placeProjectId)) {
+            // Not my project
+            logger.info("The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
+            return;
+        }
         ItemSelection itemSelection = place.getItemSelection();
         if(!itemSelection.equals(selection)) {
             Optional<OWLEntity> previousSelection = extractEntityFromItem(selection);
@@ -203,6 +220,13 @@ public class SelectionModel {
         if(!(place instanceof ProjectViewPlace)) {
             return;
         }
+        logger.info("Responding to request to set the selection now. New place: " + place);
+        ProjectId placeProjectId = ((ProjectViewPlace) place).getProjectId();
+        if(!projectId.equals(placeProjectId)) {
+            // Not my project
+            logger.info("The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
+            return;
+        }
         Item<?> item = entity
                 .accept(new OWLEntityVisitorEx<Item<?>>() {
                     @Nonnull
@@ -259,7 +283,6 @@ public class SelectionModel {
         placeController.goTo(nextPlace);
     }
 
-
     private void fireEvent(Optional<OWLEntity> previousLastSelection) {
         // It's likely that several actions will be executed as a result of the selection
         // change.  These can be nicely batched together so that only one HTTP call takes
@@ -271,5 +294,11 @@ public class SelectionModel {
         } finally {
             dispatch.executeCurrentBatch();
         }
+    }
+
+    @Override
+    public void dispose() {
+        logger.info("Disposing of selection model for project " + projectId);
+        placeChangeEventHandlerRegistration.removeHandler();
     }
 }
