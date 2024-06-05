@@ -141,6 +141,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     @Override
     public void dispose() {
+        widgetMapper.dispose();
     }
 
 

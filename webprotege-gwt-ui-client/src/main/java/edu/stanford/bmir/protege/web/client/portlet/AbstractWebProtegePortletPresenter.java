@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -55,6 +56,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     @Nullable
     private Place lastPlace = null;
 
+    private boolean disposed = false;
+
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer,
@@ -64,6 +67,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         this.projectId = checkNotNull(projectId);
         this.displayNameRenderer = displayNameRenderer;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
+            logger.info("Handling selection changed in " + projectId + " (disposed=" + disposed  + ") in " + portletUi.map(HasViewTitle::getViewTitle).orElse("(not set)"));
                                                                                           if (trackSelection) {
                                                                                               handleBeforeSetEntity(e.getPreviousSelection());
                                                                                               handleAfterSetEntity(e.getLastSelection());
@@ -209,6 +213,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     @Override
     public void dispose() {
+        disposed = true;
+        logger.info("Disposing of portlet " + getClass().getSimpleName() + " in project " + projectId);
         selectionModelHandlerRegistration.removeHandler();
         portletUi.ifPresent(HasDispose::dispose);
     }

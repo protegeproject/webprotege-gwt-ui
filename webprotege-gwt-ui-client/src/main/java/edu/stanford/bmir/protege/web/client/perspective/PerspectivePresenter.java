@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -67,6 +68,9 @@ public class PerspectivePresenter implements HasDispose {
 
     private final LanguageMapCurrentLocaleMapper localeMapper;
 
+    private HandlerRegistration placeChangedHandlerRegistration;
+
+
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
                                 final LoggedInUserProvider loggedInUserProvider,
@@ -91,8 +95,8 @@ public class PerspectivePresenter implements HasDispose {
 
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
         logger.fine("[PerspectivePresenter] Starting at place " + place);
-        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
-            if(event.getNewPlace() instanceof ProjectViewPlace) {
+        placeChangedHandlerRegistration = eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
+            if (event.getNewPlace() instanceof ProjectViewPlace) {
                 displayPerspective(((ProjectViewPlace) event.getNewPlace()).getPerspectiveId());
             }
         });
@@ -218,6 +222,9 @@ public class PerspectivePresenter implements HasDispose {
 
     @Override
     public void dispose() {
+        if(placeChangedHandlerRegistration != null) {
+            placeChangedHandlerRegistration.removeHandler();
+        }
         for(Perspective tab : perspectiveCache.values()) {
             tab.dispose();
         }
