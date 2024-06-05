@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresent
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
  * 12/02/16
  */
 public class WebProtegeActivityMapper implements ActivityMapper {
+    
     Logger logger = Logger.getLogger("WebProtegeActivityMapper");
 
     private final ClientApplicationComponent applicationComponent;
@@ -86,9 +88,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     public void start() {
-        GWT.log("[WebProtegeActivityMapper] Started activity mapper.");
+        logger.info("Started activity mapper.");
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> {
-            GWT.log("[WebProtegeActivityMapper] User logged out.  Going to the Login Place.");
+            logger.info("User logged out.  Going to the Login Place.");
             LoginPlace loginPlace;
             Place currentPlace = placeController.getWhere();
             if (!(currentPlace instanceof LoginPlace)) {
@@ -102,16 +104,18 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     private ClientProjectComponent getClientProjectComponentForProjectAndLoggedInUser(@Nonnull ProjectId projectId) {
+        logger.info("Getting project component for " + projectId + ".  The current project is " + currentClientProjectComponent);
         if(currentClientProjectComponent.isPresent()) {
             ClientProjectComponent projectComponent = currentClientProjectComponent.get();
             if(isProjectComponentForProject(projectComponent, projectId) && isLastUserSameAsLoggedInUser()) {
                 return projectComponent;
             }
-            projectComponent.getProjectPresenter().dispose();
+            logger.info("Disposing of project component for " + projectComponent.getProjectId());
+            projectComponent.dispose();
         }
         ClientProjectComponent nextProjectComponent = instantiateClientProjectComponent(projectId);
         // Reset project component and user
-        GWT.log("[WebProtegeActivityMapper] Instantiating new project component");
+        logger.info("Instantiating new project component");
         lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
         currentClientProjectComponent = Optional.of(nextProjectComponent);
         return nextProjectComponent;
@@ -131,10 +135,10 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     public Activity getActivity(final Place place) {
-        GWT.log("[WebProtegeActivityMapper] Map place: " + place);
+        logger.info("Map place: " + place);
         if (shouldRedirectToLogin(place)) {
-            GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
-            logger.info("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
+            logger.info("User is not logged in.  Redirecting to login.");
+            logger.info("User is not logged in.  Redirecting to login.");
             loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(loginPresenter);
@@ -168,7 +172,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         if (place instanceof LoginPlace) {
             if (!loggedInUserProvider.getCurrentUserId().isGuest()) {
-                logger.info("[WebProtegeActivityMapper] Schedule to project list after login.");
+                logger.info("Schedule to project list after login.");
 
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
@@ -193,7 +197,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
 
         if (place instanceof ProjectListPlace) {
-            logger.info("[WebProtegeActivityMapper] Route to project list activity");
+            logger.info("Route to project list activity");
             return new ProjectListActivity(projectManagerPresenter);
         }
 
