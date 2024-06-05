@@ -112,6 +112,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         textBox.setText("");
         reasonForChangeTextBox.setText("");
         clearErrors();
+        clearClassesWithCycle();
     }
 
     @Nonnull
@@ -132,8 +133,8 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void markClassesWithCycles(Set<OWLEntityData> classesWithCycles) {
-        classesWithCyclesWarningField.setVisible(true);
         String classes = classesWithCycles.stream().map(OWLEntityData::getBrowserText).collect(Collectors.joining(", "));
         classesWithCyclesWarningField.setHTML(messages.classHierarchy_cyclesHaveBeenCreated(classes));
+        classesWithCyclesWarningField.setVisible(true);
     }
 }
