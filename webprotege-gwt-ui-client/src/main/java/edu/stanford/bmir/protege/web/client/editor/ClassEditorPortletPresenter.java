@@ -49,4 +49,10 @@ public class ClassEditorPortletPresenter extends AbstractWebProtegePortletPresen
     protected void handleReloadRequest() {
         editorPresenter.handleReloadRequest();
     }
+
+    @Override
+    public void dispose() {
+        editorPresenter.dispose();
+        super.dispose();
+    }
 }
