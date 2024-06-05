@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -16,9 +21,13 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 @JsonTypeName("webprotege.entities.ChangeEntityParents")
 public abstract class ChangeEntityParentsResult implements Result {
 
+
     @JsonCreator
-    public static ChangeEntityParentsResult create() {
-        return new AutoValue_ChangeEntityParentsResult();
+    public static ChangeEntityParentsResult create(@JsonProperty("classesWithCycle") @Nonnull Set<OWLEntityData> classesWithCycle) {
+        return new AutoValue_ChangeEntityParentsResult(classesWithCycle);
     }
+
+    @Nonnull
+    public abstract Set<OWLEntityData> getClassesWithCycle();
 
 }

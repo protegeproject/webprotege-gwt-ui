@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -31,8 +32,6 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     ExpandingTextBoxImpl textBox;
 
-    private OWLEntityData entityData;
-
     private final Messages messages;
 
     @UiField(provided = true)
@@ -43,6 +42,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @UiField
     Label reasonForChangeErrorLabel;
+
+    @UiField
+    HTML classesWithCyclesWarningField;
 
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
@@ -61,7 +63,6 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         domains.setPlaceholder(messages.frame_enterAClassName());
         domains.setValue(new ArrayList<>());
         domains.setEnabled(true);
-        // domains.setValue(Collections.singletonList(entityData));
         textBox.setEnabled(false);
     }
 
@@ -72,11 +73,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void setOwlEntityData(OWLEntityData entity) {
-        this.entityData = entity;
         this.textBox.setText(entity.getBrowserText());
         logger.log(Level.FINE, "[EditParentsViewImpl] setting entityData "
                 + entity);
-        // this.domains.setValue(entity.getObject().getObjectPropertiesInSignature());
     }
 
     @Override
@@ -115,13 +114,6 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         clearErrors();
     }
 
-
-    @Nonnull
-    @Override
-    public String getEntityString() {
-        return textBox.getText().trim();
-    }
-
     @Nonnull
     @Override
     public String getReasonForChange() {
@@ -131,5 +123,17 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Override
     public List<OWLPrimitiveData> getNewParentList() {
         return this.domains.getValue().orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public void clearClassesWithCycle() {
+        classesWithCyclesWarningField.setVisible(false);
+    }
+
+    @Override
+    public void markClassesWithCycles(Set<OWLEntityData> classesWithCycles) {
+        classesWithCyclesWarningField.setVisible(true);
+        String classes = classesWithCycles.stream().map(OWLEntityData::getBrowserText).collect(Collectors.joining(", "));
+        classesWithCyclesWarningField.setHTML(messages.classHierarchy_cyclesHaveBeenCreated(classes));
     }
 }

@@ -20,10 +20,11 @@ public interface EditParentsView extends IsWidget, HasBusy {
     void clear();
 
     @Nonnull
-    String getEntityString();
-
-    @Nonnull
     String getReasonForChange();
 
     List<OWLPrimitiveData> getNewParentList();
+
+    void clearClassesWithCycle();
+
+    void markClassesWithCycles(Set<OWLEntityData> classesWithCycles);
 }

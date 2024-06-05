@@ -1216,6 +1216,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "To edit the global display name settings please see the Project Settings page.")
     SafeHtml displayName_noDisplayNameForLangTag(String langTag);
 
+
+    @DefaultMessage("<em>The Hierarchy change you attempted has created cycles for following classes: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please correct this in order to save changes!")
+    SafeHtml classHierarchy_cyclesHaveBeenCreated(String classesWithCycles);
+
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
     String displayName_noDisplayName_helpText(String typeName, String defDisplayName);

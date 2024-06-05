@@ -4,24 +4,24 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,9 +37,6 @@ public class EditParentsPresenter {
 
     @Nonnull
     private final DispatchServiceManager dispatch;
-
-    @Nonnull
-    private EntityType<?> entityType = EntityType.CLASS;
 
     @Nullable
     private OWLEntity entity;
@@ -75,12 +72,7 @@ public class EditParentsPresenter {
         this.entity = entity;
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.OK);
-        modalPresenter.setButtonHandler(DialogButton.OK, closer -> {
-            if (view.isReasonForChangeSet()) {
-                handleHierarchyChange(entity, view.getNewParentList());
-                closer.closeModal();
-            }
-        });
+        modalPresenter.setButtonHandler(DialogButton.OK, this::handleHierarchyChange);
         modalManager.showModal(modalPresenter);
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                 result -> view.setOwlEntityData(result.getEntityData()));
@@ -98,14 +90,25 @@ public class EditParentsPresenter {
         this.hierarchyId = Optional.of(hierarchyId);
     }
 
-    private void handleHierarchyChange(OWLEntity entity, List<OWLPrimitiveData> parentsList) {
-        ImmutableSet<OWLClass> parentsSet = parentsList.stream()
-                .map(owlPrimitiveData -> owlPrimitiveData.asEntity().get().asOWLClass())
-                .collect(toImmutableSet());
-        dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
-                changeEntityParentsResult -> dispatch.execute(
-                        CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
-                        threadActionResult -> {
-                        }));
+    private void handleHierarchyChange(ModalCloser closer) {
+        if (view.isReasonForChangeSet()) {
+
+            ImmutableSet<OWLClass> parentsSet = view.getNewParentList().stream()
+                    .map(owlPrimitiveData -> owlPrimitiveData.asEntity().get().asOWLClass())
+                    .collect(toImmutableSet());
+            dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
+                    changeEntityParentsResult -> {
+                        if (changeEntityParentsResult.getClassesWithCycle().isEmpty()) {
+                            view.clearClassesWithCycle();
+                            dispatch.execute(
+                                    CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
+                                    threadActionResult -> closer.closeModal());
+                            return;
+                        }
+                        view.clearClassesWithCycle();
+                        Set<OWLEntityData> classesWithCycles = changeEntityParentsResult.getClassesWithCycle();
+                        view.markClassesWithCycles(classesWithCycles);
+                    });
+        }
     }
 }

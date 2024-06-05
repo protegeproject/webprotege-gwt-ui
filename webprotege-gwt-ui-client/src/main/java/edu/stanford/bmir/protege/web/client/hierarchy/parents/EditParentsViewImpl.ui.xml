@@ -6,7 +6,9 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
-
+        .warningField {
+            margin-top: 20px;
+        }
     </ui:style>
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
@@ -24,6 +26,9 @@
                                        mode="MULTI_LINE"
                                        anchorVisible="false"/>
             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
+            <g:HTML ui:field="classesWithCyclesWarningField"
+                    visible="false"
+                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>
