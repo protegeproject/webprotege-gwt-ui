@@ -137,15 +137,15 @@ public class DispatchServiceManager {
             }
         }
 
-//        if(batch > 0) {
-//            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
-//            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
-//            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
-//            pendingActionExecutions.add(actionExecution);
-//        }
-//        else {
+        if(batch > 0) {
+            logger.info("Batching submitted action: " + action.getClass().getSimpleName());
+            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
+            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
+            pendingActionExecutions.add(actionExecution);
+        }
+        else {
             execAction(action, callback);
-//        }
+        }
     }
 
     private void checkMakingACallForCurrentProject(ProjectId projectId) {
