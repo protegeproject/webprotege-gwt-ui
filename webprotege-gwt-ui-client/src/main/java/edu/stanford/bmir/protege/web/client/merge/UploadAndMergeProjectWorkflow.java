@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogControllerFactory;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -24,19 +22,9 @@ public class UploadAndMergeProjectWorkflow {
     @Nonnull
     private final MergeUploadedProjectWorkflow mergeWorkflow;
 
-    @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
-
-    @Nonnull
-    private final UploadFileDialogControllerFactory uploadFileDialogControllerFactory;
-
     @Inject
-    public UploadAndMergeProjectWorkflow(@Nonnull MergeUploadedProjectWorkflow mergeWorkflow,
-                                         @Nonnull DispatchServiceManager dispatchServiceManager,
-                                         @Nonnull UploadFileDialogControllerFactory uploadFileDialogControllerFactory) {
+    public UploadAndMergeProjectWorkflow(@Nonnull MergeUploadedProjectWorkflow mergeWorkflow) {
         this.mergeWorkflow = checkNotNull(mergeWorkflow);
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.uploadFileDialogControllerFactory = uploadFileDialogControllerFactory;
     }
 
     public void start(ProjectId projectId) {
@@ -44,19 +32,17 @@ public class UploadAndMergeProjectWorkflow {
     }
 
     private void uploadProject(final ProjectId projectId) {
-        UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create(
-                "Upload ontologies", new UploadFileResultHandler() {
-                    @Override
-                    public void handleFileUploaded(DocumentId fileDocumentId) {
-                        startMergeWorkflow(projectId, fileDocumentId);
-                    }
+        UploadFileDialogController uploadFileDialogController = new UploadFileDialogController("Upload ontologies", new UploadFileResultHandler() {
+            @Override
+            public void handleFileUploaded(DocumentId fileDocumentId) {
+                startMergeWorkflow(projectId, fileDocumentId);
+            }
 
-                    @Override
-                    public void handleFileUploadFailed(String errorMessage) {
-                        GWT.log("Upload failed");
-                    }
-                }
-        );
+            @Override
+            public void handleFileUploadFailed(String errorMessage) {
+                GWT.log("Upload failed");
+            }
+        });
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
 
