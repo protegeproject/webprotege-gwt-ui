@@ -179,7 +179,7 @@ public class DispatchServiceManager {
         }
         else {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
-            logger.info("[Dispatch] Executing action " + requestCount + "    " + action);
+            logger.info("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
         }
     }
 
