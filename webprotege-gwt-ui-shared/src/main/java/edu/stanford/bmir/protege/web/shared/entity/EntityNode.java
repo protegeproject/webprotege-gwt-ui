@@ -41,6 +41,9 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     private static final ImmutableSet<Tag> NO_ENTITY_TAGS = ImmutableSet.of();
 
+    private static final ImmutableSet<EntityStatus> NO_STATUS = ImmutableSet.of();
+
+
     @Nonnull
     public static EntityNode get(@Nonnull OWLEntity entity,
                                  @Nonnull String browserText,
@@ -48,14 +51,16 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                  boolean deprecated,
                                  @Nonnull Set<Watch> watches,
                                  int openCommentCount,
-                                 Collection<Tag> tags) {
+                                 Collection<Tag> tags,
+                                 Set<EntityStatus> statuses) {
         return new AutoValue_EntityNode(entity,
-                                        browserText,
-                                        ImmutableSet.copyOf(tags),
-                                        deprecated,
-                                        ImmutableSet.copyOf(watches),
-                                        openCommentCount,
-                                        shortForms);
+                browserText,
+                ImmutableSet.copyOf(tags),
+                deprecated,
+                ImmutableSet.copyOf(watches),
+                openCommentCount,
+                shortForms,
+                ImmutableSet.copyOf(statuses));
     }
 
     @JsonCreator
@@ -66,18 +71,20 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                  @JsonProperty("deprecated") boolean deprecated,
                                  @JsonProperty("watches") @Nonnull Set<Watch> watches,
                                  @JsonProperty("openCommentCount") int openCommentCount,
-                                 @JsonProperty("tags") Collection<Tag> tags) {
+                                 @JsonProperty("tags") Collection<Tag> tags,
+                                 @JsonProperty("statuses") Set<EntityStatus> statuses) {
         ImmutableMap<DictionaryLanguage, String> map = shortForms.stream()
-                                                        .collect(toImmutableMap(ShortForm::getDictionaryLanguage,
-                                                                                ShortForm::getShortForm));
+                .collect(toImmutableMap(ShortForm::getDictionaryLanguage,
+                        ShortForm::getShortForm));
 
         return get(entity,
-                   browserText,
-                   map,
-                   deprecated,
-                   ImmutableSet.copyOf(watches),
-                   openCommentCount,
-                   ImmutableSet.copyOf(tags));
+                browserText,
+                map,
+                deprecated,
+                ImmutableSet.copyOf(watches),
+                openCommentCount,
+                ImmutableSet.copyOf(tags),
+                ImmutableSet.copyOf(statuses));
     }
 
     /**
@@ -91,12 +98,13 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     @Nonnull
     public static EntityNode getFromEntityData(@Nonnull OWLEntityData entityData) {
         return get(entityData.getEntity(),
-                   entityData.getBrowserText(),
-                   entityData.getShortForms(),
-                   NOT_DEPRECATED,
-                   NO_WATCHES,
-                   NO_OPEN_COMMENTS,
-                   NO_ENTITY_TAGS);
+                entityData.getBrowserText(),
+                entityData.getShortForms(),
+                NOT_DEPRECATED,
+                NO_WATCHES,
+                NO_OPEN_COMMENTS,
+                NO_ENTITY_TAGS,
+                NO_STATUS);
     }
 
     @Nonnull
@@ -117,10 +125,10 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     public String getText(@Nonnull List<DictionaryLanguage> prefLang, String defaultText) {
         return prefLang.stream()
-                       .map(language -> getShortForms().get(language))
-                       .filter(Objects::nonNull)
-                       .findFirst()
-                       .orElse(defaultText);
+                .map(language -> getShortForms().get(language))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(defaultText);
     }
 
     @JsonIgnore
@@ -140,12 +148,14 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     @Nonnull
     public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
 
+    public abstract ImmutableSet<EntityStatus> getEntityStatus();
+
     @JsonProperty("shortForms")
     public ImmutableList<ShortForm> getShortFormsList() {
         return getShortForms().entrySet()
-                       .stream()
-                       .map(entry -> ShortForm.get(entry.getKey(), entry.getValue()))
-                       .collect(ImmutableList.toImmutableList());
+                .stream()
+                .map(entry -> ShortForm.get(entry.getKey(), entry.getValue()))
+                .collect(ImmutableList.toImmutableList());
     }
 
     @Override

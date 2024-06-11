@@ -26,17 +26,18 @@ public class EntityNode_Serialization_TestCase {
     @Test
     public void shouldSerializeNode() throws IOException {
         var entityNode = EntityNode.get(mockOWLClass(),
-                       "The browser text",
-                       ImmutableMap.of(DictionaryLanguage.localName(), "Hello"),
-                       true,
-                       ImmutableSet.of(Watch.create(mockUserId(), mockOWLClass(), WatchType.ENTITY)),
-                       33,
-                       ImmutableSet.of(Tag.get(TagId.createTagId(),
-                                               mockProjectId(),
-                                               "The Tag Label",
-                                               "The tag description",
-                                               Color.getWhite(),
-                                               Color.getWhite(), ImmutableList.of())));
+                "The browser text",
+                ImmutableMap.of(DictionaryLanguage.localName(), "Hello"),
+                true,
+                ImmutableSet.of(Watch.create(mockUserId(), mockOWLClass(), WatchType.ENTITY)),
+                33,
+                ImmutableSet.of(Tag.get(TagId.createTagId(),
+                        mockProjectId(),
+                        "The Tag Label",
+                        "The tag description",
+                        Color.getWhite(),
+                        Color.getWhite(), ImmutableList.of())),
+                ImmutableSet.of(EntityStatus.get("")));
         JsonSerializationTestUtil.testSerialization(entityNode, EntityNode.class);
     }
 }
