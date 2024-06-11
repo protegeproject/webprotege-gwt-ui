@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityStatus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
@@ -17,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -233,6 +235,9 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
     private DataResource getIcon(@Nonnull EntityNode node) {
         OWLEntity entity = node.getEntity();
         if (entity.isOWLClass()) {
+            if(containsIgnoreCase(node.getEntityStatuses(), "released")){
+                return BUNDLE.releasedClassIcon();
+            }
             return BUNDLE.svgClassIcon();
         }
         else if (entity.isOWLObjectProperty()) {
@@ -254,5 +259,14 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     public void setPrimaryDisplayLanguage(@Nonnull DictionaryLanguage language) {
         this.primaryLanguages = ImmutableList.of(checkNotNull(language));
+    }
+
+
+
+    private static boolean containsIgnoreCase(Set<EntityStatus> entityStatuses, String searchStr) {
+        if (searchStr == null || entityStatuses == null ||entityStatuses.isEmpty()) {
+            return false;
+        }
+        return entityStatuses.stream().anyMatch(entityStatus -> entityStatus.getStatus().equalsIgnoreCase(searchStr));
     }
 }

@@ -148,7 +148,9 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     @Nonnull
     public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
 
-    public abstract ImmutableSet<EntityStatus> getEntityStatus();
+
+    @JsonProperty("statuses")
+    public abstract ImmutableSet<EntityStatus> getEntityStatuses();
 
     @JsonProperty("shortForms")
     public ImmutableList<ShortForm> getShortFormsList() {

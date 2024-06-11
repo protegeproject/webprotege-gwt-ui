@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import javax.annotation.Nonnull;
 
 @AutoValue
-public abstract class EntityStatus implements IsSerializable {
+public abstract class EntityStatus implements IsSerializable, Comparable<EntityStatus> {
 
     public static final String STATUS = "_status";
 
@@ -21,4 +21,10 @@ public abstract class EntityStatus implements IsSerializable {
     @JsonProperty(STATUS)
     @Nonnull
     public abstract String getStatus();
+
+
+    @Override
+    public int compareTo(EntityStatus o) {
+        return this.getStatus().compareToIgnoreCase(o.getStatus());
+    }
 }
