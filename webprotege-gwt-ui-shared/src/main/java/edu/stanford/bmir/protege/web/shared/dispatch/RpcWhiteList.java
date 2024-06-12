@@ -581,6 +581,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GraphNode<EntityNode> _GraphNode;
 
+    EntityStatus _EntityStatus;
+
     GridCellData _GridCellData;
 
     GridCellDataDto _GridCellDataDto;
