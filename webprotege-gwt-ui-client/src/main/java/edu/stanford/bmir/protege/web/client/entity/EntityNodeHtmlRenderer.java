@@ -235,7 +235,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
     private DataResource getIcon(@Nonnull EntityNode node) {
         OWLEntity entity = node.getEntity();
         if (entity.isOWLClass()) {
-            if(containsIgnoreCase(node.getEntityStatuses(), "released")){
+            if(containsIgnoreCase(node.getStatuses(), "released")){
                 return BUNDLE.releasedClassIcon();
             }
             return BUNDLE.svgClassIcon();

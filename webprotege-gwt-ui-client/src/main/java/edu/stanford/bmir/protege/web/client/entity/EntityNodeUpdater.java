@@ -77,7 +77,7 @@ public class EntityNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     node.getTags(),
-                    node.getEntityStatuses());
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }
@@ -116,7 +116,7 @@ public class EntityNodeUpdater {
                 updatedWatches,
                 node.getOpenCommentCount(),
                 node.getTags(),
-                node.getEntityStatuses());
+                node.getStatuses());
         nodeIndex.updateNode(updatedNode);
     }
 
@@ -134,7 +134,7 @@ public class EntityNodeUpdater {
                         node.getWatches(),
                         event.getOpenCommentCountForEntity(),
                         node.getTags(),
-                        node.getEntityStatuses());
+                        node.getStatuses());
                 nodeIndex.updateNode(updatedNode);
             });
         });
@@ -154,7 +154,7 @@ public class EntityNodeUpdater {
                         node.getWatches(),
                         event.getOpenCommentsCountForEntity(),
                         node.getTags(),
-                        node.getEntityStatuses());
+                        node.getStatuses());
                 nodeIndex.updateNode(updatedNode);
             });
         });
@@ -173,7 +173,7 @@ public class EntityNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     node.getTags(),
-                    node.getEntityStatuses());
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }
@@ -191,7 +191,7 @@ public class EntityNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     event.getTags(),
-                    node.getEntityStatuses());
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }

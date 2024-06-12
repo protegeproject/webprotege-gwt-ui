@@ -1,18 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
-import edu.stanford.bmir.protege.web.shared.shortform.ShortForm;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.protege.gwt.graphtree.shared.tree.HasTextRendering;
@@ -23,8 +17,6 @@ import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
@@ -41,7 +33,7 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     private static final ImmutableSet<Tag> NO_ENTITY_TAGS = ImmutableSet.of();
 
-    private static final ImmutableSet<EntityStatus> NO_STATUS = ImmutableSet.of();
+    private static final ImmutableSet<EntityStatus> NO_STATUSES = ImmutableSet.of();
 
 
     @Nonnull
@@ -104,7 +96,7 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                 NO_WATCHES,
                 NO_OPEN_COMMENTS,
                 NO_ENTITY_TAGS,
-                NO_STATUS);
+                NO_STATUSES);
     }
 
     @Nonnull
@@ -150,7 +142,7 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
 
     @JsonProperty("statuses")
-    public abstract ImmutableSet<EntityStatus> getEntityStatuses();
+    public abstract ImmutableSet<EntityStatus> getStatuses();
 
     @JsonProperty("shortForms")
     public ImmutableList<ShortForm> getShortFormsList() {
