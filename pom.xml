@@ -255,7 +255,7 @@
                 <plugin>
                     <groupId>net.ltgt.gwt.maven</groupId>
                     <artifactId>gwt-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.1.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sourceLevel>1.8</sourceLevel>
@@ -265,11 +265,10 @@
                         <startupUrls>WebProtege.jsp</startupUrls>
                         <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
 <!--                        <style>OBFUSCATED</style>-->
-                        <style>DETAILED</style>
-                        <devmodeArgs>
-                            <arg>-style</arg><arg>DETAILED</arg>
-                            <arg>-port</arg><arg>8765</arg>
-                        </devmodeArgs>
+                        <style>OBFUSCATED</style>
+                        <draftCompile>false</draftCompile>
+                        <optimize>9</optimize>
+                        <logLevel>WARN</logLevel>
                     </configuration>
                 </plugin>
                 <plugin>

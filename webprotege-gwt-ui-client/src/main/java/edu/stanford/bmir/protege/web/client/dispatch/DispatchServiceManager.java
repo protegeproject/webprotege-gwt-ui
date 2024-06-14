@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.EventBus;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -126,6 +128,7 @@ public class DispatchServiceManager {
         callback.handleSubmittedForExecution();
         if(action instanceof HasProjectId) {
             ProjectId projectId = ((HasProjectId) action).getProjectId();
+            checkMakingACallForCurrentProject(projectId);
             ResultCache resultCache = getResultCache(projectId, eventBus);
             Optional<R> result = resultCache.getCachedResult(action);
             if (result.isPresent()) {
@@ -134,15 +137,33 @@ public class DispatchServiceManager {
             }
         }
 
-//        if(batch > 0) {
-//            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
-//            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
-//            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
-//            pendingActionExecutions.add(actionExecution);
-//        }
-//        else {
+        if(batch > 0) {
+            logger.info("Batching submitted action: " + action.getClass().getSimpleName());
+            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
+            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
+            pendingActionExecutions.add(actionExecution);
+        }
+        else {
             execAction(action, callback);
-//        }
+        }
+    }
+
+    private void checkMakingACallForCurrentProject(ProjectId projectId) {
+        Place place = placeController.getWhere();
+        if(place instanceof HasProjectId) {
+            ProjectId placeProjectId = ((HasProjectId) place).getProjectId();
+            if(!placeProjectId.equals(projectId)) {
+                logCurrentStack();
+            }
+        }
+    }
+
+    private static void logCurrentStack() {
+        try {
+            throw new RuntimeException("Mismatch");
+        } catch (RuntimeException e) {
+            logger.log(Level.WARNING, "Mismatch of project Ids.  If not deliberate this may indicated a bug somewhere.", e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -158,7 +179,7 @@ public class DispatchServiceManager {
         }
         else {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
-            logger.info("[Dispatch] Executing action " + requestCount + "    " + action);
+            logger.info("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
         }
     }
 
