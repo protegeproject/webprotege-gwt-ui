@@ -49,8 +49,6 @@ public class FileUploader {
                 }
             }
         };
-
-        console.log("About to send form data");
         // Initiate a multipart/form-data upload
         xhr.send(formData);
 
