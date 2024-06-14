@@ -33,7 +33,6 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
     public UploadFileDialogController(String title,
                                       final UploadFileResultHandler resultHandler,
                                       @Provided DispatchServiceManager dispatch,
-                                      @Provided DispatchErrorMessageDisplay errorMessageDisplay,
                                       @Provided ProgressDisplay progressDisplay) {
         super(title);
         this.dispatch = dispatch;
