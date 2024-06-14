@@ -9,5 +9,7 @@ public enum StringType {
 
     SIMPLE_STRING,
 
-    LANG_STRING
+    LANG_STRING,
+
+    SPECIFIC_LANG_STRING
 }
