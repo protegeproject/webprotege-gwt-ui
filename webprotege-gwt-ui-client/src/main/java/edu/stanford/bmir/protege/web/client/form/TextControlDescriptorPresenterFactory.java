@@ -44,6 +44,7 @@ public class TextControlDescriptorPresenterFactory implements FormControlDescrip
         return new TextControlDescriptor(
                 LanguageMap.empty(),
                 StringType.SIMPLE_STRING,
+                "",
                 LineMode.SINGLE_LINE,
                 "",
                 LanguageMap.empty()

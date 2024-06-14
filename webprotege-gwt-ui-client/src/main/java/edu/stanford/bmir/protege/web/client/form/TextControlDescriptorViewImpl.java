@@ -1,19 +1,23 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.primitive.LanguageEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,16 +56,38 @@ public class TextControlDescriptorViewImpl extends Composite implements TextCont
     @UiField
     RadioButton langString;
 
+    @UiField
+    RadioButton specificLangString;
+
+    @UiField(provided = true)
+    LanguageEditor specificLangTagEditor;
+
     @UiField(provided = true)
     protected static Counter counter = new Counter();
 
+    @UiField
+    HTMLPanel specificLangTagPanel;
+
     @Inject
     public TextControlDescriptorViewImpl(@Nonnull LanguageMapEditor placeholderEditor,
-                                         @Nonnull LanguageMapEditor patternViolationMessageEditor) {
+                                         @Nonnull LanguageMapEditor patternViolationMessageEditor,
+                                         @Nonnull LanguageEditor specificLangTagEditor) {
         this.placeholderEditor = checkNotNull(placeholderEditor);
+        this.specificLangTagEditor = checkNotNull(specificLangTagEditor);
         this.patternViolationMessageEditor = checkNotNull(patternViolationMessageEditor);
         counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
+        specificLangString.addValueChangeHandler(this::handleSpecificLangStringChanged);
+        simpleString.addValueChangeHandler(this::handleSpecificLangStringChanged);
+        langString.addValueChangeHandler(this::handleSpecificLangStringChanged);
+    }
+
+    private void handleSpecificLangStringChanged(ValueChangeEvent<Boolean> event) {
+        updateVisibility();
+    }
+
+    private void updateVisibility() {
+        specificLangTagPanel.setVisible(specificLangString.getValue());
     }
 
     @Override
@@ -69,9 +95,13 @@ public class TextControlDescriptorViewImpl extends Composite implements TextCont
         if(stringType == StringType.SIMPLE_STRING) {
             simpleString.setValue(true);
         }
-        else {
+        else if(stringType == StringType.LANG_STRING) {
             langString.setValue(true);
         }
+        else {
+            specificLangString.setValue(true);
+        }
+        updateVisibility();
     }
 
     @Nonnull
@@ -80,8 +110,11 @@ public class TextControlDescriptorViewImpl extends Composite implements TextCont
         if(simpleString.getValue()) {
             return StringType.SIMPLE_STRING;
         }
-        else {
+        else if(langString.getValue()) {
             return StringType.LANG_STRING;
+        }
+        else {
+            return StringType.SPECIFIC_LANG_STRING;
         }
     }
 
@@ -137,5 +170,16 @@ public class TextControlDescriptorViewImpl extends Composite implements TextCont
     @Override
     public LanguageMap getPlaceholder() {
         return placeholderEditor.getValue().orElse(LanguageMap.empty());
+    }
+
+    @Nonnull
+    @Override
+    public Optional<LangTag> getSpecificLangTag() {
+        return specificLangTagEditor.getValue().map(LangTag::get);
+    }
+
+    @Override
+    public void setSpecificLangTag(LangTag langTag) {
+        specificLangTagEditor.setValue(langTag.format());
     }
 }
