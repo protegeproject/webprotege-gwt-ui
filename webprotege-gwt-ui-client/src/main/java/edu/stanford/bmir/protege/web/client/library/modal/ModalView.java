@@ -17,22 +17,25 @@ public interface ModalView extends IsWidget {
 
     /**
      * Sets the primary dialog button
-     * @param button The button.
+     *
+     * @param button  The button.
      * @param handler A handler that is run when the button is pressed.
      */
     void setPrimaryButton(@Nonnull DialogButton button, @Nonnull Runnable handler);
 
     /**
      * Sets the escape button.
-     * @param button The button.
+     *
+     * @param button  The button.
      * @param handler A handler that is run when the button is pressed.
      */
     void setEscapeButton(DialogButton button, @Nonnull Runnable handler);
 
     /**
      * Adds a button.
-     * @param button The button.  The button will be styled as a regular dialog button, that is,
-     *               neither an escape button nor an accept button.
+     *
+     * @param button  The button.  The button will be styled as a regular dialog button, that is,
+     *                neither an escape button nor an accept button.
      * @param handler A handler that is run when the button is pressed.
      */
     void addButton(@Nonnull DialogButton button, @Nonnull Runnable handler);

@@ -101,6 +101,10 @@ public class ModalPresenter {
         }
     }
 
+    public void closeModal(){
+        modalCloser.closeModal();
+    }
+
     protected void escape() {
         modalCloser.closeModal();
     }

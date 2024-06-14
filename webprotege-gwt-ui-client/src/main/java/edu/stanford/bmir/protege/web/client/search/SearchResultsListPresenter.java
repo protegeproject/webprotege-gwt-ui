@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination.PageNumberChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
@@ -32,15 +34,22 @@ public class SearchResultsListPresenter {
     private final EntitySearchResultPresenterFactory resultPresenterFactory;
 
     @Nonnull
+    private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
+
+    @Nonnull
     private final List<EntitySearchResultPresenter> resultPresenters = new ArrayList<>();
 
     @Nonnull
     private PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
 
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = (selection) -> {};
+
     @Inject
     public SearchResultsListPresenter(@Nonnull SearchResultsListView view,
-                                      @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory) {
+                                      @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory,
+    @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory) {
         this.view = checkNotNull(view);
+        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         this.resultPresenterFactory = resultPresenterFactory;
         this.view.setPageNumberChangedHandler(this::handlePageNumberChanged);
     }
@@ -64,7 +73,8 @@ public class SearchResultsListPresenter {
         resultsPage.getPageElements()
                    .stream()
                    .map(r -> {
-                       EntitySearchResultPresenter presenter = resultPresenterFactory.create(r);
+                       EntitySearchResultPresenter presenter = resultPresenterFactory.create(r, hierarchyPopupPresenterFactory.create(HierarchyId.CLASS_HIERARCHY));
+                       presenter.setHierarchySelectionHandler(hierarchySelectionHandler);
                        presenter.start();
                        return presenter;
                    })
@@ -110,6 +120,10 @@ public class SearchResultsListPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+        this.hierarchySelectionHandler = handler;
     }
 }
 

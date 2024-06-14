@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         @external .searchedIri;
         @external .wp-entity-node__display-name;
@@ -57,6 +58,8 @@
         <g:HTMLPanel addStyleNames="{style.entityRendering}">
             <g:HTML ui:field="entityRenderingField" addStyleNames="{style.entityDisplayName}"/>
             <g:Label ui:field="oboIdField" text="OBO:Id" addStyleNames="{style.oboIdField}"/>
+            <g:Button ui:field="showInHierarchyButton" title="Show in hierarchy"
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.showHierarchy}"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="matchesContainer" addStyleNames="{style.matchesContainer}">
         </g:HTMLPanel>
