@@ -6,8 +6,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -81,6 +81,17 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     @Override
     public void displayImportFormsInputBox(Consumer<String> importFormsJson) {
+        messageBox.showConfirmBox(MessageStyle.ALERT,
+                                  formsMessages.confirmImportFormsIntoProject_title(),
+                                  formsMessages.confirmImportFormsIntoProject_message(),
+                                  DialogButton.NO,
+                                  () -> {},
+                                  DialogButton.YES,
+                                  () -> displayInputBox(importFormsJson),
+                                  DialogButton.NO);
+    }
+
+    private void displayInputBox(Consumer<String> importFormsJson) {
         inputBox.showDialog(formsMessages.importFormsIntoProject_title(),
                             formsMessages.importFormsIntoProject_message(),
                             true, "", importFormsJson::accept);
