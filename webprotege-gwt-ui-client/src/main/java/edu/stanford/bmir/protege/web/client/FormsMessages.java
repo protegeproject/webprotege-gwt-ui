@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import org.checkerframework.checker.units.qual.K;
 
 /**
  * Matthew Horridge
@@ -231,4 +232,12 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Deprecate")
     @Key("deprecate")
     String deprecate();
+
+    @DefaultMessage("Import and replace forms?")
+    @Key("forms.import.confirmation.title")
+    String confirmImportFormsIntoProject_title();
+
+    @DefaultMessage("Do you really want to import and replace all of the forms in this project?  This cannot be undone.")
+    @Key("forms.import.confirmation.message")
+    String confirmImportFormsIntoProject_message();
 }
