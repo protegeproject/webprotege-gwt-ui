@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
+import edu.stanford.bmir.protege.web.client.download.FetchAndOpenInBrowserWindow;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -19,14 +21,27 @@ public class FormsDownloader {
     @Nonnull
     private final ProjectId projectId;
 
+    private final DispatchServiceManager dispatch;
+
+    private final MessageBoxErrorDisplay errorDisplay;
+
     @Inject
-    public FormsDownloader(@Nonnull ProjectId projectId) {
+    public FormsDownloader(@Nonnull ProjectId projectId, DispatchServiceManager dispatch, MessageBoxErrorDisplay errorDisplay) {
         this.projectId = checkNotNull(projectId);
+        this.dispatch = checkNotNull(dispatch);
+        this.errorDisplay = checkNotNull(errorDisplay);
     }
 
     public void download() {
-        String baseURL = GWT.getHostPageBaseURL() + "data/";
-        String downloadURL = baseURL + "projects/" + projectId.getId() + "/forms";
-        Window.open(downloadURL, "Download forms", "");
+        dispatch.execute(new GetUserInfoAction(), result -> {
+            String baseURL = GWT.getHostPageBaseURL() + "data/";
+            String token = result.getToken();
+            FetchAndOpenInBrowserWindow.fetchUrlAndOpenInWindow("/data/projects/" + projectId.getId() + "/forms",
+                                                                token,
+                                                                () -> {
+                                                                    errorDisplay.displayGeneralErrorMessage("Download error",
+                                                                                                            "Could not download project forms");
+                                                                });
+        });
     }
 }
