@@ -5,7 +5,7 @@
 
     <groupId>edu.stanford.protege</groupId>
     <artifactId>webprotege-gwt-ui</artifactId>
-    <version>5.0.7</version>
+    <version>5.0.13</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -255,7 +255,7 @@
                 <plugin>
                     <groupId>net.ltgt.gwt.maven</groupId>
                     <artifactId>gwt-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.1.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sourceLevel>1.8</sourceLevel>
@@ -265,15 +265,10 @@
                         <startupUrls>WebProtege.jsp</startupUrls>
                         <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
 <!--                        <style>OBFUSCATED</style>-->
-                        <style>DETAILED</style>
-                        <devmodeArgs>
-                            <arg>-style</arg><arg>DETAILED</arg>
-                            <arg>-port</arg><arg>8765</arg>
-                        </devmodeArgs>
-                        <compilerArgs>
-                            <arg>-optimize</arg>
-                            <arg>9</arg>
-                        </compilerArgs>
+                        <style>OBFUSCATED</style>
+                        <draftCompile>false</draftCompile>
+                        <optimize>9</optimize>
+                        <logLevel>WARN</logLevel>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -3,9 +3,10 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -39,4 +40,8 @@ public interface TextControlDescriptorView extends IsWidget {
     @Nonnull
     LanguageMap getPlaceholder();
 
+    @Nonnull
+    Optional<LangTag> getSpecificLangTag();
+
+    void setSpecificLangTag(LangTag langTag);
 }

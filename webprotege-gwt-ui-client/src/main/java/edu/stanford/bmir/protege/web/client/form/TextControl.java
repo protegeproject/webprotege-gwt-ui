@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.primitive.*;
-import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
@@ -164,7 +164,7 @@ public class TextControl extends Composite implements FormControl {
     }
 
     private void setStringType(StringType stringType) {
-        if(stringType == StringType.SIMPLE_STRING) {
+        if(stringType == StringType.SIMPLE_STRING  || stringType == StringType.SPECIFIC_LANG_STRING) {
             languageEditor.setVisible(false);
         }
         else {
@@ -231,7 +231,8 @@ public class TextControl extends Composite implements FormControl {
             return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
-        if(literalData.getLiteral().getLiteral().trim().isEmpty()) {
+        String lexicalValue = literalData.getLiteral().getLiteral().trim();
+        if(lexicalValue.isEmpty()) {
             return Optional.empty();
         }
         if(stringType == StringType.SIMPLE_STRING) {
@@ -242,6 +243,11 @@ public class TextControl extends Composite implements FormControl {
             else {
                 return Optional.of(TextControlData.get(descriptor, literalData.getLiteral()));
             }
+        }
+        else if(stringType == StringType.SPECIFIC_LANG_STRING) {
+            String specificLangTag = descriptor.getSpecificLangTag().trim();
+            OWLLiteral literalWithSepcificLang = DataFactory.getOWLLiteral(lexicalValue, specificLangTag);
+            return Optional.of(TextControlData.get(descriptor, literalWithSepcificLang));
         }
         else {
             return Optional.of(TextControlData.get(descriptor, literalData.getLiteral()));

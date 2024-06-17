@@ -137,15 +137,15 @@ public class DispatchServiceManager {
             }
         }
 
-//        if(batch > 0) {
-//            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
-//            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
-//            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
-//            pendingActionExecutions.add(actionExecution);
-//        }
-//        else {
+        if(batch > 0) {
+            logger.info("Batching submitted action: " + action.getClass().getSimpleName());
+            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
+            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
+            pendingActionExecutions.add(actionExecution);
+        }
+        else {
             execAction(action, callback);
-//        }
+        }
     }
 
     private void checkMakingACallForCurrentProject(ProjectId projectId) {
@@ -169,7 +169,18 @@ public class DispatchServiceManager {
     @SuppressWarnings("unchecked")
     private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
+        logAction(action);
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
+    }
+
+    private <A extends Action<R>, R extends Result> void logAction(A action) {
+        if(action instanceof BatchAction) {
+            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName() + "(" + ((BatchAction) action).getActions().size() + " actions)");
+        }
+        else {
+            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
+            logger.info("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
+        }
     }
 
 

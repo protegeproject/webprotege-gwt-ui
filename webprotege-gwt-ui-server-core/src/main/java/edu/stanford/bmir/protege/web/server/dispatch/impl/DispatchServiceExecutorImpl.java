@@ -103,7 +103,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                     ((BatchAction) action).getActions()
                                           .stream()
                                           .map(a -> a.getClass().getSimpleName())
-                                          .forEach(a -> logger.error("    Nested action: {}", a));
+                                          .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
                 }
             }
             else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
