@@ -2,18 +2,15 @@ package edu.stanford.bmir.protege.web.client.upload;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
-import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileAction;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 
 import javax.annotation.Nonnull;
 
@@ -29,8 +26,6 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
 
     private final DispatchServiceManager dispatch;
 
-    private final DispatchErrorMessageDisplay errorMessageDisplay;
-
     private final ProgressDisplay progressDisplay;
 
     private UploadFileDialogForm form = new UploadFileDialogForm();
@@ -38,50 +33,32 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
     public UploadFileDialogController(String title,
                                       final UploadFileResultHandler resultHandler,
                                       @Provided DispatchServiceManager dispatch,
-                                      @Provided DispatchErrorMessageDisplay errorMessageDisplay,
                                       @Provided ProgressDisplay progressDisplay) {
         super(title);
         this.dispatch = dispatch;
-        this.errorMessageDisplay = errorMessageDisplay;
         this.progressDisplay = progressDisplay;
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> handleButtonPress(resultHandler, closer));
         form.getFileUpload().getElement().setId(UuidV4.uuidv4());
     }
 
     private void handleButtonPress(UploadFileResultHandler resultHandler, WebProtegeDialogCloser closer) {
-        ProgressMonitor.get().showProgressMonitor("Preparing file", "Preparing file for upload.  Please wait.");
-        FileUploadFileReader reader = new FileUploadFileReader();
-        reader.readFiles(form.getFileUpload().getElement().getId(),
-                         content -> {
-                             dispatch.execute(SubmitFileAction.create(content), new DispatchServiceCallbackWithProgressDisplay<SubmitFileResult>(errorMessageDisplay,
-                                                                                                                                                 progressDisplay) {
-                                 @Override
-                                 public String getProgressDisplayTitle() {
-                                     return "Uploading file";
-                                 }
+        progressDisplay.displayProgress("Uploading file", "Uploading file.  Please wait.");
+        dispatch.execute(new GetUserInfoAction(), userInfo -> {
+            String token = userInfo.getToken();
+            String fileUploadId = form.getFileUpload().getElement().getId();
+            FileUploader fileUploader = new FileUploader();
+            fileUploader.uploadFile(fileUploadId, token, fileSubmissionId -> {
+                progressDisplay.hideProgress();
+                closer.hide();
+                resultHandler.handleFileUploaded(new DocumentId(fileSubmissionId));
+            }, errorCode -> {
+                progressDisplay.hideProgress();
+                closer.hide();
+                resultHandler.handleFileUploadFailed("An error occurred uploading the file.  Error code: " + errorCode);
+            });
+        });
 
-                                 @Override
-                                 public String getProgressDisplayMessage() {
-                                     return "Please wait";
-                                 }
 
-                                 @Override
-                                 public void handleSuccess(SubmitFileResult submitFileResult) {
-                                     closer.hide();
-                                     resultHandler.handleFileUploaded(submitFileResult.getFileSubmissionId());
-                                 }
-
-                                 @Override
-                                 public void handleErrorFinally(Throwable throwable) {
-                                     closer.hide();
-                                     resultHandler.handleFileUploadFailed("An error occurred uploading the file: " + throwable.getMessage());
-                                 }
-                             });
-                         },
-                         errorHandler -> {
-                             ProgressMonitor.get().hideProgressMonitor();
-                             resultHandler.handleFileUploadFailed("An error occurred preparing the file for upload");
-                         });
     }
 
     @Nonnull

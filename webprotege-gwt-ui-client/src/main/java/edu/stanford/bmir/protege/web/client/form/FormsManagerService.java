@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -67,32 +68,35 @@ public class FormsManagerService {
                             @Nonnull HasBusy busyIndicator,
                             @Nonnull Runnable completeHandler,
                             @Nonnull Runnable errorHandler) {
-        try {
-            String importFormsUrl = "/data/projects/" + projectId.getId() + "/forms";
-            RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
-                                                               importFormsUrl);
-            requestBuilder.setRequestData(formJsonSerialization);
-            requestBuilder.setCallback(new RequestCallback() {
-                @Override
-                public void onResponseReceived(Request request, Response response) {
-                    busyIndicator.setBusy(false);
-                    completeHandler.run();
-                    if(response.getStatusCode() != Response.SC_CREATED) {
-                        errorHandler.run();
+        dispatch.execute(new GetUserInfoAction(), userInfo -> {
+            try {
+                String importFormsUrl = "/data/projects/" + projectId.getId() + "/forms";
+                RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
+                                                                   importFormsUrl);
+                requestBuilder.setRequestData(formJsonSerialization);
+                requestBuilder.setHeader("Authorization", "Bearer " + userInfo.getToken());
+                requestBuilder.setCallback(new RequestCallback() {
+                    @Override
+                    public void onResponseReceived(Request request, Response response) {
+                        busyIndicator.setBusy(false);
+                        completeHandler.run();
+                        if(response.getStatusCode() >= 400) {
+                            errorHandler.run();
+                        }
                     }
-                }
 
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    busyIndicator.setBusy(false);
-                    completeHandler.run();
-                }
-            });
-            requestBuilder.setHeader("Content-Type", "application/json");
-            busyIndicator.setBusy(true);
-            requestBuilder.send();
-        } catch (RequestException e) {
-            GWT.log(e.getMessage());
-        }
+                    @Override
+                    public void onError(Request request, Throwable exception) {
+                        busyIndicator.setBusy(false);
+                        completeHandler.run();
+                    }
+                });
+                requestBuilder.setHeader("Content-Type", "application/json");
+                busyIndicator.setBusy(true);
+                requestBuilder.send();
+            } catch (RequestException e) {
+                GWT.log(e.getMessage());
+            }
+        });
     }
 }

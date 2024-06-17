@@ -289,6 +289,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetOntologyAnnotationsResult.class),
         @JsonSubTypes.Type(SetPerspectiveLayoutResult.class),
         @JsonSubTypes.Type(SetProjectFormDescriptorsResult.class),
+        @JsonSubTypes.Type(SetProjectFormsResult.class),
         @JsonSubTypes.Type(SetProjectPrefixDeclarationsResult.class),
         @JsonSubTypes.Type(SetProjectSettingsResult.class),
         @JsonSubTypes.Type(SetProjectSharingSettingsResult.class),

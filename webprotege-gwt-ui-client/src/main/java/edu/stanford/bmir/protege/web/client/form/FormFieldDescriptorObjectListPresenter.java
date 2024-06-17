@@ -29,6 +29,7 @@ public class FormFieldDescriptorObjectListPresenter extends ObjectListPresenter<
                 FormFieldDeprecationStrategy.DELETE_VALUES,
                 new TextControlDescriptor(LanguageMap.empty(),
                                           StringType.SIMPLE_STRING,
+                                          "",
                                           LineMode.SINGLE_LINE,
                                           "",
                                           LanguageMap.empty()),

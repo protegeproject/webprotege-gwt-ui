@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +32,7 @@ public class TextControlDescriptorPresenter implements FormControlDescriptorPres
     public FormControlDescriptor getFormFieldDescriptor() {
         return new TextControlDescriptor(view.getPlaceholder(),
                                          view.getStringType(),
+                                         view.getSpecificLangTag().map(LangTag::format).orElse(""),
                                          view.getLineMode(),
                                          view.getPattern(),
                                          view.getPatternViolationMessage());
@@ -46,6 +47,7 @@ public class TextControlDescriptorPresenter implements FormControlDescriptorPres
         TextControlDescriptor descriptor = (TextControlDescriptor) formControlDescriptor;
         view.setStringType(descriptor.getStringType());
         view.setLineMode(descriptor.getLineMode());
+        view.setSpecificLangTag(LangTag.get(descriptor.getSpecificLangTag()));
         view.setPatternViolationMessage(descriptor.getPlaceholder());
         view.setPattern(descriptor.getPattern());
         view.setPatternViolationMessage(descriptor.getPatternViolationErrorMessage());
@@ -55,6 +57,7 @@ public class TextControlDescriptorPresenter implements FormControlDescriptorPres
     public void clear() {
         view.setLineMode(LineMode.SINGLE_LINE);
         view.setStringType(StringType.SIMPLE_STRING);
+        view.setSpecificLangTag(LangTag.get(""));
         view.setPattern("");
         view.setPatternViolationMessage(LanguageMap.empty());
         view.setPlaceholder(LanguageMap.empty());
