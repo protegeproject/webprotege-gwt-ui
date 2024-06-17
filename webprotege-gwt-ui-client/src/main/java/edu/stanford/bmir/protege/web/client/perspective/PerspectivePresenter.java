@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
@@ -93,7 +94,7 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
-        GWT.log("[PerspectivePresenter] Starting at place " + place);
+        logger.fine("[PerspectivePresenter] Starting at place " + place);
         placeChangedHandlerRegistration = eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
             if (event.getNewPlace() instanceof ProjectViewPlace) {
                 displayPerspective(((ProjectViewPlace) event.getNewPlace()).getPerspectiveId());
@@ -115,7 +116,7 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void executeResetPerspective(PerspectiveId perspectiveId) {
-        GWT.log("[PerspectivePresenter] Reset Perspective: " + perspectiveId);
+        logger.fine("[PerspectivePresenter] Reset Perspective: " + perspectiveId);
         dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId),
                                        result -> {
                                            removePerspective(perspectiveId);
@@ -135,7 +136,7 @@ public class PerspectivePresenter implements HasDispose {
         if(currentPerspective.equals(java.util.Optional.of(perspectiveId))) {
             return;
         }
-        GWT.log("[PerspectivePresenter] Display Perspective: " + perspectiveId);
+        logger.fine("[PerspectivePresenter] Display Perspective: " + perspectiveId);
         currentPerspective = java.util.Optional.of(perspectiveId);
         retrieveAndSetPerspective(perspectiveId);
     }
@@ -151,19 +152,19 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void retrieveAndSetPerspective(final  PerspectiveId perspectiveId) {
-        GWT.log("[PerspectivePresenter] Retrive and set perspective for " + perspectiveId);
+        logger.fine("[PerspectivePresenter] Retrive and set perspective for " + perspectiveId);
         Perspective p = perspectiveCache.get(perspectiveId);
         if(p != null) {
-            GWT.log("[PerspectivePresenter] Using cached perspective for " + perspectiveId);
+            logger.fine("[PerspectivePresenter] Using cached perspective for " + perspectiveId);
             perspectiveView.setWidget(p);
             return;
         }
         perspectiveView.setWidget(new BusyViewImpl());
-        GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
+        logger.fine("[PerspectivePresenter] Loading perspective for project " + projectId);
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(GetPerspectiveLayoutAction.create(projectId, userId, perspectiveId),
                 result -> {
-                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getLayout());
+                    logger.fine("[PerspectivePresenter] Retrieved layout: " + result.getLayout());
                     installPerspective(result.getLayout());
                 });
     }
@@ -171,7 +172,7 @@ public class PerspectivePresenter implements HasDispose {
     private void installPerspective(PerspectiveLayout perspective) {
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
                                         canAddRemove -> {
-                                            GWT.log("[PerspectivePresenter] Can close views: " + canAddRemove);
+                                            logger.fine("[PerspectivePresenter] Can close views: " + canAddRemove);
                                             PerspectiveId perspectiveId = perspective.getPerspectiveId();
                                             Optional<Node> rootNode = perspective.getLayout();
                                             installPerspective(perspectiveId, rootNode, canAddRemove);
@@ -181,18 +182,23 @@ public class PerspectivePresenter implements HasDispose {
     private void installPerspective(@Nonnull PerspectiveId perspectiveId,
                                     @Nonnull Optional<Node> rootNode,
                                     boolean viewsCloseable) {
-        Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
-        perspective.setViewsCloseable(viewsCloseable);
-        EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
-        perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
-        perspective.setRootNode(rootNode);
-        perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
-            savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
-        });
-        perspective.setNodePropertiesChangedHandler(node -> savePerspectiveLayout(perspectiveId, perspective.getRootNode()));
-        perspectiveCache.put(perspectiveId, perspective);
-        perspectiveView.setWidget(perspective);
-        rootNode.ifPresent(node -> originalRootNodeMap.put(perspectiveId, node.duplicate()));
+        try {
+            logger.fine("[PerspectivePresenter] Installing perspective " + perspectiveId + " with root node: " + rootNode);
+            Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
+            perspective.setViewsCloseable(viewsCloseable);
+            EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
+            perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
+            perspective.setRootNode(rootNode);
+            perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
+                savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
+            });
+            perspective.setNodePropertiesChangedHandler(node -> savePerspectiveLayout(perspectiveId, perspective.getRootNode()));
+            perspectiveCache.put(perspectiveId, perspective);
+            perspectiveView.setWidget(perspective);
+            rootNode.ifPresent(node -> originalRootNodeMap.put(perspectiveId, node.duplicate()));
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "[PerspectivePresenter] Error while installing perspective: " + e.getMessage(), e);
+        }
     }
 
     private final Map<PerspectiveId, SavePerspectiveRunner> perspectivesToSave = new HashMap<>();
