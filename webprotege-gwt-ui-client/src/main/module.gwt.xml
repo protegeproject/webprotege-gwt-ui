@@ -41,8 +41,7 @@
     Trim down the permutations that are compiled.  We need CSS3 features and so don't support
     earlier versions of IE.
     -->
-<!--    <set-property name="user.agent" value="gecko1_8,safari"/>-->
-    <set-property name="user.agent" value="gecko1_8"/>
+    <set-property name="user.agent" value="gecko1_8,safari"/>
 
     <set-property-fallback name="locale" value="en"/>
     <extend-property name="locale" values="en"/>
