@@ -84,7 +84,12 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
                     return PrimitiveFormControlData.get(df.getOWLLiteral(literal, df.getOWLDatatype(IRI.create(typeNode.asText()))));
                 }
                 else {
-                    return PrimitiveFormControlData.get(df.getOWLLiteral(literal, langNode.asText("")));
+                    if (langNode == null) {
+                        return PrimitiveFormControlData.get(df.getOWLLiteral(literal));
+                    }
+                    else {
+                        return PrimitiveFormControlData.get(df.getOWLLiteral(literal, langNode.asText("")));
+                    }
                 }
 
             }
