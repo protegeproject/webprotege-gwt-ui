@@ -20,7 +20,7 @@ public abstract class EntityNameControlDataDto implements FormControlDataDto {
 
     @JsonCreator
     public static EntityNameControlDataDto get(@JsonProperty("descriptor") @Nonnull EntityNameControlDescriptor descriptor,
-                                               @JsonProperty("entityData") @Nonnull OWLEntityData entityData,
+                                               @JsonProperty("entity") @Nonnull OWLEntityData entityData,
                                                @JsonProperty("depth") int depth) {
         return new AutoValue_EntityNameControlDataDto(depth, descriptor, entityData);
     }

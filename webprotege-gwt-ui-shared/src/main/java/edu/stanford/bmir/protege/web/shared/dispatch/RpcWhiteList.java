@@ -405,6 +405,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetHierarchyChildrenResult _GetHierarchyChildrenResult;
 
+    GetHierarchyParentsAction _GetHierarchyParentsAction;
+
+    GetHierarchyParentsResult _GetHierarchyParentsResult;
+
     GetHierarchyPathsToRootAction _GetHierarchyPathsToRootAction;
 
     GetHierarchyPathsToRootResult _GetHierarchyPathsToRootResult;
@@ -648,6 +652,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     MoveEntitiesToParentAction _MoveEntitiesToParentAction;
 
     MoveEntitiesToParentResult _MoveEntitiesToParentResult;
+
+    ChangeEntityParentsAction _ChangeEntityParentsAction;
+
+    ChangeEntityParentsResult _ChangeEntityParentsResult;
 
     MoveHierarchyNodeAction _MoveHierarchyNodeAction;
 
