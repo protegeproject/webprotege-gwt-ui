@@ -1222,6 +1222,13 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please correct this in order to save changes!")
     SafeHtml classHierarchy_cyclesHaveBeenCreated(String classesWithCycles);
 
+
+    @DefaultMessage("<em>A released class cannot be retired! <br>" +
+            "Following parents have retired ancestors: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please correct this in order to save changes")
+    SafeHtml classHierarchy_parentsHaveRetiredAncestors(String classesWithRetiredParents);
+
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
     String displayName_noDisplayName_helpText(String typeName, String defDisplayName);

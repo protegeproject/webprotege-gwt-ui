@@ -209,6 +209,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SetOntologyAnnotationsAction.class),
         @Type(value = SetPerspectiveLayoutAction.class),
         @Type(value = SetProjectFormDescriptorsAction.class),
+        @Type(value = SetProjectFormsAction.class),
         @Type(value = SetProjectPrefixDeclarationsAction.class),
         @Type(value = SetProjectSettingsAction.class),
         @Type(value = SetProjectSharingSettingsAction.class),

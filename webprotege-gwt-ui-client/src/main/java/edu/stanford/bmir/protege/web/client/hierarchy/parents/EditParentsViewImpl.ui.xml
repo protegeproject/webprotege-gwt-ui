@@ -29,6 +29,9 @@
             <g:HTML ui:field="classesWithCyclesWarningField"
                     visible="false"
                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
+            <g:HTML ui:field="classesWithRetiredParentsField"
+                    visible="false"
+                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

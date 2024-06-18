@@ -24,6 +24,8 @@ public class TextControlDescriptor implements FormControlDescriptor {
 
     private StringType stringType = StringType.SIMPLE_STRING;
 
+    private String specificLangTag = "";
+
     private LineMode lineMode = LineMode.SINGLE_LINE;
 
     private String pattern = "";
@@ -35,10 +37,12 @@ public class TextControlDescriptor implements FormControlDescriptor {
 
     public TextControlDescriptor(@Nonnull LanguageMap placeholder,
                                  @Nonnull StringType stringType,
+                                 @Nonnull String specificLangTag,
                                  @Nonnull LineMode lineMode,
                                  @Nonnull String pattern,
                                  @Nonnull LanguageMap patternViolationErrorMessage) {
         this.placeholder = checkNotNull(placeholder);
+        this.specificLangTag = checkNotNull(specificLangTag);
         this.stringType = checkNotNull(stringType);
         this.lineMode = checkNotNull(lineMode);
         this.pattern = checkNotNull(pattern);
@@ -54,6 +58,7 @@ public class TextControlDescriptor implements FormControlDescriptor {
         return new TextControlDescriptor(
                 LanguageMap.empty(),
                 StringType.SIMPLE_STRING,
+                "",
                 LineMode.SINGLE_LINE,
                 "",
                 LanguageMap.empty()
@@ -122,6 +127,11 @@ public class TextControlDescriptor implements FormControlDescriptor {
     @Nonnull
     public StringType getStringType() {
         return stringType;
+    }
+
+    @Nonnull
+    public String getSpecificLangTag() {
+        return specificLangTag;
     }
 
     @Override

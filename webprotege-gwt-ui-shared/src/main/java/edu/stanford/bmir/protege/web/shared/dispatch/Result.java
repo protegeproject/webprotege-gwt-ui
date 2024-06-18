@@ -34,17 +34,7 @@ import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
-import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
-import edu.stanford.bmir.protege.web.shared.form.DeleteFormResult;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityCreationFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormDescriptorResult;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.GetProjectFormDescriptorsResult;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDescriptorResult;
-import edu.stanford.bmir.protege.web.shared.form.SetProjectFormDescriptorsResult;
-import edu.stanford.bmir.protege.web.shared.form.UpdateFormDescriptorResult;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
@@ -289,6 +279,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetOntologyAnnotationsResult.class),
         @JsonSubTypes.Type(SetPerspectiveLayoutResult.class),
         @JsonSubTypes.Type(SetProjectFormDescriptorsResult.class),
+        @JsonSubTypes.Type(SetProjectFormsResult.class),
         @JsonSubTypes.Type(SetProjectPrefixDeclarationsResult.class),
         @JsonSubTypes.Type(SetProjectSettingsResult.class),
         @JsonSubTypes.Type(SetProjectSharingSettingsResult.class),
