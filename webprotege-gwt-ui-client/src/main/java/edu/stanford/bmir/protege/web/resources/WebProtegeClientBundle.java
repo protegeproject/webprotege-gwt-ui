@@ -39,6 +39,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
 
+    @Source("released.png")
+    @DataResource.MimeType("image/png")
+    DataResource releasedClassIcon();
+
     @Source("deprecated-class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDeprecatedClassIcon();
