@@ -110,7 +110,7 @@ class FileTransferTask implements Callable<Void> {
             try (BufferedOutputStream outputStream = new BufferedOutputStream(response.getOutputStream())) {
                 double sizeMB = Files.size(downloadSource) / (1024.0 * 1024);
                 String formattedSize = String.format("%.4f", sizeMB);
-                logger.info("{} {} Transferring {} MB download to client",
+                logger.debug("{} {} Transferring {} MB download to client",
                             projectId,
                             userId,
                             formattedSize);
@@ -119,7 +119,7 @@ class FileTransferTask implements Callable<Void> {
                 IOUtils.copy(inputStream, outputStream);
                 outputStream.flush();
 
-                logger.info("{} {} Finished transferring {} MB to client after {} ms",
+                logger.debug("{} {} Finished transferring {} MB to client after {} ms",
                             projectId,
                             userId,
                             formattedSize,

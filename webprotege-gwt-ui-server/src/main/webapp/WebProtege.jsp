@@ -18,7 +18,7 @@
 
     <title><%writeApplicationName(out);%></title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png"/>
+    <link rel="shortcut icon" type="image/x-icon" href="ICAT-X4.svg"/>
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 

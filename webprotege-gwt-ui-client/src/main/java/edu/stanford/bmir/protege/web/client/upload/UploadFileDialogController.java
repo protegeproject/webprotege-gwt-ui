@@ -3,14 +3,13 @@ package edu.stanford.bmir.protege.web.client.upload;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 
 import javax.annotation.Nonnull;
 
@@ -30,13 +29,17 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
 
     private UploadFileDialogForm form = new UploadFileDialogForm();
 
+    private ApplicationEnvironmentManager applicationEnvironmentManager;
+
     public UploadFileDialogController(String title,
                                       final UploadFileResultHandler resultHandler,
                                       @Provided DispatchServiceManager dispatch,
-                                      @Provided ProgressDisplay progressDisplay) {
+                                      @Provided ProgressDisplay progressDisplay,
+                                      @Provided ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(title);
         this.dispatch = dispatch;
         this.progressDisplay = progressDisplay;
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> handleButtonPress(resultHandler, closer));
         form.getFileUpload().getElement().setId(UuidV4.uuidv4());
     }
@@ -46,7 +49,7 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
         dispatch.execute(new GetUserInfoAction(), userInfo -> {
             String token = userInfo.getToken();
             String fileUploadId = form.getFileUpload().getElement().getId();
-            FileUploader fileUploader = new FileUploader();
+            FileUploader fileUploader = new FileUploader(applicationEnvironmentManager.getAppEnvVariables().getFileUploadUrl());
             fileUploader.uploadFile(fileUploadId, token, fileSubmissionId -> {
                 progressDisplay.hideProgress();
                 closer.hide();

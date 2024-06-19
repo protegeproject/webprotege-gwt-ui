@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -106,11 +107,11 @@ public class SelectionModel implements HasDispose {
     }
 
     private void updateSelectionFromPlace(ProjectViewPlace place) {
-        logger.info("Responding to place changed. New place: " + place);
+        logger.log(Level.FINE, "Responding to place changed. New place: " + place);
         ProjectId placeProjectId = place.getProjectId();
         if(!projectId.equals(placeProjectId)) {
             // Not my project
-            logger.info("The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
+            logger.log(Level.FINE, "The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
             return;
         }
         ItemSelection itemSelection = place.getItemSelection();
@@ -220,11 +221,11 @@ public class SelectionModel implements HasDispose {
         if(!(place instanceof ProjectViewPlace)) {
             return;
         }
-        logger.info("Responding to request to set the selection now. New place: " + place);
+        logger.log(Level.FINE, "Responding to request to set the selection now. New place: " + place);
         ProjectId placeProjectId = ((ProjectViewPlace) place).getProjectId();
         if(!projectId.equals(placeProjectId)) {
             // Not my project
-            logger.info("The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
+            logger.log(Level.FINE, "The place belongs to project " + placeProjectId + " but this selection model is belongs to " + projectId + ".  Ignoring new place and any change in selection.");
             return;
         }
         Item<?> item = entity
@@ -298,7 +299,7 @@ public class SelectionModel implements HasDispose {
 
     @Override
     public void dispose() {
-        logger.info("Disposing of selection model for project " + projectId);
+        logger.log(Level.FINE, "Disposing of selection model for project " + projectId);
         placeChangeEventHandlerRegistration.removeHandler();
     }
 }

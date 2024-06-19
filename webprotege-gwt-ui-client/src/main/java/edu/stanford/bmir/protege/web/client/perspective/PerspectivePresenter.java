@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
@@ -256,8 +257,8 @@ public class PerspectivePresenter implements HasDispose {
             PerspectiveLayout layout = PerspectiveLayout.get(perspectiveId, node);
             String uuid = UuidV4.uuidv4();
             SetPerspectiveLayoutAction perspectiveLayoutAction =  SetPerspectiveLayoutAction.create(ChangeRequestId.get(uuid), projectId, currentUserId, layout);
-            logger.info("[PerspectivePresenter] Saving perspective: " + perspectiveId + " and uuid: " + uuid);
-            logger.info("[PerspectivePresenter]        perspective: " + perspectiveLayoutAction);
+            logger.log(Level.FINE, "[PerspectivePresenter] Saving perspective: " + perspectiveId + " and uuid: " + uuid);
+            logger.log(Level.FINE, "[PerspectivePresenter]        perspective: " + perspectiveLayoutAction);
             dispatchServiceManager.execute(perspectiveLayoutAction, result -> {});
         }
     }

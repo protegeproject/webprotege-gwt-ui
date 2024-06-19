@@ -249,7 +249,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("language-codes.txt")
     TextResource languageCodes();
 
-    @Source("protege-blender.svg")
+    @Source("ICAT-X4.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource protegeBlender();
 

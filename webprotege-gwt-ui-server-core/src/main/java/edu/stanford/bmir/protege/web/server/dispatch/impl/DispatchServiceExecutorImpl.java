@@ -70,7 +70,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var websocketUrl = getEnvVariable("webprotege.websocketUrl").orElse("ws://webprotege-local.edu/wsapps");
                 var logoutUrl = getEnvVariable("webprotege.logoutUrl").orElse("http://webprotege-local.edu/webprotege/logout");
                 var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
-                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl);
+                var fileUploadUrl = getEnvVariable("webprotege.fileUploadurl").orElse("http://webprotege-local.edu");
+                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl);
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);
@@ -114,7 +115,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                         .map(e -> e.getKey() + ": " +  e.getValue())
                         .collect(Collectors.joining("  &&  "));
                 var reason = httpResponse.headers().firstValue("www-authenticate");
-                logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
+                logger.debug("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
                             action.getClass().getSimpleName(),
                             executionContext.getUserId(),
                             headers,

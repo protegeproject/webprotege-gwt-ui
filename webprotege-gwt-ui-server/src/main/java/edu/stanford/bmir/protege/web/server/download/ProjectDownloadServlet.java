@@ -41,7 +41,7 @@ public class ProjectDownloadServlet extends HttpServlet {
         UserId userId = webProtegeSession.getUserInSession();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(!downloadParameters.isProjectDownload()) {
-            logger.info("Bad project download request from {} at {}.  Request URI: {}  Query String: {}",
+            logger.debug("Bad project download request from {} at {}.  Request URI: {}  Query String: {}",
                         webProtegeSession.getUserInSession(),
                         formatAddr(req),
                         req.getRequestURI(),
@@ -49,7 +49,7 @@ public class ProjectDownloadServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        logger.info("Received download request from {} at {} for project {}",
+        logger.debug("Received download request from {} at {} for project {}",
                     userId,
                     formatAddr(req),
                     downloadParameters.getProjectId());

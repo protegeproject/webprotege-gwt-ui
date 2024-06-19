@@ -46,4 +46,8 @@ public class UploadFileDialogForm extends WebProtegeDialogForm {
             return "A file name must be specified.  Please specify a file name";
         }
     }
+
+    public FileUpload getFileUpload() {
+        return fileUpload;
+    }
 }

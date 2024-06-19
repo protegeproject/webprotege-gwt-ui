@@ -19,6 +19,7 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     private String redirectAfterLogoutUrl;
 
+    private String fileUploadUrl;
 
 
     @GwtSerializationConstructor
@@ -29,11 +30,14 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     @JsonCreator
     @NotNull
-    public static AppEnvVariables create(@JsonProperty("logoutUrl") String logoutUrl, @JsonProperty("websocketUrl") String websocketUrl, @JsonProperty("redirectUrl") String redirectUrl) {
+    public static AppEnvVariables create(@JsonProperty("logoutUrl") String logoutUrl, @JsonProperty("websocketUrl") String websocketUrl,
+                                         @JsonProperty("redirectUrl") String redirectUrl,
+                                         @JsonProperty("fileUploadUrl") String fileUploadUrl) {
         AppEnvVariables response = new AppEnvVariables();
         response.redirectAfterLogoutUrl = redirectUrl;
         response.logoutUrl = logoutUrl;
         response.websocketUrl = websocketUrl;
+        response.fileUploadUrl = fileUploadUrl;
         return response;
     }
 
@@ -47,5 +51,9 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     public String getRedirectAfterLogoutUrl() {
         return redirectAfterLogoutUrl;
+    }
+
+    public String getFileUploadUrl() {
+        return fileUploadUrl;
     }
 }
