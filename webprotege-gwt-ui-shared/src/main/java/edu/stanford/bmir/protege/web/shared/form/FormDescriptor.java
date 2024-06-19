@@ -44,8 +44,8 @@ public class FormDescriptor implements IsSerializable {
                           @JsonProperty(PropertyNames.LABEL) LanguageMap label,
                           @JsonProperty(PropertyNames.FIELDS) List<FormFieldDescriptor> formFieldDescriptors,
                           @JsonProperty(PropertyNames.SUBJECT_FACTORY) Optional<FormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
-        this.formId = id;
-        this.label = label;
+        this.formId = checkNotNull(id);
+        this.label = checkNotNull(label);
         this.elements = new ArrayList<>(formFieldDescriptors);
         this.subjectFactoryDescriptor = subjectFactoryDescriptor.orElse(null);
     }

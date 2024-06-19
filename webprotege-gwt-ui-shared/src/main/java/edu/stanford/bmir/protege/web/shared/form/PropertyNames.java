@@ -134,6 +134,4 @@ public interface PropertyNames {
     String FORM = "form";
 
     String FIELD = "field";
-
-    String CONTROL_DATA = "controlData";
 }

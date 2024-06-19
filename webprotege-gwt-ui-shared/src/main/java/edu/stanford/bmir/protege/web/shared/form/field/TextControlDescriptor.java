@@ -35,6 +35,7 @@ public class TextControlDescriptor implements FormControlDescriptor {
     private TextControlDescriptor() {
     }
 
+    @JsonCreator
     public TextControlDescriptor(@JsonProperty(PropertyNames.PLACEHOLDER) @Nonnull LanguageMap placeholder,
                                  @JsonProperty(PropertyNames.STRING_TYPE) @Nonnull StringType stringType,
                                  @JsonProperty(PropertyNames.SPECIFIC_LANG_TAG) @Nonnull String specificLangTag,
@@ -129,7 +130,7 @@ public class TextControlDescriptor implements FormControlDescriptor {
     }
 
     @Nonnull
-    @JsonProperty(PropertyNames.SOURCE_TYPE)
+    @JsonProperty(PropertyNames.STRING_TYPE)
     public StringType getStringType() {
         return stringType;
     }

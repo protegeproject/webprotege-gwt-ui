@@ -35,7 +35,7 @@ public abstract class MultiChoiceControlDescriptor implements FormControlDescrip
     }
 
     @Nonnull
-    @JsonProperty(PropertyNames.DEFAULT_CHOICE)
+    @JsonProperty(PropertyNames.CHOICES_SOURCE)
     public abstract ChoiceListSourceDescriptor getSource();
 
     @Nonnull
@@ -51,6 +51,7 @@ public abstract class MultiChoiceControlDescriptor implements FormControlDescrip
 
     @Nonnull
     @Override
+    @JsonIgnore
     public String getAssociatedType() {
         return TYPE;
     }

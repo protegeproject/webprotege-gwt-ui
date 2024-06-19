@@ -6,7 +6,7 @@
     },
     "fields": [
       {
-        "id": "2b16a436-28da-4d47-b25e-a9fbb876deb6",
+        "id": "12345678-1234-1234-1234-123456789def",
         "owlBinding": {
           "type": "PROPERTY",
           "property": {
@@ -40,6 +40,6 @@
       }
     ],
     "subjectFactory": null,
-    "formId": "12345678-1234-1234-1234-123456789abc"
+    "id": "12345678-1234-1234-1234-123456789abc"
   }
 }

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 public abstract class FormFieldData implements IsSerializable {
 
     public static FormFieldData get(@JsonProperty(PropertyNames.FIELD) @Nonnull FormFieldDescriptor descriptor,
-                                    @JsonProperty(PropertyNames.CONTROL_DATA) @Nonnull Page<FormControlData> formControlData) {
+                                    @JsonProperty(PropertyNames.DATA) @Nonnull Page<FormControlData> formControlData) {
         return new AutoValue_FormFieldData(descriptor, formControlData);
     }
 
@@ -31,7 +31,7 @@ public abstract class FormFieldData implements IsSerializable {
     /**
      * Gets the page of form control values for this field.
      */
-    @JsonProperty(PropertyNames.CONTROL_DATA)
+    @JsonProperty(PropertyNames.DATA)
     @Nonnull
     public abstract Page<FormControlData> getFormControlData();
 }

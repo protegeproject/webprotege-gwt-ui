@@ -24,7 +24,7 @@ import java.util.Optional;
 public abstract class GridCellData {
 
     public static GridCellData get(@JsonProperty(PropertyNames.COLUMN_ID) @Nonnull GridColumnId columnId,
-                                   @JsonProperty(PropertyNames.CONTROL_DATA) @Nullable Page<FormControlData> values) {
+                                   @JsonProperty(PropertyNames.DATA) @Nullable Page<FormControlData> values) {
         return new AutoValue_GridCellData(columnId, values);
     }
 
