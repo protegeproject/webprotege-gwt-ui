@@ -154,5 +154,4 @@ public class TextControlDescriptor_TestCase {
     public void should_getType() {
         assertThat(TextControlDescriptor.getType(), is("TEXT"));
     }
-
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 
@@ -20,8 +21,8 @@ public abstract class EntityNameControlDescriptorDto implements FormControlDescr
 
     @JsonCreator
     @Nonnull
-    public static EntityNameControlDescriptorDto get(@JsonProperty("placeholder") @Nonnull LanguageMap placeholder,
-                                                     @JsonProperty("matchCriteria") @Nullable CompositeRootCriteria matchCriteria) {
+    public static EntityNameControlDescriptorDto get(@JsonProperty(PropertyNames.PLACEHOLDER) @Nonnull LanguageMap placeholder,
+                                                     @JsonProperty(PropertyNames.CRITERIA) @Nullable CompositeRootCriteria matchCriteria) {
         return new AutoValue_EntityNameControlDescriptorDto(placeholder, matchCriteria);
     }
 
@@ -36,13 +37,15 @@ public abstract class EntityNameControlDescriptorDto implements FormControlDescr
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.PLACEHOLDER)
     public abstract LanguageMap getPlaceholder();
 
-    @JsonIgnore
+    @JsonProperty(PropertyNames.CRITERIA)
     @Nullable
     protected abstract CompositeRootCriteria getMatchCriteriaInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<CompositeRootCriteria> getMatchCriteria() {
         return Optional.ofNullable(getMatchCriteriaInternal());
     }

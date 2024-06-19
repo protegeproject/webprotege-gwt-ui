@@ -26,8 +26,6 @@ import java.util.Optional;
               })
 public interface OwlBinding extends IsSerializable {
 
-    String VALUES_CRITERIA = "valuesCriteria";
-
     @JsonIgnore
     @Nonnull
     Optional<OWLProperty> getOwlProperty();

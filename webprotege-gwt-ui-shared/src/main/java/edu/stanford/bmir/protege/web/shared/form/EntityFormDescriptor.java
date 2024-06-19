@@ -16,44 +16,32 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class EntityFormDescriptor {
 
-
-    public static final String PROJECT_ID = "projectId";
-
-    public static final String FORM_ID = "formId";
-
-    public static final String FORM_DESCRIPTOR = "formDescriptor";
-
-    public static final String SELECTOR_CRITERIA = "formSelectorCriteria";
-
-    public static final String PURPOSE = "purpose";
-
-
     @JsonCreator
-    public static EntityFormDescriptor valueOf(@JsonProperty(PROJECT_ID) @Nonnull ProjectId projectId,
-                                               @JsonProperty(FORM_ID) @Nonnull FormId formId,
-                                               @JsonProperty(FORM_DESCRIPTOR) @Nonnull FormDescriptor newDescriptor,
-                                               @JsonProperty(PURPOSE) @Nonnull FormPurpose purpose,
-                                               @JsonProperty(SELECTOR_CRITERIA) @Nonnull RootCriteria newSelectorCriteria) {
+    public static EntityFormDescriptor valueOf(@JsonProperty(PropertyNames.PROJECT_ID) @Nonnull ProjectId projectId,
+                                               @JsonProperty(PropertyNames.FORM_ID) @Nonnull FormId formId,
+                                               @JsonProperty(PropertyNames.FORM) @Nonnull FormDescriptor newDescriptor,
+                                               @JsonProperty(PropertyNames.PURPOSE) @Nonnull FormPurpose purpose,
+                                               @JsonProperty(PropertyNames.CRITERIA) @Nonnull RootCriteria newSelectorCriteria) {
         return new AutoValue_EntityFormDescriptor(projectId, formId, newDescriptor, purpose, newSelectorCriteria);
     }
 
     @Nonnull
-    @JsonProperty(PROJECT_ID)
+    @JsonProperty(PropertyNames.PROJECT_ID)
     public abstract ProjectId getProjectId();
 
     @Nonnull
-    @JsonProperty(FORM_ID)
+    @JsonProperty(PropertyNames.FORM_ID)
     public abstract FormId getFormId();
 
     @Nonnull
-    @JsonProperty(FORM_DESCRIPTOR)
+    @JsonProperty(PropertyNames.FORM)
     public abstract FormDescriptor getDescriptor();
 
     @Nonnull
-    @JsonProperty(PURPOSE)
+    @JsonProperty(PropertyNames.PURPOSE)
     public abstract FormPurpose getPurpose();
 
     @Nonnull
-    @JsonProperty(SELECTOR_CRITERIA)
+    @JsonProperty(PropertyNames.CRITERIA)
     public abstract RootCriteria getSelectorCriteria();
 }

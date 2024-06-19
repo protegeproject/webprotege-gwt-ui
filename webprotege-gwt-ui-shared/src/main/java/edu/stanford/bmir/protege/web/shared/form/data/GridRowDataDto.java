@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -14,9 +15,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 @GwtCompatible(serializable = true)
 public  abstract class GridRowDataDto {
 
+    @JsonCreator
     @Nonnull
-    public static GridRowDataDto get(@Nullable FormSubjectDto subject,
-                                     @Nonnull ImmutableList<GridCellDataDto> cellData) {
+    public static GridRowDataDto get(@JsonProperty("subject") @Nullable FormSubjectDto subject,
+                                     @JsonProperty("cells") @Nonnull ImmutableList<GridCellDataDto> cellData) {
         return new AutoValue_GridRowDataDto(subject, cellData);
     }
 
@@ -35,6 +37,7 @@ public  abstract class GridRowDataDto {
     }
 
     @Nonnull
+    @JsonProperty("cells")
     public abstract ImmutableList<GridCellDataDto> getCells();
 
     /**

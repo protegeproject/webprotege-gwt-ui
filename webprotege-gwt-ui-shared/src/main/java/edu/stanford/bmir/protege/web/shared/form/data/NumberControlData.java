@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -42,7 +43,7 @@ public abstract class NumberControlData implements FormControlData {
     @Nonnull
     public abstract NumberControlDescriptor getDescriptor();
 
-    @JsonProperty("value")
+    @JsonProperty(PropertyNames.LABEL)
     @Nullable
     protected abstract OWLLiteral getValueInternal();
 

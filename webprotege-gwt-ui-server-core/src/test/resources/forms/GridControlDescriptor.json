@@ -1,0 +1,9 @@
+{
+  "type": "GRID",
+  "columns": [],
+  "subjectFactory": {
+    "entityType": "Class",
+    "parent": null,
+    "targetOntologyIri": null
+  }
+}

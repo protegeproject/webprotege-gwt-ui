@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
@@ -18,19 +19,19 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class FormFieldData implements IsSerializable {
 
-    public static FormFieldData get(@JsonProperty("descriptor") @Nonnull FormFieldDescriptor descriptor,
-                                    @JsonProperty("formControlData") @Nonnull Page<FormControlData> formControlData) {
+    public static FormFieldData get(@JsonProperty(PropertyNames.FIELD) @Nonnull FormFieldDescriptor descriptor,
+                                    @JsonProperty(PropertyNames.CONTROL_DATA) @Nonnull Page<FormControlData> formControlData) {
         return new AutoValue_FormFieldData(descriptor, formControlData);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.FIELD)
     @Nonnull
     public abstract FormFieldDescriptor getFormFieldDescriptor();
 
     /**
      * Gets the page of form control values for this field.
      */
-    @JsonProperty("formControlData")
+    @JsonProperty(PropertyNames.CONTROL_DATA)
     @Nonnull
     public abstract Page<FormControlData> getFormControlData();
 }

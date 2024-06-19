@@ -20,7 +20,7 @@ public abstract class FormDescriptorDto {
 
     @JsonCreator
     public static FormDescriptorDto get(@JsonProperty("formId") @Nonnull FormId formId,
-                                        @JsonProperty("label") @Nonnull LanguageMap label,
+                                        @JsonProperty(PropertyNames.LABEL) @Nonnull LanguageMap label,
                                         @JsonProperty("fields") @Nonnull ImmutableList<FormFieldDescriptorDto> fields,
                                         @JsonProperty("formSubjectFactoryDescriptor") @Nullable FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
         return new AutoValue_FormDescriptorDto(formId, label, fields, subjectFactoryDescriptor);

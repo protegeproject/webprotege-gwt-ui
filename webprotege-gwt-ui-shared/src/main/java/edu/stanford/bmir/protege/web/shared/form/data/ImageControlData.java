@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -23,8 +24,8 @@ import java.util.Optional;
 public abstract class ImageControlData implements FormControlData {
 
     @JsonCreator
-    public static ImageControlData get(@JsonProperty("descriptor") @Nonnull ImageControlDescriptor descriptor,
-                                       @JsonProperty("iri") @Nullable IRI iri) {
+    public static ImageControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull ImageControlDescriptor descriptor,
+                                       @JsonProperty(PropertyNames.IRI) @Nullable IRI iri) {
         return new AutoValue_ImageControlData(descriptor, iri);
     }
 
@@ -38,11 +39,11 @@ public abstract class ImageControlData implements FormControlData {
         visitor.visit(this);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.CONTROL)
     @Nonnull
     public abstract ImageControlDescriptor getDescriptor();
 
-    @JsonProperty("iri")
+    @JsonProperty(PropertyNames.IRI)
     @Nullable
     protected abstract IRI getIriInternal();
 

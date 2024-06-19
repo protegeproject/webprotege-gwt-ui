@@ -1,0 +1,13 @@
+{
+  "type": "TEXT",
+  "placeholder": {
+    "en": "The placeholder"
+  },
+  "stringType": "SPECIFIC_LANG_STRING",
+  "specificLangTag": "en",
+  "lineMode": "SINGLE_LINE",
+  "pattern": "Pattern",
+  "patternViolationErrorMessage": {
+    "en": "An error message"
+  }
+}

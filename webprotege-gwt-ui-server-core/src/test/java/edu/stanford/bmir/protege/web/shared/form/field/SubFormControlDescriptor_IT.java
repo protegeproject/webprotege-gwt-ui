@@ -35,6 +35,7 @@ public class SubFormControlDescriptor_IT {
 
     @Test
     public void shouldSerializeAndDeserialize() throws IOException {
+
         var formDescriptor = new FormDescriptor(FormId.get("12345678-1234-1234-1234-123456789abc"),
                                                 LanguageMap.of("en", "The sub form"),
                                                 singletonList(
@@ -64,8 +65,9 @@ public class SubFormControlDescriptor_IT {
         SubFormControlDescriptor descriptor = new SubFormControlDescriptor(formDescriptor);
         var serialized = objectMapper.writeValueAsString(descriptor);
         System.out.println(serialized);
+        var subFormJson = SubFormControlDescriptor_IT.class.getResourceAsStream("/forms/SubFormDescriptor.json");
         var deserialized = objectMapper.readerFor(SubFormControlDescriptor.class)
-                .readValue(serialized);
+                .readValue(subFormJson);
         assertThat(deserialized, is(descriptor));
     }
 }

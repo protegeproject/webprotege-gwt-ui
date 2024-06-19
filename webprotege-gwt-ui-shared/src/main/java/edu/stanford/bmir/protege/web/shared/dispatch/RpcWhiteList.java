@@ -267,6 +267,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     FilterName _FilterName;
 
+    FilterState _FilterState;
+
     FormControlData _FormControlData;
 
     FormControlDataDto _FormControlDataDto;

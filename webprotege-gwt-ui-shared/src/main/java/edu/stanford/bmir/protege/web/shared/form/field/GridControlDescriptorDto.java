@@ -8,7 +8,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,18 +25,21 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
 
     @JsonCreator
     @Nonnull
-    public static GridControlDescriptorDto get(@JsonProperty("columns") @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
-                                               @JsonProperty("formSubjectFactoryDescriptor") @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
+    public static GridControlDescriptorDto get(@JsonProperty(PropertyNames.COLUMNS) @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
+                                               @JsonProperty(PropertyNames.SUBJECT_FACTORY) @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
         return new AutoValue_GridControlDescriptorDto(columns, formSubjectFactoryDescriptor);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.COLUMNS)
     public abstract ImmutableList<GridColumnDescriptorDto> getColumns();
 
     @Nullable
+    @JsonProperty(PropertyNames.SUBJECT_FACTORY)
     protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
     }
@@ -54,6 +57,7 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
         );
     }
 
+    @JsonIgnore
     public int getNestedColumnCount() {
         int count = 0;
         for(GridColumnDescriptorDto columnDescriptor : getColumns()) {

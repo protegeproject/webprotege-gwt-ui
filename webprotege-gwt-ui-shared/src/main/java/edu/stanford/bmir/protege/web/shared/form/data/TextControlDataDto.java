@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -26,7 +27,7 @@ public abstract class TextControlDataDto implements FormControlDataDto, Comparab
     @JsonCreator
     @Nonnull
     public static TextControlDataDto get(@JsonProperty("descriptor") @Nonnull TextControlDescriptor descriptor,
-                                         @JsonProperty("value") @Nonnull OWLLiteral value,
+                                         @JsonProperty(PropertyNames.VALUE) @Nonnull OWLLiteral value,
                                          @JsonProperty("depth") int depth) {
         return new AutoValue_TextControlDataDto(depth, descriptor, value);
     }
@@ -35,7 +36,7 @@ public abstract class TextControlDataDto implements FormControlDataDto, Comparab
     @Nonnull
     public abstract TextControlDescriptor getDescriptor();
 
-    @JsonProperty("value")
+    @JsonProperty(PropertyNames.VALUE)
     @Nullable
     protected abstract OWLLiteral getValueInternal();
 

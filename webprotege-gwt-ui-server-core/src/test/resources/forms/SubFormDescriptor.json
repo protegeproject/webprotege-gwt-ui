@@ -1,0 +1,45 @@
+{
+  "type": "SUB_FORM",
+  "form": {
+    "label": {
+      "en": "The sub form"
+    },
+    "fields": [
+      {
+        "id": "2b16a436-28da-4d47-b25e-a9fbb876deb6",
+        "owlBinding": {
+          "type": "PROPERTY",
+          "property": {
+            "@type": "ObjectProperty",
+            "iri": "http://www.w3.org/2000/01/rdf-schema#label"
+          },
+          "criteria": null
+        },
+        "label": {
+          "en": "The Label"
+        },
+        "fieldRun": "START",
+        "control": {
+          "type": "TEXT",
+          "placeholder": {
+          },
+          "stringType": "SIMPLE_STRING",
+          "specificLangTag": "en",
+          "lineMode": "SINGLE_LINE",
+          "pattern": "Pattern",
+          "patternViolationErrorMessage": {
+          }
+        },
+        "repeatability": "NON_REPEATABLE",
+        "optionality": "REQUIRED",
+        "readOnly": true,
+        "help": {
+        },
+        "deprecationStrategy": "LEAVE_VALUES_INTACT",
+        "initialExpansionState": "COLLAPSED"
+      }
+    ],
+    "subjectFactory": null,
+    "formId": "12345678-1234-1234-1234-123456789abc"
+  }
+}
