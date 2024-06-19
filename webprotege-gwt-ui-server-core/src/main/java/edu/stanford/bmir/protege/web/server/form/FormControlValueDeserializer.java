@@ -79,16 +79,29 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
                 }
                 String literal = literalNode.asText();
                 JsonNode langNode = node.get("lang");
-                JsonNode typeNode = node.get("type");
+                var typeNode = getJsonNode(node);
                 if(typeNode != null && !typeNode.asText().equals(OWLRDFVocabulary.RDF_PLAIN_LITERAL.getIRI().toString())) {
                     return PrimitiveFormControlData.get(df.getOWLLiteral(literal, df.getOWLDatatype(IRI.create(typeNode.asText()))));
                 }
                 else {
-                    return PrimitiveFormControlData.get(df.getOWLLiteral(literal, langNode.asText("")));
+                    if (langNode == null) {
+                        return PrimitiveFormControlData.get(df.getOWLLiteral(literal));
+                    }
+                    else {
+                        return PrimitiveFormControlData.get(df.getOWLLiteral(literal, langNode.asText("")));
+                    }
                 }
 
             }
         }
         throw new JsonParseException(p, "Cannot parse node as primitive value");
+    }
+
+    private static JsonNode getJsonNode(JsonNode node) {
+        JsonNode typeNode = node.get("type");
+        if (typeNode != null) {
+            return typeNode;
+        }
+        return node.get("@type");
     }
 }
