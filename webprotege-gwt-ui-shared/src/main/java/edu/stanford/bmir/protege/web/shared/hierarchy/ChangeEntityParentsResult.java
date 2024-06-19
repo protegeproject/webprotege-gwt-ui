@@ -28,9 +28,11 @@ public abstract class ChangeEntityParentsResult implements Result {
         return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents);
     }
 
+    @JsonProperty("classesWithCycle")
     @Nonnull
     public abstract Set<OWLEntityData> getClassesWithCycle();
 
+    @JsonProperty("classesWithRetiredParents")
     @Nonnull
     public abstract Set<OWLEntityData> getClassesWithRetiredParents();
 
