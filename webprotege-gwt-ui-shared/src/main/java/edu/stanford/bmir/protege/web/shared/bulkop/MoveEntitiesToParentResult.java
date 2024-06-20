@@ -1,14 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.bulkop;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 
 import javax.annotation.Nonnull;
 
@@ -23,8 +18,12 @@ import javax.annotation.Nonnull;
 public abstract class MoveEntitiesToParentResult implements Result {
 
     @JsonCreator
-    public static MoveEntitiesToParentResult create() {
-        return new AutoValue_MoveEntitiesToParentResult();
+    public static MoveEntitiesToParentResult create(@JsonProperty("isDestinationRetiredClass") @Nonnull boolean isDestinationRetiredClass) {
+        return new AutoValue_MoveEntitiesToParentResult(isDestinationRetiredClass);
     }
+
+    @JsonProperty("isDestinationRetiredClass")
+    @Nonnull
+    public abstract boolean isDestinationRetiredClass();
 
 }

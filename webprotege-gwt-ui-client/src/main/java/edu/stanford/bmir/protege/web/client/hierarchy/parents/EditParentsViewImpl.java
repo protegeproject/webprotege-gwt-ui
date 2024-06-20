@@ -46,6 +46,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     HTML classesWithCyclesWarningField;
 
+    @UiField
+    HTML classesWithRetiredParentsField;
+
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
     interface EditParentsViewImplUiBinder extends UiBinder<HTMLPanel, EditParentsViewImpl> {
@@ -129,12 +132,26 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Override
     public void clearClassesWithCycle() {
         classesWithCyclesWarningField.setVisible(false);
+        classesWithCyclesWarningField.setHTML("");
     }
 
     @Override
     public void markClassesWithCycles(Set<OWLEntityData> classesWithCycles) {
         String classes = classesWithCycles.stream().map(OWLEntityData::getBrowserText).collect(Collectors.joining(", "));
         classesWithCyclesWarningField.setHTML(messages.classHierarchy_cyclesHaveBeenCreated(classes));
+        classesWithCyclesWarningField.setVisible(true);
+    }
+
+    @Override
+    public void clearClassesWithRetiredParents() {
+        classesWithRetiredParentsField.setVisible(false);
+        classesWithRetiredParentsField.setHTML("");
+    }
+
+    @Override
+    public void markClassesWithRetiredParents(Set<OWLEntityData> classesWithRetiredParents) {
+        String classes = classesWithRetiredParents.stream().map(OWLEntityData::getBrowserText).collect(Collectors.joining(", "));
+        classesWithCyclesWarningField.setHTML(messages.classHierarchy_parentsHaveRetiredAncestors(classes));
         classesWithCyclesWarningField.setVisible(true);
     }
 }
