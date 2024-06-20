@@ -23,6 +23,9 @@
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
     <inherits name="com.google.gwt.logging.Logging"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.logLevel" value="FINE"/>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 

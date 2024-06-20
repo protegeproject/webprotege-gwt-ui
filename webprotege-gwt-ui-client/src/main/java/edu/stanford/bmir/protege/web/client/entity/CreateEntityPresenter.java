@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,22 +32,30 @@ public class CreateEntityPresenter {
     private final DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
 
     @Nonnull
+    private final WhoCreateClassPresenter whoCreateClassPresenter;
+
+    @Nonnull
     private final CreateEntityFormPresenter createEntityFormPresenter;
+
+    private final static Logger logger = Logger.getLogger(CreateEntityPresenter.class.getName());
+
 
     @Inject
     public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatch,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
-                                 @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
+                                 @Nonnull WhoCreateClassPresenter whoCreateClassPresenter, @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
         this.dispatch = checkNotNull(dispatch);
         this.projectId = checkNotNull(projectId);
         this.defaultCreateEntitiesPresenter = checkNotNull(defaultCreateEntitiesPresenter);
+        this.whoCreateClassPresenter = checkNotNull(whoCreateClassPresenter);
         this.createEntityFormPresenter = checkNotNull(createEntityFormPresenter);
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
+
         parentEntity.ifPresent(owlEntity -> dispatch.execute(GetEntityCreationFormsAction.create(projectId,
                                                                                                  owlEntity,
                                                                                                  entityType), result -> {
@@ -63,17 +72,35 @@ public class CreateEntityPresenter {
                                                  @Nonnull Optional<? extends OWLEntity> parentEntity,
                                                  @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
                                                  @Nonnull ImmutableList<FormDescriptorDto> createEntityForms) {
-        if (createEntityForms.isEmpty()) {
-            defaultCreateEntitiesPresenter.createEntities(entityType,
-                                                          parentEntity,
-                                                          entitiesCreatedHandler);
-        }
-        else {
+
+        if (isImmutableListNotEmpty(createEntityForms)) {
+
             createEntityFormPresenter.createEntities(entityType,
-                                                     parentEntity,
-                                                     entitiesCreatedHandler,
-                                                     createEntityForms);
+                    parentEntity,
+                    entitiesCreatedHandler,
+                    createEntityForms);
+
+            return;
         }
+        if(isEntityTypeClass(entityType)){
+            whoCreateClassPresenter.createEntities(entityType,
+                    parentEntity,
+                    entitiesCreatedHandler);
+
+            return;
+        }
+
+        defaultCreateEntitiesPresenter.createEntities(entityType,
+                parentEntity,
+                entitiesCreatedHandler);
+    }
+
+    private <T> boolean  isImmutableListNotEmpty(ImmutableList<T> listToCheck){
+        return !listToCheck.isEmpty();
+    }
+
+    private boolean isEntityTypeClass(EntityType entityType){
+        return entityType.equals(EntityType.CLASS);
     }
 
     public interface EntitiesCreatedHandler {

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
@@ -16,7 +15,9 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
-import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
+import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
@@ -26,6 +27,8 @@ import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -62,6 +65,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final LargeNumberOfChangesManager largeNumberOfChangesHandler;
 
+    private static final Logger logger = Logger.getLogger(ProjectPresenter.class.getName());
     private final LoggedInUserProvider loggedInUserProvider;
 
     private final ApplicationEnvironmentManager applicationEnvironmentManager;
@@ -106,7 +110,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus,
                       @Nonnull ProjectViewPlace place) {
-        GWT.log("[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
+        logger.log(Level.FINE, "[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
         busyView.setMessage("Loading project.  Please wait.");
         container.setWidget(busyView);
         permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
@@ -118,7 +122,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull EventBus eventBus,
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
-                                       result -> handleProjectLoaded(container, eventBus, place));
+                result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
             subscribeToWebsocket(projectId.getId(),  r.getToken(), applicationEnvironmentManager.getAppEnvVariables().getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
 
@@ -131,14 +135,14 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-       // eventPollingManager.start();
+        // eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
-                                    projectId,
-                                    largeNumberOfChangesHandler);
+                projectId,
+                largeNumberOfChangesHandler);
         container.setWidget(view);
 
         dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
-                                       r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
+                r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
         dispatchServiceManager.executeCurrentBatch();
     }
 

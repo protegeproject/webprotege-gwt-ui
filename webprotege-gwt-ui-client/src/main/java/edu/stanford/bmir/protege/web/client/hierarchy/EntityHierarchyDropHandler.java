@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
-import edu.stanford.protege.gwt.graphtree.shared.DropType;
-import edu.stanford.protege.gwt.graphtree.shared.Path;
+import edu.stanford.protege.gwt.graphtree.shared.*;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
@@ -28,11 +28,20 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    private final Messages messages;
+
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
-                                      @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                      @Nonnull DispatchServiceManager dispatchServiceManager,
+                                      @Nonnull MessageBox messageBox,
+                                      @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.messageBox = checkNotNull(messageBox);
+        this.messages = checkNotNull(messages);
     }
 
     @Nonnull
@@ -96,6 +105,9 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                                                 dropEndHandler.handleDropComplete();
                                             }
                                             else {
+                                                if (moveResult.isDestinationRetiredClass()){
+                                                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                                                }
                                                 dropEndHandler.handleDropCancelled();
                                             }
                                        });

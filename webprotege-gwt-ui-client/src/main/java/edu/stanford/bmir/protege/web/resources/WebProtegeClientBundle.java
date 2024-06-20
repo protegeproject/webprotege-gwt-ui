@@ -39,6 +39,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
 
+    @Source("released.png")
+    @DataResource.MimeType("image/png")
+    DataResource releasedClassIcon();
+
     @Source("deprecated-class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDeprecatedClassIcon();
@@ -166,6 +170,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("search-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource searchIcon();
+
+
+    @Source("solar--card-search-linear.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource searchIcdIcon();
 
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")

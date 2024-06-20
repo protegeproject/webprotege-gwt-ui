@@ -21,6 +21,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="ICAT-X4.svg"/>
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
+    <link rel="stylesheet" href="css/icd11ect-1.7.css">
 
     <script src="https://dagrejs.github.io/project/graphlib/v2.1.2/graphlib.js"></script>
     <script src="js/dagre/dagre.js"></script>
@@ -31,6 +32,8 @@
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
     <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js"></script>
     <script type="module" src="https://unpkg.com/uuid@8.3.1/dist/umd/uuidv4.min.js"></script>
+    <script src="js/ect/icd11ect-1.7.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.min.js"></script>
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
 

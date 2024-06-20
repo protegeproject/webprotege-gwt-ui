@@ -10,6 +10,7 @@
 @url syncSelectionIconUrl syncSelectionIcon;
 @url hierarchyIconUrl hierarchyIcon;
 @url searchIconUrl searchIcon;
+@url searchIcdIconUrl searchIcdIcon;
 @url createIconUrl svgCreateIcon;
 @url deleteIconUrl svgDeleteIcon;
 @url createIndividualIconUrl svgCreateIndividualIcon;
@@ -427,6 +428,11 @@
 .wp-btn-g--search {
     mask-image:  searchIconUrl;
     -webkit-mask-image:  searchIconUrl;
+}
+
+.wp-btn-g--searchIcd {
+    mask-image:  searchIcdIconUrl;
+    -webkit-mask-image:  searchIcdIconUrl;
 }
 
 .wp-btn-g--create-class {

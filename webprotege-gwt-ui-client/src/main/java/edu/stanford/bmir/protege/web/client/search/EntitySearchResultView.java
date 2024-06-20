@@ -20,4 +20,6 @@ public interface EntitySearchResultView extends IsWidget {
     void clearOboId();
 
     void setOboId(@Nonnull String oboId);
+
+    void setPopUpHierarchyHandler(SearchPopUpHierarchyHandler handler);
 }
