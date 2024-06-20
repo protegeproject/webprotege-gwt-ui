@@ -9,6 +9,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,9 +32,11 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
     }
 
     @Nonnull
+    @JsonProperty("columns")
     public abstract ImmutableList<GridColumnDescriptorDto> getColumns();
 
     @Nullable
+    @JsonProperty("formSubjectFactoryDescriptor")
     protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
 
     @Nonnull
