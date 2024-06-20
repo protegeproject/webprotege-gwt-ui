@@ -5,7 +5,7 @@
 
     <groupId>edu.stanford.protege</groupId>
     <artifactId>webprotege-gwt-ui</artifactId>
-    <version>5.0.15-WHO</version>
+    <version>5.0.16-WHO</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -92,7 +92,7 @@
             <dependency>
                 <groupId>edu.stanford.protege</groupId>
                 <artifactId>graphtree</artifactId>
-                <version>1.2.0</version>
+                <version>${graphtree.version}</version>
             </dependency>
 
 

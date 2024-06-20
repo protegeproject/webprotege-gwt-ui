@@ -28,7 +28,7 @@ public class MoveEntitiesToParent_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = MoveEntitiesToParentResult.create();
+        var result = MoveEntitiesToParentResult.create(true);
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

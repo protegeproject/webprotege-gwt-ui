@@ -27,4 +27,8 @@ public interface EditParentsView extends IsWidget, HasBusy {
     void clearClassesWithCycle();
 
     void markClassesWithCycles(Set<OWLEntityData> classesWithCycles);
+
+    void clearClassesWithRetiredParents();
+
+    void markClassesWithRetiredParents(Set<OWLEntityData> classesWithRetiredParents);
 }
