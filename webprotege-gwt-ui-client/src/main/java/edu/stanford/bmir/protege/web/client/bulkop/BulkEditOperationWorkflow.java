@@ -5,17 +5,20 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,11 @@ public class BulkEditOperationWorkflow {
     @Nonnull
     private final ModalManager modalManager;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    private final Messages messages;
+
     @AutoFactory
     @Inject
     public BulkEditOperationWorkflow(@Provided @Nonnull DispatchServiceManager dispatch,
@@ -55,13 +63,17 @@ public class BulkEditOperationWorkflow {
                                      @Nonnull BulkEditOperationPresenter presenter,
                                      @Nonnull ImmutableSet<OWLEntityData> entities,
                                      @Provided @Nonnull CommitMessageInputView commitMessageInputView,
-                                     @Provided @Nonnull ModalManager modalManager) {
+                                     @Provided @Nonnull ModalManager modalManager,
+                                     @Provided @Nonnull MessageBox messageBox,
+                                     @Provided @Nonnull Messages messages) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
         this.viewContainer = checkNotNull(viewContainer);
         this.entities = checkNotNull(entities);
         this.commitMessageInputView = checkNotNull(commitMessageInputView);
         this.modalManager = checkNotNull(modalManager);
+        this.messageBox = checkNotNull(messageBox);
+        this.messages = checkNotNull(messages);
     }
 
     public void start() {
@@ -111,6 +123,12 @@ public class BulkEditOperationWorkflow {
     private void executeAction(@Nonnull Action<?> action) {
         dispatch.execute(action,
                          result -> {
+            if(result instanceof MoveEntitiesToParentResult){
+                MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
+                if(moveEntitiesResult.isDestinationRetiredClass()){
+                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                }
+            }
                          });
     }
 
