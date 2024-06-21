@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>5.0.16-WHO</version>
+        <version>5.0.19-WHO</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-server</artifactId>
