@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
+import com.google.auto.factory.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -18,10 +15,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -95,15 +91,14 @@ public class BulkEditOperationWorkflow {
     private void handleExecute(ModalCloser closer) {
         if (!presenter.isDataWellFormed()) {
             presenter.displayErrorMessage();
-        }
-        else {
+        } else {
             ModalPresenter commitMsgPresenter = getCommitMessagePresenter(closer, entities);
             modalManager.showModal(commitMsgPresenter);
         }
     }
 
     private ModalPresenter getCommitMessagePresenter(ModalCloser mainCloser, ImmutableSet<OWLEntityData> entities) {
-        ModalPresenter commitMsgPresenter =  modalManager.createPresenter();
+        ModalPresenter commitMsgPresenter = modalManager.createPresenter();
         commitMsgPresenter.setTitle(presenter.getTitle() + " Commit Message");
         commitMsgPresenter.setView(commitMessageInputView);
         commitMsgPresenter.setEscapeButton(DialogButton.CANCEL);
@@ -121,15 +116,25 @@ public class BulkEditOperationWorkflow {
     }
 
     private void executeAction(@Nonnull Action<?> action) {
-        dispatch.execute(action,
-                         result -> {
-            if(result instanceof MoveEntitiesToParentResult){
-                MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
-                if(moveEntitiesResult.isDestinationRetiredClass()){
-                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
-                }
-            }
-                         });
+        if (action instanceof MoveEntitiesToParentAction) {
+            messageBox.showYesNoConfirmBox("Move classes?",
+                    "You are about to move selected classes to new parent. Are you sure?",
+                    () ->
+                            dispatch.execute(action,
+                                    result -> {
+                                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
+                                        if (moveEntitiesResult.isDestinationRetiredClass()) {
+                                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                                        }
+                                    }
+                            )
+            );
+        } else {
+            dispatch.execute(action,
+                    result -> {
+                    });
+        }
+
     }
 
 }

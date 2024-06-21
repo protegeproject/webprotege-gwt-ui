@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -56,10 +56,10 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
                                   @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
-        if(!hierarchyId.isPresent()) {
+        if (!hierarchyId.isPresent()) {
             return false;
         }
-        if(nodePath.isEmpty()) {
+        if (nodePath.isEmpty()) {
             return false;
         }
         // Don't drop on self
@@ -78,39 +78,55 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if(!hierarchyId.isPresent()) {
+        if (!hierarchyId.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if(nodePath.isEmpty()) {
+        if (nodePath.isEmpty()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if(nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
+        if (nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
             dropEndHandler.handleDropCancelled();
             return;
         }
         // Don't drop on self
-        if(targetPath.getLast().equals(nodePath.getLast())) {
+        if (targetPath.getLast().equals(nodePath.getLast())) {
             dropEndHandler.handleDropCancelled();
             return;
         }
-        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
-                                                                      hierarchyId.get(),
-                                                                      nodePath,
-                                                                      targetPath,
-                                                                      dropType),
-                                       moveResult -> {
-                                            if(moveResult.isMoved()) {
-                                                dropEndHandler.handleDropComplete();
-                                            }
-                                            else {
-                                                if (moveResult.isDestinationRetiredClass()){
-                                                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
-                                                }
-                                                dropEndHandler.handleDropCancelled();
-                                            }
-                                       });
+
+        YesNoHandler yesNoHandler = new YesNoHandler() {
+            @Override
+            public void handleYes() {
+                dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+                                hierarchyId.get(),
+                                nodePath,
+                                targetPath,
+                                dropType),
+                        moveResult -> {
+                            if (moveResult.isMoved()) {
+                                dropEndHandler.handleDropComplete();
+                            } else {
+                                if (moveResult.isDestinationRetiredClass()) {
+                                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                                }
+                                dropEndHandler.handleDropCancelled();
+                            }
+                        }
+                );
+            }
+
+            @Override
+            public void handleNo() {
+                dropEndHandler.handleDropCancelled();
+            }
+        };
+
+        messageBox.showYesNoConfirmBox("Move entities?",
+                "You are about to move selected entities to new parent. Are you sure?",
+                yesNoHandler
+        );
     }
 
     @Override
