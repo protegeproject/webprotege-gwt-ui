@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -13,23 +11,18 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.lang.LangTag;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 /**
  * Matthew Horridge
@@ -207,7 +200,13 @@ public class EntityFormStackPresenter {
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
-        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
+        /*
+         ToDo:
+          uncomment deprecate button bellow when we made it configurable.
+          it is presumed that a user needs a specific role to make a form deprecated
+         */
+        view.setDeprecateButtonVisible(false);
+//        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
         for (FormDataDto formDataDto : result.getFormData()) {
             pristineDataManager.updatePristineFormData(formDataDto.toFormData());
