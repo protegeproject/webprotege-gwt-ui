@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -70,6 +71,8 @@ public class PerspectivePresenter implements HasDispose {
 
     private HandlerRegistration placeChangedHandlerRegistration;
 
+    private UuidV4Provider uuidV4Provider;
+
 
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
@@ -80,6 +83,7 @@ public class PerspectivePresenter implements HasDispose {
                                 PerspectiveFactory perspectiveFactory,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter,
+                                UuidV4Provider uuidV4Provider,
                                 MessageBox messageBox, LanguageMapCurrentLocaleMapper localeMapper) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -91,6 +95,7 @@ public class PerspectivePresenter implements HasDispose {
         this.portletChooserPresenter = portletChooserPresenter;
         this.messageBox = messageBox;
         this.localeMapper = localeMapper;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
@@ -117,7 +122,7 @@ public class PerspectivePresenter implements HasDispose {
 
     private void executeResetPerspective(PerspectiveId perspectiveId) {
         logger.fine("[PerspectivePresenter] Reset Perspective: " + perspectiveId);
-        dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId),
+        dispatchServiceManager.execute(resetPerspective(ChangeRequestId.get(uuidV4Provider.get()), projectId, perspectiveId),
                                        result -> {
                                            removePerspective(perspectiveId);
                                            installPerspective(result.getResetLayout());

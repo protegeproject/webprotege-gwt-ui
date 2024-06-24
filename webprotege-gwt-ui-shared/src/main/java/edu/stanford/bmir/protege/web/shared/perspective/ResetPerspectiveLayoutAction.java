@@ -37,12 +37,14 @@ public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspect
         this.perspectiveId = checkNotNull(perspectiveId);
     }
 
-    public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ProjectId projectId,
+    public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ChangeRequestId changeRequestId,
+                                                                @Nonnull ProjectId projectId,
                                                                 @Nonnull PerspectiveId perspectiveId) {
-        return create(projectId, perspectiveId);
+        return create(changeRequestId, projectId, perspectiveId);
     }
 
-    public static ResetPerspectiveLayoutAction create(@Nonnull ProjectId projectId,
+    public static ResetPerspectiveLayoutAction create(@Nonnull ChangeRequestId changeRequestId,
+                                                      @Nonnull ProjectId projectId,
                                                       @Nonnull PerspectiveId perspectiveId) {
         return new ResetPerspectiveLayoutAction(projectId, perspectiveId);
     }

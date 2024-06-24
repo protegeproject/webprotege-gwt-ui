@@ -14,6 +14,10 @@ import javax.annotation.Nonnull;
 @JsonTypeName("SubFormControlDescriptorDto")
 public abstract class SubFormControlDescriptorDto implements FormControlDescriptorDto {
 
+    public SubFormControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static SubFormControlDescriptorDto get(@JsonProperty("descriptor") @Nonnull FormDescriptorDto subformDescriptorDto) {

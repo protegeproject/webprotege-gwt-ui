@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Matthew Horridge
@@ -18,7 +20,7 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 @AutoValue
 @JsonTypeName("GridColumnId")
-public abstract class GridColumnId implements FormRegionId {
+public abstract class GridColumnId implements FormRegionId, Serializable, IsSerializable {
 
     @JsonCreator
     @Nonnull
@@ -31,6 +33,10 @@ public abstract class GridColumnId implements FormRegionId {
         if(!UUIDUtil.isWellFormed(id)) {
             throw new IllegalArgumentException("Malformed GridColumnId: " + id);
         }
+    }
+
+    public GridColumnId(){
+
     }
 
     @Override

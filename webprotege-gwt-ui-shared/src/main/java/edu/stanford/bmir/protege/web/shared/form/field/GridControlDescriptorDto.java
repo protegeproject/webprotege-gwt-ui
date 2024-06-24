@@ -24,6 +24,11 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 @JsonTypeName("GridControlDescriptorDto")
 public abstract class GridControlDescriptorDto implements FormControlDescriptorDto {
 
+
+    public GridControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static GridControlDescriptorDto get(@JsonProperty("columns") @Nonnull ImmutableList<GridColumnDescriptorDto> columns,

@@ -14,6 +14,11 @@ import javax.annotation.Nonnull;
 @JsonTypeName("NumberControlDescriptorDto")
 public abstract class NumberControlDescriptorDto implements FormControlDescriptorDto {
 
+
+    public NumberControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static NumberControlDescriptorDto get(@JsonProperty("descriptor") @Nonnull NumberControlDescriptor descriptor) {

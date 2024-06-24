@@ -12,11 +12,12 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Optional;
 
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormFieldId {
+public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormFieldId, Serializable {
 
     @JsonCreator
     @Nonnull

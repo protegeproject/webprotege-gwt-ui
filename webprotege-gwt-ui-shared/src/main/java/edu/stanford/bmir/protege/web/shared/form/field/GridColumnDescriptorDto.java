@@ -5,17 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class GridColumnDescriptorDto {
+public abstract class GridColumnDescriptorDto implements IsSerializable, Serializable {
 
 
     @JsonCreator

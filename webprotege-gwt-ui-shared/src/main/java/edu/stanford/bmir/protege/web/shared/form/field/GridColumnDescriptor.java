@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -19,7 +21,11 @@ import java.util.stream.Stream;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridColumnDescriptor implements BoundControlDescriptor {
+public abstract class GridColumnDescriptor implements BoundControlDescriptor, IsSerializable, Serializable {
+
+    public GridColumnDescriptor(){
+
+    }
 
     @Nonnull
     public static GridColumnDescriptor get(@Nonnull GridColumnId id,

@@ -19,6 +19,10 @@ import javax.annotation.Nonnull;
 @JsonTypeName("GridControlDataDto")
 public abstract class GridControlDataDto implements FormControlDataDto, HasFilterState {
 
+    public GridControlDataDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static GridControlDataDto get(@JsonProperty("descriptor") @Nonnull GridControlDescriptor descriptor,

@@ -3,16 +3,22 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormRegionOrdering {
+public abstract class FormRegionOrdering implements IsSerializable, Serializable {
 
     public static final String REGION_ID = "regionId";
 
     public static final String DIRECTION = "direction";
+
+    public FormRegionOrdering(){
+
+    }
 
     @JsonCreator
     @Nonnull

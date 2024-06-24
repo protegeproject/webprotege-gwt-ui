@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 @JsonSubTypes({
         @Type(EntityNameControlDataDto.class),
@@ -20,7 +21,7 @@ import javax.annotation.Nonnull;
         @Type(FormDataDto.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-public interface FormControlDataDto extends IsSerializable {
+public interface FormControlDataDto extends IsSerializable, Serializable {
 
     <R> R accept(FormControlDataDtoVisitorEx<R> visitor);
 

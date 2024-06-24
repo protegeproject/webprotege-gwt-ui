@@ -8,11 +8,13 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -24,7 +26,7 @@ import java.util.stream.Stream;
 @JsonTypeName(GridControlDescriptor.TYPE)
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridControlDescriptor implements FormControlDescriptor {
+public abstract class GridControlDescriptor implements FormControlDescriptor, IsSerializable, Serializable {
 
     protected static final String TYPE = "GRID";
 

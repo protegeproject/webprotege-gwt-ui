@@ -17,6 +17,9 @@ import java.util.Optional;
 @JsonTypeName("ImageControlDataDto")
 public abstract class ImageControlDataDto implements FormControlDataDto {
 
+    public ImageControlDataDto(){
+
+    }
     @JsonCreator
     @Nonnull
     public static ImageControlDataDto get(@JsonProperty("descriptor") @Nonnull ImageControlDescriptor descriptor,

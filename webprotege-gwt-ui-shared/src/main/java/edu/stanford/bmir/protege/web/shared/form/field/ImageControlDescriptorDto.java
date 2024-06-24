@@ -12,6 +12,10 @@ import javax.annotation.Nonnull;
 @JsonTypeName("ImageControlDescriptorDto")
 public abstract class ImageControlDescriptorDto implements FormControlDescriptorDto {
 
+    public ImageControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static ImageControlDescriptorDto get() {

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -24,7 +25,7 @@ import java.util.Optional;
                       @JsonSubTypes.Type(value = OwlInstanceBinding.class, name = OwlInstanceBinding.TYPE),
                       @JsonSubTypes.Type(value = OwlSubClassBinding.class, name = OwlSubClassBinding.TYPE)
               })
-public interface OwlBinding extends IsSerializable {
+public interface OwlBinding extends IsSerializable, Serializable {
 
     String VALUES_CRITERIA = "valuesCriteria";
 

@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +21,11 @@ import java.util.Map;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class LanguageMap {
+public abstract class LanguageMap implements IsSerializable, Serializable {
+
+    public LanguageMap(){
+
+    }
 
     private static final LanguageMap EMPTY = get(ImmutableMap.of());
 

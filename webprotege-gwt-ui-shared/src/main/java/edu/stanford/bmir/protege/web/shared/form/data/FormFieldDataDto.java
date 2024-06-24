@@ -4,20 +4,27 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormFieldDataDto {
+public abstract class FormFieldDataDto implements IsSerializable, Serializable {
 
     @JsonCreator
     @Nonnull
     public static FormFieldDataDto get(@JsonProperty("formFieldDescriptor") @Nonnull FormFieldDescriptorDto descriptor,
                                        @JsonProperty("formControlData") @Nonnull Page<FormControlDataDto> formControlData) {
         return new AutoValue_FormFieldDataDto(descriptor, formControlData);
+    }
+
+
+    public FormFieldDataDto(){
+
     }
 
     @Nonnull

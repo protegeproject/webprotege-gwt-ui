@@ -18,6 +18,10 @@ import java.util.Optional;
 @JsonTypeName("EntityNameControlDescriptorDto")
 public abstract class EntityNameControlDescriptorDto implements FormControlDescriptorDto {
 
+    public EntityNameControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static EntityNameControlDescriptorDto get(@JsonProperty("placeholder") @Nonnull LanguageMap placeholder,

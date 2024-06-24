@@ -13,6 +13,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("TextControlDescriptorDto")
 public abstract class TextControlDescriptorDto implements FormControlDescriptorDto {
 
+    public TextControlDescriptorDto(){}
+    
     @JsonCreator
     public static TextControlDescriptorDto get(@JsonProperty("descriptor") @Nonnull TextControlDescriptor descriptor) {
         return new AutoValue_TextControlDescriptorDto(descriptor);
