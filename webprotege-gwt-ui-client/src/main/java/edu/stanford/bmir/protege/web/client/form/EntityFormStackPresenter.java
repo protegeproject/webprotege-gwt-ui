@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -30,6 +31,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 2020-04-23
  */
 public class EntityFormStackPresenter {
+    private final static java.util.logging.Logger logger = Logger.getLogger("EntityFormStackPresenter");
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -140,6 +142,7 @@ public class EntityFormStackPresenter {
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
+        logger.info("ALEX din setEntity cu mode " + mode + " si entity " + entity.getIRI());
         if (mode.equals(FormMode.EDIT_MODE)) {
             handleOutstandingEditsAndSwitchToEntity(entity);
         }
@@ -150,9 +153,13 @@ public class EntityFormStackPresenter {
 
     private void handleOutstandingEditsAndSwitchToEntity(@Nonnull OWLEntity entity) {
         view.displayApplyOutstandingEditsConfirmation(() -> {
+            logger.info("ALEX din displayApplyOutstandingEditsConfirmation schimb handleru " + entity.getIRI());
+
             currentEntity.ifPresent(this::applyEdits);
             switchToEntity(entity);
         }, () -> {
+            logger.info("ALEX din displayApplyOutstandingEditsConfirmation " + entity.getIRI());
+
             handleCancelEdits();
             switchToEntity(entity);
         });
@@ -179,6 +186,8 @@ public class EntityFormStackPresenter {
     }
 
     private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
+        logger.info("ALEX din updateFormsForCurrentEntity cu current entity " + currentEntity);
+
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
@@ -208,6 +217,7 @@ public class EntityFormStackPresenter {
         view.setDeprecateButtonVisible(false);
 //        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
+        logger.info("ALEX adaug FormData " + result);
         for (FormDataDto formDataDto : result.getFormData()) {
             pristineDataManager.updatePristineFormData(formDataDto.toFormData());
         }
@@ -227,6 +237,8 @@ public class EntityFormStackPresenter {
 
     private void handleApplyEdits() {
         setMode(FormMode.READ_ONLY_MODE);
+        logger.info("ALEX din handleApplyEdits schimb handleru " + currentEntity);
+
         currentEntity.ifPresent(this::applyEdits);
     }
 
@@ -234,6 +246,7 @@ public class EntityFormStackPresenter {
         // TODO: Offer a commit message
         setMode(FormMode.READ_ONLY_MODE);
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> {
+            logger.info("ALEX are permisiune " + canEdit);
             if (canEdit) {
                 commitEdits(entity);
             }
@@ -268,12 +281,20 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        FormDataByFormId editedFormData = formStackPresenter.getFormData();
-        Collection<FormId> editedFormIds = editedFormData.getFormIds();
-        ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
-        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
-                         // Refresh the pristine data to what was committed
-                         result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        try {
+            FormDataByFormId editedFormData = formStackPresenter.getFormData();
+            logger.info("ALEX trecut de getFormData");
+            Collection<FormId> editedFormIds = editedFormData.getFormIds();
+            logger.info("ALEX trecut de getFormIds");
+
+            ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
+            logger.info("ALEX DIspatching comment edits");
+            dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+                    // Refresh the pristine data to what was committed
+                    result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        }catch (Exception e) {
+            logger.info("AM EXCEPTIE " + e);
+        }
     }
 
     private void dropEdits() {

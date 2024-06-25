@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
+    private final static java.util.logging.Logger logger = Logger.getLogger("FormPortletPresenter");
 
 
     @Nonnull
@@ -45,11 +47,15 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        logger.info("ALEX din handleAfterSetEntity");
+
         updateForms();
     }
 
     @Override
     protected void handlePlaceChangeFromNonProjectViewPlace() {
+        logger.info("ALEX din handlePlaceChangeFromNonProjectViewPlace");
+
         updateForms();
     }
 
@@ -86,6 +92,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     protected void handleReloadRequest() {
+        logger.info("ALEX din handleReloadRequest");
+
         updateForms();
     }
 }
