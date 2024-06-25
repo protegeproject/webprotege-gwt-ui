@@ -25,4 +25,6 @@ public interface InputBoxView extends HasInitialFocusable, IsWidget {
     void setMultiline(boolean multiline);
 
     void setInitialInput(String initialInput);
+
+    void disableFields();
 }
