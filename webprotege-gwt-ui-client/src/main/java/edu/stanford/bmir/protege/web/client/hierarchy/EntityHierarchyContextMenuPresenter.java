@@ -241,15 +241,15 @@ public class EntityHierarchyContextMenuPresenter {
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
             String iri = sel.getIRI().toString();
-            inputBox.showOkDialog(messages.classIri(), true, iri, input -> {
-            });
+            inputBox.showOkDialog(messages.classIri(), false, iri, input -> {
+            }, true);
         });
     }
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
         inputBox.showOkDialog(messages.directLink(), true, location, input -> {
-        });
+        }, true);
     }
 
     private void handleRefresh() {
