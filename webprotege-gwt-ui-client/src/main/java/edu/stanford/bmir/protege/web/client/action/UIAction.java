@@ -41,4 +41,7 @@ public interface UIAction extends HasEnabled {
     default String getStyle() {
         return "";
     }
+
+    void setVisible(boolean visible);
+
 }

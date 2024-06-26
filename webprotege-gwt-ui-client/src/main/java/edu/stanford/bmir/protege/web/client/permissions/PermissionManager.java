@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Manages the permissions for projects and users.
@@ -48,6 +49,9 @@ public class PermissionManager implements HasDispose {
     private final Multimap<UserIdProjectIdKey, ActionId> permittedActionCache = HashMultimap.create();
 
     private final DispatchErrorMessageDisplay errorDisplay;
+
+    private final Logger logger = Logger.getLogger(PermissionManager.class.getName());
+
 
     @Inject
     public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay) {
@@ -77,6 +81,7 @@ public class PermissionManager implements HasDispose {
             UserIdProjectIdKey key = new UserIdProjectIdKey(userId, theProjectId);
             permittedActionCache.putAll(key, result.getAllowedActions());
             GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
+            logger.info("[PermissionManager] permissions firePermissionsChanged: " + result.getAllowedActions());
             eventBus.fireEventFromSource(new PermissionsChangedEvent(theProjectId).asGWTEvent(), theProjectId);
         });
 
@@ -96,13 +101,16 @@ public class PermissionManager implements HasDispose {
                                         @Nonnull DispatchServiceCallback<Boolean> callback) {
         final UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId);
         if(permittedActionCache.containsKey(key)) {
+            logger.info("[PermissionManager] permissions: " + permittedActionCache.get(key));
             callback.onSuccess(permittedActionCache.get(key).contains(actionId));
             return;
         }
+        logger.info("[PermissionManager] permissions no cache: " + permittedActionCache.get(key));
         dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId, userId),
                                        new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(GetProjectPermissionsResult result) {
+                                               logger.info("[PermissionManager] result: " + result.getAllowedActions());
                                                permittedActionCache.putAll(key, result.getAllowedActions());
                                                callback.onSuccess(result.getAllowedActions().contains(actionId));
                                            }
