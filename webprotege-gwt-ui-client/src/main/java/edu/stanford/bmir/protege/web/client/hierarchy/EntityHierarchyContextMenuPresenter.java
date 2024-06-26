@@ -201,6 +201,10 @@ public class EntityHierarchyContextMenuPresenter {
         boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyId());
         editParentsUiAction.setVisible(isClassHierarchy);
 
+        boolean isNotClassHierarchy = isNotClassHierarchyType(model.getHierarchyId());
+        editAnnotationsUiAction.setVisible(isNotClassHierarchy);
+        setAnnotationValueUiAction.setVisible(isNotClassHierarchy);
+
         if (selIsNonEmpty) {
             permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
             permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
@@ -213,6 +217,10 @@ public class EntityHierarchyContextMenuPresenter {
 
     private boolean isClassHierarchyType(HierarchyId hierarchyId) {
         return hierarchyId == HierarchyId.CLASS_HIERARCHY;
+    }
+
+    private boolean isNotClassHierarchyType(HierarchyId hierarchyId){
+        return !isClassHierarchyType(hierarchyId);
     }
 
 
@@ -233,15 +241,15 @@ public class EntityHierarchyContextMenuPresenter {
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
             String iri = sel.getIRI().toString();
-            inputBox.showOkDialog(messages.classIri(), true, iri, input -> {
-            });
+            inputBox.showOkDialog(messages.classIri(), false, iri, input -> {
+            }, true);
         });
     }
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
         inputBox.showOkDialog(messages.directLink(), true, location, input -> {
-        });
+        }, true);
     }
 
     private void handleRefresh() {

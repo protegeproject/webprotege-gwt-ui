@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.core.client.Scheduler;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.library.modal.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.inject.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,20 +49,28 @@ public class InputBox {
         showModal(title, message, multiline, initialInput, handler, false);
     }
 
+    public void showOkDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler, boolean disableFields) {
+        showModal(title, "", multiline, initialInput, handler, false, disableFields);
+    }
+
     private void showModal(@Nonnull String title,
                            @Nonnull String message,
                            boolean multiline,
                            @Nonnull String initialInput,
                            InputBoxHandler handler,
-                           boolean showCancelButton) {
+                           boolean showCancelButton,
+                           boolean disableFields) {
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(title);
         InputBoxView view = viewProvider.get();
         view.setMessage(message);
         view.setMultiline(multiline);
         view.setInitialInput(initialInput);
+        if (disableFields) {
+            view.disableFields();
+        }
         modalPresenter.setView(view);
-        if(showCancelButton) {
+        if (showCancelButton) {
             modalPresenter.setEscapeButton(DialogButton.CANCEL);
         }
         modalPresenter.setPrimaryButton(DialogButton.OK);
@@ -76,8 +81,17 @@ public class InputBox {
         });
         modalManager.showModal(modalPresenter);
         Scheduler.get()
-                 .scheduleDeferred(() -> {
-                     view.getInitialFocusable().ifPresent(HasRequestFocus::requestFocus);
-                 });
+                .scheduleDeferred(() -> {
+                    view.getInitialFocusable().ifPresent(HasRequestFocus::requestFocus);
+                });
+    }
+
+    private void showModal(@Nonnull String title,
+                           @Nonnull String message,
+                           boolean multiline,
+                           @Nonnull String initialInput,
+                           InputBoxHandler handler,
+                           boolean showCancelButton) {
+        showModal(title, message, multiline, initialInput, handler, showCancelButton, false);
     }
 }

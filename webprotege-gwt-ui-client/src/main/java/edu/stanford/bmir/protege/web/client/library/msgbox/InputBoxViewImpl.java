@@ -103,4 +103,10 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
             textBox.setValue(initialInput);
         }
     }
+
+    @Override
+    public void disableFields() {
+        this.textBox.setEnabled(false);
+        this.textArea.setEnabled(false);
+    }
 }
