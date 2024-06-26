@@ -200,6 +200,7 @@ public class EntityHierarchyContextMenuPresenter {
 
         boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyId());
         editParentsUiAction.setVisible(isClassHierarchy);
+        moveToParentUiAction.setEnabled(isClassHierarchy);
         moveToParentUiAction.setVisible(isClassHierarchy);
 
         boolean isNotClassHierarchy = !isClassHierarchy;
