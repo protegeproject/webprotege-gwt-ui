@@ -107,15 +107,14 @@ public class BulkEditOperationWorkflow {
         commitMsgPresenter.setButtonHandler(continueButton, msgCloser -> {
             ImmutableSet<OWLEntity> rawEntities = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
             presenter.createAction(rawEntities, commitMessageInputView.getCommitMessage())
-                    .ifPresent(this::executeAction);
+                    .ifPresent((action) -> executeAction(mainCloser, action));
             msgCloser.closeModal();
-            mainCloser.closeModal();
         });
         commitMessageInputView.setDefaultCommitMessage(presenter.getDefaultCommitMessage(entities));
         return commitMsgPresenter;
     }
 
-    private void executeAction(@Nonnull Action<?> action) {
+    private void executeAction(ModalCloser mainCloser, @Nonnull Action<?> action) {
         if (action instanceof MoveEntitiesToParentAction) {
             messageBox.showYesNoConfirmBox("Move classes?",
                     "You are about to move selected classes to new parent. Are you sure?",
@@ -125,7 +124,9 @@ public class BulkEditOperationWorkflow {
                                         MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
                                         if (moveEntitiesResult.isDestinationRetiredClass()) {
                                             messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                                            return;
                                         }
+                                        mainCloser.closeModal();
                                     }
                             )
             );
@@ -133,6 +134,7 @@ public class BulkEditOperationWorkflow {
             dispatch.execute(action,
                     result -> {
                     });
+            mainCloser.closeModal();
         }
 
     }
