@@ -107,36 +107,24 @@ public class BulkEditOperationWorkflow {
         commitMsgPresenter.setButtonHandler(continueButton, msgCloser -> {
             ImmutableSet<OWLEntity> rawEntities = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
             presenter.createAction(rawEntities, commitMessageInputView.getCommitMessage())
-                    .ifPresent((action) -> executeAction(mainCloser, action));
+                    .ifPresent(this::executeAction);
             msgCloser.closeModal();
+            mainCloser.closeModal();
         });
         commitMessageInputView.setDefaultCommitMessage(presenter.getDefaultCommitMessage(entities));
         return commitMsgPresenter;
     }
 
-    private void executeAction(ModalCloser mainCloser, @Nonnull Action<?> action) {
-        if (action instanceof MoveEntitiesToParentAction) {
-            messageBox.showYesNoConfirmBox("Move classes?",
-                    "You are about to move selected classes to new parent. Are you sure?",
-                    () ->
-                            dispatch.execute(action,
-                                    result -> {
-                                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
-                                        if (moveEntitiesResult.isDestinationRetiredClass()) {
-                                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
-                                            return;
-                                        }
-                                        mainCloser.closeModal();
-                                    }
-                            )
-            );
-        } else {
-            dispatch.execute(action,
-                    result -> {
-                    });
-            mainCloser.closeModal();
-        }
-
+    private void executeAction(@Nonnull Action<?> action) {
+        dispatch.execute(action,
+                result -> {
+                    if(result instanceof MoveEntitiesToParentResult){
+                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
+                        if(moveEntitiesResult.isDestinationRetiredClass()){
+                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                        }
+                    }
+                });
     }
 
 }
