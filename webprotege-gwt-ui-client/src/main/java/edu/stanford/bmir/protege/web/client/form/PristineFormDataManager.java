@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -19,7 +18,6 @@ import java.util.logging.Logger;
  * 2020-11-13
  */
 public class PristineFormDataManager {
-    private final static java.util.logging.Logger logger = Logger.getLogger("PristineFormDataManager");
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -39,8 +37,6 @@ public class PristineFormDataManager {
         }
         FormId formId = formData.getFormId();
         pristineFormData.put(formId, formData);
-        logger.info("ALEX am setat  pristinu " + pristineFormData.keySet());
-
     }
 
     /**

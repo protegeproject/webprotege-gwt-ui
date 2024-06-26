@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Matthew Horridge
@@ -18,7 +20,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.perspectives.GetPerspectiveDetails")
-public abstract class GetPerspectiveDetailsResult implements Result {
+public abstract class GetPerspectiveDetailsResult implements Result, IsSerializable, Serializable {
 
     @JsonCreator
     @Nonnull

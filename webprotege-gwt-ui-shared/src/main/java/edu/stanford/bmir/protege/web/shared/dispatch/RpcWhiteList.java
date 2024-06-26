@@ -495,6 +495,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetPerspectiveDetailsResult _GetPerspectiveDetailsResult;
 
+    PerspectiveDetails _PerspectiveDetails;
+
     GetPerspectiveLayoutAction _GetPerspectiveLayoutAction;
 
     GetPerspectiveLayoutResult _GetPerspectiveLayoutResult;
@@ -1003,6 +1005,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     AppEnvVariables _AppEnvVariables;
 
     GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
+
 
     public RpcWhiteList() {
     }
