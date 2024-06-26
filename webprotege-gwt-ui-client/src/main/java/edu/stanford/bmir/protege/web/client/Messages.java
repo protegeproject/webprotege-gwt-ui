@@ -820,7 +820,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search")
     String search();
 
-    @DefaultMessage("Search Icd")
+    @DefaultMessage("ICD Search")
     @Key("searchIcd")
     String searchIcd();
 
