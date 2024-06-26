@@ -116,25 +116,15 @@ public class BulkEditOperationWorkflow {
     }
 
     private void executeAction(@Nonnull Action<?> action) {
-        if (action instanceof MoveEntitiesToParentAction) {
-            messageBox.showYesNoConfirmBox("Move classes?",
-                    "You are about to move selected classes to new parent. Are you sure?",
-                    () ->
-                            dispatch.execute(action,
-                                    result -> {
-                                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
-                                        if (moveEntitiesResult.isDestinationRetiredClass()) {
-                                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
-                                        }
-                                    }
-                            )
-            );
-        } else {
-            dispatch.execute(action,
-                    result -> {
-                    });
-        }
-
+        dispatch.execute(action,
+                result -> {
+                    if(result instanceof MoveEntitiesToParentResult){
+                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
+                        if(moveEntitiesResult.isDestinationRetiredClass()){
+                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                        }
+                    }
+                });
     }
 
 }
