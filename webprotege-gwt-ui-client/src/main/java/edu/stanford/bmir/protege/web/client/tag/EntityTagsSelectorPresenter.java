@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -39,12 +41,16 @@ public class EntityTagsSelectorPresenter {
     @Nonnull
     private final Set<Tag> selectedTags = new HashSet<>();
 
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EntityTagsSelectorPresenter(@Nonnull ProjectId projectId,
+                                       @Nonnull UuidV4Provider uuidV4Provider,
                                        @Nonnull EntityTagsSelectorView view,
                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
@@ -77,7 +83,8 @@ public class EntityTagsSelectorPresenter {
         List<Tag> tags = getSelectedTags();
         Set<TagId> fromTagIds = selectedTags.stream().map(Tag::getTagId).collect(toSet());
         Set<TagId> toTagIds = tags.stream().map(Tag::getTagId).collect(toSet());
-        dispatchServiceManager.execute(UpdateEntityTagsAction.create(projectId,
+        dispatchServiceManager.execute(UpdateEntityTagsAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                     projectId,
                                                                      entity,
                                                                      fromTagIds,
                                                                      toTagIds),

@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -30,7 +31,10 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
 
     private Set<TagId> toTagIds;
 
-    private UpdateEntityTagsAction(@Nonnull ProjectId projectId,
+    private ChangeRequestId changeRequestId;
+
+    private UpdateEntityTagsAction(ChangeRequestId changeRequestId,
+                                    @Nonnull ProjectId projectId,
                                    OWLEntity entity,
                                    @Nonnull Set<TagId> fromTagIds,
                                    @Nonnull Set<TagId> toTagIds) {
@@ -38,17 +42,19 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
         this.entity = checkNotNull(entity);
         this.fromTagIds = ImmutableSet.copyOf(fromTagIds);
         this.toTagIds = ImmutableSet.copyOf(toTagIds);
+        this.changeRequestId = changeRequestId;
     }
 
     @GwtSerializationConstructor
     private UpdateEntityTagsAction() {
     }
 
-    public static UpdateEntityTagsAction create(@Nonnull ProjectId projectId,
+    public static UpdateEntityTagsAction create(ChangeRequestId changeRequestId,
+                                                @Nonnull ProjectId projectId,
                                                 OWLEntity entity,
                                                 @Nonnull Set<TagId> fromTagIds,
                                                 @Nonnull Set<TagId> toTagIds) {
-        return new UpdateEntityTagsAction(projectId, entity, fromTagIds, toTagIds);
+        return new UpdateEntityTagsAction(changeRequestId, projectId, entity, fromTagIds, toTagIds);
     }
 
     @Nonnull
@@ -67,6 +73,10 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
 
     public Set<TagId> getToTagIds() {
         return ImmutableSet.copyOf(toTagIds);
+    }
+
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Override
