@@ -197,6 +197,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
         button.addClickHandler(event -> action.execute());
         action.setStateChangedHandler(value -> {
             button.setEnabled(value.isEnabled());
+            button.setVisible(value.isVisible());
             if (!action.hasIcon()) {
                 button.setText(value.getLabel());
             }
