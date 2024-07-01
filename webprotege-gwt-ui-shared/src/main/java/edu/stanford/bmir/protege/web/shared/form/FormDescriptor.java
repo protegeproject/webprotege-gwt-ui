@@ -40,7 +40,7 @@ public class FormDescriptor implements IsSerializable {
     }
 
     @JsonCreator
-    public FormDescriptor(@JsonProperty(PropertyNames.ID) FormId id,
+    public FormDescriptor(@JsonProperty(PropertyNames.FORM_ID) FormId id,
                           @JsonProperty(PropertyNames.LABEL) LanguageMap label,
                           @JsonProperty(PropertyNames.FIELDS) List<FormFieldDescriptor> formFieldDescriptors,
                           @JsonProperty(PropertyNames.SUBJECT_FACTORY) Optional<FormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
@@ -63,7 +63,7 @@ public class FormDescriptor implements IsSerializable {
                                   getSubjectFactoryDescriptor());
     }
 
-    @JsonProperty(PropertyNames.ID)
+    @JsonProperty(PropertyNames.FORM_ID)
     public FormId getFormId() {
         return formId;
     }
