@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,8 +18,8 @@ public  abstract class GridRowDataDto {
 
     @JsonCreator
     @Nonnull
-    public static GridRowDataDto get(@JsonProperty("subject") @Nullable FormSubjectDto subject,
-                                     @JsonProperty("cells") @Nonnull ImmutableList<GridCellDataDto> cellData) {
+    public static GridRowDataDto get(@JsonProperty(PropertyNames.SUBJECT) @Nullable FormSubjectDto subject,
+                                     @JsonProperty(PropertyNames.CELLS) @Nonnull ImmutableList<GridCellDataDto> cellData) {
         return new AutoValue_GridRowDataDto(subject, cellData);
     }
 
@@ -29,15 +30,17 @@ public  abstract class GridRowDataDto {
 
 
     @Nullable
+    @JsonProperty(PropertyNames.SUBJECT)
     protected abstract FormSubjectDto getSubjectInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<FormSubjectDto> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
     }
 
     @Nonnull
-    @JsonProperty("cells")
+    @JsonProperty(PropertyNames.CELLS)
     public abstract ImmutableList<GridCellDataDto> getCells();
 
     /**
