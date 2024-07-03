@@ -1,1 +1,1 @@
-{"type":"Dynamic","criteria":{"match":"CompositeCriteria","criteria":[],"matchType":"ALL"}}
+{"@type":"Dynamic","criteria":{"match":"CompositeCriteria","criteria":[],"matchType":"ALL"}}
