@@ -1,0 +1,20 @@
+{
+  "@type": "EntityNameControlDataDto",
+  "depth": 3,
+  "control": {
+    "@type": "ENTITY_NAME",
+    "criteria": {
+      "match": "CompositeCriteria",
+      "criteria": [
+        {
+          "match": "EntityTypeIsOneOf",
+          "types": [
+            "Class"
+          ]
+        }
+      ],
+      "matchType": "ALL"
+    }
+  },
+  "value": null
+}

@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -15,15 +13,14 @@ import java.util.Optional;
  * 2019-11-24
  */
 @JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type")
+        use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
                       @JsonSubTypes.Type(value = OwlPropertyBinding.class, name = OwlPropertyBinding.TYPE),
                       @JsonSubTypes.Type(value = OwlClassBinding.class, name = OwlClassBinding.TYPE),
                       @JsonSubTypes.Type(value = OwlInstanceBinding.class, name = OwlInstanceBinding.TYPE),
                       @JsonSubTypes.Type(value = OwlSubClassBinding.class, name = OwlSubClassBinding.TYPE)
               })
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public interface OwlBinding extends IsSerializable {
 
     @JsonIgnore

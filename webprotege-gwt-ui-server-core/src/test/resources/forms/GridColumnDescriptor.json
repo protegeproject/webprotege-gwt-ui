@@ -3,7 +3,7 @@
   "optionality": "OPTIONAL",
   "repeatability": "NON_REPEATABLE",
   "owlBinding": {
-    "type": "PROPERTY",
+    "@type": "PROPERTY",
     "property": {
       "@type": "AnnotationProperty",
       "iri": "http://example.org/p"
@@ -12,7 +12,7 @@
   },
   "label": {},
   "control": {
-    "type": "ENTITY_NAME",
+    "@type": "ENTITY_NAME",
     "placeholder": {},
     "criteria": {
       "match": "CompositeCriteria",

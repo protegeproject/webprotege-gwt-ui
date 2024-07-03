@@ -297,8 +297,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     FormFieldDescriptorDto _FormFieldDescriptorDto;
 
-    FormFieldId _FormFieldId;
-
     FormId _FormId;
 
     FormPageRequest _FormPageRequest;
@@ -308,6 +306,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     FormPurpose _FormPurpose;
 
     FormRegionFilter _FormRegionFilter;
+
+    FormRegionId _FormRegionId;
 
     FormRegionOrdering _FormRegionOrdering;
 
@@ -590,8 +590,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GridColumnDescriptor _GridColumnDescriptor;
 
     GridColumnDescriptorDto _GridColumnDescriptorDto;
-
-    GridColumnId _GridColumnId;
 
     GridControlData _GridControlData;
 

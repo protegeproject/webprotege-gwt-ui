@@ -1,0 +1,7 @@
+{
+  "@type": "PROPERTY",
+  "property": {
+    "@type": "AnnotationProperty",
+    "iri": "http://example.org/p"
+  }
+}

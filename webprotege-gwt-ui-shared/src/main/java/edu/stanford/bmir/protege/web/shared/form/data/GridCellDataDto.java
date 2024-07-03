@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public abstract class GridCellDataDto implements HasFilterState {
 
     @JsonCreator
-    public static GridCellDataDto get(@JsonProperty(PropertyNames.COLUMN_ID) @Nonnull GridColumnId columnId,
+    public static GridCellDataDto get(@JsonProperty(PropertyNames.COLUMN_ID) @Nonnull FormRegionId columnId,
                                       @JsonProperty(PropertyNames.VALUES) @Nullable Page<FormControlDataDto> values,
                                       @JsonProperty(PropertyNames.FILTER_STATE) @Nonnull FilterState filterState) {
         return new AutoValue_GridCellDataDto(columnId, values, filterState);
@@ -23,7 +23,7 @@ public abstract class GridCellDataDto implements HasFilterState {
 
     @Nonnull
     @JsonProperty(PropertyNames.COLUMN_ID)
-    public abstract GridColumnId getColumnId();
+    public abstract FormRegionId getColumnId();
 
     @Nonnull
     @JsonProperty(PropertyNames.VALUES)

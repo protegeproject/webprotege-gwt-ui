@@ -18,7 +18,7 @@ import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class GridHeaderViewImpl extends Composite implements GridHeaderView {
 
-    private Map<FilterId, GridColumnId> filterMap = new HashMap<>();
+    private Map<FilterId, FormRegionId> filterMap = new HashMap<>();
 
     @Nonnull
     private EditGridFilterHandler editGridFilterHandler = () -> {};
@@ -119,7 +119,7 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     }
 
     @Override
-    public ImmutableSet<GridColumnId> getFilteredColumns() {
+    public ImmutableSet<FormRegionId> getFilteredColumns() {
         return filterView.getFilterSet()
                          .getOnFilters()
                          .stream()
@@ -129,7 +129,7 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
 
     @Override
     public void addColumnToFilterList(@Nonnull String columnName,
-                                      @Nonnull GridColumnId columnId) {
+                                      @Nonnull FormRegionId columnId) {
         FilterId filterId = new FilterId(columnName);
         filterView.addFilter(filterId, FilterSetting.ON);
         filterMap.put(filterId, columnId);

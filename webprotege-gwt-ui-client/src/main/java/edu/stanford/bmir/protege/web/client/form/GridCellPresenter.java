@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -70,7 +70,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
         stackPresenter.setRegionPageChangedHandler(handler);
     }
 
-    public GridColumnId getId() {
+    public FormRegionId getId() {
         return descriptor.getId();
     }
 

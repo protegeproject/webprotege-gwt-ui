@@ -1,5 +1,5 @@
 {
-  "type": "SUB_FORM",
+  "@type": "SUB_FORM",
   "form": {
     "label": {
       "en": "The sub form"
@@ -8,7 +8,7 @@
       {
         "id": "12345678-1234-1234-1234-123456789def",
         "owlBinding": {
-          "type": "PROPERTY",
+          "@type": "PROPERTY",
           "property": {
             "@type": "ObjectProperty",
             "iri": "http://www.w3.org/2000/01/rdf-schema#label"
@@ -20,7 +20,7 @@
         },
         "fieldRun": "START",
         "control": {
-          "type": "TEXT",
+          "@type": "TEXT",
           "placeholder": {
           },
           "stringType": "SIMPLE_STRING",
@@ -40,6 +40,6 @@
       }
     ],
     "subjectFactory": null,
-    "id": "12345678-1234-1234-1234-123456789abc"
+    "formId": "12345678-1234-1234-1234-123456789abc"
   }
 }

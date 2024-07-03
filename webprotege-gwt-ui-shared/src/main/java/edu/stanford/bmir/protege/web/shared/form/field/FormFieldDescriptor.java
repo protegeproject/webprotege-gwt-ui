@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -17,7 +16,6 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.form.PropertyNames.*;
-import static edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor.*;
 
 /**
  * Matthew Horridge
@@ -27,10 +25,10 @@ import static edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescripto
 @JsonPropertyOrder({ID, OWL_BINDING, LABEL, FIELD_RUN, CONTROL, REPEATABILITY, OPTIONALITY, READ_ONLY, HELP})
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatability, IsSerializable, BoundControlDescriptor {
+public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeatability, IsSerializable, BoundControlDescriptor {
 
     @Nonnull
-    public static FormFieldDescriptor get(@Nonnull FormFieldId id,
+    public static FormFieldDescriptor get(@Nonnull FormRegionId id,
                                           @Nullable OwlBinding owlBinding,
                                           @Nullable LanguageMap formLabel,
                                           @Nullable FieldRun fieldRun,
@@ -67,14 +65,14 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                   @JsonProperty(PropertyNames.READ_ONLY) boolean readOnly,
                                                   @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) @Nullable ExpansionState expansionState,
                                                   @JsonProperty(PropertyNames.HELP) @Nullable LanguageMap help) {
-        final FormFieldId formFieldId = FormFieldId.get(checkNotNull(id));
+        final FormRegionId formFieldId = FormRegionId.get(checkNotNull(id));
         return get(formFieldId, owlBinding, formLabel, fieldRun, deprecationStrategy, fieldDescriptor, repeatability, optionality, readOnly, expansionState, help);
     }
 
     @Nonnull
     @Override
     @JsonIgnore
-    public abstract FormFieldId getId();
+    public abstract FormRegionId getId();
 
     @JsonProperty(ID)
     protected String getFormFieldId() {

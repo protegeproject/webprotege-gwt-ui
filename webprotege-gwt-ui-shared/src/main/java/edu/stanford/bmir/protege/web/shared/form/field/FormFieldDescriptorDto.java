@@ -15,11 +15,11 @@ import java.util.Optional;
 
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormFieldId {
+public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormRegionId {
 
     @JsonCreator
     @Nonnull
-    public static FormFieldDescriptorDto get(@JsonProperty(PropertyNames.ID) FormFieldId formFieldId,
+    public static FormFieldDescriptorDto get(@JsonProperty(PropertyNames.ID) FormRegionId formFieldId,
                                              @JsonProperty(PropertyNames.OWL_BINDING) OwlBinding owlBinding,
                                                @JsonProperty(PropertyNames.LABEL)  LanguageMap newlabel,
                                               @JsonProperty(PropertyNames.FIELD_RUN)   FieldRun fieldRun,
@@ -47,7 +47,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
     @Nonnull
     @Override
     @JsonProperty(PropertyNames.ID)
-    public abstract FormFieldId getId();
+    public abstract FormRegionId getId();
 
     @JsonProperty(PropertyNames.OWL_BINDING)
     @Nullable

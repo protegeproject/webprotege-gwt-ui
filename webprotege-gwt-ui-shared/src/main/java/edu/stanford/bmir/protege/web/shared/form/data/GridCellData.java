@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class GridCellData {
 
-    public static GridCellData get(@JsonProperty(PropertyNames.COLUMN_ID) @Nonnull GridColumnId columnId,
+    public static GridCellData get(@JsonProperty(PropertyNames.COLUMN_ID) @Nonnull FormRegionId columnId,
                                    @JsonProperty(PropertyNames.DATA) @Nullable Page<FormControlData> values) {
         return new AutoValue_GridCellData(columnId, values);
     }
@@ -62,7 +62,7 @@ public abstract class GridCellData {
     }
 
     @Nonnull
-    public abstract GridColumnId getColumnId();
+    public abstract FormRegionId getColumnId();
 
     @Nonnull
     public abstract Page<FormControlData> getValues();

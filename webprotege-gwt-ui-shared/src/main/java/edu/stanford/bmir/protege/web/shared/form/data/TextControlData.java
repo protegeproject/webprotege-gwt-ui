@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
@@ -23,8 +21,9 @@ import java.util.Optional;
 @JsonTypeName("TextControlData")
 public abstract class TextControlData implements FormControlData {
 
+    @JsonCreator
     @Nonnull
-    public static TextControlData get(@JsonProperty("descriptor") @Nonnull TextControlDescriptor descriptor,
+    public static TextControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull TextControlDescriptor descriptor,
                                       @JsonProperty(PropertyNames.VALUE) @Nullable OWLLiteral value) {
         return new AutoValue_TextControlData(descriptor, value);
     }
@@ -39,7 +38,7 @@ public abstract class TextControlData implements FormControlData {
         visitor.visit(this);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.CONTROL)
     @Nonnull
     public abstract TextControlDescriptor getDescriptor();
 

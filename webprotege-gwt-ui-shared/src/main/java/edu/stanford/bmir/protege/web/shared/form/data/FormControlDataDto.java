@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
         @Type(TextControlDataDto.class),
         @Type(FormDataDto.class)
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface FormControlDataDto extends IsSerializable {
 
     <R> R accept(FormControlDataDtoVisitorEx<R> visitor);

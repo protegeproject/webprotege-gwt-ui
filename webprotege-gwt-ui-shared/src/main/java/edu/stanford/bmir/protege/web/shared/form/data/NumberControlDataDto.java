@@ -23,9 +23,9 @@ public abstract class NumberControlDataDto implements FormControlDataDto, Compar
 
     @JsonCreator
     @Nonnull
-    public static NumberControlDataDto get(@JsonProperty("descriptor") @Nonnull NumberControlDescriptor descriptor,
+    public static NumberControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull NumberControlDescriptor descriptor,
                                            @JsonProperty(PropertyNames.LABEL) @Nonnull OWLLiteral value,
-                                           @JsonProperty("depth") int depth) {
+                                           @JsonProperty(PropertyNames.DEPTH) int depth) {
         return new AutoValue_NumberControlDataDto(depth, descriptor, value);
     }
 

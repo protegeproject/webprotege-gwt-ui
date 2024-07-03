@@ -1,5 +1,5 @@
 {
-  "type": "TEXT",
+  "@type": "TEXT",
   "placeholder": {
     "en": "The placeholder"
   },

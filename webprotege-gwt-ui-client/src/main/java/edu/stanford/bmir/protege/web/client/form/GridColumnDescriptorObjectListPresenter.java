@@ -20,7 +20,7 @@ public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter
 
     private static GridColumnDescriptor getDefaultColumnDescriptor(UuidV4Provider uuidV4Provider) {
         return GridColumnDescriptor.get(
-                GridColumnId.get(uuidV4Provider.get()),
+                FormRegionId.get(uuidV4Provider.get()),
                 Optionality.REQUIRED,
                 Repeatability.NON_REPEATABLE,
                 null,

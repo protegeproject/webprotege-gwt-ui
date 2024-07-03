@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 30/03/16
  */
 @JsonTypeName(TextControlDescriptor.TYPE)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TextControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "TEXT";
@@ -36,18 +37,18 @@ public class TextControlDescriptor implements FormControlDescriptor {
     }
 
     @JsonCreator
-    public TextControlDescriptor(@JsonProperty(PropertyNames.PLACEHOLDER) @Nonnull LanguageMap placeholder,
+    public TextControlDescriptor(@JsonProperty(PropertyNames.PLACEHOLDER) @Nullable LanguageMap placeholder,
                                  @JsonProperty(PropertyNames.STRING_TYPE) @Nonnull StringType stringType,
-                                 @JsonProperty(PropertyNames.SPECIFIC_LANG_TAG) @Nonnull String specificLangTag,
+                                 @JsonProperty(PropertyNames.SPECIFIC_LANG_TAG) @Nullable String specificLangTag,
                                  @JsonProperty(PropertyNames.LINE_MODE) @Nonnull LineMode lineMode,
-                                 @JsonProperty(PropertyNames.PATTERN) @Nonnull String pattern,
-                                 @JsonProperty(PropertyNames.PATTERN_VIOLATION_ERROR_MESSAGE) @Nonnull LanguageMap patternViolationErrorMessage) {
-        this.placeholder = checkNotNull(placeholder);
-        this.specificLangTag = checkNotNull(specificLangTag);
+                                 @JsonProperty(PropertyNames.PATTERN) @Nullable String pattern,
+                                 @JsonProperty(PropertyNames.PATTERN_VIOLATION_ERROR_MESSAGE) @Nullable LanguageMap patternViolationErrorMessage) {
+        this.placeholder = placeholder != null ? placeholder : LanguageMap.empty();
+        this.specificLangTag = specificLangTag != null ? specificLangTag : "";
         this.stringType = checkNotNull(stringType);
         this.lineMode = checkNotNull(lineMode);
-        this.pattern = checkNotNull(pattern);
-        this.patternViolationErrorMessage = checkNotNull(patternViolationErrorMessage);
+        this.pattern = pattern != null ? pattern : "";
+        this.patternViolationErrorMessage = patternViolationErrorMessage != null ? patternViolationErrorMessage : LanguageMap.empty();
     }
 
     @Nonnull
