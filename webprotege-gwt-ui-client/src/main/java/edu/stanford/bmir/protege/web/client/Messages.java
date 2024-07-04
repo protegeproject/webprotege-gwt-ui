@@ -1018,6 +1018,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
+    @DefaultMessage("Apply Linearization Changes")
+    @Key("linearization.upload")
+    String linearizationUpload();
+
     @DefaultMessage("Merge Ontologies")
     @Key("uploadAndMergeAdditions")
     String uploadAndMergeAdditions();
