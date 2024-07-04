@@ -5,7 +5,7 @@
     "@type": "SINGLE_CHOICE",
     "widgetType": "ComboBox",
     "choicesSource": {
-      "type": "Fixed",
+      "@type": "Fixed",
       "choices": [
 
       ]
