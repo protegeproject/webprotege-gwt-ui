@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.projects.ProcessUploadedLinearization")
+@JsonTypeName("webprotege.linearization.ProcessUploadedLinearization")
 public abstract class ProcessUploadedLinearizationAction extends AbstractHasProjectAction<ProcessUploadedLinearizationResult> {
 
     @JsonCreator
