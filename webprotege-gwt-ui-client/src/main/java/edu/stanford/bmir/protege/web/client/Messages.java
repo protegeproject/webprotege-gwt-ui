@@ -863,6 +863,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("sharing.edit")
     String sharing_edit();
 
+    @DefaultMessage("ICD Edit")
+    @Key("sharing.icd.edit")
+    String sharing_icd_edit();
+
 
     @DefaultMessage("Link sharing enabled")
     @Key("sharing.linkSharingEnabled")

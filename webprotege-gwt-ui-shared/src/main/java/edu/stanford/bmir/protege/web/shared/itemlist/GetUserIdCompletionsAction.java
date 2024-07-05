@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.itemlist;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

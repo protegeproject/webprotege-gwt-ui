@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -22,7 +23,7 @@ public class ProjectSharingSettings implements Serializable {
 
     private ProjectId projectId;
     
-    private List<SharingSetting> sharingSettings = new ArrayList<>();
+    private List<SharingSetting> sharingSettings;
 
     @Nullable
     private SharingPermission linkSharingPermission = null;
@@ -33,20 +34,25 @@ public class ProjectSharingSettings implements Serializable {
     private ProjectSharingSettings() {
     }
 
-    public ProjectSharingSettings(ProjectId projectId, Optional<SharingPermission> linkSharingPermission, List<SharingSetting> sharingSettings) {
+    public ProjectSharingSettings(@JsonProperty("projectId") ProjectId projectId,
+                                  @JsonProperty("linkSharingPermission") Optional<SharingPermission> linkSharingPermission,
+                                  @JsonProperty("sharingSettings") List<SharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
-        this.sharingSettings.addAll(checkNotNull(sharingSettings));
+        this.sharingSettings = new ArrayList<>(checkNotNull(sharingSettings));
         this.linkSharingPermission = checkNotNull(linkSharingPermission).orElse(null);
     }
 
+    @JsonProperty("projectId")
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("sharingSettings")
     public List<SharingSetting> getSharingSettings() {
         return new ArrayList<>(sharingSettings);
     }
 
+    @JsonProperty("linkSharingPermission")
     public Optional<SharingPermission> getLinkSharingPermission() {
         return Optional.ofNullable(linkSharingPermission);
     }
