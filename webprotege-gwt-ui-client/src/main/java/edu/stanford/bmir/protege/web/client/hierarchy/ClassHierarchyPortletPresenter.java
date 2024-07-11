@@ -4,30 +4,25 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
-import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
+import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.lang.*;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdModal;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
-import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.client.*;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,8 +30,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
@@ -102,6 +96,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private boolean settingSelectionInTree = false;
 
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
@@ -121,7 +118,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull DisplayNameRenderer displayNameRenderer,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory,
-                                          @Nonnull DispatchServiceManager dispatch) {
+                                          @Nonnull DispatchServiceManager dispatch,
+                                          @Nonnull LoggedInUserManager loggedInUserManager, @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.searchModal = searchModal;
         this.searchIcdModal = searchIcdModal;
@@ -152,6 +150,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
+        this.permissionChecker = checkNotNull(permissionChecker);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
         this.updater = updaterFactory.create(treeWidget, hierarchyModel);
     }
@@ -179,11 +178,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);
 
+
         createClassAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
         /* TODO uncomment this after delete is implemented*/
        // deleteClassAction.setRequiresSelection(true);
        // actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
+
+        permissionChecker.hasPermission(DELETE_CLASS, deleteClassAction::setVisible);
 
         actionStatePresenter.start(eventBus);
 

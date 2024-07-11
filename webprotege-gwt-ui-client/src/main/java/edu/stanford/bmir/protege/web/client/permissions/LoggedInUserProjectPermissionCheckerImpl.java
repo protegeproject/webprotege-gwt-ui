@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

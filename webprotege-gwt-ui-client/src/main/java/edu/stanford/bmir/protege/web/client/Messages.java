@@ -820,7 +820,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search")
     String search();
 
-    @DefaultMessage("Search Icd")
+    @DefaultMessage("ICD Search")
     @Key("searchIcd")
     String searchIcd();
 
@@ -862,6 +862,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Edit")
     @Key("sharing.edit")
     String sharing_edit();
+
+    @DefaultMessage("ICD Edit")
+    @Key("sharing.icd.edit")
+    String sharing_icd_edit();
 
 
     @DefaultMessage("Link sharing enabled")

@@ -201,10 +201,17 @@ public class EntityHierarchyContextMenuPresenter {
         boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyId());
         editParentsUiAction.setVisible(isClassHierarchy);
         moveToParentUiAction.setEnabled(isClassHierarchy);
+        moveToParentUiAction.setVisible(isClassHierarchy);
 
-        boolean isNotClassHierarchy = isNotClassHierarchyType(model.getHierarchyId());
+        boolean isNotClassHierarchy = !isClassHierarchy;
         editAnnotationsUiAction.setVisible(isNotClassHierarchy);
         setAnnotationValueUiAction.setVisible(isNotClassHierarchy);
+
+        if (isClassHierarchy) {
+            permissionChecker.hasPermission(DELETE_CLASS, deleteEntityAction::setVisible);
+        } else {
+            permissionChecker.hasPermission(DELETE_PROPERTY, deleteEntityAction::setVisible);
+        }
 
         if (selIsNonEmpty) {
             permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
