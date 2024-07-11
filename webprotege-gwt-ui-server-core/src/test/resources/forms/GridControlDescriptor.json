@@ -1,0 +1,32 @@
+{
+  "@type": "GRID",
+  "columns": [
+    {
+      "optionality": "OPTIONAL",
+      "repeatability": "NON_REPEATABLE",
+      "owlBinding": null,
+      "label": {},
+      "control": {
+        "@type": "ENTITY_NAME",
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "EntityTypeIsOneOf",
+              "types": [
+                "Class"
+              ]
+            }
+          ],
+          "matchType": "ALL"
+        }
+      },
+      "id": "6bdcc85d-a514-4f4e-874b-f41a94ee8d2b"
+    }
+  ],
+  "subjectFactory": {
+    "entityType": "Class",
+    "parent": null,
+    "targetOntologyIri": null
+  }
+}

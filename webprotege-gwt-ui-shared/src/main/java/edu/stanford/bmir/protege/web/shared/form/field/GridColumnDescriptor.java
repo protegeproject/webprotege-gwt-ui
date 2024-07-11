@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
 public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @Nonnull
-    public static GridColumnDescriptor get(@Nonnull GridColumnId id,
+    public static GridColumnDescriptor get(@Nonnull FormRegionId id,
                                            @Nullable Optionality optionality,
                                            @Nullable Repeatability repeatability,
                                            @Nullable OwlBinding owlBinding,
@@ -36,13 +37,13 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @JsonCreator
     @Nonnull
-    public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") String id,
-                                           @Nullable @JsonProperty("optionality") Optionality optionality,
-                                           @Nullable @JsonProperty("repeatability") Repeatability repeatability,
-                                           @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
-                                           @Nonnull @JsonProperty("label") LanguageMap columnLabel,
-                                           @Nonnull @JsonProperty("formControlDescriptor") FormControlDescriptor formControlDescriptor) {
-        return new AutoValue_GridColumnDescriptor(GridColumnId.get(id),
+    public static GridColumnDescriptor get(@Nonnull @JsonProperty(PropertyNames.ID) String id,
+                                           @Nullable @JsonProperty(PropertyNames.OPTIONALITY) Optionality optionality,
+                                           @Nullable @JsonProperty(PropertyNames.REPEATABILITY) Repeatability repeatability,
+                                           @Nullable @JsonProperty(PropertyNames.OWL_BINDING) OwlBinding owlBinding,
+                                           @Nonnull @JsonProperty(PropertyNames.LABEL) LanguageMap columnLabel,
+                                           @Nonnull @JsonProperty(PropertyNames.CONTROL) FormControlDescriptor formControlDescriptor) {
+        return new AutoValue_GridColumnDescriptor(FormRegionId.get(id),
                                                   optionality == null ? Optionality.REQUIRED : optionality,
                                                   repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
                                                   owlBinding, columnLabel, formControlDescriptor);
@@ -50,10 +51,10 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @JsonIgnore
     @Nonnull
-    public abstract GridColumnId getId();
+    public abstract FormRegionId getId();
 
-    @JsonProperty("id")
-    public String getGridColumnId() {
+    @JsonProperty(PropertyNames.ID)
+    public String getFormRegionId() {
         return getId().getId();
     }
 
@@ -71,7 +72,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     }
 
     @JsonIgnore
-    public Stream<GridColumnId> getLeafColumnIds() {
+    public Stream<FormRegionId> getLeafColumnIds() {
         return getLeafColumnDescriptors().map(GridColumnDescriptor::getId);
     }
 
@@ -86,12 +87,13 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Nonnull
     public abstract Repeatability getRepeatability();
 
-    @JsonIgnore
+    @JsonProperty(PropertyNames.OWL_BINDING)
     @Nullable
     protected abstract OwlBinding getOwlBindingInternal();
 
     @Override
     @Nonnull
+    @JsonIgnore
     public Optional<OwlBinding> getOwlBinding() {
         return Optional.ofNullable(getOwlBindingInternal());
     }
@@ -101,6 +103,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @Override
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract FormControlDescriptor getFormControlDescriptor();
 
     @JsonIgnore

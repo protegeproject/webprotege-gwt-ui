@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -26,9 +28,13 @@ public abstract class OwlInstanceBinding implements OwlBinding {
 
     @JsonCreator
     @Nonnull
-    public static OwlInstanceBinding get(@JsonProperty(VALUES_CRITERIA) @Nullable EntityMatchCriteria valuesFilter) {
-        return new AutoValue_OwlInstanceBinding();
+    public static OwlInstanceBinding get(@JsonProperty(PropertyNames.CRITERIA) @Nullable EntityMatchCriteria criteria) {
+        return new AutoValue_OwlInstanceBinding(criteria);
     }
+
+    @JsonProperty(PropertyNames.CRITERIA)
+    @Nullable
+    public abstract EntityMatchCriteria getCriteria();
 
     @Nonnull
     public static OwlInstanceBinding get() {

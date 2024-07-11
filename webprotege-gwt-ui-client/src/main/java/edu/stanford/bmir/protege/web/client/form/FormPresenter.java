@@ -11,9 +11,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -54,7 +52,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     private FormFieldPresenterFactory formFieldPresenterFactory;
 
-    private Set<FormFieldId> collapsedFields = new HashSet<>();
+    private Set<FormRegionId> collapsedFields = new HashSet<>();
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {
     };
@@ -131,7 +129,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {
             if (p.getExpansionState() == ExpansionState.COLLAPSED) {
-                FormFieldId id = p.getValue().getFormFieldDescriptor().getId();
+                FormRegionId id = p.getValue().getFormFieldDescriptor().getId();
                 collapsedFields.add(id);
             }
         });

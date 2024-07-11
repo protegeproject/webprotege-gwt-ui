@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
         @Type(TextControlDataDto.class),
         @Type(FormDataDto.class)
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface FormControlDataDto extends IsSerializable {
 
     <R> R accept(FormControlDataDtoVisitorEx<R> visitor);
@@ -27,5 +26,6 @@ public interface FormControlDataDto extends IsSerializable {
     @Nonnull
     FormControlData toFormControlData();
 
+    @JsonProperty(PropertyNames.DEPTH)
     int getDepth();
 }

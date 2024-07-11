@@ -21,7 +21,7 @@ public class GridColumnDescriptor_Serialization_Test {
     @Before
     public void setUp() {
         descriptor = GridColumnDescriptor.get(
-                GridColumnId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 Optionality.OPTIONAL,
                 Repeatability.NON_REPEATABLE,
                 null,

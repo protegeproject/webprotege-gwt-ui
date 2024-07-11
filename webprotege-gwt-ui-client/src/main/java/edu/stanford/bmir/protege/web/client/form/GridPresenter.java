@@ -133,7 +133,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
 
     public void setTopLevel() {
         this.topLevel = true;
-        ImmutableSet<GridColumnId> gridColumnIds = descriptor.getLeafColumns()
+        ImmutableSet<FormRegionId> gridColumnIds = descriptor.getLeafColumns()
                                                              .map(GridColumnDescriptorDto::getId)
                                                              .collect(toImmutableSet());
         columnVisibilityManager.setVisibleColumns(gridColumnIds);

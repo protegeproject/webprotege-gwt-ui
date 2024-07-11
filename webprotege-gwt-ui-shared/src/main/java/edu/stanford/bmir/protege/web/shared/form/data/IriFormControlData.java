@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -23,11 +24,11 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class IriFormControlData implements PrimitiveFormControlData {
 
-    public static IriFormControlData get(@Nonnull IRI iri) {
+    public static IriFormControlData get(@JsonProperty(PropertyNames.IRI) @Nonnull IRI iri) {
         return new AutoValue_IriFormControlData(iri);
     }
 
-    @JsonProperty("iri")
+    @JsonProperty(PropertyNames.IRI)
     @Nonnull
     public abstract IRI getIri();
 

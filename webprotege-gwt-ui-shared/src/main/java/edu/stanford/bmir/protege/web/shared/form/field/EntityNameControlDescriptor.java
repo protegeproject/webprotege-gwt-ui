@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
@@ -26,14 +24,15 @@ import java.util.Optional;
 @JsonTypeName(EntityNameControlDescriptor.TYPE)
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class EntityNameControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "ENTITY_NAME";
 
     @JsonCreator
     @Nonnull
-    public static EntityNameControlDescriptor get(@Nullable @JsonProperty("placeholder") LanguageMap languageMap,
-                                                  @Nullable @JsonProperty("matchCriteria") CompositeRootCriteria criteria) {
+    public static EntityNameControlDescriptor get(@Nullable @JsonProperty(PropertyNames.PLACEHOLDER) LanguageMap languageMap,
+                                                  @Nullable @JsonProperty(PropertyNames.CRITERIA) CompositeRootCriteria criteria) {
         return new AutoValue_EntityNameControlDescriptor(languageMap == null ? LanguageMap.empty() : languageMap,
                                                          criteria);
     }
@@ -70,13 +69,15 @@ public abstract class EntityNameControlDescriptor implements FormControlDescript
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.PLACEHOLDER)
     public abstract LanguageMap getPlaceholder();
 
-    @JsonIgnore
+    @JsonProperty(PropertyNames.CRITERIA)
     @Nullable
     protected abstract CompositeRootCriteria getMatchCriteriaInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<CompositeRootCriteria> getMatchCriteria() {
         return Optional.ofNullable(getMatchCriteriaInternal());
     }

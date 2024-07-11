@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     private final LanguageMapCurrentLocaleMapper localeMapper;
 
     @Nonnull
-    private Optional<GridColumnId> currentColumnId = Optional.empty();
+    private Optional<FormRegionId> currentColumnId = Optional.empty();
 
     @Nonnull
     private final UuidV4Provider uuidV4Provider;
@@ -58,7 +58,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     @Nonnull
     @Override
     public Optional<GridColumnDescriptor> getValue() {
-        GridColumnId columnId = currentColumnId.orElseGet(() -> GridColumnId.get(uuidV4Provider.get()));
+        FormRegionId columnId = currentColumnId.orElseGet(() -> FormRegionId.get(uuidV4Provider.get()));
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
                                               .map(fieldDescriptor -> GridColumnDescriptor.get(columnId,
                                                                                                view.getOptionality(),

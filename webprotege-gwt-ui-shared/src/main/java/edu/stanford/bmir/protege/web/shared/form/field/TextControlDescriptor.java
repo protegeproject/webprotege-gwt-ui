@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 30/03/16
  */
 @JsonTypeName(TextControlDescriptor.TYPE)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TextControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "TEXT";
@@ -35,18 +36,19 @@ public class TextControlDescriptor implements FormControlDescriptor {
     private TextControlDescriptor() {
     }
 
-    public TextControlDescriptor(@Nonnull LanguageMap placeholder,
-                                 @Nonnull StringType stringType,
-                                 @Nonnull String specificLangTag,
-                                 @Nonnull LineMode lineMode,
-                                 @Nonnull String pattern,
-                                 @Nonnull LanguageMap patternViolationErrorMessage) {
-        this.placeholder = checkNotNull(placeholder);
-        this.specificLangTag = checkNotNull(specificLangTag);
+    @JsonCreator
+    public TextControlDescriptor(@JsonProperty(PropertyNames.PLACEHOLDER) @Nullable LanguageMap placeholder,
+                                 @JsonProperty(PropertyNames.STRING_TYPE) @Nonnull StringType stringType,
+                                 @JsonProperty(PropertyNames.SPECIFIC_LANG_TAG) @Nullable String specificLangTag,
+                                 @JsonProperty(PropertyNames.LINE_MODE) @Nonnull LineMode lineMode,
+                                 @JsonProperty(PropertyNames.PATTERN) @Nullable String pattern,
+                                 @JsonProperty(PropertyNames.PATTERN_VIOLATION_ERROR_MESSAGE) @Nullable LanguageMap patternViolationErrorMessage) {
+        this.placeholder = placeholder != null ? placeholder : LanguageMap.empty();
+        this.specificLangTag = specificLangTag != null ? specificLangTag : "";
         this.stringType = checkNotNull(stringType);
         this.lineMode = checkNotNull(lineMode);
-        this.pattern = checkNotNull(pattern);
-        this.patternViolationErrorMessage = checkNotNull(patternViolationErrorMessage);
+        this.pattern = pattern != null ? pattern : "";
+        this.patternViolationErrorMessage = patternViolationErrorMessage != null ? patternViolationErrorMessage : LanguageMap.empty();
     }
 
     @Nonnull
@@ -105,31 +107,37 @@ public class TextControlDescriptor implements FormControlDescriptor {
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.LINE_MODE)
     public LineMode getLineMode() {
         return lineMode;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.PATTERN)
     public String getPattern() {
         return pattern;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.PATTERN_VIOLATION_ERROR_MESSAGE)
     public LanguageMap getPatternViolationErrorMessage() {
         return patternViolationErrorMessage;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.PLACEHOLDER)
     public LanguageMap getPlaceholder() {
         return placeholder;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.STRING_TYPE)
     public StringType getStringType() {
         return stringType;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.SPECIFIC_LANG_TAG)
     public String getSpecificLangTag() {
         return specificLangTag;
     }

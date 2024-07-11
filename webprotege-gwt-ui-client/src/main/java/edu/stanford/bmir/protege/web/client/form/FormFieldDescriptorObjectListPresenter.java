@@ -22,7 +22,7 @@ public class FormFieldDescriptorObjectListPresenter extends ObjectListPresenter<
 
     private static FormFieldDescriptor getDefaultFormFieldDescriptor(UuidV4Provider uuidSupplier) {
         return FormFieldDescriptor.get(
-                FormFieldId.get(uuidSupplier.get()),
+                FormRegionId.get(uuidSupplier.get()),
                 null,
                 LanguageMap.empty(),
                 FieldRun.START,
