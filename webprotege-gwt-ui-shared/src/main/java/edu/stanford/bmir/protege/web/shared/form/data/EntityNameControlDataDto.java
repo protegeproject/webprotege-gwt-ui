@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -23,18 +24,18 @@ public abstract class EntityNameControlDataDto implements FormControlDataDto {
     }
 
     @JsonCreator
-    public static EntityNameControlDataDto get(@JsonProperty("descriptor") @Nonnull EntityNameControlDescriptor descriptor,
-                                               @JsonProperty("entity") @Nonnull OWLEntityData entityData,
-                                               @JsonProperty("depth") int depth) {
+    public static EntityNameControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull EntityNameControlDescriptor descriptor,
+                                               @JsonProperty(PropertyNames.VALUE) @Nonnull OWLEntityData entityData,
+                                               @JsonProperty(PropertyNames.DEPTH) int depth) {
         return new AutoValue_EntityNameControlDataDto(depth, descriptor, entityData);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.CONTROL)
     @Nonnull
     public abstract EntityNameControlDescriptor getDescriptor();
 
     @Nullable
-    @JsonProperty("entity")
+    @JsonProperty(PropertyNames.VALUE)
     protected abstract OWLEntityData getEntityInternal();
 
     @JsonIgnore

@@ -34,7 +34,7 @@ public class FormDataDto_Serialization_TestCase {
                                                       LanguageMap.empty(),
                                                       ImmutableList.of(
                                                               FormFieldDescriptorDto.get(
-                                                                      FormFieldId.get(UUID.randomUUID().toString()),
+                                                                      FormRegionId.get(UUID.randomUUID().toString()),
                                                                       OwlPropertyBinding.get(mockOWLObjectProperty()),
                                                                       LanguageMap.empty(),
                                                                       FieldRun.START,
@@ -57,7 +57,7 @@ public class FormDataDto_Serialization_TestCase {
                                 ImmutableList.of(
                                         FormFieldDataDto.get(
                                             FormFieldDescriptorDto.get(
-                                                    FormFieldId.get(UUID.randomUUID().toString()),
+                                                    FormRegionId.get(UUID.randomUUID().toString()),
                                                     OwlSubClassBinding.get(),
                                                     LanguageMap.empty(),
                                                     FieldRun.START,

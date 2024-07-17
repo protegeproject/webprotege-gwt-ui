@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import javax.annotation.Nonnull;
 
@@ -21,20 +22,23 @@ public abstract class SingleChoiceControlDescriptorDto implements FormControlDes
 
     @JsonCreator
     @Nonnull
-    public static SingleChoiceControlDescriptorDto get(@JsonProperty("widgetType") @Nonnull SingleChoiceControlType widgetType,
-                                                       @JsonProperty("availableChoices") @Nonnull ImmutableList<ChoiceDescriptorDto> availableChoices,
-                                                       @JsonProperty("choiceListSourceDescriptor") @Nonnull ChoiceListSourceDescriptor choiceListSourceDescriptor) {
+    public static SingleChoiceControlDescriptorDto get(@JsonProperty(PropertyNames.WIDGET_TYPE) @Nonnull SingleChoiceControlType widgetType,
+                                                       @JsonProperty(PropertyNames.CHOICES) @Nonnull ImmutableList<ChoiceDescriptorDto> availableChoices,
+                                                       @JsonProperty(PropertyNames.CHOICES_SOURCE) @Nonnull ChoiceListSourceDescriptor choiceListSourceDescriptor) {
         return new AutoValue_SingleChoiceControlDescriptorDto(availableChoices, choiceListSourceDescriptor, widgetType);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.CHOICES)
     public abstract ImmutableList<ChoiceDescriptorDto> getAvailableChoices();
 
 
     @Nonnull
+    @JsonProperty(PropertyNames.CHOICES_SOURCE)
     public abstract ChoiceListSourceDescriptor getChoiceListSourceDescriptor();
 
     @Nonnull
+    @JsonProperty(PropertyNames.WIDGET_TYPE)
     public abstract SingleChoiceControlType getWidgetType();
 
     @Override

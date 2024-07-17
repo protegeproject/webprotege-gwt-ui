@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -16,14 +17,13 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class LiteralFormControlDataMatchCriteria implements PrimitiveFormControlDataMatchCriteria {
 
-    public static final String LITERAL_MATCHES = "literalMatches";
-
+    @JsonCreator
     @Nonnull
-    public static LiteralFormControlDataMatchCriteria get(@Nonnull LiteralCriteria literalCriteria) {
+    public static LiteralFormControlDataMatchCriteria get(@JsonProperty(PropertyNames.CRITERIA) @Nonnull LiteralCriteria literalCriteria) {
         return new AutoValue_LiteralFormControlDataMatchCriteria(literalCriteria);
     }
 
-    @JsonProperty(LITERAL_MATCHES)
+    @JsonProperty(PropertyNames.CRITERIA)
     @Nonnull
     public abstract LiteralCriteria getLexicalValueCriteria();
 

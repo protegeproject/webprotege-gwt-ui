@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import javax.annotation.Nonnull;
 
@@ -16,11 +17,12 @@ public abstract class TextControlDescriptorDto implements FormControlDescriptorD
     public TextControlDescriptorDto(){}
     
     @JsonCreator
-    public static TextControlDescriptorDto get(@JsonProperty("descriptor") @Nonnull TextControlDescriptor descriptor) {
+    public static TextControlDescriptorDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull TextControlDescriptor descriptor) {
         return new AutoValue_TextControlDescriptorDto(descriptor);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract TextControlDescriptor getDescriptor();
 
     @Override

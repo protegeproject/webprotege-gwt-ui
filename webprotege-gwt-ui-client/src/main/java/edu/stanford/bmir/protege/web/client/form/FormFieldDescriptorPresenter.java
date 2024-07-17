@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -35,7 +33,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     @Nonnull
-    private Optional<FormFieldId> formFieldId = Optional.empty();
+    private Optional<FormRegionId> formFieldId = Optional.empty();
 
     @Nonnull
     private LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
@@ -85,9 +83,9 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         if(!formFieldDescriptor.isPresent()) {
             return Optional.empty();
         }
-        FormFieldId formFieldIdToSave = formFieldId.orElseGet(() -> {
+        FormRegionId formFieldIdToSave = formFieldId.orElseGet(() -> {
             String id = uuidV4Provider.get();
-            FormFieldId formFieldId = FormFieldId.get(id);
+            FormRegionId formFieldId = FormRegionId.get(id);
             this.formFieldId = Optional.of(formFieldId);
             return formFieldId;
         });
@@ -110,7 +108,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
 
         if(descriptor.getId().getId().equals("")) {
-            this.formFieldId = Optional.of(FormFieldId.get(uuidV4Provider.get()));
+            this.formFieldId = Optional.of(FormRegionId.get(uuidV4Provider.get()));
         }
         else {
             this.formFieldId = Optional.of(descriptor.getId());

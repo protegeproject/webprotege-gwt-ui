@@ -27,7 +27,7 @@ public class FormFieldPresenter_TestCase {
     private FormFieldView view;
 
     @Mock
-    private FormFieldId fieldId;
+    private FormRegionId fieldId;
 
     @Mock
     private OwlBinding owlBinding;

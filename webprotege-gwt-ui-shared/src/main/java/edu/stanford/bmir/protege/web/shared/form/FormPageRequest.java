@@ -30,27 +30,31 @@ public abstract class FormPageRequest {
 
     @JsonCreator
     @Nonnull
-    public static FormPageRequest get(@JsonProperty("formId") @Nonnull FormId formId,
-                                      @JsonProperty("subject") @Nonnull FormSubject subject,
-                                      @JsonProperty("regionId") @Nonnull FormRegionId formFieldId,
-                                      @JsonProperty("sourceType") @Nonnull SourceType sourceType,
-                                      @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest) {
+    public static FormPageRequest get(@JsonProperty(PropertyNames.FORM_ID) @Nonnull FormId formId,
+                                      @JsonProperty(PropertyNames.SUBJECT) @Nonnull FormSubject subject,
+                                      @JsonProperty(PropertyNames.REGION_ID) @Nonnull FormRegionId formFieldId,
+                                      @JsonProperty(PropertyNames.SOURCE_TYPE) @Nonnull SourceType sourceType,
+                                      @JsonProperty(PropertyNames.PAGE_REQUEST) @Nonnull PageRequest pageRequest) {
         return new AutoValue_FormPageRequest(formId, subject, formFieldId, sourceType, pageRequest);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.FORM_ID)
     public abstract FormId getFormId();
 
     @Nonnull
+    @JsonProperty(PropertyNames.SUBJECT)
     public abstract FormSubject getSubject();
 
-    @JsonProperty("regionId")
+    @JsonProperty(PropertyNames.REGION_ID)
     @Nonnull
     public abstract FormRegionId getFieldId();
 
     @Nonnull
+    @JsonProperty(PropertyNames.SOURCE_TYPE)
     public abstract SourceType getSourceType();
 
     @Nonnull
+    @JsonProperty(PropertyNames.PAGE_REQUEST)
     public abstract PageRequest getPageRequest();
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,14 +23,12 @@ public abstract class FixedChoiceListSourceDescriptor implements ChoiceListSourc
 
     public static final String TYPE = "Fixed";
 
-    private static final String CHOICES = "choices";
-
     @JsonCreator
-    public static FixedChoiceListSourceDescriptor get(@JsonProperty(CHOICES) @Nullable ImmutableList<ChoiceDescriptor> choices) {
+    public static FixedChoiceListSourceDescriptor get(@JsonProperty(PropertyNames.CHOICES) @Nullable ImmutableList<ChoiceDescriptor> choices) {
         return new AutoValue_FixedChoiceListSourceDescriptor(choices == null ? ImmutableList.of() : choices);
     }
 
-    @JsonProperty(CHOICES)
+    @JsonProperty(PropertyNames.CHOICES)
     @Nonnull
     public abstract ImmutableList<ChoiceDescriptor> getChoices();
 }

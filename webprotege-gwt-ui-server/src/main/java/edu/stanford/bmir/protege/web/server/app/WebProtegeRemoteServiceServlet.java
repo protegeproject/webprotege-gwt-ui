@@ -74,7 +74,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        logger.log(Level.SEVERE, e.getMessage());
+        logger.log(Level.SEVERE, e.getMessage(), e);
         if(e instanceof SerializationException) {
             HttpServletResponse response = getThreadLocalResponse();
             response.reset();

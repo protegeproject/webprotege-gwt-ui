@@ -1,0 +1,12 @@
+{
+  "@type": "TextControlData",
+  "control": {
+    "@type": "TEXT",
+    "stringType": "SIMPLE_STRING",
+    "lineMode": "SINGLE_LINE"
+  },
+  "value": {
+    "lang": "en",
+    "value": "Test"
+  }
+}

@@ -15,8 +15,7 @@ import javax.annotation.Nonnull;
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type")
+        include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
                       @JsonSubTypes.Type(value = TextControlDescriptor.class, name = TextControlDescriptor.TYPE),
                       @JsonSubTypes.Type(value = NumberControlDescriptor.class, name = NumberControlDescriptor.TYPE),

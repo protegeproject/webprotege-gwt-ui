@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -20,8 +19,6 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class GridRowData implements Comparable<GridRowData> {
 
-
-    @JsonCreator
     public static GridRowData get(@JsonProperty(PropertyNames.SUBJECT) @Nullable FormEntitySubject subject,
                                   @JsonProperty(PropertyNames.CELLS) @Nonnull ImmutableList<GridCellData> cellData) {
         return new AutoValue_GridRowData(subject, cellData);
@@ -33,6 +30,7 @@ public abstract class GridRowData implements Comparable<GridRowData> {
     protected abstract FormEntitySubject getSubjectInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<FormEntitySubject> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
     }

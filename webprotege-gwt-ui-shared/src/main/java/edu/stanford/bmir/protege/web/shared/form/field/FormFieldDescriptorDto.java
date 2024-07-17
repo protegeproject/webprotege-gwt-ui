@@ -6,32 +6,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.HasFormFieldId;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Optional;
 
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormFieldId, Serializable {
+public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormRegionId {
 
     @JsonCreator
     @Nonnull
-    public static FormFieldDescriptorDto get(@JsonProperty("id") FormFieldId formFieldId,
-                                             @JsonProperty("owlBinding") OwlBinding owlBinding,
-                                               @JsonProperty("label")  LanguageMap newlabel,
-                                              @JsonProperty("fieldRun")   FieldRun fieldRun,
-                                              @JsonProperty("formControlDescriptor")   FormControlDescriptorDto descriptorDto,
-                                              @JsonProperty("optionality")   Optionality optionality,
-                                              @JsonProperty("repeatability")   Repeatability repeatability,
-                                              @JsonProperty("deprecationStrategy")   FormFieldDeprecationStrategy deprecationStrategy,
-                                              @JsonProperty("readOnly")   boolean newReadOnly,
-                                              @JsonProperty("initialExpansionState")   ExpansionState initialExpansionState,
-                                              @JsonProperty("help")   LanguageMap help) {
+    public static FormFieldDescriptorDto get(@JsonProperty(PropertyNames.ID) FormRegionId formFieldId,
+                                             @JsonProperty(PropertyNames.OWL_BINDING) OwlBinding owlBinding,
+                                               @JsonProperty(PropertyNames.LABEL)  LanguageMap newlabel,
+                                              @JsonProperty(PropertyNames.FIELD_RUN)   FieldRun fieldRun,
+                                              @JsonProperty(PropertyNames.CONTROL)   FormControlDescriptorDto descriptorDto,
+                                              @JsonProperty(PropertyNames.OPTIONALITY)   Optionality optionality,
+                                              @JsonProperty(PropertyNames.REPEATABILITY)   Repeatability repeatability,
+                                              @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)   FormFieldDeprecationStrategy deprecationStrategy,
+                                              @JsonProperty(PropertyNames.READ_ONLY)   boolean newReadOnly,
+                                              @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE)   ExpansionState initialExpansionState,
+                                              @JsonProperty(PropertyNames.HELP)   LanguageMap help) {
         return new AutoValue_FormFieldDescriptorDto(formFieldId,
                                                     owlBinding,
                                                     newlabel,
@@ -48,42 +46,52 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
 
     @Nonnull
     @Override
-    @JsonProperty("id")
-    public abstract FormFieldId getId();
+    @JsonProperty(PropertyNames.ID)
+    public abstract FormRegionId getId();
 
-    @JsonIgnore
+    @JsonProperty(PropertyNames.OWL_BINDING)
     @Nullable
     protected abstract OwlBinding getOwlBindingInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<OwlBinding> getOwlBinding() {
         return Optional.ofNullable(getOwlBindingInternal());
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.LABEL)
     public abstract LanguageMap getLabel();
 
     @Nonnull
+    @JsonProperty(PropertyNames.FIELD_RUN)
     public abstract FieldRun getFieldRun();
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract FormControlDescriptorDto getFormControlDescriptor();
 
     @Nonnull
+    @JsonProperty(PropertyNames.OPTIONALITY)
     public abstract Optionality getOptionality();
 
     @Nonnull
+    @JsonProperty(PropertyNames.REPEATABILITY)
     public abstract Repeatability getRepeatability();
 
     @Nonnull
+    @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)
     public abstract FormFieldDeprecationStrategy getDeprecationStrategy();
 
+    @JsonProperty(PropertyNames.READ_ONLY)
     public abstract boolean isReadOnly();
 
     @Nonnull
+    @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE)
     public abstract ExpansionState getInitialExpansionState();
 
     @Nonnull
+    @JsonProperty(PropertyNames.HELP)
     public abstract LanguageMap getHelp();
 
     @JsonIgnore

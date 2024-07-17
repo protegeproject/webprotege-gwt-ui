@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -19,8 +20,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("MultiChoiceControlData")
 public abstract class MultiChoiceControlData implements FormControlData {
 
-    public static MultiChoiceControlData get(@JsonProperty("descriptor") @Nonnull MultiChoiceControlDescriptor descriptor,
-                                             @JsonProperty("values") @Nonnull ImmutableList<PrimitiveFormControlData> values) {
+    public static MultiChoiceControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull MultiChoiceControlDescriptor descriptor,
+                                             @JsonProperty(PropertyNames.VALUES) @Nonnull ImmutableList<PrimitiveFormControlData> values) {
         return new AutoValue_MultiChoiceControlData(descriptor, values);
     }
 
@@ -34,11 +35,11 @@ public abstract class MultiChoiceControlData implements FormControlData {
         visitor.visit(this);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.CONTROL)
     @Nonnull
     public abstract MultiChoiceControlDescriptor getDescriptor();
 
-    @JsonProperty("values")
+    @JsonProperty(PropertyNames.VALUES)
     @Nonnull
     public abstract ImmutableList<PrimitiveFormControlData> getValues();
 }

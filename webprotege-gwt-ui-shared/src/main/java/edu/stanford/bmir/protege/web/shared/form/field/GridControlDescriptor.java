@@ -8,13 +8,11 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -26,7 +24,7 @@ import java.util.stream.Stream;
 @JsonTypeName(GridControlDescriptor.TYPE)
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridControlDescriptor implements FormControlDescriptor, IsSerializable, Serializable {
+public abstract class GridControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "GRID";
 
@@ -42,14 +40,14 @@ public abstract class GridControlDescriptor implements FormControlDescriptor, Is
 
     @JsonCreator
     @Nonnull
-    public static GridControlDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors,
-                                            @Nullable @JsonProperty("subjectFactoryDescriptor") FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+    public static GridControlDescriptor get(@Nonnull @JsonProperty(PropertyNames.COLUMNS) ImmutableList<GridColumnDescriptor> columnDescriptors,
+                                            @Nullable @JsonProperty(PropertyNames.SUBJECT_FACTORY) FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
         return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors,
                                                    subjectFactoryDescriptor == null ? FormSubjectFactoryDescriptor.get(
-                                                           EntityType.NAMED_INDIVIDUAL, null, Optional.empty()) : subjectFactoryDescriptor);
+                                                           EntityType.CLASS, null, Optional.empty()) : subjectFactoryDescriptor);
     }
 
-    @JsonProperty("columns")
+    @JsonProperty(PropertyNames.COLUMNS)
     @Nonnull
     public abstract ImmutableList<GridColumnDescriptor> getColumns();
 
@@ -68,10 +66,11 @@ public abstract class GridControlDescriptor implements FormControlDescriptor, Is
     }
 
 
-    @JsonIgnore
+    @JsonProperty(PropertyNames.SUBJECT_FACTORY)
     @Nullable
     protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
 
+    @JsonIgnore
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
     }
@@ -89,8 +88,8 @@ public abstract class GridControlDescriptor implements FormControlDescriptor, Is
      * have nested columns then the column will map to itself.
      */
     @JsonIgnore
-    public ImmutableMap<GridColumnId, GridColumnId> getLeafColumnToTopLevelColumnMap() {
-        ImmutableMap.Builder<GridColumnId, GridColumnId> builder = ImmutableMap.builder();
+    public ImmutableMap<FormRegionId, FormRegionId> getLeafColumnToTopLevelColumnMap() {
+        ImmutableMap.Builder<FormRegionId, FormRegionId> builder = ImmutableMap.builder();
         getColumns()
                 .forEach(topLevelColumn -> {
                     topLevelColumn.getLeafColumnDescriptors()
@@ -104,12 +103,12 @@ public abstract class GridControlDescriptor implements FormControlDescriptor, Is
 
     /**
      * Gets the index of the specified columnId.
-     * @param columnId The {@link GridColumnId}
+     * @param columnId The {@link FormRegionId}
      * @return The column index of the specified column Id.  A value of -1 is returned if the
-     * {@link GridColumnId} does not identify a column in this grid.
+     * {@link FormRegionId} does not identify a column in this grid.
      */
     @JsonIgnore
-    public int getColumnIndex(GridColumnId columnId) {
+    public int getColumnIndex(FormRegionId columnId) {
         ImmutableList<GridColumnDescriptor> columns = getColumns();
         for(int i = 0; i < columns.size(); i++) {
             if(columns.get(i).getId().equals(columnId)) {

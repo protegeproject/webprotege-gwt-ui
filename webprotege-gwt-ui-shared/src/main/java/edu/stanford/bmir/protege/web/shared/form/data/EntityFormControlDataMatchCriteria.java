@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 
 import javax.annotation.Nonnull;
@@ -16,13 +17,12 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class EntityFormControlDataMatchCriteria implements PrimitiveFormControlDataMatchCriteria {
 
-    public static final String ENTITY_MATCHES = "entityMatches";
-
-    public static EntityFormControlDataMatchCriteria get(@Nonnull EntityMatchCriteria entityMatchCriteria) {
+    @JsonCreator
+    public static EntityFormControlDataMatchCriteria get(@JsonProperty(PropertyNames.CRITERIA) @Nonnull EntityMatchCriteria entityMatchCriteria) {
         return new AutoValue_EntityFormControlDataMatchCriteria(entityMatchCriteria);
     }
 
-    @JsonProperty(ENTITY_MATCHES)
+    @JsonProperty(PropertyNames.CRITERIA)
     public abstract EntityMatchCriteria getEntityMatchCriteria();
 
     @Override

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.*;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ public class SubFormControlDescriptor implements FormControlDescriptor {
     private SubFormControlDescriptor() {
     }
 
-    public SubFormControlDescriptor(@Nonnull FormDescriptor formDescriptor) {
+    public SubFormControlDescriptor(@JsonProperty(PropertyNames.FORM) @Nonnull FormDescriptor formDescriptor) {
         this.formDescriptor = checkNotNull(formDescriptor);
     }
 
@@ -45,11 +45,12 @@ public class SubFormControlDescriptor implements FormControlDescriptor {
 
     @Nonnull
     @Override
+    @JsonIgnore
     public String getAssociatedType() {
         return TYPE;
     }
 
-    @JsonUnwrapped
+    @JsonProperty(PropertyNames.FORM)
     public FormDescriptor getFormDescriptor() {
         return formDescriptor;
     }

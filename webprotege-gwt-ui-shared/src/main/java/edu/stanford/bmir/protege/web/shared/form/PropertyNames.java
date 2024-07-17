@@ -9,7 +9,7 @@ public interface PropertyNames {
 
     String DESCRIPTOR = "descriptor";
 
-    String CONTROL = "formControlDescriptor";
+    String CONTROL = "control";
 
     String CRITERIA = "criteria";
 

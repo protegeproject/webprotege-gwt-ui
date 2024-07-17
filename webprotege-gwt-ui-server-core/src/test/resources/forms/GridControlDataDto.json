@@ -1,0 +1,18 @@
+{
+  "@type": "GridControlDataDto",
+  "depth": 3,
+  "control": {
+    "@type": "GRID",
+    "columns": [],
+    "subjectFactory": null
+  },
+  "rows": {
+    "pageElements": [],
+    "pageSize": 0,
+    "totalElements": 0,
+    "pageNumber": 1,
+    "pageCount": 1
+  },
+  "ordering": [],
+  "filterState": "FILTERED"
+}

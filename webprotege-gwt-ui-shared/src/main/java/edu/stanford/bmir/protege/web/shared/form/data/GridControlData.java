@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -23,9 +21,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("GridControlData")
 public abstract class GridControlData implements ComplexFormControlValue {
 
-    @JsonCreator
     @Nonnull
-    public static GridControlData get(@JsonProperty(PropertyNames.DESCRIPTOR) @Nonnull GridControlDescriptor descriptor,
+    public static GridControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull GridControlDescriptor descriptor,
                                       @JsonProperty(PropertyNames.ROWS) @Nonnull Page<GridRowData> rows,
                                       @JsonProperty(PropertyNames.ORDERING) @Nonnull ImmutableSet<FormRegionOrdering> ordering) {
         return new AutoValue_GridControlData(descriptor, rows, ordering);
@@ -41,15 +38,12 @@ public abstract class GridControlData implements ComplexFormControlValue {
         visitor.visit(this);
     }
 
-    @JsonProperty(PropertyNames.DESCRIPTOR)
     @Nonnull
     public abstract GridControlDescriptor getDescriptor();
 
-    @JsonProperty(PropertyNames.ROWS)
     @Nonnull
     public abstract Page<GridRowData> getRows();
 
-    @JsonProperty(PropertyNames.ORDERING)
     @Nonnull
     public abstract ImmutableSet<FormRegionOrdering> getOrdering();
 }

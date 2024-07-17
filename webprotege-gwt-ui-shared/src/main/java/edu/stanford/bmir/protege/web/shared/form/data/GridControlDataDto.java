@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.form.FilterState;
-import edu.stanford.bmir.protege.web.shared.form.HasFilterState;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -25,21 +24,24 @@ public abstract class GridControlDataDto implements FormControlDataDto, HasFilte
 
     @JsonCreator
     @Nonnull
-    public static GridControlDataDto get(@JsonProperty("descriptor") @Nonnull GridControlDescriptor descriptor,
-                                         @JsonProperty("rows") @Nonnull Page<GridRowDataDto> rows,
-                                         @JsonProperty("ordering") @Nonnull ImmutableSet<FormRegionOrdering> ordering,
-                                         @JsonProperty("depth") int depth,
-                                         @JsonProperty("filterState") @Nonnull FilterState filterState) {
+    public static GridControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull GridControlDescriptor descriptor,
+                                         @JsonProperty(PropertyNames.ROWS) @Nonnull Page<GridRowDataDto> rows,
+                                         @JsonProperty(PropertyNames.ORDERING) @Nonnull ImmutableSet<FormRegionOrdering> ordering,
+                                         @JsonProperty(PropertyNames.DEPTH) int depth,
+                                         @JsonProperty(PropertyNames.FILTER_STATE) @Nonnull FilterState filterState) {
         return new AutoValue_GridControlDataDto(depth, descriptor, rows, ordering, filterState);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract GridControlDescriptor getDescriptor();
 
     @Nonnull
+    @JsonProperty(PropertyNames.ROWS)
     public abstract Page<GridRowDataDto> getRows();
 
     @Nonnull
+    @JsonProperty(PropertyNames.ORDERING)
     public abstract ImmutableSet<FormRegionOrdering> getOrdering();
 
     @Override
@@ -57,6 +59,7 @@ public abstract class GridControlDataDto implements FormControlDataDto, HasFilte
 
     @Nonnull
     @Override
+    @JsonProperty(PropertyNames.FILTER_STATE)
     public abstract FilterState getFilterState();
 
     /**

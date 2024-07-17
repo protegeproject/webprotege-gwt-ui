@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
@@ -18,11 +19,12 @@ import java.util.Optional;
 public abstract class EntityFormControlDataDto extends PrimitiveFormControlDataDto {
 
     @JsonCreator
-    public static EntityFormControlDataDto get(@JsonProperty("entity") @Nonnull OWLEntityData entityData) {
+    public static EntityFormControlDataDto get(@JsonProperty(PropertyNames.ENTITY) @Nonnull OWLEntityData entityData) {
         return new AutoValue_EntityFormControlDataDto(entityData);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.ENTITY)
     public abstract OWLEntityData getEntity();
 
     @Nonnull

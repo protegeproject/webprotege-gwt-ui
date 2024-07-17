@@ -1,28 +1,24 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class GridColumnDescriptorDto implements IsSerializable, Serializable {
+public abstract class GridColumnDescriptorDto {
 
 
     @JsonCreator
     @Nonnull
-    public static GridColumnDescriptorDto get(@JsonProperty(PropertyNames.ID) @Nonnull GridColumnId columnId,
+    public static GridColumnDescriptorDto get(@JsonProperty(PropertyNames.ID) @Nonnull FormRegionId columnId,
                                               @JsonProperty(PropertyNames.OPTIONALITY) @Nonnull Optionality optionality,
                                               @JsonProperty(PropertyNames.REPEATABILITY) @Nonnull Repeatability repeatability,
                                               @JsonProperty(PropertyNames.OWL_BINDING) @Nullable OwlBinding binding,
@@ -39,7 +35,7 @@ public abstract class GridColumnDescriptorDto implements IsSerializable, Seriali
 
     @Nonnull
     @JsonProperty(PropertyNames.ID)
-    public abstract GridColumnId getId();
+    public abstract FormRegionId getId();
 
     @Nonnull
     @JsonProperty(PropertyNames.OPTIONALITY)
@@ -60,26 +56,26 @@ public abstract class GridColumnDescriptorDto implements IsSerializable, Seriali
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.LABEL)
     public abstract LanguageMap getLabel();
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract FormControlDescriptorDto getFormControlDescriptor();
 
     public GridColumnDescriptor toGridColumnDescriptor() {
-        return GridColumnDescriptor.get(
-                getId(),
-                getOptionality(),
-                getRepeatability(),
-                getOwlBindingInternal(),
-                getLabel(),
-                getFormControlDescriptor().toFormControlDescriptor()
-        );
+        return GridColumnDescriptor.get(getId(),
+                                        getOptionality(),
+                                        getRepeatability(),
+                                        getOwlBindingInternal(),
+                                        getLabel(),
+                                        getFormControlDescriptor().toFormControlDescriptor());
     }
 
     @JsonIgnore
     public int getNestedColumnCount() {
         FormControlDescriptorDto formControlDescriptor = getFormControlDescriptor();
-        if(formControlDescriptor instanceof GridControlDescriptorDto) {
+        if (formControlDescriptor instanceof GridControlDescriptorDto) {
             return ((GridControlDescriptorDto) getFormControlDescriptor()).getNestedColumnCount();
         }
         else {
@@ -91,7 +87,7 @@ public abstract class GridColumnDescriptorDto implements IsSerializable, Seriali
     @JsonIgnore
     public Stream<GridColumnDescriptorDto> getLeafColumnDescriptors() {
         FormControlDescriptorDto formControlDescriptor = getFormControlDescriptor();
-        if(formControlDescriptor instanceof GridControlDescriptorDto) {
+        if (formControlDescriptor instanceof GridControlDescriptorDto) {
             // This is not a leaf column
             return ((GridControlDescriptorDto) formControlDescriptor).getLeafColumns();
         }

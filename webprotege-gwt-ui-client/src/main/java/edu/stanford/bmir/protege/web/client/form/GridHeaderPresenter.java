@@ -29,7 +29,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     private final Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider;
 
     @Nonnull
-    private final Map<GridColumnId, GridHeaderColumnPresenter> columnPresenters = new LinkedHashMap<>();
+    private final Map<FormRegionId, GridHeaderColumnPresenter> columnPresenters = new LinkedHashMap<>();
 
     @Nonnull
     private final LanguageMapCurrentLocaleMapper localeMapper;
@@ -123,7 +123,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         });
     }
 
-    private void handleColumnClicked(GridColumnId id) {
+    private void handleColumnClicked(FormRegionId id) {
         if(!sortingEnabled) {
             return;
         }
@@ -146,17 +146,17 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     }
 
     @Override
-    public void addColumnToFilterList(@Nonnull String columnName, @Nonnull GridColumnId columnId) {
+    public void addColumnToFilterList(@Nonnull String columnName, @Nonnull FormRegionId columnId) {
         view.addColumnToFilterList(columnName, columnId);
     }
 
     @Override
-    public ImmutableSet<GridColumnId> getFilteredColumns() {
+    public ImmutableSet<FormRegionId> getFilteredColumns() {
         return view.getFilteredColumns();
     }
 
     public void updateVisibleColumns() {
-        ImmutableSet<GridColumnId> visibleColumns = columnVisibilityManager.map(GridColumnVisibilityManager::getVisibleColumns)
+        ImmutableSet<FormRegionId> visibleColumns = columnVisibilityManager.map(GridColumnVisibilityManager::getVisibleColumns)
                                                                            .orElse(ImmutableSet.of());
         containersByDescriptor.forEach((columnDescriptor, container) -> {
             boolean visible = !columnDescriptor.isLeafColumnDescriptor()
@@ -183,10 +183,10 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                             .forEach(GridHeaderColumnPresenter::clearSortOrder);
         }
         else {
-            Map<GridColumnId, FormRegionOrdering> orderingsById = new HashMap<>();
+            Map<FormRegionId, FormRegionOrdering> orderingsById = new HashMap<>();
             ordering.stream()
-                    .filter(o -> o.getRegionId() instanceof GridColumnId)
-                    .forEach(o -> orderingsById.put((GridColumnId) o.getRegionId(), o));
+                    .filter(o -> o.getRegionId() instanceof FormRegionId)
+                    .forEach(o -> orderingsById.put((FormRegionId) o.getRegionId(), o));
             this.orderBy = Optional.empty();
             columnPresenters.forEach((columnId, columnPresenter) -> {
                 FormRegionOrdering columnOrdering = orderingsById.get(columnId);

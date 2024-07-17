@@ -29,9 +29,9 @@ public abstract class FormSubjectFactoryDescriptor implements IsSerializable, Se
     }
 
     @JsonCreator
-    public static FormSubjectFactoryDescriptor get(@Nonnull @JsonProperty("entityType") EntityType entityType,
-                                                   @Nullable @JsonProperty("parent") OWLClass parent,
-                                                   @Nonnull @JsonProperty("targetOntologyIri") Optional<IRI> targetOntologyIri) {
+    public static FormSubjectFactoryDescriptor get(@Nonnull @JsonProperty(PropertyNames.ENTITY_TYPE) EntityType entityType,
+                                                   @Nullable @JsonProperty(PropertyNames.PARENT) OWLClass parent,
+                                                   @Nonnull @JsonProperty(PropertyNames.TARGET_ONTOLOGY_IRI) Optional<IRI> targetOntologyIri) {
         return new AutoValue_FormSubjectFactoryDescriptor(entityType,
                                                           parent,
                                                           targetOntologyIri.orElse(null));
@@ -42,6 +42,7 @@ public abstract class FormSubjectFactoryDescriptor implements IsSerializable, Se
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.ENTITY_TYPE)
     public abstract EntityType<?> getEntityType();
 
     /**
@@ -54,13 +55,15 @@ public abstract class FormSubjectFactoryDescriptor implements IsSerializable, Se
         return Optional.ofNullable(getParentInternal());
     }
 
-    @JsonProperty("parent")
+    @JsonProperty(PropertyNames.PARENT)
     @Nullable
     protected abstract OWLClass getParentInternal();
 
+    @JsonProperty(PropertyNames.TARGET_ONTOLOGY_IRI)
     @Nullable
     protected abstract IRI getTargetOntologyIriInternal();
 
+    @JsonIgnore
     @Nonnull
     public Optional<IRI> getTargetOntologyIri() {
         return Optional.ofNullable(getTargetOntologyIriInternal());

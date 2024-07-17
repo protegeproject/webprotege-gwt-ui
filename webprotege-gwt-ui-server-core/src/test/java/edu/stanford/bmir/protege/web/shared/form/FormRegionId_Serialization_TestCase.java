@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import org.junit.Test;
 
@@ -18,11 +16,11 @@ public class FormRegionId_Serialization_TestCase {
 
     @Test
     public void shouldSerializeFormFieldId() throws IOException {
-        JsonSerializationTestUtil.testSerialization(FormFieldId.get(UUID.randomUUID().toString()), FormRegionId.class);
+        JsonSerializationTestUtil.testSerialization(FormRegionId.get(UUID.randomUUID().toString()), FormRegionId.class);
     }
 
     @Test
     public void shouldSerializeGridColumnId() throws IOException {
-        JsonSerializationTestUtil.testSerialization(GridColumnId.get(UUID.randomUUID().toString()), FormRegionId.class);
+        JsonSerializationTestUtil.testSerialization(FormRegionId.get(UUID.randomUUID().toString()), FormRegionId.class);
     }
 }

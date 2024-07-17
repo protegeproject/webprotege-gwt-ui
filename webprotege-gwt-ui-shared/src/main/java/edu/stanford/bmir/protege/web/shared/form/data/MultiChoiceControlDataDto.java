@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -19,17 +20,17 @@ public abstract class MultiChoiceControlDataDto implements FormControlDataDto {
 
     @JsonCreator
     @Nonnull
-    public static MultiChoiceControlDataDto get(@JsonProperty("descriptor") @Nonnull MultiChoiceControlDescriptor descriptor,
-                                                @JsonProperty("values") @Nonnull ImmutableList<PrimitiveFormControlDataDto> values,
-                                                @JsonProperty("depth") int depth) {
+    public static MultiChoiceControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull MultiChoiceControlDescriptor descriptor,
+                                                @JsonProperty(PropertyNames.VALUES) @Nonnull ImmutableList<PrimitiveFormControlDataDto> values,
+                                                @JsonProperty(PropertyNames.DEPTH) int depth) {
         return new AutoValue_MultiChoiceControlDataDto(depth, descriptor, values);
     }
 
-    @JsonProperty("descriptor")
+    @JsonProperty(PropertyNames.CONTROL)
     @Nonnull
     public abstract MultiChoiceControlDescriptor getDescriptor();
 
-    @JsonProperty("values")
+    @JsonProperty(PropertyNames.VALUES)
     @Nonnull
     public abstract ImmutableList<PrimitiveFormControlDataDto> getValues();
 
