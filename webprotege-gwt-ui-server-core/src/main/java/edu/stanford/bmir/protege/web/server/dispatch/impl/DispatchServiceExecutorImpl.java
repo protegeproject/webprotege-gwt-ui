@@ -9,7 +9,11 @@ import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
+import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +78,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl);
                 return DispatchServiceResultContainer.create(result);
             }
+            if(action instanceof GetEntityLinearizationAction) {
+                return DispatchServiceResultContainer.create(GetEntityLinearizationResult.create(IRI.create( "http://id.who.int/icd/entity/2072728114"), objectMapper.readValue(TEST, WhoficEntityLinearizationSpecification.class)));
+            }
             var result = sendRequest(action, executionContext);
             return DispatchServiceResultContainer.create(result);
         }
@@ -137,4 +144,102 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         String env = System.getenv(path);
         return Optional.ofNullable(env);
     }
+
+    private final static String TEST = "{\n" +
+            "  \"linearizationResiduals\": {\n" +
+            "    \"suppressOtherSpecifiedResiduals\": \"true\",\n" +
+            "    \"unspecifiedResidualTitle\": \"Infection, unspecified\"\n" +
+            "  },\n" +
+            "  \"linearizationSpecifications\": [\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"linearizationParent\": \"http://id.who.int/icd/entity/455013390\",\n" +
+            "      \"isIncludedInLinearization\": \"true\",\n" +
+            "      \"isGrouping\": \"true\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/pch\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/research\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/mnh\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/der\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/mus\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"linearizationParent\": \"http://id.who.int/icd/entity/455013390\",\n" +
+            "      \"isIncludedInLinearization\": \"true\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/ner\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/ped\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"linearizationParent\": \"http://id.who.int/icd/entity/455013390\",\n" +
+            "      \"isIncludedInLinearization\": \"true\",\n" +
+            "      \"isGrouping\": \"true\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/mms\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/ocu\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"linearizationParent\": \"http://id.who.int/icd/entity/455013390\",\n" +
+            "      \"isIncludedInLinearization\": \"true\",\n" +
+            "      \"isGrouping\": \"true\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/pcl\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/rar\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/env\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"false\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/oph\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"isAuxiliaryAxisChild\": \"unknown\",\n" +
+            "      \"isIncludedInLinearization\": \"unknown\",\n" +
+            "      \"isGrouping\": \"unknown\",\n" +
+            "      \"linearizationView\": \"http://id.who.int/icd/release/11/icd-o\"\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"whoficEntityIri\": \"http://id.who.int/icd/entity/1435254666\"\n" +
+            "}";
 }

@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:FlexTable ui:field="flexTable">
+        <g:row>
+            <g:customCell>
+                <g:Label ui:field="linearization"/>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="isPartOf"/>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="isGrouping"/>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="linearizationParent"/>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="sortingLabel"/>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="comments"/>
+            </g:customCell>
+        </g:row>
+    </g:FlexTable>
+</ui:UiBinder>
