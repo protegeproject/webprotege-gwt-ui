@@ -131,14 +131,7 @@ import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesServi
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
-import edu.stanford.bmir.protege.web.client.project.ProjectDetailsView;
-import edu.stanford.bmir.protege.web.client.project.ProjectDetailsViewImpl;
-import edu.stanford.bmir.protege.web.client.project.ShowProjectDetailsHandler;
-import edu.stanford.bmir.protege.web.client.project.ShowProjectDetailsHandlerImpl;
-import edu.stanford.bmir.protege.web.client.project.UploadAndMergeAdditionsHandler;
-import edu.stanford.bmir.protege.web.client.project.UploadAndMergeAdditionsHandlerImpl;
-import edu.stanford.bmir.protege.web.client.project.UploadAndMergeHandler;
-import edu.stanford.bmir.protege.web.client.project.UploadAndMergeHandlerImpl;
+import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.EntityDeprecationSettingsView;
 import edu.stanford.bmir.protege.web.client.projectsettings.EntityDeprecationSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.projectsettings.GeneralSettingsView;
@@ -254,6 +247,11 @@ public class ClientProjectModule {
 
     @Provides
     UploadAndMergeHandler provideUploadAndMergeHandler(UploadAndMergeHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
+    UploadAndProcessLinearizationHandler provideUploadAndProcessLinearizationHandler(UploadAndProcessLinearizationHandlerImpl handler) {
         return handler;
     }
 
