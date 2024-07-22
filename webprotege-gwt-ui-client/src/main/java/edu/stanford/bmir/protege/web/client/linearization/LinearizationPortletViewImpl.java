@@ -1,41 +1,48 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckBoxConfig;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
-import edu.stanford.bmir.protege.web.client.form.input.CheckBox;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationSpecification;
 import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView {
     Logger logger = java.util.logging.Logger.getLogger("LinearizationPortletViewImpl");
 
-    private LinearizationPortletView.LinearizationPaneChangedHandler linearizationPaneChangedHandler = () -> {};
-
     private WhoficEntityLinearizationSpecification specification;
-
     @UiField
     HTMLPanel paneContainer;
 
     @UiField
     protected FlexTable flexTable;
 
+    @UiField Button editValuesButton;
+    @UiField Button cancelButton;
 
+    private List<LinearizationTableRow> tableRowList = new ArrayList<>();
+    private Map<String, LinearizationDefinition> linearizationDefinitonMap = new HashMap<>();
+    private Map<String, EntityNode> parentsMap = new HashMap<>();
     private static LinearizationPortletViewImplUiBinder ourUiBinder = GWT.create(LinearizationPortletViewImplUiBinder.class);
+
+    LinearizationTableResourceBundle.LinearizationCss style;
 
     @Inject
     public LinearizationPortletViewImpl() {
+        LinearizationTableResourceBundle.INSTANCE.style().ensureInjected();
+        style = LinearizationTableResourceBundle.INSTANCE.style();
         initWidget(ourUiBinder.createAndBindUi(this));
+        editValuesButton.addClickHandler(event -> setEditable());
+        cancelButton.addClickHandler(event -> setReadOnly());
     }
 
     @Override
@@ -47,52 +54,50 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @Override
     public void dispose() {
         flexTable.removeAllRows();
+        tableRowList = new ArrayList<>();
+        parentsMap = new HashMap<>();
     }
 
     @Override
     public void setWhoFicEntity(WhoficEntityLinearizationSpecification specification) {
         try {
             this.specification = specification;
-            flexTable.setBorderWidth(1);
-            flexTable.setWidget(0, 0, new Label("Linearization"));
-            flexTable.setWidget(0, 1, new Label("Is part of?"));
-            flexTable.setWidget(0, 2, new Label("Is grouping?"));
-            flexTable.setWidget(0, 3, new Label("Linearization parent"));
-            flexTable.setWidget(0, 4, new Label("Sorting Label"));
-            flexTable.setWidget(0, 5, new Label("Comments"));
-            flexTable.getRowFormatter().setStyleName(0, "customRowStyle");
+            flexTable.setStyleName(style.getLinearizationTable());
 
-            for(int i = 0; i < this.specification.getLinearizationSpecifications().size(); i ++ ){
-                //LinearizationSpecificationRowPresenter row = new LinearizationSpecificationRowPresenter(this.specification.getLinearizationSpecifications().get(i));
-                LinearizationSpecification linearizationSpecification = this.specification.getLinearizationSpecifications().get(i);
+            initializeTableHeader();
 
-                flexTable.setWidget(i+1, 0, new Label(linearizationSpecification.getLinearizationView()));
-                CheckBox isIncluded = new CheckBox();
-                isIncluded.setValue(getValueOutOfString(linearizationSpecification.getIsIncludedInLinearization()));
-
-                CheckBox isPartOfGroup = new CheckBox();
-                isPartOfGroup.setValue(getValueOutOfString(linearizationSpecification.getIsGrouping()));
-
-                CheckboxValue unknown = new CheckboxValue(UNKNOWN_SVG, "UNKNOWN");
-                LinkedList<CheckboxValue> e = new LinkedList<>();
-                e.add(new CheckboxValue(X_SVG, "FALSE"));
-                e.add(new CheckboxValue(CHECK_SVG, "TRUE"));
-                e.add(unknown);
-
-                CheckBoxConfig checkBoxConfig = new LinearizationCheckboxConfig(e);
-
-                flexTable.setWidget(i+1, 1, isIncluded);
-                flexTable.setWidget(i+1, 2, new ThreeStateCheckbox(checkBoxConfig, unknown));
-                flexTable.setWidget(i+1, 3, new Label(linearizationSpecification.getLinearizationParent()));
-                flexTable.setWidget(i+1, 4, new Label(linearizationSpecification.getSortingLabel()));
-                flexTable.setWidget(i+1, 5, new Label(linearizationSpecification.getCodingNote()));
-
+            if(specification != null){
+                initializeTableRows();
             }
-            logger.info("ALEX " + specification);
+
+            orderAndPopulateViewWithRows();
+
         }catch (Exception e) {
-            logger.info("ALEX EROARE " + e.getMessage() + " stacktrace " + Arrays.toString(e.getStackTrace()));
+            logger.log(Level.SEVERE, "Error while initializing the table " + e);
         }
 
+    }
+
+    @Override
+    public void setLinearizationDefinitonMap(Map<String, LinearizationDefinition> linearizationDefinitonMap) {
+        this.linearizationDefinitonMap = linearizationDefinitonMap;
+    }
+
+    @Override
+    public void setLinearizationParentsMap(Map<String, EntityNode> linearizationParentsMap) {
+        parentsMap = linearizationParentsMap;
+    }
+
+    private void setEditable() {
+        for(LinearizationTableRow row : this.tableRowList) {
+            row.setEnabled();
+        }
+    }
+
+    private void setReadOnly() {
+        for(LinearizationTableRow row : this.tableRowList) {
+            row.setReadOnly();
+        }
     }
 
 
@@ -101,26 +106,46 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     }
 
 
-    private Boolean getValueOutOfString(String s){
-
-        return "true".equalsIgnoreCase(s);
+    private void addHeaderCell(String headerText, int column) {
+        Widget headerCell = new Label(headerText);
+        flexTable.setWidget(0, column, headerCell);
+        flexTable.getCellFormatter().addStyleName(0, column, style.getTableText());
     }
 
-    private final String CHECK_SVG = "<svg width=\"14px\" height=\"14px\">\n" +
-            "                <rect class=\"wp-checkbox__input__box\"\n" +
-            "                      x=\"1\" y=\"1\"\n" +
-            "                      width=\"12\" height=\"12\"\n" +
-            "                      rx=\"2\" ry=\"2\"/>\n" +
-            "                <path class=\"wp-checkbox__input__check-mark\"\n" +
-            "                      d=\"M3.5 7\n" +
-            "                         L6 11\n" +
-            "                         L10.5 3.5\"\n" +
-            "                      fill=\"none\"\n" +
-            "                      stroke-linejoin=\"round\"\n" +
-            "                      stroke-linecap=\"round\"/>\n" +
-            "            </svg>";
-    private final String X_SVG = "<svg fill=\"#ff2424\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\" stroke=\"#ff2424\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M18.8,16l5.5-5.5c0.8-0.8,0.8-2,0-2.8l0,0C24,7.3,23.5,7,23,7c-0.5,0-1,0.2-1.4,0.6L16,13.2l-5.5-5.5 c-0.8-0.8-2.1-0.8-2.8,0C7.3,8,7,8.5,7,9.1s0.2,1,0.6,1.4l5.5,5.5l-5.5,5.5C7.3,21.9,7,22.4,7,23c0,0.5,0.2,1,0.6,1.4 C8,24.8,8.5,25,9,25c0.5,0,1-0.2,1.4-0.6l5.5-5.5l5.5,5.5c0.8,0.8,2.1,0.8,2.8,0c0.8-0.8,0.8-2.1,0-2.8L18.8,16z\"></path> </g></svg>";
+    private void addWideHeaderCell(String headerText, int column) {
+        addHeaderCell(headerText,column);
+        flexTable.getCellFormatter().addStyleName(0, column, style.getWideColumn());
+    }
 
-    private final String UNKNOWN_SVG = "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M12 19H12.01M8.21704 7.69689C8.75753 6.12753 10.2471 5 12 5C14.2091 5 16 6.79086 16 9C16 10.6565 14.9931 12.0778 13.558 12.6852C12.8172 12.9988 12.4468 13.1556 12.3172 13.2767C12.1629 13.4209 12.1336 13.4651 12.061 13.6634C12 13.8299 12 14.0866 12 14.6L12 16\" stroke=\"#828282\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>";
+    private void initializeTableHeader() {
+        addHeaderCell("Linearization",  0);
+        addHeaderCell("Is part of?",  1);
+        addHeaderCell("Is grouping?",2);
+        addHeaderCell("Aux.ax.child?", 3);
+        addWideHeaderCell("Linearization parent", 4);
+        addWideHeaderCell("Coding notes", 5);
+        flexTable.getRowFormatter().addStyleName(0, style.getLinearizationHeader());
+    }
+
+    private void orderAndPopulateViewWithRows() {
+        List<LinearizationTableRow> orderedRows = tableRowList.stream()
+                .sorted((o1, o2) -> o1.getLinearizationDefinition().getSortingCode().compareToIgnoreCase(o2.getLinearizationDefinition().getSortingCode()))
+                .collect(Collectors.toList());
+
+        for(int i = 0; i < orderedRows.size(); i ++) {
+            flexTable.getRowFormatter().addStyleName(i+1, style.customRowStyle());
+            orderedRows.get(i).populateFlexTable(i+1, flexTable);
+        }
+    }
+
+    private void initializeTableRows() {
+        for(LinearizationSpecification linearizationSpecification: this.specification.getLinearizationSpecifications()){
+            LinearizationDefinition definition = linearizationDefinitonMap.get(linearizationSpecification.getLinearizationView());
+            if(definition != null) {
+                LinearizationTableRow row = new LinearizationTableRow(definition, linearizationSpecification, this.parentsMap.get(linearizationSpecification.getLinearizationParent()));
+                tableRowList.add(row);
+            }
+        }
+    }
 
 }

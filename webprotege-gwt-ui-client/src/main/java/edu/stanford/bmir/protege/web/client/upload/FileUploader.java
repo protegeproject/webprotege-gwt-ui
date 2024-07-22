@@ -42,7 +42,7 @@ public class FileUploader {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", endPoint, true);
         var authHeader = "Bearer " + token;
-        xhr.setRequestHeader('Authorization', authHeader);
+        xhr.setRequestHeader('Authorization', "Bearer " + token);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if(xhr.status === 200) {

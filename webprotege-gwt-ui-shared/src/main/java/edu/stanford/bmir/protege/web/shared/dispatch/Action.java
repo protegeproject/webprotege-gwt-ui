@@ -18,10 +18,7 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -228,7 +225,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
-        @Type(value = GetEntityLinearizationAction.class)
+        @Type(value = GetEntityLinearizationAction.class),
+        @Type(value = GetRenderedOwlEntitiesAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

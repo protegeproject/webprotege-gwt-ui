@@ -33,7 +33,6 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
         view.addKeyUpHandler(this::handleKeyUp);
         view.addMouseDownHandler(this::handleMouseDown);
         view.addMouseUpHandler(this::handleMouseUp);
-        logger.info("ALEX configuring the handlers ");
     }
 
 
@@ -54,19 +53,11 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
     }
 
     private void toggleSelected() {
-        logger.info("ALEX incerc sa fac toggle " + view.isReadOnly() + " " + view.isEnabled());
-/*        if(view.isReadOnly() || !view.isEnabled()) {
+        if(view.isReadOnly() || !view.isEnabled()) {
             return;
-        }*/
-        try{
-            CheckboxValue nextSel = config.getNextValue(view.getValue());
-            logger.info("ALEX am gasit nexVal " + nextSel);
-
-            view.setValue(nextSel);
-        }catch (Exception e) {
-            logger.info("ALEX am avut eroare " + e.getMessage() + "   /  " + Arrays.toString(e.getStackTrace()));
         }
-
+        CheckboxValue nextSel = config.getNextValue(view.getValue());
+        view.setValue(nextSel);
     }
 
     @Override
@@ -125,7 +116,6 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        logger.info("ALEX setez readonly din Presenter " + readOnly);
         view.setReadOnly(readOnly);
     }
 

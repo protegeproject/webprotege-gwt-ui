@@ -6,6 +6,9 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
 import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
@@ -17,10 +20,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENT;
 
@@ -38,12 +41,15 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
     private Optional<PortletUi> portletUi = Optional.empty();
     private Optional<OWLEntity> displayedEntity = Optional.empty();
 
-    private Optional<List<LinearizationDefinition>> definitionList = Optional.empty();
+    private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
+
+    private Map<String, EntityNode> parentsMap = new HashMap<>();
 
     private DispatchServiceManager dispatch;
 
     @Nonnull
     private final HierarchyFieldView hierarchyFieldView;
+
     @Inject
     public LinearizationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                          @Nonnull ProjectId projectId,
@@ -51,7 +57,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                                          @Nonnull DispatchServiceManager dispatch,
                                          @Nonnull HierarchyFieldView hierarchyFieldView,
                                          @Nonnull LinearizationPortletView view
-                                        ) {
+    ) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.hierarchyFieldView = hierarchyFieldView;
@@ -66,13 +72,15 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
         setDisplaySelectedEntityNameAsSubtitle(true);
 
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
-            this.definitionList = Optional.of(result.getDefinitionList());
+            for (LinearizationDefinition definition : result.getDefinitionList()) {
+                this.definitionMap.put(definition.getWhoficEntityIri(), definition);
+            }
+            view.setLinearizationDefinitonMap(this.definitionMap);
+            handleSetEntity(getSelectedEntity());
         });
 
-        logger.info("ALEX din start portlet " + getSelectedEntity());
-        handleSetEntity(getSelectedEntity());
-
     }
+
     @Override
     protected void handleReloadRequest() {
 
@@ -80,21 +88,41 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        logger.info("ALEX incerc entitatea " + entityData);
 
-        if(entityData.isPresent()) {
+        if (entityData.isPresent()) {
             displayedEntity = entityData;
-            logger.info("ALEX afisez entitatea " + entityData);
-            dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI(), this.getProjectId()), response -> {
-                logger.info("ALEX " + response);
+            dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
+
                 this.view.dispose();
-                this.view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                if (response.getWhoficEntityLinearizationSpecification() != null &&
+                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
+                    Set<String> parentsIris = response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications()
+                            .stream()
+                            .map(specification -> specification.getLinearizationParent())
+                            .filter(iri -> iri != null && !iri.isEmpty())
+                            .collect(Collectors.toSet());
+
+                    if (!parentsIris.isEmpty()) {
+                        dispatch.execute(GetRenderedOwlEntitiesAction.create(getProjectId(), parentsIris), renderedEntitiesResponse -> {
+                            for (EntityNode data : renderedEntitiesResponse.getRenderedEntities()) {
+                                this.parentsMap.put(data.getEntity().getIRI().toString(), data);
+                            }
+                            view.setLinearizationParentsMap(this.parentsMap);
+                            view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+
+                        });
+                    } else {
+                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                    }
+                }
+
+
             });
-        }
-        else {
+        } else {
             setDisplayedEntity(Optional.empty());
         }
     }
+
     private void handleSetEntity(Optional<OWLEntity> entity) {
         handleAfterSetEntity(entity);
 

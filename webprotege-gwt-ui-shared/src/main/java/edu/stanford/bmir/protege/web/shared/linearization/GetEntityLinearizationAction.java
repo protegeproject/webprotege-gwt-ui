@@ -15,12 +15,13 @@ import org.semanticweb.owlapi.model.IRI;
 @JsonTypeName("webprotege.linearization.GetEntityLinearizations")
 public abstract class GetEntityLinearizationAction implements Action<GetEntityLinearizationResult> {
     @JsonCreator
-    public static GetEntityLinearizationAction create(@JsonProperty("entityIRI") IRI entityIRI,
+    public static GetEntityLinearizationAction create(@JsonProperty("entityIRI") String entityIRI,
                                                       @JsonProperty("projectId") ProjectId projectId) {
         return new AutoValue_GetEntityLinearizationAction(entityIRI, projectId);
     }
 
-    public abstract IRI getEntityIri();
+    @JsonProperty("entityIRI")
+    public abstract String getEntityIri();
 
     public abstract ProjectId getProjectId();
 }

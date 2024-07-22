@@ -847,9 +847,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     SetEntityWatchesResult _SetEntityWatchesResult;
 
-    FilterState _FilterState;
-
-
     SetManchesterSyntaxFrameAction _SetManchesterSyntaxFrameAction;
 
     SetManchesterSyntaxFrameResult _SetManchesterSyntaxFrameResult;
@@ -1016,6 +1013,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityLinearizationResult _GetEntityLinearizationResult;
 
     WhoficEntityLinearizationSpecification _WhoficEntityLinearizationSpecification;
+
+    GetRenderedOwlEntitiesResult _GetRenderedOwlEntitiesResult;
     public RpcWhiteList() {
     }
 }

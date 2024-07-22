@@ -5,12 +5,14 @@
 
 .wp-checkbox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    padding: 1px;
     cursor: pointer;
-    justify-items: start;
+    justify-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
 }
 
 

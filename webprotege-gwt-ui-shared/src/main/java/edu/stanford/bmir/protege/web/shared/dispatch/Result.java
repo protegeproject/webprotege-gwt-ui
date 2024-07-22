@@ -29,10 +29,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdRe
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameResult;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesResult;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
@@ -298,7 +295,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
-        @JsonSubTypes.Type(GetUserInfoResult.class)
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

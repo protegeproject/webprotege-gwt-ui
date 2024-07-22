@@ -38,6 +38,9 @@ public class ConfigurableCheckBoxViewImpl extends Composite implements Configura
     HTMLPanel input;
 
     @UiField
+    HTMLPanel wrapper;
+
+    @UiField
     Label label;
 
     @UiField
@@ -86,6 +89,7 @@ public class ConfigurableCheckBoxViewImpl extends Composite implements Configura
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        wrapper.getElement().setAttribute("enabled",String.valueOf(enabled));
         updateState();
     }
 
@@ -108,7 +112,6 @@ public class ConfigurableCheckBoxViewImpl extends Composite implements Configura
     @Override
     public void setValue(CheckboxValue value, boolean fireEvents) {
         if(this.checkboxValue == null || !this.checkboxValue.equals(value)) {
-        logger.info("ALEX in configurableView schimb " + this.checkboxValue + " cu " + value.getValue() );
             this.checkboxValue = value;
             updateState();
             if (fireEvents) {
@@ -136,8 +139,6 @@ public class ConfigurableCheckBoxViewImpl extends Composite implements Configura
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        logger.info("ALEX setez readonly din view " + readOnly);
-
         this.readOnly = readOnly;
         updateState();
     }

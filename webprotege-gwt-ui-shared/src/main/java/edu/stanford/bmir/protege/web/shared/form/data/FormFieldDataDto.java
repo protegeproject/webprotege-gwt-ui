@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;

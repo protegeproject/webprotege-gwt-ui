@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Logger;
 
 
 /**
@@ -22,6 +23,7 @@ import javax.annotation.Nonnull;
  */
 @AutoFactory
 public class UploadFileDialogController extends WebProtegeOKCancelDialogController<String> {
+    Logger logger = java.util.logging.Logger.getLogger("UploadFileDialogController");
 
     private final DispatchServiceManager dispatch;
 
