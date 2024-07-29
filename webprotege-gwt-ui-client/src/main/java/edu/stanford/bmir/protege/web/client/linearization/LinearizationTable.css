@@ -64,3 +64,16 @@
 .enabledCheckbox {
 
 }
+
+.secondaryParent {
+    color : #A8A8A8;
+}
+
+.linearizationDefinition {
+    justify-self: left!important;
+}
+
+.linearizationDefinition div {
+    justify-content: left;
+    margin-left: 5px;
+}

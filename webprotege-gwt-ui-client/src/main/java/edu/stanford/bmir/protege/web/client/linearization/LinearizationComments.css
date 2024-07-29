@@ -1,0 +1,19 @@
+.linearizationHelp {
+    padding-top: 10px;
+    padding-left: 5px;
+    display: inline-block;
+    color: #909090;
+}
+.linearizationEditor {
+        display: block;
+        border: 1px solid literal("var(--separator--color)");
+}
+
+.linearizationColumn {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: block;
+    min-width: 50px;
+    min-height: 25px;
+}

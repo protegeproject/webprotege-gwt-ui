@@ -34,6 +34,12 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
         @ClassName("enabledCheckbox")
         String getEnabledCheckbox();
 
+        @ClassName("secondaryParent")
+        String getSecondaryParent();
+
+        @ClassName("linearizationDefinition")
+        String getLinearizationDefinition();
+
     }
 
 }

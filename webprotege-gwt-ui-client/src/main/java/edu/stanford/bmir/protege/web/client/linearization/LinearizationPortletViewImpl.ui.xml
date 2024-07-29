@@ -58,6 +58,7 @@
         </g:ScrollPanel>
         <div class="{style.buttonsWrapper}">
             <g:Button ui:field="editValuesButton" addStyleNames="{style.editValuesButton}">Edit values</g:Button>
+            <g:Button ui:field="saveValuesButton" addStyleNames="{style.editValuesButton}">Save values</g:Button>
             <g:Button ui:field="cancelButton" addStyleNames="{style.cancelButton}">Cancel</g:Button>
         </div>
     </g:HTMLPanel>

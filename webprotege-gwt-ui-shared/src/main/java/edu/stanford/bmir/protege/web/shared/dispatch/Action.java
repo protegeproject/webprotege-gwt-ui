@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
 import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
+import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -226,6 +227,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = TranslateEventListAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
+        @Type(value = SaveEntityLinearizationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)

@@ -23,6 +23,8 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
 
     private String sortingCode;
 
+    private String displayLabel;
+
     @GwtSerializationConstructor
     private LinearizationDefinition() {
     }
@@ -32,6 +34,7 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
                                    @JsonProperty("whoficEntityIri") String whoficEntityIri,
                                    @JsonProperty("linearizationMode") String linearizationMode,
                                    @JsonProperty("rootId") String rootId,
+                                   @JsonProperty("DisplayLabel") String displayLabel,
                                    @JsonProperty("coreLinId") String coreLinId,
                                    @JsonProperty("sortingCode") String sortingCode) {
         this.id = id;
@@ -40,6 +43,7 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         this.rootId = rootId;
         this.coreLinId = coreLinId;
         this.sortingCode = sortingCode;
+        this.displayLabel = displayLabel;
     }
 
     public String getId() {
@@ -64,6 +68,10 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
 
     public String getSortingCode() {
         return sortingCode;
+    }
+
+    public String getDisplayLabel() {
+        return displayLabel;
     }
 
     @Override

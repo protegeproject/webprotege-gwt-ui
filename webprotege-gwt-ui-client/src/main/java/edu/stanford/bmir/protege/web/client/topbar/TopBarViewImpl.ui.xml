@@ -36,6 +36,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
         <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
+        <div>iCat - X</div>
         <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
             <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
             <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>

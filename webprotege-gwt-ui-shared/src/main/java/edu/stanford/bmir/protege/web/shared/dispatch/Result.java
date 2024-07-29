@@ -67,6 +67,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
 import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsResult;
+import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationResult;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
@@ -296,6 +297,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)

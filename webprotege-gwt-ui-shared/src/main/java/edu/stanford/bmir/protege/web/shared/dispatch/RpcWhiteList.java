@@ -34,10 +34,7 @@ import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.lang.*;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsResult;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
@@ -1013,6 +1010,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityLinearizationResult _GetEntityLinearizationResult;
 
     WhoficEntityLinearizationSpecification _WhoficEntityLinearizationSpecification;
+
+    SaveEntityLinearizationResult _SaveEntityLinearizationResult;
 
     GetRenderedOwlEntitiesResult _GetRenderedOwlEntitiesResult;
     public RpcWhiteList() {

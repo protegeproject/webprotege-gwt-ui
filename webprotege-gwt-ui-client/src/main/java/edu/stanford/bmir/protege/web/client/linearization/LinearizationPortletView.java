@@ -7,19 +7,17 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Map;
 
 public interface LinearizationPortletView extends AcceptsOneWidget, IsWidget, HasDispose {
-
-    interface LinearizationPaneChangedHandler {
-        void handleLinearizationPaneChanged();
-    }
-
 
     void setWhoFicEntity(WhoficEntityLinearizationSpecification specification);
 
     void setLinearizationDefinitonMap(Map<String, LinearizationDefinition> linearizationDefinitonMap);
 
     void setLinearizationParentsMap(Map<String, EntityNode> linearizationParentsMap);
+
+    void setProjectId(ProjectId projectId);
 }

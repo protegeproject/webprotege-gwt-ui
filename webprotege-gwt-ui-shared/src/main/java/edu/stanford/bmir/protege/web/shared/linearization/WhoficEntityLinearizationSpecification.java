@@ -30,14 +30,19 @@ public class WhoficEntityLinearizationSpecification implements IsSerializable, S
     private WhoficEntityLinearizationSpecification() {
     }
 
+    @JsonProperty("whoficEntityIri")
     public IRI getEntityIRI() {
         return entityIRI;
     }
 
+
+    @JsonProperty("linearizationResiduals")
     public LinearizationResiduals getLinearizationResiduals() {
         return linearizationResiduals;
     }
 
+
+    @JsonProperty("linearizationSpecifications")
     public List<LinearizationSpecification> getLinearizationSpecifications() {
         return linearizationSpecifications;
     }
