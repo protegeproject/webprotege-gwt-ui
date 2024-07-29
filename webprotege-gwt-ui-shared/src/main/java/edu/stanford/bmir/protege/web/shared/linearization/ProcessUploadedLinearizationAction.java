@@ -9,10 +9,14 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
+import static edu.stanford.bmir.protege.web.shared.linearization.ProcessUploadedLinearizationAction.CHANNEL;
+
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.linearization.ProcessUploadedLinearization")
+@JsonTypeName(CHANNEL)
 public abstract class ProcessUploadedLinearizationAction extends AbstractHasProjectAction<ProcessUploadedLinearizationResult> {
+
+    public final static String CHANNEL = "webprotege.linearization.ProcessUploadedLinearization";
 
     @JsonCreator
     public static ProcessUploadedLinearizationAction create(@JsonProperty("projectId") ProjectId projectId,
