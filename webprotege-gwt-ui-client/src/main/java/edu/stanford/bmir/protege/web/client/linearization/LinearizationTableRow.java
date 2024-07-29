@@ -68,7 +68,6 @@ public class LinearizationTableRow {
             this.isAuxAxChildCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
 
             initCodingNotes(linearizationSpecification.getCodingNote());
-            logger.info("ALEX din constructor " + this.commentsWidget);
             this.codingNotes = this.commentsWidget.asWidget();
             this.parentModal = modal;
 
@@ -119,7 +118,6 @@ public class LinearizationTableRow {
 
         this.isAuxAxChildCheckbox.setEnabled(true);
         this.isAuxAxChildCheckbox.setReadOnly(false);
-        logger.info("ALEX din setEnabled " + this.commentsWidget);
 
         this.commentsWidget.enable();
     }
@@ -134,14 +132,12 @@ public class LinearizationTableRow {
 
         this.isAuxAxChildCheckbox.setEnabled(false);
         this.isAuxAxChildCheckbox.setReadOnly(true);
-        logger.info("ALEX din setReadOnly " + this.commentsWidget);
 
         this.commentsWidget.disable();
     }
 
 
     public LinearizationSpecification asLinearizationSpecification(){
-        logger.info("ALEX din asLinearizationSpecification " + this.commentsWidget);
 
         return new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
                 this.isGroupingCheckbox.getValue().getValue(),
@@ -190,7 +186,6 @@ public class LinearizationTableRow {
         clone.isPartOfCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
         clone.isGroupingCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
         clone.isAuxAxChildCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
-        logger.info("ALEX din clone " + this.commentsWidget);
 
         LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal);
 
@@ -201,8 +196,6 @@ public class LinearizationTableRow {
     }
 
     private void initCodingNotes(String value) {
-        logger.info("ALEX din initCodingNotes " + this.commentsWidget);
-
         if(value != null && !value.isEmpty()) {
             this.commentsWidget = new LinearizationComments(value, linearizationCommentsModal);
         } else {

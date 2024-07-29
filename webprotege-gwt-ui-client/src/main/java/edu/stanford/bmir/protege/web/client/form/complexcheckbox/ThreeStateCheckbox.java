@@ -18,9 +18,12 @@ public class ThreeStateCheckbox implements IsWidget, HasValue<CheckboxValue>, Ha
     @Nonnull
     private final ConfigurableCheckBoxPresenter presenter;
 
+    private final CheckBoxConfig checkBoxConfig;
+
     public ThreeStateCheckbox(CheckBoxConfig checkBoxConfig, String initialValue) {
         presenter = new ConfigurableCheckBoxPresenter(new ConfigurableCheckBoxViewImpl());
         presenter.start(container);
+        this.checkBoxConfig = checkBoxConfig;
 
         presenter.setEnabled(checkBoxConfig.isEnabled());
         presenter.setReadOnly(checkBoxConfig.isReadOnly());
@@ -42,6 +45,11 @@ public class ThreeStateCheckbox implements IsWidget, HasValue<CheckboxValue>, Ha
     @Override
     public void setValue(CheckboxValue value) {
         presenter.setValue(value);
+    }
+
+    public void setValue(String value) {
+        CheckboxValue checkboxValue = this.checkBoxConfig.findValue(value);
+        this.setValue(checkboxValue);
     }
 
     @Override

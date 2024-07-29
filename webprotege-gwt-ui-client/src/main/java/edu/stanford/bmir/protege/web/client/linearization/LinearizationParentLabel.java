@@ -49,7 +49,6 @@ public class LinearizationParentLabel implements ClickHandler {
     public void onClick(ClickEvent event) {
         // Handle the click event here
         // For example, you can change the label's text on click
-        logger.info("ALEX am apasat pe " + this.label.getText());
         this.linearizationParentModal.showModal();
     }
 

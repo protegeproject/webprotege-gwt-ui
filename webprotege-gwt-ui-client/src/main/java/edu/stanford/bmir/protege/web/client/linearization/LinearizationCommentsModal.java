@@ -34,7 +34,6 @@ public class LinearizationCommentsModal {
         presenter.setButtonHandler(DialogButton.OK, closer -> {
             closer.closeModal();
             String body = view.getBody();
-           logger.info("ALEX am body " + body);
             acceptBodyConsumer.accept(body);
         });
         modalManager.showModal(presenter);

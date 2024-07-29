@@ -57,11 +57,8 @@ public class LinearizationComments  implements ClickHandler {
         // Handle the click event here
         // For example, you can change the label's text on click
         if(!this.isReadOnly) {
-            logger.info("ALEX am apasat pe " + this.shownWidget.getText());
             Consumer<String> handler = body -> {
-                logger.info("ALEX am primit pe body " + body);
                 this.markDownText = body;
-                logger.info("ALEX bag in label " + stripMarkdown(body));
                 setText(body);
             };
 
