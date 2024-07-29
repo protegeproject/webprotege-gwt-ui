@@ -33,7 +33,7 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithoutOwlBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 null,
                 LanguageMap.empty(),
                 FieldRun.START,
@@ -53,7 +53,7 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithOwlPropertyBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop")), null),
                 LanguageMap.empty(),
                 FieldRun.START,
@@ -74,7 +74,7 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithOwlClassBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 OwlClassBinding.get(),
                 LanguageMap.empty(),
                 FieldRun.START,

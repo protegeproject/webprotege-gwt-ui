@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -22,8 +23,8 @@ import java.util.Optional;
 public abstract class SingleChoiceControlData implements FormControlData {
 
     @JsonCreator
-    public static SingleChoiceControlData get(@JsonProperty("descriptor") @Nonnull SingleChoiceControlDescriptor descriptor,
-                                              @JsonProperty("choice") @Nullable PrimitiveFormControlData choice) {
+    public static SingleChoiceControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull SingleChoiceControlDescriptor descriptor,
+                                              @JsonProperty(PropertyNames.CHOICE) @Nullable PrimitiveFormControlData choice) {
 
         return new AutoValue_SingleChoiceControlData(descriptor, choice);
     }

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>webprotege-gwt-ui</artifactId>
         <groupId>edu.stanford.protege</groupId>
-        <version>5.0.25-WHO</version>
+        <version>6.0.1-WHO</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -113,6 +113,26 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <version>8.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

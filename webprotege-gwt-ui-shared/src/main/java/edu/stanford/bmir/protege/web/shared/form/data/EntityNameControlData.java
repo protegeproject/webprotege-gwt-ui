@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -24,8 +25,8 @@ import java.util.Optional;
 public abstract class EntityNameControlData implements FormControlData {
 
     @JsonCreator
-    public static EntityNameControlData get(@JsonProperty("descriptor") @Nonnull EntityNameControlDescriptor descriptor,
-                                            @Nullable OWLEntity entity) {
+    public static EntityNameControlData get(@JsonProperty(PropertyNames.CONTROL) @Nonnull EntityNameControlDescriptor descriptor,
+                                            @JsonProperty(PropertyNames.ENTITY) @Nullable OWLEntity entity) {
         return new AutoValue_EntityNameControlData(descriptor, entity);
     }
 
@@ -40,10 +41,11 @@ public abstract class EntityNameControlData implements FormControlData {
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract EntityNameControlDescriptor getDescriptor();
 
     @Nullable
-    @JsonProperty("entity")
+    @JsonProperty(PropertyNames.ENTITY)
     protected abstract OWLEntity getEntityInternal();
 
     @JsonIgnore

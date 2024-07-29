@@ -1,0 +1,35 @@
+{
+  "id": "498d8e09-e2a0-43e4-9b83-b13d42e2fa47",
+  "owlBinding": {
+    "@type": "PROPERTY",
+    "property": {
+      "@type": "AnnotationProperty",
+      "iri": "http://example.org"
+    },
+    "criteria": null
+  },
+  "label": {},
+  "fieldRun": "START",
+  "control": {
+    "@type": "ENTITY_NAME",
+    "placeholder": {},
+    "criteria": {
+      "match": "CompositeCriteria",
+      "criteria": [
+        {
+          "match": "EntityTypeIsOneOf",
+          "types": [
+            "Class"
+          ]
+        }
+      ],
+      "matchType": "ALL"
+    }
+  },
+  "repeatability": "NON_REPEATABLE",
+  "optionality": "OPTIONAL",
+  "readOnly": true,
+  "help": {},
+  "deprecationStrategy": "DELETE_VALUES",
+  "initialExpansionState": "COLLAPSED"
+}

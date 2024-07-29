@@ -1,0 +1,22 @@
+{
+  "@type": "SingleChoiceControlDataDto",
+  "depth": 3,
+  "control": {
+    "@type": "SINGLE_CHOICE",
+    "widgetType": "ComboBox",
+    "choicesSource": {
+      "@type": "Fixed",
+      "choices": [
+
+      ]
+    },
+    "defaultChoice": null
+  },
+  "value": {
+    "type": "IriFormControlDataDto",
+    "iri": {
+      "@type": "IRIData",
+      "iri": "http://example.org/A"
+    }
+  }
+}

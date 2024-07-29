@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
 import com.google.common.collect.Range;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -27,10 +29,12 @@ public class NumberControlRange implements IsSerializable {
 
     private BoundType upperBoundType = BoundType.INCLUSIVE;
 
-    private NumberControlRange(double lowerBound,
-                               BoundType lowerBoundType,
-                               double upperBound,
-                               BoundType upperBoundType) {
+    @JsonCreator
+    private NumberControlRange(
+            @JsonProperty(PropertyNames.LOWER_BOUND) double lowerBound,
+            @JsonProperty(PropertyNames.LOWER_BOUND_TYPE)   BoundType lowerBoundType,
+            @JsonProperty(PropertyNames.UPPER_BOUND) double upperBound,
+            @JsonProperty(PropertyNames.UPPER_BOUND_TYPE) BoundType upperBoundType) {
         this.lowerBound = lowerBound;
         this.lowerBoundType = lowerBoundType;
         this.upperBound = upperBound;
@@ -85,18 +89,22 @@ public class NumberControlRange implements IsSerializable {
         );
     }
 
+    @JsonProperty(PropertyNames.LOWER_BOUND)
     public double getLowerBound() {
         return lowerBound;
     }
 
+    @JsonProperty(PropertyNames.LOWER_BOUND_TYPE)
     public BoundType getLowerBoundType() {
         return lowerBoundType;
     }
 
+    @JsonProperty(PropertyNames.UPPER_BOUND)
     public double getUpperBound() {
         return upperBound;
     }
 
+    @JsonProperty(PropertyNames.UPPER_BOUND_TYPE)
     public BoundType getUpperBoundType() {
         return upperBoundType;
     }

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -73,7 +73,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        logger.info(e.getMessage());
+        logger.log(Level.SEVERE, e.getMessage(), e);
         if(e instanceof SerializationException) {
             HttpServletResponse response = getThreadLocalResponse();
             response.reset();

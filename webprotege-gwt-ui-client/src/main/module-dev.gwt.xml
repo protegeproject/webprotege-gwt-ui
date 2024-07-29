@@ -55,6 +55,8 @@
 
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
+    <set-configuration-property name="devModeUrlWhitelistRegexp" value="http://(webprotege-local\.edu|localhost|127\.0\.0\.1)(:\d+)?/.*" />
+
     <entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
 </module>
