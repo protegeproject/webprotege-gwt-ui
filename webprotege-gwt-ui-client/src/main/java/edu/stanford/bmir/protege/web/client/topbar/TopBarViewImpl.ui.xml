@@ -33,7 +33,8 @@
             margin-right: 8px;
         }
         .logoTitle {
-            font-size: 15px;
+            font-size: 18px;
+            margin-top: 4px;
         }
         .logoWrapper {
             display: flex;
