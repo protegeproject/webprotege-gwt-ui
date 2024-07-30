@@ -115,11 +115,14 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
             if(specification != null){
                 initializeTableRows();
+                if(specification.getLinearizationResiduals() != null) {
+                    this.suppressResidual.setValue(specification.getLinearizationResiduals().getSuppressSpecifiedResidual());
+                    this.residualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
+                }
+                orderAndPopulateViewWithRows();
+
             }
 
-            orderAndPopulateViewWithRows();
-            this.suppressResidual.setValue(specification.getLinearizationResiduals().getSuppressSpecifiedResidual());
-            this.residualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
         }catch (Exception e) {
             logger.log(Level.SEVERE, "Error while initializing the table " + e);
         }

@@ -32,12 +32,27 @@
             margin-left: 8px;
             margin-right: 8px;
         }
+        .logoTitle {
+            font-size: 15px;
+        }
+        .logoWrapper {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 5px;
+            color: #08048c;
+            padding-right: 15px;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
-        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
-        <div>iCat - X</div>
+        <div class="{style.logoWrapper}">
+            <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
+            <div class="{style.logoTitle}" >iCAT-X</div>
+        </div>
+
         <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
+            <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
             <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
             <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
             <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
