@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
@@ -16,8 +15,7 @@ import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.pagination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -29,8 +27,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REVERT_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
@@ -109,8 +106,16 @@ public class ChangeListPresenter {
         GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.empty(), pageRequest);
         lastAction = Optional.of(action);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                (projChangeResult) -> {
+                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, null, pageRequest);
+                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> {
+                        fillView(projChangeResult, linChangeResult);
+                    });
+                });
+//        dispatch.execute(action,
+//                         hasBusy,
+//                         this::fillView);
     }
 
     public void displayChangesForEntity(@Nonnull OWLEntity entity) {
@@ -120,8 +125,8 @@ public class ChangeListPresenter {
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.of(entity), pageRequest);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                this::fillView);
     }
 
     public void displayChangesForWatches(@Nonnull UserId userId) {
@@ -130,8 +135,8 @@ public class ChangeListPresenter {
         view.clear();
         GetWatchedEntityChangesAction action = GetWatchedEntityChangesAction.create(projectId, userId);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                this::fillView);
     }
 
     public void clear() {
@@ -142,11 +147,28 @@ public class ChangeListPresenter {
         Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
-                                        viewChanges -> {
-                                            if (viewChanges) {
-                                                insertChangesIntoView(changes);
-                                            }
-                                        });
+                viewChanges -> {
+                    if (viewChanges) {
+                        insertChangesIntoView(changes);
+                    }
+                });
+    }
+
+    private void fillView(HasProjectChanges projChangeResult, HasProjectChanges linChangeResult) {
+        Page<ProjectChange> projChanges = projChangeResult.getProjectChanges();
+        Page<ProjectChange> linChanges = linChangeResult.getProjectChanges();
+        List<ProjectChange> allChanges = new ArrayList<ProjectChange>();
+        allChanges.addAll(projChanges.getPageElements());
+        allChanges.addAll(linChanges.getPageElements());
+        Page<ProjectChange> mergePage = Page.create(1, projChanges.getPageCount() + linChanges.getPageCount(), allChanges, allChanges.size());
+
+        view.clear();
+        permissionChecker.hasPermission(VIEW_CHANGES,
+                viewChanges -> {
+                    if (viewChanges) {
+                        insertChangesIntoView(mergePage);
+                    }
+                });
     }
 
     private void insertChangesIntoView(Page<ProjectChange> changes) {
@@ -173,7 +195,7 @@ public class ChangeListPresenter {
             view.setRevertRevisionVisible(false);
             if (revertChangesVisible) {
                 permissionChecker.hasPermission(REVERT_CHANGES,
-                                                view::setRevertRevisionVisible);
+                        view::setRevertRevisionVisible);
             }
             view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
@@ -212,7 +234,7 @@ public class ChangeListPresenter {
     private void revertChanges(ProjectChange projectChange) {
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
         dispatch.execute(RevertRevisionAction.create(projectId, revisionNumber),
-                         this::handleChangedReverted);
+                this::handleChangedReverted);
     }
 
     private void handleChangedReverted(@Nonnull RevertRevisionResult result) {

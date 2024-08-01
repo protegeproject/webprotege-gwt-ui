@@ -516,6 +516,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetProjectChangesResult _GetProjectChangesResult;
 
+    GetLinearizationChangesAction _GetLinearizationChangesAction;
+
+    GetLinearizationChangesResult _GetLinearizationChangesResult;
+
     GetProjectDetailsAction _GetProjectDetailsAction;
 
     GetProjectDetailsResult _GetProjectDetailsResult;
