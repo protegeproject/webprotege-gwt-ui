@@ -108,7 +108,7 @@ public class ChangeListPresenter {
         dispatch.execute(action,
                 hasBusy,
                 (projChangeResult) -> {
-                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, null, pageRequest);
+                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.empty(), pageRequest);
                     dispatch.execute(linAction, hasBusy, (linChangeResult) -> {
                         fillView(projChangeResult, linChangeResult);
                     });
