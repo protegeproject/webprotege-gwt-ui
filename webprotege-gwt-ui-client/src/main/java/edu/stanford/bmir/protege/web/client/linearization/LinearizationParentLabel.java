@@ -10,8 +10,6 @@ import java.util.logging.Logger;
 
 public class LinearizationParentLabel implements ClickHandler {
 
-    Logger logger = java.util.logging.Logger.getLogger("LinearizationParentLabel");
-
 
     private Label label;
 
