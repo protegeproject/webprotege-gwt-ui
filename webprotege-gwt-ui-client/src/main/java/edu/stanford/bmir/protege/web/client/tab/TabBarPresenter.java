@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -17,23 +17,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormTabBarPresenter {
+public class TabBarPresenter {
 
     @Nonnull
-    private final List<FormTabPresenter> itemPresenters = new ArrayList<>();
+    private final List<TabPresenter> itemPresenters = new ArrayList<>();
 
     @Nonnull
-    private final FormTabBarView view;
+    private final TabBarView view;
 
-    private final FormTabPresenterFactory tabPresenterFactory;
+    private final TabPresenterFactory tabPresenterFactory;
 
-    private SelectedFormChangedHandler selectedFormChangedHandler = () -> {};
+    private SelectedTabChangedHandler selectedTabChangedHandler = () -> {};
 
     @Nonnull
-    private Optional<SelectedFormIdStash> selectedFormIdStash = Optional.empty();
+    private Optional<SelectedTabIdStash> selectedFormIdStash = Optional.empty();
 
     @Inject
-    public FormTabBarPresenter(@Nonnull FormTabBarView view, FormTabPresenterFactory tabPresenterFactory) {
+    public TabBarPresenter(@Nonnull TabBarView view, TabPresenterFactory tabPresenterFactory) {
         this.view = checkNotNull(view);
         this.tabPresenterFactory = checkNotNull(tabPresenterFactory);
     }
@@ -44,13 +44,13 @@ public class FormTabBarPresenter {
         view.setVisible(false);
     }
 
-    public void setSelectedFormChangedHandler(@Nonnull SelectedFormChangedHandler selectedFormChangedHandler) {
-        this.selectedFormChangedHandler = checkNotNull(selectedFormChangedHandler);
+    public void setSelectedFormChangedHandler(@Nonnull SelectedTabChangedHandler selectedTabChangedHandler) {
+        this.selectedTabChangedHandler = checkNotNull(selectedTabChangedHandler);
     }
 
-    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash selectedFormIdStash) {
-        this.selectedFormIdStash = Optional.of(selectedFormIdStash);
-        selectedFormIdStash.getSelectedForm().ifPresent(this::restoreFormSelection);
+    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash selectedTabIdStash) {
+        this.selectedFormIdStash = Optional.of(selectedTabIdStash);
+        selectedTabIdStash.getSelectedForm().ifPresent(this::restoreFormSelection);
     }
 
     private void restoreFormSelection(FormId formId) {
@@ -62,12 +62,12 @@ public class FormTabBarPresenter {
         restoreSelection();
     }
 
-    public void addForm(@Nonnull FormId formId, @Nonnull LanguageMap label, @Nonnull FormContainer formContainer) {
-        FormTabPresenter tabPresenter = tabPresenterFactory.create(formId);
+    public void addForm(@Nonnull FormId formId, @Nonnull LanguageMap label, @Nonnull TabContentContainer tabContentContainer) {
+        TabPresenter tabPresenter = tabPresenterFactory.create(formId);
         itemPresenters.add(tabPresenter);
         view.addView(tabPresenter.getView());
         tabPresenter.setLabel(label);
-        tabPresenter.setFormContainer(formContainer);
+        tabPresenter.setFormContainer(tabContentContainer);
         tabPresenter.setClickHandler(event -> selectFormAndStashId(formId));
         view.setVisible(itemPresenters.size() > 1);
     }
@@ -75,11 +75,11 @@ public class FormTabBarPresenter {
     public void selectFormAndStashId(@Nonnull FormId formId) {
         setSelected(formId);
         selectedFormIdStash.ifPresent(stash -> stash.stashSelectedForm(formId));
-        selectedFormChangedHandler.handleSelectedFormChanged();
+        selectedTabChangedHandler.handleSelectedFormChanged();
     }
 
     private void setSelected(FormId formId) {
-        for (FormTabPresenter ip : itemPresenters) {
+        for (TabPresenter ip : itemPresenters) {
             boolean selected = ip.getFormId().equals(formId);
             ip.setSelected(selected);
         }
@@ -99,13 +99,13 @@ public class FormTabBarPresenter {
     }
 
     public void setFirstFormSelected() {
-        itemPresenters.stream().findFirst().map(FormTabPresenter::getFormId).ifPresent(this::setSelected);
+        itemPresenters.stream().findFirst().map(TabPresenter::getFormId).ifPresent(this::setSelected);
     }
 
     public Optional<FormId> getSelectedForm() {
         return itemPresenters.stream()
-                             .filter(FormTabPresenter::isSelected)
-                             .map(FormTabPresenter::getFormId)
+                             .filter(TabPresenter::isSelected)
+                             .map(TabPresenter::getFormId)
                              .findFirst();
     }
 }

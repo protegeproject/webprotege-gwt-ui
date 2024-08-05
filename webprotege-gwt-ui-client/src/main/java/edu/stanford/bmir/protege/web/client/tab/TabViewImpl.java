@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -19,12 +20,12 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormTabViewImpl extends Composite implements FormTabView {
+public class TabViewImpl extends Composite implements TabView {
 
     public static final String SELECTED_ITEM_STYLE = WebProtegeClientBundle.BUNDLE.style()
                                                                                   .formTabBar__tab__selected();
 
-    interface FormTabViewImplUiBinder extends UiBinder<HTMLPanel, FormTabViewImpl> {
+    interface FormTabViewImplUiBinder extends UiBinder<HTMLPanel, TabViewImpl> {
 
     }
 
@@ -38,7 +39,7 @@ public class FormTabViewImpl extends Composite implements FormTabView {
     private final LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
 
     @Inject
-    public FormTabViewImpl() {
+    public TabViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

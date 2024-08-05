@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 
 import com.google.auto.factory.AutoFactory;
@@ -13,30 +13,23 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 2020-04-27
- *
- * Presents a form
- */
-public class FormTabPresenter {
+public class TabPresenter {
 
     @Nonnull
     private final FormId formId;
 
     @Nonnull
-    private final FormTabView view;
+    private final TabView view;
 
     private boolean selected = false;
 
     @Nonnull
-    private Optional<FormContainer> formContainer = Optional.empty();
+    private Optional<TabContentContainer> formContainer = Optional.empty();
 
     @AutoFactory
     @Inject
-    public FormTabPresenter(@Nonnull FormId formId,
-                            @Provided @Nonnull FormTabView view) {
+    public TabPresenter(@Nonnull FormId formId,
+                        @Provided @Nonnull TabView view) {
         this.formId = checkNotNull(formId);
         this.view = checkNotNull(view);
     }
@@ -46,8 +39,8 @@ public class FormTabPresenter {
         return formId;
     }
 
-    public void setFormContainer(@Nonnull FormContainer formContainer) {
-        this.formContainer = Optional.of(checkNotNull(formContainer));
+    public void setFormContainer(@Nonnull TabContentContainer tabContentContainer) {
+        this.formContainer = Optional.of(checkNotNull(tabContentContainer));
     }
 
     public void setLabel(LanguageMap label) {
@@ -69,7 +62,7 @@ public class FormTabPresenter {
     }
 
     @Nonnull
-    public FormTabView getView() {
+    public TabView getView() {
         return view;
     }
 }

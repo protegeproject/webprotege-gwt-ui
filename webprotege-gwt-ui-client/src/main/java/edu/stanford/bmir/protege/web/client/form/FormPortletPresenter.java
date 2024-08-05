@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -72,7 +73,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         setDisplaySelectedEntityNameAsSubtitle(true);
         entityFormStackPresenter.start(portletUi);
         entityFormStackPresenter.setHasBusy(portletUi);
-        entityFormStackPresenter.setSelectedFormIdStash(new SelectedFormIdStash(portletUi));
+        entityFormStackPresenter.setSelectedFormIdStash(new SelectedTabIdStash(portletUi));
         entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
         entityFormStackPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());

@@ -1,11 +1,11 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-11-13
  */
-interface SelectedFormChangedHandler {
+public interface SelectedTabChangedHandler {
 
     void handleSelectedFormChanged();
 }

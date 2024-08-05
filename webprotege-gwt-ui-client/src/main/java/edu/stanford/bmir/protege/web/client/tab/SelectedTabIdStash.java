@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 import edu.stanford.bmir.protege.web.client.portlet.HasNodeProperties;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -13,14 +13,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class SelectedFormIdStash {
+public class SelectedTabIdStash {
 
     private static final String KEY = "forms-selected-form";
 
     @Nonnull
     private final HasNodeProperties nodeProperties;
 
-    public SelectedFormIdStash(@Nonnull HasNodeProperties nodeProperties) {
+    public SelectedTabIdStash(@Nonnull HasNodeProperties nodeProperties) {
         this.nodeProperties = checkNotNull(nodeProperties);
     }
 
