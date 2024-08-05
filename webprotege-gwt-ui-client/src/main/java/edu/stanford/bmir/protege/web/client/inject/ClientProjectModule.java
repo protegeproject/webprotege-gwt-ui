@@ -5,6 +5,9 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.card.CardPortletView;
+import edu.stanford.bmir.protege.web.client.card.CardPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.card.PortletCardPresenter;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.*;
@@ -941,6 +944,11 @@ public class ClientProjectModule {
 
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CardPortletView provideCardPortletView(CardPortletViewImpl impl) {
         return impl;
     }
 }
