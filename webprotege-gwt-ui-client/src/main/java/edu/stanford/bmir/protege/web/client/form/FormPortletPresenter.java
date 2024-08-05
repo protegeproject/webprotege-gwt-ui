@@ -26,10 +26,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-
-    @Nonnull
-    private final ProjectId projectId;
-
     @Nonnull
     private final EntityFormStackPresenter entityFormStackPresenter;
 
@@ -40,7 +36,6 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
                                 @Nonnull EntityFormStackPresenter entityFormStackPresenter,
                                 DispatchServiceManager dispatch) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
-        this.projectId = checkNotNull(projectId);
         this.entityFormStackPresenter = checkNotNull(entityFormStackPresenter);
     }
 
@@ -73,7 +68,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         setDisplaySelectedEntityNameAsSubtitle(true);
         entityFormStackPresenter.start(portletUi);
         entityFormStackPresenter.setHasBusy(portletUi);
-        entityFormStackPresenter.setSelectedFormIdStash(new SelectedTabIdStash(portletUi));
+        entityFormStackPresenter.setSelectedFormIdStash(new SelectedTabIdStash<>(portletUi, new FormIdTabKeySerializer()));
         entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
         entityFormStackPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());

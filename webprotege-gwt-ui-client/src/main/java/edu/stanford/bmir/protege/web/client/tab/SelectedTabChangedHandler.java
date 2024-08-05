@@ -7,5 +7,9 @@ package edu.stanford.bmir.protege.web.client.tab;
  */
 public interface SelectedTabChangedHandler {
 
-    void handleSelectedFormChanged();
+    /**
+     * Handles the event when the selected tab in the tab bar changes.
+     * This method is called to notify any registered listeners that the selected tab has changed.
+     */
+    void handleSelectedTabChanged();
 }

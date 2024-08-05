@@ -284,7 +284,7 @@ public class EntityFormStackPresenter {
         updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
-    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash formIdStash) {
+    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash<FormId> formIdStash) {
         formStackPresenter.setSelectedFormIdStash(formIdStash);
     }
 
