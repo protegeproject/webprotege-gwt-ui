@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>6.0.3</version>
+        <version>6.0.5</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-server</artifactId>
@@ -238,9 +238,26 @@
                                 <argument>build</argument>
                                 <argument>-f</argument>
                                 <argument>Dockerfile</argument>
+                                <argument>--build-arg</argument>
+                                <argument>JAR_FILE=${project.artifactId}-${project.version}.jar</argument>
                                 <argument>-t</argument>
                                 <argument>protegeproject/${project.artifactId}:${project.version}</argument>
                                 <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>docker-push</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>push</argument>
+                                <argument>protegeproject/${project.artifactId}:${project.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>
