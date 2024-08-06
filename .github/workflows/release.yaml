@@ -38,7 +38,7 @@ jobs:
       - name: Build package
         run: mvn --batch-mode clean package
       - name: Build and push image
-        run: mvn --batch-mode -pl webprotege-gwt-ui-server dockerfile:build dockerfile:push
+        run: mvn --batch-mode -pl webprotege-gwt-ui-server -am package install
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
