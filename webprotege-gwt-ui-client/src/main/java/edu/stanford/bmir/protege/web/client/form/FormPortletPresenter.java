@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -25,10 +26,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-
-    @Nonnull
-    private final ProjectId projectId;
-
     @Nonnull
     private final EntityFormStackPresenter entityFormStackPresenter;
 
@@ -39,7 +36,6 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
                                 @Nonnull EntityFormStackPresenter entityFormStackPresenter,
                                 DispatchServiceManager dispatch) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
-        this.projectId = checkNotNull(projectId);
         this.entityFormStackPresenter = checkNotNull(entityFormStackPresenter);
     }
 
@@ -72,7 +68,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         setDisplaySelectedEntityNameAsSubtitle(true);
         entityFormStackPresenter.start(portletUi);
         entityFormStackPresenter.setHasBusy(portletUi);
-        entityFormStackPresenter.setSelectedFormIdStash(new SelectedFormIdStash(portletUi));
+        entityFormStackPresenter.setSelectedFormIdStash(new SelectedTabIdStash<>(portletUi, new FormIdTabKeySerializer()));
         entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
         entityFormStackPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());

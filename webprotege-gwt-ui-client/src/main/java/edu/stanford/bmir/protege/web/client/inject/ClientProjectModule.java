@@ -53,6 +53,10 @@ import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
+import edu.stanford.bmir.protege.web.client.tab.TabBarView;
+import edu.stanford.bmir.protege.web.client.tab.TabBarViewImpl;
+import edu.stanford.bmir.protege.web.client.tab.TabView;
+import edu.stanford.bmir.protege.web.client.tab.TabViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
@@ -792,12 +796,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormTabBarView provideFormSelectorView(FormTabBarViewImpl impl) {
+    TabBarView provideFormSelectorView(TabBarViewImpl impl) {
         return impl;
     }
 
     @Provides
-    FormTabView provideFormSelectorItemView(FormTabViewImpl impl) {
+    TabView provideFormSelectorItemView(TabViewImpl impl) {
         return impl;
     }
 

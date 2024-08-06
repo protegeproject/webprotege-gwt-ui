@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public interface FormTabBarView extends IsWidget {
+public interface TabBarView extends IsWidget {
 
-    void addView(FormTabView tabView);
+    void addView(TabView tabView);
 
     void clear();
 
