@@ -108,7 +108,6 @@ public class CardPortletPresenter extends AbstractWebProtegePortletPresenter {
                             return null;
                         }
                     };
-                    tabBarPresenter.addForm(FormId.generate(), LanguageMap.of("en", "Stuff"), );
                 });
             }
         });
