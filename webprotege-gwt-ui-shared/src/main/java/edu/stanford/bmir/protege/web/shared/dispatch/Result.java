@@ -219,7 +219,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetPerspectivesResult.class),
         @JsonSubTypes.Type(GetPossibleItemCompletionsResult.class),
         @JsonSubTypes.Type(GetProjectChangesResult.class),
-        @JsonSubTypes.Type(GetLinearizationChangesAction.class),
+        @JsonSubTypes.Type(GetLinearizationChangesResult.class),
         @JsonSubTypes.Type(GetProjectDetailsResult.class),
         @JsonSubTypes.Type(GetProjectEventsResult.class),
         @JsonSubTypes.Type(GetProjectFormDescriptorsResult.class),
