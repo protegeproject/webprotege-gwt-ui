@@ -25,14 +25,17 @@ public class WebProtegeInitializer {
     private static boolean properlyInitialized = false;
 
     private final ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask;
+    private final FetchApplicationEnvVariablesTask fetchApplicationEnvVariablesTask;
 
     @Nonnull
     private final MessageBox messageBox;
 
     @Inject
     protected WebProtegeInitializer(@Nonnull ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask,
+                                    @Nonnull FetchApplicationEnvVariablesTask fetchApplicationEnvVariablesTask,
                                     @Nonnull MessageBox messageBox) {
         this.readLoggedInUserInitializationTask = readLoggedInUserInitializationTask;
+        this.fetchApplicationEnvVariablesTask = fetchApplicationEnvVariablesTask;
         this.messageBox = messageBox;
     }
 
@@ -67,6 +70,7 @@ public class WebProtegeInitializer {
     private void runInitTasks(final AsyncCallback<Void> callback) {
         List<ApplicationInitManager.ApplicationInitializationTask> initTasks = new ArrayList<>();
         initTasks.add(readLoggedInUserInitializationTask);
+        initTasks.add(fetchApplicationEnvVariablesTask);
         ApplicationInitManager initManager = new ApplicationInitManager(initTasks);
         // Run the tasks and mark proper initalization on finish.
         initManager.runTasks(new AsyncCallback<Void>() {

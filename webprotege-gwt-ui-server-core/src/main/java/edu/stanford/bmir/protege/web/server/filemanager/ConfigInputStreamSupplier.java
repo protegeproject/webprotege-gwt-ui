@@ -52,11 +52,11 @@ public class ConfigInputStreamSupplier {
             Path configDirectoryPath = configDirectory.get();
             Path configFilePath = configDirectoryPath.resolve(fileName);
             if(Files.exists(configFilePath)) {
-                logger.info("Loading {} from {}", fileName, configFilePath.toAbsolutePath());
+                logger.debug("Loading {} from {}", fileName, configFilePath.toAbsolutePath());
                 return new BufferedInputStream(Files.newInputStream(configFilePath));
             }
         }
-        logger.info("Loading {} from the class path", fileName);
+        logger.debug("Loading {} from the class path", fileName);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if(inputStream == null) {

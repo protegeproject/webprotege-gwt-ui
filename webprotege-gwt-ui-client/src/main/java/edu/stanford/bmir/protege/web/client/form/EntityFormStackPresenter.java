@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -30,6 +31,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 2020-04-23
  */
 public class EntityFormStackPresenter {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("EntityFormStackPresenter");
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -189,7 +192,8 @@ public class EntityFormStackPresenter {
                                                       ImmutableSet.copyOf(pageRequests),
                                                       langTagFilter,
                                                       orderings,
-                                                      ImmutableSet.copyOf(formFilter),
+                                                      ImmutableSet.of(),
+                                                      //TODO avoid missing on setting to pristine forms, when fixed change to ImmutableSet.copyOf(formFilter),
                                                       filters), hasBusy, this::handleGetEntityFormsResult);
         });
         if (!currentEntity.isPresent()) {
@@ -268,12 +272,16 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        FormDataByFormId editedFormData = formStackPresenter.getFormData();
-        Collection<FormId> editedFormIds = editedFormData.getFormIds();
-        ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
-        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
-                         // Refresh the pristine data to what was committed
-                         result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        try {
+            FormDataByFormId editedFormData = formStackPresenter.getFormData();
+            Collection<FormId> editedFormIds = editedFormData.getFormIds();
+            ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
+            dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+                    // Refresh the pristine data to what was committed
+                    result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        }catch (Exception e) {
+            logger.info("An exception occured " + e);
+        }
     }
 
     private void dropEdits() {

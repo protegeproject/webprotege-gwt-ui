@@ -29,7 +29,7 @@ public class LogOutUserResult implements Result {
     }
 
     @GwtSerializationConstructor
-    private LogOutUserResult() {
+    public LogOutUserResult() {
     }
 
     @Nonnull

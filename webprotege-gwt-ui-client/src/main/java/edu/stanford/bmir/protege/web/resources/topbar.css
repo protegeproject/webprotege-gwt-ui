@@ -11,7 +11,7 @@
     border-bottom: 1px solid literal("var(--alternate--separator-strong--color)");
     padding-top: 1px;
     padding-bottom: 2px;
-    min-height: 2.2em;
+    height: 50px;
 }
 
 .wp-topbar__logo {
@@ -19,11 +19,12 @@
     flex-grow: 0;
     background-image: protegeBlenderUrl;
     background-repeat: no-repeat;
-    background-size: 2em;
-    width: 2em;
-    height: 2em;
-    margin-left: 2px;
+    background-size: cover;
+    width: 35px;
+    height: 35px;
+    margin-left: 10px;
     margin-right: 0.5em;
+
 }
 
 .wp-topbar__content {

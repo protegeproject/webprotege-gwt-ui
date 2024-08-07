@@ -15,6 +15,11 @@ import javax.annotation.Nonnull;
 @JsonTypeName("SingleChoiceControlDescriptorDto")
 public abstract class SingleChoiceControlDescriptorDto implements FormControlDescriptorDto {
 
+
+    public SingleChoiceControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static SingleChoiceControlDescriptorDto get(@JsonProperty(PropertyNames.WIDGET_TYPE) @Nonnull SingleChoiceControlType widgetType,

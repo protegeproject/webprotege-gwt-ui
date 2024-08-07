@@ -19,6 +19,10 @@ import java.util.Optional;
 @JsonTypeName("EntityNameControlDataDto")
 public abstract class EntityNameControlDataDto implements FormControlDataDto {
 
+    public EntityNameControlDataDto(){
+
+    }
+
     @JsonCreator
     public static EntityNameControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull EntityNameControlDescriptor descriptor,
                                                @JsonProperty(PropertyNames.VALUE) @Nonnull OWLEntityData entityData,

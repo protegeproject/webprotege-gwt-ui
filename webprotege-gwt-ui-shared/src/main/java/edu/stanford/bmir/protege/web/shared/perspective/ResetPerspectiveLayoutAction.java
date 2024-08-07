@@ -18,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.perspectives.ResetPerspectiveLayout")
 public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private ProjectId projectId;
 
     private PerspectiveId perspectiveId;
@@ -32,19 +34,22 @@ public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspect
      * @param projectId The project id.
      * @param perspectiveId The perspective id.
      */
-    private ResetPerspectiveLayoutAction(@Nonnull ProjectId projectId, @Nonnull PerspectiveId perspectiveId) {
+    private ResetPerspectiveLayoutAction(@Nonnull ChangeRequestId changeRequestId, @Nonnull ProjectId projectId, @Nonnull PerspectiveId perspectiveId) {
         this.projectId = checkNotNull(projectId);
         this.perspectiveId = checkNotNull(perspectiveId);
+        this.changeRequestId = checkNotNull(changeRequestId);
     }
 
-    public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ProjectId projectId,
+    public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ChangeRequestId changeRequestId,
+                                                                @Nonnull ProjectId projectId,
                                                                 @Nonnull PerspectiveId perspectiveId) {
-        return create(projectId, perspectiveId);
+        return create(changeRequestId, projectId, perspectiveId);
     }
 
-    public static ResetPerspectiveLayoutAction create(@Nonnull ProjectId projectId,
+    public static ResetPerspectiveLayoutAction create(@Nonnull ChangeRequestId changeRequestId,
+                                                      @Nonnull ProjectId projectId,
                                                       @Nonnull PerspectiveId perspectiveId) {
-        return new ResetPerspectiveLayoutAction(projectId, perspectiveId);
+        return new ResetPerspectiveLayoutAction(changeRequestId, projectId, perspectiveId);
     }
 
     @Nonnull
@@ -56,6 +61,10 @@ public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspect
     @Nonnull
     public PerspectiveId getPerspectiveId() {
         return perspectiveId;
+    }
+
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Override

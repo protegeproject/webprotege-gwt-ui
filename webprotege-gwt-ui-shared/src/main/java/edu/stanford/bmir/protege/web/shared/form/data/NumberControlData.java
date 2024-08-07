@@ -25,8 +25,7 @@ import java.util.Optional;
 public abstract class NumberControlData implements FormControlData {
 
     @JsonCreator
-    public static NumberControlData get(@Nonnull NumberControlDescriptor descriptor,
-                                        @Nullable OWLLiteral value) {
+    public static NumberControlData get(@Nonnull @JsonProperty("descriptor") NumberControlDescriptor descriptor,  @JsonProperty("value") @Nullable OWLLiteral value) {
         return new AutoValue_NumberControlData(descriptor, value);
     }
 
@@ -41,6 +40,7 @@ public abstract class NumberControlData implements FormControlData {
     }
 
     @Nonnull
+    @JsonProperty("descriptor")
     public abstract NumberControlDescriptor getDescriptor();
 
     @JsonProperty(PropertyNames.LABEL)

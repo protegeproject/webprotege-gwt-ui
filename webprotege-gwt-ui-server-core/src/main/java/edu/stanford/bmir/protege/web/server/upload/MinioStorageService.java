@@ -44,7 +44,7 @@ public class MinioStorageService implements StorageService {
 
 
         var fileIdentifier = UUID.randomUUID().toString();
-        logger.info("Storing uploaded file ({} MB) with an identifier of {}", getFileSizeInMB(tempFile), fileIdentifier);
+        logger.debug("Storing uploaded file ({} MB) with an identifier of {}", getFileSizeInMB(tempFile), fileIdentifier);
         createBucketIfNecessary();
         uploadObject(tempFile, fileIdentifier);
         return FileSubmissionId.valueOf(fileIdentifier);

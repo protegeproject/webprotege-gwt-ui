@@ -19,7 +19,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
     }
 
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info(WebProtegeMarker, "Initializing WebProtege");
+        logger.debug(WebProtegeMarker, "Initializing WebProtege");
         try {
             ServerComponent serverComponent = DaggerServerComponent.create();
 
@@ -34,8 +34,8 @@ public class WebProtegeServletContextListener implements ServletContextListener 
                           .addMapping("/download");
 
             Runtime runtime = Runtime.getRuntime();
-            logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
-            logger.info(WebProtegeMarker, "WebProtege initialization complete");
+            logger.debug("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
+            logger.debug(WebProtegeMarker, "WebProtege initialization complete");
         } catch (Throwable error) {
             logger.error(WebProtegeMarker, "Encountered an error during initialization: {}", error.getMessage(), error);
             WebProtegeWebAppFilter.setError(error);
@@ -46,8 +46,8 @@ public class WebProtegeServletContextListener implements ServletContextListener 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
         try {
-            logger.info(WebProtegeMarker, "Shutting down WebProtege");
-            logger.info(WebProtegeMarker, "WebProtege shutdown complete");
+            logger.debug(WebProtegeMarker, "Shutting down WebProtege");
+            logger.debug(WebProtegeMarker, "WebProtege shutdown complete");
             // Finally stop logging
             LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
             loggerContext.stop();

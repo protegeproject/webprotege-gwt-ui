@@ -5,9 +5,11 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import static edu.stanford.bmir.protege.web.shared.linearization.ProcessUploadedLinearizationAction.CHANNEL;
+
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.projects.ProcessUploadedLinearization")
+@JsonTypeName(CHANNEL)
 public abstract class ProcessUploadedLinearizationResult implements Result {
 
     @JsonCreator

@@ -7,19 +7,24 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
+import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -62,8 +67,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 return DispatchServiceResultContainer.create(result);
             }
             if(action instanceof GetUserInfoAction) {
-                var websocketUrl = System.getenv("webprotege.websocketUrl");
-                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
+                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
+                return DispatchServiceResultContainer.create(result);
+            }
+            if(action instanceof FetchAppEnvVariables) {
+                var websocketUrl = getEnvVariable("webprotege.websocketUrl").orElse("ws://webprotege-local.edu/wsapps");
+                var logoutUrl = getEnvVariable("webprotege.logoutUrl").orElse("http://webprotege-local.edu/webprotege/logout");
+                var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
+                var fileUploadUrl = getEnvVariable("webprotege.fileUploadurl").orElse("http://webprotege-local.edu");
+                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl);
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);
@@ -107,7 +119,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                         .map(e -> e.getKey() + ": " +  e.getValue())
                         .collect(Collectors.joining("  &&  "));
                 var reason = httpResponse.headers().firstValue("www-authenticate");
-                logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
+                logger.debug("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
                             action.getClass().getSimpleName(),
                             executionContext.getUserId(),
                             headers,
@@ -125,4 +137,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         }
     }
 
+    private Optional<String> getEnvVariable(String path) {
+        String env = System.getenv(path);
+        return Optional.ofNullable(env);
+    }
 }

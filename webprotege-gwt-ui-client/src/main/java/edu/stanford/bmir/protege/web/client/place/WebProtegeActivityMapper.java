@@ -37,6 +37,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -88,9 +89,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     public void start() {
-        logger.info("Started activity mapper.");
+        logger.log(Level.FINE, "Started activity mapper.");
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> {
-            logger.info("User logged out.  Going to the Login Place.");
+            logger.log(Level.FINE, "User logged out.  Going to the Login Place.");
             LoginPlace loginPlace;
             Place currentPlace = placeController.getWhere();
             if (!(currentPlace instanceof LoginPlace)) {
@@ -104,18 +105,18 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     private ClientProjectComponent getClientProjectComponentForProjectAndLoggedInUser(@Nonnull ProjectId projectId) {
-        logger.info("Getting project component for " + projectId + ".  The current project is " + currentClientProjectComponent);
+        logger.log(Level.FINE, "Getting project component for " + projectId + ".  The current project is " + currentClientProjectComponent);
         if(currentClientProjectComponent.isPresent()) {
             ClientProjectComponent projectComponent = currentClientProjectComponent.get();
             if(isProjectComponentForProject(projectComponent, projectId) && isLastUserSameAsLoggedInUser()) {
                 return projectComponent;
             }
-            logger.info("Disposing of project component for " + projectComponent.getProjectId());
+            logger.log(Level.FINE, "Disposing of project component for " + projectComponent.getProjectId());
             projectComponent.dispose();
         }
         ClientProjectComponent nextProjectComponent = instantiateClientProjectComponent(projectId);
         // Reset project component and user
-        logger.info("Instantiating new project component");
+        logger.log(Level.FINE, "Instantiating new project component");
         lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
         currentClientProjectComponent = Optional.of(nextProjectComponent);
         return nextProjectComponent;
@@ -135,10 +136,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     public Activity getActivity(final Place place) {
-        logger.info("Map place: " + place);
+        logger.log(Level.FINE, "Map place: " + place);
         if (shouldRedirectToLogin(place)) {
-            logger.info("User is not logged in.  Redirecting to login.");
-            logger.info("User is not logged in.  Redirecting to login.");
+            logger.log(Level.FINE, "User is not logged in.  Redirecting to login.");
             loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(loginPresenter);
@@ -172,7 +172,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         if (place instanceof LoginPlace) {
             if (!loggedInUserProvider.getCurrentUserId().isGuest()) {
-                logger.info("Schedule to project list after login.");
+                logger.log(Level.FINE, "Schedule to project list after login.");
 
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
@@ -197,7 +197,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
 
         if (place instanceof ProjectListPlace) {
-            logger.info("Route to project list activity");
+            logger.log(Level.FINE, "Route to project list activity");
             return new ProjectListActivity(projectManagerPresenter);
         }
 

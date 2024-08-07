@@ -18,14 +18,12 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -33,6 +31,9 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsActio
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
+import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -224,7 +225,12 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateFrameAction.class),
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
-        @Type(value = TranslateEventListAction.class)
+        @Type(value = TranslateEventListAction.class),
+        @Type(value = GetLinearizationDefinitionsAction.class),
+        @Type(value = GetEntityLinearizationAction.class),
+        @Type(value = GetClassAncestorsAction.class),
+        @Type(value = SaveEntityLinearizationAction.class),
+        @Type(value = GetRenderedOwlEntitiesAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {
