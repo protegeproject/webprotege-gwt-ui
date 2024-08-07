@@ -30,6 +30,8 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsResult;
 import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
@@ -1014,6 +1016,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SaveEntityLinearizationResult _SaveEntityLinearizationResult;
 
     GetRenderedOwlEntitiesResult _GetRenderedOwlEntitiesResult;
+
+    GetClassAncestorsResult _GetClassAncestorsResult;
+
+    AncestorClassHierarchy _AncestorClassHierarchy;
     public RpcWhiteList() {
     }
 }

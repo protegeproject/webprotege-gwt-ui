@@ -1,0 +1,9 @@
+.linearizationParentLabel tr {
+    width : 100%;
+    cursor: pointer;
+}
+
+.parentSelected {
+    background-color: rgb(17, 108, 214);
+    color: white;
+}

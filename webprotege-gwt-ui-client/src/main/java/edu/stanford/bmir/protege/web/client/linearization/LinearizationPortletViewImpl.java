@@ -10,8 +10,10 @@ import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -73,7 +75,20 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private ProjectId projectId;
 
+    private IRI entityIri;
+
     boolean isReadOnly = true;
+
+    private final TableRefresh tableRefresh = (owlEntity) -> {
+        flexTable.removeAllRows();
+        for(LinearizationTableRow row : tableRowList) {
+            row.populateDerivedLinearizationParents(this.tableRowList);
+        }
+        initializeTableHeader();
+
+        orderAndPopulateViewWithRows();
+    };
+
 
     @Inject
     public LinearizationPortletViewImpl(DispatchServiceManager dispatch,
@@ -127,10 +142,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         try {
             this.specification = specification;
             flexTable.setStyleName(style.getLinearizationTable());
-
             initializeTableHeader();
 
             if(specification != null){
+                this.entityIri = specification.getEntityIRI();
+
                 initializeTableRows();
                 if(specification.getLinearizationResiduals() != null) {
                     this.suppressOthersSpecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressedOtherSpecifiedResiduals());
@@ -304,15 +320,22 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                     linearizationSpecification,
                     parentsMap,
                     linearizationParentModal,
-                    commentsModal);
+                    commentsModal,
+                    entityIri,
+                    projectId,
+                    tableRefresh);
             tableRowList.add(row);
         }
         for(LinearizationTableRow row : tableRowList) {
-            row.refreshParents(tableRowList);
+            row.populateDerivedLinearizationParents(tableRowList);
         }
+
+
     }
 
-
+    interface TableRefresh {
+        void refreshTable(OWLEntityData newParent);
+    }
 
 
 }
