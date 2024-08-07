@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityModal;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -290,7 +291,7 @@ public class EntityFormStackPresenter {
         updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
-    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
+    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash<FormId> formIdStash) {
         formStackPresenter.setSelectedFormIdStash(formIdStash);
     }
 
