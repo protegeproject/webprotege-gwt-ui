@@ -163,12 +163,17 @@ public class ChangeListPresenter {
         Page<ProjectChange> mergePage = Page.create(1, projChanges.getPageCount() + linChanges.getPageCount(), allChanges, allChanges.size());
 
         view.clear();
-        permissionChecker.hasPermission(VIEW_CHANGES,
-                viewChanges -> {
-                    if (viewChanges) {
-                        insertChangesIntoView(mergePage);
-                    }
-                });
+        insertChangesIntoView(mergePage);
+/*
+    ToDo:
+        add the permision checks when we have a working history.
+ */
+//        permissionChecker.hasPermission(VIEW_CHANGES,
+//                viewChanges -> {
+//                    if (viewChanges) {
+//                        insertChangesIntoView(mergePage);
+//                    }
+//                });
     }
 
     private void insertChangesIntoView(Page<ProjectChange> changes) {
@@ -193,10 +198,10 @@ public class ChangeListPresenter {
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
             view.setRevertRevisionVisible(false);
-            if (revertChangesVisible) {
-                permissionChecker.hasPermission(REVERT_CHANGES,
-                        view::setRevertRevisionVisible);
-            }
+//            if (revertChangesVisible) {
+//                permissionChecker.hasPermission(REVERT_CHANGES,
+//                        view::setRevertRevisionVisible);
+//            }
             view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
             view.setDownloadRevisionHandler(revisionNumber -> {
