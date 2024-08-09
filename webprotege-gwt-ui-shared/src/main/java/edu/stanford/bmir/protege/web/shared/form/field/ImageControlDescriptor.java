@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Matthew Horridge
@@ -10,7 +12,11 @@ import javax.annotation.Nonnull;
  * 09/04/16
  */
 @JsonTypeName(ImageControlDescriptor.TYPE)
-public class ImageControlDescriptor implements FormControlDescriptor {
+public class ImageControlDescriptor implements FormControlDescriptor, IsSerializable, Serializable {
+
+    public ImageControlDescriptor(){
+
+    }
 
     protected static final String TYPE = "IMAGE";
 

@@ -48,12 +48,6 @@
     <extend-property name="locale" values="de"/>
     <extend-property name="locale" values="sl"/>
     <extend-property name="locale" values="pt"/>
-
-<!--    <set-property name="webprotege.brokerUrl" value="ws://webprotege-local.edu/wsapps"/>
-    <set-property name="webprotege.reconnectDelay" value="5000"/>
-    <set-property name="webprotege.heartbeatIncoming" value="4000"/>
-    <set-property name="webprotege.heartbeatOutgoing" value="4000"/>-->
-
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
     <set-configuration-property name="devModeUrlWhitelistRegexp" value="http://(webprotege-local\.edu|localhost|127\.0\.0\.1)(:\d+)?/.*" />

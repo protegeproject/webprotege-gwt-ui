@@ -172,7 +172,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     public void startPortlet(@Nonnull PortletUi portletUi,
                              @Nonnull WebProtegeEventBus eventBus) {
         portletUi.addAction(createClassAction);
-        portletUi.addAction(deleteClassAction);
+       // portletUi.addAction(deleteClassAction);
         portletUi.addAction(searchActionIcd);
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
@@ -181,8 +181,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         createClassAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
-        deleteClassAction.setRequiresSelection(true);
-        actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
+        /* TODO uncomment this after delete is implemented*/
+       // deleteClassAction.setRequiresSelection(true);
+       // actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
 
         permissionChecker.hasPermission(DELETE_CLASS, deleteClassAction::setVisible);
 

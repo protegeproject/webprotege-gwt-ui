@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.form.FilterState;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 
 import java.io.*;

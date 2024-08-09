@@ -18,7 +18,7 @@ public class CreateEntityFormViewImpl extends Composite implements CreateEntityF
 
     private static CreateEntityFormViewImplUiBinder ourUiBinder = GWT.create(CreateEntityFormViewImplUiBinder.class);
     @UiField
-    SimplePanel formContainer;
+    SimplePanel tabContentContainer;
 
     @Inject
     public CreateEntityFormViewImpl() {
@@ -28,6 +28,6 @@ public class CreateEntityFormViewImpl extends Composite implements CreateEntityF
     @Nonnull
     @Override
     public AcceptsOneWidget getFormsContainer() {
-        return formContainer;
+        return tabContentContainer;
     }
 }

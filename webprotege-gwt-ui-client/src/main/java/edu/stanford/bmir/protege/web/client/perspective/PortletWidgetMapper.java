@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -74,19 +75,19 @@ public class PortletWidgetMapper implements WidgetMapper, HasDispose {
 
     @Override
     public IsWidget getWidget(TerminalNode terminalNode) {
-        logger.info("logger.infoGetting widget for TerminalNode: " + terminalNode);
+        logger.log(Level.FINE, "logger.infoGetting widget for TerminalNode: " + terminalNode);
         ViewHolder cachedViewHolder = nodeId2ViewHolderMap.get(terminalNode.getNodeId());
         if (cachedViewHolder != null) {
-            logger.info("logger.infoUsing cached view: " + terminalNode);
+            logger.log(Level.FINE, "logger.infoUsing cached view: " + terminalNode);
             return cachedViewHolder;
         }
         String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", "");
-        logger.info("logger.infoInstantiate portlet: " + portletClass);
+        logger.log(Level.FINE, "logger.infoInstantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if (!portletClass.isEmpty()) {
             Optional<WebProtegePortletComponents> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
-                logger.info("logger.infoCreated portlet from auto-generated factory");
+                logger.log(Level.FINE, "logger.infoCreated portlet from auto-generated factory");
                 WebProtegePortletComponents portletComponents = thePortlet.get();
                 WebProtegePortletPresenter portletPresenter = portletComponents.getPresenter();
                 viewHolder = createViewHolder(terminalNode,

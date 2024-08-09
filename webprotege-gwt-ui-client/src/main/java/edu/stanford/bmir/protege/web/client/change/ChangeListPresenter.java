@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
@@ -109,8 +108,8 @@ public class ChangeListPresenter {
         GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.empty(), pageRequest);
         lastAction = Optional.of(action);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                this::fillView);
     }
 
     public void displayChangesForEntity(@Nonnull OWLEntity entity) {
@@ -120,8 +119,8 @@ public class ChangeListPresenter {
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.of(entity), pageRequest);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                this::fillView);
     }
 
     public void displayChangesForWatches(@Nonnull UserId userId) {
@@ -130,8 +129,8 @@ public class ChangeListPresenter {
         view.clear();
         GetWatchedEntityChangesAction action = GetWatchedEntityChangesAction.create(projectId, userId);
         dispatch.execute(action,
-                         hasBusy,
-                         this::fillView);
+                hasBusy,
+                this::fillView);
     }
 
     public void clear() {
@@ -142,11 +141,11 @@ public class ChangeListPresenter {
         Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
-                                        viewChanges -> {
-                                            if (viewChanges) {
-                                                insertChangesIntoView(changes);
-                                            }
-                                        });
+                viewChanges -> {
+                    if (viewChanges) {
+                        insertChangesIntoView(changes);
+                    }
+                });
     }
 
     private void insertChangesIntoView(Page<ProjectChange> changes) {
@@ -173,7 +172,7 @@ public class ChangeListPresenter {
             view.setRevertRevisionVisible(false);
             if (revertChangesVisible) {
                 permissionChecker.hasPermission(REVERT_CHANGES,
-                                                view::setRevertRevisionVisible);
+                        view::setRevertRevisionVisible);
             }
             view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
@@ -212,7 +211,7 @@ public class ChangeListPresenter {
     private void revertChanges(ProjectChange projectChange) {
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
         dispatch.execute(RevertRevisionAction.create(projectId, revisionNumber),
-                         this::handleChangedReverted);
+                this::handleChangedReverted);
     }
 
     private void handleChangedReverted(@Nonnull RevertRevisionResult result) {

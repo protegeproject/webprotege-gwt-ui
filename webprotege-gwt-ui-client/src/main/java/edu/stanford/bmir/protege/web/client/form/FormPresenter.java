@@ -151,7 +151,6 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     private void updateFormData(@Nonnull FormDataDto formData) {
-        GWT.log("[FormPresenter] Updating form data");
         this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
         ImmutableList<FormFieldDataDto> nextFormFieldData = formData.getFormFieldData();

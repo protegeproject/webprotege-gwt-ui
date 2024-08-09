@@ -67,7 +67,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         this.projectId = checkNotNull(projectId);
         this.displayNameRenderer = displayNameRenderer;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
-            logger.info("Handling selection changed in " + projectId + " (disposed=" + disposed  + ") in " + portletUi.map(HasViewTitle::getViewTitle).orElse("(not set)"));
+            logger.log(Level.FINE, "Handling selection changed in " + projectId + " (disposed=" + disposed  + ") in " + portletUi.map(HasViewTitle::getViewTitle).orElse("(not set)"));
                                                                                           if (trackSelection) {
                                                                                               handleBeforeSetEntity(e.getPreviousSelection());
                                                                                               handleAfterSetEntity(e.getLastSelection());
@@ -214,7 +214,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     @Override
     public void dispose() {
         disposed = true;
-        logger.info("Disposing of portlet " + getClass().getSimpleName() + " in project " + projectId);
+        logger.log(Level.FINE, "Disposing of portlet " + getClass().getSimpleName() + " in project " + projectId);
         selectionModelHandlerRegistration.removeHandler();
         portletUi.ifPresent(HasDispose::dispose);
     }

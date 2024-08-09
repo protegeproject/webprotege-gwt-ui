@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class FormRegionPageChangedEvent {
 
-    interface FormRegionPageChangedHandler {
+    public interface FormRegionPageChangedHandler {
         void handleFormRegionPageChanged(@Nonnull FormRegionPageChangedEvent event);
     }
 

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.tab.TabContentContainer;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -39,10 +40,10 @@ public class FormStackViewImpl extends Composite implements FormStackView {
 
     @Nonnull
     @Override
-    public FormContainer addContainer(@Nonnull LanguageMap labels) {
+    public TabContentContainer addContainer(@Nonnull LanguageMap labels) {
         FormStackContainer simplePanel = new FormStackContainer();
         container.add(simplePanel);
-        return new FormContainer() {
+        return new TabContentContainer() {
             @Override
             public void setWidget(IsWidget w) {
                 simplePanel.setWidget(w);

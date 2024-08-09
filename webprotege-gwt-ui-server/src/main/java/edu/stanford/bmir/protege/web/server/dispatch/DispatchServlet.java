@@ -105,9 +105,9 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
                     var innerExecutionResult = ActionExecutionResult.get(innerResult);
                     resultList.set(index, innerExecutionResult);
                 } catch (ActionExecutionException e) {
-                    resultList.add(ActionExecutionResult.get(e));
+                    resultList.set(index, ActionExecutionResult.get(e));
                 } catch (PermissionDeniedException e) {
-                    resultList.add(ActionExecutionResult.get(e));
+                    resultList.set(index, ActionExecutionResult.get(e));
                 }
             });
             futures.add(future);

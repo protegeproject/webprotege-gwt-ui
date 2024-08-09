@@ -9,6 +9,12 @@ public class FileUploader {
 
     private static final String END_POINT = "/files/submit";
 
+    private final String fileUploadHostUrl;
+
+    public FileUploader(String fileUploadHostUrl) {
+        this.fileUploadHostUrl = fileUploadHostUrl;
+    }
+
     /**
      * Upload a file that is retrieved from a FileInput element
      * @param fileInputId The Id of the file input element
@@ -20,7 +26,7 @@ public class FileUploader {
                            String token,
                            FileUploadSuccessHandler successHandler,
                            FileUploadErrorHandler errorHandler) {
-        uploadFileNative(fileInputId, END_POINT, token, successHandler, errorHandler);
+        uploadFileNative(fileInputId, fileUploadHostUrl + END_POINT, token, successHandler, errorHandler);
     }
 
     private native void uploadFileNative(String fileInputId, String endPoint, String token,
@@ -35,8 +41,8 @@ public class FileUploader {
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", endPoint, true);
-        var authHeader = "bearer " + token;
-        xhr.setRequestHeader('Authorization', authHeader);
+        var authHeader = "Bearer " + token;
+        xhr.setRequestHeader('Authorization', "Bearer " + token);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if(xhr.status === 200) {
