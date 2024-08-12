@@ -175,7 +175,7 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
 
     @Override
     public void setRevision(RevisionNumber revision) {
-        this.revision = Optional.of(revision);
+        this.revision = Optional.ofNullable(revision);
         updateRevisionButtonState();
     }
 
