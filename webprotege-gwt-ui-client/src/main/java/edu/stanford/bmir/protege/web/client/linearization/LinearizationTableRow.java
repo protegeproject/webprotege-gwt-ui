@@ -232,11 +232,7 @@ public class LinearizationTableRow {
     }
 
     private void handleParentSelected(OWLEntityData owlEntityData) {
-        this.linearizationParent = new LinearizationParentLabel(owlEntityData.getBrowserText(),
-                parentModal,
-                entityIri,
-                projectId,
-                parentSelectedHandler).asWidget();
+        this.linearizationParentLabel.setText(owlEntityData.getBrowserText());
         this.parentIri = owlEntityData.getEntity().getIRI().toString();
         tableRefresh.refreshTable(owlEntityData);
     }
