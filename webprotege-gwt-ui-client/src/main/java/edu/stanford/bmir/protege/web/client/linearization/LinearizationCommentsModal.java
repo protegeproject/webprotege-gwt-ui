@@ -31,7 +31,7 @@ public class LinearizationCommentsModal {
         presenter.setView(view);
         presenter.setEscapeButton(DialogButton.CANCEL);
         presenter.setPrimaryButton(DialogButton.OK);
-        presenter.setTitle("Linearization comments");
+        presenter.setTitle("Coding notes");
         presenter.setButtonHandler(DialogButton.OK, closer -> {
             closer.closeModal();
             String body = view.getBody();
