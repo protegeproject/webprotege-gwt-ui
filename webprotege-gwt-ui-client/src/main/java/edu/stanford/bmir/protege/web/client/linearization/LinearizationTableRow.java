@@ -43,7 +43,6 @@ public class LinearizationTableRow {
 
     private LinearizationParentModal parentModal;
 
-
     private LinearizationCommentsModal linearizationCommentsModal;
 
     private ProjectId projectId;
@@ -207,7 +206,19 @@ public class LinearizationTableRow {
     public LinearizationTableRow clone(){
         LinearizationTableRow clone = new LinearizationTableRow();
         clone.linearizationSpecification = linearizationSpecification;
-        clone.linearizationParent = new Label(this.linearizationParent.getElement().getInnerText());
+
+        if(!isDerived()) {
+            clone.linearizationParentLabel = new LinearizationParentLabel(this.linearizationParent.getElement().getInnerText(),
+                    parentModal,
+                    entityIri,
+                    projectId,
+                    parentSelectedHandler);
+            clone.linearizationParent = clone.linearizationParentLabel.asWidget();
+        } else {
+            clone.linearizationParent = new Label(this.linearizationParent.getElement().getInnerText());
+            clone.linearizationParent.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
+
+        }
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
@@ -232,12 +243,27 @@ public class LinearizationTableRow {
     }
 
     private void handleParentSelected(OWLEntityData owlEntityData) {
-        this.linearizationParentLabel.setText(owlEntityData.getBrowserText());
+        this.linearizationParentLabel = new LinearizationParentLabel(owlEntityData.getBrowserText(),
+                parentModal,
+                entityIri,
+                projectId,
+                parentSelectedHandler);
+        this.linearizationParent = linearizationParentLabel.asWidget();
         this.parentIri = owlEntityData.getEntity().getIRI().toString();
-        tableRefresh.refreshTable(owlEntityData);
+        tableRefresh.refreshTable(this);
     }
 
     private boolean isDerived(){
         return linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "LinearizationTableRow{" +
+                "linearizationDefinitionWidget=" + linearizationDefinitionWidget +
+                ", linearizationParent=" + linearizationParent.getElement().getInnerText() +
+                ", parentIri='" + parentIri + '\'' +
+                ", linearizationParentLabel=" + linearizationParentLabel.getText() +
+                '}';
     }
 }

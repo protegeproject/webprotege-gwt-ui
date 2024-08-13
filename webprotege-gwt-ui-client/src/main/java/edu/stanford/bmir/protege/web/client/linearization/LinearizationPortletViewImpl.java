@@ -79,8 +79,15 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     boolean isReadOnly = true;
 
-    private final TableRefresh tableRefresh = (owlEntity) -> {
+    private final TableRefresh tableRefresh = (linearizationTableRow) -> {
         flexTable.removeAllRows();
+        this.tableRowList = this.tableRowList.stream().map(row -> {
+            if(row.getLinearizationDefinition().getWhoficEntityIri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getWhoficEntityIri())) {
+                return linearizationTableRow;
+            }
+            return row;
+        }).collect(Collectors.toList());
+
         for(LinearizationTableRow row : tableRowList) {
             row.populateDerivedLinearizationParents(this.tableRowList);
         }
@@ -109,14 +116,18 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         cancelButton.setVisible(true);
         editValuesButton.setVisible(true);
 
-        this.suppressOthersSpecifiedResidual.setReadOnly(true);
-        this.suppressUnspecifiedResidual.setReadOnly(true);
-        this.suppressOthersSpecifiedResidual.setEnabled(false);
+        disableResiduals();
+        this.dispatch = dispatch;
+    }
+
+    private void disableResiduals() {
         this.suppressUnspecifiedResidual.setEnabled(false);
+        this.suppressUnspecifiedResidual.setReadOnly(true);
+        this.suppressOthersSpecifiedResidual.setReadOnly(true);
+        this.suppressOthersSpecifiedResidual.setEnabled(false);
+
         this.unspecifiedResidualTitle.setEnabled(false);
         this.otherSpecifiedResidualTitle.setEnabled(false);
-
-        this.dispatch = dispatch;
     }
 
     @Override
@@ -155,7 +166,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                     this.otherSpecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getOtherSpecifiedResidualTitle());
                 }
                 orderAndPopulateViewWithRows();
-
+                disableResiduals();
             }
 
         }catch (Exception e) {
@@ -223,16 +234,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
             this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
 
+            disableResiduals();
             isReadOnly = true;
-            this.unspecifiedResidualTitle.setEnabled(false);
-            this.otherSpecifiedResidualTitle.setEnabled(false);
-
-            this.suppressOthersSpecifiedResidual.setReadOnly(true);
-            this.suppressOthersSpecifiedResidual.setEnabled(false);
-
-            this.suppressUnspecifiedResidual.setReadOnly(true);
-            this.suppressUnspecifiedResidual.setEnabled(false);
-
+            this.backupRows = new ArrayList<>();
             toggleSaveButtons();
         }
 
@@ -247,7 +251,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     interface LinearizationPortletViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationPortletViewImpl> {
 
     }
-
 
     private void addHeaderCell(String headerText, int column) {
         Widget headerCell = new Label(headerText);
@@ -334,7 +337,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     }
 
     interface TableRefresh {
-        void refreshTable(OWLEntityData newParent);
+        void refreshTable(LinearizationTableRow newRow);
     }
 
 
