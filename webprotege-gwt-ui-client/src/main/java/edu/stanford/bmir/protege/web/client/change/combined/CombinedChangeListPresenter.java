@@ -27,6 +27,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
@@ -108,9 +109,7 @@ public class CombinedChangeListPresenter {
                 hasBusy,
                 (projChangeResult) -> {
                     GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.empty(), pageRequest);
-                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> {
-                        fillView(projChangeResult, linChangeResult);
-                    });
+                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
                 });
     }
 
@@ -124,9 +123,7 @@ public class CombinedChangeListPresenter {
                 hasBusy,
                 (projChangeResult) -> {
                     GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.empty(), pageRequest);
-                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> {
-                        fillView(projChangeResult, linChangeResult);
-                    });
+                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
                 });
     }
 
@@ -157,23 +154,18 @@ public class CombinedChangeListPresenter {
         allChanges.addAll(ontologyChanges);
         Page<GeneralProjectChange> totalProjectChanges = Page.create(
                 projChangesPage.getPageNumber(),
-                projChangesPage.getPageCount() + linChangesPage.getPageCount(),
+                Math.max(projChangesPage.getPageCount(), linChangesPage.getPageCount()),
                 allChanges,
                 allChanges.size()
         );
 
         view.clear();
-        insertChangesIntoView(totalProjectChanges);
-/*
-    ToDo:
-        add the permision checks when we have a working history.
- */
-//        permissionChecker.hasPermission(VIEW_CHANGES,
-//                viewChanges -> {
-//                    if (viewChanges) {
-//                        insertChangesIntoView(mergePage);
-//                    }
-//                });
+        permissionChecker.hasPermission(VIEW_CHANGES,
+                viewChanges -> {
+                    if (viewChanges) {
+                        insertChangesIntoView(totalProjectChanges);
+                    }
+                });
     }
 
     private void insertChangesIntoView(Page<GeneralProjectChange> changes) {
@@ -212,10 +204,10 @@ public class CombinedChangeListPresenter {
                     downloader.download();
                 });
                 view.setDownloadRevisionVisible(downloadVisible);
-//                if (revertChangesVisible) {
-//                    permissionChecker.hasPermission(REVERT_CHANGES,
-//                            view::setRevertRevisionVisible);
-//                }
+                if (revertChangesVisible) {
+                    permissionChecker.hasPermission(REVERT_CHANGES,
+                            view::setRevertRevisionVisible);
+                }
             } else {
                 view.setRevision(null);
                 view.setRevertRevisionVisible(false);
