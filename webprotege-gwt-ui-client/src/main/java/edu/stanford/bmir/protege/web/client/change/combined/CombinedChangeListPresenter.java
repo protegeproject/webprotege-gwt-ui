@@ -122,7 +122,7 @@ public class CombinedChangeListPresenter {
         dispatch.execute(action,
                 hasBusy,
                 (projChangeResult) -> {
-                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.empty(), pageRequest);
+                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.of(entity), pageRequest);
                     dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
                 });
     }
