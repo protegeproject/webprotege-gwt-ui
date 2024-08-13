@@ -10,8 +10,10 @@ import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -20,6 +22,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView {
+
+
     Logger logger = java.util.logging.Logger.getLogger("LinearizationPortletViewImpl");
 
     private WhoficEntityLinearizationSpecification specification;
@@ -35,14 +39,24 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @UiField Button saveValuesButton;
 
     @UiField(provided = true)
-    ThreeStateCheckbox suppressResidual;
+    ThreeStateCheckbox suppressOthersSpecifiedResidual;
+
+    @UiField(provided = true)
+    ThreeStateCheckbox suppressUnspecifiedResidual;
 
     @UiField
-    PlaceholderTextBox residualTitle;
+    PlaceholderTextBox unspecifiedResidualTitle;
 
-    String backupTitle;
+    @UiField
+    PlaceholderTextBox otherSpecifiedResidualTitle;
 
-    CheckboxValue backupSuppressResidualValue;
+    String backupUnspecifiedTitle;
+
+    String backupOtherSpecifiedTitle;
+
+    CheckboxValue backupSuppressOtherResidualValue;
+
+    CheckboxValue backupSuppressUnspecifiedResidualValue;
 
 
     private List<LinearizationTableRow> tableRowList = new ArrayList<>();
@@ -61,13 +75,34 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private ProjectId projectId;
 
+    private IRI entityIri;
+
     boolean isReadOnly = true;
+
+    private final TableRefresh tableRefresh = (linearizationTableRow) -> {
+        flexTable.removeAllRows();
+        this.tableRowList = this.tableRowList.stream().map(row -> {
+            if(row.getLinearizationDefinition().getWhoficEntityIri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getWhoficEntityIri())) {
+                return linearizationTableRow;
+            }
+            return row;
+        }).collect(Collectors.toList());
+
+        for(LinearizationTableRow row : tableRowList) {
+            row.populateDerivedLinearizationParents(this.tableRowList);
+        }
+        initializeTableHeader();
+
+        orderAndPopulateViewWithRows();
+    };
+
 
     @Inject
     public LinearizationPortletViewImpl(DispatchServiceManager dispatch,
                                         LinearizationCommentsModal commentsModal,
                                         LinearizationParentModal parentModal) {
-        this.suppressResidual = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), "");
+        this.suppressOthersSpecifiedResidual = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), "");
+        this.suppressUnspecifiedResidual = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), "");
         LinearizationTableResourceBundle.INSTANCE.style().ensureInjected();
         style = LinearizationTableResourceBundle.INSTANCE.style();
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -80,11 +115,19 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         saveValuesButton.setVisible(false);
         cancelButton.setVisible(true);
         editValuesButton.setVisible(true);
-        this.suppressResidual.setReadOnly(true);
-        this.suppressResidual.setEnabled(false);
-        this.residualTitle.setEnabled(false);
 
+        disableResiduals();
         this.dispatch = dispatch;
+    }
+
+    private void disableResiduals() {
+        this.suppressUnspecifiedResidual.setEnabled(false);
+        this.suppressUnspecifiedResidual.setReadOnly(true);
+        this.suppressOthersSpecifiedResidual.setReadOnly(true);
+        this.suppressOthersSpecifiedResidual.setEnabled(false);
+
+        this.unspecifiedResidualTitle.setEnabled(false);
+        this.otherSpecifiedResidualTitle.setEnabled(false);
     }
 
     @Override
@@ -110,17 +153,20 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         try {
             this.specification = specification;
             flexTable.setStyleName(style.getLinearizationTable());
-
             initializeTableHeader();
 
             if(specification != null){
+                this.entityIri = specification.getEntityIRI();
+
                 initializeTableRows();
                 if(specification.getLinearizationResiduals() != null) {
-                    this.suppressResidual.setValue(specification.getLinearizationResiduals().getSuppressSpecifiedResidual());
-                    this.residualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
+                    this.suppressOthersSpecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressedOtherSpecifiedResiduals());
+                    this.suppressUnspecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressUnspecifiedResiduals());
+                    this.unspecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
+                    this.otherSpecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getOtherSpecifiedResidualTitle());
                 }
                 orderAndPopulateViewWithRows();
-
+                disableResiduals();
             }
 
         }catch (Exception e) {
@@ -152,13 +198,21 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                 row.setEnabled();
             }
 
-            this.backupTitle = this.residualTitle.getValue();
-            this.backupSuppressResidualValue = suppressResidual.getValue();
+            this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
+            this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
+
+            this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
+            this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
 
             this.isReadOnly = false;
-            this.residualTitle.setEnabled(true);
-            this.suppressResidual.setReadOnly(false);
-            this.suppressResidual.setEnabled(true);
+            this.unspecifiedResidualTitle.setEnabled(true);
+            this.otherSpecifiedResidualTitle.setEnabled(true);
+
+            this.suppressOthersSpecifiedResidual.setReadOnly(false);
+            this.suppressOthersSpecifiedResidual.setEnabled(true);
+
+            this.suppressUnspecifiedResidual.setReadOnly(false);
+            this.suppressUnspecifiedResidual.setEnabled(true);
             toggleSaveButtons();
         }
 
@@ -174,13 +228,15 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             initializeTableHeader();
 
             orderAndPopulateViewWithRows();
-            this.suppressResidual.setValue(this.backupSuppressResidualValue);
-            this.residualTitle.setValue(this.backupTitle);
-            isReadOnly = true;
-            this.residualTitle.setEnabled(false);
-            this.suppressResidual.setReadOnly(true);
-            this.suppressResidual.setEnabled(false);
+            this.suppressOthersSpecifiedResidual.setValue(this.backupSuppressOtherResidualValue);
+            this.suppressUnspecifiedResidual.setValue(this.backupSuppressUnspecifiedResidualValue);
 
+            this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
+            this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
+
+            disableResiduals();
+            isReadOnly = true;
+            this.backupRows = new ArrayList<>();
             toggleSaveButtons();
         }
 
@@ -195,7 +251,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     interface LinearizationPortletViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationPortletViewImpl> {
 
     }
-
 
     private void addHeaderCell(String headerText, int column) {
         Widget headerCell = new Label(headerText);
@@ -223,7 +278,12 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             List<LinearizationSpecification> specifications = this.tableRowList.stream()
                     .map(LinearizationTableRow::asLinearizationSpecification)
                     .collect(Collectors.toList());
-            LinearizationResiduals residuals = new LinearizationResiduals(this.suppressResidual.getValue().getValue(), this.residualTitle.getValue());
+
+            LinearizationResiduals residuals = new LinearizationResiduals(this.suppressOthersSpecifiedResidual.getValue().getValue(),
+                                                                          this.suppressUnspecifiedResidual.getValue().getValue(),
+                                                                          this.otherSpecifiedResidualTitle.getValue(),
+                                                                          this.unspecifiedResidualTitle.getValue());
+
             WhoficEntityLinearizationSpecification linearizationSpecification = new WhoficEntityLinearizationSpecification(specification.getEntityIRI(),
                     residuals,
                     specifications);
@@ -238,8 +298,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                 for(LinearizationTableRow row : this.tableRowList) {
                     this.backupRows.add(row.clone());
                 }
-                this.backupTitle = this.residualTitle.getValue();
-                this.backupSuppressResidualValue = suppressResidual.getValue();
+                this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
+                this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
+
+                this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
             }) ;
         }
     }
@@ -261,15 +323,22 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                     linearizationSpecification,
                     parentsMap,
                     linearizationParentModal,
-                    commentsModal);
+                    commentsModal,
+                    entityIri,
+                    projectId,
+                    tableRefresh);
             tableRowList.add(row);
         }
         for(LinearizationTableRow row : tableRowList) {
-            row.refreshParents(tableRowList);
+            row.populateDerivedLinearizationParents(tableRowList);
         }
+
+
     }
 
-
+    interface TableRefresh {
+        void refreshTable(LinearizationTableRow newRow);
+    }
 
 
 }

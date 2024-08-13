@@ -40,6 +40,8 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
         @ClassName("linearizationDefinition")
         String getLinearizationDefinition();
 
+        @ClassName("linearizationParentCell")
+        String getLinearizationParentCell();
     }
 
 }

@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("Convert2MethodRef")
 @Portlet(id = "portlets.Linearization",
-        title = "Linearization",
-        tooltip = "Displays the linearization on the current entity.")
+        title = "Linearizations",
+        tooltip = "Displays the linearizations on the current entity.")
 public class LinearizationPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 

@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -226,6 +227,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = TranslateEventListAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
+        @Type(value = GetClassAncestorsAction.class),
         @Type(value = SaveEntityLinearizationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class)
 })

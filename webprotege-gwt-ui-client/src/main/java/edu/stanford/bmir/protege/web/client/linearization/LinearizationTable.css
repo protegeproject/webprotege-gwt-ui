@@ -21,7 +21,7 @@
 }
 
 .customRowStyle .tableText {
-    padding: 5px;
+    padding: 2px;
 }
 
 .linearizationHeader .tableText {
@@ -43,7 +43,6 @@
     justify-content: center;
     align-content: center;
     max-width: 350px;
-
 }
 
 .tableText [enabled="true"]:hover {
@@ -54,6 +53,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    vertical-align: middle;
 }
 
 .wideColumn {
@@ -63,6 +63,10 @@
 
 .enabledCheckbox {
 
+}
+
+.linearizationParentCell {
+    cursor: pointer;
 }
 
 .secondaryParent {

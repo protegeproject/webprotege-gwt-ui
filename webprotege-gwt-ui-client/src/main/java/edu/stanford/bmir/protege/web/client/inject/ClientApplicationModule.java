@@ -65,10 +65,7 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.linearization.LinearizationCommentsView;
-import edu.stanford.bmir.protege.web.client.linearization.LinearizationCommentsViewImpl;
-import edu.stanford.bmir.protege.web.client.linearization.LinearizationPortletView;
-import edu.stanford.bmir.protege.web.client.linearization.LinearizationPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.linearization.*;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -496,6 +493,11 @@ public class ClientApplicationModule {
     EditorPortletView provideEditorPortletView(EditorPortletViewImpl impl) {
         return impl;
     }
+    @Provides
+    LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
+        return impl;
+    }
+
 
     @Provides
     LinearizationPortletView provideLinearizationPortletView(LinearizationPortletViewImpl impl) {

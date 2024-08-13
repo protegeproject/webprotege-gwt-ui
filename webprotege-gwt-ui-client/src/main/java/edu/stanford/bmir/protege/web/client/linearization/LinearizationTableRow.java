@@ -5,8 +5,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationSpecification;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,14 @@ public class LinearizationTableRow {
 
     private LinearizationCommentsModal linearizationCommentsModal;
 
+    private ProjectId projectId;
+    private IRI entityIri;
+
+    private String parentIri;
+    LinearizationParentLabel.ParentSelectedHandler parentSelectedHandler = this::handleParentSelected;
+    LinearizationPortletViewImpl.TableRefresh tableRefresh;
+    private LinearizationParentLabel linearizationParentLabel;
+
     private LinearizationTableRow(){
 
     }
@@ -50,9 +61,15 @@ public class LinearizationTableRow {
                                  LinearizationSpecification linearizationSpecification,
                                  Map<String, EntityNode> parentsMap,
                                  LinearizationParentModal  modal,
-                                 LinearizationCommentsModal commentsModal) {
+                                 LinearizationCommentsModal commentsModal,
+                                 IRI entityIri,
+                                 ProjectId projectId,
+                                 LinearizationPortletViewImpl.TableRefresh tableRefresh) {
         try {
             this.parentsMap = parentsMap;
+            this.projectId = projectId;
+            this.entityIri = entityIri;
+            this.tableRefresh = tableRefresh;
             this.linearizationCommentsModal = commentsModal;
             this.linearizationDefinition = definitionMap.get(linearizationSpecification.getLinearizationView());
 
@@ -71,41 +88,42 @@ public class LinearizationTableRow {
             this.codingNotes = this.commentsWidget.asWidget();
             this.parentModal = modal;
 
-        }catch (Exception e) {
+            populateEditableLinearizationParent();
+
+
+        } catch (Exception e) {
             logger.info("Error while initializing table row " + e);
         }
     }
 
 
-    public void refreshParents(List<LinearizationTableRow> rows) {
+    private void populateEditableLinearizationParent() {
+        if(!isDerived()) {
+            EntityNode linearizationParentEntityNode = this.parentsMap.get(linearizationSpecification.getLinearizationParent());
+            String browserText = linearizationParentEntityNode != null ? linearizationParentEntityNode.getBrowserText() : linearizationSpecification.getLinearizationParent();
+            this.linearizationParentLabel = new LinearizationParentLabel(browserText,
+                    parentModal,
+                    entityIri,
+                    projectId,
+                    parentSelectedHandler);
+            this.linearizationParent = linearizationParentLabel.asWidget();
+            this.parentIri = this.linearizationSpecification.getLinearizationParent();
+        }
+    }
 
-        boolean isDerived = linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty();
-        EntityNode linearizationParentEntityNode;
-        if (isDerived) {
-
-            String actualParentId = rows.stream()
-                            .filter(linearizationRow -> linearizationRow.linearizationDefinition.getId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
+    public void populateDerivedLinearizationParents(List<LinearizationTableRow> rows){
+        if(isDerived()) {
+            LinearizationTableRow mainRow = rows.stream()
+                    .filter(linearizationRow -> linearizationRow.linearizationDefinition.getId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
                     .findFirst()
-                    .map(linearizationTableRow -> linearizationTableRow.linearizationSpecification.getLinearizationParent())
-                    .orElse("");
-
-            linearizationParentEntityNode = this.parentsMap.get(actualParentId);
-        } else {
-            linearizationParentEntityNode = this.parentsMap.get(linearizationSpecification.getLinearizationParent());
+                    .orElseThrow(() -> {
+                        logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
+                        return new RuntimeException();
+                    });
+            Label label = new Label("[" + mainRow.linearizationParent.getElement().getInnerText() + "]");
+            label.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
+            this.linearizationParent = label;
         }
-
-        if (linearizationParentEntityNode != null && linearizationParentEntityNode.getBrowserText() != null && !linearizationParentEntityNode.getBrowserText().isEmpty()) {
-            if(isDerived) {
-                Label label = new Label("[" + linearizationParentEntityNode.getBrowserText() + "]");
-                label.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
-                this.linearizationParent = label;
-            } else {
-                this.linearizationParent = new LinearizationParentLabel(linearizationParentEntityNode.getBrowserText(), parentModal).asWidget();
-            }
-        } else {
-            this.linearizationParent = new LinearizationParentLabel(linearizationSpecification.getLinearizationParent(), parentModal).asWidget();
-        }
-
     }
 
     public void setEnabled() {
@@ -120,7 +138,12 @@ public class LinearizationTableRow {
         this.isAuxAxChildCheckbox.setReadOnly(false);
 
         this.commentsWidget.enable();
+        if(linearizationParentLabel != null) {
+            linearizationParentLabel.setReadOnly(false);
+        }
     }
+
+
 
     public void setReadOnly() {
         this.isPartOfCheckbox.setEnabled(false);
@@ -134,6 +157,9 @@ public class LinearizationTableRow {
         this.isAuxAxChildCheckbox.setReadOnly(true);
 
         this.commentsWidget.disable();
+        if(linearizationParentLabel != null) {
+            linearizationParentLabel.setReadOnly(true);
+        }
     }
 
 
@@ -142,7 +168,7 @@ public class LinearizationTableRow {
         return new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
                 this.isGroupingCheckbox.getValue().getValue(),
                 this.isPartOfCheckbox.getValue().getValue(),
-                this.linearizationSpecification.getLinearizationParent(),
+                this.parentIri,
                 this.linearizationDefinition.getSortingCode(),
                 this.linearizationDefinition.getWhoficEntityIri(),
                 this.commentsWidget.getText()
@@ -180,7 +206,20 @@ public class LinearizationTableRow {
     public LinearizationTableRow clone(){
         LinearizationTableRow clone = new LinearizationTableRow();
         clone.linearizationSpecification = linearizationSpecification;
-        clone.linearizationParent = new Label(this.linearizationParent.getElement().getInnerText());
+
+        if(!isDerived()) {
+            clone.linearizationParentLabel = new LinearizationParentLabel(this.linearizationParent.getElement().getInnerText(),
+                    parentModal,
+                    entityIri,
+                    projectId,
+                    parentSelectedHandler);
+            clone.linearizationParent = clone.linearizationParentLabel.asWidget();
+        } else {
+            clone.linearizationParent = new Label(this.linearizationParent.getElement().getInnerText());
+            clone.linearizationParent.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
+
+        }
+        clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
         clone.isPartOfCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
@@ -201,5 +240,30 @@ public class LinearizationTableRow {
         } else {
             this.commentsWidget = new LinearizationComments(DEFAULT_COMMENTS_MESSAGE, linearizationCommentsModal);
         }
+    }
+
+    private void handleParentSelected(OWLEntityData owlEntityData) {
+        this.linearizationParentLabel = new LinearizationParentLabel(owlEntityData.getBrowserText(),
+                parentModal,
+                entityIri,
+                projectId,
+                parentSelectedHandler);
+        this.linearizationParent = linearizationParentLabel.asWidget();
+        this.parentIri = owlEntityData.getEntity().getIRI().toString();
+        tableRefresh.refreshTable(this);
+    }
+
+    private boolean isDerived(){
+        return linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "LinearizationTableRow{" +
+                "linearizationDefinitionWidget=" + linearizationDefinitionWidget +
+                ", linearizationParent=" + linearizationParent.getElement().getInnerText() +
+                ", parentIri='" + parentIri + '\'' +
+                ", linearizationParentLabel=" + linearizationParentLabel.getText() +
+                '}';
     }
 }

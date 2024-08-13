@@ -50,6 +50,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootRes
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchySiblingsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeResult;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
@@ -297,6 +298,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
+        @JsonSubTypes.Type(GetClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
