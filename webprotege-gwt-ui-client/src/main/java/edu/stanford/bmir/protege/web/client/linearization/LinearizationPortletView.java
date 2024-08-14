@@ -20,4 +20,6 @@ public interface LinearizationPortletView extends AcceptsOneWidget, IsWidget, Ha
     void setLinearizationParentsMap(Map<String, EntityNode> linearizationParentsMap);
 
     void setProjectId(ProjectId projectId);
+
+    boolean isReadOnly();
 }

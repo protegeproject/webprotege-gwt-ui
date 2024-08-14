@@ -190,6 +190,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         this.projectId = projectId;
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
+
     private void setEditable() {
         if(isReadOnly) {
             this.backupRows = new ArrayList<>();

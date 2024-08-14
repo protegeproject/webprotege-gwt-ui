@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.linearization;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -40,15 +43,19 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private DispatchServiceManager dispatch;
 
+    private MessageBox messageBox;
+
     @Inject
     public LinearizationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                          @Nonnull ProjectId projectId,
                                          @Nonnull DisplayNameRenderer displayNameRenderer,
                                          @Nonnull DispatchServiceManager dispatch,
+                                         @Nonnull MessageBox messageBox,
                                          @Nonnull LinearizationPortletView view
     ) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
+        this.messageBox = messageBox;
         this.dispatch = dispatch;
         this.view.setProjectId(projectId);
 
@@ -77,7 +84,22 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        if(!view.isReadOnly()){
+            messageBox.showConfirmBox(MessageStyle.ALERT,
+                    "Save edits before switching?",
+                    "Do you want to save your edits before changing selection?",
+                    DialogButton.NO,
+                    () -> {},
+                    DialogButton.YES,
+                    () -> navigateToEntity(entityData),
+                    DialogButton.YES);
+        } else {
+            navigateToEntity(entityData);
+        }
 
+    }
+
+    private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
             dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
 
