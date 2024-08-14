@@ -1,24 +1,19 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.*;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView {
@@ -33,10 +28,13 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @UiField
     protected FlexTable flexTable;
 
-    @UiField Button editValuesButton;
-    @UiField Button cancelButton;
+    @UiField
+    Button editValuesButton;
+    @UiField
+    Button cancelButton;
 
-    @UiField Button saveValuesButton;
+    @UiField
+    Button saveValuesButton;
 
     @UiField(provided = true)
     ThreeStateCheckbox suppressOthersSpecifiedResidual;
@@ -58,6 +56,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     CheckboxValue backupSuppressUnspecifiedResidualValue;
 
+    LinearizationChangeEventHandler linearizationChangeEventHandler = () -> {
+    };
+
 
     private List<LinearizationTableRow> tableRowList = new ArrayList<>();
     private List<LinearizationTableRow> backupRows = new ArrayList<>();
@@ -71,7 +72,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     private LinearizationParentModal linearizationParentModal;
     private DispatchServiceManager dispatch;
 
-    private  LinearizationCommentsModal commentsModal;
+    private LinearizationCommentsModal commentsModal;
 
     private ProjectId projectId;
 
@@ -82,13 +83,13 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     private final TableRefresh tableRefresh = (linearizationTableRow) -> {
         flexTable.removeAllRows();
         this.tableRowList = this.tableRowList.stream().map(row -> {
-            if(row.getLinearizationDefinition().getWhoficEntityIri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getWhoficEntityIri())) {
+            if (row.getLinearizationDefinition().getWhoficEntityIri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getWhoficEntityIri())) {
                 return linearizationTableRow;
             }
             return row;
         }).collect(Collectors.toList());
 
-        for(LinearizationTableRow row : tableRowList) {
+        for (LinearizationTableRow row : tableRowList) {
             row.populateDerivedLinearizationParents(this.tableRowList);
         }
         initializeTableHeader();
@@ -155,11 +156,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             flexTable.setStyleName(style.getLinearizationTable());
             initializeTableHeader();
 
-            if(specification != null){
+            if (specification != null) {
                 this.entityIri = specification.getEntityIRI();
 
                 initializeTableRows();
-                if(specification.getLinearizationResiduals() != null) {
+                if (specification.getLinearizationResiduals() != null) {
                     this.suppressOthersSpecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressedOtherSpecifiedResiduals());
                     this.suppressUnspecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressUnspecifiedResiduals());
                     this.unspecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
@@ -169,7 +170,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                 disableResiduals();
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Error while initializing the table " + e);
         }
 
@@ -191,9 +192,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     }
 
     private void setEditable() {
-        if(isReadOnly) {
+        if (isReadOnly) {
             this.backupRows = new ArrayList<>();
-            for(LinearizationTableRow row : this.tableRowList) {
+            for (LinearizationTableRow row : this.tableRowList) {
                 this.backupRows.add(row.clone());
                 row.setEnabled();
             }
@@ -219,10 +220,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     }
 
     private void setReadOnly() {
-        if(!isReadOnly) {
+        if (!isReadOnly) {
             this.tableRowList = this.backupRows;
             flexTable.removeAllRows();
-            for(LinearizationTableRow row : this.tableRowList) {
+            for (LinearizationTableRow row : this.tableRowList) {
                 row.setReadOnly();
             }
             initializeTableHeader();
@@ -259,30 +260,30 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     }
 
     private void addWideHeaderCell(String headerText, int column) {
-        addHeaderCell(headerText,column);
+        addHeaderCell(headerText, column);
         flexTable.getCellFormatter().addStyleName(0, column, style.getWideColumn());
     }
 
     private void initializeTableHeader() {
-        addHeaderCell("Linearization",  0);
-        addHeaderCell("Is part of?",  1);
-        addHeaderCell("Is grouping?",2);
+        addHeaderCell("Linearization", 0);
+        addHeaderCell("Is part of?", 1);
+        addHeaderCell("Is grouping?", 2);
         addHeaderCell("Aux.ax.child?", 3);
         addWideHeaderCell("Linearization parent", 4);
         addWideHeaderCell("Coding notes", 5);
         flexTable.getRowFormatter().addStyleName(0, style.getLinearizationHeader());
     }
 
-    private void saveValues(){
-        if(!isReadOnly) {
+    private void saveValues() {
+        if (!isReadOnly) {
             List<LinearizationSpecification> specifications = this.tableRowList.stream()
                     .map(LinearizationTableRow::asLinearizationSpecification)
                     .collect(Collectors.toList());
 
             LinearizationResiduals residuals = new LinearizationResiduals(this.suppressOthersSpecifiedResidual.getValue().getValue(),
-                                                                          this.suppressUnspecifiedResidual.getValue().getValue(),
-                                                                          this.otherSpecifiedResidualTitle.getValue(),
-                                                                          this.unspecifiedResidualTitle.getValue());
+                    this.suppressUnspecifiedResidual.getValue().getValue(),
+                    this.otherSpecifiedResidualTitle.getValue(),
+                    this.unspecifiedResidualTitle.getValue());
 
             WhoficEntityLinearizationSpecification linearizationSpecification = new WhoficEntityLinearizationSpecification(specification.getEntityIRI(),
                     residuals,
@@ -290,35 +291,41 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
             this.isReadOnly = true;
             toggleSaveButtons();
-            for(LinearizationTableRow row : this.tableRowList) {
+            for (LinearizationTableRow row : this.tableRowList) {
                 row.setReadOnly();
             }
-            dispatch.execute(SaveEntityLinearizationAction.create(projectId, linearizationSpecification), (result) -> {
-                this.backupRows = new ArrayList<>();
-                for(LinearizationTableRow row : this.tableRowList) {
-                    this.backupRows.add(row.clone());
-                }
-                this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
-                this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
+            dispatch.execute(
+                    SaveEntityLinearizationAction.create(projectId, linearizationSpecification),
+                    (result) -> {
+                        this.backupRows = new ArrayList<>();
+                        for (LinearizationTableRow row : this.tableRowList) {
+                            this.backupRows.add(row.clone());
+                        }
+                        this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
+                        this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
 
-                this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
-            }) ;
+                        this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
+
+                        this.linearizationChangeEventHandler.handleLinearizationChangeEvent();
+                    }
+            );
         }
     }
+
 
     private void orderAndPopulateViewWithRows() {
         List<LinearizationTableRow> orderedRows = tableRowList.stream()
                 .sorted((o1, o2) -> o1.getLinearizationDefinition().getSortingCode().compareToIgnoreCase(o2.getLinearizationDefinition().getSortingCode()))
                 .collect(Collectors.toList());
 
-        for(int i = 0; i < orderedRows.size(); i ++) {
-            flexTable.getRowFormatter().addStyleName(i+1, style.customRowStyle());
-            orderedRows.get(i).populateFlexTable(i+1, flexTable);
+        for (int i = 0; i < orderedRows.size(); i++) {
+            flexTable.getRowFormatter().addStyleName(i + 1, style.customRowStyle());
+            orderedRows.get(i).populateFlexTable(i + 1, flexTable);
         }
     }
 
     private void initializeTableRows() {
-        for(LinearizationSpecification linearizationSpecification: this.specification.getLinearizationSpecifications()){
+        for (LinearizationSpecification linearizationSpecification : this.specification.getLinearizationSpecifications()) {
             LinearizationTableRow row = new LinearizationTableRow(linearizationDefinitonMap,
                     linearizationSpecification,
                     parentsMap,
@@ -329,7 +336,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                     tableRefresh);
             tableRowList.add(row);
         }
-        for(LinearizationTableRow row : tableRowList) {
+        for (LinearizationTableRow row : tableRowList) {
             row.populateDerivedLinearizationParents(tableRowList);
         }
 
@@ -338,6 +345,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     interface TableRefresh {
         void refreshTable(LinearizationTableRow newRow);
+    }
+
+    @Override
+    public void setLinearizationChangeEventHandler(LinearizationChangeEventHandler eventHandler) {
+        this.linearizationChangeEventHandler = eventHandler;
     }
 
 

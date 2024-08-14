@@ -21,7 +21,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.CombinedChangesByEntity",
-        title = "Combined Entity Changes",
+        title = "iCat-X Entity Changes",
         tooltip = "Displays a list of combined project changes for the selected entity.")
 public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePortletPresenter {
 

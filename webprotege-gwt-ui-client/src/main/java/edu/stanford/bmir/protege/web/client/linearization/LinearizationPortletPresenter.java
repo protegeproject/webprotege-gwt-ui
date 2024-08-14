@@ -1,27 +1,23 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.*;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-
 import java.util.stream.Collectors;
-
 
 
 @SuppressWarnings("Convert2MethodRef")
@@ -31,7 +27,6 @@ import java.util.stream.Collectors;
 public class LinearizationPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
-
     private final LinearizationPortletView view;
 
     private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
@@ -39,17 +34,24 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
     private Map<String, EntityNode> parentsMap = new HashMap<>();
 
     private DispatchServiceManager dispatch;
+    private final EventBus eventBus;
+
+    private final LoggedInUserManager loggedInUserManager;
+
 
     @Inject
     public LinearizationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                          @Nonnull ProjectId projectId,
                                          @Nonnull DisplayNameRenderer displayNameRenderer,
                                          @Nonnull DispatchServiceManager dispatch,
-                                         @Nonnull LinearizationPortletView view
-    ) {
+                                         @Nonnull LinearizationPortletView view,
+                                         @Nonnull EventBus eventBus,
+                                         @Nonnull LoggedInUserManager loggedInUserManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.dispatch = dispatch;
+        this.eventBus = eventBus;
+        this.loggedInUserManager = loggedInUserManager;
         this.view.setProjectId(projectId);
 
     }
@@ -59,6 +61,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
+        view.setLinearizationChangeEventHandler(() -> triggerLinearizationChangeEvent());
 
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
             for (LinearizationDefinition definition : result.getDefinitionList()) {
@@ -68,6 +71,25 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
             handleSetEntity(getSelectedEntity());
         });
 
+    }
+
+    /*
+    ToDo:
+        Need to rethink arhitecture of linearization view and history so we no longer do the complete hack that is below for the history refresh button.
+     */
+    private void triggerLinearizationChangeEvent() {
+        eventBus.fireEvent(
+                new ProjectChangedEvent(
+                        getProjectId(),
+                        new RevisionSummary(
+                                RevisionNumber.valueOf("0"),
+                                loggedInUserManager.getLoggedInUserId(),
+                                new Date().getTime(),
+                                0,
+                                ""),
+                        Collections.emptySet()
+                ).asGWTEvent()
+        );
     }
 
     @Override

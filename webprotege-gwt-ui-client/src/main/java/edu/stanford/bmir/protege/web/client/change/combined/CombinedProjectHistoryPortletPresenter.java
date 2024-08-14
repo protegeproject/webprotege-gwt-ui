@@ -25,7 +25,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.CombinedProjectHistory",
-        title = "Combined Project History",
+        title = "iCat-X Project History",
         tooltip = "Displays a list of all changes that have been made to the project")
 public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePortletPresenter {
 
