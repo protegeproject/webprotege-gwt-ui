@@ -11,9 +11,7 @@ import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
-import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
-import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
-import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
+import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
@@ -153,6 +151,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetPerspectivesAction.class),
         @Type(value = GetPossibleItemCompletionsAction.class),
         @Type(value = GetProjectChangesAction.class),
+        @Type(value = GetLinearizationChangesAction.class),
         @Type(value = GetProjectDetailsAction.class),
         @Type(value = GetProjectEventsAction.class),
         @Type(value = GetProjectFormDescriptorsAction.class),

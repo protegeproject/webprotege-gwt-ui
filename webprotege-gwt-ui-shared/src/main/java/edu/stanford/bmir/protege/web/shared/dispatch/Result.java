@@ -10,9 +10,7 @@ import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueResult;
-import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
-import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
-import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
+import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
@@ -143,7 +141,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- *     The basic interface for results which are returned from the dispatch service
+ * The basic interface for results which are returned from the dispatch service
  * </p>
  */
 @JsonSubTypes({
@@ -222,6 +220,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetPerspectivesResult.class),
         @JsonSubTypes.Type(GetPossibleItemCompletionsResult.class),
         @JsonSubTypes.Type(GetProjectChangesResult.class),
+        @JsonSubTypes.Type(GetLinearizationChangesResult.class),
         @JsonSubTypes.Type(GetProjectDetailsResult.class),
         @JsonSubTypes.Type(GetProjectEventsResult.class),
         @JsonSubTypes.Type(GetProjectFormDescriptorsResult.class),
