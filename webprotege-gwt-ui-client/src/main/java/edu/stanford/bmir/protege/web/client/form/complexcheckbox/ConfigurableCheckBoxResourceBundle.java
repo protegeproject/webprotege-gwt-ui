@@ -1,9 +1,15 @@
 package edu.stanford.bmir.protege.web.client.form.complexcheckbox;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import edu.stanford.bmir.protege.web.client.linearization.LinearizationTableResourceBundle;
 
 public interface ConfigurableCheckBoxResourceBundle extends ClientBundle {
+
+
+    ConfigurableCheckBoxResourceBundle INSTANCE = GWT.create(ConfigurableCheckBoxResourceBundle.class);
+
 
     @Source("configurableCheckbox.css")
     CheckBoxCss style();
@@ -27,6 +33,9 @@ public interface ConfigurableCheckBoxResourceBundle extends ClientBundle {
 
         @ClassName("wp-checkbox__input--checked")
         String checkBox__input__checked();
+
+        @ClassName("configurableCheckboxContainer")
+        String getConfigurableCheckboxContainer();
     }
 
 }

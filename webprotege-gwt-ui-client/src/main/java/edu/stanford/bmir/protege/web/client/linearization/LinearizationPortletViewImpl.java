@@ -7,10 +7,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
@@ -39,10 +38,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @UiField Button saveValuesButton;
 
     @UiField(provided = true)
-    ThreeStateCheckbox suppressOthersSpecifiedResidual;
+    ConfigurableCheckbox suppressOthersSpecifiedResidual;
 
     @UiField(provided = true)
-    ThreeStateCheckbox suppressUnspecifiedResidual;
+    ConfigurableCheckbox suppressUnspecifiedResidual;
 
     @UiField
     PlaceholderTextBox unspecifiedResidualTitle;
@@ -94,6 +93,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         initializeTableHeader();
 
         orderAndPopulateViewWithRows();
+        logger.info("ALEX parentIRI " + linearizationTableRow);
     };
 
 
@@ -101,8 +101,8 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     public LinearizationPortletViewImpl(DispatchServiceManager dispatch,
                                         LinearizationCommentsModal commentsModal,
                                         LinearizationParentModal parentModal) {
-        this.suppressOthersSpecifiedResidual = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), "");
-        this.suppressUnspecifiedResidual = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), "");
+        this.suppressOthersSpecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
+        this.suppressUnspecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
         LinearizationTableResourceBundle.INSTANCE.style().ensureInjected();
         style = LinearizationTableResourceBundle.INSTANCE.style();
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -258,6 +258,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         flexTable.getCellFormatter().addStyleName(0, column, style.getTableText());
     }
 
+    private void addCheckboxHeaderCell(String headerText, int column) {
+        addHeaderCell(headerText,column);
+        flexTable.getCellFormatter().addStyleName(0, column, style.getTableCheckboxHeader());
+    }
+
     private void addWideHeaderCell(String headerText, int column) {
         addHeaderCell(headerText,column);
         flexTable.getCellFormatter().addStyleName(0, column, style.getWideColumn());
@@ -265,9 +270,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private void initializeTableHeader() {
         addHeaderCell("Linearization",  0);
-        addHeaderCell("Is part of?",  1);
-        addHeaderCell("Is grouping?",2);
-        addHeaderCell("Aux.ax.child?", 3);
+        addCheckboxHeaderCell("Is part of?",  1);
+        addCheckboxHeaderCell("Is grouping?",2);
+        addCheckboxHeaderCell("Aux.ax.child?", 3);
         addWideHeaderCell("Linearization parent", 4);
         addWideHeaderCell("Coding notes", 5);
         flexTable.getRowFormatter().addStyleName(0, style.getLinearizationHeader());

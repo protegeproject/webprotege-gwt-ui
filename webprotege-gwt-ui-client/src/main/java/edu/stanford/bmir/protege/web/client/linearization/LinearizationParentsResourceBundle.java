@@ -18,5 +18,8 @@ public interface LinearizationParentsResourceBundle extends ClientBundle {
         String getLinearizationParentLabel();
         @ClassName("parentSelected")
         String getParentSelected();
+
+        @ClassName("parentLabel")
+        String getParentLabel();
     }
 }

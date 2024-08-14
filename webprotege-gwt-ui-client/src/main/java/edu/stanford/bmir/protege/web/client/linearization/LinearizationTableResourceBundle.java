@@ -28,6 +28,12 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
         @ClassName("tableText")
         String getTableText();
 
+        @ClassName("tableCheckBox")
+        String getTableCheckBox();
+
+        @ClassName("tableCheckboxHeader")
+        String getTableCheckboxHeader();
+
         @ClassName("wideColumn")
         String getWideColumn();
 

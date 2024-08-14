@@ -127,11 +127,11 @@
                 <g:HTMLPanel addStyleNames="{style.residualsCardBody}">
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:Label addStyleNames="{style.residualLabel}" text="Suppress 'Other Specified' Residuals"/>
-                        <custom:ThreeStateCheckbox  ui:field="suppressOthersSpecifiedResidual"></custom:ThreeStateCheckbox>
+                        <custom:ConfigurableCheckbox  ui:field="suppressOthersSpecifiedResidual"></custom:ConfigurableCheckbox>
                     </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:Label addStyleNames="{style.residualLabel}" text="Suppress 'Unspecified' Residuals"/>
-                        <custom:ThreeStateCheckbox  ui:field="suppressUnspecifiedResidual"></custom:ThreeStateCheckbox>
+                        <custom:ConfigurableCheckbox  ui:field="suppressUnspecifiedResidual"></custom:ConfigurableCheckbox>
                     </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:Label  addStyleNames="{style.residualLabel}" text="'Other Specified' Residual title"/>
@@ -142,7 +142,6 @@
                         <text:PlaceholderTextBox  addStyleNames="{style.residualValue}" ui:field="unspecifiedResidualTitle" placeholder="Add the 'Unspecified' residual title" />
                     </g:HTMLPanel>
                 </g:HTMLPanel>
-
             </g:HTMLPanel>
         </g:HTMLPanel>
         <div class="{style.buttonsWrapper}">

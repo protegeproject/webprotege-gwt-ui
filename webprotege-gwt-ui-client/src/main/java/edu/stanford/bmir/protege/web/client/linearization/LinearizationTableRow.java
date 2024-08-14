@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.linearization;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ThreeStateCheckbox;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
@@ -23,11 +23,11 @@ public class LinearizationTableRow {
 
     private Widget linearizationDefinitionWidget;
 
-    private ThreeStateCheckbox isPartOfCheckbox;
+    private ConfigurableCheckbox isPartOfCheckbox;
 
-    private ThreeStateCheckbox isGroupingCheckbox;
+    private ConfigurableCheckbox isGroupingCheckbox;
 
-    private ThreeStateCheckbox isAuxAxChildCheckbox;
+    private ConfigurableCheckbox isAuxAxChildCheckbox;
 
     private Widget linearizationParent;
 
@@ -80,9 +80,9 @@ public class LinearizationTableRow {
             this.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
             this.linearizationSpecification = linearizationSpecification;
 
-            this.isPartOfCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
-            this.isGroupingCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-            this.isAuxAxChildCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+            this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
+            this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
+            this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
 
             initCodingNotes(linearizationSpecification.getCodingNote());
             this.codingNotes = this.commentsWidget.asWidget();
@@ -164,8 +164,7 @@ public class LinearizationTableRow {
 
 
     public LinearizationSpecification asLinearizationSpecification(){
-
-        return new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
+        LinearizationSpecification response = new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
                 this.isGroupingCheckbox.getValue().getValue(),
                 this.isPartOfCheckbox.getValue().getValue(),
                 this.parentIri,
@@ -173,6 +172,8 @@ public class LinearizationTableRow {
                 this.linearizationDefinition.getWhoficEntityIri(),
                 this.commentsWidget.getText()
                 );
+        logger.info("ALEX specification " + response);
+        return response;
     }
 
 
@@ -183,13 +184,13 @@ public class LinearizationTableRow {
         flexTable.getCellFormatter().addStyleName(index, 0, style.getLinearizationDefinition());
 
         flexTable.setWidget(index, 1, isPartOfCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 1, style.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 1, style.getTableCheckBox());
 
         flexTable.setWidget(index, 2, isGroupingCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 2, style.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 2, style.getTableCheckBox());
 
         flexTable.setWidget(index, 3, isAuxAxChildCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 3, style.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 3, style.getTableCheckBox());
 
         flexTable.setWidget(index, 4, linearizationParent);
         flexTable.getCellFormatter().addStyleName(index, 4, style.getTableText());
@@ -222,9 +223,9 @@ public class LinearizationTableRow {
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
-        clone.isPartOfCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
-        clone.isGroupingCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-        clone.isAuxAxChildCheckbox = new ThreeStateCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+        clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
+        clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
+        clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
 
         LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal);
 
@@ -250,6 +251,7 @@ public class LinearizationTableRow {
                 parentSelectedHandler);
         this.linearizationParent = linearizationParentLabel.asWidget();
         this.parentIri = owlEntityData.getEntity().getIRI().toString();
+        this.setEnabled();
         tableRefresh.refreshTable(this);
     }
 

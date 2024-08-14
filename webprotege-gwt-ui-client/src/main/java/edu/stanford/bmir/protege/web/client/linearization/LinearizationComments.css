@@ -9,11 +9,12 @@
         border: 1px solid literal("var(--separator--color)");
 }
 
-.linearizationColumn {
+.linearizationComments {
     cursor: pointer;
     width: 100%;
     height: 100%;
     display: block;
     min-width: 50px;
     min-height: 25px;
+    text-align: start;
 }

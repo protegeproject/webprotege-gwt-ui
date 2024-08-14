@@ -9,9 +9,7 @@ import edu.stanford.bmir.protege.web.client.HasReadOnly;
 import javax.annotation.Nonnull;
 import java.util.logging.Logger;
 
-public class ThreeStateCheckbox implements IsWidget, HasValue<CheckboxValue>, HasText, HasEnabled, HasReadOnly {
-    Logger logger = java.util.logging.Logger.getLogger("ThreeStateCheckbox");
-
+public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, HasText, HasEnabled, HasReadOnly {
     @Nonnull
     private final SimplePanel container = new SimplePanel();
 
@@ -20,9 +18,14 @@ public class ThreeStateCheckbox implements IsWidget, HasValue<CheckboxValue>, Ha
 
     private final CheckBoxConfig checkBoxConfig;
 
-    public ThreeStateCheckbox(CheckBoxConfig checkBoxConfig, String initialValue) {
+    public ConfigurableCheckbox(CheckBoxConfig checkBoxConfig, String initialValue) {
+        ConfigurableCheckBoxResourceBundle.CheckBoxCss style = ConfigurableCheckBoxResourceBundle.INSTANCE.style();
+        style.ensureInjected();
+        container.addStyleName(style.getConfigurableCheckboxContainer());
         presenter = new ConfigurableCheckBoxPresenter(new ConfigurableCheckBoxViewImpl());
         presenter.start(container);
+
+
         this.checkBoxConfig = checkBoxConfig;
 
         presenter.setEnabled(checkBoxConfig.isEnabled());
