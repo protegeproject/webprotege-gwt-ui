@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Map;
@@ -20,6 +17,8 @@ public interface LinearizationPortletView extends AcceptsOneWidget, IsWidget, Ha
     void setLinearizationParentsMap(Map<String, EntityNode> linearizationParentsMap);
 
     void setProjectId(ProjectId projectId);
+
+    void setLinearizationChangeEventHandler(LinearizationChangeEventHandler handler);
 
     boolean isReadOnly();
 
