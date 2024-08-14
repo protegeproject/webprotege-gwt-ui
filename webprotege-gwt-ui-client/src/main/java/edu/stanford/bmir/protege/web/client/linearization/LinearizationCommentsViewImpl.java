@@ -50,8 +50,11 @@ public class LinearizationCommentsViewImpl  extends Composite implements Lineari
     }
 
     @Override
-    public void setBody(@Nonnull String body) {
-        Scheduler.get().scheduleDeferred(() -> bodyField.setValue(body));
+    public void setBody(@Nonnull String body, boolean readonly) {
+        Scheduler.get().scheduleDeferred(() -> {
+            bodyField.setValue(body);
+            bodyField.setEnabled(!readonly);
+        });
     }
 
     @Nonnull

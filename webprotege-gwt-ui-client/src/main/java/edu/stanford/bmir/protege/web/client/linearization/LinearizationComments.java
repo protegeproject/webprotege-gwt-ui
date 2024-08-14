@@ -56,14 +56,15 @@ public class LinearizationComments  implements ClickHandler {
     public void onClick(ClickEvent event) {
         // Handle the click event here
         // For example, you can change the label's text on click
-        if(!this.isReadOnly) {
-            Consumer<String> handler = body -> {
+        Consumer<String> handler = body -> {
+            if(!isReadOnly) {
                 this.markDownText = body;
                 setText(body);
-            };
+            }
+        };
 
-            this.linearizationCommentsModal.showModal(markDownText, handler);
-        }
+        this.linearizationCommentsModal.showModal(markDownText, this.isReadOnly, handler);
+
 
     }
 

@@ -93,7 +93,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         initializeTableHeader();
 
         orderAndPopulateViewWithRows();
-        logger.info("ALEX parentIRI " + linearizationTableRow);
     };
 
 
@@ -283,7 +282,8 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         flexTable.getRowFormatter().addStyleName(0, style.getLinearizationHeader());
     }
 
-    private void saveValues(){
+    @Override
+    public void saveValues(){
         if(!isReadOnly) {
             List<LinearizationSpecification> specifications = this.tableRowList.stream()
                     .map(LinearizationTableRow::asLinearizationSpecification)

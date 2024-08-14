@@ -89,9 +89,12 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                     "Save edits before switching?",
                     "Do you want to save your edits before changing selection?",
                     DialogButton.NO,
-                    () -> {},
-                    DialogButton.YES,
                     () -> navigateToEntity(entityData),
+                    DialogButton.YES,
+                    () -> {
+                        view.saveValues();
+                        navigateToEntity(entityData);
+                    },
                     DialogButton.YES);
         } else {
             navigateToEntity(entityData);
