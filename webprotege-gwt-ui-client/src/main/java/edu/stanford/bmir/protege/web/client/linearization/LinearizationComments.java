@@ -29,7 +29,7 @@ public class LinearizationComments  implements ClickHandler {
         shownWidget = new Button();
         setText(text);
         shownWidget.addClickHandler(this);
-        shownWidget.addStyleName(style.getLinearizationColumn());
+        shownWidget.addStyleName(style.getLinearizationComments());
         this.linearizationCommentsModal = linearizationParentModal;
     }
 

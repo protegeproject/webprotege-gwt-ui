@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 public class LinearizationParentLabel implements ClickHandler {
 
+    private final static java.util.logging.Logger logger = Logger.getLogger("LinearizationParentLabel");
     private Label label;
 
     private LinearizationParentModal linearizationParentModal;
@@ -26,9 +27,12 @@ public class LinearizationParentLabel implements ClickHandler {
 
     private boolean readOnly = true;
 
+    private LinearizationParentsResourceBundle.LinearizationParentCss style = LinearizationParentsResourceBundle.INSTANCE.style();
+
     // Constructor
     public LinearizationParentLabel(String text, LinearizationParentModal linearizationParentModal, IRI entityIri, ProjectId projectId, ParentSelectedHandler parentSelectedHandler) {
-        label = new Label(text);
+        label = new Label(text == null || text.isEmpty() ? "\u00A0" : text);
+        label.setStyleName(style.getParentLabel());
         label.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getLinearizationParentCell());
         this.linearizationParentModal = linearizationParentModal;
         label.addClickHandler(this); // Register this class as the ClickHandler for the Label
@@ -56,6 +60,7 @@ public class LinearizationParentLabel implements ClickHandler {
 
     @Override
     public void onClick(ClickEvent event) {
+
         if(!readOnly) {
             this.linearizationParentModal.showModal(selectedEntityIri, projectId, selectedHandler);
         }

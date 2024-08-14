@@ -20,7 +20,7 @@ public interface LinearizationCommentsResourceBundle extends ClientBundle {
         @ClassName("linearizationEditor")
         String getLinearizationEditor();
 
-        @ClassName("linearizationColumn")
-        String getLinearizationColumn();
+        @ClassName("linearizationComments")
+        String getLinearizationComments();
     }
 }
