@@ -36,10 +36,10 @@ public class LinearizationComments  implements ClickHandler {
 
     public void setText(String text) {
         String strippedText = stripMarkdown(text);
-        if(strippedText.length() < 50) {
+        if(strippedText.length() < 26) {
             this.shownWidget.setText(strippedText);
         } else {
-            this.shownWidget.setText(strippedText.substring(0, 46) + " ...");
+            this.shownWidget.setText(strippedText.substring(0, 26) + " ...");
         }
 
     }

@@ -68,7 +68,7 @@
             width: 99%;
             border-bottom: 1px solid  #f2f2f2;
             border-top: 1px solid  #f2f2f2;
-            min-height: 45px;
+            min-height: 35px;
             align-items: center;
         }
 

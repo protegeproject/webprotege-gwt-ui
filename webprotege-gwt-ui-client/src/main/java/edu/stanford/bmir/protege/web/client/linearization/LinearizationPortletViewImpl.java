@@ -272,13 +272,18 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         flexTable.getCellFormatter().addStyleName(0, column, style.getWideColumn());
     }
 
+    private void addCommentsHeader(String headerText, int column) {
+        addHeaderCell(headerText,column);
+        flexTable.getCellFormatter().addStyleName(0, column, style.getNotesColumn());
+    }
+
     private void initializeTableHeader() {
         addHeaderCell("Linearization",  0);
         addCheckboxHeaderCell("Is part of?",  1);
         addCheckboxHeaderCell("Is grouping?",2);
         addCheckboxHeaderCell("Aux.ax.child?", 3);
         addWideHeaderCell("Linearization parent", 4);
-        addWideHeaderCell("Coding notes", 5);
+        addCommentsHeader("Coding notes", 5);
         flexTable.getRowFormatter().addStyleName(0, style.getLinearizationHeader());
     }
 

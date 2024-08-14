@@ -82,6 +82,11 @@
     cursor: pointer;
 }
 
+.notesColumn {
+    width: 200px;
+    min-width: 100px;
+}
+
 .secondaryParent {
     color : #A8A8A8;
 }
