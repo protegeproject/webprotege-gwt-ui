@@ -67,7 +67,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue()
                 .hasSetting(SHOW_DETAILS_FILTER,
                         FilterSetting.ON)));
-        refreshAction = new PortletAction(messages.refresh(), "wp-btn-g--refresh", () -> reload());
+        refreshAction = new PortletAction(messages.refresh(), "wp-btn-g--refresh", this::reload);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
                 canViewChanges -> {
                     if (canViewChanges) {
                         ProjectId projectId = getProjectId();
-                        presenter.setRevertChangesVisible(false);
+                        presenter.setRevertChangesVisible(true);
                         presenter.displayChangesForProject();
                         setForbiddenVisible(false);
                     } else {
