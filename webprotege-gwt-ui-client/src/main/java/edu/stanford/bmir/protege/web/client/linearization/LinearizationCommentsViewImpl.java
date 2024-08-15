@@ -6,7 +6,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
@@ -20,10 +19,12 @@ import javax.inject.Inject;
 
 public class LinearizationCommentsViewImpl  extends Composite implements LinearizationCommentsView {
 
+
     interface LinearizationCommentsViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationCommentsViewImpl> {
 
     }
 
+    private boolean isReadonly;
     private static LinearizationCommentsViewImplUiBinder ourUiBinder = GWT.create(LinearizationCommentsViewImplUiBinder.class);
 
     @UiField(provided = true)
@@ -43,6 +44,11 @@ public class LinearizationCommentsViewImpl  extends Composite implements Lineari
 
     private void handleAutocomplete(String query, EditorPosition caretPosition, int caretPos, AutoCompletionCallback callback) {
     }
+
+    public void setReadonly(boolean readonly) {
+        this.isReadonly = readonly;
+    }
+
 
     @Override
     public void clear() {
@@ -75,6 +81,9 @@ public class LinearizationCommentsViewImpl  extends Composite implements Lineari
     }
 
     private void focus(@Nonnull Element element) {
+        if(isReadonly) {
+            return;
+        }
         if("textarea".equalsIgnoreCase(element.getTagName())) {
             element.focus();
             return;

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 
@@ -28,15 +29,23 @@ public class LinearizationCommentsModal {
     public void showModal(String initialBody, boolean readonly, @Nonnull Consumer<String> acceptBodyConsumer){
         ModalPresenter presenter = modalManager.createPresenter();
         view.setBody(initialBody, readonly);
+        view.setReadonly(readonly);
         presenter.setView(view);
-        presenter.setEscapeButton(DialogButton.CANCEL);
-        presenter.setPrimaryButton(DialogButton.OK);
-        presenter.setTitle("Coding notes");
-        presenter.setButtonHandler(DialogButton.OK, closer -> {
-            closer.closeModal();
-            String body = view.getBody();
-            acceptBodyConsumer.accept(body);
-        });
+        if(readonly) {
+            presenter.setPrimaryButton(DialogButton.OK);
+            presenter.setTitle("Coding notes (read-only)");
+            presenter.setButtonHandler(DialogButton.OK, ModalCloser::closeModal);
+        }else {
+            presenter.setEscapeButton(DialogButton.CANCEL);
+            presenter.setPrimaryButton(DialogButton.OK);
+            presenter.setTitle("Coding notes");
+            presenter.setButtonHandler(DialogButton.OK, closer -> {
+                closer.closeModal();
+                String body = view.getBody();
+                acceptBodyConsumer.accept(body);
+            });
+        }
+
         modalManager.showModal(presenter);
     }
 }
