@@ -64,7 +64,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.glass}">
-        <g:HTMLPanel addStyleNames="{style.modal} {wp.modal.modal}">
+        <g:HTMLPanel ui:field="wrapper" addStyleNames="{style.modal} {wp.modal.modal}">
             <g:Label ui:field="titleField" addStyleNames="{wp.modal.caption}"/>
             <g:SimplePanel ui:field="contentContainer" addStyleNames="{wp.modal.content}"/>
             <g:HTMLPanel ui:field="buttonContainer" addStyleNames="{style.buttonContainer} {wp.modal.buttonBar}"/>

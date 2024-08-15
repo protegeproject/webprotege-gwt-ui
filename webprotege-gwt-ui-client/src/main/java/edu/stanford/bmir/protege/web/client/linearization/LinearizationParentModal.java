@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalStyleConfig;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
@@ -21,13 +22,13 @@ public class LinearizationParentModal {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-
-    Logger logger = java.util.logging.Logger.getLogger("LinearizationParentModal");
+    LinearizationParentsResourceBundle.LinearizationParentCss style = LinearizationParentsResourceBundle.INSTANCE.style();
 
     @Inject
     public LinearizationParentModal(@Nonnull ModalManager modalManager, DispatchServiceManager dispatchServiceManager) {
         this.modalManager = modalManager;
         this.dispatchServiceManager = dispatchServiceManager;
+        style.ensureInjected();
     }
 
 
@@ -37,6 +38,7 @@ public class LinearizationParentModal {
             LinearizationParentView view = new LinearizationParentViewImpl(getHierarchyParentsResult.getAncestorsTree());
             presenter.setTitle("Set linearization parent");
             presenter.setView(view);
+            presenter.setModalStyleConfig(new ModalStyleConfig(style.getParentModalWrapper()));
             presenter.setEscapeButton(DialogButton.CANCEL);
             presenter.setPrimaryButton(DialogButton.OK);
             presenter.setButtonHandler(DialogButton.OK, closer -> {

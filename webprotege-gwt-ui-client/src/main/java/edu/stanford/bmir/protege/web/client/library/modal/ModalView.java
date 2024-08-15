@@ -47,4 +47,6 @@ public interface ModalView extends IsWidget {
     void hide();
 
     void setPrimaryButtonEnabled(boolean enabled);
+
+    void setStyleConfig(ModalStyleConfig modalStyleConfig);
 }
