@@ -29,13 +29,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @UiField
     protected FlexTable flexTable;
 
-    @UiField
-    Button editValuesButton;
-    @UiField
-    Button cancelButton;
+    @UiField Button editValuesButton;
+    @UiField Button cancelButton;
 
-    @UiField
-    Button saveValuesButton;
+    @UiField Button saveValuesButton;
 
     @UiField(provided = true)
     ConfigurableCheckbox suppressOthersSpecifiedResidual;
