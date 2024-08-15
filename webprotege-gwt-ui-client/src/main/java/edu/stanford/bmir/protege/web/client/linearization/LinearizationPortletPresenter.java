@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("Convert2MethodRef")
 @Portlet(id = "portlets.Linearization",
-        title = "Linearizations",
+        title = "iCat-X Linearizations",
         tooltip = "Displays the linearizations on the current entity.")
 public class LinearizationPortletPresenter extends AbstractWebProtegePortletPresenter {
 
