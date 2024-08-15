@@ -9,7 +9,7 @@ public interface LinearizationCommentsView extends IsWidget, HasInitialFocusable
 
     void clear();
 
-    void setBody(@Nonnull String body);
+    void setBody(@Nonnull String body, boolean readonly);
 
     @Nonnull
     String getBody();

@@ -19,4 +19,8 @@ public interface LinearizationPortletView extends AcceptsOneWidget, IsWidget, Ha
     void setProjectId(ProjectId projectId);
 
     void setLinearizationChangeEventHandler(LinearizationChangeEventHandler handler);
+
+    boolean isReadOnly();
+
+    void saveValues();
 }

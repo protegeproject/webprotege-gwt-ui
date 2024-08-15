@@ -25,9 +25,9 @@ public class LinearizationCommentsModal {
     }
 
 
-    public void showModal(String initialBody, @Nonnull Consumer<String> acceptBodyConsumer){
+    public void showModal(String initialBody, boolean readonly, @Nonnull Consumer<String> acceptBodyConsumer){
         ModalPresenter presenter = modalManager.createPresenter();
-        view.setBody(initialBody);
+        view.setBody(initialBody, readonly);
         presenter.setView(view);
         presenter.setEscapeButton(DialogButton.CANCEL);
         presenter.setPrimaryButton(DialogButton.OK);

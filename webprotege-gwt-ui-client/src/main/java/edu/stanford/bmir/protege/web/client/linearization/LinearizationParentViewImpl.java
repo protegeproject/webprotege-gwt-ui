@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -15,8 +13,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class LinearizationParentViewImpl  extends Composite implements LinearizationParentView {
-
-    Logger logger = java.util.logging.Logger.getLogger("LinearizationParentViewImpl");
 
     @UiField
     Tree tree;

@@ -41,6 +41,9 @@ public class ModalViewImpl extends Composite implements ModalView {
     HTMLPanel buttonContainer;
 
     @UiField
+    HTMLPanel wrapper;
+
+    @UiField
     Label titleField;
 
     @Nonnull
@@ -80,6 +83,13 @@ public class ModalViewImpl extends Composite implements ModalView {
     public void setPrimaryButtonEnabled(boolean enabled) {
         this.primaryButtonEnabled = enabled;
         primaryButton.ifPresent(button -> button.setEnabled(enabled));
+    }
+
+    @Override
+    public void setStyleConfig(ModalStyleConfig modalStyleConfig) {
+        if(modalStyleConfig != null) {
+            this.wrapper.addStyleName(modalStyleConfig.getWpModalWrapperStyle());
+        }
     }
 
     @Override

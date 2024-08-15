@@ -12,3 +12,7 @@
 .parentLabel {
     width: 100%;
 }
+
+.parentModalWrapper {
+    max-width: 600px!important;
+}

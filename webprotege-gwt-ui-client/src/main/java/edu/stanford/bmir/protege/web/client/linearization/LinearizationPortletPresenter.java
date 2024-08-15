@@ -3,7 +3,11 @@ package edu.stanford.bmir.protege.web.client.linearization;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -39,6 +43,8 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
     private final LoggedInUserManager loggedInUserManager;
 
 
+    private MessageBox messageBox;
+
     @Inject
     public LinearizationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                          @Nonnull ProjectId projectId,
@@ -46,9 +52,11 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                                          @Nonnull DispatchServiceManager dispatch,
                                          @Nonnull LinearizationPortletView view,
                                          @Nonnull EventBus eventBus,
+                                         @Nonnull MessageBox messageBox,
                                          @Nonnull LoggedInUserManager loggedInUserManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
+        this.messageBox = messageBox;
         this.dispatch = dispatch;
         this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
@@ -99,7 +107,25 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        if(!view.isReadOnly()){
+            messageBox.showConfirmBox(MessageStyle.ALERT,
+                    "Save edits before switching?",
+                    "Do you want to save your edits before changing selection?",
+                    DialogButton.NO,
+                    () -> navigateToEntity(entityData),
+                    DialogButton.YES,
+                    () -> {
+                        view.saveValues();
+                        navigateToEntity(entityData);
+                    },
+                    DialogButton.YES);
+        } else {
+            navigateToEntity(entityData);
+        }
 
+    }
+
+    private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
             dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
 

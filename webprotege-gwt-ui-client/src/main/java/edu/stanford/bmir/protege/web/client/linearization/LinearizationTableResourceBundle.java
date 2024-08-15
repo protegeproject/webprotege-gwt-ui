@@ -37,6 +37,9 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
         @ClassName("wideColumn")
         String getWideColumn();
 
+        @ClassName("notesColumn")
+        String getNotesColumn();
+
         @ClassName("enabledCheckbox")
         String getEnabledCheckbox();
 

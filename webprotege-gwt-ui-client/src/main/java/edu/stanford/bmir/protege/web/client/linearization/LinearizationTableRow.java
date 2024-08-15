@@ -172,7 +172,6 @@ public class LinearizationTableRow {
                 this.linearizationDefinition.getWhoficEntityIri(),
                 this.commentsWidget.getText()
                 );
-        logger.info("ALEX specification " + response);
         return response;
     }
 

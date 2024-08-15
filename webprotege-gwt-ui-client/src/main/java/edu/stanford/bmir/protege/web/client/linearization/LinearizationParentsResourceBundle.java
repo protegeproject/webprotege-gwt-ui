@@ -21,5 +21,8 @@ public interface LinearizationParentsResourceBundle extends ClientBundle {
 
         @ClassName("parentLabel")
         String getParentLabel();
+
+        @ClassName("parentModalWrapper")
+        String getParentModalWrapper();
     }
 }
