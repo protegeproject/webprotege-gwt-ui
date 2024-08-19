@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -20,7 +22,11 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormSubjectFactoryDescriptor {
+public abstract class FormSubjectFactoryDescriptor implements IsSerializable, Serializable {
+
+    public FormSubjectFactoryDescriptor(){
+
+    }
 
     @JsonCreator
     public static FormSubjectFactoryDescriptor get(@Nonnull @JsonProperty(PropertyNames.ENTITY_TYPE) EntityType entityType,

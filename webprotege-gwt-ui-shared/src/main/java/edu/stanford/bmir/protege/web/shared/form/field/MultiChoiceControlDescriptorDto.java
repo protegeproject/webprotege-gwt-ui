@@ -15,6 +15,11 @@ import javax.annotation.Nonnull;
 @JsonTypeName("MultiChoiceControlDescriptorDto")
 public abstract class MultiChoiceControlDescriptorDto implements FormControlDescriptorDto {
 
+
+    public MultiChoiceControlDescriptorDto(){
+
+    }
+
     @JsonCreator
     @Nonnull
     public static MultiChoiceControlDescriptorDto get(@JsonProperty(PropertyNames.CHOICES_SOURCE) @Nonnull ChoiceListSourceDescriptor choiceListSourceDescriptor,

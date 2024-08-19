@@ -45,6 +45,10 @@ public class ModalPresenter {
         this.view.setCaption(title);
     }
 
+    public void setModalStyleConfig(ModalStyleConfig modalStyleConfig) {
+        this.view.setStyleConfig(modalStyleConfig);
+    }
+
     public void setView(@Nonnull IsWidget content) {
         view.setContent(checkNotNull(content));
     }

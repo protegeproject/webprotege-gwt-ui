@@ -48,7 +48,7 @@ public abstract class SetPerspectivesAction implements ProjectAction<SetPerspect
     @JsonCreator
     public static SetPerspectivesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                @JsonProperty("userId") @Nullable UserId userId,
-                                               @JsonProperty("perspectiveDescriptors") @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
+                                               @JsonProperty("perspectiveIds") @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
         return new AutoValue_SetPerspectivesAction(projectId, userId, perspectiveIds);
     }
 
@@ -65,6 +65,7 @@ public abstract class SetPerspectivesAction implements ProjectAction<SetPerspect
     }
 
     @Nonnull
+    @JsonProperty("perspectiveIds")
     public abstract ImmutableList<PerspectiveDescriptor> getPerspectiveDescriptors();
 
 }

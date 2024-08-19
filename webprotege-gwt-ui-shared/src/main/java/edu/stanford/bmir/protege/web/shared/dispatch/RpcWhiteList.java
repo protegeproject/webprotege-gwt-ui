@@ -30,10 +30,13 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsResult;
 import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.lang.*;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
@@ -497,6 +500,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetPerspectiveDetailsResult _GetPerspectiveDetailsResult;
 
+    PerspectiveDetails _PerspectiveDetails;
+
     GetPerspectiveLayoutAction _GetPerspectiveLayoutAction;
 
     GetPerspectiveLayoutResult _GetPerspectiveLayoutResult;
@@ -512,6 +517,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetProjectChangesAction _GetProjectChangesAction;
 
     GetProjectChangesResult _GetProjectChangesResult;
+
+    GetLinearizationChangesAction _GetLinearizationChangesAction;
+
+    GetLinearizationChangesResult _GetLinearizationChangesResult;
 
     GetProjectDetailsAction _GetProjectDetailsAction;
 
@@ -997,8 +1006,24 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetUserInfoResult _GetUserInfoResult;
 
+    AppEnvVariables _AppEnvVariables;
+
     GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
 
+    GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
+    LinearizationDefinition _LinearizationDefinition;
+
+    GetEntityLinearizationResult _GetEntityLinearizationResult;
+
+    WhoficEntityLinearizationSpecification _WhoficEntityLinearizationSpecification;
+
+    SaveEntityLinearizationResult _SaveEntityLinearizationResult;
+
+    GetRenderedOwlEntitiesResult _GetRenderedOwlEntitiesResult;
+
+    GetClassAncestorsResult _GetClassAncestorsResult;
+
+    AncestorClassHierarchy _AncestorClassHierarchy;
     public RpcWhiteList() {
     }
 }

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.form;
+package edu.stanford.bmir.protege.web.client.tab;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,14 +13,14 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormTabBarViewImpl extends Composite implements FormTabBarView {
+public class TabBarViewImpl extends Composite implements TabBarView {
 
     @Override
-    public void addView(FormTabView tabView) {
+    public void addView(TabView tabView) {
         itemContainer.add(tabView);
     }
 
-    interface FormTabBarViewImplUiBinder extends UiBinder<HTMLPanel, FormTabBarViewImpl> {
+    interface FormTabBarViewImplUiBinder extends UiBinder<HTMLPanel, TabBarViewImpl> {
 
     }
 
@@ -30,7 +30,7 @@ public class FormTabBarViewImpl extends Composite implements FormTabBarView {
     HTMLPanel itemContainer;
 
     @Inject
-    public FormTabBarViewImpl() {
+    public TabBarViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

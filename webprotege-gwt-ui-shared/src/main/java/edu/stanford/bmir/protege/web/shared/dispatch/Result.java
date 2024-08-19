@@ -10,9 +10,7 @@ import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueResult;
-import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
-import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
-import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
+import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
@@ -29,10 +27,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdRe
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameResult;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesResult;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
@@ -55,6 +50,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootRes
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchySiblingsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeResult;
+import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
@@ -68,6 +64,9 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsResul
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
+import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsResult;
+import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationResult;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
@@ -142,7 +141,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- *     The basic interface for results which are returned from the dispatch service
+ * The basic interface for results which are returned from the dispatch service
  * </p>
  */
 @JsonSubTypes({
@@ -221,6 +220,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetPerspectivesResult.class),
         @JsonSubTypes.Type(GetPossibleItemCompletionsResult.class),
         @JsonSubTypes.Type(GetProjectChangesResult.class),
+        @JsonSubTypes.Type(GetLinearizationChangesResult.class),
         @JsonSubTypes.Type(GetProjectDetailsResult.class),
         @JsonSubTypes.Type(GetProjectEventsResult.class),
         @JsonSubTypes.Type(GetProjectFormDescriptorsResult.class),
@@ -294,7 +294,12 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateDataPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
-        @JsonSubTypes.Type(GetUserInfoResult.class)
+        @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
+        @JsonSubTypes.Type(GetEntityLinearizationResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
+        @JsonSubTypes.Type(GetClassAncestorsResult.class),
+        @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

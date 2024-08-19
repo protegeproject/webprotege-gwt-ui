@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -15,8 +16,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.*;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileAction;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -53,6 +52,8 @@ public class CreateNewProjectPresenter {
     @Nonnull
     private final MessageBox messageBox;
 
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
+
     @Inject
     public CreateNewProjectPresenter(DispatchErrorMessageDisplay errorDisplay,
                                      ProgressDisplay progressDisplay,
@@ -60,7 +61,7 @@ public class CreateNewProjectPresenter {
                                      @Nonnull LoggedInUserManager loggedInUserManager,
                                      @Nonnull DispatchServiceManager dispatchServiceManager,
                                      @Nonnull EventBus eventBus,
-                                     @Nonnull MessageBox messageBox) {
+                                     @Nonnull MessageBox messageBox, ApplicationEnvironmentManager applicationEnvironmentManager) {
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
         this.view = checkNotNull(view);
@@ -68,6 +69,7 @@ public class CreateNewProjectPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.eventBus = checkNotNull(eventBus);
         this.messageBox = messageBox;
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
     }
 
     @Nonnull
@@ -124,7 +126,7 @@ public class CreateNewProjectPresenter {
                                       ProjectCreatedHandler projectCreatedHandler) {
 
         String fileUploadElementId = view.getFileUploadElementId();
-        FileUploader fileUploader = new FileUploader();
+        FileUploader fileUploader = new FileUploader(applicationEnvironmentManager.getAppEnvVariables().getFileUploadUrl());
         fileUploader.uploadFile(fileUploadElementId,
                                 userInfo.getToken(),
                                 fileSubmissionId -> handleFileSubmissionSuccess(projectCreatedHandler, fileSubmissionId),

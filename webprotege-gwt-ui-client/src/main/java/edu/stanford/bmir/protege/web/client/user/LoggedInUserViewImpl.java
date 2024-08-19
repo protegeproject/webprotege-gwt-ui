@@ -29,7 +29,7 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
     private static LoggedInUserViewImplUiBinder ourUiBinder = GWT.create(LoggedInUserViewImplUiBinder.class);
 
 
-    private SignOutRequestHandler signOutRequestHandler = () -> {};
+    private SignOutRequestHandler signOutRequestHandler = () -> {throw new RuntimeException("This should not be called");};
 
     private ChangeEmailAddressHandler changeEmailAddressHandler = () -> {};
 
@@ -46,9 +46,10 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
     @Inject
-    public LoggedInUserViewImpl() {
+    public LoggedInUserViewImpl(SignOutRequestHandler signOutRequestHandler) {
+        this.signOutRequestHandler = signOutRequestHandler;
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem(MESSAGES.signOut(), () -> signOutRequestHandler.handleSignOutRequest());
+        popupMenu.addItem(MESSAGES.signOut(), signOutRequestHandler::handleSignOutRequest);
         popupMenu.addItem(MESSAGES.changeEmailAddress(), () -> changeEmailAddressHandler.handleChangeEmailAddress());
         popupMenu.addItem(MESSAGES.changePassword(), () -> changePasswordHandler.handleChangePassword());
     }

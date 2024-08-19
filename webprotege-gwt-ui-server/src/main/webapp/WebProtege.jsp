@@ -18,16 +18,17 @@
 
     <title><%writeApplicationName(out);%></title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png"/>
+    <link rel="shortcut icon" type="image/x-icon" href="ICAT-X4.svg"/>
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
     <link rel="stylesheet" href="css/icd11ect-1.7.css">
+    <link href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" rel="stylesheet" />
 
     <script src="https://dagrejs.github.io/project/graphlib/v2.1.2/graphlib.js"></script>
     <script src="js/dagre/dagre.js"></script>
     <script src="js/polyfill/pathseg/pathseg.js"></script>
-
     <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
     <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js"></script>

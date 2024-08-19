@@ -24,6 +24,10 @@ import java.util.Optional;
 @JsonTypeName(OwlInstanceBinding.TYPE)
 public abstract class OwlInstanceBinding implements OwlBinding {
 
+    public OwlInstanceBinding(){
+
+    }
+
     protected static final String TYPE = "INSTANCE";
 
     @JsonCreator

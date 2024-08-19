@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.tab.TabContentContainer;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ public interface FormStackView extends IsWidget {
     AcceptsOneWidget getSelectorContainer();
 
     @Nonnull
-    FormContainer addContainer(@Nonnull LanguageMap labels);
+    TabContentContainer addContainer(@Nonnull LanguageMap labels);
 
     void clear();
 }
