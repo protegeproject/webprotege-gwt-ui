@@ -9,13 +9,18 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 
 @Portlet(id = "portlets.PostCoordination",
@@ -24,6 +29,7 @@ import java.util.Optional;
 public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletPresenter  {
 
         private final PostCoordinationPortletView view;
+        Logger logger = java.util.logging.Logger.getLogger("PostCoordinationPortletPresenter");
 
         private DispatchServiceManager dispatch;
         private final EventBus eventBus;
@@ -57,7 +63,21 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
             portletUi.setWidget(view.asWidget());
             setDisplaySelectedEntityNameAsSubtitle(true);
+            portletUi.setWidget(view.asWidget());
+            setDisplaySelectedEntityNameAsSubtitle(true);
+
+            dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
+                Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+                for(String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
+                    PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                            .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
+                            .findFirst().orElseThrow( () -> new RuntimeException("Couldn't find label for " + availableAxis));
+                    labels.put(availableAxis, existingLabel);
+                }
+                view.setLabels(labels);
+            });
         }
+
 
 
         @Override
