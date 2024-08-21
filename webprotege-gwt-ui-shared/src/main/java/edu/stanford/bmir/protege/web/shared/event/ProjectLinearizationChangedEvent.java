@@ -5,7 +5,7 @@ import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-@JsonTypeName("webprotege.linearization.ProjectLinearizationChangeEvent")
+@JsonTypeName("webprotege.linearization.ProjectLinearizationChangedEvent")
 public class ProjectLinearizationChangedEvent extends ProjectEvent<ProjectLinearizationChangedHandler> {
 
     public static final Event.Type<ProjectLinearizationChangedHandler> PROJECT_LINEARIZATION_CHANGED = new Event.Type<>();
