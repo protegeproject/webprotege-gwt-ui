@@ -3,6 +3,8 @@
              xmlns:custom="urn:import:edu.stanford.bmir.protege.web.client.form.complexcheckbox"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
 <g:HTMLPanel ui:field="paneContainer">
-
+    <g:HTMLPanel width="100%">
+        <g:FlexTable width="97%" height="100%" ui:field="flexTable"/>
+    </g:HTMLPanel>
 </g:HTMLPanel>
 </ui:UiBinder>

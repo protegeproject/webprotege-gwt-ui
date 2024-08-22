@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -75,7 +77,20 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                     labels.put(availableAxis, existingLabel);
                 }
                 view.setLabels(labels);
+
+                dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
+                    Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
+
+                    for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
+                        definitionMap.put(definition.getWhoficEntityIri(), definition);
+                    }
+                    view.setLinearizationDefinitonMap(definitionMap);
+                    view.setPostCoordinationEntity();
+                });
+
             });
+
+
         }
 
 
