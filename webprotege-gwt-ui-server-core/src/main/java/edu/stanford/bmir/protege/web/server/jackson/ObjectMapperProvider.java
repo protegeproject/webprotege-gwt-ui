@@ -100,6 +100,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
                 OntologyBrowserTextChangedEvent.class,
                 PermissionsChangedEvent.class,
                 ProjectChangedEvent.class,
+                ProjectLinearizationChangedEvent.class,
                 ProjectMovedToTrashEvent.class,
                 OntologyFrameChangedEvent.class,
                 EntityHierarchyChangedEvent.class,

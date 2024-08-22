@@ -7,14 +7,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.filter.FilterId;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.filter.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -22,6 +18,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.event.ProjectLinearizationChangedEvent.PROJECT_LINEARIZATION_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.CombinedProjectHistory",
@@ -80,6 +77,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
+        eventBus.addProjectEventHandler(getProjectId(), PROJECT_LINEARIZATION_CHANGED, this::handleLinearizationChanged);
         reload();
     }
 
@@ -94,6 +92,10 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         }
         refreshAction.setEnabled(true);
         lastRevisionNumber = event.getRevisionNumber();
+    }
+
+    private void handleLinearizationChanged(ProjectLinearizationChangedEvent event) {
+        refreshAction.setEnabled(true);
     }
 
     private void reload() {
