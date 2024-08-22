@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <g:HTMLPanel>
+        <!-- Label with bold text -->
+        <g:Label ui:field="titleLabel" styleName="cm-strong cm-def"/>
+
+        <!-- Plus button with "Select value" text -->
+        <g:HorizontalPanel>
+            <g:Button ui:field="addButton" text="+ Select value" styleName="cm-link"/>
+        </g:HorizontalPanel>
+
+        <!-- Table for displaying values and buttons -->
+        <g:FlexTable ui:field="valueTable"/>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

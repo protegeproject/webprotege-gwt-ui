@@ -1,8 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:custom="urn:import:edu.stanford.bmir.protege.web.client.form.complexcheckbox"
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
-<g:HTMLPanel ui:field="paneContainer">
-
-</g:HTMLPanel>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel ui:field="paneContainer">
+        <g:VerticalPanel ui:field="scaleValueCardList"/>
+    </g:HTMLPanel>
 </ui:UiBinder>
