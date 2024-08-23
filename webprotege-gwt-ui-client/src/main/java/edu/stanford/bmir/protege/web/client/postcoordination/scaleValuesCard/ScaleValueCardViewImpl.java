@@ -3,15 +3,19 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle;
 
-import java.util.List;
+import java.util.*;
 
 public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     interface ScaleValueCardViewImplUiBinder extends UiBinder<HTMLPanel, ScaleValueCardViewImpl> {
     }
 
-    private static ScaleValueCardViewImplUiBinder uiBinder = GWT.create(ScaleValueCardViewImplUiBinder.class);
+    private final static ScaleValueCardViewImplUiBinder uiBinder = GWT.create(ScaleValueCardViewImplUiBinder.class);
+    private final HTMLPanel rootPanel;
+    private static PostCoordinationTableResourceBundle.PostCoordinationTableCss postCoordinationStyle = PostCoordinationTableResourceBundle.INSTANCE.style();
+
 
     @UiField
     Label titleLabel;
@@ -28,20 +32,22 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     public ScaleValueCardViewImpl(String postCoordinationAxis, List<String> scaleValues) {
         this.postCoordinationAxis = postCoordinationAxis;
         this.scaleValues = scaleValues;
-        uiBinder.createAndBindUi(this);
+
+        rootPanel = uiBinder.createAndBindUi(this);
+        titleLabel.setText(postCoordinationAxis);
         initTable();
     }
 
     private void initTable() {
-        valueTable.setText(0, 0, "Value");
-        valueTable.setText(0, 1, "");
-        valueTable.setText(0, 2, "");
+        addHeaderCell("Value",0);
+        addHeaderCell("",1);
+        addHeaderCell("",2);
 
         for (int i = 0; i < scaleValues.size(); i++) {
             String value = scaleValues.get(i);
             int rowIndex = i + 1;
 
-            valueTable.setText(rowIndex, 0, value);
+            valueTable.setWidget(rowIndex, 0, new Label(value));
 
             Button deleteButton = new Button("Delete");
             Button actionButton = new Button("Action");
@@ -65,7 +71,12 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     @Override
     public Widget asWidget() {
-        titleLabel.setText(postCoordinationAxis);
-        return uiBinder.createAndBindUi(this);
+        return rootPanel;
+    }
+
+    private void addHeaderCell(String label, int position) {
+        Widget headerCell = new Label(label);
+        valueTable.setWidget(0, position, headerCell);
+        valueTable.getCellFormatter().addStyleName(0, position, postCoordinationStyle.getPostCoordinationHeader());
     }
 }

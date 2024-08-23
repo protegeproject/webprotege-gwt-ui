@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -19,9 +20,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -89,6 +88,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 });
 
             });
+            List<ScaleValueCardView> scaleValueList = Arrays.asList(
+                    new ScaleValueCardViewImpl("iri1", Arrays.asList("iri1.1", "iri1.2", "iri1.3")),
+                    new ScaleValueCardViewImpl("iri2", Arrays.asList("iri2.1", "iri2.2", "iri2.3"))
+            );
+
+            view.setScaleValueCards(scaleValueList);
 
 
         }

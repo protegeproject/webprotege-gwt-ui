@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class PostCoordinationPortletViewImpl extends Composite implements PostCoordinationPortletView {
 
@@ -67,7 +66,10 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @Override
     public void setScaleValueCards(List<ScaleValueCardView> scaleValueCards) {
-        scaleValueCards.forEach(scaleValue -> scaleValueCardList.add(scaleValue));
+        scaleValueCardList.clear(); // Clear previous components
+        scaleValueCards.forEach(scaleValue -> {
+            scaleValueCardList.add(scaleValue.asWidget());
+        });
     }
 
     @Override

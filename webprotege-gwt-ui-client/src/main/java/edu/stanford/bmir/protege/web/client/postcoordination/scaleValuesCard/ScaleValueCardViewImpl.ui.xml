@@ -3,18 +3,17 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
+    <ui:with field="pc"
+             type="edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle"/>
     <g:HTMLPanel>
-        <!-- Label with bold text -->
-        <g:Label ui:field="titleLabel" styleName="cm-strong cm-def"/>
-
-        <!-- Plus button with "Select value" text -->
         <g:HorizontalPanel>
-            <g:Button ui:field="addButton" text="+ Select value" styleName="cm-link"/>
+            <g:VerticalPanel>
+                <g:Label ui:field="titleLabel" styleName="cm-strong cm-def"/>
+                <g:Button ui:field="addButton" text="+ Select value" styleName="cm-link"/>
+            </g:VerticalPanel>
+            <g:FlexTable width="97%" height="100%" ui:field="valueTable"
+                         styleName="{pc.style.getPostCoordinationTable}"/>
         </g:HorizontalPanel>
-
-        <!-- Table for displaying values and buttons -->
-        <g:FlexTable ui:field="valueTable"/>
     </g:HTMLPanel>
 
 </ui:UiBinder>
