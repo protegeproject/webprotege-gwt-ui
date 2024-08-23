@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.postcoordination;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardView;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -12,6 +13,10 @@ public interface PostCoordinationPortletView extends AcceptsOneWidget, IsWidget,
     void setProjectId(ProjectId projectId);
 
     void setLabels(Map<String, PostCoordinationTableAxisLabel> labels);
+
+    void setLinearizationDefinitonMap(Map<String, LinearizationDefinition> linearizationDefinitonMap);
+
+    void setPostCoordinationEntity();
 
     void setScaleValueCards(List<ScaleValueCardView> scaleValueCards);
 }
