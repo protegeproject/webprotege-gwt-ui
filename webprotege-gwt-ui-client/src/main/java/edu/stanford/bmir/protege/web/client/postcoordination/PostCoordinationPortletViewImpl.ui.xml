@@ -4,6 +4,6 @@
         <g:HTMLPanel width="100%">
             <g:FlexTable width="97%" height="100%" ui:field="flexTable"/>
         </g:HTMLPanel>
-        <g:VerticalPanel ui:field="scaleValueCardList"/>
+        <g:VerticalPanel width="100%" ui:field="scaleValueCardList"/>
     </g:HTMLPanel>
 </ui:UiBinder>
