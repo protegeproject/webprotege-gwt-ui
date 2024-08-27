@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Portlet(id = "portlets.PostCoordination",
         title = "iCat-X Post-Coordinations",
@@ -57,6 +58,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
 
+
         dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
             Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
             for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
@@ -67,6 +69,20 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 labels.put(availableAxis, existingLabel);
             }
             view.setLabels(labels);
+            List<ScaleValueCardPresenter> scaleValueCardViews = labels.values()
+                    .stream()
+                    .map(tabelAxisLabel ->
+                            createScaleValueCardPresenter(
+                                    tabelAxisLabel,
+                                    new PostCoordinationScaleValue(
+                                            tabelAxisLabel.getPostCoordinationAxis(),
+                                            tabelAxisLabel.getScaleLabel(),
+                                            new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3"))
+                                    )
+                            ))
+                    .collect(Collectors.toList());
+
+            scaleValueCardViews.forEach(scaleValuePresenter -> scaleValuePresenter.start(view.getScaleValueCardsView()));
 
             dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
@@ -77,19 +93,11 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 view.setPostCoordinationEntity();
             });
         });
-
-
-        List<ScaleValueCardView> scaleValueCardViews = Arrays.asList(
-                createScaleValueCardPresenter("iri1", Arrays.asList("iri1.1", "iri1.2", "iri1.3")).getView(),
-                createScaleValueCardPresenter("iri2", Arrays.asList("iri2.1", "iri2.2", "iri2.3")).getView()
-        );
-
-        view.setScaleValueCards(scaleValueCardViews);
     }
 
-    private ScaleValueCardPresenter createScaleValueCardPresenter(String axis, List<String> values) {
+    private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
         ScaleValueCardView view = new ScaleValueCardViewImpl();
-        return new ScaleValueCardPresenter(axis, values, view);
+        return new ScaleValueCardPresenter(axis, scaleValue, view);
     }
 
     @Override

@@ -1,20 +1,18 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
-import java.util.*;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 
 public class ScaleValueCardPresenter {
 
     private final ScaleValueCardView view;
-    private final String postCoordinationAxis;
-    private final List<String> scaleValues;
+    private final PostCoordinationTableAxisLabel postCoordinationAxis;
+    private final PostCoordinationScaleValue scaleValues;
 
-    public ScaleValueCardPresenter(String postCoordinationAxis, List<String> scaleValues, ScaleValueCardView view) {
+    public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis, PostCoordinationScaleValue scaleValue, ScaleValueCardView view) {
         this.view = view;
         this.postCoordinationAxis = postCoordinationAxis;
-        this.scaleValues = new ArrayList<>(scaleValues);
-
-        bindView();
-        initTable();
+        this.scaleValues = scaleValue;
     }
 
     private void bindView() {
@@ -23,16 +21,16 @@ public class ScaleValueCardPresenter {
 
     private void initTable() {
         view.clearTable();
-        view.addHeader(postCoordinationAxis);
+        view.addHeader(postCoordinationAxis.getScaleLabel());
         view.addSelectValueButton();
 
-        for (String value : scaleValues) {
+        for (String value : scaleValues.getValueIris()) {
             view.addRow(value);
         }
     }
 
     private void addRow(String value) {
-        scaleValues.add(value);
+        scaleValues.getValueIris().add(value);
         view.addRow(value);
     }
 
@@ -40,7 +38,13 @@ public class ScaleValueCardPresenter {
         return view;
     }
 
-    public List<String> getValues() {
+    public PostCoordinationScaleValue getValues() {
         return scaleValues;
+    }
+
+    public void start(VerticalPanel panel) {
+        bindView();
+        initTable();
+        panel.add(view.asWidget());
     }
 }

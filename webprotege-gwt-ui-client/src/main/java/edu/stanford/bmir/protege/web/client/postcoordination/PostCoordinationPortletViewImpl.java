@@ -23,7 +23,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     @UiField
     protected FlexTable flexTable;
     @UiField
-    VerticalPanel scaleValueCardList;
+    public VerticalPanel scaleValueCardList;
 
     private Map<String, PostCoordinationTableAxisLabel> labels;
     private Map<String, LinearizationDefinition> definitionMap;
@@ -65,11 +65,8 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     }
 
     @Override
-    public void setScaleValueCards(List<ScaleValueCardView> scaleValueCards) {
-        scaleValueCardList.clear(); // Clear previous components
-        scaleValueCards.forEach(scaleValue -> {
-            scaleValueCardList.add(scaleValue.asWidget());
-        });
+    public VerticalPanel getScaleValueCardsView() {
+        return scaleValueCardList;
     }
 
     @Override

@@ -18,5 +18,5 @@ public interface PostCoordinationPortletView extends AcceptsOneWidget, IsWidget,
 
     void setPostCoordinationEntity();
 
-    void setScaleValueCards(List<ScaleValueCardView> scaleValueCards);
+    VerticalPanel getScaleValueCardsView();
 }
