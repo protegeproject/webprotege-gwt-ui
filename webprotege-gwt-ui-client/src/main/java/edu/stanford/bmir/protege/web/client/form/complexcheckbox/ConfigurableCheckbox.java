@@ -16,6 +16,7 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
     @Nonnull
     private final ConfigurableCheckBoxPresenter presenter;
 
+
     private final CheckBoxConfig checkBoxConfig;
 
     public ConfigurableCheckbox(CheckBoxConfig checkBoxConfig, String initialValue) {
@@ -33,6 +34,10 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
         presenter.setConfig(checkBoxConfig);
         CheckboxValue checkboxValue = checkBoxConfig.findValue(initialValue);
         this.setValue(checkboxValue);
+    }
+
+    public boolean isTouched() {
+        return this.presenter.isTouched();
     }
 
     @Override

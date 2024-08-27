@@ -35,6 +35,9 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
         @ClassName("headerLabelRow")
         String getHeaderLabelRow();
 
+        @ClassName("evenRowStyle")
+        String getEvenRowStyle();
+
         @ClassName("scaleValueHeader")
         String scaleValueHeader();
 
