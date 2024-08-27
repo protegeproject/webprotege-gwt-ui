@@ -11,7 +11,9 @@ public interface ScaleValueCardView extends IsWidget {
 
     void addHeader(String headerText);
 
-    void addRow(String value);
+    void addRow(String value) ;
 
     void addSelectValueButton();
+
+    void setDeleteValueButtonHandler(DeleteScaleValueButtonHandler handler);
 }

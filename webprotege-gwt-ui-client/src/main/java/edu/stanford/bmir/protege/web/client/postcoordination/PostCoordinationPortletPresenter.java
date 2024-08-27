@@ -35,6 +35,11 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final LoggedInUserManager loggedInUserManager;
     private final MessageBox messageBox;
 
+    private final Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new HashMap<>();
+
+    private final Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+
+
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                             @Nonnull ProjectId projectId,
@@ -58,9 +63,11 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
 
+        scaleValueCardPresenters.clear();
+        labels.clear();
+
 
         dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
-            Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
             for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
                 PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
                         .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
@@ -69,20 +76,27 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 labels.put(availableAxis, existingLabel);
             }
             view.setLabels(labels);
-            List<ScaleValueCardPresenter> scaleValueCardViews = labels.values()
+
+            Map<String, ScaleValueCardPresenter> axisMapWithValues = labels.values()
                     .stream()
-                    .map(tabelAxisLabel ->
-                            createScaleValueCardPresenter(
+                    .collect(Collectors.toMap(
+                            PostCoordinationTableAxisLabel::getPostCoordinationAxis, // Key mapper
+                            tabelAxisLabel -> createScaleValueCardPresenter(            // Value mapper
                                     tabelAxisLabel,
                                     new PostCoordinationScaleValue(
                                             tabelAxisLabel.getPostCoordinationAxis(),
                                             tabelAxisLabel.getScaleLabel(),
                                             new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3"))
                                     )
-                            ))
-                    .collect(Collectors.toList());
+                            )
+                    ));
 
-            scaleValueCardViews.forEach(scaleValuePresenter -> scaleValuePresenter.start(view.getScaleValueCardsView()));
+            scaleValueCardPresenters.putAll(axisMapWithValues);
+            //Do batch action for all scaleValues
+            dispatch.beginBatch();
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.start(view.getScaleValueCardsView()));
+            dispatch.executeCurrentBatch();
+
 
             dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
@@ -97,7 +111,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
         ScaleValueCardView view = new ScaleValueCardViewImpl();
-        return new ScaleValueCardPresenter(axis, scaleValue, view);
+        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId());
     }
 
     @Override
@@ -106,5 +120,18 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+    }
+
+    public void removeScaleValueCardPresenter(String axisIri) {
+        ScaleValueCardPresenter presenter = scaleValueCardPresenters.get(axisIri);
+        view.getScaleValueCardsView().remove(presenter.getView().asWidget());
+        scaleValueCardPresenters.remove(axisIri);
+    }
+
+    private void addScaleValueCardPresenter(String axisIri) {
+        PostCoordinationTableAxisLabel currentAxisLabels = labels.get(axisIri);
+        ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(currentAxisLabels, PostCoordinationScaleValue.createEmpty(axisIri, currentAxisLabels.getScaleLabel()));
+        scaleValueCardPresenters.put(axisIri, newPresenter);
+        newPresenter.start(view.getScaleValueCardsView());
     }
 }

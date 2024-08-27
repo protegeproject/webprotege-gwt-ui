@@ -1,17 +1,21 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
-import java.util.List;
+import java.util.*;
 
 public class PostCoordinationScaleValue {
 
-    private String axisIri;
-    private String axisLabel;
-    private List<String> valueIris;
+    private final String axisIri;
+    private final String axisLabel;
+    private final List<String> valueIris;
 
     public PostCoordinationScaleValue(String axisIri, String axisLabel, List<String> valueIris) {
         this.axisIri = axisIri;
         this.axisLabel = axisLabel;
         this.valueIris = valueIris;
+    }
+
+    public static PostCoordinationScaleValue createEmpty(String axisIri, String axisLabel){
+        return new PostCoordinationScaleValue(axisIri, axisLabel, new ArrayList<>());
     }
 
     public String getAxisIri() {

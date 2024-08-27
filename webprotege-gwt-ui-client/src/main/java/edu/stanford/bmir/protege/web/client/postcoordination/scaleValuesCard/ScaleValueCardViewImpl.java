@@ -19,6 +19,8 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
+    private DeleteScaleValueButtonHandler deleteScaleValueButtonHandler = (value) -> {};
+
     @UiField
     FlexTable valueTable;
 
@@ -77,6 +79,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         valueTable.getRowFormatter().addStyleName(rowIndex, postCoordinationStyle.scaleValueRow());
 
         deleteButton.addClickHandler(event -> {
+            deleteScaleValueButtonHandler.handleDeleteButton(value);
             int row = valueTable.getCellForEvent(event).getRowIndex();
             GWT.log("Deleting row at index: " + row);
             valueTable.removeRow(row);
@@ -84,6 +87,10 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         });
 
         GWT.log("New row added. Current row count: " + valueTable.getRowCount());
+    }
+
+    public void setDeleteValueButtonHandler(DeleteScaleValueButtonHandler handler){
+        this.deleteScaleValueButtonHandler = handler;
     }
 
     @Override
