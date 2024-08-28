@@ -56,6 +56,9 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("scaleValueHeaderDescription")
         String scaleValueHeaderDescription();
+
+        @ClassName("toggle-icon")
+        String toggleIcon();
     }
 
 }

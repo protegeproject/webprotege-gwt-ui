@@ -36,7 +36,7 @@ public class ScaleValueCardPresenter {
 
     private void initTable() {
         view.clearTable();
-        view.addHeader(postCoordinationAxis.getScaleLabel(), scaleValue.getGenericScale().getAllowMultiValue().getBrowserTest());
+        view.addHeader(postCoordinationAxis.getScaleLabel(), scaleValue.getGenericScale().getAllowMultiValue().getBrowserText());
         view.addSelectValueButton();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),

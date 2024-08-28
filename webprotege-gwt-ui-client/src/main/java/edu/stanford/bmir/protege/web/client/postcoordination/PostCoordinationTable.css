@@ -17,13 +17,13 @@
 }
 
 .rotatedHeader div {
-  transform-origin: left;
-  transform: rotate(-75deg)  translate(-50px,100%);
-  display: table-cell;
-  vertical-align: middle;
-  text-align: start;
-  text-wrap: wrap;
-  white-space: nowrap;
+    transform-origin: left;
+    transform: rotate(-75deg) translate(-50px, 100%);
+    display: table-cell;
+    vertical-align: middle;
+    text-align: start;
+    text-wrap: wrap;
+    white-space: nowrap;
 }
 
 .customRowStyle {
@@ -61,8 +61,8 @@
 .postCoordinationTable {
     border-radius: 5px;
     overflow: hidden;
-    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
-    box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
     margin: 15px;
     border-collapse: collapse;
     padding: 3px;
@@ -105,12 +105,18 @@
     text-align: center;
     vertical-align: middle;
 }
+
 .scaleValue-table-value-cell {
     padding-left: 10px;
     text-align: left;
 }
 
 .scaleValueHeaderDescription {
-    font-size: 11px; /* Smaller font size for description */
-    font-style: italic; /* Italic style for description */
+    font-size: 11px;
+    font-style: italic;
+}
+
+.toggle-icon {
+    cursor: pointer;
+    margin-right: 5px;
 }

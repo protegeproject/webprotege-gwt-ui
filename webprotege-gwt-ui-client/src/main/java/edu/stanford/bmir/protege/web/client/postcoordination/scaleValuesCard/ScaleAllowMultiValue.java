@@ -11,7 +11,7 @@ public enum ScaleAllowMultiValue {
         this.description = description;
     }
 
-    public String getBrowserTest() {
+    public String getBrowserText() {
         return description;
     }
 

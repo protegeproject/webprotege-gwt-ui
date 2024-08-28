@@ -15,6 +15,10 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private static final ScaleValueCardViewImplUiBinder uiBinder = GWT.create(ScaleValueCardViewImplUiBinder.class);
     private final HTMLPanel rootPanel;
+    private HTML headerHtml;
+    private boolean isCollapsed = false;
+    private final String collapseIcon = "&#9660;";
+    private final String expandIcon = "&#9654;";
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss postCoordinationStyle = PostCoordinationTableResourceBundle.INSTANCE.style();
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
@@ -52,13 +56,14 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     public void addHeader(String headerText, String description) {
         GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
 
-        // Combine header text and description using HTML with inline span for description
-        HTML headerHtml = new HTML(headerText + "<br><span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">" + description + "</span>");
+        headerHtml = new HTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + collapseIcon + "</span> " + headerText + "<br><span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">" + description + "</span>");
+        headerHtml.setStyleName(postCoordinationStyle.scaleValueHeader());
 
-        // Add the combined header HTML to the table cell and apply the scaleValueHeader style to the cell
         valueTable.setWidget(0, 0, headerHtml);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
         valueTable.getCellFormatter().setStyleName(0, 0, postCoordinationStyle.scaleValueHeader());
+
+        headerHtml.addClickHandler(event -> toggleTable());
 
         GWT.log("Header added. Current row count: " + valueTable.getRowCount());
     }
@@ -95,8 +100,28 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         GWT.log("New row added. Current row count: " + valueTable.getRowCount());
     }
 
+    @Override
     public void setDeleteValueButtonHandler(DeleteScaleValueButtonHandler handler) {
         this.deleteScaleValueButtonHandler = handler;
+    }
+
+    private void toggleTable() {
+        isCollapsed = !isCollapsed;
+
+        for (int i = 1; i < valueTable.getRowCount(); i++) {
+            valueTable.getRowFormatter().setVisible(i, !isCollapsed);
+        }
+
+        String currentHtml = headerHtml.getHTML();
+        String icon = isCollapsed ? expandIcon : collapseIcon;
+
+        if (currentHtml.contains("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">")) {
+            int spanEnd = currentHtml.indexOf("</span>") + 7; // 7 to move past "</span>"
+
+            currentHtml = currentHtml.substring(spanEnd).trim(); // Extract text after the span
+        }
+
+        headerHtml.setHTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + icon + "</span> " + currentHtml);
     }
 
     @Override
