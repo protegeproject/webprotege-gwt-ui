@@ -53,6 +53,9 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("scaleValue-table-value-cell")
         String scaleValueTableValueCell();
+
+        @ClassName("scaleValueHeaderDescription")
+        String scaleValueHeaderDescription();
     }
 
 }

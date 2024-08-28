@@ -29,19 +29,18 @@ public class ScaleValueCardPresenter {
         this.projectId = projectId;
     }
 
+    //implement here the pop-up modal for selecting a scale value
     private void bindView() {
         view.setAddButtonClickHandler(event -> addRow("New Value"));
     }
 
     private void initTable() {
         view.clearTable();
-        view.addHeader(postCoordinationAxis.getScaleLabel());
+        view.addHeader(postCoordinationAxis.getScaleLabel(), scaleValue.getGenericScale().getAllowMultiValue().getBrowserTest());
         view.addSelectValueButton();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
-                result -> {
-                    result.getRenderedEntities().forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
-                }
+                result -> result.getRenderedEntities().forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()))
         );
 
         view.setDeleteValueButtonHandler((value) -> scaleValue.getValueIris().remove(value));

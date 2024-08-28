@@ -38,6 +38,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new HashMap<>();
 
     private final Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+    private final Map<String, PostCoordinationAxisToGenericScale> genericScale = new HashMap<>();
 
 
     @Inject
@@ -65,6 +66,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
         scaleValueCardPresenters.clear();
         labels.clear();
+        genericScale.clear();
 
 
         dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
@@ -77,18 +79,28 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             }
             view.setLabels(labels);
 
+            /*
+                ToDo:
+                    populate genericScale using a dispatch request.
+             */
             Map<String, ScaleValueCardPresenter> axisMapWithValues = labels.values()
                     .stream()
                     .collect(Collectors.toMap(
-                            PostCoordinationTableAxisLabel::getPostCoordinationAxis, // Key mapper
-                            tabelAxisLabel -> createScaleValueCardPresenter(            // Value mapper
-                                    tabelAxisLabel,
-                                    new PostCoordinationScaleValue(
-                                            tabelAxisLabel.getPostCoordinationAxis(),
-                                            tabelAxisLabel.getScaleLabel(),
-                                            new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3"))
-                                    )
-                            )
+                            PostCoordinationTableAxisLabel::getPostCoordinationAxis,
+                            tabelAxisLabel -> {
+                                PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
+                                        tabelAxisLabel.getPostCoordinationAxis(),
+                                        new PostCoordinationAxisToGenericScale(tabelAxisLabel.getPostCoordinationAxis(), "", ScaleAllowMultiValue.NotAllowed)
+                                );
+                                return createScaleValueCardPresenter(
+                                        tabelAxisLabel,
+                                        new PostCoordinationScaleValue(
+                                                tabelAxisLabel.getPostCoordinationAxis(),
+                                                tabelAxisLabel.getScaleLabel(),
+                                                new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3")),
+                                                genericScale1)
+                                );
+                            }
                     ));
 
             scaleValueCardPresenters.putAll(axisMapWithValues);
@@ -130,7 +142,14 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private void addScaleValueCardPresenter(String axisIri) {
         PostCoordinationTableAxisLabel currentAxisLabels = labels.get(axisIri);
-        ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(currentAxisLabels, PostCoordinationScaleValue.createEmpty(axisIri, currentAxisLabels.getScaleLabel()));
+        PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
+                axisIri,
+                new PostCoordinationAxisToGenericScale(axisIri, "", ScaleAllowMultiValue.NotAllowed)
+        );
+        ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
+                currentAxisLabels,
+                PostCoordinationScaleValue.createEmpty(axisIri, currentAxisLabels.getScaleLabel(), genericScale1)
+        );
         scaleValueCardPresenters.put(axisIri, newPresenter);
         newPresenter.start(view.getScaleValueCardsView());
     }

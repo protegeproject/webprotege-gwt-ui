@@ -19,7 +19,8 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
-    private DeleteScaleValueButtonHandler deleteScaleValueButtonHandler = (value) -> {};
+    private DeleteScaleValueButtonHandler deleteScaleValueButtonHandler = (value) -> {
+    };
 
     @UiField
     FlexTable valueTable;
@@ -48,12 +49,17 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
     @Override
-    public void addHeader(String headerText) {
+    public void addHeader(String headerText, String description) {
         GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
-        Label headerLabel = new Label(headerText);
-        headerLabel.setStyleName(postCoordinationStyle.scaleValueHeader());
-        valueTable.setWidget(0, 0, headerLabel);
+
+        // Combine header text and description using HTML with inline span for description
+        HTML headerHtml = new HTML(headerText + "<br><span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">" + description + "</span>");
+
+        // Add the combined header HTML to the table cell and apply the scaleValueHeader style to the cell
+        valueTable.setWidget(0, 0, headerHtml);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
+        valueTable.getCellFormatter().setStyleName(0, 0, postCoordinationStyle.scaleValueHeader());
+
         GWT.log("Header added. Current row count: " + valueTable.getRowCount());
     }
 
@@ -89,7 +95,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         GWT.log("New row added. Current row count: " + valueTable.getRowCount());
     }
 
-    public void setDeleteValueButtonHandler(DeleteScaleValueButtonHandler handler){
+    public void setDeleteValueButtonHandler(DeleteScaleValueButtonHandler handler) {
         this.deleteScaleValueButtonHandler = handler;
     }
 

@@ -7,15 +7,21 @@ public class PostCoordinationScaleValue {
     private final String axisIri;
     private final String axisLabel;
     private final List<String> valueIris;
+    private final PostCoordinationAxisToGenericScale genericScale;
 
-    public PostCoordinationScaleValue(String axisIri, String axisLabel, List<String> valueIris) {
+    public PostCoordinationScaleValue(String axisIri,
+                                      String axisLabel,
+                                      List<String> valueIris, PostCoordinationAxisToGenericScale genericScale) {
         this.axisIri = axisIri;
         this.axisLabel = axisLabel;
         this.valueIris = valueIris;
+        this.genericScale = genericScale;
     }
 
-    public static PostCoordinationScaleValue createEmpty(String axisIri, String axisLabel){
-        return new PostCoordinationScaleValue(axisIri, axisLabel, new ArrayList<>());
+    public static PostCoordinationScaleValue createEmpty(String axisIri,
+                                                         String axisLabel,
+                                                         PostCoordinationAxisToGenericScale genericScale) {
+        return new PostCoordinationScaleValue(axisIri, axisLabel, new ArrayList<>(), genericScale);
     }
 
     public String getAxisIri() {
@@ -28,5 +34,9 @@ public class PostCoordinationScaleValue {
 
     public List<String> getValueIris() {
         return valueIris;
+    }
+
+    public PostCoordinationAxisToGenericScale getGenericScale(){
+        return genericScale;
     }
 }
