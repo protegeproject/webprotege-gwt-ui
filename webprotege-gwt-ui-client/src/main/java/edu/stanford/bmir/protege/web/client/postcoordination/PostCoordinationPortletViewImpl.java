@@ -4,15 +4,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardView;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PostCoordinationPortletViewImpl extends Composite implements PostCoordinationPortletView {
 
@@ -28,12 +28,15 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     private Map<String, PostCoordinationTableAxisLabel> labels;
     private Map<String, LinearizationDefinition> definitionMap;
 
-    private List<PostCoordinationTableRow> tableRows = new ArrayList<>();
+    private final List<PostCoordinationTableRow> tableRows = new ArrayList<>();
     private final DispatchServiceManager dispatch;
 
-    private static PostCoordinationTableResourceBundle.PostCoordinationTableCss style = PostCoordinationTableResourceBundle.INSTANCE.style();
+    private TableCellChangedHandler tableCellChanged = (tableRows, checkboxValue, tableAxisLabel) -> {
+    };
 
-    private static PostCoordinationPortletViewImpl.PostCoordinationPortletViewImplUiBinder ourUiBinder = GWT.create(PostCoordinationPortletViewImpl.PostCoordinationPortletViewImplUiBinder.class);
+    private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss style = PostCoordinationTableResourceBundle.INSTANCE.style();
+
+    private static final PostCoordinationPortletViewImpl.PostCoordinationPortletViewImplUiBinder ourUiBinder = GWT.create(PostCoordinationPortletViewImpl.PostCoordinationPortletViewImplUiBinder.class);
 
     @Inject
     public PostCoordinationPortletViewImpl(DispatchServiceManager dispatch) {
@@ -101,37 +104,52 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
             addRowLabel(tableRow.isDerived(), definitions.get(i).getDisplayLabel(), i + 1, 0);
             List<PostCoordinationTableAxisLabel> labelList = new ArrayList<>(this.labels.values());
             for (int j = 0; j < labelList.size(); j++) {
-
-                PostCoordinationTableCell cell = new PostCoordinationTableCell(definitions.get(i), labelList.get(j), tableRow);
+                LinearizationDefinition linDef = definitions.get(i);
+                PostCoordinationTableAxisLabel axisLabel = labelList.get(j);
+                PostCoordinationTableCell cell = new PostCoordinationTableCell(linDef, axisLabel, tableRow);
                 cell.addValueChangeHandler(valueChanged -> {
+                    tableCellChanged.handleTableCellChanged(
+                            isValueSetOnMultipleRowsForAxis(axisLabel, valueChanged.getValue()),
+                            valueChanged.getValue(),
+                            cell.getAxisLabel().getPostCoordinationAxis()
+                    );
                     updateTelescopicLinearizations(cell);
                 });
                 flexTable.setWidget(i + 1, j + 1, cell.asWidget());
                 tableRow.addCell(cell);
             }
-            addRowLabel(false, definitions.get(i).getDisplayLabel(), i + 1, labelList.size()+1);
+            addRowLabel(false, definitions.get(i).getDisplayLabel(), i + 1, labelList.size() + 1);
 
-            flexTable.getRowFormatter().addStyleName(i+1, style.getCustomRowStyle());
-            if( (i + 1) % 2 == 1) {
-                flexTable.getRowFormatter().addStyleName(i+1, style.getEvenRowStyle());
+            flexTable.getRowFormatter().addStyleName(i + 1, style.getCustomRowStyle());
+            if ((i + 1) % 2 == 1) {
+                flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
             this.tableRows.add(tableRow);
         }
 
-        for(PostCoordinationTableRow tableRow : tableRows) {
+        for (PostCoordinationTableRow tableRow : tableRows) {
             tableRow.bindToParentRow(tableRows);
         }
     }
 
+    private boolean isValueSetOnMultipleRowsForAxis(PostCoordinationTableAxisLabel axisLabel, CheckboxValue valueChanged) {
+        List<PostCoordinationTableRow> tableRowsWithAxisChecked = this.tableRows.stream()
+                .filter(tableRow -> tableRow.getCellList()
+                        .stream()
+                        .anyMatch(cell -> cell.getAxisLabel().equals(axisLabel) && cell.getValue().equals(valueChanged.getValue())))
+                .collect(Collectors.toList());
+        return tableRowsWithAxisChecked.size() > 1;
+    }
+
     private void updateTelescopicLinearizations(PostCoordinationTableCell cell) {
-        for(PostCoordinationTableRow tableRow: this.tableRows) {
+        for (PostCoordinationTableRow tableRow : this.tableRows) {
             tableRow.updateDerivedCell(cell);
         }
     }
 
     private void addRowLabel(boolean isDerived, String label, int row, int column) {
         String rowLabelString;
-        if(isDerived) {
+        if (isDerived) {
             rowLabelString = SVG + label;
         } else {
             rowLabelString = label;
@@ -154,7 +172,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     private String getHeaderLabelPadded(int padding, String label) {
 
-       StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         int lastBreak = 0;
 
         for (int i = padding; i < label.length(); i += padding) {
@@ -173,7 +191,13 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
         return result.toString();
     }
-    private static String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
+
+    @Override
+    public void setTableCellChangedHandler(TableCellChangedHandler handler) {
+        this.tableCellChanged = handler;
+    }
+
+    private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
 
             "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M3 7V8.2C3 9.88016 3 10.7202 3.32698 11.362C3.6146 11.9265 4.07354 12.3854 4.63803 12.673C5.27976 13 6.11984 13 7.8 13H21M21 13L17 9M21 13L17 17\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>" +
             "</div>";

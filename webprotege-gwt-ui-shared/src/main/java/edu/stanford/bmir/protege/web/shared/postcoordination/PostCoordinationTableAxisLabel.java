@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @GwtCompatible(serializable = true)
 public class PostCoordinationTableAxisLabel implements IsSerializable, Serializable {
@@ -43,5 +44,18 @@ public class PostCoordinationTableAxisLabel implements IsSerializable, Serializa
     @JsonProperty("scaleLabel")
     public String getScaleLabel() {
         return scaleLabel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PostCoordinationTableAxisLabel that = (PostCoordinationTableAxisLabel) o;
+        return postCoordinationAxis.equals(that.postCoordinationAxis) && Objects.equals(tableLabel, that.tableLabel) && Objects.equals(scaleLabel, that.scaleLabel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postCoordinationAxis, tableLabel, scaleLabel);
     }
 }
