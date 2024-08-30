@@ -29,7 +29,10 @@ public class ScaleValueCardPresenter {
         this.projectId = projectId;
     }
 
-    //implement here the pop-up modal for selecting a scale value
+    /*
+        ToDo:
+            implement here the pop-up modal for selecting a scale value
+     */
     private void bindView() {
         view.setAddButtonClickHandler(event -> addRow("New Value"));
     }

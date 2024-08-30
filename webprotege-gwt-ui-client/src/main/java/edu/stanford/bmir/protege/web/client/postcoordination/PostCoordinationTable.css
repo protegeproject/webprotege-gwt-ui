@@ -61,8 +61,8 @@
 .postCoordinationTable {
     border-radius: 5px;
     overflow: hidden;
-    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
-    box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
     margin: 15px;
     border-collapse: collapse;
     padding: 3px;
