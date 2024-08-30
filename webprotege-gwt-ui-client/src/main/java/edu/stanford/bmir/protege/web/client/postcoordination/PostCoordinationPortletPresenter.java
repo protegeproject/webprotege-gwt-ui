@@ -102,6 +102,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                                         .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
 //                            .orElseThrow(() -> new RuntimeException("Couldn't find label for " + subAxis));
                                                 scaleLabelsForAxes.put(subAxis, existingLabel);
+                                                scaleLabelsForAxes.remove(compositeAxis.getPostCoordinationAxis());
                                             }
                                     )
             );
@@ -166,7 +167,9 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     public void removeScaleValueCardPresenter(String axisIri) {
         ScaleValueCardPresenter presenter = scaleValueCardPresenters.get(axisIri);
-        view.getScaleValueCardsView().remove(presenter.getView().asWidget());
+        if (presenter != null) {
+            view.getScaleValueCardsView().remove(presenter.getView().asWidget());
+        }
         scaleValueCardPresenters.remove(axisIri);
     }
 
@@ -235,6 +238,16 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     }
 
     private boolean isScaleValuePresenterCreated(String axisIri) {
+        Optional<PostCoordinationCompositeAxis> compositeAxesOptional = compositeAxisList.stream()
+                .filter(compositeAxis -> compositeAxis.getPostCoordinationAxis().equals(axisIri))
+                .findFirst();
+
+        if (compositeAxesOptional.isPresent()) {
+            return compositeAxesOptional.get()
+                    .getSubAxis()
+                    .stream()
+                    .anyMatch(subAxis -> scaleValueCardPresenters.get(subAxis) != null);
+        }
         return scaleValueCardPresenters.get(axisIri) != null;
     }
 
