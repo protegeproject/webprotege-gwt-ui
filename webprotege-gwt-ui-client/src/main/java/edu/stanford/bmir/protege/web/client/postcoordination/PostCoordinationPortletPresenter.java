@@ -65,8 +65,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
             portletUi.setWidget(view.asWidget());
             setDisplaySelectedEntityNameAsSubtitle(true);
-            portletUi.setWidget(view.asWidget());
-            setDisplaySelectedEntityNameAsSubtitle(true);
 
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
                 Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
