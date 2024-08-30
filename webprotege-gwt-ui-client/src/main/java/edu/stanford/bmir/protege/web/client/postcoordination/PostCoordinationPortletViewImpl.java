@@ -1,19 +1,18 @@
 package edu.stanford.bmir.protege.web.client.postcoordination;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardView;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import java.util.*;
 
 public class PostCoordinationPortletViewImpl extends Composite implements PostCoordinationPortletView {
 
@@ -23,6 +22,9 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @UiField
     protected FlexTable flexTable;
+    @UiField
+    public VerticalPanel scaleValueCardList;
+
     private Map<String, PostCoordinationTableAxisLabel> labels;
     private Map<String, LinearizationDefinition> definitionMap;
 
@@ -60,6 +62,11 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     public void setPostCoordinationEntity() {
         initializeTableHeader();
         initializeTableContent();
+    }
+
+    @Override
+    public VerticalPanel getScaleValueCardsView() {
+        return scaleValueCardList;
     }
 
     @Override

@@ -4,104 +4,153 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
-
+import java.util.stream.Collectors;
 
 @Portlet(id = "portlets.PostCoordination",
         title = "iCat-X Post-Coordinations",
         tooltip = "Displays the Post-Coordination configuration on the current entity.")
-public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletPresenter  {
+public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-        private final PostCoordinationPortletView view;
-        Logger logger = java.util.logging.Logger.getLogger("PostCoordinationPortletPresenter");
+    private final PostCoordinationPortletView view;
+    private final Logger logger = Logger.getLogger("PostCoordinationPortletPresenter");
 
-        private DispatchServiceManager dispatch;
-        private final EventBus eventBus;
+    private final DispatchServiceManager dispatch;
+    private final EventBus eventBus;
 
-        private final LoggedInUserManager loggedInUserManager;
+    private final LoggedInUserManager loggedInUserManager;
+    private final MessageBox messageBox;
+
+    private final Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new HashMap<>();
+
+    private final Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+    private final Map<String, PostCoordinationAxisToGenericScale> genericScale = new HashMap<>();
 
 
-        private MessageBox messageBox;
+    @Inject
+    public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                            @Nonnull ProjectId projectId,
+                                            @Nonnull DisplayNameRenderer displayNameRenderer,
+                                            @Nonnull DispatchServiceManager dispatch,
+                                            @Nonnull PostCoordinationPortletView view,
+                                            @Nonnull EventBus eventBus,
+                                            @Nonnull MessageBox messageBox,
+                                            @Nonnull LoggedInUserManager loggedInUserManager) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        this.view = view;
+        this.messageBox = messageBox;
+        this.dispatch = dispatch;
+        this.eventBus = eventBus;
+        this.loggedInUserManager = loggedInUserManager;
+        this.view.setProjectId(projectId);
+    }
 
-        @Inject
-        public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
-                                                @Nonnull ProjectId projectId,
-                                                @Nonnull DisplayNameRenderer displayNameRenderer,
-                                                @Nonnull DispatchServiceManager dispatch,
-                                                @Nonnull PostCoordinationPortletView view,
-                                                @Nonnull EventBus eventBus,
-                                                @Nonnull MessageBox messageBox,
-                                                @Nonnull LoggedInUserManager loggedInUserManager) {
-            super(selectionModel, projectId, displayNameRenderer, dispatch);
-            this.view = view;
-            this.messageBox = messageBox;
-            this.dispatch = dispatch;
-            this.eventBus = eventBus;
-            this.loggedInUserManager = loggedInUserManager;
-            this.view.setProjectId(projectId);
+    @Override
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(view.asWidget());
+        setDisplaySelectedEntityNameAsSubtitle(true);
 
-        }
+        scaleValueCardPresenters.clear();
+        labels.clear();
+        genericScale.clear();
 
-        @Override
-        public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
 
-            portletUi.setWidget(view.asWidget());
-            setDisplaySelectedEntityNameAsSubtitle(true);
+        dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
+            for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
+                PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                        .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Couldn't find label for " + availableAxis));
+                labels.put(availableAxis, existingLabel);
+            }
+            view.setLabels(labels);
 
-            dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
-                Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
-                for(String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
-                    PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                            .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
-                            .findFirst().orElseThrow( () -> new RuntimeException("Couldn't find label for " + availableAxis));
-                    labels.put(availableAxis, existingLabel);
+            /*
+                ToDo:
+                    populate genericScale using a dispatch request.
+             */
+            Map<String, ScaleValueCardPresenter> axisMapWithValues = labels.values()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            PostCoordinationTableAxisLabel::getPostCoordinationAxis,
+                            tabelAxisLabel -> {
+                                PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
+                                        tabelAxisLabel.getPostCoordinationAxis(),
+                                        new PostCoordinationAxisToGenericScale(tabelAxisLabel.getPostCoordinationAxis(), "", ScaleAllowMultiValue.NotAllowed)
+                                );
+                                return createScaleValueCardPresenter(
+                                        tabelAxisLabel,
+                                        new PostCoordinationScaleValue(
+                                                tabelAxisLabel.getPostCoordinationAxis(),
+                                                tabelAxisLabel.getScaleLabel(),
+                                                new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3")),
+                                                genericScale1)
+                                );
+                            }
+                    ));
+
+            scaleValueCardPresenters.putAll(axisMapWithValues);
+            //Do batch action for all scaleValues
+            dispatch.beginBatch();
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.start(view.getScaleValueCardsView()));
+            dispatch.executeCurrentBatch();
+
+
+            dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
+                Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
+                for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
+                    definitionMap.put(definition.getWhoficEntityIri(), definition);
                 }
-                view.setLabels(labels);
-
-                dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
-                    Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
-
-                    for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
-                        definitionMap.put(definition.getWhoficEntityIri(), definition);
-                    }
-                    view.setLinearizationDefinitonMap(definitionMap);
-                    view.setPostCoordinationEntity();
-                });
-
+                view.setLinearizationDefinitonMap(definitionMap);
+                view.setPostCoordinationEntity();
             });
+        });
+    }
 
+    private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
+        ScaleValueCardView view = new ScaleValueCardViewImpl();
+        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId());
+    }
 
-        }
+    @Override
+    protected void handleReloadRequest() {
+    }
 
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+    }
 
+    public void removeScaleValueCardPresenter(String axisIri) {
+        ScaleValueCardPresenter presenter = scaleValueCardPresenters.get(axisIri);
+        view.getScaleValueCardsView().remove(presenter.getView().asWidget());
+        scaleValueCardPresenters.remove(axisIri);
+    }
 
-        @Override
-        protected void handleReloadRequest() {
-
-        }
-
-        @Override
-        protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-
-
-        }
-
+    private void addScaleValueCardPresenter(String axisIri) {
+        PostCoordinationTableAxisLabel currentAxisLabels = labels.get(axisIri);
+        PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
+                axisIri,
+                new PostCoordinationAxisToGenericScale(axisIri, "", ScaleAllowMultiValue.NotAllowed)
+        );
+        ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
+                currentAxisLabels,
+                PostCoordinationScaleValue.createEmpty(axisIri, currentAxisLabels.getScaleLabel(), genericScale1)
+        );
+        scaleValueCardPresenters.put(axisIri, newPresenter);
+        newPresenter.start(view.getScaleValueCardsView());
+    }
 }

@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.postcoordination;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.*;
 
 public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
@@ -11,7 +10,6 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
     @Source("PostCoordinationTable.css")
     PostCoordinationTableCss style();
-
 
 
     interface PostCoordinationTableCss extends CssResource {
@@ -33,12 +31,34 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("rotatedHeader")
         String getRotatedHeader();
+
         @ClassName("headerLabelRow")
         String getHeaderLabelRow();
 
         @ClassName("evenRowStyle")
         String getEvenRowStyle();
 
+        @ClassName("scaleValueHeader")
+        String scaleValueHeader();
+
+        @ClassName("scaleValueRow")
+        String scaleValueRow();
+
+        @ClassName("scaleValueCard")
+        String scaleValueCard();
+
+        @ClassName("scaleValue-table-button-cell")
+        String scaleValueTableButtonCell();
+
+
+        @ClassName("scaleValue-table-value-cell")
+        String scaleValueTableValueCell();
+
+        @ClassName("scaleValueHeaderDescription")
+        String scaleValueHeaderDescription();
+
+        @ClassName("toggle-icon")
+        String toggleIcon();
     }
 
 }
