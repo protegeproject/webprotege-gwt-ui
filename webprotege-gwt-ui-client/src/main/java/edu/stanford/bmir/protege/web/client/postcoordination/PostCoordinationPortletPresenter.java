@@ -193,7 +193,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     }
 
     private TableCellChangedHandler handleTableCellChanged() {
-        return (isOnMultipleRows, checkboxValue, tableAxisIri) -> {
+        return (isAxisEnabledOnAnyRow, checkboxValue, tableAxisIri) -> {
             boolean presenterExists = isScaleValuePresenterCreated(tableAxisIri);
             if ((checkboxValue.getValue().equals("ALLOWED") ||
                     checkboxValue.getValue().equals("REQUIRED")) &&
@@ -211,7 +211,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 } else {
                     addScaleValueCardPresenter(tableAxisIri);
                 }
-            } else if (!isOnMultipleRows &&
+            } else if (!isAxisEnabledOnAnyRow &&
                     (!checkboxValue.getValue().equals("ALLOWED") ||
                             !checkboxValue.getValue().equals("REQUIRED"))) {
                 if (isCompositeAxis(tableAxisIri)) {

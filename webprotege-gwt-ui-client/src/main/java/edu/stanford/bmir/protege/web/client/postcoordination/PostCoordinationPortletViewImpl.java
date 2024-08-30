@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
@@ -31,7 +30,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     private final List<PostCoordinationTableRow> tableRows = new ArrayList<>();
     private final DispatchServiceManager dispatch;
 
-    private TableCellChangedHandler tableCellChanged = (tableRows, checkboxValue, tableAxisLabel) -> {
+    private TableCellChangedHandler tableCellChanged = (isAxisEnabledOnAnyRow, checkboxValue, tableAxisLabel) -> {
     };
 
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss style = PostCoordinationTableResourceBundle.INSTANCE.style();
@@ -109,7 +108,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                 PostCoordinationTableCell cell = new PostCoordinationTableCell(linDef, axisLabel, tableRow);
                 cell.addValueChangeHandler(valueChanged -> {
                     tableCellChanged.handleTableCellChanged(
-                            isValueSetOnMultipleRowsForAxis(axisLabel, valueChanged.getValue()),
+                            isAxisEnabledOnAnyRow(axisLabel),
                             valueChanged.getValue(),
                             cell.getAxisLabel().getPostCoordinationAxis()
                     );
@@ -132,13 +131,17 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         }
     }
 
-    private boolean isValueSetOnMultipleRowsForAxis(PostCoordinationTableAxisLabel axisLabel, CheckboxValue valueChanged) {
+    private boolean isAxisEnabledOnAnyRow(PostCoordinationTableAxisLabel axisLabel) {
         List<PostCoordinationTableRow> tableRowsWithAxisChecked = this.tableRows.stream()
                 .filter(tableRow -> tableRow.getCellList()
                         .stream()
-                        .anyMatch(cell -> cell.getAxisLabel().equals(axisLabel) && cell.getValue().equals(valueChanged.getValue())))
+                        .anyMatch(cell ->
+                                cell.getAxisLabel().equals(axisLabel) &&
+                                        (cell.getValue().equals("ALLOWED") || cell.getValue().equals("REQUIRED"))
+                        )
+                )
                 .collect(Collectors.toList());
-        return tableRowsWithAxisChecked.size() > 1;
+        return tableRowsWithAxisChecked.size() > 0;
     }
 
     private void updateTelescopicLinearizations(PostCoordinationTableCell cell) {
