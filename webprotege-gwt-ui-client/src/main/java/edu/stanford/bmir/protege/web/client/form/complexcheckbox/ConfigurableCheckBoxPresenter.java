@@ -19,10 +19,10 @@ import java.util.logging.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, HasText, HasEnabled, HasReadOnly {
-    Logger logger = java.util.logging.Logger.getLogger("ConfigurableCheckBoxPresenter");
-
     @Nonnull
     private final ConfigurableCheckBoxView view;
+
+    private boolean isTouched = false;
 
     private CheckBoxConfig config;
 
@@ -58,6 +58,7 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
         }
         CheckboxValue nextSel = config.getNextValue(view.getValue());
         view.setValue(nextSel);
+        isTouched = true;
     }
 
     @Override
@@ -87,6 +88,10 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<CheckboxValue> handler) {
         return view.addValueChangeHandler(handler);
+    }
+
+    public boolean isTouched() {
+        return isTouched;
     }
 
     @Override

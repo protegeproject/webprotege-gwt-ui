@@ -97,6 +97,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutRe
 import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectivesResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
+import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationResult;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
@@ -299,7 +300,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetClassAncestorsResult.class),
-        @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class)
+        @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
+        @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

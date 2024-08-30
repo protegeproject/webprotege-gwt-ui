@@ -56,6 +56,10 @@ import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsRes
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationResult;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationCompositeAxis;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableConfiguration;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingAction;
@@ -1024,6 +1028,14 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetClassAncestorsResult _GetClassAncestorsResult;
 
     AncestorClassHierarchy _AncestorClassHierarchy;
+
+    GetPostCoordinationTableConfigurationResult _GetPostCoordinationTableConfigurationResult;
+
+    PostCoordinationTableConfiguration _PostCoordinationTableConfiguration;
+
+    PostCoordinationTableAxisLabel _PostCoordinationTableAxisLabel;
+    PostCoordinationCompositeAxis _PostCoordinationCompositeAxis;
+
     public RpcWhiteList() {
     }
 }

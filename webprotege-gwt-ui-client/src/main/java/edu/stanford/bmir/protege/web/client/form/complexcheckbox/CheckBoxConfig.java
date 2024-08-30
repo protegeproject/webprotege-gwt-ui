@@ -18,7 +18,7 @@ public abstract class CheckBoxConfig {
         this.readOnly = true;
     }
 
-    CheckboxValue getNextValue(CheckboxValue checkboxValue) {
+    public CheckboxValue getNextValue(CheckboxValue checkboxValue) {
         int pos = scrollableValues.indexOf(checkboxValue);
         if(pos >= 0) {
             if(pos == scrollableValues.size() - 1) {

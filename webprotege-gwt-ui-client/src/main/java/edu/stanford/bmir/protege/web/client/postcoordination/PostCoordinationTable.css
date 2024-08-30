@@ -1,0 +1,70 @@
+
+.postCoordinationHeader {
+    font-size: 12px;
+    color: #fff;
+    line-height: 12px;
+    vertical-align: middle;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #d0d0d0;
+    color: #fff;
+    line-height: 1.4;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    height: 100px;
+    max-width: 43px;
+    overflow: hidden;
+}
+
+.rotatedHeader {
+}
+
+.rotatedHeader div {
+  transform-origin: left;
+  transform: rotate(-75deg)  translate(-50px,100%);
+  display: table-cell;
+  vertical-align: middle;
+  text-align: start;
+  text-wrap: wrap;
+  white-space: nowrap;
+}
+
+.customRowStyle {
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.evenRowStyle {
+    background-color: #f2f7f4;
+}
+
+
+.headerLabel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+    min-width: 13vw;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.headerLabelRow {
+    background-color: #186cd4;
+}
+
+
+.rowLabel {
+    vertical-align: middle;
+    display: flex;
+    margin-left: 5px;
+
+}
+
+
+.postCoordinationTable {
+    border-radius: 5px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    margin: 15px;
+    border-collapse: collapse;
+    padding: 3px;
+}
