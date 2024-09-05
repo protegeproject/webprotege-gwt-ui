@@ -62,7 +62,7 @@ public abstract class SingleChoiceControlDescriptor implements FormControlDescri
     @Nonnull
     public abstract SingleChoiceControlType getWidgetType();
 
-    @JsonProperty(PropertyNames.SOURCE_TYPE)
+    @JsonProperty(PropertyNames.CHOICES_SOURCE)
     @Nonnull
     public abstract ChoiceListSourceDescriptor getSource();
 
