@@ -7,29 +7,22 @@ import com.google.gwt.user.client.ui.*;
 
 import javax.inject.Inject;
 
-public class EntityCardViewImpl extends Composite implements EntityCardView {
+public class EntityCardContainerImpl extends Composite implements EntityCardContainer {
 
-    interface EntityCardViewImplUiBinder extends UiBinder<HTMLPanel, EntityCardViewImpl> {
+    interface EntityCardViewImplUiBinder extends UiBinder<HTMLPanel, EntityCardContainerImpl> {
     }
 
     private static EntityCardViewImplUiBinder ourUiBinder = GWT.create(EntityCardViewImplUiBinder.class);
     @UiField
     SimplePanel cardHolder;
-    @UiField
-    Label cardLabel;
 
     @Inject
-    public EntityCardViewImpl() {
+    public EntityCardContainerImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @Override
     public void setWidget(IsWidget w) {
         cardHolder.setWidget(w);
-    }
-
-    @Override
-    public void setLabel(String label) {
-        cardLabel.setText(label);
     }
 }

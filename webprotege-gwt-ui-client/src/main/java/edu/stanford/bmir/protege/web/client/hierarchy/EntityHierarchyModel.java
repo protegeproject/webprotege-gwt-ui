@@ -68,9 +68,9 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     }
 
     private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
-        if (!event.getHierarchyId().equals(hierarchyId)) {
-            return;
-        }
+//        if (!event.getHierarchyId().equals(hierarchyId)) {
+//            return;
+//        }
         GraphModelChangeProcessor changeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
         event.getChangeEvent().getChanges().forEach(evt -> evt.accept(changeProcessor));
         changeProcessor.getUpdatedNodes().forEach(node -> nodeCache.put(node.getEntity(), node));

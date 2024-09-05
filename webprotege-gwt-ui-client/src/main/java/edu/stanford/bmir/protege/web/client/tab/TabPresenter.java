@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.tab;
 
 
 import com.google.gwt.event.dom.client.ClickHandler;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -64,6 +65,25 @@ public class TabPresenter<K> {
      */
     public void setLabel(LanguageMap label) {
         view.setLabel(label);
+    }
+
+    /**
+     * Sets the color of the tab.
+     *
+     * @param color The color to set for the tab.
+     *
+     */
+    public void setColor(Color color) {
+        view.setColor(color);
+    }
+
+    /**
+     * Sets the background color for the view.
+     *
+     * @param backgroundColor The color to set as the background color.
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        view.setBackgroundColor(backgroundColor);
     }
 
     /**

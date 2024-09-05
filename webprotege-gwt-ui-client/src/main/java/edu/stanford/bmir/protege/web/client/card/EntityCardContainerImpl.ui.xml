@@ -2,24 +2,18 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .main {
-            position: relative;
-            border: 2px solid orange;
-            width: 300px;
-            height: 200px;
             display: flex;
             flex-direction: column;
-        }
-        .label {
-            flex-grow: 0;
-            flex-shrink: 0;
-            padding: 2px;
-            color: white;
-            background-color: black;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
         .holder {
             flex-grow: 1;
             flex-shrink: 1;
-            border: 2px solid magenta;
             position: relative;
         }
         .holder > div {
@@ -28,12 +22,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            border: 2px solid dodgerblue;
             overflow: hidden;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Label ui:field="cardLabel" addStyleNames="{style.label}"/>
         <g:SimplePanel ui:field="cardHolder" addStyleNames="{style.holder}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
