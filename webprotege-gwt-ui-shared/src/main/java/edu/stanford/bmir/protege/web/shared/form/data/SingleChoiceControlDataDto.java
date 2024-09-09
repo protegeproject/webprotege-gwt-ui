@@ -27,7 +27,7 @@ public abstract class SingleChoiceControlDataDto implements FormControlDataDto {
     @JsonProperty(PropertyNames.CONTROL)
     public abstract SingleChoiceControlDescriptor getDescriptor();
 
-    @JsonProperty(PropertyNames.CHOICE)
+    @JsonProperty(PropertyNames.VALUE)
     @Nullable
     protected abstract PrimitiveFormControlDataDto getChoiceInternal();
 
