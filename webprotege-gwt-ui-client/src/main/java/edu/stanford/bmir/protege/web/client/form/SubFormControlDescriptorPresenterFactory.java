@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
@@ -41,7 +43,7 @@ public class SubFormControlDescriptorPresenterFactory implements FormControlDesc
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new SubFormControlDescriptor(FormDescriptor.empty(FormId.get("12345678-1234-1234-1234-123456789abc")));
+        return new SubFormControlDescriptor(FormDescriptor.empty(FormId.valueOf(UuidV4.uuidv4())));
     }
 
     @Nonnull
