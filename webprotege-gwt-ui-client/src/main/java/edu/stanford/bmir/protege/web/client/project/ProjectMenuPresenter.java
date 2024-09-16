@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -32,6 +33,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
     private final UploadAndProcessLinearizationHandler linearizationChangesHandler;
+
+    private final PostCoordinationChangesHandler postCoordinationChangesHandler;
 
     private final UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler;
 
@@ -66,6 +69,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         @Override
         public void execute() {
             linearizationChangesHandler.handleUploadLinearizationChanges();
+        }
+    };
+
+    private final AbstractUiAction uploadPostCoordinationChanges = new AbstractUiAction(MESSAGES.postCoordinationUpload()) {
+        @Override
+        public void execute() {
+            postCoordinationChangesHandler.handleUploadPostCoordinationChanges();
         }
     };
 
@@ -117,7 +127,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
                                 UploadAndProcessLinearizationHandler linearizationChangesHandler,
-                                UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
+                                PostCoordinationChangesHandler postCoordinationChangesHandler, UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
@@ -128,6 +138,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
         this.linearizationChangesHandler = linearizationChangesHandler;
+        this.postCoordinationChangesHandler = postCoordinationChangesHandler;
         this.uploadAndMergeAdditionsHandler = uploadAndMergeAdditionsHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
         this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
@@ -142,6 +153,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
         uploadLinearizationChanges.setEnabled(false);
+        uploadPostCoordinationChanges.setEnabled(false);
         displayButton(container);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
@@ -152,6 +164,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
 
     }
 
@@ -170,6 +183,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectPrefixes);
         view.addSeparator();
         view.addMenuAction(uploadLinearizationChanges);
+        view.addMenuAction(uploadPostCoordinationChanges);
         view.addSeparator();
         view.addMenuAction(uploadAndMerge);
 

@@ -1026,6 +1026,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("linearization.upload")
     String linearizationUpload();
 
+    @DefaultMessage("Apply PostCoordination changes")
+    @Key("postcoordination.upload")
+    String postCoordinationUpload();
+
+
     @DefaultMessage("Merge Ontologies")
     @Key("uploadAndMergeAdditions")
     String uploadAndMergeAdditions();
