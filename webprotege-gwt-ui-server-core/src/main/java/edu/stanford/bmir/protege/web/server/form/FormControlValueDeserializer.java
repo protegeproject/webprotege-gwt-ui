@@ -56,19 +56,20 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
                         case "Class" :
                             return PrimitiveFormControlData.get(df.getOWLClass(iri));
                         case "owl:ObjectProperty":
-                        case "ObjectProperty":
+                        case "ObjectProperty" :
                             return PrimitiveFormControlData.get(df.getOWLObjectProperty(iri));
                         case "owl:DatatypeProperty" :
                         case "DatatypeProperty" :
+                        case "DataProperty" :
                             return PrimitiveFormControlData.get(df.getOWLDataProperty(iri));
                         case "owl:AnnotationProperty":
-                        case "AnnotationProperty":
+                        case "AnnotationProperty" :
                             return PrimitiveFormControlData.get(df.getOWLAnnotationProperty(iri));
                         case "rdfs:Datatype" :
                         case "Datatype" :
                             return PrimitiveFormControlData.get(df.getOWLDatatype(iri));
                         case "owl:NamedIndividual" :
-                        case "NamedIndividual" :
+                        case "NamedIndividual"     :
                             return PrimitiveFormControlData.get(df.getOWLNamedIndividual(iri));
                     }
                     throw new JsonParseException(p, "Unrecognised entity type: " + type);

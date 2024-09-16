@@ -134,6 +134,8 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     public void setFormLabel(String formLabel) {
         label.setText(formLabel);
         label.setVisible(!formLabel.isEmpty());
+        helpIcon.setVisible(!formLabel.isEmpty());
+        expansionHandle.setVisible(!formLabel.isEmpty());
     }
 
     @Nonnull

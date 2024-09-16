@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
@@ -13,6 +15,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,10 +40,11 @@ public class FormDescriptorPresenter implements Presenter {
                                    @Nonnull FormFieldDescriptorObjectListPresenter elementDescriptorListPresenter) {
         this.view = checkNotNull(view);
         this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
+        this.formId = FormId.valueOf(UuidV4.uuidv4());
     }
 
     public void clear() {
-        formId = null;
+        formId = FormId.get(UuidV4.uuidv4());
         elementDescriptorListPresenter.clear();
     }
 
@@ -71,7 +75,7 @@ public class FormDescriptorPresenter implements Presenter {
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
-        this.formId = formDescriptor.getFormId();
+        this.formId = checkNotNull(formDescriptor.getFormId(), "formId in supplied FormDescriptor is null");
         view.setLabel(formDescriptor.getLabel());
         elementDescriptorListPresenter.setValues(formDescriptor.getFields());
     }
@@ -80,7 +84,6 @@ public class FormDescriptorPresenter implements Presenter {
     public FormDescriptor getFormDescriptor() {
         LanguageMap label = view.getLabel();
         List<FormFieldDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
-
         return new FormDescriptor(this.formId, label, elementDescriptors, Optional.empty());
     }
 }
