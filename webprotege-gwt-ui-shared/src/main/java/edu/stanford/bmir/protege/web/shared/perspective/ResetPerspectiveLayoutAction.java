@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -16,71 +20,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 15 Mar 2017
  */
 @JsonTypeName("webprotege.perspectives.ResetPerspectiveLayout")
-public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
-
-    private ProjectId projectId;
-
-    private PerspectiveId perspectiveId;
-
-    @GwtSerializationConstructor
-    private ResetPerspectiveLayoutAction() {
-    }
-
-    /**
-     * Requests that the perspective identified by the specified id in the specified project is reset to
-     * the default for the current user.
-     * @param projectId The project id.
-     * @param perspectiveId The perspective id.
-     */
-    private ResetPerspectiveLayoutAction(@Nonnull ProjectId projectId, @Nonnull PerspectiveId perspectiveId) {
-        this.projectId = checkNotNull(projectId);
-        this.perspectiveId = checkNotNull(perspectiveId);
-    }
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
 
     public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ProjectId projectId,
-                                                                @Nonnull PerspectiveId perspectiveId) {
-        return create(projectId, perspectiveId);
+                                                                @Nonnull PerspectiveId perspectiveId,
+                                                                @Nonnull ChangeRequestId changeRequestId) {
+        return create(projectId, perspectiveId, changeRequestId);
     }
 
-    public static ResetPerspectiveLayoutAction create(@Nonnull ProjectId projectId,
-                                                      @Nonnull PerspectiveId perspectiveId) {
-        return new ResetPerspectiveLayoutAction(projectId, perspectiveId);
-    }
-
-    @Nonnull
-    @Override
-    public ProjectId getProjectId() {
-        return projectId;
+    @JsonCreator
+    public static ResetPerspectiveLayoutAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                      @JsonProperty("perspectiveId") @Nonnull PerspectiveId perspectiveId,
+                                                      @JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId) {
+        return new AutoValue_ResetPerspectiveLayoutAction(projectId, perspectiveId, changeRequestId);
     }
 
     @Nonnull
-    public PerspectiveId getPerspectiveId() {
-        return perspectiveId;
-    }
-
     @Override
-    public int hashCode() {
-        return projectId.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ResetPerspectiveLayoutAction)) {
-            return false;
-        }
-        ResetPerspectiveLayoutAction other = (ResetPerspectiveLayoutAction) obj;
-        return this.projectId.equals(other.projectId)
-                && this.perspectiveId.equals(other.perspectiveId);
-    }
+    @JsonProperty("projectId")
+    public abstract ProjectId getProjectId();
 
 
-    @Override
-    public String toString() {
-        return toStringHelper("ResetPerspectiveLayoutAction" )
-                .addValue(projectId)
-                .toString();
-    }
+    @Nonnull
+    @JsonProperty("perspectiveId")
+    public abstract PerspectiveId getPerspectiveId();
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 }

@@ -116,7 +116,7 @@ public class PerspectivePresenter implements HasDispose {
 
     private void executeResetPerspective(PerspectiveId perspectiveId) {
         GWT.log("[PerspectivePresenter] Reset Perspective: " + perspectiveId);
-        dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId),
+        dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId, ChangeRequestId.get(UuidV4.uuidv4())),
                                        result -> {
                                            removePerspective(perspectiveId);
                                            installPerspective(result.getResetLayout());
