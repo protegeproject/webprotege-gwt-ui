@@ -152,7 +152,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetPerspectivesAction.class),
         @Type(value = GetPossibleItemCompletionsAction.class),
         @Type(value = GetProjectChangesAction.class),
-        @Type(value = GetLinearizationChangesAction.class),
         @Type(value = GetProjectDetailsAction.class),
         @Type(value = GetProjectEventsAction.class),
         @Type(value = GetProjectFormDescriptorsAction.class),
@@ -231,7 +230,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetClassAncestorsAction.class),
         @Type(value = SaveEntityLinearizationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class),
-        @Type(value = GetPostCoordinationTableConfigurationAction.class)
+        @Type(value = GetPostCoordinationTableConfigurationAction.class),
+        @Type(value = GetProjectChangesForHistoryViewAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {
