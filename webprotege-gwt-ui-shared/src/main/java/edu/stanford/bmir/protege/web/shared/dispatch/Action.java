@@ -44,6 +44,7 @@ import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.GetEntityPostCoordinationAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
@@ -231,6 +232,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetClassAncestorsAction.class),
         @Type(value = SaveEntityLinearizationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class),
+        @Type(value = GetEntityPostCoordinationAction.class),
         @Type(value = GetPostCoordinationTableConfigurationAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)

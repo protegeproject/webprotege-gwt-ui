@@ -147,7 +147,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                     definitionMap.put(definition.getWhoficEntityIri(), definition);
                 }
                 view.setLinearizationDefinitonMap(definitionMap);
-                view.setPostCoordinationEntity();
+                view.initializeTable();
             });
         });
     }
@@ -163,6 +163,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        logger.info("Fac fetch la entity " + entityData);
+        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
+                (result) -> view.setTableData(result.getPostCoordinationSpecification())));
+
+        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
+                (result)-> logger.info("ALEX a venit si scales " + result)));
     }
 
     public void removeScaleValueCardPresenter(String axisIri) {

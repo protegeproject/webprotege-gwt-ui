@@ -1031,6 +1031,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String postCoordinationUpload();
 
 
+    @DefaultMessage("Apply PostCoordination custom scales")
+    @Key("postcoordination.customscales")
+    String postCoordinationCustomScales();
+
+
     @DefaultMessage("Merge Ontologies")
     @Key("uploadAndMergeAdditions")
     String uploadAndMergeAdditions();

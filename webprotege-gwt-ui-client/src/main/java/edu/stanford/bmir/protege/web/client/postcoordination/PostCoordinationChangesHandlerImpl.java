@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.postcoordination;
 
+import edu.stanford.bmir.protege.web.shared.postcoordination.ProcessUploadedCustomScalesAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.ProcessUploadedPostCoordinationAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -33,5 +34,18 @@ public class PostCoordinationChangesHandlerImpl implements PostCoordinationChang
 
         workflow.start(projectId, configuration);
 
+    }
+
+    @Override
+    public void handlePostCoordinationCustomScales() {
+        UploadPostCoordinationWorkflow workflow = workflowProvider.get();
+
+        UploadPostCoordinationWorkflowConfiguration configuration = new UploadPostCoordinationWorkflowConfiguration("Upload PostCoordination changes",
+                "Process postcoordination custom scales",
+                "Applying postcoordination custom scales changes to ontologies.  Please wait.",
+                "The postcoordination scales where successfully processes and added to the project",
+                ProcessUploadedCustomScalesAction::create);
+
+        workflow.start(projectId, configuration);
     }
 }

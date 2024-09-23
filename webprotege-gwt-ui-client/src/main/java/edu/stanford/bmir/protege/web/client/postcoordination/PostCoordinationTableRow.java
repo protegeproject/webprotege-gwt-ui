@@ -27,7 +27,6 @@ public class PostCoordinationTableRow {
                 if (!cell.isTouched() || cell.getValue().startsWith("DEFAULT")) {
                     cell.setParentValue(changedCell.getAsCheckboxValue());
                     cell.setValue("DEFAULT_" + changedCell.getValue());
-
                 }
             });
         }

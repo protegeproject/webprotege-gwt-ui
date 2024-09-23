@@ -97,7 +97,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutRe
 import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectivesResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationResult;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
@@ -301,6 +301,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
+        @JsonSubTypes.Type(GetEntityPostCoordinationResult.class),
+        @JsonSubTypes.Type(ProcessUploadedCustomScalesResult.class),
+        @JsonSubTypes.Type(GetEntityCustomScalesResult.class),
+        @JsonSubTypes.Type(ProcessUploadedPostCoordinationResult.class),
         @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)

@@ -79,6 +79,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private final AbstractUiAction uploadPostCoordinationCustomScales = new AbstractUiAction(MESSAGES.postCoordinationCustomScales()) {
+        @Override
+        public void execute() {
+            postCoordinationChangesHandler.handlePostCoordinationCustomScales();
+        }
+    };
+
     private final AbstractUiAction uploadAndMergeAdditions = new AbstractUiAction(MESSAGES.uploadAndMergeAdditions()) {
         @Override
         public void execute() {
@@ -154,6 +161,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadAndMergeAdditions.setEnabled(false);
         uploadLinearizationChanges.setEnabled(false);
         uploadPostCoordinationChanges.setEnabled(false);
+        uploadPostCoordinationCustomScales.setEnabled(false);
         displayButton(container);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
@@ -165,6 +173,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
 
     }
 
@@ -184,6 +193,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addSeparator();
         view.addMenuAction(uploadLinearizationChanges);
         view.addMenuAction(uploadPostCoordinationChanges);
+        view.addMenuAction(uploadPostCoordinationCustomScales);
         view.addSeparator();
         view.addMenuAction(uploadAndMerge);
 

@@ -6,14 +6,18 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficEntityPostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class PostCoordinationPortletViewImpl extends Composite implements PostCoordinationPortletView {
+    Logger logger = java.util.logging.Logger.getLogger("PostCoordinationPortletViewImpl");
 
 
     @UiField
@@ -61,7 +65,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     }
 
     @Override
-    public void setPostCoordinationEntity() {
+    public void initializeTable() {
         initializeTableHeader();
         initializeTableContent();
     }
@@ -200,12 +204,48 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         this.tableCellChanged = handler;
     }
 
-    private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
+    @Override
+    public void setTableData(WhoficEntityPostCoordinationSpecification whoficSpecification) {
+        for (PostCoordinationTableRow row : this.tableRows) {
+            for (PostCoordinationTableCell cell : row.getCellList()) {
 
-            "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M3 7V8.2C3 9.88016 3 10.7202 3.32698 11.362C3.6146 11.9265 4.07354 12.3854 4.63803 12.673C5.27976 13 6.11984 13 7.8 13H21M21 13L17 9M21 13L17 17\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>" +
-            "</div>";
+                PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
+                        .filter(spec -> spec.getLinearizationView()
+                                .equalsIgnoreCase(cell.getLinearizationDefinition().getWhoficEntityIri()))
+                        .findFirst()
+                        .orElse(null);
 
-    interface PostCoordinationPortletViewImplUiBinder extends UiBinder<HTMLPanel, PostCoordinationPortletViewImpl> {
+                if (specification != null) {
+                    logger.info("ALEX setez valori pentru " + cell.getAxisLabel().getPostCoordinationAxis() + " cu " + cell.getLinearizationDefinition().getWhoficEntityIri());
+                    if (specification.getAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                        cell.setValue("ALLOWED");
+                    }
 
+                    if (specification.getRequiredAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                        cell.setValue("REQUIRED");
+                    }
+
+                    if (specification.getNotAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                        cell.setValue("NOT_ALLOWED");
+                    }
+                }
+            }
+        }
+        for (PostCoordinationTableRow row : this.tableRows) {
+            for (PostCoordinationTableCell cell : row.getCellList()) {
+                if(cell.getLinearizationDefinition().getCoreLinId() == null) {
+                    row.updateDerivedCell(cell);
+                }
+            }
+        }
     }
-}
+
+        private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
+
+                "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M3 7V8.2C3 9.88016 3 10.7202 3.32698 11.362C3.6146 11.9265 4.07354 12.3854 4.63803 12.673C5.27976 13 6.11984 13 7.8 13H21M21 13L17 9M21 13L17 17\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>" +
+                "</div>";
+
+        interface PostCoordinationPortletViewImplUiBinder extends UiBinder<HTMLPanel, PostCoordinationPortletViewImpl> {
+
+        }
+    }
