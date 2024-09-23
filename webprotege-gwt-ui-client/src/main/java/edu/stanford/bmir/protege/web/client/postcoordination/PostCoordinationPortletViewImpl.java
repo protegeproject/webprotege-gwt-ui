@@ -31,7 +31,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     private Map<String, PostCoordinationTableAxisLabel> labels;
     private Map<String, LinearizationDefinition> definitionMap;
 
-    private final List<PostCoordinationTableRow> tableRows = new ArrayList<>();
+    private List<PostCoordinationTableRow> tableRows = new ArrayList<>();
     private final DispatchServiceManager dispatch;
 
     private TableCellChangedHandler tableCellChanged = (isAxisEnabledOnAnyRow, checkboxValue, tableAxisLabel) -> {
@@ -206,6 +206,10 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @Override
     public void setTableData(WhoficEntityPostCoordinationSpecification whoficSpecification) {
+
+        tableRows = new ArrayList<>();
+        initializeTableContent();
+
         for (PostCoordinationTableRow row : this.tableRows) {
             for (PostCoordinationTableCell cell : row.getCellList()) {
 
@@ -216,7 +220,6 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                         .orElse(null);
 
                 if (specification != null) {
-                    logger.info("ALEX setez valori pentru " + cell.getAxisLabel().getPostCoordinationAxis() + " cu " + cell.getLinearizationDefinition().getWhoficEntityIri());
                     if (specification.getAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
                         cell.setValue("ALLOWED");
                     }
