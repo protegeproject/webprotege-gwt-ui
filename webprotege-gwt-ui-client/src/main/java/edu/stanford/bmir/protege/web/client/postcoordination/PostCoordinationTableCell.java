@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 public class PostCoordinationTableCell {
         private ConfigurableCheckbox configurableCheckbox;
         private LinearizationDefinition linearizationDefinition;
-
         private PostCoordinationCheckboxConfig checkboxConfig;
         private PostCoordinationTableAxisLabel axisLabel;
 

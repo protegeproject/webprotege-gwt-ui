@@ -207,40 +207,45 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     @Override
     public void setTableData(WhoficEntityPostCoordinationSpecification whoficSpecification) {
 
-        tableRows = new ArrayList<>();
-        initializeTableContent();
 
-        for (PostCoordinationTableRow row : this.tableRows) {
-            for (PostCoordinationTableCell cell : row.getCellList()) {
+        if (whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
+            tableRows = new ArrayList<>();
+            initializeTableContent();
+        } else {
+            for (PostCoordinationTableRow row : this.tableRows) {
+                for (PostCoordinationTableCell cell : row.getCellList()) {
 
-                PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
-                        .filter(spec -> spec.getLinearizationView()
-                                .equalsIgnoreCase(cell.getLinearizationDefinition().getWhoficEntityIri()))
-                        .findFirst()
-                        .orElse(null);
+                    PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
+                            .filter(spec -> spec.getLinearizationView()
+                                    .equalsIgnoreCase(cell.getLinearizationDefinition().getWhoficEntityIri()))
+                            .findFirst()
+                            .orElse(null);
 
-                if (specification != null) {
-                    if (specification.getAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
-                        cell.setValue("ALLOWED");
+                    if (specification != null) {
+                        if (specification.getAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                            cell.setValue("ALLOWED");
+                        }
+
+                        if (specification.getRequiredAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                            cell.setValue("REQUIRED");
+                        }
+
+                        if (specification.getNotAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                            cell.setValue("NOT_ALLOWED");
+                        }
                     }
-
-                    if (specification.getRequiredAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
-                        cell.setValue("REQUIRED");
-                    }
-
-                    if (specification.getNotAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
-                        cell.setValue("NOT_ALLOWED");
+                }
+            }
+            for (PostCoordinationTableRow row : this.tableRows) {
+                for (PostCoordinationTableCell cell : row.getCellList()) {
+                    if(cell.getLinearizationDefinition().getCoreLinId() == null) {
+                        row.updateDerivedCell(cell);
                     }
                 }
             }
         }
-        for (PostCoordinationTableRow row : this.tableRows) {
-            for (PostCoordinationTableCell cell : row.getCellList()) {
-                if(cell.getLinearizationDefinition().getCoreLinId() == null) {
-                    row.updateDerivedCell(cell);
-                }
-            }
-        }
+
+
     }
 
         private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +

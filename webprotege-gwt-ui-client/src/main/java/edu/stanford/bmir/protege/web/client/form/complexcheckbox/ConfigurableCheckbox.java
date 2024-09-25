@@ -26,7 +26,6 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
         presenter = new ConfigurableCheckBoxPresenter(new ConfigurableCheckBoxViewImpl());
         presenter.start(container);
 
-
         this.checkBoxConfig = checkBoxConfig;
 
         presenter.setEnabled(checkBoxConfig.isEnabled());
