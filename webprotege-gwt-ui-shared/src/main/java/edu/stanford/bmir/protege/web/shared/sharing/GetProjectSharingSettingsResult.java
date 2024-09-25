@@ -30,6 +30,7 @@ public class GetProjectSharingSettingsResult implements Result {
         return new GetProjectSharingSettingsResult(projectSharingSettings);
     }
 
+    @JsonProperty("settings")
     public ProjectSharingSettings getProjectSharingSettings() {
         return projectSharingSettings;
     }
