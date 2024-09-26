@@ -29,9 +29,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsActio
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -44,9 +42,7 @@ import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetEntityPostCoordinationAction;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
-import edu.stanford.bmir.protege.web.shared.postcoordination.SaveEntityPostCoordinationAction;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
@@ -235,7 +231,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetRenderedOwlEntitiesAction.class),
         @Type(value = GetEntityPostCoordinationAction.class),
         @Type(value = GetPostCoordinationTableConfigurationAction.class),
-        @Type(value = GetProjectChangesForHistoryViewAction.class)
+        @Type(value = GetProjectChangesForHistoryViewAction.class),
+        @Type(value = ProcessUploadedLinearizationAction.class),
+        @Type(value = ProcessUploadedPostCoordinationAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

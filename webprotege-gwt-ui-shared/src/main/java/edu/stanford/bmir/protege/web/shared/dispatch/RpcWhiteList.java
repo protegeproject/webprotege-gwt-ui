@@ -1012,6 +1012,9 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetProjectChangesForHistoryViewAction _GetProjectChangesForHistoryViewAction;
     GetProjectChangesForHistoryViewResult _GetProjectChangesForHistoryViewResult;
 
+    ProcessUploadedLinearizationAction _ProcessUploadedLinearizationAction;
+    ProcessUploadedLinearizationResult _ProcessUploadedLinearizationResult;
+
     public RpcWhiteList() {
     }
 }
