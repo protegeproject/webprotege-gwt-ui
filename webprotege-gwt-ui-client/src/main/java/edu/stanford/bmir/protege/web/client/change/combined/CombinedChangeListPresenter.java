@@ -108,7 +108,7 @@ public class CombinedChangeListPresenter {
         dispatch.execute(action,
                 hasBusy,
                 (projChangeResult) -> {
-                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.empty(), pageRequest);
+                    GetProjectChangesForHistoryViewAction linAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.empty(), pageRequest);
                     dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
                 });
     }
@@ -122,7 +122,7 @@ public class CombinedChangeListPresenter {
         dispatch.execute(action,
                 hasBusy,
                 (projChangeResult) -> {
-                    GetLinearizationChangesAction linAction = GetLinearizationChangesAction.create(projectId, Optional.of(entity), pageRequest);
+                    GetProjectChangesForHistoryViewAction linAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.of(entity), pageRequest);
                     dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
                 });
     }
