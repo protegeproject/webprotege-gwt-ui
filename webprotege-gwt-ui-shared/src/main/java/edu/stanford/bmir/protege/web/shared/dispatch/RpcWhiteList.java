@@ -1014,6 +1014,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
     ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;
     ProcessUploadedPostCoordinationResult _ProcessUploadedPostCoordinationResult;
+
+    SaveEntityPostCoordinationResult _SaveEntityPostCoordinationResult;
     LinearizationDefinition _LinearizationDefinition;
 
     GetEntityLinearizationResult _GetEntityLinearizationResult;

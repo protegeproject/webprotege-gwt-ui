@@ -304,6 +304,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetEntityPostCoordinationResult.class),
         @JsonSubTypes.Type(ProcessUploadedCustomScalesResult.class),
         @JsonSubTypes.Type(GetEntityCustomScalesResult.class),
+        @JsonSubTypes.Type(SaveEntityPostCoordinationResult.class),
         @JsonSubTypes.Type(ProcessUploadedPostCoordinationResult.class),
         @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class)
 })

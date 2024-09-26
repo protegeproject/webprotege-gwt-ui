@@ -24,19 +24,19 @@ public class PostCoordinationCheckboxConfig extends CheckBoxConfig {
     private CheckboxValue parentValue;
 
 
-    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(NOT_ALLOWED, "UNKNOWN"),
+    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED"),
             new CheckboxValue(CHECK_SVG, "ALLOWED"),
             new CheckboxValue(REQUIRED_SVG, "REQUIRED")
             );
 
     public static List<CheckboxValue> AVAILABLE_DEFAULT_VALUE_LIST = Arrays.asList(
-            new CheckboxValue(DEFAULT_NOT_ALLOWED, "DEFAULT_UNKNOWN"),
+            new CheckboxValue(DEFAULT_NOT_ALLOWED, "DEFAULT_NOT_ALLOWED"),
             new CheckboxValue(DEFAULT_CHECK_SVG, "DEFAULT_ALLOWED"),
             new CheckboxValue(DEFAULT_REQUIRED_SVG, "DEFAULT_REQUIRED")
     );
 
     protected PostCoordinationCheckboxConfig() {
-        super(new CheckboxValue(NOT_ALLOWED, "UNKNOWN"), AVAILABLE_VALUES_LIST);
+        super(new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED"), AVAILABLE_VALUES_LIST);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PostCoordinationCheckboxConfig extends CheckBoxConfig {
     @Override
     public CheckboxValue findValue(String inputValue) {
         if(inputValue == null || inputValue.isEmpty()) {
-            return new CheckboxValue(NOT_ALLOWED, "UNKNOWN");
+            return new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED");
         }
         List<CheckboxValue> allValues = new ArrayList<>();
         allValues.addAll(AVAILABLE_VALUES_LIST);
@@ -59,7 +59,7 @@ public class PostCoordinationCheckboxConfig extends CheckBoxConfig {
 
         return allValues.stream().filter(value -> value.getValue().equalsIgnoreCase(inputValue))
                 .findFirst()
-                .orElse(new CheckboxValue(NOT_ALLOWED, "UNKNOWN"));
+                .orElse(new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED"));
     }
 
     private CheckboxValue getNextValueForDerivedClasses(CheckboxValue checkboxValue) {

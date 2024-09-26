@@ -6,9 +6,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
-import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficEntityPostCoordinationSpecification;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 public class PostCoordinationPortletViewImpl extends Composite implements PostCoordinationPortletView {
     Logger logger = java.util.logging.Logger.getLogger("PostCoordinationPortletViewImpl");
 
-
     @UiField
     HTMLPanel paneContainer;
 
@@ -27,6 +24,13 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     protected FlexTable flexTable;
     @UiField
     public VerticalPanel scaleValueCardList;
+    @UiField Button saveValuesButton;
+
+    @UiField Button cancelButton;
+
+
+    private String entityIri;
+    private ProjectId projectId;
 
     private Map<String, PostCoordinationTableAxisLabel> labels;
     private Map<String, LinearizationDefinition> definitionMap;
@@ -45,13 +49,62 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     public PostCoordinationPortletViewImpl(DispatchServiceManager dispatch) {
         initWidget(ourUiBinder.createAndBindUi(this));
 
+        saveValuesButton.addClickHandler(event -> saveValues());
+        cancelButton.addClickHandler(event -> cancelValues());
+        saveValuesButton.setVisible(true);
         this.dispatch = dispatch;
         style.ensureInjected();
     }
 
+    private void cancelValues() {
+        dispatch.execute(GetEntityPostCoordinationAction.create(entityIri, this.projectId),
+                (result) -> this.setTableData(result.getPostCoordinationSpecification()));
+    }
+
+
+    private void saveValues() {
+        WhoficEntityPostCoordinationSpecification specification = new WhoficEntityPostCoordinationSpecification(entityIri, "ICD", new ArrayList<>());
+        boolean somethingChanged = false;
+        for(PostCoordinationTableRow tableRow : this.tableRows) {
+            PostCoordinationSpecification postCoordinationSpecification = new PostCoordinationSpecification(tableRow.getLinearizationDefinition().getWhoficEntityIri(),
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    new ArrayList<>());
+            for(PostCoordinationTableCell cell : tableRow.getCellList()) {
+                if(cell.isTouched()) {
+                    if(cell.getValue().equalsIgnoreCase("NOT_ALLOWED")) {
+                        postCoordinationSpecification.getNotAllowedAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
+                        somethingChanged = true;
+                    }
+                    if(cell.getValue().equalsIgnoreCase("ALLOWED")) {
+                        postCoordinationSpecification.getAllowedAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
+                        somethingChanged = true;
+                    }
+                    if(cell.getValue().equalsIgnoreCase("REQUIRED")) {
+                        postCoordinationSpecification.getRequiredAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
+                        somethingChanged = true;
+                    }
+                    if(cell.getValue().startsWith("DEFAULT")) {
+                        postCoordinationSpecification.getDefaultAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
+                        somethingChanged = true;
+                    }
+                }
+            }
+            specification.getPostCoordinationSpecifications().add(postCoordinationSpecification);
+        }
+        if(somethingChanged) {
+            dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification), (result) -> {
+                logger.info("ALEX a venit cu rezult");
+            });
+
+        }
+
+    }
+
     @Override
     public void setProjectId(ProjectId projectId) {
-
+        this.projectId = projectId;
     }
 
     @Override
@@ -148,6 +201,8 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         return tableRowsWithAxisChecked.size() > 0;
     }
 
+
+
     private void updateTelescopicLinearizations(PostCoordinationTableCell cell) {
         for (PostCoordinationTableRow tableRow : this.tableRows) {
             tableRow.updateDerivedCell(cell);
@@ -207,6 +262,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     @Override
     public void setTableData(WhoficEntityPostCoordinationSpecification whoficSpecification) {
 
+        this.entityIri = whoficSpecification.getWhoficEntityIri();
 
         if (whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
             tableRows = new ArrayList<>();

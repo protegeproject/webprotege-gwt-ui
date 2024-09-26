@@ -21,7 +21,7 @@ public class PostCoordinationTableCell {
 
     public PostCoordinationTableCell(LinearizationDefinition linearizationDefinition, PostCoordinationTableAxisLabel axisLabel, PostCoordinationTableRow parentRow) {
         this.checkboxConfig = new PostCoordinationCheckboxConfig();
-        configurableCheckbox = new ConfigurableCheckbox(checkboxConfig, "UNKNOWN");
+        configurableCheckbox = new ConfigurableCheckbox(checkboxConfig, "NOT_ALLOWED");
         configurableCheckbox.setReadOnly(false);
         configurableCheckbox.setEnabled(true);
 

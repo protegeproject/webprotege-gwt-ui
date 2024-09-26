@@ -36,6 +36,10 @@ public class PostCoordinationTableRow {
         return linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty();
     }
 
+    public LinearizationDefinition getLinearizationDefinition() {
+        return linearizationDefinition;
+    }
+
     public void bindToParentRow(List<PostCoordinationTableRow> tableRows) {
         if (isDerived()) {
             PostCoordinationTableRow parentRow = findParentRow(linearizationDefinition.getCoreLinId(), tableRows);
