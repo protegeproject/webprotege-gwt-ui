@@ -42,6 +42,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
     private final Map<String, PostCoordinationAxisToGenericScale> genericScale = new HashMap<>();
 
+    private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
+
 
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -110,37 +112,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                     )
             );
 
-            /*
-                ToDo:
-                    1. populate genericScale using a dispatch request.
-                    2. populate a list of scaleCustomizations from BE with the real scale values for each axis/subaxis
-             */
-//            Map<String, ScaleValueCardPresenter> axisMapWithValues = tableLabelsForAxes.values()
-//                    .stream()
-//                    .collect(Collectors.toMap(
-//                            PostCoordinationTableAxisLabel::getPostCoordinationAxis,
-//                            tabelAxisLabel -> {
-//                                PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
-//                                        tabelAxisLabel.getPostCoordinationAxis(),
-//                                        new PostCoordinationAxisToGenericScale(tabelAxisLabel.getPostCoordinationAxis(), "", ScaleAllowMultiValue.NotAllowed)
-//                                );
-//                                return createScaleValueCardPresenter(
-//                                        tabelAxisLabel,
-//                                        new PostCoordinationScaleValue(
-//                                                tabelAxisLabel.getPostCoordinationAxis(),
-//                                                tabelAxisLabel.getScaleLabel(),
-//                                                new ArrayList<>(Arrays.asList("iri1.1", "iri1.2", "iri1.3")),
-//                                                genericScale1)
-//                                );
-//                            }
-//                    ));
-//
-//            scaleValueCardPresenters.putAll(axisMapWithValues);
-            //Do batch action for all scaleValues
-            dispatch.beginBatch();
-            scaleValueCardPresenters.values().forEach(presenter -> presenter.start(view.getScaleValueCardsView()));
-            dispatch.executeCurrentBatch();
-
 
             view.setTableCellChangedHandler(handleTableCellChanged());
 
@@ -166,12 +137,27 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        clearScaleValueCards();
         logger.info("Fac fetch la entity " + entityData);
-        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
-                (result) -> view.setTableData(result.getPostCoordinationSpecification())));
-
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
-                (result)-> logger.info("ALEX a venit si scales " + result)));
+                (result) -> {
+                    logger.info("ALEX a venit si scales " + result);
+                    postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
+                }));
+
+        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
+                (result) -> {
+                    logger.info("ALEX post coord result: " + result);
+                    view.setTableData(result.getPostCoordinationSpecification());
+                }));
+
+
+    }
+
+    private void clearScaleValueCards() {
+        scaleValueCardPresenters.clear();
+        postCoordinationCustomScalesList.clear();
+        view.getScaleValueCardsView().clear();
     }
 
     public void removeScaleValueCardPresenter(String axisIri) {
@@ -192,13 +178,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                  */
                 new PostCoordinationAxisToGenericScale(axisIri, "", ScaleAllowMultiValue.NotAllowed)
         );
+        List<String> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
+                .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())
+                .collect(Collectors.toList());
         ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
                 currentAxisLabels,
-                /*
-                ToDo:
-                    create a post  PostCoordinationScaleValue also using the scale value from BE if it exists. if not then use createEmpty()
-                 */
-                PostCoordinationScaleValue.createEmpty(axisIri, currentAxisLabels.getScaleLabel(), genericScale1)
+                PostCoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
         newPresenter.start(view.getScaleValueCardsView());
@@ -251,13 +236,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 .filter(compositeAxis -> compositeAxis.getPostCoordinationAxis().equals(axisIri))
                 .findFirst();
 
-        if (compositeAxesOptional.isPresent()) {
-            return compositeAxesOptional.get()
-                    .getSubAxis()
-                    .stream()
-                    .anyMatch(subAxis -> scaleValueCardPresenters.get(subAxis) != null);
-        }
-        return scaleValueCardPresenters.get(axisIri) != null;
+        return compositeAxesOptional.map(
+                        postCoordinationCompositeAxis -> postCoordinationCompositeAxis
+                                .getSubAxis()
+                                .stream()
+                                .anyMatch(subAxis -> scaleValueCardPresenters.get(subAxis) != null))
+                .orElseGet(() -> scaleValueCardPresenters.get(axisIri) != null);
     }
 
 }
