@@ -25,9 +25,11 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     @UiField
     public VerticalPanel scaleValueCardList;
     @UiField Button saveValuesButton;
+    @UiField Button editValuesButton;
 
     @UiField Button cancelButton;
 
+    private boolean readOnly = true;
 
     private String entityIri;
     private ProjectId projectId;
@@ -51,9 +53,26 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
         saveValuesButton.addClickHandler(event -> saveValues());
         cancelButton.addClickHandler(event -> cancelValues());
-        saveValuesButton.setVisible(true);
+        editValuesButton.addClickHandler(event -> enableEditValues());
+        saveValuesButton.setVisible(!readOnly);
+        editValuesButton.setVisible(readOnly);
         this.dispatch = dispatch;
         style.ensureInjected();
+    }
+
+    private void enableEditValues() {
+        setTableState(false);
+        saveValuesButton.setVisible(true);
+        editValuesButton.setVisible(false);
+    }
+
+
+    private void setTableState(boolean readOnly){
+        for(PostCoordinationTableRow row : tableRows) {
+            for(PostCoordinationTableCell cell : row.getCellList()) {
+                cell.setState(readOnly);
+            }
+        }
     }
 
     private void cancelValues() {
@@ -95,6 +114,9 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         }
         if(somethingChanged) {
             dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification), (result) -> {
+                setTableState(true);
+                editValuesButton.setVisible(true);
+                saveValuesButton.setVisible(false);
                 logger.info("ALEX a venit cu rezult");
             });
 
@@ -261,7 +283,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @Override
     public void setTableData(WhoficEntityPostCoordinationSpecification whoficSpecification) {
-
+        logger.info("Set table data");
         this.entityIri = whoficSpecification.getWhoficEntityIri();
 
         if (whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
@@ -270,7 +292,6 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         } else {
             for (PostCoordinationTableRow row : this.tableRows) {
                 for (PostCoordinationTableCell cell : row.getCellList()) {
-
                     PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
                             .filter(spec -> spec.getLinearizationView()
                                     .equalsIgnoreCase(cell.getLinearizationDefinition().getWhoficEntityIri()))
@@ -289,6 +310,15 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                         if (specification.getNotAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
                             cell.setValue("NOT_ALLOWED");
                         }
+                        if(specification.getDefaultAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
+                            cell.setSetValueAsDefaultParent();
+                        }
+                    } else {
+                        if(row.isDerived()) {
+                            cell.setSetValueAsDefaultParent();
+                        } else {
+                            cell.setValue("NOT_ALLOWED");
+                        }
                     }
                 }
             }
@@ -301,7 +331,9 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
             }
         }
 
-
+        setTableState(true);
+        editValuesButton.setVisible(true);
+        saveValuesButton.setVisible(false);
     }
 
         private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +

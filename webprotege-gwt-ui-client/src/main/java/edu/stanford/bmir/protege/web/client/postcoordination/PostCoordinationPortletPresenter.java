@@ -78,7 +78,10 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
                         .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
                         .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Couldn't find label for " + availableAxis));
+                        .orElseThrow(() -> {
+                            logger.info("Couldn't find label for " + availableAxis);
+                            return new RuntimeException("Couldn't find label for " + availableAxis);
+                        });
                 tableLabelsForAxes.put(availableAxis, existingLabel);
             }
 

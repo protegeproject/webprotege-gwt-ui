@@ -15,8 +15,9 @@ public class PostCoordinationTableCell {
         private LinearizationDefinition linearizationDefinition;
         private PostCoordinationCheckboxConfig checkboxConfig;
         private PostCoordinationTableAxisLabel axisLabel;
+        private PostCoordinationTableRow rowWrapper;
+        private PostCoordinationTableCell parentCell;
 
-        private PostCoordinationTableRow parentRow;
     Logger logger = java.util.logging.Logger.getLogger("PostCoordinationTableCell");
 
     public PostCoordinationTableCell(LinearizationDefinition linearizationDefinition, PostCoordinationTableAxisLabel axisLabel, PostCoordinationTableRow parentRow) {
@@ -27,7 +28,7 @@ public class PostCoordinationTableCell {
 
         this.linearizationDefinition = linearizationDefinition;
         this.axisLabel = axisLabel;
-        this.parentRow = parentRow;
+        this.rowWrapper = parentRow;
     }
 
     public Widget asWidget(){
@@ -38,12 +39,28 @@ public class PostCoordinationTableCell {
         return this.configurableCheckbox.addValueChangeHandler(handler);
     }
 
+    public void setSetValueAsDefaultParent(){
+        if(parentCell != null) {
+            this.setValue("DEFAULT_" + parentCell.getValue());
+        } else {
+            this.setValue("DEFAULT_NOT_ALLOWED");
+        }
+    }
+    public void setState(boolean readOnly) {
+        configurableCheckbox.setReadOnly(readOnly);
+        configurableCheckbox.setEnabled(!readOnly);
+    }
+
     public void setValue(String value) {
        this.configurableCheckbox.setValue(value);
     }
 
     public  boolean isTouched(){
         return configurableCheckbox.isTouched();
+    }
+
+    public void setParentCell(PostCoordinationTableCell parentCell) {
+        this.parentCell = parentCell;
     }
 
     public String getValue() {

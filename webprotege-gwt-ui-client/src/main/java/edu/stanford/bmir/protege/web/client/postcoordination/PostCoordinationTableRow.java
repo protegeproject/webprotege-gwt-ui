@@ -54,6 +54,7 @@ public class PostCoordinationTableRow {
                     .filter(myCell -> myCell.getAxisLabel().getPostCoordinationAxis().equalsIgnoreCase(parentCell.getAxisLabel().getPostCoordinationAxis()))
                     .findFirst();
 
+            cellToUpload.ifPresent(cell -> cell.setParentCell(parentCell));
             cellToUpload.ifPresent(cell -> cell.setParentValue(parentCell.getAsCheckboxValue()));
         }
     }
