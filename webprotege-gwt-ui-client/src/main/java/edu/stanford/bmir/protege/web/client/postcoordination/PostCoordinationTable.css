@@ -57,6 +57,11 @@
 
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 
 .postCoordinationTable {
     border-radius: 5px;

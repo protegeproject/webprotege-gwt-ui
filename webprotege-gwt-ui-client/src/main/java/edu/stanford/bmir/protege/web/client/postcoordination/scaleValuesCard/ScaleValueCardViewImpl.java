@@ -32,9 +32,12 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private Button addButton;
 
+    private boolean isReadOnly = true;
+
     public ScaleValueCardViewImpl() {
         rootPanel = uiBinder.createAndBindUi(this);
         createAddButton();
+        setReadOnly(isReadOnly);
     }
 
     private void createAddButton() {
@@ -137,5 +140,19 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     @Override
     public Widget asWidget() {
         return rootPanel;
+    }
+
+    @Override
+    public void setEditMode(boolean enabled) {
+        setReadOnly(!enabled);
+    }
+
+    private void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
+        if (isReadOnly) {
+            rootPanel.addStyleName(postCoordinationStyle.disabled());
+        } else {
+            rootPanel.removeStyleName(postCoordinationStyle.disabled());
+        }
     }
 }
