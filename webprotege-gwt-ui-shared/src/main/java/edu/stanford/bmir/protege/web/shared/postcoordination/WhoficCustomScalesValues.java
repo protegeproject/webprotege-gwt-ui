@@ -12,15 +12,13 @@ import java.util.List;
 @GwtCompatible(serializable = true)
 public class WhoficCustomScalesValues implements IsSerializable, Serializable {
 
-    @JsonProperty("whoficEntityIri")
     private String whoficEntityIri;
-    @JsonProperty("scaleCustomizations")
-    private List<PostCoordinationCustomScalesRequest> scaleCustomizations;
+    private List<PostCoordinationCustomScales> scaleCustomizations;
 
 
     @JsonCreator
     public WhoficCustomScalesValues( @JsonProperty("whoficEntityIri") String whoficEntityIri,
-                                     @JsonProperty("scaleCustomizations") List<PostCoordinationCustomScalesRequest> scaleCustomizations) {
+                                     @JsonProperty("scaleCustomizations") List<PostCoordinationCustomScales> scaleCustomizations) {
         this.whoficEntityIri = whoficEntityIri;
         this.scaleCustomizations = scaleCustomizations;
     }
@@ -29,11 +27,13 @@ public class WhoficCustomScalesValues implements IsSerializable, Serializable {
     private WhoficCustomScalesValues() {
     }
 
+    @JsonProperty("whoficEntityIri")
     public String getWhoficEntityIri() {
         return whoficEntityIri;
     }
 
-    public List<PostCoordinationCustomScalesRequest> getScaleCustomizations() {
+    @JsonProperty("scaleCustomizations")
+    public List<PostCoordinationCustomScales> getScaleCustomizations() {
         return scaleCustomizations;
     }
 }
