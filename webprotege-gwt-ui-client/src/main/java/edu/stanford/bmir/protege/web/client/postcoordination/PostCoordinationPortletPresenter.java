@@ -44,6 +44,10 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
 
+    private boolean editMode = false;
+
+    private Optional<OWLEntity> entityIri;
+
 
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -68,11 +72,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
 
-        scaleValueCardPresenters.clear();
-        tableLabelsForAxes.clear();
-        compositeAxisList.clear();
-        scaleLabelsForAxes.clear();
-        genericScale.clear();
+        clearAllDate();
 
 
         dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
@@ -126,14 +126,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         });
 
         view.setEditButtonHandler(() -> {
-            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
-            view.setEditMode(true);
+            this.setEditMode(true);
         });
 
         view.setCancelButtonHandler(() -> {
-            handleAfterSetEntity(getSelectedEntity());
-            view.setEditMode(false);
-            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
+            handleAfterSetEntity(this.entityIri);
+            this.setEditMode(false);
         });
 
         view.setSaveButtonHandler((postcoordinationSpec) -> {
@@ -143,9 +141,10 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                             }
                     )
             );
-            view.setEditMode(false);
-            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
+            this.setEditMode(false);
         });
+
+        this.setEditMode(false);
     }
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
@@ -159,7 +158,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        clearScaleValueCards();
+        this.entityIri = entityData;
         logger.info("Fac fetch la entity " + entityData);
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
@@ -171,15 +170,22 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 (result) -> {
                     logger.info("ALEX post coord result: " + result);
                     view.setTableData(result.getPostCoordinationSpecification());
+                    setEditMode(false);
                 }));
-
-
     }
 
     private void clearScaleValueCards() {
         scaleValueCardPresenters.clear();
         postCoordinationCustomScalesList.clear();
         view.getScaleValueCardsView().clear();
+    }
+
+    private void clearAllDate() {
+        clearScaleValueCards();
+        tableLabelsForAxes.clear();
+        compositeAxisList.clear();
+        scaleLabelsForAxes.clear();
+        genericScale.clear();
     }
 
     public void removeScaleValueCardPresenter(String axisIri) {
@@ -208,7 +214,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 PostCoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(view.getScaleValueCardsView(), false);
+        newPresenter.start(view.getScaleValueCardsView(), editMode);
     }
 
     private TableCellChangedHandler handleTableCellChanged() {
@@ -264,6 +270,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                 .stream()
                                 .anyMatch(subAxis -> scaleValueCardPresenters.get(subAxis) != null))
                 .orElseGet(() -> scaleValueCardPresenters.get(axisIri) != null);
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+        scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(editMode));
+        view.setEditMode(editMode);
     }
 
 }

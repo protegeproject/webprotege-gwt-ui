@@ -16,6 +16,8 @@ public class ScaleValueCardPresenter {
     private final DispatchServiceManager dispatchServiceManager;
     private final ProjectId projectId;
 
+    private boolean isReadOnly = true;
+
 
     public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis,
                                    PostCoordinationScaleValue scaleValue,
@@ -43,7 +45,11 @@ public class ScaleValueCardPresenter {
         view.addSelectValueButton();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
-                result -> result.getRenderedEntities().forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()))
+                result -> {
+            result.getRenderedEntities()
+                    .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
+            view.setEditMode(isReadOnly);
+                }
         );
 
         view.setDeleteValueButtonHandler((value) -> scaleValue.getValueIris().remove(value));
@@ -64,13 +70,14 @@ public class ScaleValueCardPresenter {
     }
 
     public void setEditMode(boolean editMode) {
+        isReadOnly = !editMode;
         view.setEditMode(editMode);
     }
 
     public void start(VerticalPanel panel, boolean isEditMode) {
         bindView();
         initTable();
-        view.setEditMode(isEditMode);
+        setEditMode(isEditMode);
         panel.add(view.asWidget());
     }
 }

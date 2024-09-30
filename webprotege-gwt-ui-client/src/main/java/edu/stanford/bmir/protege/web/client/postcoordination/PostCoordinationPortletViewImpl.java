@@ -72,8 +72,10 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
 
     public void setEditMode(boolean editMode) {
-        setTableState(!editMode);
+        readOnly = !editMode;
+        setTableState(readOnly);
         saveValuesButton.setVisible(editMode);
+        cancelButton.setVisible(editMode);
         editValuesButton.setVisible(!editMode);
     }
 
@@ -84,7 +86,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @Override
     public void setCancelButtonHandler(CancelButtonHandler handler) {
-        this.cancelButtonHandler.handleCancelButton();
+        this.cancelButtonHandler = handler;
     }
 
     @Override
@@ -97,54 +99,6 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
             for (PostCoordinationTableCell cell : row.getCellList()) {
                 cell.setState(readOnly);
             }
-        }
-    }
-
-    private void cancelValues() {
-        dispatch.execute(GetEntityPostCoordinationAction.create(entityIri, this.projectId),
-                (result) -> this.setTableData(result.getPostCoordinationSpecification()));
-    }
-
-
-    private void saveValues() {
-        WhoficEntityPostCoordinationSpecification specification = new WhoficEntityPostCoordinationSpecification(entityIri, "ICD", new ArrayList<>());
-        boolean somethingChanged = false;
-        for (PostCoordinationTableRow tableRow : this.tableRows) {
-            PostCoordinationSpecification postCoordinationSpecification = new PostCoordinationSpecification(tableRow.getLinearizationDefinition().getWhoficEntityIri(),
-                    new ArrayList<>(),
-                    new ArrayList<>(),
-                    new ArrayList<>(),
-                    new ArrayList<>());
-            for (PostCoordinationTableCell cell : tableRow.getCellList()) {
-                if (cell.isTouched()) {
-                    if (cell.getValue().equalsIgnoreCase("NOT_ALLOWED")) {
-                        postCoordinationSpecification.getNotAllowedAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
-                        somethingChanged = true;
-                    }
-                    if (cell.getValue().equalsIgnoreCase("ALLOWED")) {
-                        postCoordinationSpecification.getAllowedAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
-                        somethingChanged = true;
-                    }
-                    if (cell.getValue().equalsIgnoreCase("REQUIRED")) {
-                        postCoordinationSpecification.getRequiredAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
-                        somethingChanged = true;
-                    }
-                    if (cell.getValue().startsWith("DEFAULT")) {
-                        postCoordinationSpecification.getDefaultAxes().add(cell.getAxisLabel().getPostCoordinationAxis());
-                        somethingChanged = true;
-                    }
-                }
-            }
-            specification.getPostCoordinationSpecifications().add(postCoordinationSpecification);
-        }
-        if (somethingChanged) {
-            dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification), (result) -> {
-                setTableState(true);
-                editValuesButton.setVisible(true);
-                saveValuesButton.setVisible(false);
-                logger.info("ALEX a venit cu rezult");
-            });
-
         }
     }
 
@@ -395,6 +349,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         setTableState(true);
         editValuesButton.setVisible(true);
         saveValuesButton.setVisible(false);
+        cancelButton.setVisible(false);
     }
 
     private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
