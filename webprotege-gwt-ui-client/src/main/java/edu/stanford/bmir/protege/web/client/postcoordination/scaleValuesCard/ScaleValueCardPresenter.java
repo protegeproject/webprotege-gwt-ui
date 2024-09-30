@@ -48,7 +48,7 @@ public class ScaleValueCardPresenter {
                 result -> {
             result.getRenderedEntities()
                     .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
-            view.setEditMode(isReadOnly);
+            view.setEditMode(!isReadOnly);
                 }
         );
 
