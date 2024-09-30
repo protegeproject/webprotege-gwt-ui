@@ -94,6 +94,10 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
         return isTouched;
     }
 
+    public void setTouched(Boolean touched) {
+        this.isTouched = touched;
+    }
+
     @Override
     public void fireEvent(GwtEvent<?> event) {
         view.fireEvent(event);

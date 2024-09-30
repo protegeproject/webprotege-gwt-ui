@@ -10,5 +10,5 @@ import static edu.stanford.bmir.protege.web.shared.postcoordination.SaveEntityPo
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName(CHANNEL)
-public abstract class SaveEntityPostCoordinationResult  implements Result {
+public class SaveEntityPostCoordinationResult  implements Result {
 }

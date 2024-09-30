@@ -207,7 +207,6 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                             valueChanged.getValue(),
                             cell.getAxisLabel().getPostCoordinationAxis()
                     );
-                    updateTelescopicLinearizations(cell);
                 });
                 flexTable.setWidget(i + 1, j + 1, cell.asWidget());
                 tableRow.addCell(cell);
@@ -221,9 +220,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
             this.tableRows.add(tableRow);
         }
 
-        for (PostCoordinationTableRow tableRow : tableRows) {
-            tableRow.bindToParentRow(tableRows);
-        }
+        bindCellsToParentCells();
     }
 
     private boolean isAxisEnabledOnAnyRow(PostCoordinationTableAxisLabel axisLabel) {
@@ -240,9 +237,22 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     }
 
 
-    private void updateTelescopicLinearizations(PostCoordinationTableCell cell) {
-        for (PostCoordinationTableRow tableRow : this.tableRows) {
-            tableRow.updateDerivedCell(cell);
+    private void bindCellsToParentCells(){
+        for(PostCoordinationTableRow row : this.tableRows) {
+            if(!row.isDerived()) {
+                for(PostCoordinationTableRow childRow : this.tableRows) {
+                    if(childRow.isDerived() && childRow.getLinearizationDefinition().getCoreLinId().equalsIgnoreCase(row.getLinearizationDefinition().getId())) {
+                        for(PostCoordinationTableCell parentCell: row.getCellList()) {
+                            for(PostCoordinationTableCell childCell: childRow.getCellList()) {
+                                if(parentCell.getAxisLabel().getPostCoordinationAxis().equalsIgnoreCase(childCell.getAxisLabel().getPostCoordinationAxis())) {
+                                    parentCell.addToChildCells(childCell);
+                                    childCell.setIsDerived();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -257,7 +267,6 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         rowLabel.getElement().setInnerHTML(rowLabelString);
         rowLabel.addStyleName(style.getRowLabel());
         flexTable.setWidget(row, column, rowLabel);
-        //flexTable.getCellFormatter().addStyleName(row, column, style.getRowLabel());
     }
 
     private void addHeaderCell(String label, int position) {
@@ -301,10 +310,13 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         logger.info("Set table data");
         this.entityIri = whoficSpecification.getWhoficEntityIri();
 
-        if (whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
-            tableRows = new ArrayList<>();
-            initializeTableContent();
-        } else {
+        for(PostCoordinationTableRow row: this.tableRows) {
+            for(PostCoordinationTableCell cell : row.getCellList()) {
+                cell.reset();
+            }
+        }
+
+        if(!whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
             for (PostCoordinationTableRow row : this.tableRows) {
                 for (PostCoordinationTableCell cell : row.getCellList()) {
                     PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
@@ -325,24 +337,20 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                         if (specification.getNotAllowedAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
                             cell.setValue("NOT_ALLOWED");
                         }
-                        if (specification.getDefaultAxes().contains(cell.getAxisLabel().getPostCoordinationAxis())) {
-                            cell.setSetValueAsDefaultParent();
-                        }
+
                     } else {
-                        if (row.isDerived()) {
-                            cell.setSetValueAsDefaultParent();
-                        } else {
-                            cell.setValue("NOT_ALLOWED");
-                        }
+                        cell.setValue("NOT_ALLOWED");
                     }
                 }
             }
-            for (PostCoordinationTableRow row : this.tableRows) {
-                for (PostCoordinationTableCell cell : row.getCellList()) {
-                    if (cell.getLinearizationDefinition().getCoreLinId() == null) {
-                        row.updateDerivedCell(cell);
-                    }
-                }
+
+        }
+        bindCellsToParentCells();
+
+        for(PostCoordinationTableRow row: this.tableRows) {
+            for(PostCoordinationTableCell cell: row.getCellList()) {
+                cell.updateChildren();
+                cell.initializeCallback();
             }
         }
 
