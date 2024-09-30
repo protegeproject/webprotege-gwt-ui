@@ -159,16 +159,13 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         this.entityIri = entityData;
-        logger.info("Fac fetch la entity " + entityData);
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
-                    logger.info("ALEX a venit si scales " + result);
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
                 }));
 
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
-                    logger.info("ALEX post coord result: " + result);
                     view.setTableData(result.getPostCoordinationSpecification());
                     setEditMode(false);
                 }));

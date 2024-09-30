@@ -13,15 +13,15 @@ import java.util.List;
 public class WhoficEntityPostCoordinationSpecification implements IsSerializable, Serializable {
     private String whoficEntityIri;
     private String entityType;
-    private List<PostCoordinationSpecification> postCoordinationSpecifications;
+    private List<PostCoordinationSpecification> postcoordinationSpecifications;
 
     @JsonCreator
     public WhoficEntityPostCoordinationSpecification(@JsonProperty("whoficEntityIri") String whoficEntityIri,
                                                      @JsonProperty("entityType") String entityType,
-                                                     @JsonProperty("postCoordinationSpecifications") List<PostCoordinationSpecification> postCoordinationSpecifications) {
+                                                     @JsonProperty("postcoordinationSpecifications") List<PostCoordinationSpecification> postcoordinationSpecifications) {
         this.whoficEntityIri = whoficEntityIri;
         this.entityType = entityType;
-        this.postCoordinationSpecifications = postCoordinationSpecifications;
+        this.postcoordinationSpecifications = postcoordinationSpecifications;
     }
 
     @GwtSerializationConstructor
@@ -33,9 +33,9 @@ public class WhoficEntityPostCoordinationSpecification implements IsSerializable
         return whoficEntityIri;
     }
 
-    @JsonProperty("postCoordinationSpecifications")
+    @JsonProperty("postcoordinationSpecifications")
     public List<PostCoordinationSpecification> getPostCoordinationSpecifications() {
-        return postCoordinationSpecifications;
+        return postcoordinationSpecifications;
     }
 
     @JsonProperty("entityType")
