@@ -57,6 +57,11 @@
 
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 
 .postCoordinationTable {
     border-radius: 5px;
@@ -73,7 +78,7 @@
     color: #fff;
     line-height: 1.4;
     background-color: #186cd4;
-    padding: 10px;
+    padding: 4px;
     font-weight: bold;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     border-top-left-radius: 5px;

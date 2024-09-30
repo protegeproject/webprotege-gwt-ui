@@ -19,6 +19,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     private boolean isCollapsed = false;
     private final String collapseIcon = "&#9660;";
     private final String expandIcon = "&#9654;";
+    private final String spaceSymbol = "&nbsp;";
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss postCoordinationStyle = PostCoordinationTableResourceBundle.INSTANCE.style();
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
@@ -31,9 +32,12 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private Button addButton;
 
+    private boolean isReadOnly = true;
+
     public ScaleValueCardViewImpl() {
         rootPanel = uiBinder.createAndBindUi(this);
         createAddButton();
+        setReadOnly(isReadOnly);
     }
 
     private void createAddButton() {
@@ -56,8 +60,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     public void addHeader(String headerText, String description) {
         GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
 
-        headerHtml = new HTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + collapseIcon + "</span> " + headerText + "<br><span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">" + description + "</span>");
-        headerHtml.setStyleName(postCoordinationStyle.scaleValueHeader());
+        headerHtml = new HTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + collapseIcon + "</span> " + headerText + spaceSymbol + "<span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">(" + description + ")</span>");
 
         valueTable.setWidget(0, 0, headerHtml);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
@@ -137,5 +140,19 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     @Override
     public Widget asWidget() {
         return rootPanel;
+    }
+
+    @Override
+    public void setEditMode(boolean enabled) {
+        setReadOnly(!enabled);
+    }
+
+    private void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
+        if (isReadOnly) {
+            rootPanel.addStyleName(postCoordinationStyle.disabled());
+        } else {
+            rootPanel.removeStyleName(postCoordinationStyle.disabled());
+        }
     }
 }

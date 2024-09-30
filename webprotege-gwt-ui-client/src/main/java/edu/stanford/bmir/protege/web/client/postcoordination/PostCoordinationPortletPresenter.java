@@ -124,6 +124,28 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 view.initializeTable();
             });
         });
+
+        view.setEditButtonHandler(() -> {
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
+            view.setEditMode(true);
+        });
+
+        view.setCancelButtonHandler(() -> {
+            handleAfterSetEntity(getSelectedEntity());
+            view.setEditMode(false);
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
+        });
+
+        view.setSaveButtonHandler((postcoordinationSpec) -> {
+            postcoordinationSpec.ifPresent(whoficEntityPostCoordinationSpecification ->
+                    dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification),
+                            (result) -> {
+                            }
+                    )
+            );
+            view.setEditMode(false);
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
+        });
     }
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
@@ -186,7 +208,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 PostCoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(view.getScaleValueCardsView());
+        newPresenter.start(view.getScaleValueCardsView(), false);
     }
 
     private TableCellChangedHandler handleTableCellChanged() {

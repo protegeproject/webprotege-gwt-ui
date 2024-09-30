@@ -63,9 +63,14 @@ public class ScaleValueCardPresenter {
         return scaleValue;
     }
 
-    public void start(VerticalPanel panel) {
+    public void setEditMode(boolean editMode) {
+        view.setEditMode(editMode);
+    }
+
+    public void start(VerticalPanel panel, boolean isEditMode) {
         bindView();
         initTable();
+        view.setEditMode(isEditMode);
         panel.add(view.asWidget());
     }
 }
