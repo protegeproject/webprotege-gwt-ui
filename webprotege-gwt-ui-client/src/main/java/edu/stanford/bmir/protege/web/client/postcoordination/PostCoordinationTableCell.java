@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableChe
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class PostCoordinationTableCell {
@@ -15,20 +17,23 @@ public class PostCoordinationTableCell {
         private LinearizationDefinition linearizationDefinition;
         private PostCoordinationCheckboxConfig checkboxConfig;
         private PostCoordinationTableAxisLabel axisLabel;
-        private PostCoordinationTableRow rowWrapper;
-        private PostCoordinationTableCell parentCell;
-
+        private List<PostCoordinationTableCell> childCells = new ArrayList<>();
     Logger logger = java.util.logging.Logger.getLogger("PostCoordinationTableCell");
 
     public PostCoordinationTableCell(LinearizationDefinition linearizationDefinition, PostCoordinationTableAxisLabel axisLabel, PostCoordinationTableRow parentRow) {
         this.checkboxConfig = new PostCoordinationCheckboxConfig();
-        configurableCheckbox = new ConfigurableCheckbox(checkboxConfig, "NOT_ALLOWED");
-        configurableCheckbox.setReadOnly(false);
-        configurableCheckbox.setEnabled(true);
+
 
         this.linearizationDefinition = linearizationDefinition;
+
         this.axisLabel = axisLabel;
-        this.rowWrapper = parentRow;
+        String initialValue = "NOT_ALLOWED";
+        if(linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty()) {
+            initialValue = "DEFAULT_NOT_ALLOWED";
+        }
+        configurableCheckbox = new ConfigurableCheckbox(checkboxConfig, initialValue);
+        configurableCheckbox.setReadOnly(false);
+        configurableCheckbox.setEnabled(true);
     }
 
     public Widget asWidget(){
@@ -38,14 +43,6 @@ public class PostCoordinationTableCell {
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<CheckboxValue> handler) {
         return this.configurableCheckbox.addValueChangeHandler(handler);
     }
-
-    public void setSetValueAsDefaultParent(){
-        if(parentCell != null) {
-            this.setValue("DEFAULT_" + parentCell.getValue());
-        } else {
-            this.setValue("DEFAULT_NOT_ALLOWED");
-        }
-    }
     public void setState(boolean readOnly) {
         configurableCheckbox.setReadOnly(readOnly);
         configurableCheckbox.setEnabled(!readOnly);
@@ -53,14 +50,35 @@ public class PostCoordinationTableCell {
 
     public void setValue(String value) {
        this.configurableCheckbox.setValue(value);
+       for(PostCoordinationTableCell childCell: this.childCells) {
+           if(childCell.getValue().startsWith("DEFAULT")) {
+               childCell.setValue("DEFAULT_"+value);
+           }
+       }
+    }
+
+    public void addToChildCells(PostCoordinationTableCell childCell) {
+        this.childCells.add(childCell);
     }
 
     public  boolean isTouched(){
         return configurableCheckbox.isTouched();
     }
 
-    public void setParentCell(PostCoordinationTableCell parentCell) {
-        this.parentCell = parentCell;
+    public void initializeCallback(){
+        this.configurableCheckbox.addValueChangeHandler((checkboxValue -> {
+            this.updateChildCells(checkboxValue.getValue().getValue());
+        }));
+    }
+
+    public void reset(){
+        this.childCells = new ArrayList<>();
+        this.configurableCheckbox.setTouched(false);
+        if(this.checkboxConfig.isDerived()) {
+            this.setValue("DEFAULT_NOT_ALLOWED");
+        } else {
+            this.setValue("NOT_ALLOWED");
+        }
     }
 
     public String getValue() {
@@ -77,6 +95,25 @@ public class PostCoordinationTableCell {
 
     public PostCoordinationTableAxisLabel getAxisLabel() {
         return axisLabel;
+    }
+
+    public void setIsDerived(){
+        this.checkboxConfig.setIsDerived(true);
+    }
+
+    public void updateChildCells(String checkboxValue) {
+        if(!checkboxConfig.isDerived()) {
+            for(PostCoordinationTableCell childCell: this.childCells) {
+                if(childCell.getValue().startsWith("DEFAULT")) {
+                    childCell.setValue("DEFAULT_"+checkboxValue);
+                }
+                childCell.setParentValue(this.getAsCheckboxValue());
+            }
+        }
+    }
+
+    public void updateChildren() {
+        updateChildCells(this.getValue());
     }
 
     public void setParentValue(CheckboxValue parentValue) {

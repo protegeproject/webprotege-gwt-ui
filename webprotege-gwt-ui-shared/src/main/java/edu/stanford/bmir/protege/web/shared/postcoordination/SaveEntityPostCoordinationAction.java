@@ -13,7 +13,7 @@ import static edu.stanford.bmir.protege.web.shared.postcoordination.SaveEntityPo
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName(CHANNEL)
-public abstract class SaveEntityPostCoordinationAction extends AbstractHasProjectAction<ProcessUploadedPostCoordinationResult> {
+public abstract class SaveEntityPostCoordinationAction extends AbstractHasProjectAction<SaveEntityPostCoordinationResult> {
 
     public final static String CHANNEL = "webprotege.postcoordination.AddEntitySpecificationRevision";
 
