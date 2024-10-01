@@ -9,7 +9,7 @@ public interface ScaleValueCardView extends IsWidget {
 
     void clearTable();
 
-    void addHeader(String headerText, String description);
+    void addHeader(String headerText, ScaleAllowMultiValue scaleAllowMultiValue);
 
     void addRow(String value) ;
 

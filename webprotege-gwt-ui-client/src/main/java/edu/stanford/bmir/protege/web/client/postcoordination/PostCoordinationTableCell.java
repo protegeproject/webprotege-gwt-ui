@@ -32,8 +32,8 @@ public class PostCoordinationTableCell {
             initialValue = "DEFAULT_NOT_ALLOWED";
         }
         configurableCheckbox = new ConfigurableCheckbox(checkboxConfig, initialValue);
-        configurableCheckbox.setReadOnly(false);
-        configurableCheckbox.setEnabled(true);
+        configurableCheckbox.setReadOnly(true);
+        configurableCheckbox.setEnabled(false);
     }
 
     public Widget asWidget(){
