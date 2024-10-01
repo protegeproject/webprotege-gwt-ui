@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,17 +20,21 @@ public class ScaleValueCardPresenter {
 
     private boolean isReadOnly = true;
 
+    private final ModalManager modalManager;
+
 
     public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis,
                                    PostCoordinationScaleValue scaleValue,
                                    ScaleValueCardView view,
                                    DispatchServiceManager dispatchServiceManager,
-                                   ProjectId projectId) {
+                                   ProjectId projectId,
+                                   ModalManager modalManager) {
         this.view = view;
         this.postCoordinationAxis = postCoordinationAxis;
         this.scaleValue = scaleValue;
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        this.modalManager = modalManager;
     }
 
     /*
@@ -46,9 +52,9 @@ public class ScaleValueCardPresenter {
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
                 result -> {
-            result.getRenderedEntities()
-                    .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
-            view.setEditMode(!isReadOnly);
+                    result.getRenderedEntities()
+                            .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
+                    view.setEditMode(!isReadOnly);
                 }
         );
 
@@ -79,5 +85,25 @@ public class ScaleValueCardPresenter {
         initTable();
         setEditMode(isEditMode);
         panel.add(view.asWidget());
+    }
+
+    public void showModalForSelection() {
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter.setTitle("Select Scale Value for " + this.scaleValue.getGenericScale().getPostcoordinationAxis());
+        modalPresenter.setView(searchPresenter.getView());
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(DialogButton.SELECT);
+        modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
+            closer.closeModal();
+            selectChosenEntity();
+        });
+        searchPresenter.setHierarchySelectionHandler(selection -> {
+            selectionModel.setSelection(selection.getEntity());
+            modalPresenter.closeModal();
+        });
+        searchPresenter.start();
+        searchPresenter.setAcceptKeyHandler(modalPresenter::accept);
+        searchPresenter.setSearchResultChosenHandler(result -> modalPresenter.accept());
+        modalManager.showModal(modalPresenter);
     }
 }
