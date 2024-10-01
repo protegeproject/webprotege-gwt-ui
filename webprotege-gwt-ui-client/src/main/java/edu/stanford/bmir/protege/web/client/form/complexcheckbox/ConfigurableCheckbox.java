@@ -32,6 +32,7 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
         presenter.setConfig(checkBoxConfig);
         CheckboxValue checkboxValue = checkBoxConfig.findValue(initialValue);
         this.setValue(checkboxValue);
+        presenter.setTitle(checkboxValue.getTooltip());
     }
 
     public boolean isTouched() {
