@@ -1015,6 +1015,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ProcessUploadedLinearizationAction _ProcessUploadedLinearizationAction;
     ProcessUploadedLinearizationResult _ProcessUploadedLinearizationResult;
 
+
+    GetPostCoordinationAxisToGenericScaleAction _GetPostCoordinationAxisToGenericScaleAction;
+    GetPostCoordinationAxisToGenericScaleResult _GetPostCoordinationAxisToGenericScaleResult;
+
     public RpcWhiteList() {
     }
 }
