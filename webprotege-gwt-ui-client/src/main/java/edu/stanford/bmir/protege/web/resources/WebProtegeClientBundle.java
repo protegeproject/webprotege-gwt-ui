@@ -315,6 +315,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("primitive-data.css")
     WebProtegePrimitiveDataCss primitiveData();
 
+    @Source("single.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource singleScaleValue();
+
+    @Source("multiple.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource multipleScaleValues();
+
+    @Source("block.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource scaleValueFromSameBlock();
+
     interface WebProtegePrimitiveDataCss extends CssResource {
 
         @ClassName("wp-pd")

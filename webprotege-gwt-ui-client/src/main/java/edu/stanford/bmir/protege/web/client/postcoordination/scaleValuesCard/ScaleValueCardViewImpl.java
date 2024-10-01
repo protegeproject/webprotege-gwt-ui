@@ -57,10 +57,27 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
     @Override
-    public void addHeader(String headerText, String description) {
+    public void addHeader(String headerText, ScaleAllowMultiValue scaleAllowMultiValue) {
         GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
+        String imageUri = "";
+        if (scaleAllowMultiValue.getImage().isPresent()) {
+            imageUri = scaleAllowMultiValue.getImage().get().getSafeUri().asString();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<span class=\"")
+                .append(postCoordinationStyle.toggleIcon())
+                .append("\">")
+                .append(collapseIcon)
+                .append("</span> ")
+                .append(headerText)
+                .append(spaceSymbol)
+                .append("<img src='")
+                .append(imageUri)
+                .append("' title='")
+                .append(scaleAllowMultiValue.getTooltip())
+                .append("'/>");
 
-        headerHtml = new HTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + collapseIcon + "</span> " + headerText + spaceSymbol + "<span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">(" + description + ")</span>");
+        headerHtml = new HTML(sb.toString());
 
         valueTable.setWidget(0, 0, headerHtml);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
