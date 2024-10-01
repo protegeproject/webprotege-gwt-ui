@@ -18,7 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 @Portlet(id = "portlets.PostCoordination",
@@ -91,25 +91,30 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
             view.setLabels(tableLabelsForAxes);
 
+            dispatch.execute(GetPostCoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult ->
+                    axisToGenericScaleResult.getPostCoordinationAxisToGenericScales()
+                            .forEach(axisToGenericScale ->
+                                    genericScale.put(axisToGenericScale.getPostcoordinationAxis(), axisToGenericScale)
+                            )
+            );
+
 
             compositeAxisList.addAll(result.getTableConfiguration().getCompositePostCoordinationAxes());
 
             compositeAxisList.forEach(compositeAxis ->
-                            compositeAxis.getSubAxis()
-                                    .forEach(subAxis -> {
-                                                PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                                                        .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
-                                                        .findFirst()
-                                                        /*
-                                                        ToDo:
-                                                            remove the orElseGet() and add back the orElseThrow() when we have proper labels
-                                                         */
-                                                        .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
-//                            .orElseThrow(() -> new RuntimeException("Couldn't find label for " + subAxis));
-                                                scaleLabelsForAxes.put(subAxis, existingLabel);
-                                                scaleLabelsForAxes.remove(compositeAxis.getPostCoordinationAxis());
-                                            }
-                                    )
+                    compositeAxis.getSubAxis()
+                            .forEach(subAxis -> {
+                                        PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                                .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
+                                                .findFirst()
+                                                .orElseThrow(() -> {
+                                                    logger.log(Level.SEVERE, "Couldn't find label for " + subAxis);
+                                                    return new RuntimeException("Couldn't find label for " + subAxis);
+                                                });
+                                        scaleLabelsForAxes.put(subAxis, existingLabel);
+                                        scaleLabelsForAxes.remove(compositeAxis.getPostCoordinationAxis());
+                                    }
+                            )
             );
 
 
@@ -125,9 +130,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             });
         });
 
-        view.setEditButtonHandler(() -> {
-            this.setEditMode(true);
-        });
+        view.setEditButtonHandler(() -> this.setEditMode(true));
 
         view.setCancelButtonHandler(() -> {
             handleAfterSetEntity(this.entityIri);
@@ -160,9 +163,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         this.entityIri = entityData;
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
-                (result) -> {
-                    postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
-                }));
+                (result) -> postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations())));
 
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
@@ -201,7 +202,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 ToDo:
                     return an error here if we don't have a value in genericScale
                  */
-                new PostCoordinationAxisToGenericScale(axisIri, "", ScaleAllowMultiValue.NotAllowed)
+                new PostCoordinationAxisToGenericScale(axisIri, "", "NotAllowed")
         );
         List<String> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
                 .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())

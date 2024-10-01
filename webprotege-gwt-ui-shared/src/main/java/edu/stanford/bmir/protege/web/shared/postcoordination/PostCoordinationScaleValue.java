@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
+package edu.stanford.bmir.protege.web.shared.postcoordination;
 
 import java.util.*;
 

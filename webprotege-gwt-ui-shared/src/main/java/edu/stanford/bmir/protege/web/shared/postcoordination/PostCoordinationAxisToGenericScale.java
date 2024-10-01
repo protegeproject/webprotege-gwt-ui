@@ -1,13 +1,13 @@
-package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
+package edu.stanford.bmir.protege.web.shared.postcoordination;
 
 public class PostCoordinationAxisToGenericScale {
     private final String postcoordinationAxis;
     private final String genericPostcoordinationScaleTopClass;
-    private final ScaleAllowMultiValue allowMultiValue;
+    private final String allowMultiValue;
 
     public PostCoordinationAxisToGenericScale(String postcoordinationAxis,
                                               String genericPostcoordinationScaleTopClass,
-                                              ScaleAllowMultiValue allowMultiValue) {
+                                              String allowMultiValue) {
         this.postcoordinationAxis = postcoordinationAxis;
         this.genericPostcoordinationScaleTopClass = genericPostcoordinationScaleTopClass;
         this.allowMultiValue = allowMultiValue;
@@ -15,7 +15,7 @@ public class PostCoordinationAxisToGenericScale {
 
     public PostCoordinationAxisToGenericScale create(String postcoordinationAxis,
                                                      String genericPostcoordinationScaleTopClass,
-                                                     ScaleAllowMultiValue allowMultiValue) {
+                                                     String allowMultiValue) {
         return new PostCoordinationAxisToGenericScale(postcoordinationAxis, genericPostcoordinationScaleTopClass, allowMultiValue);
     }
 
@@ -27,7 +27,7 @@ public class PostCoordinationAxisToGenericScale {
         return genericPostcoordinationScaleTopClass;
     }
 
-    public ScaleAllowMultiValue getAllowMultiValue() {
+    public String getAllowMultiValue() {
         return allowMultiValue;
     }
 }
