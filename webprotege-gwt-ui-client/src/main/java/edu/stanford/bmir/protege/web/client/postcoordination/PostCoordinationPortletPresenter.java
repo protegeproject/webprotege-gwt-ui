@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.postcoordination;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -134,17 +136,21 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             this.setEditMode(false);
         });
 
-        view.setSaveButtonHandler((postcoordinationSpec) -> {
-            postcoordinationSpec.ifPresent(whoficEntityPostCoordinationSpecification ->
-                    dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification),
-                            (result) -> {
-                            }
-                    )
-            );
-            this.setEditMode(false);
-        });
+        view.setSaveButtonHandler(this::saveEntity);
 
         this.setEditMode(false);
+    }
+
+    private void saveEntity(Optional<WhoficEntityPostCoordinationSpecification> specification) {
+        this.setEditMode(false);
+
+        specification.ifPresent(whoficEntityPostCoordinationSpecification ->
+                dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification),
+                        (result) -> {
+                        }
+                )
+
+        );
     }
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
@@ -158,7 +164,27 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        this.entityIri = entityData;
+        if(this.editMode) {
+            this.entityIri = entityData;
+
+            messageBox.showConfirmBox(MessageStyle.ALERT,
+                    "Save edits before switching?",
+                    "Do you want to save your edits before changing selection?",
+                    DialogButton.YES,
+                    () -> {
+                        saveEntity(view.getTableData());
+                        navigateToEntity(entityData);
+                    },
+                    DialogButton.NO,
+                    () -> navigateToEntity(entityData),
+                    DialogButton.YES);
+        } else {
+            navigateToEntity(entityData);
+        }
+
+
+    }
+    private void navigateToEntity(Optional<OWLEntity> entityData){
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());

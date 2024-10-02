@@ -80,6 +80,11 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     }
 
     @Override
+    public Optional<WhoficEntityPostCoordinationSpecification> getTableData() {
+        return createEditedSpec();
+    }
+
+    @Override
     public void setEditButtonHandler(EditButtonHandler handler) {
         this.editButtonHandler = handler;
     }
