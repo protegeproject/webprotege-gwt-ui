@@ -32,6 +32,15 @@
 
 .evenRowStyle {
     background-color: #f2f7f4;
+    vertical-align: middle;
+}
+
+.customRowStyle td {
+    vertical-align: middle!important;
+}
+
+.evenRowStyle td {
+    vertical-align: middle!important;
 }
 
 
@@ -54,7 +63,7 @@
     vertical-align: middle;
     display: flex;
     margin-left: 5px;
-
+    align-items: center;
 }
 
 .disabled {
