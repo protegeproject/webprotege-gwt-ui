@@ -12,7 +12,7 @@ public class ScaleValueCardPresenter {
 
     private final ScaleValueCardView view;
     private final PostCoordinationTableAxisLabel postCoordinationAxis;
-    private final PostCoordinationScaleValue scaleValue;
+    private final PostcoordinationScaleValue scaleValue;
     private final DispatchServiceManager dispatchServiceManager;
     private final ProjectId projectId;
 
@@ -20,7 +20,7 @@ public class ScaleValueCardPresenter {
 
 
     public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis,
-                                   PostCoordinationScaleValue scaleValue,
+                                   PostcoordinationScaleValue scaleValue,
                                    ScaleValueCardView view,
                                    DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId) {
@@ -41,7 +41,7 @@ public class ScaleValueCardPresenter {
 
     private void initTable() {
         view.clearTable();
-        view.addHeader(postCoordinationAxis.getScaleLabel(), ScaleAllowMultiValue.valueOf(scaleValue.getGenericScale().getAllowMultiValue()));
+        view.addHeader(postCoordinationAxis.getScaleLabel(), ScaleAllowMultiValue.fromString(scaleValue.getGenericScale().getAllowMultiValue()));
         view.addSelectValueButton();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
@@ -65,7 +65,7 @@ public class ScaleValueCardPresenter {
         return view;
     }
 
-    public PostCoordinationScaleValue getValues() {
+    public PostcoordinationScaleValue getValues() {
         return scaleValue;
     }
 

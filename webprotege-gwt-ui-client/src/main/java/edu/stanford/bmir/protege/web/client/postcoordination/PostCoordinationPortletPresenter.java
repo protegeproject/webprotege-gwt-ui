@@ -18,7 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Portlet(id = "portlets.PostCoordination",
@@ -40,7 +40,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final Map<String, PostCoordinationTableAxisLabel> tableLabelsForAxes = new HashMap<>();
     private final Map<String, PostCoordinationTableAxisLabel> scaleLabelsForAxes = new HashMap<>();
     private final List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
-    private final Map<String, PostCoordinationAxisToGenericScale> genericScale = new HashMap<>();
+    private final Map<String, PostcoordinationAxisToGenericScale> genericScale = new HashMap<>();
 
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
 
@@ -91,8 +91,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
             view.setLabels(tableLabelsForAxes);
 
-            dispatch.execute(GetPostCoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult ->
-                    axisToGenericScaleResult.getPostCoordinationAxisToGenericScales()
+            dispatch.execute(GetPostcoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult ->
+                    axisToGenericScaleResult.getPostcoordinationAxisToGenericScales()
                             .forEach(axisToGenericScale ->
                                     genericScale.put(axisToGenericScale.getPostcoordinationAxis(), axisToGenericScale)
                             )
@@ -102,19 +102,24 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             compositeAxisList.addAll(result.getTableConfiguration().getCompositePostCoordinationAxes());
 
             compositeAxisList.forEach(compositeAxis ->
-                    compositeAxis.getSubAxis()
-                            .forEach(subAxis -> {
-                                        PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                                                .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
-                                                .findFirst()
-                                                .orElseThrow(() -> {
-                                                    logger.log(Level.SEVERE, "Couldn't find label for " + subAxis);
-                                                    return new RuntimeException("Couldn't find label for " + subAxis);
-                                                });
-                                        scaleLabelsForAxes.put(subAxis, existingLabel);
-                                        scaleLabelsForAxes.remove(compositeAxis.getPostCoordinationAxis());
-                                    }
-                            )
+                            compositeAxis.getSubAxis()
+                                    .forEach(subAxis -> {
+                                                PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                                        .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
+                                                        .findFirst()
+//                                                .orElseThrow(() -> {
+//                                                    logger.log(Level.SEVERE, "Couldn't find label for " + subAxis);
+//                                                    return new RuntimeException("Couldn't find label for " + subAxis);
+//                                                });
+                                                        /*
+                        ToDo:
+                            remove the orElseGet() and add back the orElseThrow() when we have proper labels
+                         */
+                                                        .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
+                                                scaleLabelsForAxes.put(subAxis, existingLabel);
+                                                scaleLabelsForAxes.remove(compositeAxis.getPostCoordinationAxis());
+                                            }
+                                    )
             );
 
 
@@ -150,7 +155,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         this.setEditMode(false);
     }
 
-    private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostCoordinationScaleValue scaleValue) {
+    private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
         ScaleValueCardView view = new ScaleValueCardViewImpl();
         return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId());
     }
@@ -196,20 +201,20 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private void addScaleValueCardPresenter(String axisIri) {
         PostCoordinationTableAxisLabel currentAxisLabels = scaleLabelsForAxes.get(axisIri);
-        PostCoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
+        PostcoordinationAxisToGenericScale genericScale1 = genericScale.getOrDefault(
                 axisIri,
                 /*
                 ToDo:
                     return an error here if we don't have a value in genericScale
                  */
-                new PostCoordinationAxisToGenericScale(axisIri, "", "NotAllowed")
+                PostcoordinationAxisToGenericScale.create(axisIri, "", "NotAllowed")
         );
         List<String> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
                 .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())
                 .collect(Collectors.toList());
         ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
                 currentAxisLabels,
-                PostCoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
+                PostcoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
         newPresenter.start(view.getScaleValueCardsView(), editMode);

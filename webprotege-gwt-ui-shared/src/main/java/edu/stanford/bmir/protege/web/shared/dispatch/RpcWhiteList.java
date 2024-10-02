@@ -1016,8 +1016,13 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ProcessUploadedLinearizationResult _ProcessUploadedLinearizationResult;
 
 
-    GetPostCoordinationAxisToGenericScaleAction _GetPostCoordinationAxisToGenericScaleAction;
-    GetPostCoordinationAxisToGenericScaleResult _GetPostCoordinationAxisToGenericScaleResult;
+    GetPostcoordinationAxisToGenericScaleAction _GetPostcoordinationAxisToGenericScaleAction;
+    GetPostcoordinationAxisToGenericScaleResult _GetPostcoordinationAxisToGenericScaleResult;
+
+    PostcoordinationAxisToGenericScale _PostcoordinationAxisToGenericScale;
+
+    PostcoordinationScaleValue _PostcoordinationScaleValue;
+
 
     public RpcWhiteList() {
     }
