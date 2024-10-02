@@ -62,6 +62,9 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("disabled")
         String disabled();
+
+        @ClassName("header-icon")
+        String headerIcon();
     }
 
 }
