@@ -305,7 +305,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(ProcessUploadedPostCoordinationResult.class),
         @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class),
         @JsonSubTypes.Type(GetProjectChangesForHistoryViewResult.class),
-        @JsonSubTypes.Type(ProcessUploadedLinearizationResult.class)
+        @JsonSubTypes.Type(ProcessUploadedLinearizationResult.class),
+        @JsonSubTypes.Type(GetPostcoordinationAxisToGenericScaleResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

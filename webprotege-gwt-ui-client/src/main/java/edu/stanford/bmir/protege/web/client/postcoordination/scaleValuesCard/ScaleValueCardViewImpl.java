@@ -73,6 +73,8 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
                 .append(spaceSymbol)
                 .append("<img src='")
                 .append(imageUri)
+                .append("' class='")
+                .append(postCoordinationStyle.headerIcon())
                 .append("' title='")
                 .append(scaleAllowMultiValue.getTooltip())
                 .append("'/>");

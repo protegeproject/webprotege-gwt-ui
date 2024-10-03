@@ -325,7 +325,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("block.svg")
     @DataResource.MimeType("image/svg+xml")
-    DataResource scaleValueFromSameBlock();
+    DataResource allowScaleValueIfNotFromSameBlock();
 
     interface WebProtegePrimitiveDataCss extends CssResource {
 

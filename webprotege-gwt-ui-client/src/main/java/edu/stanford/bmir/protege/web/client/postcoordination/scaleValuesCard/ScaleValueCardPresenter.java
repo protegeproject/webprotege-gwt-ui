@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.HashSet;
@@ -12,7 +12,7 @@ public class ScaleValueCardPresenter {
 
     private final ScaleValueCardView view;
     private final PostCoordinationTableAxisLabel postCoordinationAxis;
-    private final PostCoordinationScaleValue scaleValue;
+    private final PostcoordinationScaleValue scaleValue;
     private final DispatchServiceManager dispatchServiceManager;
     private final ProjectId projectId;
 
@@ -20,7 +20,7 @@ public class ScaleValueCardPresenter {
 
 
     public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis,
-                                   PostCoordinationScaleValue scaleValue,
+                                   PostcoordinationScaleValue scaleValue,
                                    ScaleValueCardView view,
                                    DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId) {
@@ -41,14 +41,14 @@ public class ScaleValueCardPresenter {
 
     private void initTable() {
         view.clearTable();
-        view.addHeader(postCoordinationAxis.getScaleLabel(), scaleValue.getGenericScale().getAllowMultiValue());
+        view.addHeader(postCoordinationAxis.getScaleLabel(), ScaleAllowMultiValue.fromString(scaleValue.getGenericScale().getAllowMultiValue()));
         view.addSelectValueButton();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
                 result -> {
-            result.getRenderedEntities()
-                    .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
-            view.setEditMode(!isReadOnly);
+                    result.getRenderedEntities()
+                            .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
+                    view.setEditMode(!isReadOnly);
                 }
         );
 
@@ -65,7 +65,7 @@ public class ScaleValueCardPresenter {
         return view;
     }
 
-    public PostCoordinationScaleValue getValues() {
+    public PostcoordinationScaleValue getValues() {
         return scaleValue;
     }
 
