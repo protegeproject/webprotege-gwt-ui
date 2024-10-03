@@ -66,6 +66,8 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.linearization.*;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletView;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -508,6 +510,11 @@ public class ClientApplicationModule {
 
     @Provides
     PostCoordinationPortletView providePostCoordinationPortletView(PostCoordinationPortletViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    LogicalDefinitionPortletView provideLogicalDefinitionPortletView(LogicalDefinitionPortletViewImpl impl) {
         return impl;
     }
 
