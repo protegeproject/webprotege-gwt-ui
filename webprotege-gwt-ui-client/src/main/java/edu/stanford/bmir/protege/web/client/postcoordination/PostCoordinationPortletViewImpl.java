@@ -80,6 +80,11 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     }
 
     @Override
+    public Optional<WhoficEntityPostCoordinationSpecification> getTableData() {
+        return createEditedSpec();
+    }
+
+    @Override
     public void setEditButtonHandler(EditButtonHandler handler) {
         this.editButtonHandler = handler;
     }
@@ -193,35 +198,49 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     private void initializeTableContent() {
         List<LinearizationDefinition> definitions = new ArrayList<>(this.definitionMap.values());
-        for (int i = 0; i < definitions.size(); i++) {
-            PostCoordinationTableRow tableRow = new PostCoordinationTableRow(definitions.get(i));
-            addRowLabel(tableRow.isDerived(), definitions.get(i).getDisplayLabel(), i + 1, 0);
+        for (LinearizationDefinition definition : definitions) {
+            PostCoordinationTableRow tableRow = new PostCoordinationTableRow(definition);
             List<PostCoordinationTableAxisLabel> labelList = new ArrayList<>(this.labels.values());
-            for (int j = 0; j < labelList.size(); j++) {
-                LinearizationDefinition linDef = definitions.get(i);
-                PostCoordinationTableAxisLabel axisLabel = labelList.get(j);
-                PostCoordinationTableCell cell = new PostCoordinationTableCell(linDef, axisLabel, tableRow);
+            for (PostCoordinationTableAxisLabel postCoordinationTableAxisLabel : labelList) {
+                PostCoordinationTableCell cell = new PostCoordinationTableCell(definition, postCoordinationTableAxisLabel, tableRow);
                 cell.addValueChangeHandler(valueChanged -> {
                     tableCellChanged.handleTableCellChanged(
-                            isAxisEnabledOnAnyRow(axisLabel),
+                            isAxisEnabledOnAnyRow(postCoordinationTableAxisLabel),
                             valueChanged.getValue(),
                             cell.getAxisLabel().getPostCoordinationAxis()
                     );
                 });
-                flexTable.setWidget(i + 1, j + 1, cell.asWidget());
                 tableRow.addCell(cell);
             }
-            addRowLabel(false, definitions.get(i).getDisplayLabel(), i + 1, labelList.size() + 1);
+            this.tableRows.add(tableRow);
+        }
+        orderAndPopulateViewWithRows();
+        bindCellsToParentCells();
+    }
 
+
+    private void orderAndPopulateViewWithRows() {
+        List<PostCoordinationTableRow> orderedRows = tableRows.stream()
+                .sorted((o1, o2) -> o1.getLinearizationDefinition().getSortingCode().compareToIgnoreCase(o2.getLinearizationDefinition().getSortingCode()))
+                .collect(Collectors.toList());
+        this.tableRows = orderedRows;
+
+        for (int i = 0; i < orderedRows.size(); i++) {
+
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0);
+
+            for(int j = 0; j < orderedRows.get(i).getCellList().size(); j ++) {
+                flexTable.setWidget(i + 1, j + 1, orderedRows.get(i).getCellList().get(j).asWidget());
+            }
             flexTable.getRowFormatter().addStyleName(i + 1, style.getCustomRowStyle());
             if ((i + 1) % 2 == 1) {
                 flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
-            this.tableRows.add(tableRow);
-        }
 
-        bindCellsToParentCells();
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1);
+        }
     }
+
 
     private boolean isAxisEnabledOnAnyRow(PostCoordinationTableAxisLabel axisLabel) {
         List<PostCoordinationTableRow> tableRowsWithAxisChecked = this.tableRows.stream()

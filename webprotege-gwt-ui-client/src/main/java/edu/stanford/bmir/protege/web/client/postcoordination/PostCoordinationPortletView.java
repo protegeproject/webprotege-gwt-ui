@@ -28,4 +28,6 @@ public interface PostCoordinationPortletView extends AcceptsOneWidget, IsWidget,
     void setCancelButtonHandler(CancelButtonHandler handler);
     void setSaveButtonHandler(SaveButtonHandler handler);
     void setEditMode(boolean editMode);
+
+    Optional<WhoficEntityPostCoordinationSpecification> getTableData();
 }

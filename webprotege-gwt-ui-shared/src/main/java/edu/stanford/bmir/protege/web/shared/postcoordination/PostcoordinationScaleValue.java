@@ -1,35 +1,35 @@
-package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
+package edu.stanford.bmir.protege.web.shared.postcoordination;
 
 import java.util.*;
 
-public class PostCoordinationScaleValue {
+public class PostcoordinationScaleValue {
 
     private final String axisIri;
     private final String axisLabel;
     private final List<String> valueIris;
-    private final PostCoordinationAxisToGenericScale genericScale;
+    private final PostcoordinationAxisToGenericScale genericScale;
 
-    public PostCoordinationScaleValue(String axisIri,
+    public PostcoordinationScaleValue(String axisIri,
                                       String axisLabel,
                                       List<String> valueIris,
-                                      PostCoordinationAxisToGenericScale genericScale) {
+                                      PostcoordinationAxisToGenericScale genericScale) {
         this.axisIri = axisIri;
         this.axisLabel = axisLabel;
         this.valueIris = valueIris;
         this.genericScale = genericScale;
     }
 
-    public static PostCoordinationScaleValue createEmpty(String axisIri,
+    public static PostcoordinationScaleValue createEmpty(String axisIri,
                                                          String axisLabel,
-                                                         PostCoordinationAxisToGenericScale genericScale) {
+                                                         PostcoordinationAxisToGenericScale genericScale) {
         return create(axisIri, axisLabel, new ArrayList<>(), genericScale);
     }
 
-    public static PostCoordinationScaleValue create(String axisIri,
+    public static PostcoordinationScaleValue create(String axisIri,
                                                     String axisLabel,
                                                     List<String> valueIris,
-                                                    PostCoordinationAxisToGenericScale genericScale) {
-        return new PostCoordinationScaleValue(axisIri, axisLabel, valueIris, genericScale);
+                                                    PostcoordinationAxisToGenericScale genericScale) {
+        return new PostcoordinationScaleValue(axisIri, axisLabel, valueIris, genericScale);
     }
 
     public String getAxisIri() {
@@ -44,7 +44,7 @@ public class PostCoordinationScaleValue {
         return valueIris;
     }
 
-    public PostCoordinationAxisToGenericScale getGenericScale() {
+    public PostcoordinationAxisToGenericScale getGenericScale() {
         return genericScale;
     }
 }

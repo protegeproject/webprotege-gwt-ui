@@ -233,7 +233,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetPostCoordinationTableConfigurationAction.class),
         @Type(value = GetProjectChangesForHistoryViewAction.class),
         @Type(value = ProcessUploadedLinearizationAction.class),
-        @Type(value = ProcessUploadedPostCoordinationAction.class)
+        @Type(value = ProcessUploadedPostCoordinationAction.class),
+        @Type(value = GetPostcoordinationAxisToGenericScaleAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {
