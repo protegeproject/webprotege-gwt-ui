@@ -4,6 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
@@ -50,6 +51,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private boolean editMode = false;
 
+    private final ModalManager modalManager;
+
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                             @Nonnull ProjectId projectId,
@@ -58,13 +61,15 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                             @Nonnull PostCoordinationPortletView view,
                                             @Nonnull EventBus eventBus,
                                             @Nonnull MessageBox messageBox,
-                                            @Nonnull LoggedInUserManager loggedInUserManager) {
+                                            @Nonnull LoggedInUserManager loggedInUserManager,
+                                            ModalManager modalManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
         this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
+        this.modalManager = modalManager;
         this.view.setProjectId(projectId);
     }
 
@@ -184,7 +189,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
         ScaleValueCardView view = new ScaleValueCardViewImpl();
-        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId());
+        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId(), modalManager);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;

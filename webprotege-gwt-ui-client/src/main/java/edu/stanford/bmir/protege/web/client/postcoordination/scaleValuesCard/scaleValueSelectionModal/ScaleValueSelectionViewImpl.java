@@ -21,21 +21,6 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
 
     private final Messages messages;
 
-    @UiField(provided = true)
-    final PrimitiveDataListEditor domains;
-
-    @UiField
-    ExpandingTextBoxImpl reasonForChangeTextBox;
-
-    @UiField
-    Label reasonForChangeErrorLabel;
-
-    @UiField
-    HTML classesWithCyclesWarningField;
-
-    @UiField
-    HTML classesWithRetiredParentsField;
-
     private static final Logger logger = Logger.getLogger(ScaleValueSelectionViewImpl.class.getName());
 
     interface ScaleValueSelectionModalImplUiBinder extends UiBinder<HTMLPanel, ScaleValueSelectionViewImpl> {
@@ -45,14 +30,8 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
             .create(ScaleValueSelectionModalImplUiBinder.class);
 
     @Inject
-    public ScaleValueSelectionViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                       @Nonnull Messages messages) {
+    public ScaleValueSelectionViewImpl(@Nonnull Messages messages) {
         this.messages = messages;
-        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
-        initWidget(ourUiBinder.createAndBindUi(this));
-        domains.setPlaceholder(messages.frame_enterAClassName());
-        domains.setValue(new ArrayList<>());
-        domains.setEnabled(true);
         textBox.setEnabled(false);
     }
 
@@ -67,16 +46,9 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
         super.onAttach();
     }
 
-    public void clearErrors() {
-        reasonForChangeErrorLabel.setText("");
-        reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
-    }
-
 
     @Override
     public void clear() {
         textBox.setText("");
-        reasonForChangeTextBox.setText("");
-        clearErrors();
     }
 }
