@@ -137,6 +137,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 }
                 view.setLinearizationDefinitonMap(definitionMap);
                 view.initializeTable();
+                handleAfterSetEntity(getSelectedEntity());
             });
         });
 
@@ -151,7 +152,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
         this.setEditMode(false);
 
-        handleAfterSetEntity(getSelectedEntity());
         dispatch.executeCurrentBatch();
     }
 
