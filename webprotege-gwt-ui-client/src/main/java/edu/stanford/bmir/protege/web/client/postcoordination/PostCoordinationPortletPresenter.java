@@ -37,7 +37,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final LoggedInUserManager loggedInUserManager;
     private final MessageBox messageBox;
 
-    private final Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new HashMap<>();
+    private final Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new LinkedHashMap<>();
 
     private final Map<String, PostCoordinationTableAxisLabel> tableLabelsForAxes = new HashMap<>();
     private final Map<String, PostCoordinationTableAxisLabel> scaleLabelsForAxes = new HashMap<>();
@@ -45,6 +45,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final Map<String, PostCoordinationAxisToGenericScale> genericScale = new HashMap<>();
 
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
+
+    private final List<String> scaleCardsOrderByAxis = new LinkedList<>();
 
     private boolean editMode = false;
 
@@ -87,6 +89,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                             return new RuntimeException("Couldn't find label for " + availableAxis);
                         });
                 tableLabelsForAxes.put(availableAxis, existingLabel);
+                scaleCardsOrderByAxis.add(availableAxis);
             }
 
             scaleLabelsForAxes.putAll(tableLabelsForAxes);
@@ -114,10 +117,13 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                     )
             );
 
+            List<String> orderedAxisListWithSubAxis = this.createOrderAxisListWithSubAxis(result.getTableConfiguration().getPostCoordinationAxes(), result.getTableConfiguration().getCompositePostCoordinationAxes());
+
+            scaleCardsOrderByAxis.addAll(orderedAxisListWithSubAxis);
 
             view.setTableCellChangedHandler(handleTableCellChanged());
 
-        dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
+            dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
                 for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
                     definitionMap.put(definition.getWhoficEntityIri(), definition);
@@ -127,9 +133,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             });
         });
 
-        view.setEditButtonHandler(() -> {
-            this.setEditMode(true);
-        });
+        view.setEditButtonHandler(() -> this.setEditMode(true));
 
         view.setCancelButtonHandler(() -> {
             handleAfterSetEntity(this.entityIri);
@@ -139,6 +143,21 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         view.setSaveButtonHandler(this::saveEntity);
 
         this.setEditMode(false);
+    }
+
+    //The corect order is determined by the order of the values that are stored in the database
+    private List<String> createOrderAxisListWithSubAxis(List<String> postCoordinationAxes, List<PostCoordinationCompositeAxis> compositeAxisList) {
+        List<String> orderedAxisList = new LinkedList<>(postCoordinationAxes);
+
+        compositeAxisList.forEach(compositeAxis ->
+                {
+                    int indexForCurrAxis = orderedAxisList.indexOf(compositeAxis.getPostCoordinationAxis());
+                    List<String> subAxisList = new LinkedList<>(compositeAxis.getSubAxis());
+                    orderedAxisList.addAll(indexForCurrAxis+1,subAxisList);
+                    orderedAxisList.remove(indexForCurrAxis);
+                }
+        );
+        return orderedAxisList;
     }
 
     private void saveEntity(Optional<WhoficEntityPostCoordinationSpecification> specification) {
@@ -164,7 +183,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        if(this.editMode) {
+        if (this.editMode) {
             this.entityIri = entityData;
 
             messageBox.showConfirmBox(MessageStyle.ALERT,
@@ -184,11 +203,10 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
 
     }
-    private void navigateToEntity(Optional<OWLEntity> entityData){
+
+    private void navigateToEntity(Optional<OWLEntity> entityData) {
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
-                (result) -> {
-                    postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
-                }));
+                (result) -> postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations())));
 
         entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
                 (result) -> {
@@ -237,7 +255,28 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 PostCoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(view.getScaleValueCardsView(), editMode);
+        newPresenter.start(editMode);
+        updateScaleValueCards();
+    }
+
+    private void updateScaleValueCards() {
+        Map<String, ScaleValueCardPresenter> orderedScaleValueCardPresenters = getOrderedScaleValueCardPresenters();
+        scaleValueCardPresenters.clear();
+        scaleValueCardPresenters.putAll(orderedScaleValueCardPresenters);
+
+        scaleValueCardPresenters.values().forEach(scaleValueCardPresenter -> view.getScaleValueCardsView().add(scaleValueCardPresenter.getView().asWidget()));
+    }
+
+    private Map<String, ScaleValueCardPresenter> getOrderedScaleValueCardPresenters() {
+        Map<String, ScaleValueCardPresenter> orderedScaleValueCardPresenters = new LinkedHashMap<>();
+
+        for (String key : scaleCardsOrderByAxis) {
+            if (scaleValueCardPresenters.containsKey(key)) {
+                orderedScaleValueCardPresenters.put(key, scaleValueCardPresenters.get(key));
+            }
+        }
+
+        return orderedScaleValueCardPresenters;
     }
 
     private TableCellChangedHandler handleTableCellChanged() {
