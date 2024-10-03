@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -74,10 +73,9 @@ public class ScaleValueCardPresenter {
         view.setEditMode(editMode);
     }
 
-    public void start(VerticalPanel panel, boolean isEditMode) {
+    public void start(boolean isEditMode) {
         bindView();
         initTable();
         setEditMode(isEditMode);
-        panel.add(view.asWidget());
     }
 }
