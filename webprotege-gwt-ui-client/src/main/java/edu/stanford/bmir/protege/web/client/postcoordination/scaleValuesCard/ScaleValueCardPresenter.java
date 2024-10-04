@@ -8,7 +8,8 @@ import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.*;
 
 public class ScaleValueCardPresenter {
 
@@ -63,10 +64,15 @@ public class ScaleValueCardPresenter {
         view.addHeader(postCoordinationAxis.getScaleLabel(), ScaleAllowMultiValue.fromString(scaleValue.getGenericScale().getAllowMultiValue()));
         view.addSelectValueButton();
 
-        dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, new HashSet<>(scaleValue.getValueIris())),
+        Set<String> scaleValueIris = scaleValue.getValueIris()
+                .stream()
+                .flatMap(scaleValueIriAndName -> Stream.of(scaleValueIriAndName.getScaleValueIri()))
+                .collect(Collectors.toSet());
+
+        dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, scaleValueIris),
                 result -> {
                     result.getRenderedEntities()
-                            .forEach(renderedEntity -> addRow(!renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
+                            .forEach(renderedEntity -> addRow(renderedEntity.getEntity().toStringID(), !renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
                     view.setEditMode(!isReadOnly);
                 }
         );
@@ -75,9 +81,10 @@ public class ScaleValueCardPresenter {
 
     }
 
-    private void addRow(String value) {
-        scaleValue.getValueIris().add(value);
-        view.addRow(value);
+    private void addRow(String iri, String value) {
+        ScaleValueIriAndName valueIriAndName = ScaleValueIriAndName.create(iri, value);
+        scaleValue.getValueIris().add(valueIriAndName);
+        view.addRow(valueIriAndName);
     }
 
     public ScaleValueCardView getView() {
@@ -117,6 +124,6 @@ public class ScaleValueCardPresenter {
     }
 
     private void selectChosenEntity() {
-        scaleValueSelectionPresenter.getSelections().forEach(scaleValue -> addRow(scaleValue));
+        scaleValueSelectionPresenter.getSelections().forEach(scaleValue -> addRow(scaleValue, scaleValue));
     }
 }

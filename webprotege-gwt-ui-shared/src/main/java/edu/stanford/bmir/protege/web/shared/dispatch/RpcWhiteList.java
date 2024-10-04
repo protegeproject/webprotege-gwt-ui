@@ -1023,6 +1023,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PostcoordinationScaleValue _PostcoordinationScaleValue;
 
+    SaveEntityCustomScaleAction _SaveEntityCustomScaleAction;
+    SaveEntityCustomScaleResult _SaveEntityCustomScaleResult;
+
+    PostCoordinationCustomScales _PostCoordinationCustomScales;
+
 
     public RpcWhiteList() {
     }

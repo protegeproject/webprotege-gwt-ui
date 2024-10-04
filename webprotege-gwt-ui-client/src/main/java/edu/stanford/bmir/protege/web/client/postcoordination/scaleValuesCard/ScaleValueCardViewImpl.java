@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.postcoordination.ScaleValueIriAndName;
 
 public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
@@ -91,7 +92,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
     @Override
-    public void addRow(String value) {
+    public void addRow(ScaleValueIriAndName value) {
         int addButtonRowIndex = valueTable.getRowCount();
 
         valueTable.insertRow(addButtonRowIndex - 1);
@@ -99,8 +100,8 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
 
-    private void setRowContents(int rowIndex, String value) {
-        valueTable.setWidget(rowIndex, 0, new Label(value));
+    private void setRowContents(int rowIndex, ScaleValueIriAndName value) {
+        valueTable.setWidget(rowIndex, 0, new Label(value.getScaleValueName()));
 
         Button deleteButton = new DeleteButton();
 
