@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,9 +12,10 @@ import java.util.HashSet;
 
 public class ScaleValueCardPresenter {
 
-    private final ScaleValueCardView view;
-    private final PostCoordinationTableAxisLabel postCoordinationAxis;
-    private final PostcoordinationScaleValue scaleValue;
+    private ScaleValueCardView view;
+
+    private PostCoordinationTableAxisLabel postCoordinationAxis;
+    private PostcoordinationScaleValue scaleValue;
     private final DispatchServiceManager dispatchServiceManager;
     private final ProjectId projectId;
 
@@ -22,19 +23,31 @@ public class ScaleValueCardPresenter {
 
     private final ModalManager modalManager;
 
+    private ScaleValueSelectionViewPresenter scaleValueSelectionPresenter;
 
-    public ScaleValueCardPresenter(PostCoordinationTableAxisLabel postCoordinationAxis,
-                                   PostcoordinationScaleValue scaleValue,
-                                   ScaleValueCardView view,
-                                   DispatchServiceManager dispatchServiceManager,
+
+    public ScaleValueCardPresenter(DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId,
                                    ModalManager modalManager) {
-        this.view = view;
-        this.postCoordinationAxis = postCoordinationAxis;
-        this.scaleValue = scaleValue;
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.modalManager = modalManager;
+    }
+
+    public void setPostCoordinationAxis(PostCoordinationTableAxisLabel postCoordinationAxis) {
+        this.postCoordinationAxis = postCoordinationAxis;
+    }
+
+    public void setScaleValue(PostcoordinationScaleValue scaleValue) {
+        this.scaleValue = scaleValue;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
+    }
+
+    public void setScaleValueSelectionPresenter(ScaleValueSelectionViewPresenter scaleValueSelectionPresenter) {
+        this.scaleValueSelectionPresenter = scaleValueSelectionPresenter;
     }
 
     /*
@@ -42,7 +55,7 @@ public class ScaleValueCardPresenter {
             implement here the pop-up modal for selecting a scale value
      */
     private void bindView() {
-        view.setAddButtonClickHandler(event -> addRow("New Value"));
+        view.setAddButtonClickHandler(event -> showModalForSelection());
     }
 
     private void initTable() {
@@ -81,6 +94,7 @@ public class ScaleValueCardPresenter {
     }
 
     public void start(boolean isEditMode) {
+        this.view = new ScaleValueCardViewImpl();
         bindView();
         initTable();
         setEditMode(isEditMode);
@@ -88,21 +102,21 @@ public class ScaleValueCardPresenter {
 
     public void showModalForSelection() {
         ModalPresenter modalPresenter = modalManager.createPresenter();
-        modalPresenter.setTitle("Select Scale Value for " + this.scaleValue.getGenericScale().getPostcoordinationAxis());
-        modalPresenter.setView(searchPresenter.getView());
+        modalPresenter.setTitle("Select Scale Value for " + this.scaleValue.getAxisLabel());
+        modalPresenter.setView(scaleValueSelectionPresenter.getView());
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.SELECT);
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
             selectChosenEntity();
         });
-        searchPresenter.setHierarchySelectionHandler(selection -> {
-            selectionModel.setSelection(selection.getEntity());
-            modalPresenter.closeModal();
-        });
-        searchPresenter.start();
-        searchPresenter.setAcceptKeyHandler(modalPresenter::accept);
-        searchPresenter.setSearchResultChosenHandler(result -> modalPresenter.accept());
+        scaleValueSelectionPresenter.setAllowMultiValue(ScaleAllowMultiValue.fromString(scaleValue.getGenericScale().getAllowMultiValue()));
+        scaleValueSelectionPresenter.setScaleTopClass(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass());
+        scaleValueSelectionPresenter.start();
         modalManager.showModal(modalPresenter);
+    }
+
+    private void selectChosenEntity() {
+        scaleValueSelectionPresenter.getSelections().forEach(scaleValue -> addRow(scaleValue));
     }
 }

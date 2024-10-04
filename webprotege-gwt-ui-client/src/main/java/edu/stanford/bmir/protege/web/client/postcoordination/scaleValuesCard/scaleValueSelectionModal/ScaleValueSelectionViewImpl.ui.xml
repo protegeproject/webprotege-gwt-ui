@@ -1,43 +1,5 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'>
-    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
-    <ui:style>
-        .warningField {
-            margin-top: 20px;
-        }
-    </ui:style>
-    <g:HTMLPanel>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="textBox"
-                                       anchorVisible="false"/>
-        </div>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="{msg.hierarchy_parents}" addStyleNames="{wp.style.formLabel}"/>
-            <wp:PrimitiveDataListEditor ui:field="domains"/>
-        </div>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
-                                       mode="MULTI_LINE"
-                                       anchorVisible="false"/>
-            <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
-            <g:HTML ui:field="classesWithCyclesWarningField"
-                    visible="false"
-                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
-            <g:HTML ui:field="classesWithRetiredParentsField"
-                    visible="false"
-                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
-        </div>
-    </g:HTMLPanel>
-</ui:UiBinder>
-
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
@@ -58,30 +20,17 @@
         padding-top: 20px;
         box-sizing: border-box;
     }
-    .main-message-style {
-        padding-bottom: 5px;
-        word-break: normal;
-    }
-    .sub-message-style {
-        font-size: 14px;
-        padding-top: 5px;
-        word-break: normal;
-    }
 </ui:style>
 
 <g:HTMLPanel addStyleNames="{style.main-panel-style}">
-    <!-- I originally implemented this with divs but had lots of problems with the settings box sizing correctly. I
-    know tables aren't meant to be used for layout, but this works really nicely in this case. -->
     <table>
         <colgroup>
             <col width="70px" valign="top"/>
             <col width="*" valign="top"/>
         </colgroup>
         <tr>
-            <td valign="top"><g:Image url="{wp.messageIcon.getSafeUri.asString}" ui:field="iconImage" width="120px"/></td>
             <td valign="top">
                 <g:HTMLPanel addStyleNames="{style.message-block}">
-                    <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
                     <text:ExpandingTextBoxImpl ui:field="scaleValueSelection"
                                                mode="MULTI_LINE"
                                                anchorVisible="false"/>

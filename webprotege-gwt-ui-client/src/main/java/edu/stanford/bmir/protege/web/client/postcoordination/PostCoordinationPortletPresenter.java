@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -53,6 +54,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private final ModalManager modalManager;
 
+    private final ScaleValueSelectionViewPresenter scaleSelectionPresenter;
+
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                             @Nonnull ProjectId projectId,
@@ -62,7 +65,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                             @Nonnull EventBus eventBus,
                                             @Nonnull MessageBox messageBox,
                                             @Nonnull LoggedInUserManager loggedInUserManager,
-                                            ModalManager modalManager) {
+                                            ModalManager modalManager,
+                                            ScaleValueSelectionViewPresenter scaleSelectionPresenter) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.messageBox = messageBox;
@@ -70,6 +74,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
         this.modalManager = modalManager;
+        this.scaleSelectionPresenter = scaleSelectionPresenter;
         this.view.setProjectId(projectId);
     }
 
@@ -189,7 +194,11 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
         ScaleValueCardView view = new ScaleValueCardViewImpl();
-        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId(), modalManager);
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), modalManager);
+        cardPresenter.setScaleValue(scaleValue);
+        cardPresenter.setPostCoordinationAxis(axis);
+        cardPresenter.setScaleValueSelectionPresenter(scaleSelectionPresenter);
+        return cardPresenter;
     }
 
     @Override
