@@ -64,9 +64,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsResul
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsResult;
-import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationResult;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
@@ -97,7 +95,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutRe
 import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectivesResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationResult;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
@@ -300,8 +298,16 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
+        @JsonSubTypes.Type(GetEntityPostCoordinationResult.class),
+        @JsonSubTypes.Type(ProcessUploadedCustomScalesResult.class),
+        @JsonSubTypes.Type(GetEntityCustomScalesResult.class),
+        @JsonSubTypes.Type(SaveEntityPostCoordinationResult.class),
+        @JsonSubTypes.Type(ProcessUploadedPostCoordinationResult.class),
         @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class),
-        @JsonSubTypes.Type(GetProjectChangesForHistoryViewResult.class)
+        @JsonSubTypes.Type(GetProjectChangesForHistoryViewResult.class),
+        @JsonSubTypes.Type(ProcessUploadedLinearizationResult.class),
+        @JsonSubTypes.Type(GetPostcoordinationAxisToGenericScaleResult.class),
+        @JsonSubTypes.Type(SaveEntityCustomScaleResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

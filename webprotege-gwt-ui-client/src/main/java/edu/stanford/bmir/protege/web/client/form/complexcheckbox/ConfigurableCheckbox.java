@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.HasReadOnly;
 
 import javax.annotation.Nonnull;
-import java.util.logging.Logger;
 
 public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, HasText, HasEnabled, HasReadOnly {
     @Nonnull
@@ -26,7 +25,6 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
         presenter = new ConfigurableCheckBoxPresenter(new ConfigurableCheckBoxViewImpl());
         presenter.start(container);
 
-
         this.checkBoxConfig = checkBoxConfig;
 
         presenter.setEnabled(checkBoxConfig.isEnabled());
@@ -34,10 +32,15 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
         presenter.setConfig(checkBoxConfig);
         CheckboxValue checkboxValue = checkBoxConfig.findValue(initialValue);
         this.setValue(checkboxValue);
+        presenter.setTitle(checkboxValue.getTooltip());
     }
 
     public boolean isTouched() {
         return this.presenter.isTouched();
+    }
+
+    public void setTouched(boolean touched) {
+        this.presenter.setTouched(touched);
     }
 
     @Override

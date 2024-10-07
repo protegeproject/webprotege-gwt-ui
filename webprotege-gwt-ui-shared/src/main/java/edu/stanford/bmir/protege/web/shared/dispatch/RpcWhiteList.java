@@ -977,11 +977,21 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
 
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
+    ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;
+    ProcessUploadedPostCoordinationResult _ProcessUploadedPostCoordinationResult;
+
+    SaveEntityPostCoordinationResult _SaveEntityPostCoordinationResult;
     LinearizationDefinition _LinearizationDefinition;
 
     GetEntityLinearizationResult _GetEntityLinearizationResult;
 
+    GetEntityCustomScalesResult _GetEntityCustomScalesResult;
+
     WhoficEntityLinearizationSpecification _WhoficEntityLinearizationSpecification;
+
+    WhoficEntityPostCoordinationSpecification _WhoficEntityPostCoordinationSpecification;
+
+    WhoficCustomScalesValues _WhoficCustomScalesValues;
 
     SaveEntityLinearizationResult _SaveEntityLinearizationResult;
 
@@ -992,6 +1002,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     AncestorClassHierarchy _AncestorClassHierarchy;
 
     GetPostCoordinationTableConfigurationResult _GetPostCoordinationTableConfigurationResult;
+    GetEntityPostCoordinationResult _GetEntityPostCoordinationResult;
 
     PostCoordinationTableConfiguration _PostCoordinationTableConfiguration;
 
@@ -1000,6 +1011,23 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetProjectChangesForHistoryViewAction _GetProjectChangesForHistoryViewAction;
     GetProjectChangesForHistoryViewResult _GetProjectChangesForHistoryViewResult;
+
+    ProcessUploadedLinearizationAction _ProcessUploadedLinearizationAction;
+    ProcessUploadedLinearizationResult _ProcessUploadedLinearizationResult;
+
+
+    GetPostcoordinationAxisToGenericScaleAction _GetPostcoordinationAxisToGenericScaleAction;
+    GetPostcoordinationAxisToGenericScaleResult _GetPostcoordinationAxisToGenericScaleResult;
+
+    PostcoordinationAxisToGenericScale _PostcoordinationAxisToGenericScale;
+
+    PostcoordinationScaleValue _PostcoordinationScaleValue;
+
+    SaveEntityCustomScaleAction _SaveEntityCustomScaleAction;
+    SaveEntityCustomScaleResult _SaveEntityCustomScaleResult;
+
+    PostCoordinationCustomScales _PostCoordinationCustomScales;
+
 
     public RpcWhiteList() {
     }

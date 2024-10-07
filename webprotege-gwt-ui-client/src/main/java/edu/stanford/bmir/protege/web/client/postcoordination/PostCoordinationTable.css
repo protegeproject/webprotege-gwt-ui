@@ -32,6 +32,15 @@
 
 .evenRowStyle {
     background-color: #f2f7f4;
+    vertical-align: middle;
+}
+
+.customRowStyle td {
+    vertical-align: middle!important;
+}
+
+.evenRowStyle td {
+    vertical-align: middle!important;
 }
 
 
@@ -54,7 +63,12 @@
     vertical-align: middle;
     display: flex;
     margin-left: 5px;
+    align-items: center;
+}
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 
@@ -73,7 +87,7 @@
     color: #fff;
     line-height: 1.4;
     background-color: #186cd4;
-    padding: 10px;
+    padding: 4px;
     font-weight: bold;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     border-top-left-radius: 5px;
@@ -119,4 +133,10 @@
 .toggle-icon {
     cursor: pointer;
     margin-right: 5px;
+}
+
+.header-icon {
+    vertical-align: text-top;
+    margin-left: 5px;
+    width: auto;
 }

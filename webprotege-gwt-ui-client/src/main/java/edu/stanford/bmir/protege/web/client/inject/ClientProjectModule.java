@@ -26,6 +26,8 @@ import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
 import edu.stanford.bmir.protege.web.client.permissions.*;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
@@ -94,6 +96,11 @@ public class ClientProjectModule {
     @Provides
     UploadAndProcessLinearizationHandler provideUploadAndProcessLinearizationHandler(UploadAndProcessLinearizationHandlerImpl handler) {
         return handler;
+    }
+
+    @Provides
+    PostCoordinationChangesHandler provideProcessPostCoordinationHandler(PostCoordinationChangesHandlerImpl impl) {
+        return impl;
     }
 
     @Provides

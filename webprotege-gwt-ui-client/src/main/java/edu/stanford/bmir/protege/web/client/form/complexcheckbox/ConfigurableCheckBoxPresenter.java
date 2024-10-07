@@ -58,6 +58,7 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
         }
         CheckboxValue nextSel = config.getNextValue(view.getValue());
         view.setValue(nextSel);
+        view.asWidget().setTitle(nextSel.getTooltip());
         isTouched = true;
     }
 
@@ -80,6 +81,10 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
         this.config = config;
     }
 
+    public void setTitle(String title) {
+        this.view.asWidget().setTitle(title);
+    }
+
     @Override
     public void setValue(CheckboxValue value, boolean fireEvents) {
         view.setValue(value, fireEvents);
@@ -92,6 +97,10 @@ public class ConfigurableCheckBoxPresenter implements HasValue<CheckboxValue>, H
 
     public boolean isTouched() {
         return isTouched;
+    }
+
+    public void setTouched(Boolean touched) {
+        this.isTouched = touched;
     }
 
     @Override
