@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 @Portlet(id = "portlets.PostCoordination",
         title = "iCat-X Post-Coordinations",
@@ -200,17 +200,20 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     }
 
     private List<PostCoordinationCustomScales> getUpdateCustomScaleValues() {
-        return scaleValueCardPresenters.values()
+        Collection<ScaleValueCardPresenter> scaleValueCardPresenters1 = scaleValueCardPresenters.values();
+        return scaleValueCardPresenters1
                 .stream()
-                .flatMap(scalePresenter -> {
+                .map(scalePresenter -> {
                     List<String> scaleValueIris = scalePresenter.getValues().getValueIris()
                             .stream()
-                            .flatMap(scaleValueIriAndName -> Stream.of(scaleValueIriAndName.getScaleValueIri()))
+                            .map(scaleValueIriAndName -> scaleValueIriAndName.getScaleValueIri()) // Directly map
                             .collect(Collectors.toList());
-                    return Stream.of(PostCoordinationCustomScales.create(scaleValueIris, scalePresenter.getValues().getAxisIri()));
+
+                    return PostCoordinationCustomScales.create(scaleValueIris, scalePresenter.getValues().getAxisIri());
                 })
                 .collect(Collectors.toList());
     }
+
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
         ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), modalManager);
@@ -255,7 +258,11 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private void navigateToEntity(OWLEntity entityData) {
         dispatch.execute(GetEntityCustomScalesAction.create(entityData.getIRI().toString(), getProjectId()),
-                (result) -> postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations()));
+                (result) -> {
+                    logger.info(result.toString());
+                    clearScaleValueCards();
+                    postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
+                });
 
         dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), getProjectId()),
                 (result) -> {
@@ -298,7 +305,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         );
         List<ScaleValueIriAndName> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
                 .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())
-                .flatMap(scaleValueIri -> Stream.of(ScaleValueIriAndName.create(scaleValueIri)))
+                .map(ScaleValueIriAndName::create)
                 .collect(Collectors.toList());
         ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
                 currentAxisLabels,

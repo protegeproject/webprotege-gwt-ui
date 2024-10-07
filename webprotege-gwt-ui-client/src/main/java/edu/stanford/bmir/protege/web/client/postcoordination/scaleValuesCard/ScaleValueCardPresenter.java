@@ -82,8 +82,11 @@ public class ScaleValueCardPresenter {
     }
 
     private void addRow(String iri, String value) {
+        scaleValue.getValueIris().removeIf(existingValueIriAndName -> existingValueIriAndName.getScaleValueIri().equals(iri));
+
         ScaleValueIriAndName valueIriAndName = ScaleValueIriAndName.create(iri, value);
         scaleValue.getValueIris().add(valueIriAndName);
+
         view.addRow(valueIriAndName);
     }
 
