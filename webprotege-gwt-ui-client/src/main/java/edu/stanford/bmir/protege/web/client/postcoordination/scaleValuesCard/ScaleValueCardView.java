@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.event.dom.client.ClickHandler;
+import edu.stanford.bmir.protege.web.shared.postcoordination.ScaleValueIriAndName;
 
 public interface ScaleValueCardView extends IsWidget {
 
@@ -11,7 +12,7 @@ public interface ScaleValueCardView extends IsWidget {
 
     void addHeader(String headerText, ScaleAllowMultiValue scaleAllowMultiValue);
 
-    void addRow(String value) ;
+    void addRow(ScaleValueIriAndName value) ;
 
     void addSelectValueButton();
 

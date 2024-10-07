@@ -1,39 +1,26 @@
 package edu.stanford.bmir.protege.web.shared.postcoordination;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import java.io.Serializable;
 import java.util.List;
 
+@AutoValue
 @GwtCompatible(serializable = true)
-public class WhoficCustomScalesValues implements IsSerializable, Serializable {
-
-    private String whoficEntityIri;
-    private List<PostCoordinationCustomScales> scaleCustomizations;
-
+public abstract class WhoficCustomScalesValues implements IsSerializable, Serializable {
 
     @JsonCreator
-    public WhoficCustomScalesValues( @JsonProperty("whoficEntityIri") String whoficEntityIri,
-                                     @JsonProperty("scaleCustomizations") List<PostCoordinationCustomScales> scaleCustomizations) {
-        this.whoficEntityIri = whoficEntityIri;
-        this.scaleCustomizations = scaleCustomizations;
-    }
-
-    @GwtSerializationConstructor
-    private WhoficCustomScalesValues() {
+    public static WhoficCustomScalesValues create(@JsonProperty("whoficEntityIri") String whoficEntityIri,
+                                                  @JsonProperty("scaleCustomizations") List<PostCoordinationCustomScales> scaleCustomizations) {
+        return new AutoValue_WhoficCustomScalesValues(whoficEntityIri, scaleCustomizations);
     }
 
     @JsonProperty("whoficEntityIri")
-    public String getWhoficEntityIri() {
-        return whoficEntityIri;
-    }
+    public abstract String getWhoficEntityIri();
 
     @JsonProperty("scaleCustomizations")
-    public List<PostCoordinationCustomScales> getScaleCustomizations() {
-        return scaleCustomizations;
-    }
+    public abstract List<PostCoordinationCustomScales> getScaleCustomizations();
 }

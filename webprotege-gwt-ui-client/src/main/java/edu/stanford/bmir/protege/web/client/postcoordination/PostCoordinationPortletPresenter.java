@@ -4,16 +4,18 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -50,8 +52,9 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private boolean editMode = false;
 
-    private Optional<OWLEntity> entityIri;
+    private final ModalManager modalManager;
 
+    private final ScaleValueSelectionViewPresenter scaleSelectionPresenter;
 
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -61,13 +64,17 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                             @Nonnull PostCoordinationPortletView view,
                                             @Nonnull EventBus eventBus,
                                             @Nonnull MessageBox messageBox,
-                                            @Nonnull LoggedInUserManager loggedInUserManager) {
+                                            @Nonnull LoggedInUserManager loggedInUserManager,
+                                            ModalManager modalManager,
+                                            ScaleValueSelectionViewPresenter scaleSelectionPresenter) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
         this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
+        this.modalManager = modalManager;
+        this.scaleSelectionPresenter = scaleSelectionPresenter;
         this.view.setProjectId(projectId);
     }
 
@@ -78,7 +85,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
         clearAllDate();
 
-
+        dispatch.beginBatch();
         dispatch.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), result -> {
             for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
                 PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
@@ -140,19 +147,22 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 }
                 view.setLinearizationDefinitonMap(definitionMap);
                 view.initializeTable();
+                handleAfterSetEntity(getSelectedEntity());
             });
         });
 
         view.setEditButtonHandler(() -> this.setEditMode(true));
 
         view.setCancelButtonHandler(() -> {
-            handleAfterSetEntity(this.entityIri);
             this.setEditMode(false);
+            handleAfterSetEntity(getSelectedEntity());
         });
 
         view.setSaveButtonHandler(this::saveEntity);
 
         this.setEditMode(false);
+
+        dispatch.executeCurrentBatch();
     }
 
     //The corect order is determined by the order of the values that are stored in the database
@@ -163,7 +173,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 {
                     int indexForCurrAxis = orderedAxisList.indexOf(compositeAxis.getPostCoordinationAxis());
                     List<String> subAxisList = new LinkedList<>(compositeAxis.getSubAxis());
-                    orderedAxisList.addAll(indexForCurrAxis+1,subAxisList);
+                    orderedAxisList.addAll(indexForCurrAxis + 1, subAxisList);
                     orderedAxisList.remove(indexForCurrAxis);
                 }
         );
@@ -172,6 +182,13 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private void saveEntity(Optional<WhoficEntityPostCoordinationSpecification> specification) {
         this.setEditMode(false);
+
+        List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
+
+        if (!newCustomScales.equals(postCoordinationCustomScalesList)) {
+            dispatch.execute(SaveEntityCustomScaleAction.create(getProjectId(), WhoficCustomScalesValues.create(getSelectedEntity().get().toStringID(), newCustomScales)), (result) -> {
+            });
+        }
 
         specification.ifPresent(whoficEntityPostCoordinationSpecification ->
                 dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification),
@@ -182,9 +199,28 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         );
     }
 
+    private List<PostCoordinationCustomScales> getUpdateCustomScaleValues() {
+        Collection<ScaleValueCardPresenter> scaleValueCardPresenters1 = scaleValueCardPresenters.values();
+        return scaleValueCardPresenters1
+                .stream()
+                .map(scalePresenter -> {
+                    List<String> scaleValueIris = scalePresenter.getValues().getValueIris()
+                            .stream()
+                            .map(scaleValueIriAndName -> scaleValueIriAndName.getScaleValueIri()) // Directly map
+                            .collect(Collectors.toList());
+
+                    return PostCoordinationCustomScales.create(scaleValueIris, scalePresenter.getValues().getAxisIri());
+                })
+                .collect(Collectors.toList());
+    }
+
+
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
-        ScaleValueCardView view = new ScaleValueCardViewImpl();
-        return new ScaleValueCardPresenter(axis, scaleValue, view, dispatch, getProjectId());
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), modalManager);
+        cardPresenter.setScaleValue(scaleValue);
+        cardPresenter.setPostCoordinationAxis(axis);
+        cardPresenter.setScaleValueSelectionPresenter(scaleSelectionPresenter);
+        return cardPresenter;
     }
 
     @Override
@@ -193,36 +229,46 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        if (this.editMode) {
-            this.entityIri = entityData;
-
-            messageBox.showConfirmBox(MessageStyle.ALERT,
-                    "Save edits before switching?",
-                    "Do you want to save your edits before changing selection?",
-                    DialogButton.YES,
-                    () -> {
-                        saveEntity(view.getTableData());
-                        navigateToEntity(entityData);
-                    },
-                    DialogButton.NO,
-                    () -> navigateToEntity(entityData),
-                    DialogButton.YES);
+        if (!entityData.isPresent()) {
+            setNothingSelectedVisible(true);
+            setDisplayedEntity(Optional.empty());
         } else {
-            navigateToEntity(entityData);
+            dispatch.execute(GetEntityRenderingAction.create(getProjectId(), entityData.get()),
+                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
+            setNothingSelectedVisible(false);
+            if (this.editMode) {
+                messageBox.showConfirmBox(MessageStyle.ALERT,
+                        "Save edits before switching?",
+                        "Do you want to save your edits before changing selection?",
+                        DialogButton.YES,
+                        () -> {
+                            saveEntity(view.getTableData());
+                            navigateToEntity(entityData.get());
+                        },
+                        DialogButton.NO,
+                        () -> navigateToEntity(entityData.get()),
+                        DialogButton.YES);
+            } else {
+                navigateToEntity(entityData.get());
+            }
         }
 
 
     }
 
-    private void navigateToEntity(Optional<OWLEntity> entityData) {
-        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), getProjectId()),
-                (result) -> postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations())));
+    private void navigateToEntity(OWLEntity entityData) {
+        dispatch.execute(GetEntityCustomScalesAction.create(entityData.getIRI().toString(), getProjectId()),
+                (result) -> {
+                    logger.info(result.toString());
+                    clearScaleValueCards();
+                    postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
+                });
 
-        entityData.ifPresent(owlEntity -> dispatch.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), getProjectId()),
+        dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), getProjectId()),
                 (result) -> {
                     view.setTableData(result.getPostCoordinationSpecification());
                     setEditMode(false);
-                }));
+                });
     }
 
     private void clearScaleValueCards() {
@@ -257,8 +303,9 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                  */
                 PostcoordinationAxisToGenericScale.create(axisIri, "", "NotAllowed")
         );
-        List<String> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
+        List<ScaleValueIriAndName> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
                 .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())
+                .map(ScaleValueIriAndName::create)
                 .collect(Collectors.toList());
         ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
                 currentAxisLabels,
