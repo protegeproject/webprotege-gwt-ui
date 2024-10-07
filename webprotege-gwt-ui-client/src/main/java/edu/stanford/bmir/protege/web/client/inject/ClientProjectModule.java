@@ -20,7 +20,10 @@ import edu.stanford.bmir.protege.web.client.hierarchy.parents.*;
 import edu.stanford.bmir.protege.web.client.individualslist.*;
 import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
+import edu.stanford.bmir.protege.web.client.linearization.*;
 import edu.stanford.bmir.protege.web.client.list.*;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletView;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
 import edu.stanford.bmir.protege.web.client.permissions.*;
@@ -28,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
@@ -214,6 +219,33 @@ public class ClientProjectModule {
 
     @Provides
     NumericValueCriteriaView provideNumericValueCriteriaView(NumericValueCriteriaViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    LogicalDefinitionPortletView provideLogicalDefinitionPortletView(LogicalDefinitionPortletViewImpl impl) {
+        return impl;
+    }
+    @Provides
+    LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    LinearizationPortletView provideLinearizationPortletView(LinearizationPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PostCoordinationPortletView providePostCoordinationPortletView(PostCoordinationPortletViewImpl impl){
+        return impl;
+    }
+
+
+    @Provides
+    LinearizationCommentsView provideLienarizationCommentsView(LinearizationCommentsViewImpl impl){
         return impl;
     }
 

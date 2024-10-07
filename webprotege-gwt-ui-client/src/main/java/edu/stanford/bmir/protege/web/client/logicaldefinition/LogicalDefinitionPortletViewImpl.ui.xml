@@ -1,10 +1,55 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        .card {
+            border-radius: 5px;
+            overflow: hidden;
+            -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+            box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+            margin: 15px;
+            border-collapse: collapse;
+            padding: 10px;
+            position: relative!important;
+            height: auto!important;
+            display: flex;
+            flex-direction: column;
+        }
+        .cardLabel {
+            font-weight: bold;
+            padding-bottom: 5px;
+            font-size: 17px;
+            white-space: nowrap;
+        }
+        .rowWrapper {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .label {
+            font-size: 13px;
+            white-space: nowrap;
+            margin-right: 3vw;
+            text-align: center;
+        }
+
+
     </ui:style>
-    <g:HTMLPanel ui:field="paneContainer">
-        <g:ListBox ui:field="secondList">
-        </g:ListBox>
+    <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.card}">
+
+          <div class="{style.cardLabel}">
+            Logical definitions
+          </div>
+
+        <div class="{style.rowWrapper}">
+            <div class="{style.label}">
+                Logical definition superclass :
+            </div>
+            <g:ListBox ui:field="ancestorDropdown"/>
+
+
+        </div>
+
+        <g:FlexTable width="50%" ui:field="superclassTable"/>
     </g:HTMLPanel>
 
 </ui:UiBinder>

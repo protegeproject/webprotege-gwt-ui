@@ -1,0 +1,22 @@
+.superClassTable {
+    overflow: hidden;
+    margin: 15px;
+    border-collapse: collapse;
+    padding: 3px;
+}
+
+.tableText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+
+.superClassTableHeader {
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #186cd4;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+}
