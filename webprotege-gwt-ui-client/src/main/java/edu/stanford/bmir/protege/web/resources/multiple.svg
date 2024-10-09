@@ -1,17 +1,18 @@
 <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
  <g>
   <title>background</title>
-  <rect fill="none" id="canvas_background" height="22" width="22" y="-1" x="-1"/>
-  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  <rect x="-1" y="-1" width="2.771603" height="2.771603" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_2" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
   </g>
  </g>
  <g>
   <title>Layer 1</title>
-  <line stroke="#ffffaa" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="4.322917" x2="17.333334" y1="4.322917" x1="2.833334" stroke-width="1.5" fill="none"/>
-  <line stroke="#ffffaa" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_17" y2="8.15625" x2="17.333334" y1="8.15625" x1="2.833334" stroke-width="1.5" fill="none"/>
-  <line stroke="#ffffaa" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_18" y2="12.489584" x2="17.333334" y1="12.489584" x1="2.833334" stroke-width="1.5" fill="none"/>
-  <line stroke="#ffffaa" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_19" y2="16.989584" x2="17.333334" y1="16.989584" x1="2.833334" stroke-width="1.5" fill="none"/>
+  <line fill="none" stroke-width="1.5" x1="2.833334" y1="4.322917" x2="17.333334" y2="4.322917" id="svg_1" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#ffff02"/>
+  <line fill="none" stroke-width="1.5" x1="2.833334" y1="8.310567" x2="17.333334" y2="8.310567" id="svg_17" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#aad4ff"/>
+  <line fill="none" stroke-width="1.5" x1="2.833334" y1="12.489584" x2="17.333334" y2="12.489584" id="svg_18" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#fffc02"/>
+  <line fill="none" stroke-width="1.5" x1="2.833334" y1="16.449475" x2="17.333334" y2="16.449475" id="svg_19" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#aad4ff"/>
  </g>
 </svg>
