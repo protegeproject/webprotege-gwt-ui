@@ -23,6 +23,10 @@ public interface LogicalDefinitionResourceBundle extends ClientBundle {
         @ClassName("superClassTableHeader")
         String superClassTableHeader();
 
+        @ClassName("customRowStyle")
+        String customRowStyle();
+
+
     }
 
 

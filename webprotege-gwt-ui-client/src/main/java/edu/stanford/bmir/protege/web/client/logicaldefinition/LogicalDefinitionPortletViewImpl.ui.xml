@@ -2,6 +2,10 @@
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        .mainContent {
+            display: flex;
+            flex-direction: column;
+        }
         .card {
             border-radius: 5px;
             overflow: hidden;
@@ -12,8 +16,7 @@
             padding: 10px;
             position: relative!important;
             height: auto!important;
-            display: flex;
-            flex-direction: column;
+
         }
         .cardLabel {
             font-weight: bold;
@@ -34,22 +37,27 @@
 
 
     </ui:style>
-    <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.card}">
-
-          <div class="{style.cardLabel}">
-            Logical definitions
-          </div>
-
-        <div class="{style.rowWrapper}">
-            <div class="{style.label}">
-                Logical definition superclass :
+    <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
+        <g:HTMLPanel ui:field="superClassContainer"  addStyleNames="{style.card}">
+            <div class="{style.cardLabel}">
+                Logical definitions
             </div>
+
+            <div class="{style.rowWrapper}">
+                <div class="{style.label}">
+                    Logical definition superclass :
+                </div>
             <g:ListBox ui:field="ancestorDropdown"/>
+            </div>
 
+        </g:HTMLPanel>
 
-        </div>
+        <g:HTMLPanel ui:field="necessaryConditionsContainer"  addStyleNames="{style.card}">
+            <div class="{style.cardLabel}">
+                Necessary conditions
+            </div>
+        </g:HTMLPanel>
 
-        <g:FlexTable width="50%" ui:field="superclassTable"/>
     </g:HTMLPanel>
 
 </ui:UiBinder>
