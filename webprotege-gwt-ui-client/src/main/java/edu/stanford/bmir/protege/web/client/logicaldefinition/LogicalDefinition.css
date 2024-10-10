@@ -19,8 +19,14 @@
     align-content: center;
     text-align: left;
     max-width: 350px;
-    padding: 8px;
+    margin: 8px;
 
+}
+
+.logicalDefinitionDropdown {
+    background-color: white;
+    margin: 5px;
+    padding: 3px;
 }
 
 .superClassTableHeader .tableText > div {
@@ -33,10 +39,34 @@
     border-bottom: 1px solid #f2f2f2;
 }
 
+.removeButtonCell {
+}
+
+.removeButtonCell > div {
+    margin-top: 2px;
+}
+
+
 .superClassTableHeader {
     font-size: 18px;
     color: #fff;
     line-height: 1.4;
     background-color: #186cd4;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+}
+
+.dropDownMandatory{
+    color: red;
+    margin: 2px;
+    font-size: bold;
+}
+
+.dropDownAllowed {
+    color: green;
+    margin: 2px;
+    font-size: bold;
+}
+
+.dropDownNotSet{
+    margin: 2px;
 }

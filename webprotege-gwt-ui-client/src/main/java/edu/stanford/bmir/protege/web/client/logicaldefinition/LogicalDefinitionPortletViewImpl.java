@@ -52,6 +52,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private WhoficEntityPostCoordinationSpecification superclassSpecification;
 
     private List<PostcoordinationAxisToGenericScale> axisToGenericScales = new ArrayList<>();
+    private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private LogicalDefinitionTable superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
             "Value",
@@ -104,6 +105,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     @Inject
     public LogicalDefinitionPortletViewImpl(DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
+        style = LogicalDefinitionResourceBundle.INSTANCE.style();
         initWidget(ourUiBinder.createAndBindUi(this));
 
         superClassContainer.add(superClassTable);
@@ -124,6 +127,10 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 populateAvailableAxisValues();
             });
         });
+
+
+        ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
+
     }
 
     @Override
@@ -165,22 +172,25 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 .stream().filter(spec -> spec.getLinearizationView().equalsIgnoreCase("http://id.who.int/icd/release/11/mms"))
                 .findFirst();
 
-        List<String> orderedAxis = new ArrayList<>();
+
+        Map<String, LogicalDefinitionTable.DropdownElement> availableAxis = new HashMap<>();
         if(mmsSpec.isPresent()) {
-            orderedAxis.addAll(mmsSpec.get().getRequiredAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
-                    .collect(Collectors.toList()));
-            orderedAxis.addAll(mmsSpec.get().getAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2))).collect(Collectors.toList()));
-            orderedAxis.addAll(mmsSpec.get().getNotAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2))).collect(Collectors.toList()));
+           mmsSpec.get().getRequiredAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
+                    .forEach((requiredAxis) -> {
+                        availableAxis.put(requiredAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(requiredAxis), style.dropDownMandatory()));
+                    });
+            mmsSpec.get().getAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
+                    .forEach((allowedAxis) -> {
+                        availableAxis.put(allowedAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(allowedAxis), style.dropDownAllowed()));
+                    });
+            mmsSpec.get().getNotAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
+                    .forEach((notSetAxis) -> availableAxis.put(notSetAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(notSetAxis), style.dropDownNotSet()))) ;
         }
 
-        Map<String, String> orderedAxisMap = new HashMap<>();
 
-        for(String axis: orderedAxis) {
-            orderedAxisMap.put(axis, getAxisName(axis));
-        }
         
-        superClassTable.setAvailableAxis(orderedAxisMap);
-        necessaryConditionsTable.setAvailableAxis(orderedAxisMap);
+        superClassTable.setAvailableAxisBis(availableAxis);
+        necessaryConditionsTable.setAvailableAxisBis(availableAxis);
     }
 
 

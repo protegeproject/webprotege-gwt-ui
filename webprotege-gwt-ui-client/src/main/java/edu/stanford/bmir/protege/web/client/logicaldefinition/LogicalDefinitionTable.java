@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -18,8 +22,6 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private Map<String, String> availableAxis = new HashMap<>();
 
-    private Map<String, String> availableValues = new HashMap<>();
-
     private List<LogicalDefinitionTableRow> tableRows = new ArrayList<>();
 
     public LogicalDefinitionTable(LogicalDefinitionTableConfig config) {
@@ -29,6 +31,8 @@ public class LogicalDefinitionTable implements IsWidget {
         initializeSuperClassTableHeader();
         injectTableControls();
         setControlsHandlers();
+        axisDropdown.setStyleName(style.logicalDefinitionDropdown());
+        valuesDropdown.setStyleName(style.logicalDefinitionDropdown());
     }
 
     @Override
@@ -36,13 +40,29 @@ public class LogicalDefinitionTable implements IsWidget {
         return flexTable;
     }
 
-    public void setAvailableAxis(Map<String,String> availableAxis) {
-        this.availableAxis = availableAxis;
-        populateAvailableAxisValues();
+
+
+    public void setAvailableAxisBis(Map<String, DropdownElement> specification) {
+        axisDropdown.clear();
+        axisDropdown.addItem("", "");
+
+        for(String axis : specification.keySet()) {
+            axisDropdown.addItem(specification.get(axis).label, axis);
+        }
+
+        SelectElement selectElement = SelectElement.as(axisDropdown.getElement());
+        NodeList<OptionElement> options = selectElement.getOptions();
+
+        for (int i = 0; i < options.getLength(); i++) {
+            String optionValue = options.getItem(i).getValue();
+            DropdownElement dropdownElement = specification.get(optionValue);
+            if(dropdownElement != null) {
+                options.getItem(i).addClassName(dropdownElement.cssClass);
+            }
+        }
     }
 
     public void setAvailableValues(Map<String, String> availableValues) {
-        this.availableValues = availableValues;
 
         this.valuesDropdown.clear();
 
@@ -72,15 +92,6 @@ public class LogicalDefinitionTable implements IsWidget {
     private void injectTableControls() {
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
-    }
-
-    private void populateAvailableAxisValues() {
-        this.axisDropdown.clear();
-        this.axisDropdown.addItem("", "");
-        for(String axis: availableAxis.keySet()) {
-            logger.info("ALEX injectez " + axis + " si valoare " + availableAxis.get(axis));
-            this.axisDropdown.addItem(availableAxis.get(axis), axis);
-        }
     }
 
     private void setControlsHandlers(){
@@ -115,21 +126,54 @@ public class LogicalDefinitionTable implements IsWidget {
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 0, style.tableText());
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 1, style.tableText());
 
-        Button button = new Button();
-        button.setText("X");
-        button.addClickHandler((click)-> this.removeSuperClassAxis(this.tableRows.size() - 1, row.getPostCoordinationAxis()));
-        this.flexTable.setWidget(this.tableRows.size(), 2, button);
+        Label removeCell = new Label();
+        removeCell.getElement().setInnerHTML(style.getxSvg());
+        removeCell.addClickHandler((click)-> this.removeSuperClassAxisBis(row.getPostCoordinationLabel(), row.getPostCoordinationAxis(), row.getPostCoordinationValueLabel()));
+        this.flexTable.setWidget(this.tableRows.size(), 2, removeCell);
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
 
+        flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 2, style.removeButtonCell());
         flexTable.getRowFormatter().addStyleName(this.tableRows.size(), style.customRowStyle());
     }
 
-    private void removeSuperClassAxis(int row, String postCoordinationAxisIri) {
-        this.flexTable.removeRow(row);
+    private void removeSuperClassAxisBis(String postCoordinationLabel, String postCoordinationAxis, String postCoordinationValue) {
+        for(int i = 0; i < flexTable.getRowCount(); i++) {
+            String existingLabel = flexTable.getText(i, 0);
+            String existingValue = flexTable.getText(i, 1);
+            if(existingLabel.equalsIgnoreCase(postCoordinationLabel) && existingValue.equalsIgnoreCase(postCoordinationValue)) {
+                flexTable.removeRow(i);
+            }
+        }
+
         this.tableRows = this.tableRows.stream()
-                .filter(r -> !r.getPostCoordinationAxis().equalsIgnoreCase(postCoordinationAxisIri))
+                .filter(r -> !r.getPostCoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
                 .collect(Collectors.toList());
+    }
+
+    private void removeSuperClassAxis(int row, String postCoordinationAxisIri) {
+
+        this.flexTable.removeRow(row);
+
+    }
+
+    static class DropdownElement {
+        private final String label;
+        private final String cssClass;
+
+
+        DropdownElement(String label, String cssClass) {
+            this.label = label;
+            this.cssClass = cssClass;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getCssClass() {
+            return cssClass;
+        }
     }
 
 }

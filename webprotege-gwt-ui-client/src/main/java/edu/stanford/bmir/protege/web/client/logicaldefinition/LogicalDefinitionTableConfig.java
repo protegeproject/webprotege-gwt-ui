@@ -27,4 +27,5 @@ public class LogicalDefinitionTableConfig {
     public interface ValueChangeHandler {
         public void handleChange(String postCoordinationAxis, LogicalDefinitionTable table);
     }
+
 }
