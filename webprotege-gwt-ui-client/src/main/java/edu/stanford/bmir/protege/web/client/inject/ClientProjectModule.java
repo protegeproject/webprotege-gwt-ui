@@ -33,6 +33,8 @@ import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationCha
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
