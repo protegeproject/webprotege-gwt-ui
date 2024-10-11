@@ -69,7 +69,6 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
-        view.setLinearizationChangeEventHandler(() -> triggerLinearizationChangeEvent());
 
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
             for (LinearizationDefinition definition : result.getDefinitionList()) {
@@ -79,25 +78,6 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
             handleSetEntity(getSelectedEntity());
         });
 
-    }
-
-    /*
-    ToDo:
-        Need to rethink arhitecture of linearization view and history so we no longer do the complete hack that is below for the history refresh button.
-     */
-    private void triggerLinearizationChangeEvent() {
-        eventBus.fireEvent(
-                new ProjectChangedEvent(
-                        getProjectId(),
-                        new RevisionSummary(
-                                RevisionNumber.valueOf("0"),
-                                loggedInUserManager.getLoggedInUserId(),
-                                new Date().getTime(),
-                                0,
-                                ""),
-                        Collections.emptySet()
-                ).asGWTEvent()
-        );
     }
 
     @Override
