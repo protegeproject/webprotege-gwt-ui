@@ -35,7 +35,48 @@
             text-align: center;
         }
 
+        .submitButtonWrappers {
+            flex-direction: row;
+            align-content: end;
+            display: flex;
+            justify-content: end;
+            width: 97%;
+            margin:15px;
+            padding: 3px;
+        }
+        .editValuesButton {
+            background-color: #186cd4;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .editValuesButton:hover {
+            background-color: #1252a1;
+        }
 
+        .cancelButton {
+            background-color: #F7F7F7;
+            border: none;
+            color: var(--primary--color);
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .cancelButton:hover {
+            background-color: #E3E3E3;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
         <g:HTMLPanel ui:field="superClassContainer"  addStyleNames="{style.card}">
@@ -58,6 +99,11 @@
             </div>
         </g:HTMLPanel>
 
+        <div class="{style.submitButtonWrappers}">
+            <g:Button ui:field="editValuesButton" addStyleNames="{style.editValuesButton}">Edit values</g:Button>
+            <g:Button ui:field="saveValuesButton" addStyleNames="{style.editValuesButton}">Save values</g:Button>
+            <g:Button ui:field="cancelButton" addStyleNames="{style.cancelButton}">Cancel</g:Button>
+        </div>
     </g:HTMLPanel>
 
 </ui:UiBinder>

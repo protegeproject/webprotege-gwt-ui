@@ -1,15 +1,26 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
+import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
+
 public class LogicalDefinitionTableRow {
 
     private String postCoordinationAxis;
-    private String postCoordinationLabel;
+    private String postCoordinationAxisLabel;
 
 
     private String postCoordinationValue;
 
     private String postCoordinationValueLabel;
 
+    public LogicalDefinitionTableRow(){
+
+    }
+    public LogicalDefinitionTableRow(PropertyClassValue propertyClassValue) {
+        this.setPostCoordinationAxis(propertyClassValue.getProperty().getEntity().getIRI().toString());
+        this.setPostCoordinationAxisLabel(propertyClassValue.getProperty().getBrowserText());
+        this.setPostCoordinationValue(propertyClassValue.getValue().getIri().toString());
+        this.setPostCoordinationValueLabel(propertyClassValue.getValue().getBrowserText());
+    }
 
     public String getPostCoordinationAxis() {
         return postCoordinationAxis;
@@ -19,12 +30,12 @@ public class LogicalDefinitionTableRow {
         this.postCoordinationAxis = postCoordinationAxis;
     }
 
-    public String getPostCoordinationLabel() {
-        return postCoordinationLabel;
+    public String getPostCoordinationAxisLabel() {
+        return postCoordinationAxisLabel;
     }
 
-    public void setPostCoordinationLabel(String postCoordinationLabel) {
-        this.postCoordinationLabel = postCoordinationLabel;
+    public void setPostCoordinationAxisLabel(String postCoordinationAxisLabel) {
+        this.postCoordinationAxisLabel = postCoordinationAxisLabel;
     }
 
     public String getPostCoordinationValue() {

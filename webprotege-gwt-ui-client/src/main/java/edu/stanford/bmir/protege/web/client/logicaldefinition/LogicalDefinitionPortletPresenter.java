@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -22,6 +23,8 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
 
     private LogicalDefinitionPortletView view;
 
+    private DispatchServiceManager dispatch;
+
     @Inject
     public LogicalDefinitionPortletPresenter(@Nonnull SelectionModel selectionModel,
                                              @Nonnull ProjectId projectId,
@@ -30,11 +33,13 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull LogicalDefinitionPortletView view) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
+        this.dispatch = dispatch;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi,
                              WebProtegeEventBus eventBus) {
+        setDisplaySelectedEntityNameAsSubtitle(true);
         portletUi.setWidget(view.asWidget());
 
     }
@@ -46,6 +51,14 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        entityData.ifPresent(owlEntity -> view.setEntity(owlEntity, getProjectId()));
+        if(!entityData.isPresent()) {
+            setNothingSelectedVisible(true);
+            setDisplayedEntity(Optional.empty());
+        } else {
+            setNothingSelectedVisible(false);
+            dispatch.execute(GetEntityRenderingAction.create(getProjectId(), entityData.get()),
+                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
+            view.setEntity(entityData.get(), getProjectId());
+        }
     }
 }
