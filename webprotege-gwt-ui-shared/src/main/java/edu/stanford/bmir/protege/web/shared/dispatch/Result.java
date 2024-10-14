@@ -65,6 +65,8 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsR
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionResult;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.SaveLogicalDefinitionResult;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
@@ -307,7 +309,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetProjectChangesForHistoryViewResult.class),
         @JsonSubTypes.Type(ProcessUploadedLinearizationResult.class),
         @JsonSubTypes.Type(GetPostcoordinationAxisToGenericScaleResult.class),
-        @JsonSubTypes.Type(SaveEntityCustomScaleResult.class)
+        @JsonSubTypes.Type(SaveEntityCustomScaleResult.class),
+        @JsonSubTypes.Type(GetEntityLogicalDefinitionResult.class),
+        @JsonSubTypes.Type(SaveLogicalDefinitionResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

@@ -28,8 +28,7 @@ public class LogicalDefinitionTable implements IsWidget {
     private ListBox valuesDropdown = new ListBox();
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
-    private Map<String, String> availableAxis = new HashMap<>();
-
+    private boolean readOnly = true;
     private List<LogicalDefinitionTableRow> tableRows = new ArrayList<>();
 
     public LogicalDefinitionTable(LogicalDefinitionTableConfig config) {
@@ -70,6 +69,7 @@ public class LogicalDefinitionTable implements IsWidget {
         this.tableRows = new ArrayList<>();
         this.valuesDropdown.clear();
         this.axisDropdown.clear();
+        this.readOnly = true;
     }
 
     public void setAvailableAxis(Map<String, DropdownElement> specification) {
@@ -107,11 +107,13 @@ public class LogicalDefinitionTable implements IsWidget {
     public void setEditable(){
         this.axisDropdown.setEnabled(true);
         this.valuesDropdown.setEnabled(true);
+        this.readOnly = false;
     }
 
     public void setReadOnly(){
         this.axisDropdown.setEnabled(false);
         this.valuesDropdown.setEnabled(false);
+        this.readOnly = true;
     }
 
     public List<LogicalDefinitionTableRow> getRows(){
@@ -197,17 +199,19 @@ public class LogicalDefinitionTable implements IsWidget {
     }
 
     private void removeSuperClassAxis(String postCoordinationLabel, String postCoordinationAxis, String postCoordinationValue) {
-        for(int i = 0; i < flexTable.getRowCount(); i++) {
-            String existingLabel = flexTable.getText(i, 0);
-            String existingValue = flexTable.getText(i, 1);
-            if(existingLabel.equalsIgnoreCase(postCoordinationLabel) && existingValue.equalsIgnoreCase(postCoordinationValue)) {
-                flexTable.removeRow(i);
+        if(!readOnly) {
+            for(int i = 0; i < flexTable.getRowCount(); i++) {
+                String existingLabel = flexTable.getText(i, 0);
+                String existingValue = flexTable.getText(i, 1);
+                if(existingLabel.equalsIgnoreCase(postCoordinationLabel) && existingValue.equalsIgnoreCase(postCoordinationValue)) {
+                    flexTable.removeRow(i);
+                }
             }
-        }
 
-        this.tableRows = this.tableRows.stream()
-                .filter(r -> !r.getPostCoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
-                .collect(Collectors.toList());
+            this.tableRows = this.tableRows.stream()
+                    .filter(r -> !r.getPostCoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
+                    .collect(Collectors.toList());
+        }
     }
 
     static class DropdownElement {

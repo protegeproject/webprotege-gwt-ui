@@ -10,13 +10,16 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 
 import java.util.List;
 
-import static edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionAction.CHANNEL;
+import static edu.stanford.bmir.protege.web.shared.logicaldefinition.SaveLogicalDefinitionAction.CHANNEL;
 
 
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName(CHANNEL)
 public abstract class SaveLogicalDefinitionAction implements Action<SaveLogicalDefinitionResult> {
+
+    public static final String CHANNEL = "icatx.logicalDefinitions.UpdateLogicalDefinition";
+
 
     @JsonCreator
     public static SaveLogicalDefinitionAction create(@JsonProperty("logicalDefinitions") List<LogicalDefinition> logicalDefinitions,

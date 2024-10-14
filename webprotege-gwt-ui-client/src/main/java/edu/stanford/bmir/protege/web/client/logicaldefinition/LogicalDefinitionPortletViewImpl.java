@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionAction;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionResult;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.SaveLogicalDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -57,9 +58,6 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private List<OWLEntityData> ancestorsList = new ArrayList<>();
 
-
-    private OWLClass superClass;
-
     private List<PostCoordinationTableAxisLabel> labels;
 
     private WhoficCustomScalesValues superclassScalesValue;
@@ -97,14 +95,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         });
 
         this.ancestorDropdown.addChangeHandler((changeEvent) -> {
-            dispatchServiceManager.execute(GetEntityCustomScalesAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
-                this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
-            });
-            dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
-
-                this.superclassSpecification = postcoordination.getPostCoordinationSpecification();
-                populateAvailableAxisValues();
-            });
+            fetchDropdownData();
         });
 
         switchToReadOnly();
@@ -114,7 +105,16 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         this.saveValuesButton.addClickHandler(event -> saveValues());
     }
 
+    private void fetchDropdownData() {
+        dispatchServiceManager.execute(GetEntityCustomScalesAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
+            this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
+        });
+        dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
 
+            this.superclassSpecification = postcoordination.getPostCoordinationSpecification();
+            populateAvailableAxisValues();
+        });
+    }
 
 
     @Override
@@ -132,7 +132,6 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         this.projectId = projectId;
         this.superClassTable.resetTable();
         this.necessaryConditionsTable.resetTable();
-        this.superClass = null;
         switchToReadOnly();
 
 
@@ -146,36 +145,40 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 ancestorDropdown.addItem(ancestor.getBrowserText(), ancestor.getIri().toString());
             }
 
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
+            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), (config) -> {
                 this.labels = config.getLabels();
             });
 
         });
 
-        //populateWithExistingDefinition(owlEntity, projectId);
+        populateWithExistingDefinition(owlEntity, projectId);
 
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
-        dispatchServiceManager.execute(GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()), getEntityLogicalDefinitionResult -> {
-            LogicalDefinition definition = getEntityLogicalDefinitionResult.getLogicalDefinitions().get(0);
-            List<LogicalDefinitionTableRow> superClassTableRows = definition.getAxis2filler().stream()
-                    .map(LogicalDefinitionTableRow::new)
-                    .collect(Collectors.toList());
+        dispatchServiceManager.execute(GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()), (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
+            if(getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
+                LogicalDefinition definition = getEntityLogicalDefinitionResult.getLogicalDefinitions().get(0);
+                List<LogicalDefinitionTableRow> superClassTableRows = definition.getAxis2filler().stream()
+                        .map(LogicalDefinitionTableRow::new)
+                        .collect(Collectors.toList());
 
-            List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
-                    .map(LogicalDefinitionTableRow::new)
-                    .collect(Collectors.toList());
+                superClassTable.addExistingRows(superClassTableRows);
 
-            superClassTable.addExistingRows(superClassTableRows);
-            necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
-
-            superClass = definition.getLogicalDefinitionParent().getEntity();
-
-            for(int i = 0; i < ancestorDropdown.getItemCount(); i++){
-                if(definition.getLogicalDefinitionParent().getIri().toString().equalsIgnoreCase(ancestorDropdown.getValue(i))) {
-                    ancestorDropdown.setItemSelected(i, true);
+                for(int i = 0; i < ancestorDropdown.getItemCount(); i++){
+                    if(definition.getLogicalDefinitionParent().getIri().toString().equalsIgnoreCase(ancestorDropdown.getValue(i))) {
+                        ancestorDropdown.setItemSelected(i, true);
+                    }
                 }
+                fetchDropdownData();
+            }
+            if(getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
+
+                List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
+                        .map(LogicalDefinitionTableRow::new)
+                        .collect(Collectors.toList());
+
+                necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
             }
         });
     }

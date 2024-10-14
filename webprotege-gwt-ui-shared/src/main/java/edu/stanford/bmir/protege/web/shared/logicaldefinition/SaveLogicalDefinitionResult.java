@@ -6,7 +6,8 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import static edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionAction.CHANNEL;
+import static edu.stanford.bmir.protege.web.shared.logicaldefinition.SaveLogicalDefinitionAction.CHANNEL;
+
 
 @AutoValue
 @GwtCompatible(serializable = true)

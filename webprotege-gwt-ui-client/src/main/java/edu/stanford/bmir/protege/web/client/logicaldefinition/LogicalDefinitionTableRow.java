@@ -6,8 +6,6 @@ public class LogicalDefinitionTableRow {
 
     private String postCoordinationAxis;
     private String postCoordinationAxisLabel;
-
-
     private String postCoordinationValue;
 
     private String postCoordinationValueLabel;
