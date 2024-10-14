@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.client.change.combined;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -18,6 +16,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.event.UiHistoryChangedEvent.UI_HISTORY_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.CombinedChangesByEntity",
@@ -49,11 +48,22 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
                 ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+        eventBus.addProjectEventHandler(getProjectId(), UI_HISTORY_CHANGED, this::handleHistoryChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
         portletUi.setWidget(presenter.getView().asWidget());
         portletUi.setForbiddenMessage(FORBIDDEN_MESSAGE);
         setDisplaySelectedEntityNameAsSubtitle(true);
         updateDisplayForSelectedEntity();
+    }
+
+    private void handleHistoryChanged(UiHistoryChangedEvent uiHistoryChangedEvent) {
+        for (String entityIri : uiHistoryChangedEvent.getAfectedEntityIris()) {
+            if (getSelectionModel().getSelection().get().toStringID().equals(entityIri)) {
+                updateDisplayForSelectedEntity();
+                return;
+            }
+        }
+        ;
     }
 
     private void handleProjectChanged(ProjectChangedEvent event) {

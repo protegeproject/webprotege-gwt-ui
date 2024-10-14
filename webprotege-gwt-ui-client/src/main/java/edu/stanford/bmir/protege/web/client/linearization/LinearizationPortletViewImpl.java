@@ -320,7 +320,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
                         this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
 
-                        this.linearizationChangeEventHandler.handleLinearizationChangeEvent();
                     }
             );
         }
