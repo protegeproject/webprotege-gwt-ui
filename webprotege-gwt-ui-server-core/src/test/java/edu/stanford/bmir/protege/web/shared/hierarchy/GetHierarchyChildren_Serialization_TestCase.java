@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -14,6 +16,7 @@ import java.io.IOException;
 
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Matthew Horridge
@@ -26,7 +29,7 @@ public class GetHierarchyChildren_Serialization_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = GetHierarchyChildrenAction.create(ProjectId.getNil(),
                                                        mockOWLClass(),
-                                                       HierarchyId.CLASS_HIERARCHY,
+                ClassHierarchyDescriptor.get(),
                                                        PageRequest.requestFirstPage());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -90,18 +92,26 @@ public class EntityHierarchyContextMenuPresenter {
 
     private final InputBox inputBox;
 
+    private DispatchServiceManager dispatch;
+    private ProjectId projectId;
+
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
+                                               @Nonnull ProjectId projectId,
+                                               @Provided @Nonnull DispatchServiceManager dispatch,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
                                                @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
+                                               @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                @Provided @Nonnull InputBox inputBox) {
+        this.projectId = projectId;
+        this.dispatch = dispatch;
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
         this.moveToParentUiAction = checkNotNull(moveToParentUiAction);
         this.editAnnotationsUiAction = checkNotNull(editAnnotationsUiAction);
@@ -158,8 +168,8 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
 
         // This needs tidying somehow.  We don't do this for other actions.
-        moveToParentUiAction.setHierarchyId(model.getHierarchyId());
-        mergeEntitiesAction.setHierarchyId(model.getHierarchyId());
+        moveToParentUiAction.setHierarchyDescriptor(model.getHierarchyDescriptor());
+        mergeEntitiesAction.setHierarchyDescriptor(model.getHierarchyDescriptor());
         Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = () ->
                 treeWidget.getSelectedNodes().stream()
                         .map(TreeNode::getUserObject)
@@ -169,6 +179,7 @@ public class EntityHierarchyContextMenuPresenter {
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
+
         updateActionStates();
     }
 
@@ -200,6 +211,9 @@ public class EntityHierarchyContextMenuPresenter {
         }
     }
 
+    private void configureHierarchy() {
+
+    }
 
     private void pruneSelectedNodesToRoot() {
         treeWidget.pruneToSelectedNodes();
