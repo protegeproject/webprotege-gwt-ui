@@ -1,0 +1,114 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .mainContent {
+            display: flex;
+            flex-direction: column;
+        }
+        .card {
+            border-radius: 5px;
+            overflow: auto;
+            -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+            box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+            margin: 15px;
+            border-collapse: collapse;
+            padding: 10px;
+            position: relative!important;
+            height: auto!important;
+
+        }
+        .cardLabel {
+            font-weight: bold;
+            padding-bottom: 5px;
+            font-size: 17px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+        .rowWrapper {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .label {
+            font-size: 13px;
+            white-space: nowrap;
+            margin-right: 3vw;
+            text-align: center;
+        }
+
+        .submitButtonWrappers {
+            flex-direction: row;
+            align-content: end;
+            display: flex;
+            justify-content: end;
+            width: 97%;
+            margin:15px;
+            padding: 3px;
+        }
+        .editValuesButton {
+            background-color: #186cd4;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .editValuesButton:hover {
+            background-color: #1252a1;
+        }
+        .cancelButton {
+            background-color: #F7F7F7;
+            border: none;
+            color: var(--primary--color);
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .cancelButton:hover {
+            background-color: #E3E3E3;
+        }
+
+        .addDefinitionsButton {
+            width: 25px;
+            height: 25px;
+        }
+    </ui:style>
+    <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
+        <g:HTMLPanel addStyleNames="{style.card}">
+            <div class="{style.cardLabel}">
+                Logical definitions
+                <g:Button addStyleNames="{style.addDefinitionsButton}" ui:field="addDefinitionButton"/>
+            </div>
+
+            <g:HTMLPanel ui:field="definitions">
+
+            </g:HTMLPanel>
+
+        </g:HTMLPanel>
+
+        <g:HTMLPanel ui:field="necessaryConditionsContainer"  addStyleNames="{style.card}">
+            <div class="{style.cardLabel}">
+                Necessary conditions
+            </div>
+        </g:HTMLPanel>
+
+        <div class="{style.submitButtonWrappers}">
+            <g:Button ui:field="editValuesButton" addStyleNames="{style.editValuesButton}">Edit values</g:Button>
+            <g:Button ui:field="saveValuesButton" addStyleNames="{style.editValuesButton}">Save values</g:Button>
+            <g:Button ui:field="cancelButton" addStyleNames="{style.cancelButton}">Cancel</g:Button>
+        </div>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

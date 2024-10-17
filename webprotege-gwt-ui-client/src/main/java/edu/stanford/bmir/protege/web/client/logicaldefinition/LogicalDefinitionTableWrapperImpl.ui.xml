@@ -1,0 +1,48 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .card {
+            margin: 15px;
+            border-bottom: 2px solid #f2f2f2;
+            padding-bottom: 15px;
+        }
+        .rowWrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .superclassWrapper {
+            display: flex;
+            width: 40%;
+        }
+        .label {
+            font-size: 13px;
+            white-space: nowrap;
+            margin-right: 3vw;
+            text-align: center;
+            align-content: center;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel ui:field="paneContainer"  addStyleNames="{style.card}">
+        <div class="{style.rowWrapper}">
+            <div class="{style.superclassWrapper}">
+                <div class="{style.label}">
+                    Logical definition superclass :
+                </div>
+
+                <g:HTMLPanel ui:field="ancestorWrapper">
+                    <g:ListBox ui:field="ancestorDropdown"/>
+                </g:HTMLPanel>
+            </div>
+
+
+            <g:Button ui:field="deleteTableWrapper"/>
+
+        </div>
+
+    </g:HTMLPanel>
+
+</ui:UiBinder>

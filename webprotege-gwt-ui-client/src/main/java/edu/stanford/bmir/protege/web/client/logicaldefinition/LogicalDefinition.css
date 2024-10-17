@@ -1,0 +1,87 @@
+.superClassTable {
+    overflow: hidden;
+    margin-top: 15px;
+    border-collapse: collapse;
+    padding: 3px;
+    width: 50%;
+}
+
+.tableText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.definitionsEmptyState {
+    height: 300px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.tableText > div {
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    text-align: left;
+    max-width: 350px;
+    margin: 8px;
+
+}
+
+.logicalDefinitionDropdown {
+    background-color: white;
+    margin: 5px;
+    padding: 3px;
+}
+
+.superClassTableHeader .tableText > div {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.customRowStyle {
+
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.removeButtonCell {
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
+
+.removeButtonCell > div {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+
+.superClassTableHeader {
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #186cd4;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+}
+
+.dropDownMandatory{
+    color: red;
+    margin: 2px;
+    font-size: bold;
+}
+
+.dropDownAllowed {
+    color: green;
+    margin: 2px;
+    font-size: bold;
+}
+
+.dropDownNotSet{
+    margin: 2px;
+}
+
+.superClassName {
+    font-size: 12px;
+    font-weight: bold;
+}

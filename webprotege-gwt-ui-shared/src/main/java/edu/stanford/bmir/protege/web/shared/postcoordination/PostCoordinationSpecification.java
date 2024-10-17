@@ -58,4 +58,16 @@ public class PostCoordinationSpecification implements Serializable, IsSerializab
     public List<String> getRequiredAxes() {
         return requiredAxes;
     }
+
+
+    @Override
+    public String toString() {
+        return "PostCoordinationSpecification{" +
+                "linearizationView='" + linearizationView + '\'' +
+                ", allowedAxes=" + allowedAxes +
+                ", defaultAxes=" + defaultAxes +
+                ", notAllowedAxes=" + notAllowedAxes +
+                ", requiredAxes=" + requiredAxes +
+                '}';
+    }
 }
