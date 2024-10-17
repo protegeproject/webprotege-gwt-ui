@@ -67,7 +67,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     LinearizationTableResourceBundle.LinearizationCss style;
 
-    private LinearizationParentModal linearizationParentModal;
     private DispatchServiceManager dispatch;
 
     private LinearizationCommentsModal commentsModal;
@@ -98,8 +97,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     @Inject
     public LinearizationPortletViewImpl(DispatchServiceManager dispatch,
-                                        LinearizationCommentsModal commentsModal,
-                                        LinearizationParentModal parentModal) {
+                                        LinearizationCommentsModal commentsModal) {
         this.suppressOthersSpecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
         this.suppressUnspecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
         LinearizationTableResourceBundle.INSTANCE.style().ensureInjected();
@@ -108,7 +106,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         editValuesButton.addClickHandler(event -> setEditable());
         cancelButton.addClickHandler(event -> setReadOnly());
         this.commentsModal = commentsModal;
-        this.linearizationParentModal = parentModal;
 
         saveValuesButton.addClickHandler(event -> saveValues());
         saveValuesButton.setVisible(false);
@@ -342,7 +339,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             LinearizationTableRow row = new LinearizationTableRow(linearizationDefinitonMap,
                     linearizationSpecification,
                     parentsMap,
-                    linearizationParentModal,
                     commentsModal,
                     entityIri,
                     projectId,
