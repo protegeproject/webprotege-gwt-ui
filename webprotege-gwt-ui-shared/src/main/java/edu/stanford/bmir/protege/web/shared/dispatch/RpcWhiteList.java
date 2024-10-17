@@ -327,10 +327,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
 
-    GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
-
-    GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
-
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
 
     GetDataPropertyFrameResult _GetDataPropertyFrameResult;
@@ -941,34 +937,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
-
-    TagData _TagData;
-
-    FormDataByFormId _FormDataByFormId;
-
-    InternalServerError _InternalServerError;
-
-    UpdateClassFrameResult _UpdateClassFrameResult;
-
-    UpdateObjectPropertyFrameResult _UpdateObjectPropertyFrameResult;
-
-    UpdateDataPropertyFrameResult _UpdateDataPropertyFrameResult;
-
-    UpdateAnnotationPropertyFrameResult _UpdateAnnotationPropertyFrameResult;
-
-    UpdateNamedIndividualFrameResult _UpdateNamedIndividualFrameResult;
-
-    DocumentId _DocumentId;
-
-    DropType _DropType;
-
-    EntityCrudKit _EntityCrudKit;
-
-    GetUserInfoResult _GetUserInfoResult;
-
     AppEnvVariables _AppEnvVariables;
 
-    GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
     AddNamedHierarchyAction _AddNamedHierarchyAction;
     AddNamedHierarchyResult _AddNamedHierarchyResult;
 

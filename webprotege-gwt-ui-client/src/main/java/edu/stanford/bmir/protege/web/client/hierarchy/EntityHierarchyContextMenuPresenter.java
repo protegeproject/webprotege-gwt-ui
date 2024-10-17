@@ -114,8 +114,7 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                               @Provided @Nonnull InputBox inputBox,
-                                               @Provided @Nonnull EditParentsUiAction editParentsUiAction) {
+                                               @Provided @Nonnull EditParentsUiAction editParentsUiAction,
                                                @Provided @Nonnull InputBox inputBox) {
         this.projectId = projectId;
         this.dispatch = dispatch;
@@ -210,7 +209,7 @@ public class EntityHierarchyContextMenuPresenter {
         showDirectLinkAction.setEnabled(selIsSingleton);
         editParentsUiAction.setEnabled(selIsSingleton);
 
-        boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyId());
+        boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyDescriptor());
         editParentsUiAction.setVisible(isClassHierarchy);
         moveToParentUiAction.setEnabled(isClassHierarchy);
         moveToParentUiAction.setVisible(isClassHierarchy);
@@ -233,6 +232,10 @@ public class EntityHierarchyContextMenuPresenter {
             permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
+    }
+
+    private boolean isClassHierarchyType(HierarchyDescriptor hierarchyDescriptor) {
+        return hierarchyDescriptor instanceof ClassHierarchyDescriptor;
     }
 
     private void configureHierarchy() {

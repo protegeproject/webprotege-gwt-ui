@@ -43,13 +43,7 @@ import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameR
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchySiblingsResult;
-import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeResult;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
