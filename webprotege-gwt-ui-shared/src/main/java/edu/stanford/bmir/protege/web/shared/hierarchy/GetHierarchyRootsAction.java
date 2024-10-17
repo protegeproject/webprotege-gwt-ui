@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -19,19 +20,19 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
 
     private ProjectId projectId;
 
-    private HierarchyId hierarchyId;
+    private HierarchyDescriptor hierarchyDescriptor;
 
-    private GetHierarchyRootsAction(@Nonnull ProjectId projectId, @Nonnull HierarchyId hierarchyId) {
+    private GetHierarchyRootsAction(@Nonnull ProjectId projectId, @Nonnull HierarchyDescriptor hierarchyDescriptor) {
         this.projectId = checkNotNull(projectId);
-        this.hierarchyId = checkNotNull(hierarchyId);
+        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
     }
 
     @GwtSerializationConstructor
     private GetHierarchyRootsAction() {
     }
 
-    public static GetHierarchyRootsAction create(@Nonnull ProjectId projectId, @Nonnull HierarchyId hierarchyId) {
-        return new GetHierarchyRootsAction(projectId, hierarchyId);
+    public static GetHierarchyRootsAction create(@Nonnull ProjectId projectId, @Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        return new GetHierarchyRootsAction(projectId, hierarchyDescriptor);
     }
 
     @Nonnull
@@ -41,13 +42,13 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
     }
 
     @Nonnull
-    public HierarchyId getHierarchyId() {
-        return hierarchyId;
+    public HierarchyDescriptor getHierarchyDescriptor() {
+        return hierarchyDescriptor;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(hierarchyId, projectId);
+        return Objects.hashCode(hierarchyDescriptor, projectId);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
             return false;
         }
         GetHierarchyRootsAction other = (GetHierarchyRootsAction) obj;
-        return this.hierarchyId.equals(other.hierarchyId)
+        return this.hierarchyDescriptor.equals(other.hierarchyDescriptor)
                 && this.projectId.equals(other.projectId);
     }
 
@@ -68,7 +69,7 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
     public String toString() {
         return toStringHelper("GetHierarchyRootsAction")
                           .addValue(projectId)
-                          .addValue(hierarchyId)
+                          .addValue(hierarchyDescriptor)
                           .toString();
     }
 }

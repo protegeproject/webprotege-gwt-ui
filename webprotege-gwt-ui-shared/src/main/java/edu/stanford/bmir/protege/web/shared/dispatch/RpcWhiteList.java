@@ -4,6 +4,11 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -195,7 +200,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     DiffElement<String, String> _DiffElement;
 
     DisplayNameSettings _DisplayNameSettings;
-
+    DocumentId _DocumentId;
+    DropType _DropType;
     EdgeCriteria _EdgeCriteria;
 
     EditAnnotationsAction _EditAnnotationsAction;
@@ -205,7 +211,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     EditCommentAction _EditCommentAction;
 
     EditCommentResult _EditCommentResult;
-
+    EntityCrudKit _EntityCrudKit;
     EntityCrudKitPrefixSettings _EntityCrudKitPrefixSettings;
 
     EntityCrudKitSettings _EntityCrudKitSettings;
@@ -253,7 +259,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     FormControlDescriptor _FormControlDescriptor;
 
     FormControlDescriptorDto _FormControlDescriptorDto;
-
+    FormDataByFormId _FormDataByFormId;
     FormDataDto _FormDataDto;
 
     FormDescriptor _FormDescriptor;
@@ -291,7 +297,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     FormRegionOrderingDirection _FormRegionOrderingDirection;
 
     FormSubjectDto _FormSubjectDto;
-
+    GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
     GetAllOntologiesAction _GetAllOntologiesAction;
 
     GetAllOntologiesResult _GetAllOntologiesResult;
@@ -303,7 +309,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetApplicationSettingsAction _GetApplicationSettingsAction;
 
     GetApplicationSettingsResult _GetApplicationSettingsResult;
-
+    GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
+    GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
     GetAvailableProjectsAction _GetAvailableProjectsAction;
 
     GetAvailableProjectsResult _GetAvailableProjectsResult;
@@ -551,7 +558,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetUserIdCompletionsAction _GetUserIdCompletionsAction;
 
     GetUserIdCompletionsResult _GetUserIdCompletionsResult;
-
+    GetUserInfoResult _GetUserInfoResult;
     GetUserProjectEntityGraphCriteriaAction _GetUserProjectEntityGraphCriteriaAction;
 
     GetUserProjectEntityGraphCriteriaResult _GetUserProjectEntityGraphCriteriaResult;
@@ -585,7 +592,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GridRowData _GridRowData;
 
     GridRowDataDto _GridRowDataDto;
-
+    HierarchyDescriptor _HierarchyDescriptor;
     HierarchyFilterType _HierarchyFilterType;
 
     HierarchyPositionCriteria _HierarchyPositionCriteria;
@@ -599,7 +606,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ImmutableSetMultimap _ImmutableSetMultimap;
 
     InstanceRetrievalMode _InstanceRetrievalMode;
-
+    InternalServerError _InternalServerError;
     IsAEdge _IsAEdge;
 
     LangTag _LangTag;
@@ -905,51 +912,34 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SubFormControlDescriptor _SubFormControlDescriptor;
 
     SubmitFileResult _SubmitFileResult;
-
     Tag _Tag;
-
+    TagData _TagData;
     TerminalNode _TerminalNode;
-
     TextControlDescriptor _TextControlDescriptor;
-
     UpdateAnnotationPropertyFrameAction _UpdateAnnotationPropertyFrameAction;
-
+    UpdateAnnotationPropertyFrameResult _UpdateAnnotationPropertyFrameResult;
     UpdateClassFrameAction _UpdateClassFrameAction;
-
+    UpdateClassFrameResult _UpdateClassFrameResult;
     UpdateDataPropertyFrameAction _UpdateDataPropertyFrameAction;
-
+    UpdateDataPropertyFrameResult _UpdateDataPropertyFrameResult;
     UpdateEntityTagsAction _UpdateEntityTagsAction;
-
     UpdateEntityTagsResult _UpdateEntityTagsResult;
-
     UpdateFormDescriptorAction _UpdateFormDescriptorAction;
-
     UpdateFormDescriptorResult _UpdateFormDescriptorResult;
-
     UpdateFrameAction _UpdateFrameAction;
-
     UpdateNamedIndividualFrameAction _UpdateNamedIndividualFrameAction;
-
+    UpdateNamedIndividualFrameResult _UpdateNamedIndividualFrameResult;
     UpdateObjectAction _UpdateObjectAction;
-
     UpdateObjectPropertyFrameAction _UpdateObjectPropertyFrameAction;
-
+    UpdateObjectPropertyFrameResult _UpdateObjectPropertyFrameResult;
     UpdateObjectResult _UpdateObjectResult;
-
     UuidFormat _UuidFormat;
-
     WebProtegeEvent _WebProtegeEvent;
-
     WebhookSetting _WebhookSetting;
-
     WebhookSettings _WebhookSettings;
-
     WhiteSpaceTreatment _WhiteSpaceTreatment;
-
     OwlBinding get_OwlBinding;
-
     PlainPropertyValue get_PlainPropertyValue;
-
     PrimitiveFormControlData primitiveFormControlData;
 
     TagData _TagData;
@@ -979,6 +969,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     AppEnvVariables _AppEnvVariables;
 
     GeneratedAnnotationsSettings _GeneratedAnnotationsSettings;
+    AddNamedHierarchyAction _AddNamedHierarchyAction;
+    AddNamedHierarchyResult _AddNamedHierarchyResult;
 
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
     ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;

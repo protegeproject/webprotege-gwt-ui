@@ -1,6 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,17 +21,17 @@ public class GetHierarchyRootsAction_TestCase {
     @Mock
     private ProjectId projectId;
     @Mock
-    private HierarchyId hierarchyId;
+    private HierarchyDescriptor hierarchyDescriptor;
 
     @Before
     public void setUp() {
-        action = GetHierarchyRootsAction.create(projectId, hierarchyId);
+        action = GetHierarchyRootsAction.create(projectId, hierarchyDescriptor);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        GetHierarchyRootsAction.create(null, hierarchyId);
+        GetHierarchyRootsAction.create(null, hierarchyDescriptor);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class GetHierarchyRootsAction_TestCase {
 
     @Test
     public void shouldReturnSupplied_hierarchyId() {
-        assertThat(action.getHierarchyId(), is(this.hierarchyId));
+        assertThat(action.getHierarchyDescriptor(), is(this.hierarchyDescriptor));
     }
 
     @Test
@@ -61,22 +63,22 @@ public class GetHierarchyRootsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(GetHierarchyRootsAction.create(projectId, hierarchyId)));
+        assertThat(action, is(GetHierarchyRootsAction.create(projectId, hierarchyDescriptor)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(not(GetHierarchyRootsAction.create(mock(ProjectId.class), hierarchyId))));
+        assertThat(action, is(not(GetHierarchyRootsAction.create(mock(ProjectId.class), hierarchyDescriptor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_hierarchyId() {
-        assertThat(action, is(not(GetHierarchyRootsAction.create(projectId, mock(HierarchyId.class)))));
+        assertThat(action, is(not(GetHierarchyRootsAction.create(projectId, mock(ClassHierarchyDescriptor.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(GetHierarchyRootsAction.create(projectId, hierarchyId).hashCode()));
+        assertThat(action.hashCode(), is(GetHierarchyRootsAction.create(projectId, hierarchyDescriptor).hashCode()));
     }
 
     @Test

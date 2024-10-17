@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.*;
@@ -45,18 +46,18 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     }
 
     @Nonnull
-    private Optional<HierarchyId> hierarchyId = Optional.empty();
+    private Optional<HierarchyDescriptor> hierarchyDescriptor = Optional.empty();
 
 
-    public void start(@Nonnull HierarchyId hierarchyId) {
-        this.hierarchyId = Optional.of(hierarchyId);
+    public void start(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        this.hierarchyDescriptor = Optional.of(hierarchyDescriptor);
     }
 
     @Override
     public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
                                   @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
-        if (!hierarchyId.isPresent()) {
+        if(!hierarchyDescriptor.isPresent()) {
             return false;
         }
         if (nodePath.isEmpty()) {
@@ -78,7 +79,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if (!hierarchyId.isPresent()) {
+        if(!hierarchyDescriptor.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -95,38 +96,19 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-
-        YesNoHandler yesNoHandler = new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
-                                hierarchyId.get(),
-                                nodePath,
-                                targetPath,
-                                dropType),
-                        moveResult -> {
-                            if (moveResult.isMoved()) {
-                                dropEndHandler.handleDropComplete();
-                            } else {
-                                if (moveResult.isDestinationRetiredClass()) {
-                                    messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
-                                }
-                                dropEndHandler.handleDropCancelled();
-                            }
-                        }
-                );
-            }
-
-            @Override
-            public void handleNo() {
-                dropEndHandler.handleDropCancelled();
-            }
-        };
-
-        messageBox.showYesNoConfirmBox("Move entities?",
-                "You are about to move selected entities to new parent. Are you sure?",
-                yesNoHandler
-        );
+        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+                                                                      hierarchyDescriptor.get(),
+                                                                      nodePath,
+                                                                      targetPath,
+                                                                      dropType),
+                                       moveResult -> {
+                                            if(moveResult.isMoved()) {
+                                                dropEndHandler.handleDropComplete();
+                                            }
+                                            else {
+                                                dropEndHandler.handleDropCancelled();
+                                            }
+                                       });
     }
 
     @Override
