@@ -50,8 +50,9 @@ public class LogicalDefinitionTable implements IsWidget {
 
 
     public void addExistingRows(List<LogicalDefinitionTableRow> rows) {
-        this.tableRows = rows;
+        this.tableRows = new ArrayList<>();
         for(LogicalDefinitionTableRow row: rows) {
+            this.tableRows.add(row);
             addNewRowToTable(row);
         }
     }
