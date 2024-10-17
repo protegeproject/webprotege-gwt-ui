@@ -8,7 +8,7 @@
         }
         .card {
             border-radius: 5px;
-            overflow: hidden;
+            overflow: auto;
             -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
             box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
             margin: 15px;
@@ -23,6 +23,8 @@
             padding-bottom: 5px;
             font-size: 17px;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
         }
         .rowWrapper {
             display: flex;
@@ -57,10 +59,10 @@
             cursor: pointer;
             border-radius: 8px;
         }
+
         .editValuesButton:hover {
             background-color: #1252a1;
         }
-
         .cancelButton {
             background-color: #F7F7F7;
             border: none;
@@ -77,19 +79,22 @@
         .cancelButton:hover {
             background-color: #E3E3E3;
         }
+
+        .addDefinitionsButton {
+            width: 25px;
+            height: 25px;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
-        <g:HTMLPanel ui:field="superClassContainer"  addStyleNames="{style.card}">
+        <g:HTMLPanel addStyleNames="{style.card}">
             <div class="{style.cardLabel}">
                 Logical definitions
+                <g:Button addStyleNames="{style.addDefinitionsButton}" ui:field="addDefinitionButton"/>
             </div>
 
-            <div class="{style.rowWrapper}">
-                <div class="{style.label}">
-                    Logical definition superclass :
-                </div>
-            <g:ListBox ui:field="ancestorDropdown"/>
-            </div>
+            <g:HTMLPanel ui:field="definitions">
+
+            </g:HTMLPanel>
 
         </g:HTMLPanel>
 

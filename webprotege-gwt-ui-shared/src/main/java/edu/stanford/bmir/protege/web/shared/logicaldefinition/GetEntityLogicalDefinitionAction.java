@@ -17,7 +17,7 @@ import static edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLo
 @JsonTypeName(CHANNEL)
 public abstract class GetEntityLogicalDefinitionAction implements Action<GetEntityLogicalDefinitionResult> {
 
-    public static final String CHANNEL = "icatx.logicalDefinitions.LogicalDefinition";
+    public static final String CHANNEL = "icatx.logicalDefinitions.GetLogicalDefinitions";
 
 
 

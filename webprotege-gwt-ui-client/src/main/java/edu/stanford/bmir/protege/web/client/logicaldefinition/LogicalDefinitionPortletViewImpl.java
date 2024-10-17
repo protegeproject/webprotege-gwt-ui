@@ -1,30 +1,26 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
-import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionAction;
-import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionResult;
-import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
-import edu.stanford.bmir.protege.web.shared.logicaldefinition.SaveLogicalDefinitionAction;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Logger;
@@ -38,12 +34,13 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     HTMLPanel paneContainer;
 
     @UiField
-    HTMLPanel superClassContainer;
+    Button addDefinitionButton;
+
+    @UiField
+    HTMLPanel definitions;
 
     @UiField
     HTMLPanel necessaryConditionsContainer;
-    @UiField
-    ListBox ancestorDropdown;
 
     @UiField Button editValuesButton;
     @UiField Button cancelButton;
@@ -53,6 +50,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private static final LogicalDefinitionPortletViewImpl.LogicalDefinitionPortletViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionPortletViewImpl.LogicalDefinitionPortletViewImplUiBinder.class);
 
     private final DispatchServiceManager dispatchServiceManager;
+
+    private final MessageBox messageBox;
 
     private ProjectId projectId;
 
@@ -67,26 +66,30 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private List<PostcoordinationAxisToGenericScale> axisToGenericScales = new ArrayList<>();
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
-    private boolean readOnly = true;
+    private List<LogicalDefinitionTableWrapper> tableWrappers = new ArrayList<>();
+    WebProtegeClientBundle BUNDLE = GWT.create(WebProtegeClientBundle.class);
 
+    private LogicalConditions pristineData;
 
-    private final LogicalDefinitionTable superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
-            "Value",
-            this::initializeTable));
+    private UuidV4Provider uuidV4Provider;
 
+    private OWLEntity currentEntity;
 
     private final LogicalDefinitionTable necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
             "Value",
             this::initializeTable));
 
     @Inject
-    public LogicalDefinitionPortletViewImpl(DispatchServiceManager dispatchServiceManager) {
+    public LogicalDefinitionPortletViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
+                                            @Nonnull MessageBox messageBox,
+                                            @Nonnull UuidV4Provider uuidV4Provider) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.messageBox = messageBox;
+        this.uuidV4Provider = uuidV4Provider;
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
-        initWidget(ourUiBinder.createAndBindUi(this));
 
-        superClassContainer.add(superClassTable);
+        initWidget(ourUiBinder.createAndBindUi(this));
 
         necessaryConditionsContainer.add(necessaryConditionsTable);
 
@@ -94,26 +97,26 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
         });
 
-        this.ancestorDropdown.addChangeHandler((changeEvent) -> {
-            fetchDropdownData();
-        });
+        this.addDefinitionButton.getElement().setInnerHTML(style.getPlusSvg());
+
+        this.addDefinitionButton.addClickHandler((event -> {
+            if(tableWrappers.isEmpty()) {
+                definitions.getElement().getStyle().setBackgroundImage(null);
+            }
+            LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager, projectId)
+                    .withLabels(this.labels)
+                    .withAncestorsList(this.ancestorsList)
+                    .withRemoveHandler((this::removeWrapper))
+                    .asNewTable();
+
+            this.tableWrappers.add(newTable);
+            this.definitions.add(newTable.asWidget());
+        }));
 
         switchToReadOnly();
-
-        ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
         this.editValuesButton.addClickHandler(event -> switchToEditable());
         this.saveValuesButton.addClickHandler(event -> saveValues());
-    }
-
-    private void fetchDropdownData() {
-        dispatchServiceManager.execute(GetEntityCustomScalesAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
-            this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
-        });
-        dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(ancestorDropdown.getSelectedValue(), projectId), postcoordination -> {
-
-            this.superclassSpecification = postcoordination.getPostCoordinationSpecification();
-            populateAvailableAxisValues();
-        });
+        displayPlaceholder();
     }
 
 
@@ -128,49 +131,56 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     @Override
     public void setEntity(OWLEntity owlEntity, ProjectId projectId) {
-        this.ancestorDropdown.clear();
         this.projectId = projectId;
-        this.superClassTable.resetTable();
         this.necessaryConditionsTable.resetTable();
-        switchToReadOnly();
-
-
+        this.tableWrappers = new ArrayList<>();
+        this.definitions.clear();
+        this.currentEntity = owlEntity;
+        dispatchServiceManager.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), projectId), postcoordination -> {
+            this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
+        });
 
         dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = new ArrayList<>(result);
 
-            for(OWLEntityData ancestor: ancestorsList) {
-                ancestorDropdown.addItem(ancestor.getBrowserText(), ancestor.getIri().toString());
-            }
-
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), (config) -> {
+            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
                 this.labels = config.getLabels();
+                populateWithExistingDefinition(owlEntity, projectId);
+                populateAvailableAxisValues(owlEntity);
             });
-
         });
 
-        populateWithExistingDefinition(owlEntity, projectId);
-
+        switchToReadOnly();
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
         dispatchServiceManager.execute(GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()), (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
+            this.pristineData = LogicalConditions.create(getEntityLogicalDefinitionResult.getLogicalDefinitions(), getEntityLogicalDefinitionResult.getNecessaryConditions());
             if(getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
-                LogicalDefinition definition = getEntityLogicalDefinitionResult.getLogicalDefinitions().get(0);
-                List<LogicalDefinitionTableRow> superClassTableRows = definition.getAxis2filler().stream()
-                        .map(LogicalDefinitionTableRow::new)
-                        .collect(Collectors.toList());
+                definitions.getElement().getStyle().setBackgroundImage(null);
 
-                superClassTable.addExistingRows(superClassTableRows);
+                for(LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
+                    List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
+                            .map(LogicalDefinitionTableRow::new)
+                            .collect(Collectors.toList());
 
-                for(int i = 0; i < ancestorDropdown.getItemCount(); i++){
-                    if(definition.getLogicalDefinitionParent().getIri().toString().equalsIgnoreCase(ancestorDropdown.getValue(i))) {
-                        ancestorDropdown.setItemSelected(i, true);
-                    }
+                    LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager, projectId)
+                            .withLabels(this.labels)
+                            .withAncestorsList(this.ancestorsList)
+                            .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
+                            .withRemoveHandler((this::removeWrapper))
+                            .asExistingTable();
+
+                    this.tableWrappers.add(newTable);
+                    this.definitions.add(newTable.asWidget());
+
+                    newTable.addExistingRows(superClassTableRows);
                 }
-                fetchDropdownData();
+
+            } else {
+                displayPlaceholder();
             }
             if(getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
 
@@ -181,6 +191,12 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
             }
         });
+    }
+
+    private void displayPlaceholder() {
+        String backgroundImageUrl = BUNDLE.noDataFound().getSafeUri().asString();
+        definitions.getElement().getStyle().setBackgroundImage("url(" + backgroundImageUrl + ")");
+        definitions.getElement().addClassName(style.definitionsEmptyState());
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
@@ -205,55 +221,67 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         table.setAvailableValues(map);
     }
 
-    private void populateAvailableAxisValues() {
-        Optional<PostCoordinationSpecification> mmsSpec = this.superclassSpecification.getPostCoordinationSpecifications()
-                .stream().filter(spec -> spec.getLinearizationView().equalsIgnoreCase("http://id.who.int/icd/release/11/mms"))
-                .findFirst();
+    private void populateAvailableAxisValues(OWLEntity owlEntity) {
+        dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), projectId), postcoordination -> {
 
+            this.superclassSpecification = postcoordination.getPostCoordinationSpecification();
+            if(this.superclassSpecification.getPostCoordinationSpecifications() != null) {
+                Optional<PostCoordinationSpecification> mmsSpec = this.superclassSpecification.getPostCoordinationSpecifications()
+                        .stream().filter( spec -> spec.getLinearizationView().equalsIgnoreCase("http://id.who.int/icd/release/11/mms"))
+                        .findFirst();
+                mmsSpec.ifPresent(postCoordinationSpecification -> necessaryConditionsTable.setAvailableAxisFromSpec(postCoordinationSpecification, this.labels));
+            }
+        });
 
-        Map<String, LogicalDefinitionTable.DropdownElement> availableAxis = new HashMap<>();
-        if(mmsSpec.isPresent()) {
-           mmsSpec.get().getRequiredAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
-                    .forEach((requiredAxis) -> {
-                        availableAxis.put(requiredAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(requiredAxis), style.dropDownMandatory()));
-                    });
-            mmsSpec.get().getAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
-                    .forEach((allowedAxis) -> {
-                        availableAxis.put(allowedAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(allowedAxis), style.dropDownAllowed()));
-                    });
-            mmsSpec.get().getNotAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1).compareTo(getAxisName(s2)))
-                    .forEach((notSetAxis) -> availableAxis.put(notSetAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(notSetAxis), style.dropDownNotSet()))) ;
-        }
-
-
-        
-        superClassTable.setAvailableAxis(availableAxis);
-        necessaryConditionsTable.setAvailableAxis(availableAxis);
     }
 
     private void saveValues() {
-        OWLEntityData selectedAncestor = ancestorsList.stream()
-                .filter(ancestor -> ancestor.getIri().toString().equalsIgnoreCase(ancestorDropdown.getSelectedValue()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("The selected value is not a known ancestor"));
-        LogicalDefinition definition = LogicalDefinition.create(OWLClassData.get(selectedAncestor.asEntity().get().asOWLClass(),
-                        ImmutableMap.of()),
-                this.superClassTable.getValues());
-        logger.info("ALEX request " + SaveLogicalDefinitionAction.create(Arrays.asList(definition), necessaryConditionsTable.getValues()));
-      /*  this.dispatchServiceManager.execute(SaveLogicalDefinitionAction.create(Arrays.asList(definition), necessaryConditionsTable.getValues()), response ->{
-            logger.info("ALEX response " + response);
-        });*/
+       List<LogicalDefinition> definitions = this.tableWrappers.stream().map(LogicalDefinitionTableWrapper::getLogicalDefinition).collect(Collectors.toList());
+
+       boolean hasDuplicates = verifyForDuplicates(definitions);
+
+       if(!hasDuplicates) {
+           this.dispatchServiceManager.execute(UpdateLogicalDefinitionAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                   projectId,
+                   this.currentEntity.asOWLClass(),
+                   this.pristineData,
+                   LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
+                   "Commit"
+           ), response ->{
+               logger.info("ALEX response " + response);
+           });
+       } else {
+           messageBox.showConfirmBox(MessageStyle.ALERT,
+                   "Logical definition have duplicated superClasses",
+                   "",
+                   DialogButton.NO,
+                   ()->{},
+                   DialogButton.YES,
+                   ()->{},
+                   DialogButton.YES);
+       }
+
     }
 
-    private OWLObjectPropertyData getAxisProperty(LogicalDefinitionTableRow row) {
-        return OWLObjectPropertyData.get(new OWLObjectPropertyImpl(IRI.create(row.getPostCoordinationAxis())), ImmutableList.of(), false);
+    private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {
+        Set<String> parentIRISet = new HashSet<>();
+        for (LogicalDefinition obj : definitions) {
+            String parentIRI = obj.getLogicalDefinitionParent().getIri().toString();
+            if (parentIRISet.contains(parentIRI)) {
+                return true;
+            } else {
+                parentIRISet.add(parentIRI);
+            }
+        }
+        return false;
     }
 
-    private String getAxisName(String axisIri) {
-        return this.labels.stream()
-                .filter(entry -> entry.getPostCoordinationAxis().equalsIgnoreCase(axisIri))
-                .map(PostCoordinationTableAxisLabel::getTableLabel).findFirst()
-                .orElse("");
+    private void removeWrapper(LogicalDefinitionTableWrapper wrapper) {
+        this.tableWrappers.remove(wrapper);
+        this.definitions.remove(wrapper.asWidget());
+        if(tableWrappers.isEmpty()){
+            displayPlaceholder();
+        }
     }
 
     private void populateAncestorsFromTree(AncestorClassHierarchy node, Set<OWLEntityData> accumulator) {
@@ -265,21 +293,24 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private void switchToReadOnly() {
         toggleButtons(true);
         this.necessaryConditionsTable.setReadOnly();
-        this.superClassTable.setReadOnly();
+        for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
+            wrapper.enableReadOnly();
+        }
     }
 
     private void toggleButtons(boolean readOnly){
-        this.readOnly = readOnly;
-        this.saveValuesButton.setVisible(!this.readOnly);
-        this.cancelButton.setVisible(!this.readOnly);
-        this.editValuesButton.setVisible(this.readOnly);
-        this.ancestorDropdown.setEnabled(!this.readOnly);
+        this.saveValuesButton.setVisible(!readOnly);
+        this.cancelButton.setVisible(!readOnly);
+        this.editValuesButton.setVisible(readOnly);
+        this.addDefinitionButton.setEnabled(!readOnly);
     }
 
     private void switchToEditable(){
         this.toggleButtons(false);
         this.necessaryConditionsTable.setEditable();
-        this.superClassTable.setEditable();
+        for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
+            wrapper.enableEditable();
+        }
     }
 
     interface LogicalDefinitionPortletViewImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionPortletViewImpl> {

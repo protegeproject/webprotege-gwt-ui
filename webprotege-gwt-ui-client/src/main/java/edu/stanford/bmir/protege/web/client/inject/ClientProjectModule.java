@@ -24,6 +24,8 @@ import edu.stanford.bmir.protege.web.client.linearization.*;
 import edu.stanford.bmir.protege.web.client.list.*;
 import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletView;
 import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionTableWrapper;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionTableWrapperImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
 import edu.stanford.bmir.protege.web.client.permissions.*;
@@ -229,6 +231,12 @@ public class ClientProjectModule {
     LogicalDefinitionPortletView provideLogicalDefinitionPortletView(LogicalDefinitionPortletViewImpl impl) {
         return impl;
     }
+
+/*    @Provides
+    LogicalDefinitionTableWrapper provideLogicalDefinitionTableWrapper(LogicalDefinitionTableWrapperImpl impl) {
+        return impl;
+    }*/
+
     @Provides
     LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
         return impl;

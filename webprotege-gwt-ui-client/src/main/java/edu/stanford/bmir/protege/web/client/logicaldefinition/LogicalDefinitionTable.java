@@ -5,11 +5,12 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.linearization.LinearizationTableRow;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import org.semanticweb.owlapi.model.IRI;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
@@ -72,7 +73,33 @@ public class LogicalDefinitionTable implements IsWidget {
         this.readOnly = true;
     }
 
-    public void setAvailableAxis(Map<String, DropdownElement> specification) {
+
+    public void setAvailableAxisFromSpec(PostCoordinationSpecification spec, List<PostCoordinationTableAxisLabel> labels) {
+        Map<String, LogicalDefinitionTable.DropdownElement> availableAxis = new HashMap<>();
+
+        spec.getRequiredAxes().stream().sorted(
+                (s1, s2) -> getAxisName(s1, labels).compareTo(getAxisName(s2, labels)))
+                .forEach((requiredAxis) -> {
+                    availableAxis.put(requiredAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(requiredAxis, labels), style.dropDownMandatory()));
+                });
+        spec.getAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1, labels).compareTo(getAxisName(s2, labels)))
+                .forEach((allowedAxis) -> {
+                    availableAxis.put(allowedAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(allowedAxis, labels), style.dropDownAllowed()));
+                });
+        spec.getNotAllowedAxes().stream().sorted((s1, s2) -> getAxisName(s1, labels).compareTo(getAxisName(s2, labels)))
+                .forEach((notSetAxis) -> availableAxis.put(notSetAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(notSetAxis, labels), style.dropDownNotSet()))) ;
+
+        setAvailableAxis(availableAxis);
+    }
+
+    private String getAxisName(String axisIri, List<PostCoordinationTableAxisLabel> labels) {
+        return labels.stream()
+                .filter(entry -> entry.getPostCoordinationAxis().equalsIgnoreCase(axisIri))
+                .map(PostCoordinationTableAxisLabel::getTableLabel).findFirst()
+                .orElse("");
+    }
+
+    private void setAvailableAxis(Map<String, DropdownElement> specification) {
         axisDropdown.clear();
         axisDropdown.addItem("", "");
 
@@ -196,6 +223,12 @@ public class LogicalDefinitionTable implements IsWidget {
 
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 2, style.removeButtonCell());
         flexTable.getRowFormatter().addStyleName(this.tableRows.size(), style.customRowStyle());
+        if(this.axisDropdown.getItemCount() > 0) {
+            this.axisDropdown.setItemSelected(0, true);
+        }
+        if(this.valuesDropdown.getItemCount() > 0){
+            this.valuesDropdown.setItemSelected(0, true);
+        }
     }
 
     private void removeSuperClassAxis(String postCoordinationLabel, String postCoordinationAxis, String postCoordinationValue) {

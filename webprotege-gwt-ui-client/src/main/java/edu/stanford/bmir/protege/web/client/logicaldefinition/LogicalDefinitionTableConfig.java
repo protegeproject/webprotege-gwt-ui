@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.logicaldefinition;
 public class LogicalDefinitionTableConfig {
     private final String axisLabel;
     private final String valueLabel;
-
     private final ValueChangeHandler changeHandler;
 
     public LogicalDefinitionTableConfig(String axisLabel, String valueLabel, ValueChangeHandler changeHandler) {
@@ -25,7 +24,7 @@ public class LogicalDefinitionTableConfig {
     }
 
     public interface ValueChangeHandler {
-        public void handleChange(String postCoordinationAxis, LogicalDefinitionTable table);
+        void handleChange(String postCoordinationAxis, LogicalDefinitionTable table);
     }
 
 }
