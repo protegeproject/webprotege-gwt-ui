@@ -3,18 +3,15 @@ package edu.stanford.bmir.protege.web.client.linearization;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.library.msgbox.*;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.*;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -35,7 +32,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
 
-    private Map<String, EntityNode> parentsMap = new HashMap<>();
+    private Map<String, String> entityParentsMap = new HashMap<>();
 
     private DispatchServiceManager dispatch;
     private final EventBus eventBus;
@@ -87,7 +84,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        if(!view.isReadOnly()){
+        if (!view.isReadOnly()) {
             messageBox.showConfirmBox(MessageStyle.ALERT,
                     "Save edits before switching?",
                     "Do you want to save your edits before changing selection?",
@@ -107,31 +104,30 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
+            this.entityParentsMap.clear();
             dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
 
                 this.view.dispose();
                 if (response.getWhoficEntityLinearizationSpecification() != null &&
                         response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
 
-                    Set<String> parentsIris = response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications()
+                    Set<String> selectedLinParentsIris = response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications()
                             .stream()
                             .map(specification -> specification.getLinearizationParent())
                             .filter(iri -> iri != null && !iri.isEmpty())
                             .collect(Collectors.toSet());
 
-                    if (!parentsIris.isEmpty()) {
-                        dispatch.execute(GetRenderedOwlEntitiesAction.create(getProjectId(), parentsIris), renderedEntitiesResponse -> {
-                            for (EntityNode data : renderedEntitiesResponse.getRenderedEntities()) {
-                                this.parentsMap.put(data.getEntity().getIRI().toString(), data);
-                            }
-                            view.dispose();
-                            view.setLinearizationParentsMap(this.parentsMap);
-                            view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-
-                        });
-                    } else {
-                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                    if (!selectedLinParentsIris.isEmpty()) {
+                        selectedLinParentsIris.forEach(linParentIri -> this.entityParentsMap.put(linParentIri, linParentIri));
                     }
+                    dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), HierarchyId.CLASS_HIERARCHY), result -> {
+                        if (result.getParents() != null) {
+                            result.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
+                        }
+                        view.dispose();
+                        view.setEntityParentsMap(this.entityParentsMap);
+                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                    });
                 }
             });
         } else {
