@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -30,20 +27,20 @@ public class LinearizationTableRow {
 
     private LinearizationDefinition linearizationDefinition;
 
-    private Map<String, EntityNode> parentsMap;
+    private Map<String, String> baseEntityParentsMap;
 
     private LinearizationSpecification linearizationSpecification;
 
     private LinearizationCommentsModal linearizationCommentsModal;
 
-    private ProjectId projectId;
-    private IRI entityIri;
 
     private String parentIri;
     LinearizationPortletViewImpl.TableRefresh tableRefresh;
 
     ListBox linearizationParentSelector;
-    String linearizationParent;
+    Label linearizationParentLabel;
+
+    HorizontalPanel parentSelectionPanel;
 
     private LinearizationTableRow() {
 
@@ -51,15 +48,11 @@ public class LinearizationTableRow {
 
     public LinearizationTableRow(Map<String, LinearizationDefinition> definitionMap,
                                  LinearizationSpecification linearizationSpecification,
-                                 Map<String, EntityNode> parentsMap,
+                                 Map<String, String> baseEntityParentsMap,
                                  LinearizationCommentsModal commentsModal,
-                                 IRI entityIri,
-                                 ProjectId projectId,
                                  LinearizationPortletViewImpl.TableRefresh tableRefresh) {
         try {
-            this.parentsMap = parentsMap;
-            this.projectId = projectId;
-            this.entityIri = entityIri;
+            this.baseEntityParentsMap = baseEntityParentsMap;
             this.tableRefresh = tableRefresh;
             this.linearizationCommentsModal = commentsModal;
             this.linearizationDefinition = definitionMap.get(linearizationSpecification.getLinearizationView());
@@ -70,8 +63,18 @@ public class LinearizationTableRow {
 
             this.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
             this.linearizationSpecification = linearizationSpecification;
+
+
             this.linearizationParentSelector = new ListBox();
             this.linearizationParentSelector.setMultipleSelect(false);
+            this.linearizationParentSelector.setVisible(false);
+            this.linearizationParentSelector.setEnabled(false);
+            this.linearizationParentLabel = new Label();
+            this.linearizationParentLabel.setVisible(true);
+            this.parentSelectionPanel = new HorizontalPanel();
+            this.parentSelectionPanel.add(linearizationParentSelector);
+            this.parentSelectionPanel.add(linearizationParentLabel);
+            this.parentSelectionPanel.setVisible(true);
 
             this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
             this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
@@ -91,12 +94,14 @@ public class LinearizationTableRow {
 
     private void populateEditableLinearizationParent() {
         if (!isDerived()) {
-            this.parentIri = this.linearizationSpecification.getLinearizationParent();
-            this.parentsMap.forEach((iri, entityNode) -> {
-                String browserText = entityNode != null ? entityNode.getBrowserText() : parentIri;
+            this.parentIri = this.linearizationSpecification.getLinearizationParent() != null ? this.linearizationSpecification.getLinearizationParent() : "";
+            this.baseEntityParentsMap.forEach(
+                    (iri, parentsText) -> {
+                        String browserText = parentsText != null ? parentsText : iri;
 
-                this.linearizationParentSelector.addItem(browserText, iri);
-            });
+                        this.linearizationParentSelector.addItem(browserText, iri);
+                    }
+            );
             for (int i = 0; i < this.linearizationParentSelector.getItemCount(); i++) {
                 if (this.linearizationParentSelector.getValue(i).equals(this.parentIri)) {
                     this.linearizationParentSelector.setSelectedIndex(i);
@@ -105,7 +110,10 @@ public class LinearizationTableRow {
             }
             this.linearizationParentSelector.addItem("<Linearization parent not set>", "");
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
+            this.linearizationParentSelector.setVisible(false);
             this.linearizationParentSelector.setEnabled(false);
+            this.linearizationParentLabel.setText(linearizationParentSelector.getSelectedItemText());
+            this.linearizationParentLabel.setVisible(true);
         }
     }
 
@@ -118,9 +126,12 @@ public class LinearizationTableRow {
                         logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
                         return new RuntimeException();
                     });
-            this.linearizationParent = mainRow.linearizationParentSelector.getSelectedValue();
-            this.linearizationParentSelector = getCopy(mainRow.linearizationParentSelector);
+            this.parentIri = mainRow.linearizationParentSelector.getSelectedValue();
             this.linearizationParentSelector.setEnabled(false);
+            this.linearizationParentSelector.setVisible(false);
+            this.linearizationParentLabel.setText("[" + mainRow.linearizationParentSelector.getSelectedItemText() + "]");
+            this.linearizationParentLabel.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
+            this.linearizationParentLabel.setVisible(true);
         }
     }
 
@@ -136,8 +147,10 @@ public class LinearizationTableRow {
         this.isAuxAxChildCheckbox.setReadOnly(false);
 
         this.commentsWidget.enable();
-        if (linearizationParent == null || linearizationParent.equals("")) {
+        if (!isDerived()) {
             linearizationParentSelector.setEnabled(true);
+            linearizationParentSelector.setVisible(true);
+            linearizationParentLabel.setVisible(false);
         }
     }
 
@@ -155,6 +168,8 @@ public class LinearizationTableRow {
 
         this.commentsWidget.disable();
         linearizationParentSelector.setEnabled(false);
+        linearizationParentSelector.setVisible(false);
+        linearizationParentLabel.setVisible(true);
     }
 
 
@@ -186,7 +201,7 @@ public class LinearizationTableRow {
         flexTable.setWidget(index, 3, isAuxAxChildCheckbox);
         flexTable.getCellFormatter().addStyleName(index, 3, style.getTableCheckBox());
 
-        flexTable.setWidget(index, 4, linearizationParentSelector);
+        flexTable.setWidget(index, 4, parentSelectionPanel);
         flexTable.getCellFormatter().addStyleName(index, 4, style.getTableText());
 
         flexTable.setWidget(index, 5, codingNotes);
@@ -202,12 +217,12 @@ public class LinearizationTableRow {
         LinearizationTableRow clone = new LinearizationTableRow();
         clone.linearizationSpecification = linearizationSpecification;
 
-        if (!isDerived()) {
-            clone.linearizationParentSelector = getCopy(linearizationParentSelector);
-        } else {
-            clone.linearizationParentSelector = getCopy(linearizationParentSelector);
-            clone.linearizationParentSelector.setEnabled(false);
-        }
+        clone.linearizationParentSelector = getCopy(linearizationParentSelector);
+        clone.linearizationParentLabel = getCopy(linearizationParentLabel);
+        clone.parentSelectionPanel = new HorizontalPanel();
+        clone.parentSelectionPanel.add(clone.linearizationParentSelector);
+        clone.parentSelectionPanel.add(clone.linearizationParentLabel);
+
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
@@ -219,7 +234,7 @@ public class LinearizationTableRow {
 
         clone.codingNotes = commentsClone.asWidget();
         clone.commentsWidget = commentsClone;
-        clone.parentsMap = this.parentsMap;
+        clone.baseEntityParentsMap = this.baseEntityParentsMap;
         return clone;
     }
 
@@ -240,7 +255,7 @@ public class LinearizationTableRow {
         }
 
         this.parentIri = this.linearizationParentSelector.getValue(selectedIndex);
-        this.linearizationParent = parentIri;
+        this.linearizationParentLabel.setText(this.linearizationParentSelector.getSelectedItemText());
         this.setEnabled();
         tableRefresh.refreshTable(this);
     }
@@ -263,6 +278,8 @@ public class LinearizationTableRow {
         ListBox copy = new ListBox();
 
         copy.setMultipleSelect(original.isMultipleSelect());
+        copy.setVisible(original.isVisible());
+        copy.setEnabled(original.isEnabled());
 
         for (int i = 0; i < original.getItemCount(); i++) {
             String itemText = original.getItemText(i);
@@ -274,6 +291,16 @@ public class LinearizationTableRow {
                 copy.setItemSelected(i, true);
             }
         }
+
+        return copy;
+    }
+
+    private Label getCopy(Label original) {
+        Label copy = new Label();
+
+        copy.setVisible(original.isVisible());
+        copy.addStyleName(original.getStyleName());
+        copy.setText(original.getText());
 
         return copy;
     }
