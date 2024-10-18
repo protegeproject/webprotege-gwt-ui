@@ -6,6 +6,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
@@ -32,6 +34,8 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     @UiField
     Button deleteTableWrapper;
 
+    private HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
+
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -50,16 +54,16 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     private List<OWLEntityData> ancestorsList;
 
 
-    private final LogicalDefinitionTable superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
-            "Value",
-            this::initializeTable));
+    private final LogicalDefinitionTable superClassTable;
     private String parentIri;
 
 
     public LogicalDefinitionTableWrapperImpl(DispatchServiceManager dispatchServiceManager,
+                                             HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
                                              ProjectId projectId) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         initWidget(ourUiBinder.createAndBindUi(this));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
@@ -71,6 +75,11 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
         dispatchServiceManager.execute(GetPostcoordinationAxisToGenericScaleAction.create(), result -> {
             this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
         });
+        superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
+                "Value",
+                this::initializeTable,
+                hierarchyPopupPresenterFactory));
+
         paneContainer.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
         this.deleteTableWrapper.getElement().setInnerHTML(style.getDeleteSvg());

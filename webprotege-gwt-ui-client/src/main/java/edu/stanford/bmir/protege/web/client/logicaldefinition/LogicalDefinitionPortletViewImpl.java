@@ -5,10 +5,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
-import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -75,17 +76,23 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private OWLEntity currentEntity;
 
-    private final LogicalDefinitionTable necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
-            "Value",
-            this::initializeTable));
+    private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
+
+    private final LogicalDefinitionTable necessaryConditionsTable;
 
     @Inject
     public LogicalDefinitionPortletViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                             @Nonnull MessageBox messageBox,
+                                            @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
                                             @Nonnull UuidV4Provider uuidV4Provider) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
+        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
+        necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
+                "Value",
+                this::initializeTable,
+                hierarchyPopupPresenterFactory));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
 
@@ -103,7 +110,9 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             if(tableWrappers.isEmpty()) {
                 definitions.getElement().getStyle().setBackgroundImage(null);
             }
-            LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager, projectId)
+            LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
+                    hierarchyPopupPresenterFactory,
+                    projectId)
                     .withLabels(this.labels)
                     .withAncestorsList(this.ancestorsList)
                     .withRemoveHandler((this::removeWrapper))
@@ -166,7 +175,9 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                             .map(LogicalDefinitionTableRow::new)
                             .collect(Collectors.toList());
 
-                    LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager, projectId)
+                    LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
+                            hierarchyPopupPresenterFactory,
+                            projectId)
                             .withLabels(this.labels)
                             .withAncestorsList(this.ancestorsList)
                             .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())

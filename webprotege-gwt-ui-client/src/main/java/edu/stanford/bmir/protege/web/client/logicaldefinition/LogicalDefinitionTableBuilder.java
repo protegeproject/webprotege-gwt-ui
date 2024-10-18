@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -21,11 +23,16 @@ public class LogicalDefinitionTableBuilder {
 
     private LogicalDefinitionTableWrapperImpl.RemoveTableHandler removeTableHandler;
 
+    private HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
+
     private String parentIri;
 
-    public LogicalDefinitionTableBuilder(DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
+    public LogicalDefinitionTableBuilder(DispatchServiceManager dispatchServiceManager,
+                                         HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
+                                         ProjectId projectId) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
     }
 
 
@@ -49,7 +56,9 @@ public class LogicalDefinitionTableBuilder {
     }
 
     public LogicalDefinitionTableWrapper asExistingTable(){
-        LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager, projectId);
+        LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager,
+                hierarchyPopupPresenterFactory,
+                projectId);
 
         logicalDefinitionTableWrapper.setAncestorList(this.ancestorsList);
         logicalDefinitionTableWrapper.setLabels(this.labels);
@@ -62,7 +71,9 @@ public class LogicalDefinitionTableBuilder {
     }
 
     public LogicalDefinitionTableWrapper asNewTable() {
-        LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager, projectId);
+        LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager,
+                hierarchyPopupPresenterFactory,
+                projectId);
 
         logicalDefinitionTableWrapper.setAncestorList(this.ancestorsList);
         logicalDefinitionTableWrapper.setLabels(this.labels);

@@ -4,14 +4,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
@@ -27,6 +33,10 @@ public class LogicalDefinitionTable implements IsWidget {
     private FlexTable flexTable = new FlexTable();
     private ListBox axisDropdown = new ListBox();
     private ListBox valuesDropdown = new ListBox();
+
+    private Button valuesButton = new Button("+");
+
+    private Set<OWLClass> availableValues = new HashSet<>();
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private boolean readOnly = true;
@@ -69,6 +79,7 @@ public class LogicalDefinitionTable implements IsWidget {
 
 
         this.tableRows = new ArrayList<>();
+        this.availableValues = new HashSet<>();
         this.valuesDropdown.clear();
         this.axisDropdown.clear();
         this.readOnly = true;
@@ -123,10 +134,12 @@ public class LogicalDefinitionTable implements IsWidget {
     public void setAvailableValues(Map<String, String> availableValues) {
 
         this.valuesDropdown.clear();
+        this.availableValues = new HashSet<>();
 
         valuesDropdown.addItem("","");
 
         for(String axis: availableValues.keySet()) {
+            this.availableValues.add(new OWLClassImpl(IRI.create(axis)));
             valuesDropdown.addItem(axis, availableValues.get(axis));
         }
     }
@@ -220,8 +233,14 @@ public class LogicalDefinitionTable implements IsWidget {
 
         this.flexTable.setWidget(this.tableRows.size(), 2, removeCell);
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
-        this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
-
+       // this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
+        valuesButton.addClickHandler(event -> {
+            HierarchyPopupPresenter hierarchyPopupPresenter = config.getHierarchyPopupPresenterFactory().create(
+                    ClassHierarchyDescriptor.get(availableValues)
+            );
+            hierarchyPopupPresenter.start(new WebProtegeEventBus(new SimpleEventBus()));
+        });
+        this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesButton);
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 2, style.removeButtonCell());
         flexTable.getRowFormatter().addStyleName(this.tableRows.size(), style.customRowStyle());
         if(this.axisDropdown.getItemCount() > 0) {
