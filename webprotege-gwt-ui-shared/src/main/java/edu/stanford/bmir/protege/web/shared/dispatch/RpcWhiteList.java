@@ -18,7 +18,6 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
@@ -605,8 +604,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
-    AddNamedHierarchyAction _AddNamedHierarchyAction;
-    AddNamedHierarchyResult _AddNamedHierarchyResult;
+    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
+    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
 
     public RpcWhiteList() {
     }

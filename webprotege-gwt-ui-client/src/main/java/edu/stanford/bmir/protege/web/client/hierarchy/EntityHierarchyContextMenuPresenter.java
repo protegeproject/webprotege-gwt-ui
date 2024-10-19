@@ -105,7 +105,6 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
-                                               @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
@@ -209,10 +208,6 @@ public class EntityHierarchyContextMenuPresenter {
             permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
-    }
-
-    private void configureHierarchy() {
-
     }
 
     private void pruneSelectedNodesToRoot() {

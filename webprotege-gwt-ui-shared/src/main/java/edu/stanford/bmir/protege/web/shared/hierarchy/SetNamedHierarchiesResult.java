@@ -8,11 +8,11 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.hierarchies.AddNamedHierarchy")
-public abstract class AddNamedHierarchyResult implements Result {
+@JsonTypeName("webprotege.hierarchies.SetNamedHierarchies")
+public abstract class SetNamedHierarchiesResult implements Result {
 
     @JsonCreator
-    public static AddNamedHierarchyResult get() {
-        return new AutoValue_AddNamedHierarchyResult();
+    public static SetNamedHierarchiesResult get() {
+        return new AutoValue_SetNamedHierarchiesResult();
     }
 }
