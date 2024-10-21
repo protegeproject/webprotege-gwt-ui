@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.*;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
+import edu.stanford.bmir.protege.web.client.progress.*;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
@@ -15,12 +16,15 @@ import java.util.*;
 import java.util.logging.*;
 import java.util.stream.Collectors;
 
-public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView {
+public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView, HasBusy {
 
 
     Logger logger = java.util.logging.Logger.getLogger("LinearizationPortletViewImpl");
 
     private WhoficEntityLinearizationSpecification specification;
+    @UiField
+    BusyView busyView;
+
     @UiField
     HTMLPanel paneContainer;
 
@@ -194,11 +198,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private void setEditable() {
         if (isReadOnly) {
-            this.backupRows = new ArrayList<>();
-            for (LinearizationTableRow row : this.tableRowList) {
-                this.backupRows.add(row.clone());
-                row.setEnabled();
-            }
+            this.backupRows.clear();
+            tableRowList.forEach(tableRow -> {
+                this.backupRows.add(tableRow.clone());
+                tableRow.setEnabled();
+            });
 
             this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
             this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
@@ -222,11 +226,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private void setReadOnly() {
         if (!isReadOnly) {
-            this.tableRowList = this.backupRows;
+            this.tableRowList.clear();
             flexTable.removeAllRows();
-            for (LinearizationTableRow row : this.tableRowList) {
-                row.setReadOnly();
-            }
+            this.backupRows.forEach(backupRow -> this.tableRowList.add(backupRow.clone()));
+            this.tableRowList.forEach(LinearizationTableRow::setReadOnly);
             initializeTableHeader();
 
             orderAndPopulateViewWithRows();
@@ -238,7 +241,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
             disableResiduals();
             isReadOnly = true;
-            this.backupRows = new ArrayList<>();
+            this.backupRows.clear();
             toggleSaveButtons();
         }
 
@@ -250,6 +253,10 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         saveValuesButton.setVisible(!isReadOnly);
     }
 
+    @Override
+    public void setBusy(boolean busy) {
+        this.busyView.setVisible(busy);
+    }
 
     interface LinearizationPortletViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationPortletViewImpl> {
 
@@ -309,8 +316,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             }
             dispatch.execute(
                     SaveEntityLinearizationAction.create(projectId, linearizationSpecification),
+                    this,
                     (result) -> {
-                        this.backupRows = new ArrayList<>();
+                        this.backupRows.clear();
                         for (LinearizationTableRow row : this.tableRowList) {
                             this.backupRows.add(row.clone());
                         }
