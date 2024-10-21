@@ -18,7 +18,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @SuppressWarnings("Convert2MethodRef")
@@ -111,15 +110,6 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                 if (response.getWhoficEntityLinearizationSpecification() != null &&
                         response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
 
-                    Set<String> selectedLinParentsIris = response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications()
-                            .stream()
-                            .map(specification -> specification.getLinearizationParent())
-                            .filter(iri -> iri != null && !iri.isEmpty())
-                            .collect(Collectors.toSet());
-
-                    if (!selectedLinParentsIris.isEmpty()) {
-                        selectedLinParentsIris.forEach(linParentIri -> this.entityParentsMap.put(linParentIri, linParentIri));
-                    }
                     dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), HierarchyId.CLASS_HIERARCHY), result -> {
                         if (result.getParents() != null) {
                             result.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));

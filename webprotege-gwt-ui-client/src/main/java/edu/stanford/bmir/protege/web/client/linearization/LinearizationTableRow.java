@@ -97,23 +97,27 @@ public class LinearizationTableRow {
             this.parentIri = this.linearizationSpecification.getLinearizationParent() != null ? this.linearizationSpecification.getLinearizationParent() : "";
             this.baseEntityParentsMap.forEach(
                     (iri, parentsText) -> {
-                        String browserText = parentsText != null ? parentsText : iri;
+                        String browserText = parentsText != null && !parentsText.equals("") ? parentsText : iri;
 
                         this.linearizationParentSelector.addItem(browserText, iri);
                     }
             );
+            this.linearizationParentSelector.addItem("<Linearization parent not set>", "");
             for (int i = 0; i < this.linearizationParentSelector.getItemCount(); i++) {
                 if (this.linearizationParentSelector.getValue(i).equals(this.parentIri)) {
                     this.linearizationParentSelector.setSelectedIndex(i);
                     break;
                 }
             }
-            this.linearizationParentSelector.addItem("<Linearization parent not set>", "");
+
+            String selectedItemText = linearizationParentSelector.getSelectedValue().equals("") ? "Select a parent" : linearizationParentSelector.getSelectedItemText();
+            this.linearizationParentLabel.setText(selectedItemText);
+
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentSelector.setEnabled(false);
-            this.linearizationParentLabel.setText(linearizationParentSelector.getSelectedItemText());
             this.linearizationParentLabel.setVisible(true);
+
         }
     }
 
@@ -129,7 +133,7 @@ public class LinearizationTableRow {
             this.parentIri = mainRow.linearizationParentSelector.getSelectedValue();
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentSelector.setVisible(false);
-            this.linearizationParentLabel.setText("[" + mainRow.linearizationParentSelector.getSelectedItemText() + "]");
+            this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());
             this.linearizationParentLabel.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
         }
@@ -250,15 +254,18 @@ public class LinearizationTableRow {
         int selectedIndex = linearizationParentSelector.getSelectedIndex();
         String selectedText = linearizationParentSelector.getItemText(selectedIndex);
 
-        if ("<Linearization parent not set>".equals(selectedText) || "".equals(selectedText)) {
-            linearizationParentSelector.setItemText(selectedIndex, "Select a parent");
+        if ("<Linearization parent not set>".equals(selectedText)) {
+            this.linearizationParentLabel.setText("Select a parent");
+        } else {
+            this.linearizationParentLabel.setText(selectedText);
         }
 
         this.parentIri = this.linearizationParentSelector.getValue(selectedIndex);
-        this.linearizationParentLabel.setText(this.linearizationParentSelector.getSelectedItemText());
+
         this.setEnabled();
         tableRefresh.refreshTable(this);
     }
+
 
     private boolean isDerived() {
         return linearizationDefinition.getCoreLinId() != null && !linearizationDefinition.getCoreLinId().isEmpty();
