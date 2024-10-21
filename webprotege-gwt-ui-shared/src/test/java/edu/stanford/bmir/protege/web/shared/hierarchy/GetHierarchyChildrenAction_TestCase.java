@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,17 +26,17 @@ public class GetHierarchyChildrenAction_TestCase {
     private OWLEntity entity;
 
     @Mock
-    private HierarchyId hierarchyId;
+    private HierarchyDescriptor hierarchyDescriptor;
 
     @Before
     public void setUp() {
-        action = GetHierarchyChildrenAction.create(projectId, entity, hierarchyId);
+        action = GetHierarchyChildrenAction.create(projectId, entity, hierarchyDescriptor);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        GetHierarchyChildrenAction.create(null, entity, hierarchyId);
+        GetHierarchyChildrenAction.create(null, entity, hierarchyDescriptor);
     }
 
     @Test
@@ -46,7 +47,7 @@ public class GetHierarchyChildrenAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        GetHierarchyChildrenAction.create(projectId, null, hierarchyId);
+        GetHierarchyChildrenAction.create(projectId, null, hierarchyDescriptor);
     }
 
     @Test
@@ -62,7 +63,7 @@ public class GetHierarchyChildrenAction_TestCase {
 
     @Test
     public void shouldReturnSupplied_hierarchyId() {
-        assertThat(action.getHierarchyId(), is(this.hierarchyId));
+        assertThat(action.getHierarchyDescriptor(), is(this.hierarchyDescriptor));
     }
 
     @Test
@@ -78,27 +79,27 @@ public class GetHierarchyChildrenAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(GetHierarchyChildrenAction.create(projectId, entity, hierarchyId)));
+        assertThat(action, is(GetHierarchyChildrenAction.create(projectId, entity, hierarchyDescriptor)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(not(GetHierarchyChildrenAction.create(mock(ProjectId.class), entity, hierarchyId))));
+        assertThat(action, is(not(GetHierarchyChildrenAction.create(mock(ProjectId.class), entity, hierarchyDescriptor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(action, is(not(GetHierarchyChildrenAction.create(projectId, mock(OWLEntity.class), hierarchyId))));
+        assertThat(action, is(not(GetHierarchyChildrenAction.create(projectId, mock(OWLEntity.class), hierarchyDescriptor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_hierarchyId() {
-        assertThat(action, is(not(GetHierarchyChildrenAction.create(projectId, entity, mock(HierarchyId.class)))));
+        assertThat(action, is(not(GetHierarchyChildrenAction.create(projectId, entity, mock(HierarchyDescriptor.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(GetHierarchyChildrenAction.create(projectId, entity, hierarchyId).hashCode()));
+        assertThat(action.hashCode(), is(GetHierarchyChildrenAction.create(projectId, entity, hierarchyDescriptor).hashCode()));
     }
 
     @Test

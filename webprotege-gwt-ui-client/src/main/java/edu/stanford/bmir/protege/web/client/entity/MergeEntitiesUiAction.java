@@ -5,8 +5,8 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflow;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflowFactory;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,8 +44,8 @@ public class MergeEntitiesUiAction extends AbstractUiAction {
         this.selectionSupplier = checkNotNull(selectionSupplier);
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        presenter.setHierarchyId(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        presenter.setHierarchyDescriptor(hierarchyDescriptor);
     }
 
     @Override

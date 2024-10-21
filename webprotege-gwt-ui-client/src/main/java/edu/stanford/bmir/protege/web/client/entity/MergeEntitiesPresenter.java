@@ -6,6 +6,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationPresenter;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkOpMessageFormatter;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -127,7 +128,7 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
 
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        hierarchyFieldPresenter.setHierarchyId(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        hierarchyFieldPresenter.setHierarchyDescriptor(hierarchyDescriptor);
     }
 }

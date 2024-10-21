@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
@@ -36,18 +35,18 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     }
 
     @Nonnull
-    private Optional<HierarchyId> hierarchyId = Optional.empty();
+    private Optional<HierarchyDescriptor> hierarchyDescriptor = Optional.empty();
 
 
-    public void start(@Nonnull HierarchyId hierarchyId) {
-        this.hierarchyId = Optional.of(hierarchyId);
+    public void start(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        this.hierarchyDescriptor = Optional.of(hierarchyDescriptor);
     }
 
     @Override
     public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
                                   @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
-        if(!hierarchyId.isPresent()) {
+        if(!hierarchyDescriptor.isPresent()) {
             return false;
         }
         if(nodePath.isEmpty()) {
@@ -69,7 +68,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if(!hierarchyId.isPresent()) {
+        if(!hierarchyDescriptor.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -87,7 +86,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             return;
         }
         dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
-                                                                      hierarchyId.get(),
+                                                                      hierarchyDescriptor.get(),
                                                                       nodePath,
                                                                       targetPath,
                                                                       dropType),

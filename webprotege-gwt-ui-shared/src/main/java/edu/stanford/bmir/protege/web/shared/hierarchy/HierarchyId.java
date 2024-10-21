@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -26,12 +28,21 @@ public abstract class HierarchyId implements IsSerializable {
 
     public static final HierarchyId ANNOTATION_PROPERTY_HIERARCHY = get("AnnotationProperty");
 
+    @JsonValue
     @Nonnull
     public abstract String getId();
 
     @Nonnull
     @JsonCreator
-    public static HierarchyId get(@JsonProperty("id") @Nonnull String id) {
+    public static HierarchyId get(@Nonnull String id) {
         return new AutoValue_HierarchyId(checkNotNull(id));
+    }
+
+    @JsonIgnore
+    public boolean isBuiltIn() {
+        return this.equals(CLASS_HIERARCHY)
+                || this.equals(OBJECT_PROPERTY_HIERARCHY)
+                || this.equals(DATA_PROPERTY_HIERARCHY)
+                || this.equals(ANNOTATION_PROPERTY_HIERARCHY);
     }
 }

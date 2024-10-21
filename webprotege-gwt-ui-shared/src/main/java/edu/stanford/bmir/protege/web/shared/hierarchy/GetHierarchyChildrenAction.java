@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -28,15 +27,15 @@ public abstract class GetHierarchyChildrenAction extends AbstractHasProjectActio
     @JsonCreator
     public static GetHierarchyChildrenAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                     @JsonProperty("entity") @Nonnull OWLEntity entity,
-                                                    @JsonProperty("hierarchyId") @Nonnull HierarchyId hierarchyId,
+                                                    @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
                                                     @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest) {
-        return new AutoValue_GetHierarchyChildrenAction(projectId, entity, hierarchyId, pageRequest);
+        return new AutoValue_GetHierarchyChildrenAction(projectId, entity, hierarchyDescriptor, pageRequest);
     }
 
     public static GetHierarchyChildrenAction create(@Nonnull ProjectId projectId,
                                                     @Nonnull OWLEntity entity,
-                                                    @Nonnull HierarchyId hierarchyId) {
-        return create(projectId, entity, hierarchyId, PageRequest.requestFirstPage());
+                                                    @Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        return create(projectId, entity, hierarchyDescriptor, PageRequest.requestFirstPage());
     }
 
     @Nonnull
@@ -45,7 +44,7 @@ public abstract class GetHierarchyChildrenAction extends AbstractHasProjectActio
 
     public abstract OWLEntity getEntity();
 
-    public abstract HierarchyId getHierarchyId();
+    public abstract HierarchyDescriptor getHierarchyDescriptor();
 
     @Nonnull
     public abstract PageRequest getPageRequest();

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -54,7 +55,7 @@ public class MoveToParentUiAction extends AbstractUiAction {
         workflow.start();
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        parentPresenter.setHierarchyId(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        parentPresenter.setHierarchyDescriptor(hierarchyDescriptor);
     }
 }

@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -27,8 +26,8 @@ public abstract class GetHierarchyPathsToRootAction extends AbstractHasProjectAc
     @JsonCreator
     public static GetHierarchyPathsToRootAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                        @JsonProperty("entity") @Nonnull OWLEntity entity,
-                                                       @JsonProperty("hierarchyId") @Nonnull HierarchyId hierarchyId) {
-        return new AutoValue_GetHierarchyPathsToRootAction(projectId, entity, hierarchyId);
+                                                       @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        return new AutoValue_GetHierarchyPathsToRootAction(projectId, entity, hierarchyDescriptor);
     }
 
     @Nonnull
@@ -39,5 +38,5 @@ public abstract class GetHierarchyPathsToRootAction extends AbstractHasProjectAc
     public abstract OWLEntity getEntity();
 
     @Nonnull
-    public abstract HierarchyId getHierarchyId();
+    public abstract HierarchyDescriptor getHierarchyDescriptor();
 }

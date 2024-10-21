@@ -5,7 +5,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -32,12 +31,12 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
     @UiField
     SimplePanel hierarchyContainer;
 
-    private final List<HierarchyId> hierarchyIds = new ArrayList<>();
+    private final List<HierarchyDescriptor> hierarchyDescriptors = new ArrayList<>();
 
     private final List<TreeWidget<EntityNode, OWLEntity>> views = new ArrayList<>();
 
     @Nonnull
-    private HierarchyIdSelectedHandler hierarchyIdSelectedHandler = hierarchyId -> {};
+    private HierarchySelectedHandler hierarchySelectedHandler = hierarchyDescriptor -> {};
 
     @Inject
     public PropertyHierarchyPortletViewImpl() {
@@ -47,41 +46,41 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
 
     private void handleTabSelectionChanged() {
         int selection = switcher.getSelectedTab();
-        HierarchyId hierarchyId = hierarchyIds.get(selection);
+        HierarchyDescriptor hierarchyDescriptor = hierarchyDescriptors.get(selection);
         IsWidget view = views.get(selection);
         hierarchyContainer.setWidget(view);
-        hierarchyIdSelectedHandler.handleHierarchyIdSelected(hierarchyId);
+        hierarchySelectedHandler.handleHierarchyDescriptorSelected(hierarchyDescriptor);
     }
 
     @Override
-    public void addHierarchy(@Nonnull HierarchyId hierarchyId,
+    public void addHierarchy(@Nonnull HierarchyDescriptor hierarchyDescriptor,
                              @Nonnull String label,
                              @Nonnull TreeWidget<EntityNode, OWLEntity> view) {
         switcher.addTab(checkNotNull(label));
-        hierarchyIds.add(checkNotNull(hierarchyId));
+        hierarchyDescriptors.add(checkNotNull(hierarchyDescriptor));
         views.add(checkNotNull(view));
     }
 
     @Override
-    public void setHierarchyIdSelectedHandler(@Nonnull HierarchyIdSelectedHandler hierarchyIdSelectedHandler) {
-        this.hierarchyIdSelectedHandler = checkNotNull(hierarchyIdSelectedHandler);
+    public void setHierarchyIdSelectedHandler(@Nonnull HierarchySelectedHandler hierarchySelectedHandler) {
+        this.hierarchySelectedHandler = checkNotNull(hierarchySelectedHandler);
     }
 
     @Override
-    public void setSelectedHierarchy(@Nonnull HierarchyId hierarchyId) {
-        int selection = hierarchyIds.indexOf(hierarchyId);
+    public void setSelectedHierarchy(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        int selection = hierarchyDescriptors.indexOf(hierarchyDescriptor);
         if(switcher.getSelectedTab() == selection) {
             return;
         }
-        GWT.log("[PropertyHierarchyPortletViewImpl] Switching tab to " + hierarchyId);
+        GWT.log("[PropertyHierarchyPortletViewImpl] Switching tab to " + hierarchyDescriptor);
         switcher.selectTab(selection);
         IsWidget view = views.get(selection);
         hierarchyContainer.setWidget(view);
     }
 
     @Override
-    public Optional<HierarchyId> getSelectedHierarchyId() {
-        return Optional.of(hierarchyIds.get(switcher.getSelectedTab()));
+    public Optional<HierarchyDescriptor> getSelectedHierarchyDescriptor() {
+        return Optional.of(hierarchyDescriptors.get(switcher.getSelectedTab()));
     }
 
     @Override

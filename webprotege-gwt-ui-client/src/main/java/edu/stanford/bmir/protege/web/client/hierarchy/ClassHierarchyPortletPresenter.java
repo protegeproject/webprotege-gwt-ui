@@ -174,17 +174,18 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         actionStatePresenter.start(eventBus);
 
-        hierarchyModel.start(eventBus, CLASS_HIERARCHY);
+        hierarchyModel.start(eventBus, ClassHierarchyDescriptor.get());
         renderer.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));
         treeWidget.setDropHandler(this.dropHandler);
-        dropHandler.start(CLASS_HIERARCHY);
+        dropHandler.start(ClassHierarchyDescriptor.get());
         contextMenuPresenterFactory.create(hierarchyModel,
                                            treeWidget,
                                            createClassAction,
-                                           deleteClassAction)
+                                           deleteClassAction,
+                        getProjectId())
                                    .install();
 
         tagVisibilityPresenter.start(filterView, treeWidget);

@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -22,21 +25,23 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();
 
-    private HierarchyId hierarchyId;
+    private HierarchyDescriptor hierarchyDescriptor;
 
     private GraphModelChangedEvent<EntityNode> changeEvent;
 
-    public EntityHierarchyChangedEvent(@Nonnull ProjectId source,
-                                       @Nonnull HierarchyId hierarchyId,
-                                       @Nonnull GraphModelChangedEvent<EntityNode> changeEvent) {
+    @JsonCreator
+    public EntityHierarchyChangedEvent(@JsonProperty("projectId") @Nonnull ProjectId source,
+                                       @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
+                                       @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent) {
         super(source);
-        this.hierarchyId = checkNotNull(hierarchyId);
+        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         this.changeEvent = checkNotNull(changeEvent);
     }
 
+    @JsonProperty("hierarchyDescriptor")
     @Nonnull
-    public HierarchyId getHierarchyId() {
-        return hierarchyId;
+    public HierarchyDescriptor getHierarchyDescriptor() {
+        return hierarchyDescriptor;
     }
 
     @GwtSerializationConstructor
@@ -66,11 +71,19 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
             return false;
         }
         EntityHierarchyChangedEvent that = (EntityHierarchyChangedEvent) o;
-        return hierarchyId.equals(that.hierarchyId) && changeEvent.equals(that.changeEvent) && getSource().equals(that.getSource());
+        return hierarchyDescriptor.equals(that.hierarchyDescriptor) && changeEvent.equals(that.changeEvent) && getSource().equals(that.getSource());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hierarchyId, changeEvent, getSource());
+        return Objects.hash(hierarchyDescriptor, changeEvent, getSource());
+    }
+
+    @Override
+    public String toString() {
+        return "EntityHierarchyChangedEvent{" +
+                "hierarchyDescriptor=" + hierarchyDescriptor +
+                ", changeEvent=" + changeEvent +
+                '}';
     }
 }

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -128,7 +129,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         entityNodeUpdater.start(eventBus, this);
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
-        hierarchyFieldPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
+        hierarchyFieldPresenter.setHierarchyDescriptor(ClassHierarchyDescriptor.get());
         hierarchyFieldPresenter.start(view.getTypeFieldContainer(), eventBus);
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
         if(selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {

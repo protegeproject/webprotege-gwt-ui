@@ -448,6 +448,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("hierarchy.objectproperties")
     String hierarchy_objectproperties();
 
+
+    @DefaultMessage("Configure hierarchy...")
+    @Key("hierarchy.configure")
+    String hierarchy_configure();
+
     
     @DefaultMessage("History")
     @Key("history")

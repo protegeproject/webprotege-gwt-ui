@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
@@ -24,7 +25,7 @@ public abstract class GetHierarchySiblings_Serialization_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = GetHierarchySiblingsAction.create(ProjectId.getNil(),
                                                        mockOWLClass(),
-                                                       HierarchyId.CLASS_HIERARCHY,
+                ClassHierarchyDescriptor.get(),
                                                        PageRequest.requestFirstPage());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
