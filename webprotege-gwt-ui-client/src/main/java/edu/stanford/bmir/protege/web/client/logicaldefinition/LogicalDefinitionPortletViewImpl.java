@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -13,13 +15,17 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -56,6 +62,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private ProjectId projectId;
 
+    private LogicalDefinitionModal logicalDefinitionModal;
+
     private List<OWLEntityData> ancestorsList = new ArrayList<>();
 
     private List<PostCoordinationTableAxisLabel> labels;
@@ -84,15 +92,17 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     public LogicalDefinitionPortletViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                             @Nonnull MessageBox messageBox,
                                             @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
-                                            @Nonnull UuidV4Provider uuidV4Provider) {
+                                            @Nonnull UuidV4Provider uuidV4Provider,
+                                            @Nonnull LogicalDefinitionModal logicalDefinitionModal) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
         this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
+        this.logicalDefinitionModal = logicalDefinitionModal;
         necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
                 "Value",
                 this::initializeTable,
-                hierarchyPopupPresenterFactory));
+                this::handleAxisValueChanged));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
 
@@ -111,8 +121,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 definitions.getElement().getStyle().setBackgroundImage(null);
             }
             LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
-                    hierarchyPopupPresenterFactory,
-                    projectId)
+                    projectId,
+                    this::handleAxisValueChanged)
                     .withLabels(this.labels)
                     .withAncestorsList(this.ancestorsList)
                     .withRemoveHandler((this::removeWrapper))
@@ -176,8 +186,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                             .collect(Collectors.toList());
 
                     LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
-                            hierarchyPopupPresenterFactory,
-                            projectId)
+                            projectId,
+                            this::handleAxisValueChanged)
                             .withLabels(this.labels)
                             .withAncestorsList(this.ancestorsList)
                             .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
@@ -208,6 +218,28 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         String backgroundImageUrl = BUNDLE.noDataFound().getSafeUri().asString();
         definitions.getElement().getStyle().setBackgroundImage("url(" + backgroundImageUrl + ")");
         definitions.getElement().addClassName(style.definitionsEmptyState());
+    }
+
+    private void handleAxisValueChanged(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue) {
+        List<String> selectedScales = superclassScalesValue.getScaleCustomizations().stream()
+                .filter(s -> s.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
+                .flatMap(s -> s.getPostcoordinationScaleValues().stream())
+                .collect(Collectors.toList());
+
+        if(selectedScales.isEmpty()) {
+            List<String> equivalentRoots = axisToGenericScales.stream()
+                    .filter(axis -> axis.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
+                    .map(PostcoordinationAxisToGenericScale::getGenericPostcoordinationScaleTopClass)
+                    .collect(Collectors.toList());
+            selectedScales.addAll(equivalentRoots);
+        }
+
+        Set<OWLClass> roots = selectedScales.stream().map(scale -> new OWLClassImpl(IRI.create(scale)))
+                .collect(Collectors.toSet());
+
+        logicalDefinitionModal.showModal(roots, (entityNode) -> {
+            logger.info("ALEX " + entityNode);
+        });
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {

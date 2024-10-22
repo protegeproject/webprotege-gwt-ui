@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyClassValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficCustomScalesValues;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
@@ -38,6 +39,8 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private Set<OWLClass> availableValues = new HashSet<>();
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
+
+    private WhoficCustomScalesValues superclassScalesValue;
 
     private boolean readOnly = true;
     private List<LogicalDefinitionTableRow> tableRows = new ArrayList<>();
@@ -190,6 +193,10 @@ public class LogicalDefinitionTable implements IsWidget {
         flexTable.getCellFormatter().addStyleName(0, column, style.tableText());
     }
 
+    public void setSuperclassScalesValue(WhoficCustomScalesValues superclassScalesValue) {
+        this.superclassScalesValue = superclassScalesValue;
+    }
+
     private void injectTableControls() {
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
@@ -233,12 +240,8 @@ public class LogicalDefinitionTable implements IsWidget {
 
         this.flexTable.setWidget(this.tableRows.size(), 2, removeCell);
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
-       // this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
         valuesButton.addClickHandler(event -> {
-            HierarchyPopupPresenter hierarchyPopupPresenter = config.getHierarchyPopupPresenterFactory().create(
-                    ClassHierarchyDescriptor.get(availableValues)
-            );
-            hierarchyPopupPresenter.start(new WebProtegeEventBus(new SimpleEventBus()));
+            config.getAddAxisValueHandler().handleAddAxisValue(this.axisDropdown.getSelectedValue(), this, this.superclassScalesValue);
         });
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesButton);
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 2, style.removeButtonCell());
@@ -284,6 +287,10 @@ public class LogicalDefinitionTable implements IsWidget {
         public String getCssClass() {
             return cssClass;
         }
+    }
+
+    public interface SelectAvailableValueHandler {
+        void handleAxisValueClick(String axis);
     }
 
 }

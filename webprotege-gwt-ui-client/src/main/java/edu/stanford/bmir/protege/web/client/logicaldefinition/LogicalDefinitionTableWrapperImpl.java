@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -33,16 +32,11 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @UiField
     Button deleteTableWrapper;
-
-    private HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
-
-
     private final DispatchServiceManager dispatchServiceManager;
 
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private final ProjectId projectId;
-
     private List<PostCoordinationTableAxisLabel> labels;
 
     private WhoficCustomScalesValues superclassScalesValue;
@@ -59,11 +53,10 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
 
     public LogicalDefinitionTableWrapperImpl(DispatchServiceManager dispatchServiceManager,
-                                             HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
-                                             ProjectId projectId) {
+                                             ProjectId projectId,
+                                             LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
-        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         initWidget(ourUiBinder.createAndBindUi(this));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
@@ -78,7 +71,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
         superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
                 "Value",
                 this::initializeTable,
-                hierarchyPopupPresenterFactory));
+                addAxisValueHandler));
 
         paneContainer.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
@@ -100,6 +93,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     private void fetchDropdownData(String iri) {
         dispatchServiceManager.execute(GetEntityCustomScalesAction.create(iri, projectId), postcoordination -> {
             this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
+            superClassTable.setSuperclassScalesValue(this.superclassScalesValue);
         });
         dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(iri, projectId), postcoordination -> {
 
@@ -115,6 +109,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
         mmsSpec.ifPresent(postCoordinationSpecification -> superClassTable.setAvailableAxisFromSpec(postCoordinationSpecification, this.labels));
     }
+
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
         List<String> selectedScales = superclassScalesValue.getScaleCustomizations().stream()

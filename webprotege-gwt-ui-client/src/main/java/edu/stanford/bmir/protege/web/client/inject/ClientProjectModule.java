@@ -22,10 +22,7 @@ import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
 import edu.stanford.bmir.protege.web.client.linearization.*;
 import edu.stanford.bmir.protege.web.client.list.*;
-import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletView;
-import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionPortletViewImpl;
-import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionTableWrapper;
-import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionTableWrapperImpl;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
 import edu.stanford.bmir.protege.web.client.permissions.*;
@@ -229,6 +226,11 @@ public class ClientProjectModule {
 
     @Provides
     LogicalDefinitionPortletView provideLogicalDefinitionPortletView(LogicalDefinitionPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LogicalDefinitionModalView provideLogicalDefinitionModalView(LogicalDefinitionModalViewImpl impl) {
         return impl;
     }
 

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
+import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
@@ -22,17 +23,16 @@ public class LogicalDefinitionTableBuilder {
     private List<PostCoordinationTableAxisLabel> labels;
 
     private LogicalDefinitionTableWrapperImpl.RemoveTableHandler removeTableHandler;
-
-    private HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
+    private LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler;
 
     private String parentIri;
 
     public LogicalDefinitionTableBuilder(DispatchServiceManager dispatchServiceManager,
-                                         HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
-                                         ProjectId projectId) {
+                                         ProjectId projectId,
+                                         LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
-        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
+        this.addAxisValueHandler = addAxisValueHandler;
     }
 
 
@@ -57,30 +57,30 @@ public class LogicalDefinitionTableBuilder {
 
     public LogicalDefinitionTableWrapper asExistingTable(){
         LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager,
-                hierarchyPopupPresenterFactory,
-                projectId);
+                projectId,
+                addAxisValueHandler);
 
         logicalDefinitionTableWrapper.setAncestorList(this.ancestorsList);
         logicalDefinitionTableWrapper.setLabels(this.labels);
         logicalDefinitionTableWrapper.setParentIRI(this.parentIri);
         logicalDefinitionTableWrapper.enableReadOnly();
-        logicalDefinitionTableWrapper.asExistingTable();
         logicalDefinitionTableWrapper.setRemoveTableHandleWrapper(this.removeTableHandler);
+        logicalDefinitionTableWrapper.asExistingTable();
 
         return logicalDefinitionTableWrapper;
     }
 
     public LogicalDefinitionTableWrapper asNewTable() {
         LogicalDefinitionTableWrapper logicalDefinitionTableWrapper = new LogicalDefinitionTableWrapperImpl(dispatchServiceManager,
-                hierarchyPopupPresenterFactory,
-                projectId);
+                projectId,
+                addAxisValueHandler);
 
         logicalDefinitionTableWrapper.setAncestorList(this.ancestorsList);
         logicalDefinitionTableWrapper.setLabels(this.labels);
         logicalDefinitionTableWrapper.setParentIRI(this.parentIri);
         logicalDefinitionTableWrapper.enableEditable();
-        logicalDefinitionTableWrapper.asNewTable();
         logicalDefinitionTableWrapper.setRemoveTableHandleWrapper(this.removeTableHandler);
+        logicalDefinitionTableWrapper.asNewTable();
 
 
 

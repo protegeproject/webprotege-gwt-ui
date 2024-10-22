@@ -95,6 +95,11 @@ public class HierarchyPopupPresenter {
         view.revealEntity(selectedEntity);
     }
 
+
+    public HierarchyPopupView getView(){
+        return view;
+    }
+
     public void setDisplayNameSettings(@Nonnull DisplayNameSettings settings) {
         view.setDisplayNameSettings(settings);
     }
