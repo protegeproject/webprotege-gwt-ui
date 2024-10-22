@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.postcoordination;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -34,7 +33,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
     private final Logger logger = Logger.getLogger("PostCoordinationPortletPresenter");
 
     private final DispatchServiceManager dispatch;
-    private final EventBus eventBus;
 
     private final LoggedInUserManager loggedInUserManager;
     private final MessageBox messageBox;
@@ -56,13 +54,14 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private final ScaleValueSelectionViewPresenter scaleSelectionPresenter;
 
+    private WebProtegeEventBus eventBus;
+
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
                                             @Nonnull ProjectId projectId,
                                             @Nonnull DisplayNameRenderer displayNameRenderer,
                                             @Nonnull DispatchServiceManager dispatch,
                                             @Nonnull PostCoordinationPortletView view,
-                                            @Nonnull EventBus eventBus,
                                             @Nonnull MessageBox messageBox,
                                             @Nonnull LoggedInUserManager loggedInUserManager,
                                             ModalManager modalManager,
@@ -71,7 +70,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
-        this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
         this.modalManager = modalManager;
         this.scaleSelectionPresenter = scaleSelectionPresenter;
@@ -80,6 +78,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.eventBus = eventBus;
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
 
@@ -312,7 +311,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 PostcoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(editMode);
+        newPresenter.start(eventBus, editMode);
         updateScaleValueCards();
     }
 
