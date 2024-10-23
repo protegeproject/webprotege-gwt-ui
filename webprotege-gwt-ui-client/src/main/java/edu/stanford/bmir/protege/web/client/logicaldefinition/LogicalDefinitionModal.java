@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFac
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalStyleConfig;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,10 @@ public class LogicalDefinitionModal {
     private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
     private final  LogicalDefinitionModalView logicalDefinitionModalView;
 
+    private final LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
+
+    private final ModalPresenter presenter;
+
     @Inject
     public LogicalDefinitionModal(@Nonnull ModalManager modalManager,
                                   LogicalDefinitionModalView logicalDefinitionModalView,
@@ -27,26 +32,33 @@ public class LogicalDefinitionModal {
         this.modalManager = modalManager;
         this.logicalDefinitionModalView = logicalDefinitionModalView;
         this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
+        LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
+        style = LogicalDefinitionResourceBundle.INSTANCE.style();
+        presenter = modalManager.createPresenter();
+        presenter.setTitle("Select axis value");
+        presenter.setView(logicalDefinitionModalView);
+        presenter.setModalStyleConfig(new ModalStyleConfig(style.selectValueModalWrapper()));
+        presenter.setEscapeButton(DialogButton.CANCEL);
+        presenter.setPrimaryButton(DialogButton.OK);
+
     }
 
     public void showModal(Set<OWLClass> availableValues, LogicalDefinitionTableConfig.SelectedAxisValueHandler selectionHandler) {
 
-        ModalPresenter presenter = modalManager.createPresenter();
-        presenter.setTitle("Set linearization parent");
-        presenter.setView(logicalDefinitionModalView);
-/*
-        presenter.setModalStyleConfig(new ModalStyleConfig(style.getParentModalWrapper()));
-*/
-        presenter.setEscapeButton(DialogButton.CANCEL);
-        presenter.setPrimaryButton(DialogButton.OK);
         presenter.setButtonHandler(DialogButton.OK, closer -> {
-//            parentSelectedHandler.handleParentSelected(view.getSelectedParent());
             presenter.closeModal();
+            if(logicalDefinitionModalView.getSelectedEntity().isPresent()) {
+                selectionHandler.handleSelectAxisValue(logicalDefinitionModalView.getSelectedEntity().get());
+            }
         });
-        logicalDefinitionModalView.showTree(availableValues, selectionHandler);
+
+        logicalDefinitionModalView.showTree(availableValues, entityNode -> {
+            presenter.closeModal();
+            if(logicalDefinitionModalView.getSelectedEntity().isPresent()) {
+                selectionHandler.handleSelectAxisValue(logicalDefinitionModalView.getSelectedEntity().get());
+            }
+        });
         modalManager.showModal(presenter);
-
-
     }
 
 

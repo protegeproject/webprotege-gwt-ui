@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
@@ -76,7 +77,6 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private List<LogicalDefinitionTableWrapper> tableWrappers = new ArrayList<>();
-    WebProtegeClientBundle BUNDLE = GWT.create(WebProtegeClientBundle.class);
 
     private LogicalConditions pristineData;
 
@@ -88,15 +88,19 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private final LogicalDefinitionTable necessaryConditionsTable;
 
+    private final NothingSelectedView nothingSelectedView;
+
     @Inject
     public LogicalDefinitionPortletViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                             @Nonnull MessageBox messageBox,
                                             @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
                                             @Nonnull UuidV4Provider uuidV4Provider,
+                                            @Nonnull NothingSelectedView nothingSelectedView,
                                             @Nonnull LogicalDefinitionModal logicalDefinitionModal) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
+        this.nothingSelectedView = nothingSelectedView;
         this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         this.logicalDefinitionModal = logicalDefinitionModal;
         necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
@@ -118,7 +122,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
         this.addDefinitionButton.addClickHandler((event -> {
             if(tableWrappers.isEmpty()) {
-                definitions.getElement().getStyle().setBackgroundImage(null);
+                definitions.clear();
             }
             LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
                     projectId,
@@ -130,6 +134,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
             this.tableWrappers.add(newTable);
             this.definitions.add(newTable.asWidget());
+
         }));
 
         switchToReadOnly();
@@ -215,9 +220,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     }
 
     private void displayPlaceholder() {
-        String backgroundImageUrl = BUNDLE.noDataFound().getSafeUri().asString();
-        definitions.getElement().getStyle().setBackgroundImage("url(" + backgroundImageUrl + ")");
-        definitions.getElement().addClassName(style.definitionsEmptyState());
+        definitions.add(nothingSelectedView);
     }
 
     private void handleAxisValueChanged(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue) {
@@ -238,7 +241,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 .collect(Collectors.toSet());
 
         logicalDefinitionModal.showModal(roots, (entityNode) -> {
-            logger.info("ALEX " + entityNode);
+            table.addNewRow(entityNode);
+            logger.info("ALEX din portlet am interceptat " + entityNode.getBrowserText());
         });
     }
 

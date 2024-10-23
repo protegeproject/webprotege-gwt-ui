@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -33,10 +34,7 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private FlexTable flexTable = new FlexTable();
     private ListBox axisDropdown = new ListBox();
-    private ListBox valuesDropdown = new ListBox();
-
     private Button valuesButton = new Button("+");
-
     private Set<OWLClass> availableValues = new HashSet<>();
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
@@ -53,7 +51,11 @@ public class LogicalDefinitionTable implements IsWidget {
         injectTableControls();
         setControlsHandlers();
         axisDropdown.setStyleName(style.logicalDefinitionDropdown());
-        valuesDropdown.setStyleName(style.logicalDefinitionDropdown());
+        valuesButton.setHTML(style.getPlusSvg());
+        valuesButton.addStyleName(style.removeButtonCell());
+        valuesButton.addClickHandler(event -> {
+            config.getAddAxisValueHandler().handleAddAxisValue(this.axisDropdown.getSelectedValue(), this, this.superclassScalesValue);
+        });
     }
 
     @Override
@@ -83,7 +85,6 @@ public class LogicalDefinitionTable implements IsWidget {
 
         this.tableRows = new ArrayList<>();
         this.availableValues = new HashSet<>();
-        this.valuesDropdown.clear();
         this.axisDropdown.clear();
         this.readOnly = true;
     }
@@ -135,28 +136,21 @@ public class LogicalDefinitionTable implements IsWidget {
     }
 
     public void setAvailableValues(Map<String, String> availableValues) {
-
-        this.valuesDropdown.clear();
         this.availableValues = new HashSet<>();
-
-        valuesDropdown.addItem("","");
 
         for(String axis: availableValues.keySet()) {
             this.availableValues.add(new OWLClassImpl(IRI.create(axis)));
-            valuesDropdown.addItem(axis, availableValues.get(axis));
         }
     }
 
 
     public void setEditable(){
         this.axisDropdown.setEnabled(true);
-        this.valuesDropdown.setEnabled(true);
         this.readOnly = false;
     }
 
     public void setReadOnly(){
         this.axisDropdown.setEnabled(false);
-        this.valuesDropdown.setEnabled(false);
         this.readOnly = true;
     }
 
@@ -199,7 +193,7 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private void injectTableControls() {
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
-        this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesDropdown);
+        this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesButton);
     }
 
     private void setControlsHandlers(){
@@ -207,24 +201,24 @@ public class LogicalDefinitionTable implements IsWidget {
             String selectedPostCoordinationIri = axisDropdown.getSelectedValue();
             config.getChangeHandler().handleChange(selectedPostCoordinationIri, this);
         });
+    }
 
-        valuesDropdown.addChangeHandler((changeEvent) -> {
-            String selectedPostCoordinationIri = axisDropdown.getSelectedValue();
-            if(selectedPostCoordinationIri != null && !selectedPostCoordinationIri.isEmpty()){
-                Optional<LogicalDefinitionTableRow> existingRow = tableRows.stream()
-                        .filter(row -> selectedPostCoordinationIri.equalsIgnoreCase(row.getPostCoordinationAxis()))
-                        .findFirst();
-                if(!existingRow.isPresent() && valuesDropdown.getSelectedValue() != null && !valuesDropdown.getSelectedValue().isEmpty()) {
-                    LogicalDefinitionTableRow row = new LogicalDefinitionTableRow();
-                    row.setPostCoordinationAxis(axisDropdown.getSelectedValue());
-                    row.setPostCoordinationAxisLabel(axisDropdown.getSelectedItemText());
-                    row.setPostCoordinationValue(valuesDropdown.getSelectedValue());
-                    row.setPostCoordinationValueLabel(valuesDropdown.getSelectedValue());
-                    this.tableRows.add(row);
-                    addNewRowToTable(row);
-                }
+    public void addNewRow(EntityNode entityNode) {
+        if(entityNode != null){
+
+            boolean rowAlreadyExists = this.tableRows.stream()
+                    .anyMatch(row -> row.getPostCoordinationAxis().equalsIgnoreCase(axisDropdown.getSelectedValue()) &&
+                            row.getPostCoordinationValue().equalsIgnoreCase(entityNode.getEntity().getIRI().toString()));
+            if(!rowAlreadyExists && !axisDropdown.getSelectedValue().isEmpty()) {
+                LogicalDefinitionTableRow row = new LogicalDefinitionTableRow();
+                row.setPostCoordinationAxis(axisDropdown.getSelectedValue());
+                row.setPostCoordinationAxisLabel(axisDropdown.getSelectedItemText());
+                row.setPostCoordinationValue(entityNode.getEntity().getIRI().toString());
+                row.setPostCoordinationValueLabel(entityNode.getBrowserText());
+                this.tableRows.add(row);
+                addNewRowToTable(row);
             }
-        });
+        }
     }
 
     private void addNewRowToTable(LogicalDefinitionTableRow row) {
@@ -236,36 +230,33 @@ public class LogicalDefinitionTable implements IsWidget {
 
         Label removeCell = new Label();
         removeCell.getElement().setInnerHTML(style.getxSvg());
-        removeCell.addClickHandler((click)-> this.removeSuperClassAxis(row.getPostCoordinationAxisLabel(), row.getPostCoordinationAxis(), row.getPostCoordinationValueLabel()));
+        removeCell.addClickHandler((click)-> this.removeSuperClassAxis(row));
 
         this.flexTable.setWidget(this.tableRows.size(), 2, removeCell);
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
-        valuesButton.addClickHandler(event -> {
-            config.getAddAxisValueHandler().handleAddAxisValue(this.axisDropdown.getSelectedValue(), this, this.superclassScalesValue);
-        });
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesButton);
+
         flexTable.getCellFormatter().addStyleName(this.tableRows.size(), 2, style.removeButtonCell());
         flexTable.getRowFormatter().addStyleName(this.tableRows.size(), style.customRowStyle());
+
         if(this.axisDropdown.getItemCount() > 0) {
             this.axisDropdown.setItemSelected(0, true);
         }
-        if(this.valuesDropdown.getItemCount() > 0){
-            this.valuesDropdown.setItemSelected(0, true);
-        }
     }
 
-    private void removeSuperClassAxis(String postCoordinationLabel, String postCoordinationAxis, String postCoordinationValue) {
+    private void removeSuperClassAxis(LogicalDefinitionTableRow row) {
         if(!readOnly) {
             for(int i = 0; i < flexTable.getRowCount(); i++) {
                 String existingLabel = flexTable.getText(i, 0);
                 String existingValue = flexTable.getText(i, 1);
-                if(existingLabel.equalsIgnoreCase(postCoordinationLabel) && existingValue.equalsIgnoreCase(postCoordinationValue)) {
+                if(existingLabel.equalsIgnoreCase(row.getPostCoordinationAxisLabel()) && existingValue.equalsIgnoreCase(row.getPostCoordinationValueLabel())) {
                     flexTable.removeRow(i);
                 }
             }
 
             this.tableRows = this.tableRows.stream()
-                    .filter(r -> !r.getPostCoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
+                    .filter((LogicalDefinitionTableRow r) -> !r.getPostCoordinationAxis().equalsIgnoreCase(row.getPostCoordinationAxis()) ||
+                            !r.getPostCoordinationValue().equalsIgnoreCase(row.getPostCoordinationValue()))
                     .collect(Collectors.toList());
         }
     }

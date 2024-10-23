@@ -51,4 +51,14 @@ public class LogicalDefinitionTableRow {
     public void setPostCoordinationValueLabel(String postCoordinationValueLabel) {
         this.postCoordinationValueLabel = postCoordinationValueLabel;
     }
+
+    @Override
+    public String toString() {
+        return "LogicalDefinitionTableRow{" +
+                "postCoordinationAxis='" + postCoordinationAxis + '\'' +
+                ", postCoordinationAxisLabel='" + postCoordinationAxisLabel + '\'' +
+                ", postCoordinationValue='" + postCoordinationValue + '\'' +
+                ", postCoordinationValueLabel='" + postCoordinationValueLabel + '\'' +
+                '}';
+    }
 }

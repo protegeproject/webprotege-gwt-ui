@@ -45,6 +45,12 @@ public interface LogicalDefinitionResourceBundle extends ClientBundle {
         @ClassName("removeButtonCell")
         String removeButtonCell();
 
+        @ClassName("selectValueModalWrapper")
+        String selectValueModalWrapper();
+
+        @ClassName("mainModalView")
+        String mainModalView();
+
         default String getxSvg(){
             return X_SVG;
         }

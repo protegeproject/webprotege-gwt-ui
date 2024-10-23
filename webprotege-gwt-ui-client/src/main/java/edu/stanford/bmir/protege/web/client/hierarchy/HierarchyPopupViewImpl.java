@@ -38,6 +38,9 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     @UiField(provided = true)
     TreeWidget<EntityNode, OWLEntity> treeWidget;
 
+    @UiField
+    HTMLPanel main;
+
     private Consumer<EntityNode> selectionChangedHandler = node -> {
     };
 
@@ -95,5 +98,10 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
                     };
                     t.schedule(200);
                 }));
+    }
+
+    @Override
+    public void addCssClassToMain(String css) {
+        main.addStyleName(css);
     }
 }
