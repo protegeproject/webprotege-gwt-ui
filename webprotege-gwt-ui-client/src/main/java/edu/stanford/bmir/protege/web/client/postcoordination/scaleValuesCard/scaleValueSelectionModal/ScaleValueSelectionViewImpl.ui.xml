@@ -1,13 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
 <ui:style>
     .main-panel-style {
-        width: 800px;
-        max-width: 800px;
+        width: 500px;
+        max-width: 500px;
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -31,9 +30,7 @@
         <tr>
             <td valign="top">
                 <g:HTMLPanel addStyleNames="{style.message-block}">
-                    <text:ExpandingTextBoxImpl ui:field="scaleValueSelection"
-                                               mode="MULTI_LINE"
-                                               anchorVisible="false"/>
+                    <g:SimplePanel ui:field="hierarchyContainer"/>
                 </g:HTMLPanel>
             </td>
         </tr>
