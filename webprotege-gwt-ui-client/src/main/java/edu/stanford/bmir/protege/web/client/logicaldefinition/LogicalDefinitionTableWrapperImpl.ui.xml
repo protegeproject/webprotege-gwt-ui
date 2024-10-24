@@ -14,11 +14,12 @@
         }
         .superclassWrapper {
             display: flex;
-            width: 40%;
+            width: 100%;
         }
         .label {
             font-size: 13px;
             white-space: nowrap;
+            font-weight: bold;
             margin-right: 3vw;
             text-align: center;
             align-content: center;
@@ -30,7 +31,7 @@
         <div class="{style.rowWrapper}">
             <div class="{style.superclassWrapper}">
                 <div class="{style.label}">
-                    Logical definition superclass :
+                    Logical Definition Superclass:
                 </div>
 
                 <g:HTMLPanel ui:field="ancestorWrapper">

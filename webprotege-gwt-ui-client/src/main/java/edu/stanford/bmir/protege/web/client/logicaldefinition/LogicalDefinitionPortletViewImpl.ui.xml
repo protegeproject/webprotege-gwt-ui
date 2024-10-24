@@ -8,10 +8,9 @@
         }
         .card {
             border-radius: 5px;
-            overflow: auto;
             -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
             box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
-            margin: 15px;
+            margin: 5px;
             border-collapse: collapse;
             padding: 10px;
             position: relative!important;
@@ -23,9 +22,11 @@
         .cardLabel {
             font-weight: bold;
             padding-bottom: 5px;
-            font-size: 17px;
+            font-size: 14px;
             white-space: nowrap;
             display: flex;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: literal("var(--primary--color)");
             align-items: center;
             z-index : 1;
             background-color: literal("var(--primary--background-color)");
@@ -88,11 +89,16 @@
             width: 25px;
             height: 25px;
         }
+        .cardLabelWrapper{
+            padding-right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
         <g:HTMLPanel addStyleNames="{style.card}">
             <div class="{style.cardLabel}">
-                Logical definitions
+                <div class="{style.cardLabelWrapper}">
+                    Logical Definitions
+                </div>
                 <g:Button addStyleNames="{style.addDefinitionsButton}" ui:field="addDefinitionButton"/>
             </div>
 
@@ -104,7 +110,7 @@
 
         <g:HTMLPanel ui:field="necessaryConditionsContainer"  addStyleNames="{style.card}">
             <div class="{style.cardLabel}">
-                Necessary conditions
+                Necessary Conditions
             </div>
         </g:HTMLPanel>
 

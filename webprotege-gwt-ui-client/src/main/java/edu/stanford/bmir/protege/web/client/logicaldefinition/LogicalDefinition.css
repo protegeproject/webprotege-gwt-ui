@@ -3,52 +3,74 @@
     margin-top: 15px;
     border-collapse: collapse;
     padding: 3px;
-    width: 50%;
+    width: 100%;
 }
 
 .tableText {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    vertical-align: middle;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: literal("var(--primary--color)");
+    font-size: 12px;
+}
+
+.axisDropdownPlaceholder {
+    font-style: italic;
+}
+
+.axisDropdownPlaceholder option  {
+    font-style: normal!important;
+}
+
+.axisColumn{
+    min-width: 350px;
+    vertical-align: middle;
+}
+
+.valuesColumn{
+    width: 100%;
     vertical-align: middle;
 }
 
 .definitionsEmptyState {
-    height: 300px;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.tableText > div {
-    display: flex;
-    justify-content: start;
-    align-content: center;
-    text-align: left;
-    max-width: 350px;
-    margin: 8px;
-
-}
 
 .logicalDefinitionDropdown {
     background-color: white;
     margin: 5px;
+    width: 95%;
     padding: 3px;
 }
 
-.superClassTableHeader .tableText > div {
-    font-size: 14px;
-    font-weight: bold;
+.axisColumn  div {
+    padding-left: 5px;
 }
 
 .customRowStyle {
-
     border-bottom: 1px solid #f2f2f2;
+    min-height: 22px;
+    line-height: 1rem;
 }
 
 .removeButtonCell {
     width: 20px;
     height: 20px;
     align-self: center;
+}
+
+.addAxisValueButton {
+    width: 25px;
+    height: 25px;
+}
+
+.addAxisValueCell {
+    align-items: start;
+    justify-content: start;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-top: 5px;
 }
 
 .removeButtonCell > div {
@@ -58,23 +80,26 @@
 
 
 .superClassTableHeader {
-    font-size: 18px;
-    color: #fff;
-    line-height: 1.4;
-    background-color: #186cd4;
-    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color: literal("var(--grid-header--color)");
+    background-color: literal("var(--grid-header--background-color)");
+    font-weight: bold;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    border-radius: literal("var(--grid-header--border-radius)");
+    line-height: 1rem;
+    padding: 3px;
 }
 
 .dropDownMandatory{
     color: red;
     margin: 2px;
-    font-size: bold;
+    font-weight: 600;
 }
 
 .dropDownAllowed {
     color: green;
     margin: 2px;
-    font-size: bold;
+    font-weight: 600;
 }
 
 .dropDownNotSet{

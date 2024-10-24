@@ -84,25 +84,27 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private OWLEntity currentEntity;
 
+    private OWLEntityData entityData;
+
     private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
 
     private final LogicalDefinitionTable necessaryConditionsTable;
 
-    private final NothingSelectedView nothingSelectedView;
+    private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
+
 
     @Inject
     public LogicalDefinitionPortletViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                             @Nonnull MessageBox messageBox,
                                             @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
                                             @Nonnull UuidV4Provider uuidV4Provider,
-                                            @Nonnull NothingSelectedView nothingSelectedView,
                                             @Nonnull LogicalDefinitionModal logicalDefinitionModal) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
-        this.nothingSelectedView = nothingSelectedView;
         this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         this.logicalDefinitionModal = logicalDefinitionModal;
+        buttonCss.ensureInjected();
         necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
                 "Value",
                 this::initializeTable,
@@ -112,13 +114,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        necessaryConditionsContainer.add(necessaryConditionsTable);
-
         dispatchServiceManager.execute(GetPostcoordinationAxisToGenericScaleAction.create(), result -> {
             this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
         });
 
-        this.addDefinitionButton.getElement().setInnerHTML(style.getPlusSvg());
+        this.addDefinitionButton.setStyleName(buttonCss.addButton());
 
         this.addDefinitionButton.addClickHandler((event -> {
             if(tableWrappers.isEmpty()) {
@@ -141,6 +141,10 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         this.editValuesButton.addClickHandler(event -> switchToEditable());
         this.saveValuesButton.addClickHandler(event -> saveValues());
         displayPlaceholder();
+
+        cancelButton.addClickHandler((event) -> {
+            this.setEntity(this.currentEntity, this.projectId);
+        });
     }
 
 
@@ -160,8 +164,13 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         this.tableWrappers = new ArrayList<>();
         this.definitions.clear();
         this.currentEntity = owlEntity;
+
+        necessaryConditionsContainer.add(necessaryConditionsTable);
+
+
         dispatchServiceManager.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), projectId), postcoordination -> {
             this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
+            this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
         });
 
         dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
@@ -177,6 +186,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         });
 
         switchToReadOnly();
+    }
+
+    @Override
+    public void setEntityData(OWLEntityData entityData) {
+        this.entityData =entityData;
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
@@ -220,7 +234,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     }
 
     private void displayPlaceholder() {
-        definitions.add(nothingSelectedView);
+        definitions.clear();
     }
 
     private void handleAxisValueChanged(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue) {
@@ -242,7 +256,6 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
         logicalDefinitionModal.showModal(roots, (entityNode) -> {
             table.addNewRow(entityNode);
-            logger.info("ALEX din portlet am interceptat " + entityNode.getBrowserText());
         });
     }
 
@@ -293,19 +306,14 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                    this.currentEntity.asOWLClass(),
                    this.pristineData,
                    LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
-                   "Commit"
+                   "Edited the Logical Definitons and/or Necessary Conditions for " + this.entityData.getBrowserText()
            ), response ->{
-               logger.info("ALEX response " + response);
+               switchToReadOnly();
            });
        } else {
-           messageBox.showConfirmBox(MessageStyle.ALERT,
-                   "Logical definition have duplicated superClasses",
-                   "",
-                   DialogButton.NO,
-                   ()->{},
-                   DialogButton.YES,
-                   ()->{},
-                   DialogButton.YES);
+           messageBox.showAlert(
+                   "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
+                   "");
        }
 
     }

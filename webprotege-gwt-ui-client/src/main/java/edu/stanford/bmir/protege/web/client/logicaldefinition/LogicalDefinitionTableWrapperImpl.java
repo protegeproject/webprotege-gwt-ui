@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
@@ -50,6 +51,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     private final LogicalDefinitionTable superClassTable;
     private String parentIri;
+    private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
 
     public LogicalDefinitionTableWrapperImpl(DispatchServiceManager dispatchServiceManager,
@@ -57,6 +59,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                                              LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        buttonCss.ensureInjected();
         initWidget(ourUiBinder.createAndBindUi(this));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
@@ -75,8 +78,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
         paneContainer.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
-        this.deleteTableWrapper.getElement().setInnerHTML(style.getDeleteSvg());
-        this.deleteTableWrapper.addStyleName(style.removeButtonCell());
+        this.deleteTableWrapper.setStyleName(buttonCss.deleteButton());
 
     }
 
