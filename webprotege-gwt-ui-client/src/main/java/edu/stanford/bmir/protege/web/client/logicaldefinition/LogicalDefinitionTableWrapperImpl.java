@@ -192,6 +192,11 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     }
 
     @Override
+    public void setPostCoordinationTableConfiguration(PostCoordinationTableConfiguration postCoordinationTableConfiguration) {
+        this.superClassTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
+    }
+
+    @Override
     public void asNewTable() {
         if(ancestorDropdown.getItemCount() > 1) {
             ancestorDropdown.setItemSelected(1, true);

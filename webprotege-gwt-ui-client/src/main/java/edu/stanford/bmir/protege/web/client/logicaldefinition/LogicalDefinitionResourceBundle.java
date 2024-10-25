@@ -17,9 +17,6 @@ public interface LogicalDefinitionResourceBundle extends ClientBundle {
         @ClassName("superClassTable")
         String superClassTable();
 
-        @ClassName("definitionsEmptyState")
-        String definitionsEmptyState();
-
         @ClassName("tableText")
         String tableText();
 
@@ -63,6 +60,9 @@ public interface LogicalDefinitionResourceBundle extends ClientBundle {
 
         @ClassName("axisDropdownPlaceholder")
         String axisDropdownPlaceholder();
+
+        @ClassName("lastItemInDropdown")
+        String lastItemInDropdown();
 
         default String getxSvg(){
             return X_SVG;

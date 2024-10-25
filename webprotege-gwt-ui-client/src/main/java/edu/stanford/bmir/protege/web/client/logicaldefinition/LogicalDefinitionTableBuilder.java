@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
-import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableConfiguration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
@@ -24,6 +22,8 @@ public class LogicalDefinitionTableBuilder {
 
     private LogicalDefinitionTableWrapperImpl.RemoveTableHandler removeTableHandler;
     private LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler;
+
+    private PostCoordinationTableConfiguration postCoordinationTableConfiguration;
 
     private String parentIri;
 
@@ -50,6 +50,11 @@ public class LogicalDefinitionTableBuilder {
         return this;
     }
 
+    public LogicalDefinitionTableBuilder withPostCoordinationTableConfiguration(PostCoordinationTableConfiguration postCoordinationTableConfiguration) {
+        this.postCoordinationTableConfiguration = postCoordinationTableConfiguration;
+        return this;
+    }
+
     public LogicalDefinitionTableBuilder withRemoveHandler(LogicalDefinitionTableWrapperImpl.RemoveTableHandler removeTableHandler) {
         this.removeTableHandler = removeTableHandler;
         return this;
@@ -64,6 +69,7 @@ public class LogicalDefinitionTableBuilder {
         logicalDefinitionTableWrapper.setLabels(this.labels);
         logicalDefinitionTableWrapper.setParentIRI(this.parentIri);
         logicalDefinitionTableWrapper.enableReadOnly();
+        logicalDefinitionTableWrapper.setPostCoordinationTableConfiguration(this.postCoordinationTableConfiguration);
         logicalDefinitionTableWrapper.setRemoveTableHandleWrapper(this.removeTableHandler);
         logicalDefinitionTableWrapper.asExistingTable();
 
@@ -79,6 +85,7 @@ public class LogicalDefinitionTableBuilder {
         logicalDefinitionTableWrapper.setLabels(this.labels);
         logicalDefinitionTableWrapper.setParentIRI(this.parentIri);
         logicalDefinitionTableWrapper.enableEditable();
+        logicalDefinitionTableWrapper.setPostCoordinationTableConfiguration(this.postCoordinationTableConfiguration);
         logicalDefinitionTableWrapper.setRemoveTableHandleWrapper(this.removeTableHandler);
         logicalDefinitionTableWrapper.asNewTable();
 

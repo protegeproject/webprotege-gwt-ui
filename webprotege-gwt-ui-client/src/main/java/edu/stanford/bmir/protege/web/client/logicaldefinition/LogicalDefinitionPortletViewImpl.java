@@ -1,18 +1,13 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -50,6 +45,12 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     @UiField
     HTMLPanel necessaryConditionsContainer;
 
+    @UiField
+    HTMLPanel logicalDefinitionsTooltip;
+
+    @UiField
+    HTMLPanel necessaryConditionsTooltip;
+
     @UiField Button editValuesButton;
     @UiField Button cancelButton;
 
@@ -85,6 +86,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private OWLEntity currentEntity;
 
     private OWLEntityData entityData;
+
+    private PostCoordinationTableConfiguration postCoordinationTableConfiguration;
 
     private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
 
@@ -145,6 +148,12 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         cancelButton.addClickHandler((event) -> {
             this.setEntity(this.currentEntity, this.projectId);
         });
+
+        this.setHelpText(this.logicalDefinitionsTooltip, "A Logical Definition provides a way to formally define the meaning of a precoordinated entity by " +
+                "specifying a parent entity with combinations of postcoordination axes with their corresponding values.");
+        this.setHelpText(this.necessaryConditionsTooltip, "A Necessary Condition provides a way to formally describe the things that are " +
+                "always necessarily true about an entity by assigning values to postcoordination axes.");
+
     }
 
 
@@ -180,6 +189,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
             dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
                 this.labels = config.getLabels();
+                this.postCoordinationTableConfiguration = config.getTableConfiguration();
+                necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
                 populateWithExistingDefinition(owlEntity, projectId);
                 populateAvailableAxisValues(owlEntity);
             });
@@ -209,6 +220,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                             this::handleAxisValueChanged)
                             .withLabels(this.labels)
                             .withAncestorsList(this.ancestorsList)
+                            .withPostCoordinationTableConfiguration(postCoordinationTableConfiguration)
                             .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
                             .withRemoveHandler((this::removeWrapper))
                             .asExistingTable();
@@ -366,6 +378,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }
+    }
+
+    private void setHelpText(HTMLPanel tooltipWrapper, String text) {
+        Tooltip helpTooltip = Tooltip.createOnBottom(tooltipWrapper, text);
+        helpTooltip.updateTitleContent(text);
     }
 
     interface LogicalDefinitionPortletViewImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionPortletViewImpl> {

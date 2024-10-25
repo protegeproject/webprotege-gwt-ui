@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
+import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableConfiguration;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
@@ -28,6 +28,8 @@ public interface LogicalDefinitionTableWrapper extends AcceptsOneWidget, IsWidge
     void enableEditable();
 
     void asExistingTable();
+
+    void setPostCoordinationTableConfiguration(PostCoordinationTableConfiguration postCoordinationTableConfiguration);
 
     void asNewTable();
 

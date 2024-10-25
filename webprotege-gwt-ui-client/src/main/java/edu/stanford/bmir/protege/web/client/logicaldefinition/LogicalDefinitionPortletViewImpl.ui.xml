@@ -1,6 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .mainContent {
             display: flex;
@@ -71,7 +73,7 @@
         .cancelButton {
             background-color: #F7F7F7;
             border: none;
-            color: var(--primary--color);
+            color: literal("var(--primary--color)");
             padding: 10px 15px;
             text-align: center;
             text-decoration: none;
@@ -92,10 +94,20 @@
         .cardLabelWrapper{
             padding-right: 5px;
         }
+
+        .helpIcon {
+            justify-self: flex-end;
+            width: 1.3em;
+            height: 1.3em;
+            margin-right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.mainContent}">
         <g:HTMLPanel addStyleNames="{style.card}">
             <div class="{style.cardLabel}">
+                <g:HTMLPanel ui:field="logicalDefinitionsTooltip"  addStyleNames="{wp.style.helpIcon} {style.helpIcon}">
+
+                </g:HTMLPanel>
                 <div class="{style.cardLabelWrapper}">
                     Logical Definitions
                 </div>
@@ -110,8 +122,14 @@
 
         <g:HTMLPanel ui:field="necessaryConditionsContainer"  addStyleNames="{style.card}">
             <div class="{style.cardLabel}">
-                Necessary Conditions
+                <g:HTMLPanel ui:field="necessaryConditionsTooltip" addStyleNames="{wp.style.helpIcon} {style.helpIcon}">
+
+                </g:HTMLPanel>
+                <div class="{style.cardLabelWrapper}">
+                    Necessary Conditions
+                </div>
             </div>
+
         </g:HTMLPanel>
 
         <div class="{style.submitButtonWrappers}">
