@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -26,11 +26,11 @@ public abstract class MoveHierarchyNodeAction implements ProjectAction<MoveHiera
 
     @JsonCreator
     public static MoveHierarchyNodeAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                 @JsonProperty("hierarchyId") @Nonnull HierarchyId hierarchyId,
+                                                 @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
                                                  @JsonProperty("fromNodePath") @Nonnull Path<EntityNode> fromNodePath,
                                                  @JsonProperty("toNodeParentPath") @Nonnull Path<EntityNode> toNodeParentPath,
                                                  @JsonProperty("dropType") @Nonnull DropType dropType) {
-        return new AutoValue_MoveHierarchyNodeAction(projectId, hierarchyId, fromNodePath, toNodeParentPath, dropType);
+        return new AutoValue_MoveHierarchyNodeAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType);
     }
 
     @Nonnull
@@ -38,7 +38,7 @@ public abstract class MoveHierarchyNodeAction implements ProjectAction<MoveHiera
     public abstract ProjectId getProjectId();
 
     @Nonnull
-    public abstract HierarchyId getHierarchyId();
+    public abstract HierarchyDescriptor getHierarchyDescriptor();
 
     @Nonnull
     public abstract Path<EntityNode> getFromNodePath();

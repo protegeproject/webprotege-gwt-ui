@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
@@ -22,7 +23,8 @@ public class MoveHierarchyNode_Serialization_TestCase {
     @Test
     public void shouldSerializeAction() throws IOException {
         var action = MoveHierarchyNodeAction.create(mockProjectId(),
-                                                    HierarchyId.CLASS_HIERARCHY, Path.asPath(mockOWLClassNode()),
+                ClassHierarchyDescriptor.get(),
+                Path.asPath(mockOWLClassNode()),
                                                     Path.emptyPath(),
                                                     DropType.ADD);
         JsonSerializationTestUtil.testSerialization(action, Action.class);

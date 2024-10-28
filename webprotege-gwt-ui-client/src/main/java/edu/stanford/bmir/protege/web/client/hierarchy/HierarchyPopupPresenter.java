@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -24,9 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class HierarchyPopupPresenter {
 
-
-    @Nonnull
-    private final HierarchyId hierarchyId;
+   @Nonnull
+   private final HierarchyDescriptor hierarchyDescriptor;
 
     @Nonnull
     private final HierarchyPopupView view;
@@ -38,12 +36,11 @@ public class HierarchyPopupPresenter {
 
     private Optional<OWLEntity> selectedEntity = Optional.empty();
 
-    @Inject
     @AutoFactory
-    public HierarchyPopupPresenter(@Nonnull HierarchyId hierarchyId,
+    public HierarchyPopupPresenter(@Nonnull HierarchyDescriptor hierarchyDescriptor,
                                    @Provided @Nonnull HierarchyPopupView view,
                                    @Provided @Nonnull EntityHierarchyModel model) {
-        this.hierarchyId = checkNotNull(hierarchyId);
+        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         this.view = view;
         this.model = checkNotNull(model);
         popupPanel = new PopupPanel(true, true);
@@ -53,7 +50,7 @@ public class HierarchyPopupPresenter {
 
     public void start(@Nonnull WebProtegeEventBus eventBus) {
         model.start(eventBus,
-                    hierarchyId);
+                hierarchyDescriptor);
         view.setModel(model);
     }
 

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -166,7 +167,7 @@ public class EventsSerializationTestCase {
         ));
         JsonSerializationTestUtil.testSerialization(
                 new EntityHierarchyChangedEvent(mockProjectId(),
-                                                HierarchyId.CLASS_HIERARCHY,
+                        ClassHierarchyDescriptor.get(),
                                                 new GraphModelChangedEvent(changes)),
                 WebProtegeEvent.class
         );
