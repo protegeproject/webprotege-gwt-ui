@@ -234,10 +234,6 @@ public class ClientProjectModule {
         return impl;
     }
 
-/*    @Provides
-    LogicalDefinitionTableWrapper provideLogicalDefinitionTableWrapper(LogicalDefinitionTableWrapperImpl impl) {
-        return impl;
-    }*/
 
     @Provides
     LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
