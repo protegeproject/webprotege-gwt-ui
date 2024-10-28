@@ -24,4 +24,6 @@ public interface HierarchyPopupView extends IsWidget {
     void setDisplayNameSettings(@Nonnull DisplayNameSettings settings);
 
     void setMouseDownHandler(Consumer<EntityNode> entityConsumer);
+
+    void addCssClassToMain(String css);
 }

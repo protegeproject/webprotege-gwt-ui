@@ -43,4 +43,12 @@ public class WhoficEntityPostCoordinationSpecification implements IsSerializable
         return entityType;
     }
 
+    @Override
+    public String toString() {
+        return "WhoficEntityPostCoordinationSpecification{" +
+                "whoficEntityIri='" + whoficEntityIri + '\'' +
+                ", entityType='" + entityType + '\'' +
+                ", postcoordinationSpecifications=" + postcoordinationSpecifications +
+                '}';
+    }
 }

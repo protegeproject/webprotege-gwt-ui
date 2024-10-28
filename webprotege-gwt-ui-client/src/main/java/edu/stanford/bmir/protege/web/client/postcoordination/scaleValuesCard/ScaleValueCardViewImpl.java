@@ -171,10 +171,11 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         isReadOnly = readOnly;
 
         for (int i = 1; i < valueTable.getRowCount(); i++) {
+            int cellsInRow = valueTable.getCellCount(i);
             if (readOnly) {
-                valueTable.getRowFormatter().addStyleName(i, postCoordinationStyle.disabled());
+                valueTable.getCellFormatter().addStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
             } else {
-                valueTable.getRowFormatter().removeStyleName(i, postCoordinationStyle.disabled());
+                valueTable.getCellFormatter().removeStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
             }
         }
     }

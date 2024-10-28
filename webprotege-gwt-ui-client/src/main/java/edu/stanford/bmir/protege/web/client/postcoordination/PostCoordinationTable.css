@@ -18,7 +18,7 @@
 
 .rotatedHeader div {
     transform-origin: left;
-    transform: rotate(-75deg) translate(-50px, 100%);
+    transform: rotate(-80deg) translate(-70px, 100%);
     display: table-cell;
     vertical-align: middle;
     text-align: start;
@@ -36,11 +36,11 @@
 }
 
 .customRowStyle td {
-    vertical-align: middle!important;
+    vertical-align: middle !important;
 }
 
 .evenRowStyle td {
-    vertical-align: middle!important;
+    vertical-align: middle !important;
 }
 
 
@@ -48,14 +48,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 120px;
+    min-height: 180px;
     min-width: 13vw;
     font-size: 14px;
     font-weight: bold;
 }
 
 .headerLabelRow {
-    background-color: #186cd4;
+    background-color: literal("var(--grid-header--background-color)");
+    border-radius: literal("var(--grid-header--border-radius)");
+    color: literal("var(--grid-header--color)");
+    min-height: 1rem;
+    font-weight: bold;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    height: 180px;
 }
 
 
@@ -83,12 +90,14 @@
 }
 
 .scaleValueHeader {
-    font-size: 14px;
-    color: #fff;
-    line-height: 1.4;
-    background-color: #186cd4;
-    padding: 4px;
+    background-color: literal("var(--grid-header--background-color)");
+    border-radius: literal("var(--grid-header--border-radius)");
+    color: literal("var(--grid-header--color)");
+    min-height: 1rem;
     font-weight: bold;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 4px;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px

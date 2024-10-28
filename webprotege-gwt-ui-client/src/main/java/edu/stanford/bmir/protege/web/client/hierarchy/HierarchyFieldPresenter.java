@@ -70,7 +70,7 @@ public class HierarchyFieldPresenter {
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
-    private Optional<HierarchyId> hierarchyId = Optional.empty();
+    private Optional<HierarchyDescriptor> hierarchyDescriptor = Optional.empty();
 
     private Optional<HierarchyPopupPresenter> hierarchyPopupPresenter = Optional.empty();
 
@@ -116,9 +116,9 @@ public class HierarchyFieldPresenter {
     }
 
     private void handleShowPopupHierarchy(UIObject target) {
-        hierarchyId.ifPresent(id -> {
+        hierarchyDescriptor.ifPresent(desc -> {
             if(!hierarchyPopupPresenter.isPresent()) {
-                HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(id);
+                HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(desc);
                 hierarchyPopupPresenter.start(eventBus);
                 hierarchyPopupPresenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
                 this.hierarchyPopupPresenter = Optional.of(hierarchyPopupPresenter);
@@ -162,7 +162,7 @@ public class HierarchyFieldPresenter {
             OWLEntity e = entity.getEntity();
             view.setMoveToParentButtonEnabled(!e.isTopEntity());
             view.setMoveToSiblingButtonEnabled(!e.isTopEntity() && !e.isBottomEntity());
-            hierarchyId.ifPresent(id -> {
+            hierarchyDescriptor.ifPresent(id -> {
                 dispatch.execute(GetHierarchyChildrenAction.create(projectId,
                                                                    e,
                                                                    id,
@@ -178,19 +178,19 @@ public class HierarchyFieldPresenter {
 
 
     private void handleMoveToParent(UIObject target) {
-        hierarchyId.ifPresent(id -> {
+        hierarchyDescriptor.ifPresent(descriptor -> {
             view.getEntity()
                     .map(OWLEntityData::getEntity)
-                    .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity, target));
+                    .ifPresent(entity -> getPathsToRootAndMoveToParent(descriptor, entity, target));
         });
     }
 
-    private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity, UIObject target) {
+    private void getPathsToRootAndMoveToParent(HierarchyDescriptor descriptor, OWLEntity entity, UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create((pageRequest, consumer) -> {
                     dispatch.execute(GetHierarchyPathsToRootAction.create(projectId,
                                                                           entity,
-                                                                          id),
+                                                                          descriptor),
                                      result -> {
                                          List<EntityNode> data = result.getPaths()
                                                  .stream()
@@ -208,20 +208,20 @@ public class HierarchyFieldPresenter {
     }
 
     private void handleMoveToSibling(UIObject target) {
-        hierarchyId.ifPresent(id -> {
+        hierarchyDescriptor.ifPresent(desc -> {
             view.getEntity().map(OWLEntityData::getEntity)
-                    .ifPresent(entity -> getSiblingsAndMoveToSibling(id, entity, target));
+                    .ifPresent(entity -> getSiblingsAndMoveToSibling(desc, entity, target));
         });
     }
 
-    private void getSiblingsAndMoveToSibling(@Nonnull HierarchyId id,
+    private void getSiblingsAndMoveToSibling(@Nonnull HierarchyDescriptor desc,
                                              @Nonnull OWLEntity entity,
                                              @Nonnull UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create((pageRequest, consumer) -> {
                     dispatch.execute(GetHierarchySiblingsAction.create(projectId,
                                                                        entity,
-                                                                       id,
+                                                                       desc,
                                                                        pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getSiblings()
@@ -234,20 +234,20 @@ public class HierarchyFieldPresenter {
 
 
     private void handleMoveToChild(UIObject target) {
-        hierarchyId.ifPresent(id -> {
+        hierarchyDescriptor.ifPresent(desc -> {
             view.getEntity().map(OWLEntityData::getEntity)
-                    .ifPresent(entity -> getChildrenAndMoveToChild(id, entity, target));
+                    .ifPresent(entity -> getChildrenAndMoveToChild(desc, entity, target));
         });
     }
 
-    private void getChildrenAndMoveToChild(@Nonnull HierarchyId id,
+    private void getChildrenAndMoveToChild(@Nonnull HierarchyDescriptor desc,
                                            @Nonnull OWLEntity entity,
                                            @Nonnull UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create(((pageRequest, consumer) -> {
                     dispatch.execute(GetHierarchyChildrenAction.create(projectId,
                                                                        entity,
-                                                                       id,
+                                                                       desc,
                                                                        pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getChildren()
@@ -283,8 +283,8 @@ public class HierarchyFieldPresenter {
         view.setEntityType(entityType);
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        this.hierarchyId = Optional.of(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        this.hierarchyDescriptor = Optional.of(hierarchyDescriptor);
     }
 
     public void clearEntity() {

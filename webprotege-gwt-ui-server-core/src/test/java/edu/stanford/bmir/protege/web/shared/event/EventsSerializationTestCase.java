@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -167,8 +168,8 @@ public class EventsSerializationTestCase {
                 ));
         JsonSerializationTestUtil.testSerialization(
                 new EntityHierarchyChangedEvent(mockProjectId(),
-                        HierarchyId.CLASS_HIERARCHY,
-                        new GraphModelChangedEvent(changes)),
+                        ClassHierarchyDescriptor.get(),
+                                                new GraphModelChangedEvent(changes)),
                 WebProtegeEvent.class
         );
     }
@@ -213,14 +214,14 @@ public class EventsSerializationTestCase {
     public void shouldSerializeProjectChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new ProjectChangedEvent(mockProjectId(),
-                        new RevisionSummary(
-                                RevisionNumber.getHeadRevisionNumber(),
-                                mockUserId(),
-                                2L,
-                                3,
-                                "Changes"
-                        ),
-                        Collections.emptySet()),
+                                        new RevisionSummary(
+                                                RevisionNumber.getHeadRevisionNumber(),
+                                                mockUserId(),
+                                                2L,
+                                                3,
+                                                "Changes"
+                                        ),
+                                        Collections.emptySet()),
                 WebProtegeEvent.class
         );
     }
