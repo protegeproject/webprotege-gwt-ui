@@ -241,7 +241,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateLogicalDefinitionAction.class),
         @Type(value = GetEntityLogicalDefinitionAction.class),
         @Type(value = TranslateEventListAction.class),
-        @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
