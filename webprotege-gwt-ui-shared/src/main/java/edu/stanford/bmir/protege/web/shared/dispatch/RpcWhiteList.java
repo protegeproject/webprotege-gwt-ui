@@ -29,6 +29,10 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionResult;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.UpdateLogicalDefinitionResult;
 import edu.stanford.bmir.protege.web.shared.mail.*;
 import edu.stanford.bmir.protege.web.shared.match.*;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
@@ -1028,6 +1032,12 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
 
     PostCoordinationCustomScales _PostCoordinationCustomScales;
 
+    UpdateLogicalDefinitionResult _SaveLogicalDefinitionResult;
+
+    LogicalDefinition _LogicalDefinition;
+
+    LogicalConditions _LogicalConditions;
+    GetEntityLogicalDefinitionResult _GetEntityLogicalDefinitionResult;
 
     public RpcWhiteList() {
     }
