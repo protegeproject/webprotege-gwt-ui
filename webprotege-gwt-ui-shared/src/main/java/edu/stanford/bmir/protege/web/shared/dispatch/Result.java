@@ -220,7 +220,6 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(GetEntityLogicalDefinitionResult.class),
         @JsonSubTypes.Type(UpdateLogicalDefinitionResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
-        @JsonSubTypes.Type(AddNamedHierarchyResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
 })

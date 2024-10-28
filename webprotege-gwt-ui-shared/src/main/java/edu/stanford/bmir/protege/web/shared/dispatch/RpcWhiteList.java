@@ -587,8 +587,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
     AppEnvVariables _AppEnvVariables;
-    AddNamedHierarchyAction _AddNamedHierarchyAction;
-    AddNamedHierarchyResult _AddNamedHierarchyResult;
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
     ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;
     ProcessUploadedPostCoordinationResult _ProcessUploadedPostCoordinationResult;
