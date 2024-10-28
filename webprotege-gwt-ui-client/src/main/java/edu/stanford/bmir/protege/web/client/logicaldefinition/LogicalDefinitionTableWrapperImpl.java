@@ -6,6 +6,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
@@ -31,14 +33,11 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @UiField
     Button deleteTableWrapper;
-
-
     private final DispatchServiceManager dispatchServiceManager;
 
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private final ProjectId projectId;
-
     private List<PostCoordinationTableAxisLabel> labels;
 
     private WhoficCustomScalesValues superclassScalesValue;
@@ -50,16 +49,17 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     private List<OWLEntityData> ancestorsList;
 
 
-    private final LogicalDefinitionTable superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
-            "Value",
-            this::initializeTable));
+    private final LogicalDefinitionTable superClassTable;
     private String parentIri;
+    private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
 
     public LogicalDefinitionTableWrapperImpl(DispatchServiceManager dispatchServiceManager,
-                                             ProjectId projectId) {
+                                             ProjectId projectId,
+                                             LogicalDefinitionTableConfig.AddAxisValueHandler addAxisValueHandler) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        buttonCss.ensureInjected();
         initWidget(ourUiBinder.createAndBindUi(this));
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
@@ -71,10 +71,14 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
         dispatchServiceManager.execute(GetPostcoordinationAxisToGenericScaleAction.create(), result -> {
             this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
         });
+        superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
+                "Value",
+                this::initializeTable,
+                addAxisValueHandler));
+
         paneContainer.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
-        this.deleteTableWrapper.getElement().setInnerHTML(style.getDeleteSvg());
-        this.deleteTableWrapper.addStyleName(style.removeButtonCell());
+        this.deleteTableWrapper.setStyleName(buttonCss.deleteButton());
 
     }
 
@@ -91,6 +95,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     private void fetchDropdownData(String iri) {
         dispatchServiceManager.execute(GetEntityCustomScalesAction.create(iri, projectId), postcoordination -> {
             this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
+            superClassTable.setSuperclassScalesValue(this.superclassScalesValue);
         });
         dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(iri, projectId), postcoordination -> {
 
@@ -106,6 +111,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
         mmsSpec.ifPresent(postCoordinationSpecification -> superClassTable.setAvailableAxisFromSpec(postCoordinationSpecification, this.labels));
     }
+
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
         List<String> selectedScales = superclassScalesValue.getScaleCustomizations().stream()
@@ -183,6 +189,11 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 return;
             }
         }
+    }
+
+    @Override
+    public void setPostCoordinationTableConfiguration(PostCoordinationTableConfiguration postCoordinationTableConfiguration) {
+        this.superClassTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
     }
 
     @Override

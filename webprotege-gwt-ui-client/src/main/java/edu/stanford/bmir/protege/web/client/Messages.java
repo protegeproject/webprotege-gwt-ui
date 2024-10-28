@@ -8,7 +8,7 @@ import static com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 @DefaultLocale()
 public interface Messages extends com.google.gwt.i18n.client.Messages {
 
-
+    
     @DefaultMessage("About")
     @Key("about")
     String about();
@@ -16,7 +16,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Back")
     @Key("back")
     String back();
-
+    
     @DefaultMessage("tab")
     @Key("perspective.tab")
     String perspective_tab();
@@ -29,57 +29,57 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("perspective.perspective_addTab")
     String perspective_addTab();
 
-
+    
     @DefaultMessage("authored")
     @Key("change.authored")
     String change_authored();
 
-
+    
     @DefaultMessage("changes")
     @Key("change.changes")
     String change_changes();
 
-
+    
     @DefaultMessage("Changes on")
     @Key("change.changesOn")
     String change_changesOn();
 
-
+    
     @DefaultMessage("Download revision")
     @Key("change.downloadRevision")
     String change_downloadRevision();
 
-
+    
     @DefaultMessage("more changes not shown here")
     @Key("change.moreChangesNotShownHere")
     String change_moreChangesNotShownHere();
 
-
+    
     @DefaultMessage("You do not have permission to view changes in this")
     @Key("change.permissionDenied")
     String change_permissionDenied();
 
-
+    
     @DefaultMessage("Plus")
     @Key("change.plus")
     String change_plus();
 
-
+    
     @DefaultMessage("Revert")
     @Key("change.revert")
     String change_revert();
 
-
+    
     @DefaultMessage("Revert changes in revision")
     @Key("change.revertChangesInRevision")
     String change_revertChangesInRevision();
 
-
+    
     @DefaultMessage("Do you want to revert the changes in this revision?")
     @Key("change.revertChangesInRevisionQuestion")
     String change_revertChangesInRevisionQuestion();
 
-
+    
     @DefaultMessage("Revert Changes?")
     @Key("change.revertChangesQuestion")
     String change_revertChangesQuestion();
@@ -92,47 +92,47 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("changeEmailAddress")
     String changeEmailAddress();
 
-
+    
     @DefaultMessage("Change Password")
     @Key("changePassword")
     String changePassword();
 
-
+    
     @DefaultMessage("Changes by Entity")
     @Key("changesByEntity")
     String changesByEntity();
 
-
+    
     @DefaultMessage("Class IRI")
     @Key("classIri")
     String classIri();
 
-
+    
     @DefaultMessage("Classes")
     @Key("classes")
     String classes();
 
-
+    
     @DefaultMessage("Comments")
     @Key("comments")
     String comments();
 
-
+    
     @DefaultMessage("by")
     @Key("comments.by")
     String comments_by();
 
-
+    
     @DefaultMessage("Comment")
     @Key("comments.comment")
     String comments_comment();
 
-
+    
     @DefaultMessage("Commented entities")
     @Key("comments.commentedEntities")
     String comments_commentedEntities();
 
-
+    
     @DefaultMessage("Last comment")
     @Key("comments.lastComment")
     String comments_lastComment();
@@ -417,252 +417,256 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("frame.sameIndividual")
     String frame_sameIndividual();
 
-
+    
     @DefaultMessage("Single valued")
     @Key("frame.singleValued")
     String frame_singleValued();
 
-
+    
     @DefaultMessage("Transitive")
     @Key("frame.transitive")
     String frame_transitive();
 
-
+    
     @DefaultMessage("Types")
     @Key("frame.types")
     String frame_types();
 
-
+    
     @DefaultMessage("Help")
     @Key("help")
     String help();
 
-
+    
     @DefaultMessage("Annotation Properties")
     @Key("hierarchy.annotationproperties")
     String hierarchy_annotationproperties();
 
-
+    
     @DefaultMessage("Data Properties")
     @Key("hierarchy.dataproperties")
     String hierarchy_dataproperties();
 
-
+    
     @DefaultMessage("Object Properties")
     @Key("hierarchy.objectproperties")
     String hierarchy_objectproperties();
 
 
+    @DefaultMessage("Configure hierarchy...")
+    @Key("hierarchy.configure")
+    String hierarchy_configure();
+
     @DefaultMessage("History")
     @Key("history")
     String history();
 
-
+    
     @DefaultMessage("Home")
     @Key("home")
     String home();
 
-
+    
     @DefaultMessage("Individuals")
     @Key("individuals")
     String individuals();
 
-
+    
     @DefaultMessage("instance")
     @Key("instance")
     String instance();
 
-
+    
     @DefaultMessage("IRI")
     @Key("iri")
     String iri();
 
-
+    
     @DefaultMessage("Last modified")
     @Key("lastModified")
     String lastModified();
 
-
+    
     @DefaultMessage("Last opened")
     @Key("lastOpened")
     String lastOpened();
 
-
+    
     @DefaultMessage("Last updated")
     @Key("lastUpdated")
     String lastUpdated();
 
-
+    
     @DefaultMessage("Please enter your password.")
     @Key("login.enterPassword")
     String login_enterPassword();
 
-
+    
     @DefaultMessage("Please enter your user name.")
     @Key("login.enterUserName")
     String login_enterUserName();
 
-
+    
     @DefaultMessage("Unable to log in.  User name or password is incorrect.")
     @Key("login.error")
     String login_error();
 
-
+    
     @DefaultMessage("Markdown supported")
     @Key("markdownSupported")
     String markdownSupported();
 
-
+    
     @DefaultMessage("Move to Trash")
     @Key("moveToTrash")
     String moveToTrash();
 
-
+    
     @DefaultMessage("New Entity Settings")
     @Key("newEntitySettings")
     String newEntitySettings();
 
-
+    
     @DefaultMessage("Digit count")
     @Key("newEntitySettings.digitCount")
     String newEntitySettings_digitCount();
 
-
+    
     @DefaultMessage("IRI Prefix")
     @Key("newEntitySettings.iriPrefix")
     String newEntitySettings_iriPrefix();
 
-
+    
     @DefaultMessage("IRI Suffix")
     @Key("newEntitySettings.iriSuffix")
     String newEntitySettings_iriSuffix();
 
-
+    
     @DefaultMessage("Auto-generated OBO Style Id")
     @Key("newEntitySettings.oboId")
     String newEntitySettings_oboId();
 
-
+    
     @DefaultMessage("Spaces")
     @Key("newEntitySettings.spaces")
     String newEntitySettings_spaces();
 
-
+    
     @DefaultMessage("Collapse and transform to camel case")
     @Key("newEntitySettings.spaces.collapseAndTransformToCamelCase")
     String newEntitySettings_spaces_collapseAndTransformToCamelCase();
 
-
+    
     @DefaultMessage("Replace with dashes")
     @Key("newEntitySettings.spaces.replaceWithDashes")
     String newEntitySettings_spaces_replaceWithDashes();
 
-
+    
     @DefaultMessage("Replace with underscores")
     @Key("newEntitySettings.spaces.replaceWithUnderscores")
     String newEntitySettings_spaces_replaceWithUnderscores();
 
-
+    
     @DefaultMessage("Supplied name")
     @Key("newEntitySettings.suppliedName")
     String newEntitySettings_suppliedName();
 
-
+    
     @DefaultMessage("User specific ranges")
     @Key("newEntitySettings.userSpecificRanges")
     String newEntitySettings_userSpecificRanges();
 
-
+    
     @DefaultMessage("Auto-generated Universally Unique Id (UUID)")
     @Key("newEntitySettings.uuid")
     String newEntitySettings_uuid();
 
-
+    
     @DefaultMessage("New topic")
     @Key("newTopic")
     String newTopic();
 
-
+    
     @DefaultMessage("Nothing selected")
     @Key("nothingSelected")
     String nothingSelected();
 
-
+    
     @DefaultMessage("Open")
     @Key("open")
     String open();
 
-
+    
     @DefaultMessage("Open in New Window")
     @Key("openInNewWindow")
     String openInNewWindow();
 
-
+    
     @DefaultMessage("Owned by Me")
     @Key("ownedByMe")
     String ownedByMe();
 
-
+    
     @DefaultMessage("Owner")
     @Key("owner")
     String owner();
 
-
+    
     @DefaultMessage("Page")
     @Key("pagination.Page")
     String pagination_Page();
 
-
+    
     @DefaultMessage("Next")
     @Key("pagination.next")
     String pagination_next();
 
-
+    
     @DefaultMessage("of")
     @Key("pagination.of")
     String pagination_of();
 
-
+    
     @DefaultMessage("Prev")
     @Key("pagination.prev")
     String pagination_prev();
 
-
+    
     @DefaultMessage("Password")
     @Key("password")
     String password();
 
-
+    
     @DefaultMessage("Password reset error")
     @Key("password.reset.error.generic.msg")
     String password_reset_error_generic_msg();
 
-
+    
     @DefaultMessage("An error occurred. Please contact the administrator.")
     @Key("password.reset.error.generic.submsg")
     String password_reset_error_generic_submsg();
 
-
+    
     @DefaultMessage("Invalid email address.")
     @Key("password.reset.error.invalidemail.msg")
     String password_reset_error_invalidemail_msg();
 
-
+    
     @DefaultMessage("The email address that you supplied is not valid.  Your password has not been reset.")
     @Key("password.reset.error.invalidemail.submsg")
     String password_reset_error_invalidemail_submsg();
 
-
+    
     @DefaultMessage("Your password has been reset")
     @Key("password.reset.success.msg")
     String password_reset_success_msg();
 
-
+    
     @DefaultMessage("A temporary password has been sent to your email address.")
     @Key("password.reset.success.submsg")
     String password_reset_success_submsg();
 
-
+    
     @DefaultMessage("Reset Password")
     @Key("password.resetPassword")
     String password_resetPassword();
@@ -671,37 +675,37 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("plus")
     String plus();
 
-
+    
     @DefaultMessage("Project")
     @Key("project")
     String project();
 
-
+    
     @DefaultMessage("Project description")
     @Key("projectDescription")
     String projectDescription();
 
-
+    
     @DefaultMessage("Project Feed")
     @Key("projectFeed")
     String projectFeed();
 
-
+    
     @DefaultMessage("Project History")
     @Key("projectHistory")
     String projectHistory();
 
-
+    
     @DefaultMessage("Project name")
     @Key("projectName")
     String projectName();
 
-
+    
     @DefaultMessage("Please enter a project name")
     @Key("projectNameMissingErrorMessage")
     String projectNameMissingErrorMessage();
 
-
+    
     @DefaultMessage("Description")
     @Key("projectSettings.description")
     String projectSettings_description();
@@ -718,7 +722,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.owlimport.helpText")
     SafeHtml projectSettings_owl_import_helpText();
 
-
+    
     @DefaultMessage("Display name")
     @Key("projectSettings.displayName")
     String projectSettings_displayName();
@@ -728,22 +732,22 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.headerSection.title")
     String projectSettings_headerSection_title();
 
-
+    
     @DefaultMessage("Main Settings")
     @Key("projectSettings.mainSettings")
     String projectSettings_mainSettings();
 
-
+    
     @DefaultMessage("Payload URLs")
     @Key("projectSettings.payloadUrls")
     String projectSettings_payloadUrls();
 
-
+    
     @DefaultMessage("Slack Integration")
     @Key("projectSettings.slackIntegration")
     String projectSettings_slackIntegration();
 
-
+    
     @DefaultMessage("Slack Webhook URL")
     @Key("projectSettings.slackWebHookUrl")
     String projectSettings_slackWebHookUrl();
@@ -753,7 +757,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             " will also receive notifications via Slack.")
     @Key("projectSettings.slackWebHookHelp")
     String projectSettings_slackWebHookHelp();
-
+    
     @DefaultMessage("Project Settings")
     @Key("projectSettings.title")
     String projectSettings_title();
@@ -780,42 +784,42 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
 
 
-
+    
     @DefaultMessage("Web Hooks")
     @Key("projectSettings.webHooks")
     String projectSettings_webHooks();
 
-
+    
     @DefaultMessage("Projects")
     @Key("projects")
     String projects();
 
-
+    
     @DefaultMessage("Properties")
     @Key("properties")
     String properties();
 
-
+    
     @DefaultMessage("Property IRI")
     @Key("propertyIri")
     String propertyIri();
 
-
+    
     @DefaultMessage("Refresh")
     @Key("refresh")
     String refresh();
 
-
+    
     @DefaultMessage("Refresh Tree")
     @Key("refreshTree")
     String refreshTree();
 
-
+    
     @DefaultMessage("Reply")
     @Key("replyToComment")
     String replyToComment();
 
-
+    
     @DefaultMessage("Search")
     @Key("search")
     String search();
@@ -829,7 +833,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search.class")
     String search_class();
 
-
+    
     @DefaultMessage("Enter text to search for (multi-word search supported)")
     @Key("search.hint")
     String search_hint();
@@ -843,22 +847,22 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("share")
     String share();
 
-
+    
     @DefaultMessage("Shared with Me")
     @Key("sharedWithMe")
     String sharedWithMe();
 
-
+    
     @DefaultMessage("Anyone with the link can")
     @Key("sharing.anyoneWithTheLinkCan")
     String sharing_anyoneWithTheLinkCan();
 
-
+    
     @DefaultMessage("Comment")
     @Key("sharing.comment")
     String sharing_comment();
 
-
+    
     @DefaultMessage("Edit")
     @Key("sharing.edit")
     String sharing_edit();
@@ -872,12 +876,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("sharing.linkSharingEnabled")
     String sharing_linkSharingEnabled();
 
-
+    
     @DefaultMessage("Manage")
     @Key("sharing.manage")
     String sharing_manage();
 
-
+    
     @DefaultMessage("Share with specific people")
     @Key("sharing.shareWithSpecificPeople")
     String sharing_shareWithSpecificPeople();
@@ -893,72 +897,72 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Updating sharing settings")
     @Key("sharing.settings.updating")
     String sharing_settings_updating();
-
+    
     @DefaultMessage("Sign-in Required")
     @Key("sharing.signInRequired")
     String sharing_signInRequired();
 
-
+    
     @DefaultMessage("View")
     @Key("sharing.view")
     String sharing_view();
 
-
+    
     @DefaultMessage("Show Direct Link")
     @Key("showDirectLink")
     String showDirectLink();
 
-
+    
     @DefaultMessage("Show IRI")
     @Key("showIri")
     String showIri();
 
-
+    
     @DefaultMessage("showing")
     @Key("showing")
     String showing();
 
-
+    
     @DefaultMessage("Sign In")
     @Key("signIn")
     String signIn();
 
-
+    
     @DefaultMessage("Please sign in to continue")
     @Key("signInToContinue")
     String signInToContinue();
 
-
+    
     @DefaultMessage("Sign Out")
     @Key("signOut")
     String signOut();
 
-
+    
     @DefaultMessage("Sign up for account")
     @Key("signUpForAccount")
     String signUpForAccount();
 
-
+    
     @DefaultMessage("Sort by Entity")
     @Key("sortByEntity")
     String sortByEntity();
 
-
+    
     @DefaultMessage("Sort by Last Modified")
     @Key("sortByLastModified")
     String sortByLastModified();
 
-
+    
     @DefaultMessage("Sort by Last Opened")
     @Key("sortByLastOpened")
     String sortByLastOpened();
 
-
+    
     @DefaultMessage("Sort by Last Updated")
     @Key("sortByLastUpdated")
     String sortByLastUpdated();
 
-
+    
     @DefaultMessage("Sort by Owner")
     @Key("sortByOwner")
     String sortByOwner();
@@ -967,57 +971,57 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("navigation.goToEntity")
     String navigation_goToEntity();
 
-
+    
     @DefaultMessage("Sort by Project Name")
     @Key("sortByProjectName")
     String sortByProjectName();
 
-
+    
     @DefaultMessage("Start new thread")
     @Key("startNewCommentThread")
     String startNewCommentThread();
 
-
+    
     @DefaultMessage("days ago")
     @Key("time.daysAgo")
     String time_daysAgo();
 
-
+    
     @DefaultMessage("hours ago")
     @Key("time.hoursAgo")
     String time_hoursAgo();
 
-
+    
     @DefaultMessage("Less than one minute ago")
     @Key("time.lessThanOneMinuteAgo")
     String time_lessThanOneMinuteAgo();
 
-
+    
     @DefaultMessage("minutes ago")
     @Key("time.minutesAgo")
     String time_minutesAgo();
 
-
+    
     @DefaultMessage("Trash")
     @Key("trash")
     String trash();
 
-
+    
     @DefaultMessage("Clear pruning")
     @Key("tree.clearPruning")
     String tree_clearPruning();
 
-
+    
     @DefaultMessage("Prune all branches to root")
     @Key("tree.pruneAllBranchesToRoot")
     String tree_pruneAllBranchesToRoot();
 
-
+    
     @DefaultMessage("Prune branch to root")
     @Key("tree.pruneBranchToRoot")
     String tree_pruneBranchToRoot();
 
-
+    
     @DefaultMessage("Apply External Edits")
     @Key("uploadAndMerge")
     String uploadAndMerge();
@@ -1040,22 +1044,22 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMergeAdditions")
     String uploadAndMergeAdditions();
 
-
+    
     @DefaultMessage("Upload Project")
     @Key("uploadProject")
     String uploadProject();
 
-
+    
     @DefaultMessage("Username")
     @Key("userName")
     String userName();
 
-
+    
     @DefaultMessage("View Projects")
     @Key("viewProjects")
     String viewProjects();
 
-
+    
     @DefaultMessage("Watch")
     @Key("watch")
     String watch();

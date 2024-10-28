@@ -1,26 +1,33 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal;
 
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleAllowMultiValue;
+import edu.stanford.bmir.protege.web.client.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Optional;
 
 public class ScaleValueSelectionViewPresenter {
 
     private ScaleValueSelectionView view;
-    private ScaleAllowMultiValue scaleAllowMultiValue;
-    private String scaleTopClass;
 
     @Nonnull
-    private final ModalManager modalManager;
+    private final HierarchyPopupView hierarchyView;
+
+    @Nonnull
+    private final EntityHierarchyModel model;
+
+    private Optional<EntityNode> selectedEntity = Optional.empty();
+
 
     @Inject
     public ScaleValueSelectionViewPresenter(ScaleValueSelectionView view,
-                                            @Nonnull ModalManager modalManager) {
+                                            @Nonnull HierarchyPopupView hierarchyView,
+                                            @Nonnull EntityHierarchyModel model) {
         this.view = view;
-        this.modalManager = modalManager;
+        this.hierarchyView = hierarchyView;
+        this.model = model;
     }
 
     @Nonnull
@@ -28,19 +35,23 @@ public class ScaleValueSelectionViewPresenter {
         return view;
     }
 
-    public void start() {
+    public void start(WebProtegeEventBus eventBus, HierarchyDescriptor hierarchyDescriptor) {
+        this.clean();
+        model.start(eventBus,
+                hierarchyDescriptor);
+        hierarchyView.setModel(model);
+        hierarchyView.setSelectionChangedHandler(
+                entityNode -> selectedEntity = Optional.of(entityNode)
+        );
+        this.view.getHierarchyContainer().setWidget(hierarchyView);
+
     }
 
-    public List<String> getSelections() {
-        return view.getText();
+    public Optional<EntityNode> getSelection() {
+        return selectedEntity;
     }
 
-    public void setAllowMultiValue(ScaleAllowMultiValue scaleAllowMultiValue) {
-        this.scaleAllowMultiValue = scaleAllowMultiValue;
-    }
-
-    public void setScaleTopClass(String scaleTopClass) {
-        this.scaleTopClass = scaleTopClass;
-        this.view.setTopClass(scaleTopClass);
+    private void clean() {
+        this.selectedEntity = Optional.empty();
     }
 }

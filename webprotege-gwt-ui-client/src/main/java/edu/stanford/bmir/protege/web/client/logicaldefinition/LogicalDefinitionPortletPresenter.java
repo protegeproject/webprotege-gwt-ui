@@ -25,6 +25,7 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
 
     private DispatchServiceManager dispatch;
 
+
     @Inject
     public LogicalDefinitionPortletPresenter(@Nonnull SelectionModel selectionModel,
                                              @Nonnull ProjectId projectId,
@@ -57,7 +58,10 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
         } else {
             setNothingSelectedVisible(false);
             dispatch.execute(GetEntityRenderingAction.create(getProjectId(), entityData.get()),
-                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
+                    (result) -> {
+                        setDisplayedEntity(Optional.of(result.getEntityData()));
+                        view.setEntityData(result.getEntityData());
+                    });
             view.setEntity(entityData.get(), getProjectId());
         }
     }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination.PageNumberChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -73,7 +74,7 @@ public class SearchResultsListPresenter {
         resultsPage.getPageElements()
                    .stream()
                    .map(r -> {
-                       EntitySearchResultPresenter presenter = resultPresenterFactory.create(r, hierarchyPopupPresenterFactory.create(HierarchyId.CLASS_HIERARCHY));
+                       EntitySearchResultPresenter presenter = resultPresenterFactory.create(r, hierarchyPopupPresenterFactory.create(ClassHierarchyDescriptor.get()));
                        presenter.setHierarchySelectionHandler(hierarchySelectionHandler);
                        presenter.start();
                        return presenter;
