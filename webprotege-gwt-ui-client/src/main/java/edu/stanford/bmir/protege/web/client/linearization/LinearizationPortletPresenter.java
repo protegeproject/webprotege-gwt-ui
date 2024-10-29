@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
@@ -62,11 +63,9 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-
-        portletUi.setWidget(view.asWidget());
-        setDisplaySelectedEntityNameAsSubtitle(true);
-
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
+            portletUi.setWidget(view.asWidget());
+            setDisplaySelectedEntityNameAsSubtitle(true);
             for (LinearizationDefinition definition : result.getDefinitionList()) {
                 this.definitionMap.put(definition.getWhoficEntityIri(), definition);
             }
@@ -110,7 +109,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                 if (response.getWhoficEntityLinearizationSpecification() != null &&
                         response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
 
-                    dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), HierarchyId.CLASS_HIERARCHY), result -> {
+                    dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), ClassHierarchyDescriptor.get()), result -> {
                         if (result.getParents() != null) {
                             result.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
                         }
