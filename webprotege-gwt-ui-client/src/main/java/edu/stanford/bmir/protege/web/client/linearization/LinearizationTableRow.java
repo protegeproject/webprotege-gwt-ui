@@ -219,7 +219,7 @@ public class LinearizationTableRow {
 
     public LinearizationTableRow clone() {
         LinearizationTableRow clone = new LinearizationTableRow();
-        clone.linearizationSpecification = linearizationSpecification;
+        clone.linearizationSpecification = this.asLinearizationSpecification();
 
         clone.linearizationParentSelector = getCopy(linearizationParentSelector);
         clone.linearizationParentLabel = getCopy(linearizationParentLabel);
@@ -230,9 +230,9 @@ public class LinearizationTableRow {
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
-        clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
-        clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-        clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+        clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsIncludedInLinearization());
+        clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsGrouping());
+        clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsAuxiliaryAxisChild());
 
         LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal);
 

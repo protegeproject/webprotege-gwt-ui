@@ -296,7 +296,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @Override
     public void saveValues() {
         if (!isReadOnly) {
-            cancelButton.setEnabled(false);
             setBusy(true);
             List<LinearizationSpecification> specifications = this.tableRowList.stream()
                     .map(LinearizationTableRow::asLinearizationSpecification)
@@ -330,7 +329,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                         this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
                         this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
                         this.setBusy(false);
-                        this.setReadOnly();
                     }
             );
         }
