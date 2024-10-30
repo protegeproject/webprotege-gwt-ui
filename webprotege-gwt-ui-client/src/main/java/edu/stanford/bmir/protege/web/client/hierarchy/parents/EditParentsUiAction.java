@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -33,7 +33,7 @@ public class EditParentsUiAction extends AbstractUiAction {
     }
 
     private void showDialog(OWLEntity entity) {
-        editParentsPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
+        editParentsPresenter.setHierarchyDescriptor(ClassHierarchyDescriptor.get());
         editParentsPresenter.start(entity);
     }
 }
