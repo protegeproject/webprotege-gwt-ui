@@ -226,7 +226,7 @@ public class LinearizationTableRow {
         clone.parentSelectionPanel = new HorizontalPanel();
         clone.parentSelectionPanel.add(clone.linearizationParentSelector);
         clone.parentSelectionPanel.add(clone.linearizationParentLabel);
-
+        clone.tableRefresh = this.tableRefresh;
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
@@ -298,6 +298,8 @@ public class LinearizationTableRow {
                 copy.setItemSelected(i, true);
             }
         }
+
+        copy.addChangeHandler((event) -> this.handleParentSelected());
 
         return copy;
     }
