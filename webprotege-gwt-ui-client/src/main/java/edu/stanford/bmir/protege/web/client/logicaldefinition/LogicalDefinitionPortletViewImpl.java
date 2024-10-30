@@ -132,6 +132,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                     this::handleAxisValueChanged)
                     .withLabels(this.labels)
                     .withAncestorsList(this.ancestorsList)
+                    .withPostCoordinationTableConfiguration(postCoordinationTableConfiguration)
                     .withRemoveHandler((this::removeWrapper))
                     .asNewTable();
 
