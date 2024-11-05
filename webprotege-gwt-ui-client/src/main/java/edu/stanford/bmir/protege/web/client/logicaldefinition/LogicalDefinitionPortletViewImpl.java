@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
@@ -11,16 +10,12 @@ import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
-import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
+import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.annotation.Nonnull;
@@ -51,10 +46,13 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     @UiField
     HTMLPanel necessaryConditionsTooltip;
 
-    @UiField Button editValuesButton;
-    @UiField Button cancelButton;
+    @UiField
+    Button editValuesButton;
+    @UiField
+    Button cancelButton;
 
-    @UiField Button saveValuesButton;
+    @UiField
+    Button saveValuesButton;
 
     private static final LogicalDefinitionPortletViewImpl.LogicalDefinitionPortletViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionPortletViewImpl.LogicalDefinitionPortletViewImplUiBinder.class);
 
@@ -117,14 +115,15 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        dispatchServiceManager.execute(GetPostcoordinationAxisToGenericScaleAction.create(), result -> {
-            this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
-        });
+        dispatchServiceManager.execute(
+                GetPostcoordinationAxisToGenericScaleAction.create(),
+                result -> this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales()
+        );
 
         this.addDefinitionButton.setStyleName(buttonCss.addButton());
 
         this.addDefinitionButton.addClickHandler((event -> {
-            if(tableWrappers.isEmpty()) {
+            if (tableWrappers.isEmpty()) {
                 definitions.clear();
             }
             LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
@@ -146,9 +145,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         this.saveValuesButton.addClickHandler(event -> saveValues());
         displayPlaceholder();
 
-        cancelButton.addClickHandler((event) -> {
-            this.setEntity(this.currentEntity, this.projectId);
-        });
+        cancelButton.addClickHandler((event) -> this.setEntity(this.currentEntity, this.projectId));
 
         this.setHelpText(this.logicalDefinitionsTooltip, "A Logical Definition provides a way to formally define the meaning of a precoordinated entity by " +
                 "specifying a parent entity with combinations of postcoordination axes with their corresponding values.");
@@ -162,6 +159,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     public void setWidget(IsWidget w) {
 
     }
+
     @Override
     public void dispose() {
 
@@ -183,10 +181,8 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
         });
 
-        dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
-            Set<OWLEntityData> result = new HashSet<>();
-            populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
+        dispatchServiceManager.execute(GetClassAncestorsWithLinearizationAction.create(owlEntity.getIRI(), projectId), result -> {
+            ancestorsList = new ArrayList<>(result.getAncestorsWithLinearization());
 
             dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
                 this.labels = config.getLabels();
@@ -202,16 +198,16 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     @Override
     public void setEntityData(OWLEntityData entityData) {
-        this.entityData =entityData;
+        this.entityData = entityData;
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
         dispatchServiceManager.execute(GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()), (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
             this.pristineData = LogicalConditions.create(getEntityLogicalDefinitionResult.getLogicalDefinitions(), getEntityLogicalDefinitionResult.getNecessaryConditions());
-            if(getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
+            if (getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
                 definitions.getElement().getStyle().setBackgroundImage(null);
 
-                for(LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
+                for (LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
                     List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
                             .map(LogicalDefinitionTableRow::new)
                             .collect(Collectors.toList());
@@ -235,7 +231,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             } else {
                 displayPlaceholder();
             }
-            if(getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
+            if (getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
 
                 List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
                         .map(LogicalDefinitionTableRow::new)
@@ -256,7 +252,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 .flatMap(s -> s.getPostcoordinationScaleValues().stream())
                 .collect(Collectors.toList());
 
-        if(selectedScales.isEmpty()) {
+        if (selectedScales.isEmpty()) {
             List<String> equivalentRoots = axisToGenericScales.stream()
                     .filter(axis -> axis.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
                     .map(PostcoordinationAxisToGenericScale::getGenericPostcoordinationScaleTopClass)
@@ -267,9 +263,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         Set<OWLClass> roots = selectedScales.stream().map(scale -> new OWLClassImpl(IRI.create(scale)))
                 .collect(Collectors.toSet());
 
-        logicalDefinitionModal.showModal(roots, (entityNode) -> {
-            table.addNewRow(entityNode);
-        });
+        logicalDefinitionModal.showModal(roots, table::addNewRow);
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
@@ -278,7 +272,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                 .flatMap(s -> s.getPostcoordinationScaleValues().stream())
                 .collect(Collectors.toList());
 
-        if(selectedScales.isEmpty()) {
+        if (selectedScales.isEmpty()) {
             List<String> equivalentRoots = axisToGenericScales.stream()
                     .filter(axis -> axis.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
                     .map(PostcoordinationAxisToGenericScale::getGenericPostcoordinationScaleTopClass)
@@ -287,7 +281,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         }
 
         Map<String, String> map = new HashMap<>();
-        for(String availableAxis : selectedScales) {
+        for (String availableAxis : selectedScales) {
             map.put(availableAxis, availableAxis);
         }
 
@@ -298,9 +292,9 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         dispatchServiceManager.execute(GetEntityPostCoordinationAction.create(owlEntity.getIRI().toString(), projectId), postcoordination -> {
 
             this.superclassSpecification = postcoordination.getPostCoordinationSpecification();
-            if(this.superclassSpecification.getPostCoordinationSpecifications() != null) {
+            if (this.superclassSpecification.getPostCoordinationSpecifications() != null) {
                 Optional<PostCoordinationSpecification> mmsSpec = this.superclassSpecification.getPostCoordinationSpecifications()
-                        .stream().filter( spec -> spec.getLinearizationView().equalsIgnoreCase("http://id.who.int/icd/release/11/mms"))
+                        .stream().filter(spec -> spec.getLinearizationView().equalsIgnoreCase("http://id.who.int/icd/release/11/mms"))
                         .findFirst();
                 mmsSpec.ifPresent(postCoordinationSpecification -> necessaryConditionsTable.setAvailableAxisFromSpec(postCoordinationSpecification, this.labels));
             }
@@ -309,25 +303,25 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     }
 
     private void saveValues() {
-       List<LogicalDefinition> definitions = this.tableWrappers.stream().map(LogicalDefinitionTableWrapper::getLogicalDefinition).collect(Collectors.toList());
+        List<LogicalDefinition> definitions = this.tableWrappers.stream().map(LogicalDefinitionTableWrapper::getLogicalDefinition).collect(Collectors.toList());
 
-       boolean hasDuplicates = verifyForDuplicates(definitions);
+        boolean hasDuplicates = verifyForDuplicates(definitions);
 
-       if(!hasDuplicates) {
-           this.dispatchServiceManager.execute(UpdateLogicalDefinitionAction.create(ChangeRequestId.get(uuidV4Provider.get()),
-                   projectId,
-                   this.currentEntity.asOWLClass(),
-                   this.pristineData,
-                   LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
-                   "Edited the Logical Definitons and/or Necessary Conditions for " + this.entityData.getBrowserText()
-           ), response ->{
-               switchToReadOnly();
-           });
-       } else {
-           messageBox.showAlert(
-                   "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
-                   "");
-       }
+        if (!hasDuplicates) {
+            this.dispatchServiceManager.execute(
+                    UpdateLogicalDefinitionAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                            projectId,
+                            this.currentEntity.asOWLClass(),
+                            this.pristineData,
+                            LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
+                            "Edited the Logical Definitons and/or Necessary Conditions for " + this.entityData.getBrowserText()
+                    ), response -> switchToReadOnly()
+            );
+        } else {
+            messageBox.showAlert(
+                    "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
+                    "");
+        }
 
     }
 
@@ -347,36 +341,37 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private void removeWrapper(LogicalDefinitionTableWrapper wrapper) {
         this.tableWrappers.remove(wrapper);
         this.definitions.remove(wrapper.asWidget());
-        if(tableWrappers.isEmpty()){
+        if (tableWrappers.isEmpty()) {
             displayPlaceholder();
         }
     }
 
     private void populateAncestorsFromTree(AncestorClassHierarchy node, Set<OWLEntityData> accumulator) {
         accumulator.add(node.getCurrentNode());
-        for(AncestorClassHierarchy child: node.getChildren()) {
+        for (AncestorClassHierarchy child : node.getChildren()) {
             populateAncestorsFromTree(child, accumulator);
         }
     }
+
     private void switchToReadOnly() {
         toggleButtons(true);
         this.necessaryConditionsTable.setReadOnly();
-        for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
+        for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableReadOnly();
         }
     }
 
-    private void toggleButtons(boolean readOnly){
+    private void toggleButtons(boolean readOnly) {
         this.saveValuesButton.setVisible(!readOnly);
         this.cancelButton.setVisible(!readOnly);
         this.editValuesButton.setVisible(readOnly);
         this.addDefinitionButton.setEnabled(!readOnly);
     }
 
-    private void switchToEditable(){
+    private void switchToEditable() {
         this.toggleButtons(false);
         this.necessaryConditionsTable.setEditable();
-        for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
+        for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }
     }

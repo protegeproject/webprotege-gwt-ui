@@ -623,6 +623,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityLogicalDefinitionResult _GetEntityLogicalDefinitionResult;
     SetNamedHierarchiesAction _SetNamedHierarchiesAction;
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
+    GetClassAncestorsWithLinearizationAction _GetClassAncestorsWithLinearizationAction;
+    GetClassAncestorsWithLinearizationResult _GetClassAncestorsWithLinearizationResult;
 
     public RpcWhiteList() {
     }
