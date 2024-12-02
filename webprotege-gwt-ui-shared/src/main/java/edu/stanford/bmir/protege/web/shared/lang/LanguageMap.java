@@ -63,7 +63,7 @@ public abstract class LanguageMap {
             }
             lastIndexOfHyphen = superLang.lastIndexOf("-");
         }
-        return map.values().stream().findFirst().orElse("");
+        return "";
     }
 
     @JsonValue

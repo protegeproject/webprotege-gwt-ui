@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @AutoValue
@@ -28,4 +30,8 @@ public abstract class AnnotationPropertyHierarchyDescriptor implements Hierarchy
     @JsonProperty("roots")
     public abstract Set<OWLAnnotationProperty> getRoots();
 
+    @Override
+    public Optional<RootCriteria> getEntityMatchCriteria() {
+        return Optional.empty();
+    }
 }

@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @AutoValue
@@ -30,4 +32,9 @@ public abstract class DataPropertyHierarchyDescriptor implements HierarchyDescri
 
     @JsonProperty("roots")
     public abstract Set<OWLDataProperty> getRoots();
+
+    @Override
+    public Optional<RootCriteria> getEntityMatchCriteria() {
+        return Optional.empty();
+    }
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -12,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.*;
@@ -71,6 +74,10 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private AcceptKeyHandler acceptKeyHandler = () -> {};
 
+    private EntityMatchCriteria resultsSetFilter = EntityTypeIsOneOfCriteria.get(
+            ImmutableSet.of(EntityType.CLASS, EntityType.OBJECT_PROPERTY, EntityType.DATA_PROPERTY, EntityType.ANNOTATION_PROPERTY, EntityType.NAMED_INDIVIDUAL, EntityType.DATATYPE)
+    );
+
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
                            @Nonnull SearchView view,
@@ -121,6 +128,10 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private void handleSearchSettings(GetSearchSettingsResult result) {
         view.setSearchFilterVisible(!result.getFilters().isEmpty());
+    }
+
+    public void setResultsSetFilter(@Nonnull EntityMatchCriteria resultsSetFilter) {
+        this.resultsSetFilter = checkNotNull(resultsSetFilter);
     }
 
     private void handleProjectLangTags(GetProjectLangTagsResult result) {
@@ -178,7 +189,8 @@ public class SearchPresenter implements HasInitialFocusable {
                                                                         entityTypes,
                                                                         langTagFilter,
                                                                         searchFilters,
-                                                                        PageRequest.requestPage(pageNumber)),
+                                                                        PageRequest.requestPage(pageNumber),
+                        resultsSetFilter),
                                        view,
                                        this::displaySearchResult);
     }

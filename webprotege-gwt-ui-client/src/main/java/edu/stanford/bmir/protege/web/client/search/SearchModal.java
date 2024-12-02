@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -39,6 +40,10 @@ public class SearchModal {
         this.messages = messages;
         this.selectionModel = selectionModel;
         title = messages.search();
+    }
+
+    public void setResultsSetFilter(EntityMatchCriteria resultsSetFilter) {
+        searchPresenter.setResultsSetFilter(resultsSetFilter);
     }
 
     public void setEntityTypes(EntityType<?>... entityTypes) {
