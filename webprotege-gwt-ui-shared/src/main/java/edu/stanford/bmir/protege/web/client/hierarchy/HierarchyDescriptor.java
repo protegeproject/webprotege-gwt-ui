@@ -16,4 +16,5 @@ import java.util.Optional;
 public interface HierarchyDescriptor {
 
     Optional<RootCriteria> getEntityMatchCriteria();
+
 }
