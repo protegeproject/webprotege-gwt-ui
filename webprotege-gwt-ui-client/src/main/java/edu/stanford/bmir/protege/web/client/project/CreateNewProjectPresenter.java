@@ -80,6 +80,7 @@ public class CreateNewProjectPresenter {
     public void start() {
         view.clear();
         view.setFileUploadEnabled(loggedInUserManager.isAllowedApplicationAction(UPLOAD_PROJECT));
+        view.setFileSourceTypeOptions();
     }
 
     private boolean validate() {
@@ -98,10 +99,12 @@ public class CreateNewProjectPresenter {
 
 
     private void submitCreateProjectRequest(ProjectCreatedHandler handler) {
-        if (view.isFileUploadSpecified()) {
+        String fileSourceType = view.getFileSourceType();
+        if (fileSourceType.equals("owl") && view.isFileUploadSpecified()) {
             uploadSourcesAndCreateProject(handler);
-        }
-        else {
+        } else if (fileSourceType.equals("backup") && view.isFileUploadSpecified()) {
+            //do stuff here
+        } else {
             createEmptyProject(handler);
         }
     }

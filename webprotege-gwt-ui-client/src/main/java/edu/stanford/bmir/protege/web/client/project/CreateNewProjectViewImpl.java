@@ -50,6 +50,9 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @Nonnull
     private final MessageBox messageBox;
 
+    @UiField
+    ListBox fileSourceType;
+
     private HandlerRegistration submitCompleteHandlerRegistraion = () -> {};
 
 
@@ -137,5 +140,19 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
         super.onAttach();
         projectNameField.setFocus(true);
         fileUpload.getElement().setId(FILE_UPLOAD_ID);
+    }
+
+    @Override
+    public String getFileSourceType() {
+        int selectedIndex = fileSourceType.getSelectedIndex();
+        return selectedIndex >= 0 ? fileSourceType.getValue(selectedIndex) : "";
+    }
+
+    @Override
+    public void setFileSourceTypeOptions() {
+        fileSourceType.clear();
+        fileSourceType.addItem("OWL file", "owl");
+        fileSourceType.addItem("Backup files", "backup");
+        fileSourceType.setSelectedIndex(0); // Default to the first option
     }
 }

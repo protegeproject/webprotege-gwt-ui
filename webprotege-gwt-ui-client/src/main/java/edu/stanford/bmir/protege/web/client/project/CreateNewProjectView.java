@@ -75,4 +75,8 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
 
     @Nonnull
     String getFileUploadElementId();
+
+    String getFileSourceType();
+
+    void setFileSourceTypeOptions();
 }
