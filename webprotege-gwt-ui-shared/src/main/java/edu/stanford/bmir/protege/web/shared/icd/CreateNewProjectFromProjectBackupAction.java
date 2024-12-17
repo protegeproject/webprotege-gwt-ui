@@ -21,7 +21,7 @@ public class CreateNewProjectFromProjectBackupAction implements Action<CreateNew
     }
 
     @JsonCreator
-    public CreateNewProjectFromProjectBackupAction(@JsonProperty("projectId") ProjectId newProjectId,
+    public CreateNewProjectFromProjectBackupAction(@JsonProperty("newProjectId") ProjectId newProjectId,
                                   @JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings) {
         this.newProjectId = newProjectId;
         this.newProjectSettings = checkNotNull(newProjectSettings);
