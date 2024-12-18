@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -63,9 +64,10 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(view.asWidget());
+        setDisplaySelectedEntityNameAsSubtitle(true);
+
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
-            portletUi.setWidget(view.asWidget());
-            setDisplaySelectedEntityNameAsSubtitle(true);
             for (LinearizationDefinition definition : result.getDefinitionList()) {
                 this.definitionMap.put(definition.getWhoficEntityIri(), definition);
             }
@@ -102,6 +104,8 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
+            dispatch.execute(GetEntityRenderingAction.create(getProjectId(), entityData.get()),
+                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
             this.entityParentsMap.clear();
             dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
 
@@ -126,6 +130,5 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private void handleSetEntity(Optional<OWLEntity> entity) {
         handleAfterSetEntity(entity);
-
     }
 }
