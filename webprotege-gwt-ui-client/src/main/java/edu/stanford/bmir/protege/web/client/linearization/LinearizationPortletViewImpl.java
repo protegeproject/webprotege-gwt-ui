@@ -85,7 +85,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     private final TableRefresh tableRefresh = (linearizationTableRow) -> {
         flexTable.removeAllRows();
         this.tableRowList = this.tableRowList.stream().map(row -> {
-            if (row.getLinearizationDefinition().getWhoficEntityIri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getWhoficEntityIri())) {
+            if (row.getLinearizationDefinition().getLinearizationUri().equalsIgnoreCase(linearizationTableRow.getLinearizationDefinition().getLinearizationUri())) {
                 return linearizationTableRow;
             }
             return row;
