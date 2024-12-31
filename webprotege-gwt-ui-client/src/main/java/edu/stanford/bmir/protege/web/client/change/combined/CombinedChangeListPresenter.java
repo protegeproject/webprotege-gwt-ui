@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
+import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.change.ChangeDetailsView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
@@ -13,7 +14,6 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
-import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -27,7 +27,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
@@ -103,14 +103,9 @@ public class CombinedChangeListPresenter {
         this.pageNumberChangedHandler = pageNumber -> displayChangesForProject();
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
-        GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.empty(), pageRequest);
-        lastAction = Optional.of(action);
-        dispatch.execute(action,
-                hasBusy,
-                (projChangeResult) -> {
-                    GetProjectChangesForHistoryViewAction linAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.empty(), pageRequest);
-                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
-                });
+
+        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.empty(), pageRequest);
+        dispatch.execute(projectHistoryAction, hasBusy, this::fillView);
     }
 
     public void displayChangesForEntity(@Nonnull OWLEntity entity) {
@@ -118,65 +113,35 @@ public class CombinedChangeListPresenter {
         this.pageNumberChangedHandler = pageNumber -> displayChangesForEntity(entity);
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
-        GetProjectChangesAction action = GetProjectChangesAction.create(projectId, Optional.of(entity), pageRequest);
-        dispatch.execute(action,
-                hasBusy,
-                (projChangeResult) -> {
-                    GetProjectChangesForHistoryViewAction linAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.of(entity), pageRequest);
-                    dispatch.execute(linAction, hasBusy, (linChangeResult) -> fillView(projChangeResult, linChangeResult));
-                });
-    }
 
-//    public void displayChangesForWatches(@Nonnull UserId userId) {
-//        checkNotNull(userId);
-//        this.pageNumberChangedHandler = pageNumber -> displayChangesForWatches(userId);
-//        view.clear();
-//        GetWatchedEntityChangesAction action = GetWatchedEntityChangesAction.create(projectId, userId);
-//        dispatch.execute(action,
-//                hasBusy,
-//                this::fillView);
-//    }
+        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.of(entity), pageRequest);
+        dispatch.execute(projectHistoryAction, hasBusy, this::fillView);
+    }
 
     public void clear() {
         view.clear();
     }
 
-    private void fillView(HasProjectChanges projChangeResult, HasProjectChanges linChangeResult) {
-        Page<ProjectChange> projChangesPage = projChangeResult.getProjectChanges();
-        Page<ProjectChange> linChangesPage = linChangeResult.getProjectChanges();
-        List<LinearizationChange> linChanges = new ArrayList<>();
-        List<OntologyChange> ontologyChanges = new ArrayList<>();
-        linChangesPage.getPageElements()
-                .forEach(linChange -> linChanges.add(LinearizationChange.createChange(linChange)));
-        projChangesPage.getPageElements()
-                .forEach(ontChange -> ontologyChanges.add(OntologyChange.createChange(ontChange)));
-        List<GeneralProjectChange> allChanges = new ArrayList<>(linChanges);
-        allChanges.addAll(ontologyChanges);
-        Page<GeneralProjectChange> totalProjectChanges = Page.create(
-                projChangesPage.getPageNumber(),
-                Math.max(projChangesPage.getPageCount(), linChangesPage.getPageCount()),
-                allChanges,
-                allChanges.size()
-        );
-
+    private void fillView(HasProjectChanges result) {
+        Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
                 viewChanges -> {
                     if (viewChanges) {
-                        insertChangesIntoView(totalProjectChanges);
+                        insertChangesIntoView(changes);
                     }
                 });
     }
 
-    private void insertChangesIntoView(Page<GeneralProjectChange> changes) {
-        List<GeneralProjectChange> generalProjectChanges = new ArrayList<>(changes.getPageElements());
-        generalProjectChanges.sort(Comparator.comparingLong(change -> change.getChange().getTimestamp()));
-        Collections.reverse(generalProjectChanges);
+    private void insertChangesIntoView(Page<ProjectChange> changes) {
+        List<ProjectChange> projectChanges = new ArrayList<>(changes.getPageElements());
+        projectChanges.sort(Ordering.compound(Collections.singletonList(
+                Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
         long previousTimeStamp = 0;
         view.setPageCount(changes.getPageCount());
         view.setPageNumber(changes.getPageNumber());
-        for (final GeneralProjectChange generalProjectChange : generalProjectChanges) {
-            long changeTimeStamp = generalProjectChange.getChange().getTimestamp();
+        for (final ProjectChange projectChange : projectChanges) {
+            long changeTimeStamp = projectChange.getTimestamp();
             if (!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
@@ -185,38 +150,16 @@ public class CombinedChangeListPresenter {
                         .format(date));
             }
 
-            CombinedChangeDetailsView view = new CombinedChangeDetailsViewImpl();
-
-            view.setAuthor(generalProjectChange.getChange().getAuthor());
-            view.setHighLevelDescription(generalProjectChange.getChange().getSummary());
+            ChangeDetailsView view = new CombinedChangeDetailsViewImpl();
+            view.setRevision(null);
+            view.setAuthor(projectChange.getAuthor());
+            view.setHighLevelDescription(projectChange.getSummary());
             view.setRevertRevisionVisible(false);
-
-
-            if (generalProjectChange instanceof OntologyChange) {
-                view.setRevision(generalProjectChange.getChange().getRevisionNumber());
-                view.setRevertRevisionHandler(revisionNumber -> CombinedChangeListPresenter.this.handleRevertRevision(
-                        generalProjectChange.getChange()));
-                view.setDownloadRevisionHandler(revisionNumber -> {
-                    ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
-                            projectId,
-                            revisionNumber,
-                            DownloadFormatExtension.owl);
-                    downloader.download();
-                });
-                view.setDownloadRevisionVisible(downloadVisible);
-                if (revertChangesVisible) {
-                    permissionChecker.hasPermission(REVERT_CHANGES,
-                            view::setRevertRevisionVisible);
-                }
-            } else {
-                view.setRevision(null);
-                view.setRevertRevisionVisible(false);
-            }
-
-            Page<DiffElement<String, String>> page = generalProjectChange.getChange().getDiff();
+            view.setDownloadRevisionVisible(false);
+            Page<DiffElement<String, String>> page = projectChange.getDiff();
             List<DiffElement<String, String>> pageElements = page.getPageElements();
             view.setDiff(pageElements, (int) page.getTotalElements());
-            view.setChangeCount(generalProjectChange.getChange().getChangeCount());
+            view.setChangeCount(projectChange.getChangeCount());
             view.setTimestamp(changeTimeStamp);
             this.view.addChangeDetailsView(view);
         }
