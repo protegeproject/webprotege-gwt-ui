@@ -69,7 +69,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
         dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
             for (LinearizationDefinition definition : result.getDefinitionList()) {
-                this.definitionMap.put(definition.getWhoficEntityIri(), definition);
+                this.definitionMap.put(definition.getLinearizationUri(), definition);
             }
             view.setLinearizationDefinitonMap(this.definitionMap);
             handleSetEntity(getSelectedEntity());

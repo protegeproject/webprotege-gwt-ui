@@ -124,7 +124,7 @@ public class LinearizationTableRow {
     public void populateDerivedLinearizationParents(List<LinearizationTableRow> rows) {
         if (isDerived()) {
             LinearizationTableRow mainRow = rows.stream()
-                    .filter(linearizationRow -> linearizationRow.linearizationDefinition.getId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
+                    .filter(linearizationRow -> linearizationRow.linearizationDefinition.getLinearizationId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
                     .findFirst()
                     .orElseThrow(() -> {
                         logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
@@ -183,7 +183,7 @@ public class LinearizationTableRow {
                 this.isPartOfCheckbox.getValue().getValue(),
                 this.parentIri,
                 this.linearizationDefinition.getSortingCode(),
-                this.linearizationDefinition.getWhoficEntityIri(),
+                this.linearizationDefinition.getLinearizationUri(),
                 this.commentsWidget.getText()
         );
         return response;

@@ -10,9 +10,9 @@ import java.io.Serializable;
 
 @GwtCompatible(serializable = true)
 public class LinearizationDefinition implements IsSerializable, Serializable {
-    private String id;
+    private String linearizationId;
 
-    private String whoficEntityIri;
+    private String linearizationUri;
 
     private String linearizationMode;
 
@@ -30,15 +30,15 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
     }
 
     @JsonCreator
-    public LinearizationDefinition(@JsonProperty("Id") String id,
-                                   @JsonProperty("whoficEntityIri") String whoficEntityIri,
+    public LinearizationDefinition(@JsonProperty("linearizationId") String linearizationId,
+                                   @JsonProperty("linearizationUri") String linearizationUri,
                                    @JsonProperty("linearizationMode") String linearizationMode,
                                    @JsonProperty("rootId") String rootId,
-                                   @JsonProperty("DisplayLabel") String displayLabel,
+                                   @JsonProperty("displayLabel") String displayLabel,
                                    @JsonProperty("coreLinId") String coreLinId,
                                    @JsonProperty("sortingCode") String sortingCode) {
-        this.id = id;
-        this.whoficEntityIri = whoficEntityIri;
+        this.linearizationId = linearizationId;
+        this.linearizationUri = linearizationUri;
         this.linearizationMode = linearizationMode;
         this.rootId = rootId;
         this.coreLinId = coreLinId;
@@ -46,12 +46,12 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         this.displayLabel = displayLabel;
     }
 
-    public String getId() {
-        return id;
+    public String getLinearizationId() {
+        return linearizationId;
     }
 
-    public String getWhoficEntityIri() {
-        return whoficEntityIri;
+    public String getLinearizationUri() {
+        return linearizationUri;
     }
 
     public String getLinearizationMode() {
@@ -77,8 +77,8 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
     @Override
     public String toString() {
         return "LinearizationDefinition{" +
-                "id='" + id + '\'' +
-                ", whoficEntityIri='" + whoficEntityIri + '\'' +
+                "linearizationId='" + linearizationId + '\'' +
+                ", linearizationUri='" + linearizationUri + '\'' +
                 ", linearizationMode='" + linearizationMode + '\'' +
                 ", rootId='" + rootId + '\'' +
                 ", coreLinId='" + coreLinId + '\'' +

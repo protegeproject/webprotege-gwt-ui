@@ -111,7 +111,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         WhoficEntityPostCoordinationSpecification specification = new WhoficEntityPostCoordinationSpecification(entityIri, "ICD", new ArrayList<>());
         boolean somethingChanged = false;
         for (PostCoordinationTableRow tableRow : this.tableRows) {
-            PostCoordinationSpecification postCoordinationSpecification = new PostCoordinationSpecification(tableRow.getLinearizationDefinition().getWhoficEntityIri(),
+            PostCoordinationSpecification postCoordinationSpecification = new PostCoordinationSpecification(tableRow.getLinearizationDefinition().getLinearizationUri(),
                     new ArrayList<>(),
                     new ArrayList<>(),
                     new ArrayList<>(),
@@ -260,7 +260,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         for(PostCoordinationTableRow row : this.tableRows) {
             if(!row.isDerived()) {
                 for(PostCoordinationTableRow childRow : this.tableRows) {
-                    if(childRow.isDerived() && childRow.getLinearizationDefinition().getCoreLinId().equalsIgnoreCase(row.getLinearizationDefinition().getId())) {
+                    if(childRow.isDerived() && childRow.getLinearizationDefinition().getCoreLinId().equalsIgnoreCase(row.getLinearizationDefinition().getLinearizationId())) {
                         for(PostCoordinationTableCell parentCell: row.getCellList()) {
                             for(PostCoordinationTableCell childCell: childRow.getCellList()) {
                                 if(parentCell.getAxisLabel().getPostCoordinationAxis().equalsIgnoreCase(childCell.getAxisLabel().getPostCoordinationAxis())) {
@@ -340,7 +340,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                 for (PostCoordinationTableCell cell : row.getCellList()) {
                     PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
                             .filter(spec -> spec.getLinearizationView()
-                                    .equalsIgnoreCase(cell.getLinearizationDefinition().getWhoficEntityIri()))
+                                    .equalsIgnoreCase(cell.getLinearizationDefinition().getLinearizationUri()))
                             .findFirst()
                             .orElse(null);
 

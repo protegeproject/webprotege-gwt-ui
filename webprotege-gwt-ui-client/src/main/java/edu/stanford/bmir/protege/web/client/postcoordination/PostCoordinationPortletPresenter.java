@@ -142,7 +142,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
                 for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
-                    definitionMap.put(definition.getWhoficEntityIri(), definition);
+                    definitionMap.put(definition.getLinearizationUri(), definition);
                 }
                 view.setLinearizationDefinitonMap(definitionMap);
                 view.initializeTable();
