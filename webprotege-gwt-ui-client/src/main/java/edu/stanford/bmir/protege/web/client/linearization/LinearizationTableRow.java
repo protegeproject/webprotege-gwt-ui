@@ -42,6 +42,8 @@ public class LinearizationTableRow {
 
     HorizontalPanel parentSelectionPanel;
 
+    LinearizationTableResourceBundle.LinearizationCss linearizationCss = LinearizationTableResourceBundle.INSTANCE.style();
+
     private LinearizationTableRow() {
 
     }
@@ -110,8 +112,7 @@ public class LinearizationTableRow {
                 }
             }
 
-            String selectedItemText = linearizationParentSelector.getSelectedValue().equals("") ? "Select a parent" : linearizationParentSelector.getSelectedItemText();
-            this.linearizationParentLabel.setText(selectedItemText);
+            setLinearizationParentLabel();
 
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
             this.linearizationParentSelector.setVisible(false);
@@ -119,6 +120,19 @@ public class LinearizationTableRow {
             this.linearizationParentLabel.setVisible(true);
 
         }
+    }
+
+    private void setLinearizationParentLabel() {
+        String selectedItemText = "Select a parent";
+        if (linearizationParentSelector.getSelectedValue().equals("") && baseEntityParentsMap.size() == 1) {
+            Optional<String> keysOptional = baseEntityParentsMap.keySet().stream().findFirst();
+            selectedItemText = "[" + baseEntityParentsMap.get(keysOptional.get()) + "]";
+            this.linearizationParentLabel.addStyleName(linearizationCss.italic());
+        } else if (!linearizationParentSelector.getSelectedValue().equals("")) {
+            selectedItemText = linearizationParentSelector.getSelectedItemText();
+            this.linearizationParentLabel.removeStyleName(linearizationCss.italic());
+        }
+        this.linearizationParentLabel.setText(selectedItemText);
     }
 
     public void populateDerivedLinearizationParents(List<LinearizationTableRow> rows) {
@@ -134,7 +148,8 @@ public class LinearizationTableRow {
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());
-            this.linearizationParentLabel.addStyleName(LinearizationTableResourceBundle.INSTANCE.style().getSecondaryParent());
+            this.linearizationParentLabel.addStyleName(mainRow.linearizationParentLabel.getStyleName());
+            this.linearizationParentLabel.addStyleName(linearizationCss.getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
         }
     }
@@ -191,25 +206,25 @@ public class LinearizationTableRow {
 
 
     public void populateFlexTable(int index, FlexTable flexTable) {
-        LinearizationTableResourceBundle.LinearizationCss style = LinearizationTableResourceBundle.INSTANCE.style();
         flexTable.setWidget(index, 0, linearizationDefinitionWidget);
-        flexTable.getCellFormatter().addStyleName(index, 0, style.getTableText());
-        flexTable.getCellFormatter().addStyleName(index, 0, style.getLinearizationDefinition());
+        flexTable.getCellFormatter().addStyleName(index, 0, linearizationCss.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 0, linearizationCss.getLinearizationDefinition());
 
         flexTable.setWidget(index, 1, isPartOfCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 1, style.getTableCheckBox());
+        flexTable.getCellFormatter().addStyleName(index, 1, linearizationCss.getTableCheckBox());
 
         flexTable.setWidget(index, 2, isGroupingCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 2, style.getTableCheckBox());
+        flexTable.getCellFormatter().addStyleName(index, 2, linearizationCss.getTableCheckBox());
 
         flexTable.setWidget(index, 3, isAuxAxChildCheckbox);
-        flexTable.getCellFormatter().addStyleName(index, 3, style.getTableCheckBox());
+        flexTable.getCellFormatter().addStyleName(index, 3, linearizationCss.getTableCheckBox());
 
         flexTable.setWidget(index, 4, parentSelectionPanel);
-        flexTable.getCellFormatter().addStyleName(index, 4, style.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 4, linearizationCss.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 4, linearizationCss.getLinearizationDefinition());
 
         flexTable.setWidget(index, 5, codingNotes);
-        flexTable.getCellFormatter().addStyleName(index, 5, style.getTableText());
+        flexTable.getCellFormatter().addStyleName(index, 5, linearizationCss.getTableText());
 
     }
 
