@@ -53,6 +53,13 @@
                 <ui:safehtml from="{msg.projectSettings_owl_import_helpText}"/>
             </label>
         </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}" ui:field="backupFileBranchContainer" visible="false">
+            <g:Label text="WHOFIC Ontology Files Branch Name" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="backupFileBranchField" addStyleNames="{style.formField}"/>
+            <label class="{wp.style.formHelpText} {style.helpText}">
+                Please enter the Git branch name for the backup files.
+            </label>
+        </g:HTMLPanel>
 
 
     </g:HTMLPanel>

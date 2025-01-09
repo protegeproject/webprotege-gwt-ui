@@ -13,6 +13,7 @@ public class CreateNewProjectFromProjectBackupAction implements Action<CreateNew
     private ProjectId newProjectId;
 
     private NewProjectSettings newProjectSettings;
+    private String branchName;
 
     /**
      * For serialization purposes only
@@ -22,9 +23,11 @@ public class CreateNewProjectFromProjectBackupAction implements Action<CreateNew
 
     @JsonCreator
     public CreateNewProjectFromProjectBackupAction(@JsonProperty("newProjectId") ProjectId newProjectId,
-                                  @JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings) {
+                                                   @JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings,
+                                                   @JsonProperty("branchName") String branchName) {
         this.newProjectId = newProjectId;
         this.newProjectSettings = checkNotNull(newProjectSettings);
+        this.branchName = branchName;
     }
 
     public ProjectId getNewProjectId() {
@@ -57,6 +60,7 @@ public class CreateNewProjectFromProjectBackupAction implements Action<CreateNew
         return toStringHelper("CreateNewProjectFromProjectBackupAction")
                 .addValue(newProjectId)
                 .addValue(newProjectSettings)
+                .addValue(branchName)
                 .toString();
     }
 }
