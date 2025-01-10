@@ -152,7 +152,8 @@ public class CreateNewProjectPresenter {
     private void submitCreateNewProjectFromProjectBackupRequest(NewProjectSettings newProjectSettings, ProjectCreatedHandler projectCreatedHandler) {
         String uuid = UuidV4.uuidv4();
         ProjectId newProjectId = ProjectId.get(uuid);
-        dispatchServiceManager.execute(new CreateNewProjectFromProjectBackupAction(newProjectId, newProjectSettings, view.getProjectVersioningBranch()),
+        String branchName = view.getProjectVersioningBranch();
+        dispatchServiceManager.execute(new CreateNewProjectFromProjectBackupAction(newProjectId, newProjectSettings, branchName),
                 new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectFromProjectBackupResult>(
                         errorDisplay,
                         progressDisplay) {
