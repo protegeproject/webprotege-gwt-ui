@@ -38,6 +38,10 @@ public class CreateNewProjectFromProjectBackupAction implements Action<CreateNew
         return newProjectSettings;
     }
 
+    public String getBranchName() {
+        return branchName;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(newProjectId, newProjectSettings);

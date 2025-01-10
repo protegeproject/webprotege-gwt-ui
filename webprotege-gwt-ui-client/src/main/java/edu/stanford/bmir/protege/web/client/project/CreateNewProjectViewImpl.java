@@ -184,6 +184,6 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
 
     @Override
     public String getProjectVersioningBranch() {
-        return backupFileBranchField.getText().trim();
+        return backupFileBranchField.getValue().trim();
     }
 }
