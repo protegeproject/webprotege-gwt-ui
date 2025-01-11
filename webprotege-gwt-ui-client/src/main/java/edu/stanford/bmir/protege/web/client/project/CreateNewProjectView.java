@@ -79,4 +79,12 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
     String getFileSourceType();
 
     void setFileSourceTypeOptions();
+
+    boolean isBackupFilesBranchSet();
+
+    void showBranchNameMissingMessage();
+
+    boolean isBackupFileSourceType();
+
+    String getProjectVersioningBranch();
 }

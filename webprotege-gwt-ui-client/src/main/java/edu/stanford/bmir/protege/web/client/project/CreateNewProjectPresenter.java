@@ -84,6 +84,9 @@ public class CreateNewProjectPresenter {
         if (view.getProjectName().isEmpty()) {
             view.showProjectNameMissingMessage();
             return false;
+        }else if ( view.isBackupFileSourceType() && !view.isBackupFilesBranchSet()){
+            view.showBranchNameMissingMessage();
+            return false;
         }
         return true;
     }
@@ -149,7 +152,8 @@ public class CreateNewProjectPresenter {
     private void submitCreateNewProjectFromProjectBackupRequest(NewProjectSettings newProjectSettings, ProjectCreatedHandler projectCreatedHandler) {
         String uuid = UuidV4.uuidv4();
         ProjectId newProjectId = ProjectId.get(uuid);
-        dispatchServiceManager.execute(new CreateNewProjectFromProjectBackupAction(newProjectId, newProjectSettings),
+        String branchName = view.getProjectVersioningBranch();
+        dispatchServiceManager.execute(new CreateNewProjectFromProjectBackupAction(newProjectId, newProjectSettings, branchName),
                 new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectFromProjectBackupResult>(
                         errorDisplay,
                         progressDisplay) {
