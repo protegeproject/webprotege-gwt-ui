@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -99,39 +98,33 @@ public class EditParentsPresenter {
                     .collect(toImmutableSet());
             dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
                     changeEntityParentsResult -> {
-                        if (isResultValid(changeEntityParentsResult)) {
-                            view.clearClassesWithCycle();
-                            view.clearClassesWithRetiredParents();
+                        if (changeEntityParentsResult.isSuccess()) {
+                            view.clearClassesWithCycleErrors();
+                            view.clearClassesWithRetiredParentsErrors();
                             dispatch.execute(
                                     CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
                                     threadActionResult -> closer.closeModal());
                             return;
                         }
 
-                        if(hasClassesWithRetiredParents(changeEntityParentsResult)){
-                            view.clearClassesWithRetiredParents();
+                        if(changeEntityParentsResult.hasClassesWithRetiredParents()){
+                            view.clearClassesWithRetiredParentsErrors();
                             Set<OWLEntityData> classesWithRetiredParents = changeEntityParentsResult.getClassesWithRetiredParents();
                             view.markClassesWithRetiredParents(classesWithRetiredParents);
                         }
 
-                        if(hasClassesWithCycles(changeEntityParentsResult)){
-                            view.clearClassesWithCycle();
+                        if(changeEntityParentsResult.hasClassesWithCycle()){
+                            view.clearClassesWithCycleErrors();
                             Set<OWLEntityData> classesWithCycles = changeEntityParentsResult.getClassesWithCycle();
                             view.markClassesWithCycles(classesWithCycles);
                         }
+
+                        if(changeEntityParentsResult.hasLinearizationPathParent()){
+                            view.clearLinearizationPathParentErrors();
+                            OWLEntityData linearizationPathParent = changeEntityParentsResult.getLinearizationPathParent().get();
+                            view.markLinearizationPathParent(linearizationPathParent);
+                        }
                     });
         }
-    }
-
-    private boolean isResultValid(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !hasClassesWithCycles(changeEntityParentsResult) && !hasClassesWithRetiredParents(changeEntityParentsResult);
-    }
-
-    private boolean hasClassesWithCycles(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !changeEntityParentsResult.getClassesWithCycle().isEmpty();
-    }
-
-    private boolean hasClassesWithRetiredParents(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !changeEntityParentsResult.getClassesWithRetiredParents().isEmpty();
     }
 }

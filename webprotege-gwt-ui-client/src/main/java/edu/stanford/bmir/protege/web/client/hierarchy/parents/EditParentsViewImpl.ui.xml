@@ -32,6 +32,9 @@
             <g:HTML ui:field="classesWithRetiredParentsField"
                     visible="false"
                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
+            <g:HTML ui:field="linearizationPathParentField"
+                    visible="false"
+                    addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>
