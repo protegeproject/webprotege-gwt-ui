@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -31,12 +32,12 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -47,6 +48,8 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
+
+    private static final Logger logger = Logger.getLogger("ClassHierarchyPortletPresenter");
 
     @Nonnull
     private final SearchModal searchModal;
@@ -91,6 +94,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
+    @Nonnull
+    private final DispatchServiceManager dispatch;
 
     private TreeWidgetUpdater updater;
 
@@ -141,6 +146,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
+        this.dispatch = dispatch;
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
         this.updater = updaterFactory.create(treeWidget, hierarchyModel);
     }
@@ -174,7 +180,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         actionStatePresenter.start(eventBus);
 
-        hierarchyModel.start(eventBus, ClassHierarchyDescriptor.get());
         renderer.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
@@ -189,7 +194,15 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                    .install();
 
         tagVisibilityPresenter.start(filterView, treeWidget);
-        setSelectionInTree(getSelectedEntity());
+
+        dispatch.execute(GetHierarchyDescriptorAction.create(getProjectId(),
+                getDisplayContext()),
+                result -> {
+                    HierarchyDescriptor hierarchyDescriptor = result.getHierarchyDescriptor();
+                    logger.info("Displaying hierarchy for descriptor: " + hierarchyDescriptor);
+                    hierarchyModel.start(eventBus, hierarchyDescriptor);
+                    setSelectionInTree(getSelectedEntity());
+                });
 
         eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
         updater.start(eventBus);

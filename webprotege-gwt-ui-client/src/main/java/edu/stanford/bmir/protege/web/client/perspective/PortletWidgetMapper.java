@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -14,7 +16,6 @@ import edu.stanford.protege.widgetmap.client.view.ViewHolder;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -30,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public class PortletWidgetMapper implements WidgetMapper, HasDispose {
+public class PortletWidgetMapper implements WidgetMapper, HasDispose, HasDisplayContext {
 
     private final Logger logger = Logger.getLogger("PortletWidgetMapper");
 
@@ -49,6 +50,8 @@ public class PortletWidgetMapper implements WidgetMapper, HasDispose {
     private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
 
     private List<HasDispose> disposables = new ArrayList<>();
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Inject
     public PortletWidgetMapper(@Nonnull PortletFactory portletFactory,
@@ -89,6 +92,7 @@ public class PortletWidgetMapper implements WidgetMapper, HasDispose {
                 logger.info("logger.infoCreated portlet from auto-generated factory");
                 WebProtegePortletComponents portletComponents = thePortlet.get();
                 WebProtegePortletPresenter portletPresenter = portletComponents.getPresenter();
+                portletPresenter.setParentDisplayContext(this);
                 viewHolder = createViewHolder(terminalNode,
                                               portletComponents,
                                               terminalNode.getNodeProperties());
@@ -123,6 +127,7 @@ public class PortletWidgetMapper implements WidgetMapper, HasDispose {
         disposables.add(eventBus);
         portletUi.setTitle(portlet.getPortletDescriptor().getTitle());
         WebProtegePortletPresenter portletPresenter = portlet.getPresenter();
+        portletPresenter.setParentDisplayContext(this);
         disposables.add(portletPresenter);
         portletPresenter.start(portletUi, eventBus);
         ViewHolder viewHolder;
@@ -146,5 +151,20 @@ public class PortletWidgetMapper implements WidgetMapper, HasDispose {
     @Override
     public void dispose() {
         disposables.forEach(HasDispose::dispose);
+    }
+
+    @Override
+    public void setParentDisplayContext(HasDisplayContext parent) {
+        displayContextManager.setParentDisplayContext(parent);
+    }
+
+    @Override
+    public Optional<HasDisplayContext> getParentDisplayContext() {
+        return displayContextManager.getDisplayContextParent();
+    }
+
+    @Override
+    public DisplayContext getDisplayContext() {
+        return displayContextManager.getDisplayContext();
     }
 }

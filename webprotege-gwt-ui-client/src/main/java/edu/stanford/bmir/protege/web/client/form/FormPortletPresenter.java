@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -24,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 30/03/16
  */
 @Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
-public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
+public class FormPortletPresenter extends AbstractWebProtegePortletPresenter implements HasDisplayContext {
 
     @Nonnull
     private final EntityFormStackPresenter entityFormStackPresenter;
@@ -72,6 +74,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
         entityFormStackPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());
+
+        entityFormStackPresenter.setParentDisplayContext(this);
     }
 
     @Override
@@ -83,5 +87,16 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     protected void handleReloadRequest() {
         updateForms();
+    }
+
+    @Override
+    public void fillDisplayContext(DisplayContext displayContext) {
+        super.fillDisplayContext(displayContext);
+        entityFormStackPresenter.fillDisplayContext(displayContext);
+    }
+
+    @Override
+    public void setParentDisplayContext(HasDisplayContext parent) {
+        super.setParentDisplayContext(parent);
     }
 }

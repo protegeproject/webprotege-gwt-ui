@@ -6,7 +6,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.client.WidgetMapPanel;
@@ -39,6 +42,8 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
 
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
     @Inject
     public PerspectiveImpl(@Nonnull final PerspectiveId perspectiveId,
                            @Nonnull DispatchServiceManager dispatchServiceManager,
@@ -53,6 +58,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
         rootNode = Optional.empty();
+        widgetMapper.setParentDisplayContext(this);
     }
 
     @Override
@@ -147,5 +153,24 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         return toStringHelper("Perspective")
                 .add("perspectiveId", perspectiveId)
                 .toString();
+    }
+
+    @Override
+    public void setParentDisplayContext(HasDisplayContext parent) {
+        displayContextManager.setParentDisplayContext(parent);
+    }
+
+    @Override
+    public DisplayContext getDisplayContext() {
+        return displayContextManager.getDisplayContext();
+    }
+
+    @Override
+    public Optional<HasDisplayContext> getParentDisplayContext() {
+        return displayContextManager.getDisplayContextParent();
+    }
+
+    private void fillDisplayContext(DisplayContext context) {
+        context.setProperty("perspectiveId", perspectiveId.getId());
     }
 }

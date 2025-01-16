@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -606,6 +607,9 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PrimitiveFormControlData primitiveFormControlData;
     SetNamedHierarchiesAction _SetNamedHierarchiesAction;
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
+    GetHierarchyDescriptorAction _GetHierarchyDescriptorAction;
+    GetHierarchyDescriptorResult _GetHierarchyDescriptorResult;
+    DisplayContext _DisplayContext;
 
     public RpcWhiteList() {
     }

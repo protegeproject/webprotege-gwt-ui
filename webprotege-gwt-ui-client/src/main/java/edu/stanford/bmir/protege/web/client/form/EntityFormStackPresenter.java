@@ -11,6 +11,9 @@ import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -37,7 +40,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-23
  */
-public class EntityFormStackPresenter {
+public class EntityFormStackPresenter implements HasDisplayContext {
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -75,6 +78,8 @@ public class EntityFormStackPresenter {
     private EntityDisplay entityDisplay = entityData -> {
     };
 
+    private DisplayContextManager displayContextManager;
+
     @Inject
     public EntityFormStackPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull EntityFormStackView view,
@@ -90,6 +95,7 @@ public class EntityFormStackPresenter {
         this.permissionChecker = checkNotNull(permissionChecker);
         this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
         this.deprecateEntityModal = deprecateEntityModal;
+        this.displayContextManager = new DisplayContextManager(this::fillDisplayContext);
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
@@ -300,5 +306,25 @@ public class EntityFormStackPresenter {
         ImmutableSet<LangTag> stashedLangTags = ImmutableSet.copyOf(formLanguageFilterStash.getStashedLangTags());
         LangTagFilter langTagFilter = LangTagFilter.get(stashedLangTags);
         langTagFilterPresenter.setFilter(langTagFilter);
+    }
+
+    public void fillDisplayContext(DisplayContext displayContext) {
+
+    }
+
+    @Override
+    public Optional<HasDisplayContext> getParentDisplayContext() {
+        return displayContextManager.getDisplayContextParent();
+    }
+
+    @Override
+    public void setParentDisplayContext(HasDisplayContext parent) {
+        displayContextManager.setParentDisplayContext(parent);
+        formStackPresenter.setParentDisplayContext(this);
+    }
+
+    @Override
+    public DisplayContext getDisplayContext() {
+        return displayContextManager.getDisplayContext();
     }
 }

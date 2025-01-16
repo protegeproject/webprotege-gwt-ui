@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RefreshUserInterfaceEvent;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -18,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
+import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -56,6 +60,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     private Place lastPlace = null;
 
     private boolean disposed = false;
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
@@ -223,4 +229,30 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     }
 
     protected abstract void handleReloadRequest();
+
+    @Override
+    public void setParentDisplayContext(HasDisplayContext parent) {
+        displayContextManager.setParentDisplayContext(parent);
+    }
+
+    public void fillDisplayContext(DisplayContext displayContext) {
+        portletUi.ifPresent(ui -> {
+            NodeProperties np = ui.getNodeProperties();
+            np.getProperties()
+                    .forEach(prop -> {
+                        displayContext.setProperty(prop, np.getPropertyValue(prop, ""));
+                    });
+        });
+        portletUi.ifPresent(ui -> displayContext.setProperty("viewId", ui.getNodeProperty("portlet", "")));
+    }
+
+    @Override
+    public Optional<HasDisplayContext> getParentDisplayContext() {
+        return displayContextManager.getDisplayContextParent();
+    }
+
+    @Override
+    public DisplayContext getDisplayContext() {
+        return displayContextManager.getDisplayContext();
+    }
 }
