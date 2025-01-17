@@ -14,11 +14,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
-/**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 25 Sep 2018
- */
+
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.entities.ChangeEntityParents")
