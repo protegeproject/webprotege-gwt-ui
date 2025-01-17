@@ -34,5 +34,5 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     void clearLinearizationPathParentErrors();
 
-    void markLinearizationPathParent(OWLEntityData classesWithRetiredParents);
+    void markLinearizationPathParent(String linearizationPathParents);
 }

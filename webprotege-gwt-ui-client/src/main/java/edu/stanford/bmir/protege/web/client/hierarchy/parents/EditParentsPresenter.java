@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -121,8 +122,11 @@ public class EditParentsPresenter {
 
                         if(changeEntityParentsResult.hasLinearizationPathParent()){
                             view.clearLinearizationPathParentErrors();
-                            OWLEntityData linearizationPathParent = changeEntityParentsResult.getLinearizationPathParent().get();
-                            view.markLinearizationPathParent(linearizationPathParent);
+                            String parents = changeEntityParentsResult.getLinearizationPathParents()
+                                    .stream()
+                                    .map(OWLEntityData::getBrowserText)
+                                    .collect(Collectors.joining(", "));
+                            view.markLinearizationPathParent(parents);
                         }
                     });
         }

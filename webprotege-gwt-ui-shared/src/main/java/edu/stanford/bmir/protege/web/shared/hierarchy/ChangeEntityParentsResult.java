@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
-import javax.annotation.Nonnull;
-import java.util.Optional;
+import javax.annotation.*;
 import java.util.Set;
 
 /**
@@ -26,8 +23,8 @@ public abstract class ChangeEntityParentsResult implements Result {
     @JsonCreator
     public static ChangeEntityParentsResult create(@JsonProperty("classesWithCycle") @Nonnull Set<OWLEntityData> classesWithCycle,
                                                    @JsonProperty("classesWithRetiredParents") @Nonnull Set<OWLEntityData> classesWithRetiredParents,
-                                                   @JsonProperty("linearizationPathParent") Optional<OWLEntityData> linearizationPathParent ) {
-        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, linearizationPathParent);
+                                                   @JsonProperty("linearizationPathParents") @Nullable Set<OWLEntityData> linearizationPathParents) {
+        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, linearizationPathParents);
     }
 
     @JsonProperty("classesWithCycle")
@@ -38,27 +35,27 @@ public abstract class ChangeEntityParentsResult implements Result {
     @Nonnull
     public abstract Set<OWLEntityData> getClassesWithRetiredParents();
 
-    @JsonProperty("linearizationPathParent")
-    @Nonnull
-    public abstract Optional<OWLEntityData> getLinearizationPathParent();
+    @JsonProperty("linearizationPathParents")
+    @Nullable
+    public abstract Set<OWLEntityData> getLinearizationPathParents();
 
-    public boolean hasClassesWithCycle(){
+    public boolean hasClassesWithCycle() {
         return !getClassesWithCycle().isEmpty();
     }
 
-    public boolean hasClassesWithRetiredParents(){
+    public boolean hasClassesWithRetiredParents() {
         return !getClassesWithRetiredParents().isEmpty();
     }
 
-    public boolean hasLinearizationPathParent(){
-        return getLinearizationPathParent().isPresent();
+    public boolean hasLinearizationPathParent() {
+        return !getLinearizationPathParents().isEmpty();
     }
 
-    public boolean isFailure(){
-        return hasClassesWithRetiredParents()||hasClassesWithCycle()||hasLinearizationPathParent();
+    public boolean isFailure() {
+        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasLinearizationPathParent();
     }
 
-    public boolean isSuccess(){
+    public boolean isSuccess() {
         return !isFailure();
     }
 }

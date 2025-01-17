@@ -166,8 +166,8 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
     @Override
-    public void markLinearizationPathParent(OWLEntityData linearizationPathParent) {
-        linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParent.getBrowserText()));
+    public void markLinearizationPathParent(String linearizationPathParents) {
+        linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParents));
         linearizationPathParentField.setVisible(true);
     }
 }
