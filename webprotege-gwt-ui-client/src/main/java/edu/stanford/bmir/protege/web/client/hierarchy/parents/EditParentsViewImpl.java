@@ -49,9 +49,6 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     HTML classesWithRetiredParentsField;
 
-    @UiField
-    HTML linearizationPathParentField;
-
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
     interface EditParentsViewImplUiBinder extends UiBinder<HTMLPanel, EditParentsViewImpl> {
@@ -103,11 +100,11 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
             reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
             return false;
         }
-        clearReasonForChangeErrors();
+        clearErrors();
         return true;
     }
 
-    public void clearReasonForChangeErrors() {
+    public void clearErrors() {
         reasonForChangeErrorLabel.setText("");
         reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
     }
@@ -117,9 +114,8 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public void clear() {
         textBox.setText("");
         reasonForChangeTextBox.setText("");
-        clearReasonForChangeErrors();
-        clearClassesWithCycleErrors();
-        clearLinearizationPathParentErrors();
+        clearErrors();
+        clearClassesWithCycle();
     }
 
     @Nonnull
@@ -134,7 +130,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
     @Override
-    public void clearClassesWithCycleErrors() {
+    public void clearClassesWithCycle() {
         classesWithCyclesWarningField.setVisible(false);
         classesWithCyclesWarningField.setHTML("");
     }
@@ -147,7 +143,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
     @Override
-    public void clearClassesWithRetiredParentsErrors() {
+    public void clearClassesWithRetiredParents() {
         classesWithRetiredParentsField.setVisible(false);
         classesWithRetiredParentsField.setHTML("");
     }
@@ -157,17 +153,5 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         String classes = classesWithRetiredParents.stream().map(OWLEntityData::getBrowserText).collect(Collectors.joining(", "));
         classesWithCyclesWarningField.setHTML(messages.classHierarchy_parentsHaveRetiredAncestors(classes));
         classesWithCyclesWarningField.setVisible(true);
-    }
-
-    @Override
-    public void clearLinearizationPathParentErrors() {
-        linearizationPathParentField.setVisible(false);
-        linearizationPathParentField.setHTML("");
-    }
-
-    @Override
-    public void markLinearizationPathParent(OWLEntityData linearizationPathParent) {
-        linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParent.getBrowserText()));
-        linearizationPathParentField.setVisible(true);
     }
 }

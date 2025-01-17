@@ -24,15 +24,11 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     List<OWLPrimitiveData> getNewParentList();
 
-    void clearClassesWithCycleErrors();
+    void clearClassesWithCycle();
 
     void markClassesWithCycles(Set<OWLEntityData> classesWithCycles);
 
-    void clearClassesWithRetiredParentsErrors();
+    void clearClassesWithRetiredParents();
 
     void markClassesWithRetiredParents(Set<OWLEntityData> classesWithRetiredParents);
-
-    void clearLinearizationPathParentErrors();
-
-    void markLinearizationPathParent(OWLEntityData classesWithRetiredParents);
 }
