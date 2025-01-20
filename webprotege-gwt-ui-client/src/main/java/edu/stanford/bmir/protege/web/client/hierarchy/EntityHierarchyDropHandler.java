@@ -1,15 +1,16 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBoxWithReasonForChange;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
-import edu.stanford.protege.gwt.graphtree.shared.*;
+import edu.stanford.protege.gwt.graphtree.shared.DropType;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
@@ -29,20 +30,15 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
-    @Nonnull
-    private final MessageBox messageBox;
-
-    private final Messages messages;
+    private final MessageBoxWithReasonForChange messageBoxWithReasonForChange;
 
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
                                       @Nonnull DispatchServiceManager dispatchServiceManager,
-                                      @Nonnull MessageBox messageBox,
-                                      @Nonnull Messages messages) {
+                                      @Nonnull MessageBoxWithReasonForChange messageBoxWithReasonForChange) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
-        this.messageBox = checkNotNull(messageBox);
-        this.messages = checkNotNull(messages);
+        this.messageBoxWithReasonForChange = messageBoxWithReasonForChange;
     }
 
     @Nonnull
@@ -57,7 +53,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
                                   @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
-        if(!hierarchyDescriptor.isPresent()) {
+        if (!hierarchyDescriptor.isPresent()) {
             return false;
         }
         if (nodePath.isEmpty()) {
@@ -79,7 +75,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if(!hierarchyDescriptor.isPresent()) {
+        if (!hierarchyDescriptor.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -96,19 +92,32 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
-                                                                      hierarchyDescriptor.get(),
-                                                                      nodePath,
-                                                                      targetPath,
-                                                                      dropType),
-                                       moveResult -> {
-                                            if(moveResult.isMoved()) {
-                                                dropEndHandler.handleDropComplete();
-                                            }
-                                            else {
-                                                dropEndHandler.handleDropCancelled();
-                                            }
-                                       });
+
+        Optional<EntityNode> parentEntityOptional = targetPath.getLast();
+        String parentEntityBrowserText = parentEntityOptional.map(EntityNode::getBrowserText).orElse("");
+        messageBoxWithReasonForChange.showConfirmBoxWithReasonForChange("Move entities?",
+                "You are about to move selected entities to new parent " + parentEntityBrowserText + ". Are you sure?",
+                DialogButton.CANCEL,
+                dropEndHandler::handleDropCancelled,
+                DialogButton.YES,
+                (reasonForChangeText) -> dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+                                hierarchyDescriptor.get(),
+                                nodePath,
+                                targetPath,
+                                dropType),
+                        moveResult -> {
+                            if (moveResult.isMoved()) {
+                                dropEndHandler.handleDropComplete();
+                                dispatchServiceManager.execute(
+                                        CreateEntityDiscussionThreadAction.create(projectId, nodePath.getLast().get().getEntity(), reasonForChangeText),
+                                        threadActionResult -> {
+                                        });
+                            } else {
+                                dropEndHandler.handleDropCancelled();
+                            }
+                        })
+        );
+
     }
 
     @Override
