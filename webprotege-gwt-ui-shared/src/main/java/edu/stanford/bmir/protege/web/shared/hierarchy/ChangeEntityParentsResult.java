@@ -19,8 +19,8 @@ public abstract class ChangeEntityParentsResult implements Result {
     @JsonCreator
     public static ChangeEntityParentsResult create(@JsonProperty("classesWithCycle") @Nonnull Set<OWLEntityData> classesWithCycle,
                                                    @JsonProperty("classesWithRetiredParents") @Nonnull Set<OWLEntityData> classesWithRetiredParents,
-                                                   @JsonProperty("linearizationPathParents") @Nullable Set<OWLEntityData> linearizationPathParents) {
-        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, linearizationPathParents);
+                                                   @JsonProperty("oldParentsThatArelinearizationPathParents") @Nullable Set<OWLEntityData> oldParentsThatArelinearizationPathParents) {
+        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, oldParentsThatArelinearizationPathParents);
     }
 
     @JsonProperty("classesWithCycle")
@@ -33,7 +33,7 @@ public abstract class ChangeEntityParentsResult implements Result {
 
     @JsonProperty("linearizationPathParents")
     @Nonnull
-    public abstract Set<OWLEntityData> getLinearizationPathParents();
+    public abstract Set<OWLEntityData> getOldParentsThatAreLinearizationPathParents();
 
     public boolean hasClassesWithCycle() {
         return !getClassesWithCycle().isEmpty();
@@ -43,12 +43,12 @@ public abstract class ChangeEntityParentsResult implements Result {
         return !getClassesWithRetiredParents().isEmpty();
     }
 
-    public boolean hasParentAsLinearizationPathParent() {
-        return !getLinearizationPathParents().isEmpty();
+    public boolean hasOldParentAsLinearizationPathParent() {
+        return !getOldParentsThatAreLinearizationPathParents().isEmpty();
     }
 
     public boolean isFailure() {
-        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasParentAsLinearizationPathParent();
+        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasOldParentAsLinearizationPathParent();
     }
 
     public boolean isSuccess() {

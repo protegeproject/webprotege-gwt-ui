@@ -120,9 +120,9 @@ public class EditParentsPresenter {
                             view.markClassesWithCycles(classesWithCycles);
                         }
 
-                        if(changeEntityParentsResult.hasParentAsLinearizationPathParent()){
+                        if(changeEntityParentsResult.hasOldParentAsLinearizationPathParent()){
                             view.clearLinearizationPathParentErrors();
-                            String parents = changeEntityParentsResult.getLinearizationPathParents()
+                            String parents = changeEntityParentsResult.getOldParentsThatAreLinearizationPathParents()
                                     .stream()
                                     .map(OWLEntityData::getBrowserText)
                                     .collect(Collectors.joining(", "));
