@@ -5,8 +5,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import javax.annotation.Nonnull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -18,12 +16,8 @@ import javax.annotation.Nonnull;
 public abstract class MoveEntitiesToParentResult implements Result {
 
     @JsonCreator
-    public static MoveEntitiesToParentResult create(@JsonProperty("isDestinationRetiredClass") @Nonnull boolean isDestinationRetiredClass) {
-        return new AutoValue_MoveEntitiesToParentResult(isDestinationRetiredClass);
+    public static MoveEntitiesToParentResult create() {
+        return new AutoValue_MoveEntitiesToParentResult();
     }
-
-    @JsonProperty("isDestinationRetiredClass")
-    @Nonnull
-    public abstract boolean isDestinationRetiredClass();
 
 }

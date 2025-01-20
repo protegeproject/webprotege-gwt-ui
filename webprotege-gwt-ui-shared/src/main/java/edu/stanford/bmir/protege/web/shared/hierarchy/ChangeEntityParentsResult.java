@@ -36,7 +36,7 @@ public abstract class ChangeEntityParentsResult implements Result {
     public abstract Set<OWLEntityData> getClassesWithRetiredParents();
 
     @JsonProperty("linearizationPathParents")
-    @Nullable
+    @Nonnull
     public abstract Set<OWLEntityData> getLinearizationPathParents();
 
     public boolean hasClassesWithCycle() {
@@ -47,12 +47,12 @@ public abstract class ChangeEntityParentsResult implements Result {
         return !getClassesWithRetiredParents().isEmpty();
     }
 
-    public boolean hasLinearizationPathParent() {
+    public boolean hasParentAsLinearizationPathParent() {
         return !getLinearizationPathParents().isEmpty();
     }
 
     public boolean isFailure() {
-        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasLinearizationPathParent();
+        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasParentAsLinearizationPathParent();
     }
 
     public boolean isSuccess() {

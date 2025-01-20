@@ -120,7 +120,7 @@ public class EditParentsPresenter {
                             view.markClassesWithCycles(classesWithCycles);
                         }
 
-                        if(changeEntityParentsResult.hasLinearizationPathParent()){
+                        if(changeEntityParentsResult.hasParentAsLinearizationPathParent()){
                             view.clearLinearizationPathParentErrors();
                             String parents = changeEntityParentsResult.getLinearizationPathParents()
                                     .stream()
