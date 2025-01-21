@@ -16,7 +16,7 @@ public abstract class MoveEntitiesToParentIcdResult implements Result {
 
     @JsonCreator
     public static MoveEntitiesToParentIcdResult create(@JsonProperty("isDestinationRetiredClass") boolean isDestinationRetiredClass,
-                                                       @JsonProperty("entitiesForWhichParentIsLinPathParent") @Nonnull ImmutableMap<OWLEntityData, ImmutableSet<OWLEntityData>> entitiesForWhichParentIsLinPathParent) {
+                                                       @JsonProperty("entitiesForWhichParentIsLinPathParent") @Nonnull ImmutableMap<String, ImmutableSet<OWLEntityData>> entitiesForWhichParentIsLinPathParent) {
         return new AutoValue_MoveEntitiesToParentIcdResult(isDestinationRetiredClass, entitiesForWhichParentIsLinPathParent);
     }
 
@@ -25,7 +25,7 @@ public abstract class MoveEntitiesToParentIcdResult implements Result {
 
     @JsonProperty("entitiesForWhichParentIsLinPathParent")
     @Nonnull
-    public abstract ImmutableMap<OWLEntityData, ImmutableSet<OWLEntityData>> getEntitiesForWhichParentIsLinPathParent();
+    public abstract ImmutableMap<String, ImmutableSet<OWLEntityData>> getEntitiesForWhichParentIsLinPathParent();
 
     public boolean hasOldParentAsLinearizationPathParent() {
         return !getEntitiesForWhichParentIsLinPathParent().isEmpty();

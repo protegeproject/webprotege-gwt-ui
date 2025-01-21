@@ -129,20 +129,20 @@ public class BulkEditOperationWorkflow {
                         }
                         if (moveEntitiesResult.hasOldParentAsLinearizationPathParent()) {
                             StringBuilder messageBuffer = new StringBuilder();
-                            Set<OWLEntityData> parents = moveEntitiesResult.getEntitiesForWhichParentIsLinPathParent()
+                            Set<String> parents = moveEntitiesResult.getEntitiesForWhichParentIsLinPathParent()
                                     .keySet();
-                            Iterator<OWLEntityData> iterator = parents.stream().iterator();
+                            Iterator<String> iterator = parents.stream().iterator();
                             while (iterator.hasNext()) {
-                                OWLEntityData parent = iterator.next();
+                                String parent = iterator.next();
                                 String entities = moveEntitiesResult.getEntitiesForWhichParentIsLinPathParent()
                                         .get(parent)
                                         .stream()
                                         .map(OWLEntityData::getBrowserText)
                                         .collect(Collectors.joining(", "));
 
-                                messageBuffer.append(messages.classHierarchy_cannotRemoveParentIfLinearizationPathParent(parent.getBrowserText(), entities));
+                                messageBuffer.append(messages.classHierarchy_cannotRemoveParentIfLinearizationPathParent(parent, entities));
                                 if (iterator.hasNext()) {
-                                    messageBuffer.append("\n");
+                                    messageBuffer.append("<br>");
                                 }
                             }
                             messageBox.showAlert(messages.classHierarchy_cannotMoveEntities(), messageBuffer.toString());
