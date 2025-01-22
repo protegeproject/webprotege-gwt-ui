@@ -627,6 +627,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     CreateNewProjectFromProjectBackupAction _CreateNewProjectFromProjectBackupAction;
     MoveEntitiesToParentIcdAction _MoveEntitiesToParentIcdAction;
     MoveEntitiesToParentIcdResult _MoveEntitiesToParentIcdResult;
+    MoveHierarchyNodeIcdAction _MoveHierarchyNodeIcdAction;
+    MoveHierarchyNodeIcdResult _MoveHierarchyNodeIcdResult;
 
     public RpcWhiteList() {
     }
