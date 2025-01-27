@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
-import edu.stanford.bmir.protege.web.shared.app.*;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -547,6 +550,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetSearchSettingsAction _SetSearchSettingsAction;
     SetSearchSettingsResult _SetSearchSettingsResult;
     SetUserProjectEntityGraphSettingsAction _SetUserProjectEntityGraphSettingsAction;
+
     SetUserProjectEntityGraphSettingsResult _SetUserProjectEntityGraphSettingsResult;
     ShortForm _ShortForm;
     SingleChoiceControlDescriptor _SingleChoiceControlDescriptor;
@@ -586,6 +590,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
+    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
+    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     AppEnvVariables _AppEnvVariables;
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
     ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;
@@ -621,8 +627,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     LogicalDefinition _LogicalDefinition;
     LogicalConditions _LogicalConditions;
     GetEntityLogicalDefinitionResult _GetEntityLogicalDefinitionResult;
-    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
-    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     CreateNewProjectFromProjectBackupResult _CreateNewProjectFromProjectBackupResult;
     CreateNewProjectFromProjectBackupAction _CreateNewProjectFromProjectBackupAction;
 
