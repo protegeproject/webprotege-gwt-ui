@@ -130,8 +130,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                             } else if (moveResult.isInitialParentLinPathParent()) {
                                 messageBox.showMessage(
                                         messages.classHierarchy_removeParentThatIsLinearizationPathParent(
-                                                nodePath.getLast().get().getBrowserText()
-                                        ).toString()
+                                                nodePath.getLastPredecessor().get().getBrowserText()
+                                        ).asString()
                                 );
                             }
                             dropEndHandler.handleDropCancelled();
