@@ -7,12 +7,11 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RefreshUserInterfaceEvent;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
-import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
@@ -26,6 +25,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -63,14 +64,17 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
+    private final SelectedPathsModel selectedPathsModel;
+
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer,
-                                              @Nonnull DispatchServiceManager dispatch) {
+                                              @Nonnull DispatchServiceManager dispatch, SelectedPathsModel selectedPathsModel) {
 
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
         this.displayNameRenderer = displayNameRenderer;
+        this.selectedPathsModel = selectedPathsModel;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
             logger.info("Handling selection changed in " + projectId + " (disposed=" + disposed  + ") in " + portletUi.map(HasViewTitle::getViewTitle).orElse("(not set)"));
                                                                                           if (trackSelection) {
@@ -231,28 +235,31 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     protected abstract void handleReloadRequest();
 
     @Override
-    public void setParentDisplayContext(HasDisplayContext parent) {
-        displayContextManager.setParentDisplayContext(parent);
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 
-    public void fillDisplayContext(DisplayContext displayContext) {
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
         portletUi.ifPresent(ui -> {
+            Map<String, String> map = new LinkedHashMap<>();
             NodeProperties np = ui.getNodeProperties();
-            np.getProperties()
-                    .forEach(prop -> {
-                        displayContext.setProperty(prop, np.getPropertyValue(prop, ""));
-                    });
+            for(String prop : np.getProperties()) {
+                String value = np.getPropertyValue(prop, "");
+                if(!value.isEmpty()) {
+                    map.put(prop, value);
+                }
+            }
+            displayContextBuilder.setViewProperties(map);
         });
-        portletUi.ifPresent(ui -> displayContext.setProperty("viewId", ui.getNodeProperty("portlet", "")));
+        portletUi.ifPresent(ui -> displayContextBuilder.setViewId(ViewId.create(ui.getNodeProperty("portlet", ""))));
+        portletUi.flatMap(PortletUi::getViewNodeId).ifPresent(viewNodeId -> displayContextBuilder.setViewNodeId(viewNodeId));
+        displayContextBuilder.setProjectId(getProjectId());
+        displayContextBuilder.setSelectedPaths(selectedPathsModel.getSelectedPaths());
+
     }
 
     @Override
-    public Optional<HasDisplayContext> getParentDisplayContext() {
-        return displayContextManager.getDisplayContextParent();
-    }
-
-    @Override
-    public DisplayContext getDisplayContext() {
-        return displayContextManager.getDisplayContext();
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

@@ -8,16 +8,19 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.annotation.Nullable;
+
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.hierarchies.GetHierarchyDescriptor")
 public abstract class GetHierarchyDescriptorResult implements Result {
 
     @JsonCreator
-    public static GetHierarchyDescriptorResult create(@JsonProperty("descriptor") HierarchyDescriptor hierarchyDescriptor) {
+    public static GetHierarchyDescriptorResult create(@Nullable @JsonProperty("hierarchyDescriptor") HierarchyDescriptor hierarchyDescriptor) {
         return new AutoValue_GetHierarchyDescriptorResult(hierarchyDescriptor);
     }
 
-    @JsonProperty("descriptor")
+    @Nullable
+    @JsonProperty("hierarchyDescriptor")
     public abstract HierarchyDescriptor getHierarchyDescriptor();
 }

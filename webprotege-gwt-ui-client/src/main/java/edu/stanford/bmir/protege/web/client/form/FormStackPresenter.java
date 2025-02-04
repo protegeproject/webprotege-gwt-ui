@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.client.tab.TabContentContainer;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabChangedHandler;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
@@ -33,7 +33,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * 2020-01-20
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class FormStackPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContext {
+public class FormStackPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
@@ -184,12 +184,12 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler, Ha
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
             formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
-            formPresenter.setParentDisplayContext(this);
+            formPresenter.setParentDisplayContextBuilder(this);
             formPresenters.put(formData.getFormId(), formPresenter);
             tabBarPresenter.addTab(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),
                     tabContentContainer);
-            formPresenter.setParentDisplayContext(this);
+            formPresenter.setParentDisplayContextBuilder(this);
         });
         tabBarPresenter.restoreSelection();
     }
@@ -252,17 +252,12 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler, Ha
     }
 
     @Override
-    public void setParentDisplayContext(HasDisplayContext parent) {
-        displayContextManager.setParentDisplayContext(parent);
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 
     @Override
-    public Optional<HasDisplayContext> getParentDisplayContext() {
-        return displayContextManager.getDisplayContextParent();
-    }
-
-    @Override
-    public DisplayContext getDisplayContext() {
-        return displayContextManager.getDisplayContext();
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

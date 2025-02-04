@@ -10,8 +10,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -32,7 +32,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContext {
+public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     @Nonnull
     private final FormView formView;
@@ -205,7 +205,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.setCollapsible(fieldsCollapsible);
         presenter.start();
-        presenter.setParentDisplayContext(this);
+        presenter.setParentDisplayContextBuilder(this);
         fieldPresenters.add(presenter);
         if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
@@ -332,21 +332,16 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     }
 
     @Override
-    public void setParentDisplayContext(HasDisplayContext parent) {
-        this.displayContextManager.setParentDisplayContext(parent);
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        currentFormDescriptor.ifPresent(fd -> context.addFormId(fd.getFormId()));
     }
 
     @Override
-    public Optional<HasDisplayContext> getParentDisplayContext() {
-        return displayContextManager.getDisplayContextParent();
-    }
-
-    @Override
-    public DisplayContext getDisplayContext() {
-        return displayContextManager.getDisplayContext();
-    }
-
-    private void fillDisplayContext(DisplayContext context) {
-        currentFormDescriptor.ifPresent(fd -> context.setProperty("formId", fd.getFormId().getId()));
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

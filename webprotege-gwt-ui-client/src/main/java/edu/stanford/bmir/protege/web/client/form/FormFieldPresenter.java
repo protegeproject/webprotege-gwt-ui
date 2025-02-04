@@ -3,10 +3,9 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
@@ -32,7 +31,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContext {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     private boolean enabled = true;
 
@@ -42,8 +41,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
-    private void fillDisplayContext(DisplayContext context) {
-        context.setProperty("formFieldId", getFormRegionId().getId());
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        context.setFormFieldId(getFormRegionId());
     }
 
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
@@ -195,7 +194,6 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         else {
             beforeExpandRunner = setValuesRunnable;
         }
-        Window.alert("Form Display Context: " + getDisplayContext());
     }
 
     public void clearValue() {
@@ -286,17 +284,12 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     @Override
-    public void setParentDisplayContext(HasDisplayContext parent) {
-        this.displayContextManager.setParentDisplayContext(parent);
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
     }
 
     @Override
-    public Optional<HasDisplayContext> getParentDisplayContext() {
-        return displayContextManager.getDisplayContextParent();
-    }
-
-    @Override
-    public DisplayContext getDisplayContext() {
-        return displayContextManager.getDisplayContext();
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

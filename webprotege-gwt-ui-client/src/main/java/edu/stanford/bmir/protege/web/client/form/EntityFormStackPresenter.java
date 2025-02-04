@@ -12,8 +12,8 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContext;
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -40,7 +40,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-23
  */
-public class EntityFormStackPresenter implements HasDisplayContext {
+public class EntityFormStackPresenter implements HasDisplayContextBuilder {
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -308,23 +308,18 @@ public class EntityFormStackPresenter implements HasDisplayContext {
         langTagFilterPresenter.setFilter(langTagFilter);
     }
 
-    public void fillDisplayContext(DisplayContext displayContext) {
-
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        // Nothing to do.  Handled by the FormStackPresenter
     }
 
     @Override
-    public Optional<HasDisplayContext> getParentDisplayContext() {
-        return displayContextManager.getDisplayContextParent();
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
+        formStackPresenter.setParentDisplayContextBuilder(this);
     }
 
     @Override
-    public void setParentDisplayContext(HasDisplayContext parent) {
-        displayContextManager.setParentDisplayContext(parent);
-        formStackPresenter.setParentDisplayContext(this);
-    }
-
-    @Override
-    public DisplayContext getDisplayContext() {
-        return displayContextManager.getDisplayContext();
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

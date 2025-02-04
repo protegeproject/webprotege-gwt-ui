@@ -5,6 +5,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -86,6 +87,7 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 
 /**
  * Matthew Horridge
@@ -361,6 +363,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetPersonIdCompletionsResult _GetPersonIdCompletionsResult;
     GetPerspectiveDetailsAction _GetPerspectiveDetailsAction;
     GetPerspectiveDetailsResult _GetPerspectiveDetailsResult;
+    PerspectiveDetails _PerspectiveDetails;
     GetPerspectiveLayoutAction _GetPerspectiveLayoutAction;
     GetPerspectiveLayoutResult _GetPerspectiveLayoutResult;
     GetPerspectivesAction _GetPerspectivesAction;
@@ -610,6 +613,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetHierarchyDescriptorAction _GetHierarchyDescriptorAction;
     GetHierarchyDescriptorResult _GetHierarchyDescriptorResult;
     DisplayContext _DisplayContext;
+    ViewId _ViewId;
+    ViewNodeId _ViewNodeId;
 
     public RpcWhiteList() {
     }

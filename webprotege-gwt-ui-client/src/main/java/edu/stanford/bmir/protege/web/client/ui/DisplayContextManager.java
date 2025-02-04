@@ -1,33 +1,33 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class DisplayContextManager {
 
-    private HasDisplayContext parent;
+    private HasDisplayContextBuilder parent;
 
-    private Consumer<DisplayContext> filler;
+    private final DisplayContextFiller filler;
 
-    public DisplayContextManager(Consumer<DisplayContext> filler) {
+    public DisplayContextManager(DisplayContextFiller filler) {
         this.filler = filler;
     }
 
-    public void setParentDisplayContext(HasDisplayContext parent) {
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         this.parent = parent;
     }
 
-    public Optional<HasDisplayContext> getDisplayContextParent() {
+    public Optional<HasDisplayContextBuilder> getParentDisplayContextBuilder() {
         return Optional.ofNullable(parent);
     }
 
-    public DisplayContext getDisplayContext() {
-        DisplayContext displayContext = new DisplayContext();
-        filler.accept(displayContext);
-        getDisplayContextParent().ifPresent(p -> displayContext.merge(p.getDisplayContext()));
-        return displayContext;
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        DisplayContextBuilder builder = getParentDisplayContextBuilder()
+                .map(HasDisplayContextBuilder::fillDisplayContextBuilder)
+                .orElse(DisplayContextBuilder.builder());
+        filler.fillDisplayContext(builder);
+        return builder;
     }
 
 }
