@@ -32,6 +32,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
+    private final UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler;
+
     private final UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
@@ -47,56 +49,63 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final ProjectSettingsImporter projectSettingsImporter;
 
 
-    private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
+    private final AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
         @Override
         public void execute() {
             showProjectDetailsHandler.handleShowProjectDetails();
         }
     };
 
-    private AbstractUiAction uploadAndMerge = new AbstractUiAction(MESSAGES.uploadAndMerge()) {
+    private final AbstractUiAction uploadAndMerge = new AbstractUiAction(MESSAGES.uploadAndMerge()) {
         @Override
         public void execute() {
             uploadAndMergeHandler.handleUploadAndMerge();
         }
     };
 
-    private AbstractUiAction uploadAndMergeAdditions = new AbstractUiAction(MESSAGES.uploadAndMergeAdditions()) {
+    private final AbstractUiAction uploadSiblingsOrdering = new AbstractUiAction(MESSAGES.siblingsOrdering()) {
+        @Override
+        public void execute() {
+            uploadAndProcessSiblingsOrderingHandler.handleUploadSiblingsOrdering();
+        }
+    };
+
+    private final AbstractUiAction uploadAndMergeAdditions = new AbstractUiAction(MESSAGES.uploadAndMergeAdditions()) {
         @Override
         public void execute() {
             uploadAndMergeAdditionsHandler.handleUploadAndMergeAdditions();
         }
     };
 
-    private AbstractUiAction editProjectPrefixes = new AbstractUiAction(MESSAGES.prefixes_edit()) {
+    private final AbstractUiAction editProjectPrefixes = new AbstractUiAction(MESSAGES.prefixes_edit()) {
         @Override
         public void execute() {
             editProjectPrefixDeclarationsHandler.handleEditProjectPrefixes();
         }
     };
 
-    private AbstractUiAction editProjectTags = new AbstractUiAction(MESSAGES.tags_EditProjectTags()) {
+    private final AbstractUiAction editProjectTags = new AbstractUiAction(MESSAGES.tags_EditProjectTags()) {
         @Override
         public void execute() {
             editProjectTagsUIActionHandler.handleEditProjectTags();
         }
     };
 
-    private AbstractUiAction editProjectForms = new AbstractUiAction(MESSAGES.forms_EditProjectForms()) {
+    private final AbstractUiAction editProjectForms = new AbstractUiAction(MESSAGES.forms_EditProjectForms()) {
         @Override
         public void execute() {
             editProjectFormsUiHandler.handleEditProjectForms();
         }
     };
 
-    private AbstractUiAction exportSettings = new AbstractUiAction(MESSAGES.settings_export()) {
+    private final AbstractUiAction exportSettings = new AbstractUiAction(MESSAGES.settings_export()) {
         @Override
         public void execute() {
             projectSettingsDownloader.download();
         }
     };
 
-    private AbstractUiAction importSettings = new AbstractUiAction(MESSAGES.settings_import()) {
+    private final AbstractUiAction importSettings = new AbstractUiAction(MESSAGES.settings_import()) {
         @Override
         public void execute() {
             projectSettingsImporter.importSettings();
@@ -108,6 +117,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
+                                UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler,
                                 UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
@@ -118,6 +128,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
+        this.uploadAndProcessSiblingsOrderingHandler = uploadAndProcessSiblingsOrderingHandler;
         this.uploadAndMergeAdditionsHandler = uploadAndMergeAdditionsHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
         this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
@@ -131,24 +142,17 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         editProjectSettings.setEnabled(false);
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
+        uploadSiblingsOrdering.setEnabled(false);
         displayButton(container);
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
-                                        canEdit -> editProjectSettings.setEnabled(canEdit));
-        permissionChecker.hasPermission(UPLOAD_AND_MERGE,
-                                        canUploadAndMerge -> uploadAndMerge.setEnabled(canUploadAndMerge));
-        permissionChecker.hasPermission(EDIT_PROJECT_PREFIXES,
-                                        canEdit -> editProjectPrefixes.setEnabled(canEdit));
-        permissionChecker.hasPermission(EDIT_PROJECT_TAGS,
-                                        canEdit -> editProjectTags.setEnabled(canEdit));
-        permissionChecker.hasPermission(EDIT_FORMS,
-                                        canEdit -> editProjectForms.setEnabled(canEdit));
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
-                                        canView -> exportSettings.setEnabled(canView));
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
-                                        canView -> importSettings.setEnabled(canView));
-
-        permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS,
-                                        canUploadAndMergeAdd -> uploadAndMergeAdditions.setEnabled(canUploadAndMergeAdd));
+        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
+        permissionChecker.hasPermission(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
+        permissionChecker.hasPermission(EDIT_PROJECT_PREFIXES, editProjectPrefixes::setEnabled);
+        permissionChecker.hasPermission(EDIT_PROJECT_TAGS, editProjectTags::setEnabled);
+        permissionChecker.hasPermission(EDIT_FORMS, editProjectForms::setEnabled);
+        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
+        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
+        permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
 
     }
 
@@ -165,6 +169,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectTags);
         view.addMenuAction(editProjectForms);
         view.addMenuAction(editProjectPrefixes);
+        view.addSeparator();
+        view.addMenuAction(uploadSiblingsOrdering);
         view.addSeparator();
         view.addMenuAction(uploadAndMerge);
 
