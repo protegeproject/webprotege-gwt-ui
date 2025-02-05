@@ -242,7 +242,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetEntityLogicalDefinitionAction.class),
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
-        @Type(value = CreateNewProjectFromProjectBackupAction.class)
+        @Type(value = CreateNewProjectFromProjectBackupAction.class),
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

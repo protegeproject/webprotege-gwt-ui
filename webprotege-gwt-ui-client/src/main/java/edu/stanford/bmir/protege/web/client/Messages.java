@@ -1026,6 +1026,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
+    @DefaultMessage("Apply Siblings Ordering")
+    @Key("siblingsOrdering.upload")
+    String siblingsOrdering();
+
     @DefaultMessage("Apply Linearization Changes")
     @Key("linearization.upload")
     String linearizationUpload();
@@ -1423,4 +1427,16 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Entity Deprecation Settings")
     @Key("entityDeprecationSettings.title")
     String entityDeprecationSettings_title();
+
+    @DefaultMessage("Processing siblings ordering")
+    @Key("siblingsOrdering.processing.title")
+    String processingSiblingsOrdering();
+
+    @DefaultMessage("Applying siblings ordering to entities.  Please wait.")
+    @Key("siblingsOrdering.processing.message")
+    String applyingSiblingsOrderingToEntities();
+
+    @DefaultMessage("Siblings ordering processed successfully ")
+    @Key("siblingsOrdering.processing.success")
+    String siblingsOrderingSuccessfullyProcessed();
 }
