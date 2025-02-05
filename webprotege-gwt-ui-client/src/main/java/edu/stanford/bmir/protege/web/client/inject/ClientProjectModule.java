@@ -7,6 +7,8 @@ import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
+import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.*;
 import edu.stanford.bmir.protege.web.client.crud.supplied.*;
 import edu.stanford.bmir.protege.web.client.crud.uuid.*;
@@ -768,6 +770,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    IcatxNameSuffixSettingsView provideIcatxNameSuffixSettingsView(IcatxNameSuffixSettingsViewImpl impl) {
+        return impl;
+    }
     @Provides
     OboIdSuffixSettingsView provideOboIdSuffixSettingsView(OboIdSuffixSettingsViewImpl impl) {
         return impl;
