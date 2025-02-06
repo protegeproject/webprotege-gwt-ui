@@ -11,11 +11,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-/**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 25 Sep 2018
- */
+
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.entities.ChangeEntityParents")
