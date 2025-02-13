@@ -1,0 +1,74 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:text='urn:import:edu.stanford.bmir.protege.web.client.library.text'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main-panel-style {
+        width: 100%;
+        max-width: 800px;
+        box-sizing: border-box;
+        overflow: hidden;
+        }
+        .message-block {
+        width: 100%;
+        padding-left: 10px;
+        padding-top: 20px;
+        box-sizing: border-box;
+        }
+        .main-message-style {
+        padding-bottom: 5px;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+        }
+        .sub-message-style {
+        font-size: 14px;
+        padding-top: 5px;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+        }
+        .text-box {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        }
+        .padding-top {
+        padding-top: 5px;
+        }
+    </ui:style>
+
+
+    <g:HTMLPanel addStyleNames="{style.main-panel-style}">
+        <!-- I originally implemented this with divs but had lots of problems with the settings box sizing correctly. I
+        know tables aren't meant to be used for layout, but this works really nicely in this case. -->
+        <table>
+            <colgroup>
+                <col width="70px" valign="top"/>
+                <col width="*" valign="top"/>
+            </colgroup>
+            <tr>
+                <td valign="top">
+                    <g:Image url="{wp.messageIcon.getSafeUri.asString}" ui:field="iconImage" width="120px"/>
+                </td>
+                <td valign="top">
+                    <g:HTMLPanel addStyleNames="{style.message-block}">
+                        <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.settings.title}"/>
+                        <g:HTML ui:field="messageLabel" addStyleNames="{style.sub-message-style}"/>
+                        <div class="{wp.style.formGroup}" addStyleNames="{style.padding-top}">
+                            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
+                            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
+                                                       mode="MULTI_LINE"
+                                                       anchorVisible="false"
+                            addStyleNames="{style.text-box}"/>
+                            <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
+                        </div>
+                    </g:HTMLPanel>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>

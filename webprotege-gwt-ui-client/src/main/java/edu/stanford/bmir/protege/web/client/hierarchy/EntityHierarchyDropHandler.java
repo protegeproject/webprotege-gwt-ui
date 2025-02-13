@@ -3,13 +3,16 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBoxWithReasonForChange;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
-import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeIcdAction;
+import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
-import edu.stanford.protege.gwt.graphtree.shared.*;
+import edu.stanford.protege.gwt.graphtree.shared.DropType;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
@@ -29,6 +32,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final MessageBoxWithReasonForChange messageBoxWithReasonForChange;
+
     @Nonnull
     private final MessageBox messageBox;
 
@@ -37,12 +42,14 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
                                       @Nonnull DispatchServiceManager dispatchServiceManager,
+                                      @Nonnull MessageBoxWithReasonForChange messageBoxWithReasonForChange,
                                       @Nonnull MessageBox messageBox,
                                       @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
-        this.messageBox = checkNotNull(messageBox);
-        this.messages = checkNotNull(messages);
+        this.messageBoxWithReasonForChange = messageBoxWithReasonForChange;
+        this.messageBox = messageBox;
+        this.messages = messages;
     }
 
     @Nonnull
@@ -57,7 +64,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
                                   @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
-        if(!hierarchyDescriptor.isPresent()) {
+        if (!hierarchyDescriptor.isPresent()) {
             return false;
         }
         if (nodePath.isEmpty()) {
@@ -79,7 +86,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if(!hierarchyDescriptor.isPresent()) {
+        if (!hierarchyDescriptor.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -96,19 +103,41 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
-                                                                      hierarchyDescriptor.get(),
-                                                                      nodePath,
-                                                                      targetPath,
-                                                                      dropType),
-                                       moveResult -> {
-                                            if(moveResult.isMoved()) {
-                                                dropEndHandler.handleDropComplete();
-                                            }
-                                            else {
-                                                dropEndHandler.handleDropCancelled();
-                                            }
-                                       });
+
+        Optional<EntityNode> parentEntityOptional = targetPath.getLast();
+        String parentEntityBrowserText = parentEntityOptional.map(EntityNode::getBrowserText).orElse("");
+        messageBoxWithReasonForChange.showConfirmBoxWithReasonForChange("Move entities?",
+                "You are about to move selected entities to new parent " + parentEntityBrowserText + ". Are you sure?",
+                DialogButton.CANCEL,
+                dropEndHandler::handleDropCancelled,
+                DialogButton.YES,
+                (reasonForChangeText) -> dispatchServiceManager.execute(MoveHierarchyNodeIcdAction.create(projectId,
+                                hierarchyDescriptor.get(),
+                                nodePath,
+                                targetPath,
+                                dropType),
+                        moveResult -> {
+                            if (moveResult.isMoved()) {
+                                dropEndHandler.handleDropComplete();
+                                dispatchServiceManager.execute(
+                                        CreateEntityDiscussionThreadAction.create(projectId, nodePath.getLast().get().getEntity(), reasonForChangeText),
+                                        threadActionResult -> {
+                                        });
+                                return;
+                            }
+                            if (moveResult.isDestinationRetiredClass()) {
+                                messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                            } else if (moveResult.isInitialParentLinPathParent()) {
+                                messageBox.showMessage(
+                                        messages.classHierarchy_removeParentThatIsLinearizationPathParent(
+                                                nodePath.getLastPredecessor().get().getBrowserText()
+                                        ).asString()
+                                );
+                            }
+                            dropEndHandler.handleDropCancelled();
+                        })
+        );
+
     }
 
     @Override

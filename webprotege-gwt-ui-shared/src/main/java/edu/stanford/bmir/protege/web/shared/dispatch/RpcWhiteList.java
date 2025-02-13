@@ -625,6 +625,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     CreateNewProjectFromProjectBackupResult _CreateNewProjectFromProjectBackupResult;
     CreateNewProjectFromProjectBackupAction _CreateNewProjectFromProjectBackupAction;
+    MoveEntitiesToParentIcdAction _MoveEntitiesToParentIcdAction;
+    MoveEntitiesToParentIcdResult _MoveEntitiesToParentIcdResult;
+    MoveHierarchyNodeIcdAction _MoveHierarchyNodeIcdAction;
+    MoveHierarchyNodeIcdResult _MoveHierarchyNodeIcdResult;
     ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
     ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
 

@@ -1255,8 +1255,21 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please correct this in order to save changes")
     SafeHtml classHierarchy_parentsHaveRetiredAncestors(String classesWithRetiredParents);
 
+    @DefaultMessage("<em>A Linearization Path Parent cannot be removed <br>" +
+            "Following parent is a linearization path parent: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please change the linearization path parent before removing the parent")
+    SafeHtml classHierarchy_removeParentThatIsLinearizationPathParent(String linearizationPathParent);
+
     @DefaultMessage("<em>A released class cannot be moved to a retired parent!")
     String classHierarchy_cannotMoveReleasedClassToRetiredParent();
+
+
+    @DefaultMessage("<em>Cannot remove parent <i>{0}</i> from entities: <i>{1}</i> because he is linearization path parent")
+    String classHierarchy_cannotRemoveParentIfLinearizationPathParent(String parent, String entities);
+
+    @DefaultMessage("<em>Cannot move entities")
+    String classHierarchy_cannotMoveEntities();
 
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
