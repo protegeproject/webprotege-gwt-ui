@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBoxWithReasonForChange;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeIcdAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
@@ -32,13 +34,22 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
 
     private final MessageBoxWithReasonForChange messageBoxWithReasonForChange;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    private final Messages messages;
+
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
                                       @Nonnull DispatchServiceManager dispatchServiceManager,
-                                      @Nonnull MessageBoxWithReasonForChange messageBoxWithReasonForChange) {
+                                      @Nonnull MessageBoxWithReasonForChange messageBoxWithReasonForChange,
+                                      @Nonnull MessageBox messageBox,
+                                      @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.messageBoxWithReasonForChange = messageBoxWithReasonForChange;
+        this.messageBox = messageBox;
+        this.messages = messages;
     }
 
     @Nonnull
@@ -100,7 +111,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                 DialogButton.CANCEL,
                 dropEndHandler::handleDropCancelled,
                 DialogButton.YES,
-                (reasonForChangeText) -> dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+                (reasonForChangeText) -> dispatchServiceManager.execute(MoveHierarchyNodeIcdAction.create(projectId,
                                 hierarchyDescriptor.get(),
                                 nodePath,
                                 targetPath,
@@ -112,9 +123,18 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                                         CreateEntityDiscussionThreadAction.create(projectId, nodePath.getLast().get().getEntity(), reasonForChangeText),
                                         threadActionResult -> {
                                         });
-                            } else {
-                                dropEndHandler.handleDropCancelled();
+                                return;
                             }
+                            if (moveResult.isDestinationRetiredClass()) {
+                                messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                            } else if (moveResult.isInitialParentLinPathParent()) {
+                                messageBox.showMessage(
+                                        messages.classHierarchy_removeParentThatIsLinearizationPathParent(
+                                                nodePath.getLastPredecessor().get().getBrowserText()
+                                        ).asString()
+                                );
+                            }
+                            dropEndHandler.handleDropCancelled();
                         })
         );
 

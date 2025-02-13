@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentIcdAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
@@ -242,7 +243,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetEntityLogicalDefinitionAction.class),
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
-        @Type(value = CreateNewProjectFromProjectBackupAction.class)
+        @Type(value = CreateNewProjectFromProjectBackupAction.class),
+        @Type(value = MoveEntitiesToParentIcdAction.class),
+        @Type(value = MoveHierarchyNodeIcdAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {
