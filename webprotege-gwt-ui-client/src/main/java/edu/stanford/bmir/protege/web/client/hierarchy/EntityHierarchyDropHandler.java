@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBoxWithReasonF
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeIcdAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
@@ -86,7 +87,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
-        if (!hierarchyDescriptor.isPresent()) {
+        if(!hierarchyDescriptor.isPresent()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -94,7 +95,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if (nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
+        if(nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
             dropEndHandler.handleDropCancelled();
             return;
         }

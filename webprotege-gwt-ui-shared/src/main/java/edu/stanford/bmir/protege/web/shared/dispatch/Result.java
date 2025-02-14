@@ -201,6 +201,8 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(UpdateDataPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),

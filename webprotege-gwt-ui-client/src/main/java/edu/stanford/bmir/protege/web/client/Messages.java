@@ -179,167 +179,167 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("delete.entity.msg")
     String delete_entity_msg(String arg0,  String arg1);
 
-
+    
     @DefaultMessage("Delete {0}")
     @Key("delete.entity.title")
     String delete_entity_title(String broswerText);
 
-
+    
     @DefaultMessage("Delete")
     @Key("deleteComment")
     String deleteComment();
 
-
+    
     @DefaultMessage("Are you sure that you want to delete this comment?  This cannot be undone.")
     @Key("deleteCommentConfirmationBoxText")
     String deleteCommentConfirmationBoxText();
 
-
+    
     @DefaultMessage("Delete Comment?")
     @Key("deleteCommentConfirmationBoxTitle")
     String deleteCommentConfirmationBoxTitle();
 
-
+    
     @DefaultMessage("Apply")
     @Key("dialog.apply")
     String dialog_apply();
 
-
+    
     @DefaultMessage("Cancel")
     @Key("dialog.cancel")
     String dialog_cancel();
 
-
+    
     @DefaultMessage("Close")
     @Key("dialog.close")
     String dialog_close();
 
-
+    
     @DefaultMessage("No")
     @Key("dialog.no")
     String dialog_no();
 
-
+    
     @DefaultMessage("OK")
     @Key("dialog.ok")
     String dialog_ok();
 
-
+    
     @DefaultMessage("Select")
     @Key("dialog.select")
     String dialog_select();
 
-
+    
     @DefaultMessage("Yes")
     @Key("dialog.yes")
     String dialog_yes();
 
-
+    
     @DefaultMessage("Direct Link")
     @Key("directLink")
     String directLink();
 
-
+    
     @DefaultMessage("Display resolved threads")
     @Key("discussionThread.DisplayResolvedThreads")
     String discussionThread_DisplayResolvedThreads();
 
-
+    
     @DefaultMessage("Re-open")
     @Key("discussionThread.Reopen")
     String discussionThread_Reopen();
 
-
+    
     @DefaultMessage("Resolve")
     @Key("discussionThread.Resolve")
     String discussionThread_Resolve();
 
-
+    
     @DefaultMessage("You do not have permission to view comments in this project")
     @Key("discussionThread.ViewingForbidden")
     String discussionThread_ViewingForbidden();
 
-
+    
     @DefaultMessage("Download")
     @Key("download")
     String download();
 
-
+    
     @DefaultMessage("Edit")
     @Key("editComment")
     String editComment();
 
-
+    
     @DefaultMessage("Enter search string to filter list")
     @Key("enterSearchStringToFilterList")
     String enterSearchStringToFilterList();
 
-
+    
     @DefaultMessage("Error")
     @Key("error")
     String error();
 
-
+    
     @DefaultMessage("An error has occurred.  Please refresh your browser and try again.")
     @Key("error.anErrorHasOccurred")
     String error_anErrorHasOccurred();
 
-
+    
     @DefaultMessage("WebProtégé cannot connect to the server.  Please check your network connection.")
     @Key("error.connectionError.msg")
     String error_connectionError_msg();
 
-
+    
     @DefaultMessage("Connection Error")
     @Key("error.connectionError.title")
     String error_connectionError_title();
 
-
+    
     @DefaultMessage("An error has occurred.  Please refresh your browser and try again.")
     @Key("error.general")
     String error_general();
 
-
+    
     @DefaultMessage("You do not have permission to carry out the specified action.")
     @Key("error.permissionError.msg")
     String error_permissionError_msg();
 
-
+    
     @DefaultMessage("Permission Denied")
     @Key("error.permissionError.title")
     String error_permissionError_title();
 
-
+    
     @DefaultMessage("Please refresh your browser")
     @Key("error.refreshBrowser")
     String error_refreshBrowser();
 
-
+    
     @DefaultMessage("Server Error")
     @Key("error.serverError")
     String error_serverError();
 
-
+    
     @DefaultMessage("Status Code")
     @Key("error.statusCode")
     String error_statusCode();
 
-
+    
     @DefaultMessage("WebProtégé has been updated.  Please empty your browser caches and reload your browser.")
     @Key("error.upgraded")
     String error_upgraded();
 
-
+    
     @DefaultMessage("WebProtégé has encountered an error.  Please try again.")
     @Key("error.webProtegeHasEncounteredAnErrorPleaseTryAgain")
     String error_webProtegeHasEncounteredAnErrorPleaseTryAgain();
 
-
+    
     @DefaultMessage("Forbidden")
     @Key("forbidden")
     String forbidden();
 
-
+    
     @DefaultMessage("Forgot username or password")
     @Key("forgotUserNameOrPassword")
     String forgotUserNameOrPassword();
@@ -353,12 +353,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("frame.annotations")
     String frame_annotations();
 
-
+    
     @DefaultMessage("Parents")
     @Key("frame.classes")
     String frame_classes();
 
-
+    
     @DefaultMessage("Domain")
     @Key("frame.domain")
     String frame_domain();
@@ -367,52 +367,52 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("frame.characteristics")
     String frame_characteristics();
 
-
+    
     @DefaultMessage("Enter a class name")
     @Key("frame.enterAClassName")
     String frame_enterAClassName();
 
-
+    
     @DefaultMessage("Enter a datatype name")
     @Key("frame.enterADatatype")
     String frame_enterADatatype();
 
-
+    
     @DefaultMessage("Enter an individual name")
     @Key("frame.enterIndividualName")
     String frame_enterIndividualName();
 
-
+    
     @DefaultMessage("Enter property")
     @Key("frame.enterProperty")
     String frame_enterProperty();
 
-
+    
     @DefaultMessage("Enter value")
     @Key("frame.enterValue")
     String frame_enterValue();
 
-
+    
     @DefaultMessage("Functional")
     @Key("frame.functional")
     String frame_functional();
 
-
+    
     @DefaultMessage("lang")
     @Key("frame.lang")
     String frame_lang();
 
-
+    
     @DefaultMessage("Range")
     @Key("frame.range")
     String frame_range();
 
-
+    
     @DefaultMessage("Relationships")
     @Key("frame.relationships")
     String frame_relationships();
 
-
+    
     @DefaultMessage("Same As")
     @Key("frame.sameIndividual")
     String frame_sameIndividual();
