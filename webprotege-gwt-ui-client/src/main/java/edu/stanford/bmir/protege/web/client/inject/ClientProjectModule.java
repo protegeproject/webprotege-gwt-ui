@@ -32,8 +32,6 @@ import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationCha
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
-import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
-import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
@@ -100,6 +98,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    UploadAndProcessSiblingsOrderingHandler provideUploadAndProcessSiblingsOrderingHandler(UploadAndProcessSiblingsOrderingHandlerImpl handler) {
+        return handler;
+    }
+
+        @Provides
     UploadAndProcessLinearizationHandler provideUploadAndProcessLinearizationHandler(UploadAndProcessLinearizationHandlerImpl handler) {
         return handler;
     }
@@ -796,9 +799,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                objectListPresenterProvider,
-                objectViewHolderProvider,
-                defaultObjectProvider);
+                                         objectListPresenterProvider,
+                                         objectViewHolderProvider,
+                                         defaultObjectProvider);
     }
 
     @Provides
