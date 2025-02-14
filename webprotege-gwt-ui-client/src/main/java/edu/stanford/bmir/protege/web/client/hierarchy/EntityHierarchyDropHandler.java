@@ -67,7 +67,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
         if (!hierarchyDescriptor.isPresent()) {
             return false;
         }
-        if (nodePath.isEmpty()) {
+        if(nodePath.isEmpty()) {
             return false;
         }
         // Don't drop on self
@@ -90,16 +90,16 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if (nodePath.isEmpty()) {
+        if(nodePath.isEmpty()) {
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if (nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
+        if(nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
             dropEndHandler.handleDropCancelled();
             return;
         }
         // Don't drop on self
-        if (targetPath.getLast().equals(nodePath.getLast())) {
+        if(targetPath.getLast().equals(nodePath.getLast())) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -137,7 +137,6 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                             dropEndHandler.handleDropCancelled();
                         })
         );
-
     }
 
     @Override

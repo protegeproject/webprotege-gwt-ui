@@ -49,7 +49,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- * The basic interface for results which are returned from the dispatch service
+ *     The basic interface for results which are returned from the dispatch service
  * </p>
  */
 @JsonSubTypes({
@@ -203,7 +203,6 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
-        @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
@@ -67,7 +68,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  * <p>
  * Do not use this class in any client code.  It is here to whitelist objects
  * that don't get added to the serialization whitelist.
- *
  * @noinspection unused
  */
 public class RpcWhiteList implements IsSerializable, Action, Result {
@@ -262,7 +262,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetClassFrameResult _GetClassFrameResult;
     GetCommentedEntitiesAction _GetCommentedEntitiesAction;
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
-
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
     GetDataPropertyFrameResult _GetDataPropertyFrameResult;
     GetDeprecatedEntitiesAction _GetDeprecatedEntitiesAction;

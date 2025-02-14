@@ -238,10 +238,6 @@ public class EntityHierarchyContextMenuPresenter {
         return hierarchyDescriptor instanceof ClassHierarchyDescriptor;
     }
 
-    private void configureHierarchy() {
-
-    }
-
     private void pruneSelectedNodesToRoot() {
         treeWidget.pruneToSelectedNodes();
     }

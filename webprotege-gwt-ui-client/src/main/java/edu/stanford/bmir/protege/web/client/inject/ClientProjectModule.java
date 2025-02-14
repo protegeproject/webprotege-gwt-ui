@@ -799,9 +799,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                objectListPresenterProvider,
-                objectViewHolderProvider,
-                defaultObjectProvider);
+                                         objectListPresenterProvider,
+                                         objectViewHolderProvider,
+                                         defaultObjectProvider);
     }
 
     @Provides
