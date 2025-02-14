@@ -1,0 +1,18 @@
+.linearizationParentLabel tr {
+    width : 100%;
+    cursor: pointer;
+}
+
+.parentSelected {
+    background-color: rgb(17, 108, 214);
+    color: white;
+}
+
+
+.parentLabel {
+    width: 100%;
+}
+
+.parentModalWrapper {
+    max-width: 600px!important;
+}

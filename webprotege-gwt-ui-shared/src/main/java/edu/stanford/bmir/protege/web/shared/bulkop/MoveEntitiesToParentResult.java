@@ -1,16 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.bulkop;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-
-import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge

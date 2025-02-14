@@ -1,0 +1,9 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="cb" type="edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckBoxResourceBundle"/>
+    <g:HTMLPanel ui:field="wrapper" addStyleNames="{cb.style.checkBox}">
+        <g:HTMLPanel ui:field="input" addStyleNames="{cb.style.checkBox__input}" width="20px" height="20px">
+        </g:HTMLPanel>
+        <g:Label ui:field="label" addStyleNames="{cb.style.checkBox__label}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

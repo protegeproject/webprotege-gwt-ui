@@ -1,0 +1,108 @@
+.customRowStyle {
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.linearizationTable {
+    border-radius: 5px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
+    margin: 15px;
+    border-collapse: collapse;
+    padding: 3px;
+}
+
+.linearizationHeader {
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #186cd4;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+}
+
+.customRowStyle .tableText {
+    padding: 2px;
+}
+
+.linearizationHeader .tableText {
+    padding: 10px;
+}
+
+
+.linearizationHeader .tableText > div {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tableText > .enabledCheckbox {
+
+}
+
+.tableText > div {
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    text-align: left;
+    max-width: 350px;
+}
+
+.tableCheckboxHeader > div {
+    justify-content: center !important;
+}
+
+.tableText [enabled="true"]:hover {
+    background-color: #F7F7F7;
+}
+
+.tableText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.wideColumn {
+    width: 300px;
+    min-width: 200px;
+}
+
+.enabledCheckbox {
+
+}
+
+.tableCheckBox {
+    justify-self: center !important;
+}
+
+.tableCheckboxHeader {
+
+}
+
+.linearizationParentCell {
+    cursor: pointer;
+}
+
+.notesColumn {
+    width: 200px;
+    min-width: 100px;
+}
+
+.secondaryParent {
+    color: #A8A8A8;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.linearizationDefinition {
+}
+
+.linearizationDefinition div {
+    margin-left: 5px;
+}

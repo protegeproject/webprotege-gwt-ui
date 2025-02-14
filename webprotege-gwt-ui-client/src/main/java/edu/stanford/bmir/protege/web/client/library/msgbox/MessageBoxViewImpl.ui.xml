@@ -5,7 +5,7 @@
 
     <ui:style>
         .main-panel-style {
-            width: 800px;
+            width: 100%;
             max-width: 800px;
             box-sizing: border-box;
             overflow: hidden;
@@ -21,11 +21,15 @@
         }
         .main-message-style {
             padding-bottom: 5px;
+            word-wrap: break-word;
+            word-break: break-word;
             word-break: normal;
         }
         .sub-message-style {
             font-size: 14px;
             padding-top: 5px;
+            word-wrap: break-word;
+            word-break: break-word;
             word-break: normal;
         }
     </ui:style>

@@ -7,8 +7,8 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
+import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
@@ -33,6 +33,10 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
     private final UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler;
+
+    private final UploadAndProcessLinearizationHandler linearizationChangesHandler;
+
+    private final PostCoordinationChangesHandler postCoordinationChangesHandler;
 
     private final UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler;
 
@@ -63,12 +67,34 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private final AbstractUiAction uploadLinearizationChanges = new AbstractUiAction(MESSAGES.linearizationUpload()) {
+        @Override
+        public void execute() {
+            linearizationChangesHandler.handleUploadLinearizationChanges();
+        }
+    };
+
+    private final AbstractUiAction uploadPostCoordinationChanges = new AbstractUiAction(MESSAGES.postCoordinationUpload()) {
+        @Override
+        public void execute() {
+            postCoordinationChangesHandler.handleUploadPostCoordinationChanges();
+        }
+    };
+
+    private final AbstractUiAction uploadPostCoordinationCustomScales = new AbstractUiAction(MESSAGES.postCoordinationCustomScales()) {
+        @Override
+        public void execute() {
+            postCoordinationChangesHandler.handlePostCoordinationCustomScales();
+        }
+    };
+
     private final AbstractUiAction uploadSiblingsOrdering = new AbstractUiAction(MESSAGES.siblingsOrdering()) {
         @Override
         public void execute() {
             uploadAndProcessSiblingsOrderingHandler.handleUploadSiblingsOrdering();
         }
     };
+
 
     private final AbstractUiAction uploadAndMergeAdditions = new AbstractUiAction(MESSAGES.uploadAndMergeAdditions()) {
         @Override
@@ -117,6 +143,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
+                                UploadAndProcessLinearizationHandler linearizationChangesHandler,
+                                PostCoordinationChangesHandler postCoordinationChangesHandler, UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler,
                                 UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
@@ -128,6 +156,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
+        this.linearizationChangesHandler = linearizationChangesHandler;
+        this.postCoordinationChangesHandler = postCoordinationChangesHandler;
         this.uploadAndProcessSiblingsOrderingHandler = uploadAndProcessSiblingsOrderingHandler;
         this.uploadAndMergeAdditionsHandler = uploadAndMergeAdditionsHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
@@ -143,6 +173,9 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
         uploadSiblingsOrdering.setEnabled(false);
+        uploadLinearizationChanges.setEnabled(false);
+        uploadPostCoordinationChanges.setEnabled(false);
+        uploadPostCoordinationCustomScales.setEnabled(false);
         displayButton(container);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
@@ -152,7 +185,9 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
 
     }
 
@@ -171,6 +206,10 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectPrefixes);
         view.addSeparator();
         view.addMenuAction(uploadSiblingsOrdering);
+        view.addSeparator();
+        view.addMenuAction(uploadLinearizationChanges);
+        view.addMenuAction(uploadPostCoordinationChanges);
+        view.addMenuAction(uploadPostCoordinationCustomScales);
         view.addSeparator();
         view.addMenuAction(uploadAndMerge);
 

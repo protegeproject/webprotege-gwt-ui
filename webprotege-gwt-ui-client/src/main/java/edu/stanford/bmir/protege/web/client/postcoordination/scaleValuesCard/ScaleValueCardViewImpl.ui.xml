@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="pc"
+             type="edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle"/>
+    <g:HTMLPanel width="100%">
+        <g:FlexTable width="97%" height="100%" ui:field="valueTable"
+                     styleName="{pc.style.getPostCoordinationTable}"/>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

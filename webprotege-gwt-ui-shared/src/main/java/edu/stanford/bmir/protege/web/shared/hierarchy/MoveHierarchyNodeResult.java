@@ -5,11 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 8 Dec 2017
@@ -25,5 +21,7 @@ public abstract class MoveHierarchyNodeResult implements Result {
         return new AutoValue_MoveHierarchyNodeResult(moved);
     }
 
+    @JsonProperty("moved")
     public abstract boolean isMoved();
+
 }

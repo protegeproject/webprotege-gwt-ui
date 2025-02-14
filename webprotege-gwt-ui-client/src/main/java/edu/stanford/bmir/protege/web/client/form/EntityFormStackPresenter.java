@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -14,23 +12,19 @@ import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.lang.LangTag;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.*;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 /**
  * Matthew Horridge
@@ -38,6 +32,8 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
  * 2020-04-23
  */
 public class EntityFormStackPresenter {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("EntityFormStackPresenter");
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -197,7 +193,8 @@ public class EntityFormStackPresenter {
                                                       ImmutableSet.copyOf(pageRequests),
                                                       langTagFilter,
                                                       orderings,
-                                                      ImmutableSet.copyOf(formFilter),
+                                                      ImmutableSet.of(),
+                                                      //TODO avoid missing on setting to pristine forms, when fixed change to ImmutableSet.copyOf(formFilter),
                                                       filters), hasBusy, this::handleGetEntityFormsResult);
         });
         if (!currentEntity.isPresent()) {
@@ -208,7 +205,13 @@ public class EntityFormStackPresenter {
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
-        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
+        /*
+         ToDo:
+          uncomment deprecate button bellow when we made it configurable.
+          it is presumed that a user needs a specific role to make a form deprecated
+         */
+        view.setDeprecateButtonVisible(false);
+//        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
         for (FormDataDto formDataDto : result.getFormData()) {
             pristineDataManager.updatePristineFormData(formDataDto.toFormData());
@@ -270,12 +273,16 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        FormDataByFormId editedFormData = formStackPresenter.getFormData();
-        Collection<FormId> editedFormIds = editedFormData.getFormIds();
-        ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
-        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
-                         // Refresh the pristine data to what was committed
-                         result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        try {
+            FormDataByFormId editedFormData = formStackPresenter.getFormData();
+            Collection<FormId> editedFormIds = editedFormData.getFormIds();
+            ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
+            dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+                    // Refresh the pristine data to what was committed
+                    result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
+        }catch (Exception e) {
+            logger.info("An exception occured " + e);
+        }
     }
 
     private void dropEdits() {

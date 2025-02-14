@@ -152,6 +152,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("create")
     String create();
 
+    @DefaultMessage("A reason for the change was not provided.\n" +
+            "Please fill in the Reason for change field.")
+    String reasonForChangeError();
+
 
     @DefaultMessage("Enter one name per line (press CTRL+ENTER to accept and close panel)")
     @Key("createEntityInstructions")
@@ -821,6 +825,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search")
     String search();
 
+    @DefaultMessage("ICD Search")
+    @Key("searchIcd")
+    String searchIcd();
+
 
     @DefaultMessage("Search for Class")
     @Key("search.class")
@@ -859,6 +867,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Edit")
     @Key("sharing.edit")
     String sharing_edit();
+
+    @DefaultMessage("ICD Edit")
+    @Key("sharing.icd.edit")
+    String sharing_icd_edit();
 
 
     @DefaultMessage("Link sharing enabled")
@@ -1015,6 +1027,20 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
+    @DefaultMessage("Apply Linearization Changes")
+    @Key("linearization.upload")
+    String linearizationUpload();
+
+    @DefaultMessage("Apply PostCoordination changes")
+    @Key("postcoordination.upload")
+    String postCoordinationUpload();
+
+
+    @DefaultMessage("Apply PostCoordination custom scales")
+    @Key("postcoordination.customscales")
+    String postCoordinationCustomScales();
+
+
     @DefaultMessage("Apply Siblings Ordering")
     @Key("siblingsOrdering.upload")
     String siblingsOrdering();
@@ -1058,6 +1084,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Merge Into...")
     @Key("merge.mergeInto")
     String merge_mergeInto();
+
+
+    @DefaultMessage("Edit parents")
+    @Key("hierarchy.editParents")
+    String hierarchy_editParents();
 
     @DefaultMessage("Merge {0}")
     @Key("merge.mergeEntity")
@@ -1223,6 +1254,35 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "You may continue and change the display name settings afterwards.  To edit the local display name settings please use the Display menu. " +
             "To edit the global display name settings please see the Project Settings page.")
     SafeHtml displayName_noDisplayNameForLangTag(String langTag);
+
+
+    @DefaultMessage("<em>The Hierarchy change you attempted has created cycles for following classes: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please correct this in order to save changes!")
+    SafeHtml classHierarchy_cyclesHaveBeenCreated(String classesWithCycles);
+
+
+    @DefaultMessage("<em>A released class cannot be retired! <br>" +
+            "Following parents have retired ancestors: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please correct this in order to save changes")
+    SafeHtml classHierarchy_parentsHaveRetiredAncestors(String classesWithRetiredParents);
+
+    @DefaultMessage("<em>A Linearization Path Parent cannot be removed <br>" +
+            "Following parent is a linearization path parent: <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "Please change the linearization path parent before removing the parent")
+    SafeHtml classHierarchy_removeParentThatIsLinearizationPathParent(String linearizationPathParent);
+
+    @DefaultMessage("<em>A released class cannot be moved to a retired parent!")
+    String classHierarchy_cannotMoveReleasedClassToRetiredParent();
+
+
+    @DefaultMessage("<em>Cannot remove parent <i>{0}</i> from entities: <i>{1}</i> because he is linearization path parent")
+    String classHierarchy_cannotRemoveParentIfLinearizationPathParent(String parent, String entities);
+
+    @DefaultMessage("<em>Cannot move entities")
+    String classHierarchy_cannotMoveEntities();
 
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")

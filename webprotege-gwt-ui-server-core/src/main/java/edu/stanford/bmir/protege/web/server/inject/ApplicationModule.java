@@ -67,7 +67,7 @@ public class ApplicationModule {
         return HttpClient.newBuilder()
                          .version(HttpClient.Version.HTTP_1_1)
                          .followRedirects(HttpClient.Redirect.NORMAL)
-                         .connectTimeout(Duration.ofSeconds(20))
+                         .connectTimeout(Duration.ofSeconds(600))
                          .build();
     }
 

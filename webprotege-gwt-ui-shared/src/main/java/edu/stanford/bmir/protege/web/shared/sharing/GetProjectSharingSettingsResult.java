@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
@@ -25,10 +25,12 @@ public class GetProjectSharingSettingsResult implements Result {
         this.projectSharingSettings = checkNotNull(projectSharingSettings);
     }
 
-    public static GetProjectSharingSettingsResult create(ProjectSharingSettings projectSharingSettings) {
+    @JsonCreator
+    public static GetProjectSharingSettingsResult create(@JsonProperty("settings") ProjectSharingSettings projectSharingSettings) {
         return new GetProjectSharingSettingsResult(projectSharingSettings);
     }
 
+    @JsonProperty("settings")
     public ProjectSharingSettings getProjectSharingSettings() {
         return projectSharingSettings;
     }

@@ -15,7 +15,20 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.app.*;
+import edu.stanford.bmir.protege.web.client.app.ApplicationUrlView;
+import edu.stanford.bmir.protege.web.client.app.ApplicationUrlViewImpl;
+import edu.stanford.bmir.protege.web.client.app.ApplicationView;
+import edu.stanford.bmir.protege.web.client.app.ApplicationViewImpl;
+import edu.stanford.bmir.protege.web.client.app.EmailNotificationSettingsView;
+import edu.stanford.bmir.protege.web.client.app.EmailNotificationSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
+import edu.stanford.bmir.protege.web.client.app.GlobalPermissionSettingsView;
+import edu.stanford.bmir.protege.web.client.app.GlobalPermissionSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedViewImpl;
+import edu.stanford.bmir.protege.web.client.app.SystemDetailsView;
+import edu.stanford.bmir.protege.web.client.app.SystemDetailsViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
@@ -24,7 +37,12 @@ import edu.stanford.bmir.protege.web.client.color.ColorSwatchView;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchViewImpl;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellView;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellViewImpl;
-import edu.stanford.bmir.protege.web.client.dispatch.*;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.MessageBoxErrorDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplayImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityFormView;
@@ -33,7 +51,12 @@ import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
-import edu.stanford.bmir.protege.web.client.help.*;
+import edu.stanford.bmir.protege.web.client.help.HelpView;
+import edu.stanford.bmir.protege.web.client.help.HelpViewImpl;
+import edu.stanford.bmir.protege.web.client.help.ShowAboutBoxHandler;
+import edu.stanford.bmir.protege.web.client.help.ShowAboutBoxHandlerImpl;
+import edu.stanford.bmir.protege.web.client.help.ShowUserGuideHandler;
+import edu.stanford.bmir.protege.web.client.help.ShowUserGuideHandlerImpl;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
@@ -52,34 +75,89 @@ import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditorImpl;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
-import edu.stanford.bmir.protege.web.client.perspective.*;
-import edu.stanford.bmir.protege.web.client.place.*;
+import edu.stanford.bmir.protege.web.client.perspective.CreateFreshPerspectiveRequestHandler;
+import edu.stanford.bmir.protege.web.client.perspective.CreateFreshPerspectiveRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.perspective.EmptyPerspectiveView;
+import edu.stanford.bmir.protege.web.client.perspective.EmptyPerspectiveViewImpl;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherView;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherViewImpl;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveView;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveViewImpl;
+import edu.stanford.bmir.protege.web.client.place.PlaceHistoryHandlerProvider;
+import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
+import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityMapper;
+import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
+import edu.stanford.bmir.protege.web.client.place.WindowTitleUpdater;
+import edu.stanford.bmir.protege.web.client.place.WindowTitleUpdaterImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
-import edu.stanford.bmir.protege.web.client.project.*;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManagerImpl;
+import edu.stanford.bmir.protege.web.client.project.CreateNewProjectView;
+import edu.stanford.bmir.protege.web.client.project.CreateNewProjectViewImpl;
+import edu.stanford.bmir.protege.web.client.project.EditProjectPrefixDeclarationsHandler;
+import edu.stanford.bmir.protege.web.client.project.EditProjectPrefixDeclarationsHandlerImpl;
+import edu.stanford.bmir.protege.web.client.project.ProjectMenuView;
+import edu.stanford.bmir.protege.web.client.project.ProjectMenuViewImpl;
+import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsView;
+import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsViewImpl;
+import edu.stanford.bmir.protege.web.client.project.ProjectView;
+import edu.stanford.bmir.protege.web.client.project.ProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
-import edu.stanford.bmir.protege.web.client.projectmanager.*;
+import edu.stanford.bmir.protege.web.client.projectmanager.CreateProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.projectmanager.CreateProjectRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.projectmanager.DownloadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.projectmanager.DownloadProjectRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindowRequestHandler;
+import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindowRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerView;
+import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerViewImpl;
+import edu.stanford.bmir.protege.web.client.projectmanager.TrashManagerRequestHandler;
+import edu.stanford.bmir.protege.web.client.projectmanager.TrashManagerRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdView;
+import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdViewImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
-import edu.stanford.bmir.protege.web.client.tag.*;
+import edu.stanford.bmir.protege.web.client.tag.EntityTagsSelectorView;
+import edu.stanford.bmir.protege.web.client.tag.EntityTagsSelectorViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.ProjectTagsView;
+import edu.stanford.bmir.protege.web.client.tag.ProjectTagsViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.TagListView;
+import edu.stanford.bmir.protege.web.client.tag.TagListViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.TagView;
+import edu.stanford.bmir.protege.web.client.tag.TagViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
-import edu.stanford.bmir.protege.web.client.user.*;
+import edu.stanford.bmir.protege.web.client.user.ChangeEmailAddressHandler;
+import edu.stanford.bmir.protege.web.client.user.ChangeEmailAddressHandlerImpl;
+import edu.stanford.bmir.protege.web.client.user.ChangePasswordHandler;
+import edu.stanford.bmir.protege.web.client.user.ChangePasswordHandlerImpl;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserView;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserViewImpl;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandler;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
@@ -369,6 +447,11 @@ public class ClientApplicationModule {
     }
 
     @Provides
+    SearchIcdView providesSearchViewIcd(SearchIcdViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     DeprecatedEntitiesView provideDeprecatedEntitiesView(DeprecatedEntitiesViewImpl impl) {
         return impl;
     }
@@ -518,6 +601,11 @@ public class ClientApplicationModule {
 
     @Provides
     CreateEntityFormView provideCreateEntityFormView(CreateEntityFormViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ScaleValueSelectionView provideScaleValueSelectionView(ScaleValueSelectionViewImpl impl) {
         return impl;
     }
 }

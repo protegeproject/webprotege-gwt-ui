@@ -40,7 +40,7 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     private EnterEditModeHandler enterEditModeHandler = () -> {};
 
     @Nonnull
-    private ApplyEditsHandler applyEditsHandler = () -> {};
+    private ApplyEditsHandler applyEditsHandler = () -> {throw new RuntimeException("Error applying edits"); };
 
     @Nonnull
     private CancelEditsHandler cancelEditsHandler = () -> {};

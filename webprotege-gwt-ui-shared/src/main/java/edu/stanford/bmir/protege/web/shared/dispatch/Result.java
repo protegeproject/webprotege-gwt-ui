@@ -1,55 +1,46 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
-import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
-import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsResult;
+import edu.stanford.bmir.protege.web.shared.icd.*;
+import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
-import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
-import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
+import edu.stanford.bmir.protege.web.shared.mail.*;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
-import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
+import edu.stanford.bmir.protege.web.shared.merge.*;
 import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.obo.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
-import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsResult;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResult;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
-import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
-import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+import edu.stanford.bmir.protege.web.shared.renderer.*;
+import edu.stanford.bmir.protege.web.shared.revision.*;
 import edu.stanford.bmir.protege.web.shared.search.*;
-import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
-import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
+import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
+import edu.stanford.bmir.protege.web.shared.user.*;
 import edu.stanford.bmir.protege.web.shared.viz.*;
-import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
-import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
+import edu.stanford.bmir.protege.web.shared.watches.*;
 
 
 /**
@@ -110,6 +101,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetEntityTagsResult.class),
         @JsonSubTypes.Type(GetHeadRevisionNumberResult.class),
         @JsonSubTypes.Type(GetHierarchyChildrenResult.class),
+        @JsonSubTypes.Type(GetHierarchyParentsResult.class),
         @JsonSubTypes.Type(GetHierarchyPathsToRootResult.class),
         @JsonSubTypes.Type(GetHierarchyRootsResult.class),
         @JsonSubTypes.Type(GetHierarchySiblingsResult.class),
@@ -161,6 +153,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(MergeEntitiesResult.class),
         @JsonSubTypes.Type(MergeUploadedProjectResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentResult.class),
+        @JsonSubTypes.Type(ChangeEntityParentsResult.class),
         @JsonSubTypes.Type(MoveHierarchyNodeResult.class),
         @JsonSubTypes.Type(MoveProjectsToTrashResult.class),
         @JsonSubTypes.Type(NewOntologyMergeAddResult.class),
@@ -210,6 +203,29 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
+        @JsonSubTypes.Type(GetEntityLinearizationResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
+        @JsonSubTypes.Type(GetClassAncestorsResult.class),
+        @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
+        @JsonSubTypes.Type(GetEntityPostCoordinationResult.class),
+        @JsonSubTypes.Type(ProcessUploadedCustomScalesResult.class),
+        @JsonSubTypes.Type(GetEntityCustomScalesResult.class),
+        @JsonSubTypes.Type(SaveEntityPostCoordinationResult.class),
+        @JsonSubTypes.Type(ProcessUploadedPostCoordinationResult.class),
+        @JsonSubTypes.Type(GetPostCoordinationTableConfigurationResult.class),
+        @JsonSubTypes.Type(GetProjectChangesForHistoryViewResult.class),
+        @JsonSubTypes.Type(ProcessUploadedLinearizationResult.class),
+        @JsonSubTypes.Type(GetPostcoordinationAxisToGenericScaleResult.class),
+        @JsonSubTypes.Type(SaveEntityCustomScaleResult.class),
+        @JsonSubTypes.Type(GetEntityLogicalDefinitionResult.class),
+        @JsonSubTypes.Type(UpdateLogicalDefinitionResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
+        @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
+        @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
         @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
         @JsonSubTypes.Type(SaveEntityChildReorderingResult.class)
 })

@@ -4,26 +4,20 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
-import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
+import edu.stanford.bmir.protege.web.client.app.*;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
-import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
-import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
+import edu.stanford.bmir.protege.web.shared.sharing.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
@@ -67,6 +61,8 @@ public class SharingSettingsPresenter implements Presenter {
 
     @Nonnull
     private UuidV4Provider uuidV4Provider;
+
+    private final static Logger logger = Logger.getLogger(SharingSettingsPresenter.class.getName());
 
     @Inject
     public SharingSettingsPresenter(@Nonnull ProjectId projectId,

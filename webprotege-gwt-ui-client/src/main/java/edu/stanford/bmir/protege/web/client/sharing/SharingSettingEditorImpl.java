@@ -58,6 +58,8 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
                 return MESSAGES.sharing_manage();
             case EDIT:
                 return MESSAGES.sharing_edit();
+            case ICD_EDIT:
+                return MESSAGES.sharing_icd_edit();
             case COMMENT:
                 return MESSAGES.sharing_comment();
             case VIEW:

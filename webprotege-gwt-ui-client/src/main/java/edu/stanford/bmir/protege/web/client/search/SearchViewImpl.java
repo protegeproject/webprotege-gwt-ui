@@ -1,13 +1,13 @@
 package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -54,16 +54,20 @@ public class SearchViewImpl extends Composite implements SearchView {
     HTMLPanel langTagsFilterPanel;
 
     @Nonnull
-    private IncrementSelectionHandler incrementSelectionHandler = () -> {};
+    private IncrementSelectionHandler incrementSelectionHandler = () -> {
+    };
 
     @Nonnull
-    private DecrementSelectionHandler decrementSelectionHandler = () -> {};
+    private DecrementSelectionHandler decrementSelectionHandler = () -> {
+    };
 
     @Nonnull
-    private SearchStringChangedHandler searchStringChangedHandler = () -> {};
+    private SearchStringChangedHandler searchStringChangedHandler = () -> {
+    };
 
     @Nonnull
-    private AcceptKeyHandler acceptKeyHandler = () -> {};
+    private AcceptKeyHandler acceptKeyHandler = () -> {
+    };
 
     private String previousSearchString = "";
 
@@ -130,16 +134,13 @@ public class SearchViewImpl extends Composite implements SearchView {
         if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_DOWN) {
             event.preventDefault();
             incrementSelectionHandler.handleIncrementSelection();
-        }
-        else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_UP) {
+        } else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_UP) {
             event.preventDefault();
             decrementSelectionHandler.handleDecrementSelection();
-        }
-        else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+        } else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
             event.preventDefault();
             acceptKeyHandler.handleAcceptKey();
-        }
-        else {
+        } else {
             performSearchIfChanged();
         }
     }
@@ -157,6 +158,14 @@ public class SearchViewImpl extends Composite implements SearchView {
     @Override
     public String getSearchString() {
         return searchStringField.getText();
+    }
+
+    @Override
+    public void setSearchString(String text) {
+        if (text != null && !text.isEmpty()) {
+            this.searchStringField.setValue(text);
+            this.searchStringChangedHandler.handleSearchStringChanged();
+        }
     }
 
     @Override

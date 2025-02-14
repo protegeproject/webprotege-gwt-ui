@@ -22,7 +22,10 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
-import edu.stanford.protege.gwt.graphtree.shared.graph.*;
+import edu.stanford.protege.gwt.graphtree.shared.graph.AddEdge;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphModelChangedEvent;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -78,16 +81,16 @@ public class EventsSerializationTestCase {
     public void shouldSerializeCommentPostedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new CommentPostedEvent(mockProjectId(),
-                                       ThreadId.create(),
-                                       new Comment(CommentId.create(),
-                                                   mockUserId(),
-                                                   1L,
-                                                   Optional.of(3L),
-                                                   "The Body",
-                                                   "The rendered body"),
-                                       Optional.of(mockOWLClassData()),
-                                       2,
-                                       3),
+                        ThreadId.create(),
+                        new Comment(CommentId.create(),
+                                mockUserId(),
+                                1L,
+                                Optional.of(3L),
+                                "The Body",
+                                "The rendered body"),
+                        Optional.of(mockOWLClassData()),
+                        2,
+                        3),
                 WebProtegeEvent.class
         );
     }
@@ -96,13 +99,13 @@ public class EventsSerializationTestCase {
     public void shouldSerializeCommentUpdatedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new CommentUpdatedEvent(mockProjectId(),
-                                        ThreadId.create(),
-                                        new Comment(CommentId.create(),
-                                                   mockUserId(),
-                                                   1L,
-                                                   Optional.of(3L),
-                                                   "The Body",
-                                                   "The rendered body")),
+                        ThreadId.create(),
+                        new Comment(CommentId.create(),
+                                mockUserId(),
+                                1L,
+                                Optional.of(3L),
+                                "The Body",
+                                "The rendered body")),
                 WebProtegeEvent.class
         );
     }
@@ -125,10 +128,10 @@ public class EventsSerializationTestCase {
     public void shouldSerializeDiscussionThreadStatusChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new DiscussionThreadStatusChangedEvent(mockProjectId(),
-                                                       ThreadId.create(),
-                                                       Optional.empty(),
-                                                       3,
-                                                       Status.CLOSED),
+                        ThreadId.create(),
+                        Optional.empty(),
+                        3,
+                        Status.CLOSED),
                 WebProtegeEvent.class
         );
     }
@@ -148,8 +151,8 @@ public class EventsSerializationTestCase {
     public void shouldSerializeEntityDeprecatedChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new EntityDeprecatedChangedEvent(mockProjectId(),
-                                                 mockOWLClass(),
-                                                 true),
+                        mockOWLClass(),
+                        true),
                 WebProtegeEvent.class
         );
     }
@@ -158,13 +161,11 @@ public class EventsSerializationTestCase {
     public void shouldSerializeEntityHierarchyChangedEvent() throws IOException {
         var changes = ImmutableList.of(
                 new AddEdge<>(new GraphEdge<>(new GraphNode<>(EntityNode.get(
-                        mockOWLClass(), "A", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of()
-                )
+                        mockOWLClass(), "A", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), ImmutableSet.of())
                 ),
-                                              new GraphNode<>(EntityNode.get(
-                                                      mockOWLClass(), "B", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of()
-                                              )))
-        ));
+                        new GraphNode<>(EntityNode.get(
+                                mockOWLClass(), "B", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), ImmutableSet.of())))
+                ));
         JsonSerializationTestUtil.testSerialization(
                 new EntityHierarchyChangedEvent(mockProjectId(),
                         ClassHierarchyDescriptor.get(),
@@ -177,8 +178,8 @@ public class EventsSerializationTestCase {
     public void shouldSerializeEntityTagsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new EntityTagsChangedEvent(mockProjectId(),
-                                           mockOWLClass(),
-                                           Collections.emptySet()),
+                        mockOWLClass(),
+                        Collections.emptySet()),
                 WebProtegeEvent.class
         );
     }
@@ -195,8 +196,8 @@ public class EventsSerializationTestCase {
     public void shouldSerializeOntologyFrameChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new OntologyBrowserTextChangedEvent(mockOWLOntologyID(),
-                                                    "Old",
-                                                    "new"),
+                        "Old",
+                        "new"),
                 WebProtegeEvent.class
         );
     }
@@ -262,7 +263,7 @@ public class EventsSerializationTestCase {
     public void shouldSerializeProjectTagsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new ProjectTagsChangedEvent(mockProjectId(),
-                                            Collections.emptySet()),
+                        Collections.emptySet()),
                 WebProtegeEvent.class
         );
     }
@@ -271,9 +272,9 @@ public class EventsSerializationTestCase {
     public void shouldSerializeWatchAddedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new WatchAddedEvent(mockProjectId(),
-                                    Watch.create(mockUserId(),
-                                                 mockOWLClass(),
-                                                 WatchType.ENTITY)),
+                        Watch.create(mockUserId(),
+                                mockOWLClass(),
+                                WatchType.ENTITY)),
                 WebProtegeEvent.class
         );
     }
@@ -282,9 +283,9 @@ public class EventsSerializationTestCase {
     public void shouldSerializeWatchRemovedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 new WatchRemovedEvent(mockProjectId(),
-                                      Watch.create(mockUserId(),
-                                                 mockOWLClass(),
-                                                 WatchType.ENTITY)),
+                        Watch.create(mockUserId(),
+                                mockOWLClass(),
+                                WatchType.ENTITY)),
                 WebProtegeEvent.class
         );
     }

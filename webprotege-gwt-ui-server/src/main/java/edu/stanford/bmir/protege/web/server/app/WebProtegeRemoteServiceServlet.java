@@ -19,7 +19,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -81,7 +82,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
                 response.setContentType("text/plain");
                 response.sendError(StatusCodes.UPDATED, "WebProtege has been updated. Please refresh your browser");
             } catch (IOException ex) {
-                logger.info(ex.getMessage());
+                logger.log(Level.SEVERE, ex.getMessage());
             }
         }
         else {

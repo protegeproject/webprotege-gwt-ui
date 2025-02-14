@@ -3,70 +3,55 @@ package edu.stanford.bmir.protege.web.client.inject;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
-import dagger.Provides;
+import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
-import edu.stanford.bmir.protege.web.client.change.ChangeListView;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
-import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsView;
-import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
-import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
-import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsView;
-import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
-import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
-import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
+import edu.stanford.bmir.protege.web.client.crud.obo.*;
+import edu.stanford.bmir.protege.web.client.crud.supplied.*;
+import edu.stanford.bmir.protege.web.client.crud.uuid.*;
+import edu.stanford.bmir.protege.web.client.editor.*;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
-import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
-import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
-import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
+import edu.stanford.bmir.protege.web.client.form.input.*;
+import edu.stanford.bmir.protege.web.client.frame.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
-import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
-import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
+import edu.stanford.bmir.protege.web.client.hierarchy.parents.*;
+import edu.stanford.bmir.protege.web.client.individualslist.*;
 import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
-import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
-import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
+import edu.stanford.bmir.protege.web.client.linearization.*;
+import edu.stanford.bmir.protege.web.client.list.*;
+import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.client.match.*;
-import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
-import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
+import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
+import edu.stanford.bmir.protege.web.client.permissions.*;
 import edu.stanford.bmir.protege.web.client.perspective.*;
-import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
-import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
-import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
+import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
+import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
-import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
-import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
-import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
-import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.renderer.*;
 import edu.stanford.bmir.protege.web.client.search.*;
-import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
-import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.searchIcd.*;
+import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
-import edu.stanford.bmir.protege.web.client.tab.TabBarView;
-import edu.stanford.bmir.protege.web.client.tab.TabBarViewImpl;
-import edu.stanford.bmir.protege.web.client.tab.TabView;
-import edu.stanford.bmir.protege.web.client.tab.TabViewImpl;
+import edu.stanford.bmir.protege.web.client.tab.*;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
-import edu.stanford.bmir.protege.web.client.watches.WatchView;
-import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
+import edu.stanford.bmir.protege.web.client.watches.*;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
-import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
-import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.client.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -117,6 +102,16 @@ public class ClientProjectModule {
     @Provides
     UploadAndProcessSiblingsOrderingHandler provideUploadAndProcessSiblingsOrderingHandler(UploadAndProcessSiblingsOrderingHandlerImpl handler) {
         return handler;
+    }
+
+    @Provides
+    UploadAndProcessLinearizationHandler provideUploadAndProcessLinearizationHandler(UploadAndProcessLinearizationHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
+    PostCoordinationChangesHandler provideProcessPostCoordinationHandler(PostCoordinationChangesHandlerImpl impl) {
+        return impl;
     }
 
     @Provides
@@ -194,6 +189,21 @@ public class ClientProjectModule {
     }
 
     @Provides
+    WhoCreateClassDialogView providesWhoCreateEntityDialogView(WhoCreateClassDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DuplicateEntitiesView providesDuplicateEntitiesView(DuplicateEntitiesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EditParentsView providesEditParentsView(EditParentsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ChangeChildrenOrderingDialogView providesChildrenOrderingDialogView(ChangeChildrenOrderingDialogViewImpl impl) {
         return impl;
     }
@@ -220,6 +230,40 @@ public class ClientProjectModule {
 
     @Provides
     NumericValueCriteriaView provideNumericValueCriteriaView(NumericValueCriteriaViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    LogicalDefinitionPortletView provideLogicalDefinitionPortletView(LogicalDefinitionPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LogicalDefinitionModalView provideLogicalDefinitionModalView(LogicalDefinitionModalViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    LinearizationPortletView provideLinearizationPortletView(LinearizationPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PostCoordinationPortletView providePostCoordinationPortletView(PostCoordinationPortletViewImpl impl){
+        return impl;
+    }
+
+
+    @Provides
+    LinearizationCommentsView provideLienarizationCommentsView(LinearizationCommentsViewImpl impl){
         return impl;
     }
 
@@ -596,7 +640,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-        TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+    TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
         return impl;
     }
 
@@ -627,13 +671,13 @@ public class ClientProjectModule {
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
             GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
-                                numberFieldDescriptorPresenterFactory,
-                                choiceFieldDescriptorPresenterFactory,
-                                multiChoiceControlDescriptorPresenterFactory,
-                                imageDescriptorPresenterFactory,
-                                entityNameFieldDescriptorPresenterFactory,
-                                subFormControlDescriptorPresenterFactory,
-                                gridControlDescriptorPresenterFactory);
+                numberFieldDescriptorPresenterFactory,
+                choiceFieldDescriptorPresenterFactory,
+                multiChoiceControlDescriptorPresenterFactory,
+                imageDescriptorPresenterFactory,
+                entityNameFieldDescriptorPresenterFactory,
+                subFormControlDescriptorPresenterFactory,
+                gridControlDescriptorPresenterFactory);
     }
 
     @Provides
@@ -762,9 +806,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                                         objectListPresenterProvider,
-                                         objectViewHolderProvider,
-                                         defaultObjectProvider);
+                objectListPresenterProvider,
+                objectViewHolderProvider,
+                defaultObjectProvider);
     }
 
     @Provides
@@ -955,6 +999,11 @@ public class ClientProjectModule {
 
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchInputManager provideSearchInputManager(SearchInputManagerImpl impl) {
         return impl;
     }
 }

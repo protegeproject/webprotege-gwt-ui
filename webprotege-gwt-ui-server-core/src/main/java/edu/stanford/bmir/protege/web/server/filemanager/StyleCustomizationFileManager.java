@@ -40,7 +40,7 @@ public class StyleCustomizationFileManager {
         ConfigDirectorySupplier configDirectorySupplier = new ConfigDirectorySupplier();
         return configDirectorySupplier.getConfigDirectory().map(configDirectory -> {
             Path styleCustomizationFilePath = configDirectory.resolve(WEBPROTEGE_CSS);
-            logger.info("Found style customization file at {}", styleCustomizationFilePath.toAbsolutePath());
+            logger.debug("Found style customization file at {}", styleCustomizationFilePath.toAbsolutePath());
             fileContents = new FileContents(styleCustomizationFilePath::toFile);
             return fileContents.getContents();
         }).orElse("");

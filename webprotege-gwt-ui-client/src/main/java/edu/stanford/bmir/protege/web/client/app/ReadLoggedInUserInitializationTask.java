@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetAuthenticatedUse
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -43,7 +44,7 @@ public class ReadLoggedInUserInitializationTask implements ApplicationInitManage
                          new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorMessageDisplay) {
                              @Override
                              public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
-                                 logger.info("[ReadLoggedInUserInitializationTask] set logged user: " + result);
+                                 logger.log(Level.FINE, "[ReadLoggedInUserInitializationTask] set logged user: " + result);
 
                                  loggedInUserManager.setLoggedInUser(new UserInSession(result.getUserDetails(),
                                                                                        result.getPermittedActions()));

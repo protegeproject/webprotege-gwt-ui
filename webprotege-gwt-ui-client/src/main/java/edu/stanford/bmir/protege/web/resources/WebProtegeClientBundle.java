@@ -23,6 +23,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource busy();
 
+    @Source("no_data_found.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource noDataFound();
+
     @Source("help.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgHelpIcon();
@@ -38,6 +42,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
+
+    @Source("released.png")
+    @DataResource.MimeType("image/png")
+    DataResource releasedClassIcon();
 
     @Source("deprecated-class.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -167,6 +175,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource searchIcon();
 
+
+    @Source("solar--card-search-linear.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource searchIcdIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();
@@ -252,7 +265,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("language-codes.txt")
     TextResource languageCodes();
 
-    @Source("protege-blender.svg")
+    @Source("ICAT-X4.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource protegeBlender();
 
@@ -308,6 +321,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("primitive-data.css")
     WebProtegePrimitiveDataCss primitiveData();
+
+    @Source("single.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource singleScaleValue();
+
+    @Source("multiple.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource multipleScaleValues();
+
+    @Source("block.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource allowScaleValueIfNotFromSameBlock();
 
     interface WebProtegePrimitiveDataCss extends CssResource {
 

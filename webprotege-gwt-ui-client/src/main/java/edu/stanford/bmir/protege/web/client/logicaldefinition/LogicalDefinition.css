@@ -1,0 +1,124 @@
+.superClassTable {
+    overflow: hidden;
+    margin-top: 15px;
+    border-collapse: collapse;
+    padding: 3px;
+    width: 100%;
+}
+
+.tableText {
+    vertical-align: middle;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: literal("var(--primary--color)");
+    font-size: 12px;
+}
+
+.axisDropdownPlaceholder {
+    font-style: italic;
+}
+
+.axisDropdownPlaceholder option  {
+    font-style: normal!important;
+}
+
+.axisColumn{
+    min-width: 350px;
+    vertical-align: middle;
+}
+
+.valuesColumn{
+    width: 100%;
+    vertical-align: middle;
+}
+
+.lastItemInDropdown {
+}
+
+
+.logicalDefinitionDropdown {
+    background-color: white;
+    margin: 5px;
+    width: 95%;
+    padding: 3px;
+}
+
+.axisColumn  div {
+    padding-left: 5px;
+}
+
+.customRowStyle {
+    border-bottom: 1px solid #f2f2f2;
+    min-height: 22px;
+    line-height: 1rem;
+}
+
+.removeButtonCell {
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
+
+.addAxisValueButton {
+    width: 25px;
+    height: 25px;
+}
+
+.addAxisValueCell {
+    align-items: start;
+    justify-content: start;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-top: 5px;
+}
+
+.removeButtonCell > div {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+
+.superClassTableHeader {
+    color: literal("var(--grid-header--color)");
+    background-color: literal("var(--grid-header--background-color)");
+    font-weight: bold;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    border-radius: literal("var(--grid-header--border-radius)");
+    line-height: 1rem;
+    padding: 3px;
+}
+
+.dropDownMandatory{
+    color: red;
+    margin: 2px;
+    font-weight: 600;
+}
+
+.dropDownAllowed {
+    color: green;
+    margin: 2px;
+    font-weight: 600;
+}
+
+.dropDownNotSet{
+    margin: 2px;
+}
+
+.superClassName {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.selectValueModalWrapper {
+    max-width: 600px!important;
+}
+
+.mainModalView {
+    width: auto!important;
+}
+
+.selectValueModalWrapper > div {
+    overflow: hidden!important;
+}

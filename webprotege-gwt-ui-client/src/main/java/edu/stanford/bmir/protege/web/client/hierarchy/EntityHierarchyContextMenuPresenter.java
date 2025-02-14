@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.ChangeChildrenOrderingUIAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
+import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -20,6 +21,8 @@ import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
@@ -67,6 +70,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final MoveToParentUiAction moveToParentUiAction;
 
     @Nonnull
+    private final EditParentsUiAction editParentsUiAction;
+
+    @Nonnull
     private final ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction;
 
     @Nonnull
@@ -111,9 +117,11 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
+                                               @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                               @Provided @Nonnull EditParentsUiAction editParentsUiAction,
                                                @Provided @Nonnull InputBox inputBox) {
         this.projectId = projectId;
         this.dispatch = dispatch;
@@ -131,6 +139,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.watchUiAction = checkNotNull(watchUiAction);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.inputBox = checkNotNull(inputBox);
+        this.editParentsUiAction = checkNotNull(editParentsUiAction);
     }
 
     /**
@@ -162,6 +171,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(editAnnotationsUiAction);
+        contextMenu.addItem(editParentsUiAction);
         contextMenu.addSeparator();
         contextMenu.addItem(watchUiAction);
         contextMenu.addSeparator();
@@ -207,7 +217,22 @@ public class EntityHierarchyContextMenuPresenter {
         clearPruningAction.setEnabled(selIsSingleton);
         showIriAction.setEnabled(selIsSingleton);
         showDirectLinkAction.setEnabled(selIsSingleton);
+        editParentsUiAction.setEnabled(selIsSingleton);
 
+        boolean isClassHierarchy = isClassHierarchyType(model.getHierarchyDescriptor());
+        editParentsUiAction.setVisible(isClassHierarchy);
+        moveToParentUiAction.setEnabled(isClassHierarchy);
+        moveToParentUiAction.setVisible(isClassHierarchy);
+
+        boolean isNotClassHierarchy = !isClassHierarchy;
+        editAnnotationsUiAction.setVisible(isNotClassHierarchy);
+        setAnnotationValueUiAction.setVisible(isNotClassHierarchy);
+
+        if (isClassHierarchy) {
+            permissionChecker.hasPermission(DELETE_CLASS, deleteEntityAction::setVisible);
+        } else {
+            permissionChecker.hasPermission(DELETE_PROPERTY, deleteEntityAction::setVisible);
+        }
 
         if (selIsNonEmpty) {
             permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
@@ -217,6 +242,14 @@ public class EntityHierarchyContextMenuPresenter {
             permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
+    }
+
+    private boolean isClassHierarchyType(HierarchyDescriptor hierarchyDescriptor) {
+        return hierarchyDescriptor instanceof ClassHierarchyDescriptor;
+    }
+
+    private void configureHierarchy() {
+
     }
 
     private void pruneSelectedNodesToRoot() {
@@ -236,13 +269,15 @@ public class EntityHierarchyContextMenuPresenter {
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
             String iri = sel.getIRI().toString();
-            inputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
+            inputBox.showOkDialog(messages.classIri(), false, iri, input -> {
+            }, true);
         });
     }
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
-        inputBox.showOkDialog(messages.directLink(), true, location, input -> {});
+        inputBox.showOkDialog(messages.directLink(), true, location, input -> {
+        }, true);
     }
 
     private void handleRefresh() {

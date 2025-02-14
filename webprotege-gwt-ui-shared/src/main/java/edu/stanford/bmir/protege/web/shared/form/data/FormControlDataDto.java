@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 @JsonSubTypes({
         @Type(EntityNameControlDataDto.class),

@@ -10,7 +10,7 @@
             overflow: auto;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel ui:field="main" addStyleNames="{style.main}">
         <graphtree:TreeWidget ui:field="treeWidget"/>
     </g:HTMLPanel>
 </ui:UiBinder>

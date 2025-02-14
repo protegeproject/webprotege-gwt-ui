@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -14,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 03/01/16
  */
 public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserProjectPermissionChecker {
+
+    private final Logger logger = Logger.getLogger(LoggedInUserProjectPermissionCheckerImpl.class.getName());
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -52,7 +52,7 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
             return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        GWT.log("[LoggedInUserProjectPermissionCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
+        logger.fine("[LoggedInUserProjectPermissionCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
         permissionManager.hasPermissionForProject(userId, actionId, projectId.get(), callback);
     }
 
@@ -63,6 +63,11 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);
+            }
+
+            @Override
+            public void handleErrorFinally(Throwable throwable) {
+                logger.info("[LoggedInUserProjectPermissionCheckerImpl] Error when checking permissions: " + throwable.getMessage());
             }
         });
     }

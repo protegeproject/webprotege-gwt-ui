@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +37,10 @@ public class HierarchyPopupPresenter {
 
     private Optional<OWLEntity> selectedEntity = Optional.empty();
 
+    private final static Logger logger = Logger.getLogger(HierarchyPopupPresenter.class.getName());
+
+
+    @Inject
     @AutoFactory
     public HierarchyPopupPresenter(@Nonnull HierarchyDescriptor hierarchyDescriptor,
                                    @Provided @Nonnull HierarchyPopupView view,
@@ -55,20 +60,44 @@ public class HierarchyPopupPresenter {
     }
 
     public void show(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler) {
+        this.show(target, popupClosedHandler, true);
+    }
+
+    public void show(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler, boolean isCurrSelectionLocked) {
+        setPopUpWidgetAndShowRelativeTo(target);
+        if(isCurrSelectionLocked){
+            view.setSelectionChangedHandler(sel -> {
+                if (!Optional.of(sel.getEntity()).equals(selectedEntity)) {
+                    closePanelAndSendSelection(sel, popupClosedHandler);
+                }
+            });
+            return;
+        }
+
+        view.setMouseDownHandler((entityNode -> {
+            closePanelAndSendSelection(entityNode, popupClosedHandler);
+        }));
+    }
+
+    private void closePanelAndSendSelection(EntityNode entityNode, Consumer<EntityNode> popupClosedHandler) {
+        popupPanel.hide();
+        selectedEntity = Optional.of(entityNode.getEntity());
+        popupClosedHandler.accept(entityNode);
+    }
+
+    private void setPopUpWidgetAndShowRelativeTo(UIObject target) {
         popupPanel.setWidget(view);
         popupPanel.showRelativeTo(target);
-        view.setSelectionChangedHandler(sel -> {
-            if(!Optional.of(sel.getEntity()).equals(selectedEntity)) {
-                popupPanel.hide();
-                selectedEntity = Optional.of(sel.getEntity());
-                popupClosedHandler.accept(sel);
-            }
-        });
     }
 
     public void setSelectedEntity(@Nonnull OWLEntity selectedEntity) {
         this.selectedEntity = Optional.of(selectedEntity);
         view.revealEntity(selectedEntity);
+    }
+
+
+    public HierarchyPopupView getView(){
+        return view;
     }
 
     public void setDisplayNameSettings(@Nonnull DisplayNameSettings settings) {
