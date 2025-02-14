@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
-import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -93,15 +93,15 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
 
     @Nonnull
     @Override
-    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities,
-                                                             @Nonnull String commitMessage) {
+    public Optional<MoveEntitiesToParentIcdAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities,
+                                                                       @Nonnull String commitMessage) {
         ImmutableSet<OWLClass> clses = entities.stream()
                 .filter(OWLEntity::isOWLClass)
                 .map(OWLEntity::asOWLClass)
                 .collect(toImmutableSet());
         return hierarchyFieldPresenter.getEntity()
                 .map(OWLEntityData::getEntity)
-                .map(entity -> MoveEntitiesToParentAction.create(projectId,
+                .map(entity -> MoveEntitiesToParentIcdAction.create(projectId,
                                                                  clses,
                                                                  entity.asOWLClass(),
                                                                  commitMessage));
@@ -112,7 +112,7 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
 
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        hierarchyFieldPresenter.setHierarchyId(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        hierarchyFieldPresenter.setHierarchyDescriptor(hierarchyDescriptor);
     }
 }

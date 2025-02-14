@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.bulkop.*;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentIcdResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -118,10 +119,33 @@ public class BulkEditOperationWorkflow {
     private void executeAction(@Nonnull Action<?> action) {
         dispatch.execute(action,
                 result -> {
-                    if(result instanceof MoveEntitiesToParentResult){
-                        MoveEntitiesToParentResult moveEntitiesResult = (MoveEntitiesToParentResult) result;
-                        if(moveEntitiesResult.isDestinationRetiredClass()){
+                    if (result instanceof MoveEntitiesToParentIcdResult) {
+                        MoveEntitiesToParentIcdResult moveEntitiesResult = (MoveEntitiesToParentIcdResult) result;
+                        if (moveEntitiesResult.isSuccess()) {
+                            return;
+                        }
+                        if (moveEntitiesResult.isDestinationRetiredClass()) {
                             messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                        }
+                        if (moveEntitiesResult.hasOldParentAsLinearizationPathParent()) {
+                            StringBuilder messageBuffer = new StringBuilder();
+                            Set<String> parents = moveEntitiesResult.getEntitiesForWhichParentIsLinPathParent()
+                                    .keySet();
+                            Iterator<String> iterator = parents.stream().iterator();
+                            while (iterator.hasNext()) {
+                                String parent = iterator.next();
+                                String entities = moveEntitiesResult.getEntitiesForWhichParentIsLinPathParent()
+                                        .get(parent)
+                                        .stream()
+                                        .map(OWLEntityData::getBrowserText)
+                                        .collect(Collectors.joining(", "));
+
+                                messageBuffer.append(messages.classHierarchy_cannotRemoveParentIfLinearizationPathParent(parent, entities));
+                                if (iterator.hasNext()) {
+                                    messageBuffer.append("<br>");
+                                }
+                            }
+                            messageBox.showAlert(messages.classHierarchy_cannotMoveEntities(), messageBuffer.toString());
                         }
                     }
                 });

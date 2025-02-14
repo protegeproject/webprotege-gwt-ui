@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentIcdAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
@@ -21,7 +22,7 @@ import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
-import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
+import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -29,9 +30,9 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsActio
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.SaveEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.GetEntityLogicalDefinitionAction;
+import edu.stanford.bmir.protege.web.shared.logicaldefinition.UpdateLogicalDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -44,7 +45,7 @@ import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
-import edu.stanford.bmir.protege.web.shared.postcoordination.GetPostCoordinationTableConfigurationAction;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
@@ -152,7 +153,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetPerspectivesAction.class),
         @Type(value = GetPossibleItemCompletionsAction.class),
         @Type(value = GetProjectChangesAction.class),
-        @Type(value = GetLinearizationChangesAction.class),
         @Type(value = GetProjectDetailsAction.class),
         @Type(value = GetProjectEventsAction.class),
         @Type(value = GetProjectFormDescriptorsAction.class),
@@ -230,8 +230,22 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
         @Type(value = SaveEntityLinearizationAction.class),
+        @Type(value = SaveEntityPostCoordinationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class),
-        @Type(value = GetPostCoordinationTableConfigurationAction.class)
+        @Type(value = GetEntityPostCoordinationAction.class),
+        @Type(value = GetPostCoordinationTableConfigurationAction.class),
+        @Type(value = GetProjectChangesForHistoryViewAction.class),
+        @Type(value = ProcessUploadedLinearizationAction.class),
+        @Type(value = ProcessUploadedPostCoordinationAction.class),
+        @Type(value = GetPostcoordinationAxisToGenericScaleAction.class),
+        @Type(value = SaveEntityCustomScaleAction.class),
+        @Type(value = UpdateLogicalDefinitionAction.class),
+        @Type(value = GetEntityLogicalDefinitionAction.class),
+        @Type(value = TranslateEventListAction.class),
+        @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = CreateNewProjectFromProjectBackupAction.class),
+        @Type(value = MoveEntitiesToParentIcdAction.class),
+        @Type(value = MoveHierarchyNodeIcdAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

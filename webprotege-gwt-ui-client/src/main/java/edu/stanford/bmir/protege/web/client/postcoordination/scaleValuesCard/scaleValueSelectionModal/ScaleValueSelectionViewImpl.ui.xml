@@ -1,0 +1,39 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+<ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+<ui:style>
+    .main-panel-style {
+        width: 500px;
+        max-width: 500px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .main-panel-style * p {
+        padding-bottom: 10px;
+    }
+    .message-block {
+        width: 100%;
+        padding-left: 10px;
+        padding-top: 20px;
+        box-sizing: border-box;
+    }
+</ui:style>
+
+<g:HTMLPanel addStyleNames="{style.main-panel-style}">
+    <table>
+        <colgroup>
+            <col width="70px" valign="top"/>
+            <col width="*" valign="top"/>
+        </colgroup>
+        <tr>
+            <td valign="top">
+                <g:HTMLPanel addStyleNames="{style.message-block}">
+                    <g:SimplePanel ui:field="hierarchyContainer"/>
+                </g:HTMLPanel>
+            </td>
+        </tr>
+    </table>
+</g:HTMLPanel>
+</ui:UiBinder>

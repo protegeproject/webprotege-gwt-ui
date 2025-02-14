@@ -3,15 +3,14 @@ package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -24,6 +23,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -42,7 +42,7 @@ public class EditParentsPresenter {
     @Nullable
     private OWLEntity entity;
 
-    private Optional<HierarchyId> hierarchyId = Optional.empty();
+    private Optional<HierarchyDescriptor> hierarchyDescriptor = Optional.empty();
 
     @Nonnull
     private final ModalManager modalManager;
@@ -78,7 +78,7 @@ public class EditParentsPresenter {
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                 result -> view.setOwlEntityData(result.getEntityData()));
 
-        hierarchyId.ifPresent(id -> dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, id),
+        hierarchyDescriptor.ifPresent(id -> dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, hierarchyDescriptor.get()),
                 result -> view.setEntityParents(result.getParents())));
     }
 
@@ -87,8 +87,8 @@ public class EditParentsPresenter {
         return view;
     }
 
-    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
-        this.hierarchyId = Optional.of(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        this.hierarchyDescriptor = Optional.of(hierarchyDescriptor);
     }
 
     private void handleHierarchyChange(ModalCloser closer) {
@@ -99,39 +99,36 @@ public class EditParentsPresenter {
                     .collect(toImmutableSet());
             dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
                     changeEntityParentsResult -> {
-                        if (isResultValid(changeEntityParentsResult)) {
-                            view.clearClassesWithCycle();
-                            view.clearClassesWithRetiredParents();
+                        if (changeEntityParentsResult.isSuccess()) {
+                            view.clearClassesWithCycleErrors();
+                            view.clearClassesWithRetiredParentsErrors();
                             dispatch.execute(
                                     CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
                                     threadActionResult -> closer.closeModal());
                             return;
                         }
 
-                        if(hasClassesWithRetiredParents(changeEntityParentsResult)){
-                            view.clearClassesWithRetiredParents();
+                        if(changeEntityParentsResult.hasClassesWithRetiredParents()){
+                            view.clearClassesWithRetiredParentsErrors();
                             Set<OWLEntityData> classesWithRetiredParents = changeEntityParentsResult.getClassesWithRetiredParents();
                             view.markClassesWithRetiredParents(classesWithRetiredParents);
                         }
 
-                        if(hasClassesWithCycles(changeEntityParentsResult)){
-                            view.clearClassesWithCycle();
+                        if(changeEntityParentsResult.hasClassesWithCycle()){
+                            view.clearClassesWithCycleErrors();
                             Set<OWLEntityData> classesWithCycles = changeEntityParentsResult.getClassesWithCycle();
                             view.markClassesWithCycles(classesWithCycles);
                         }
+
+                        if(changeEntityParentsResult.hasOldParentAsLinearizationPathParent()){
+                            view.clearLinearizationPathParentErrors();
+                            String parents = changeEntityParentsResult.getOldParentsThatAreLinearizationPathParents()
+                                    .stream()
+                                    .map(OWLEntityData::getBrowserText)
+                                    .collect(Collectors.joining(", "));
+                            view.markLinearizationPathParent(parents);
+                        }
                     });
         }
-    }
-
-    private boolean isResultValid(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !hasClassesWithCycles(changeEntityParentsResult) && !hasClassesWithRetiredParents(changeEntityParentsResult);
-    }
-
-    private boolean hasClassesWithCycles(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !changeEntityParentsResult.getClassesWithCycle().isEmpty();
-    }
-
-    private boolean hasClassesWithRetiredParents(ChangeEntityParentsResult changeEntityParentsResult) {
-        return !changeEntityParentsResult.getClassesWithRetiredParents().isEmpty();
     }
 }

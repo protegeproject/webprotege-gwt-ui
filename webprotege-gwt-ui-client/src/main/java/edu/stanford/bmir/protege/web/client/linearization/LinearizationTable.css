@@ -5,8 +5,8 @@
 .linearizationTable {
     border-radius: 5px;
     overflow: hidden;
-    -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
-    box-shadow: 0 0 40px 0 rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
     margin: 15px;
     border-collapse: collapse;
     padding: 3px;
@@ -47,7 +47,7 @@
 }
 
 .tableCheckboxHeader > div {
-   justify-content: center!important;
+    justify-content: center !important;
 }
 
 .tableText [enabled="true"]:hover {
@@ -71,7 +71,7 @@
 }
 
 .tableCheckBox {
-    justify-self: center!important;
+    justify-self: center !important;
 }
 
 .tableCheckboxHeader {
@@ -88,7 +88,16 @@
 }
 
 .secondaryParent {
-    color : #A8A8A8;
+    color: #A8A8A8;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
 }
 
 .linearizationDefinition {

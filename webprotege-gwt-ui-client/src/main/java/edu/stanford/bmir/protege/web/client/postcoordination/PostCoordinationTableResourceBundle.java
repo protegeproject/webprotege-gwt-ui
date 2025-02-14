@@ -59,6 +59,12 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("toggle-icon")
         String toggleIcon();
+
+        @ClassName("disabled")
+        String disabled();
+
+        @ClassName("header-icon")
+        String headerIcon();
     }
 
 }

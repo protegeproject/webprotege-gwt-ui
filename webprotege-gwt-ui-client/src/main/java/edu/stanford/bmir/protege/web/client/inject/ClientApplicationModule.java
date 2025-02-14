@@ -65,7 +65,6 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.linearization.*;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -96,6 +95,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
@@ -495,26 +495,6 @@ public class ClientApplicationModule {
     EditorPortletView provideEditorPortletView(EditorPortletViewImpl impl) {
         return impl;
     }
-    @Provides
-    LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
-        return impl;
-    }
-
-
-    @Provides
-    LinearizationPortletView provideLinearizationPortletView(LinearizationPortletViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    PostCoordinationPortletView providePostCoordinationPortletView(PostCoordinationPortletViewImpl impl){
-        return impl;
-    }
-
-    @Provides
-    LinearizationCommentsView provideLienarizationCommentsView(LinearizationCommentsViewImpl impl){
-        return impl;
-    }
 
     @Provides
     ProjectTagsView provideProjectTagsView(ProjectTagsViewImpl impl) {
@@ -621,6 +601,11 @@ public class ClientApplicationModule {
 
     @Provides
     CreateEntityFormView provideCreateEntityFormView(CreateEntityFormViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ScaleValueSelectionView provideScaleValueSelectionView(ScaleValueSelectionViewImpl impl) {
         return impl;
     }
 }

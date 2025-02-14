@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
+import edu.stanford.bmir.protege.web.shared.postcoordination.ScaleValueIriAndName;
+
 public interface DeleteScaleValueButtonHandler {
 
-    void handleDeleteButton(String value);
+    void handleDeleteButton(ScaleValueIriAndName value);
 }

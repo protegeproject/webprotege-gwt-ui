@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -28,9 +28,9 @@ public abstract class GetHierarchySiblingsAction extends AbstractHasProjectActio
     @JsonCreator
     public static GetHierarchySiblingsAction create(@JsonProperty("projectId") ProjectId projectId,
                                                     @JsonProperty("entity") OWLEntity entity,
-                                                    @JsonProperty("hierarchyId") HierarchyId hierarchyId,
+                                                    @JsonProperty("hierarchyDescriptor") HierarchyDescriptor hierarchyDescriptor,
                                                     @JsonProperty("pageRequest") PageRequest pageRequest) {
-        return new AutoValue_GetHierarchySiblingsAction(projectId, entity, hierarchyId, pageRequest);
+        return new AutoValue_GetHierarchySiblingsAction(projectId, entity, hierarchyDescriptor, pageRequest);
     }
 
     @Nonnull
@@ -41,7 +41,7 @@ public abstract class GetHierarchySiblingsAction extends AbstractHasProjectActio
     public abstract OWLEntity getEntity();
 
     @Nonnull
-    public abstract HierarchyId getHierarchyId();
+    public abstract HierarchyDescriptor getHierarchyDescriptor();
 
     @Nonnull
     public abstract PageRequest getPageRequest();

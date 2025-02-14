@@ -51,6 +51,12 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
 
         @ClassName("linearizationParentCell")
         String getLinearizationParentCell();
+
+        @ClassName("italic")
+        String italic();
+
+        @ClassName("center")
+        String center();
     }
 
 }

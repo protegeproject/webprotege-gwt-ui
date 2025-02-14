@@ -18,7 +18,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.event.ProjectLinearizationChangedEvent.PROJECT_LINEARIZATION_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.event.UiHistoryChangedEvent.UI_HISTORY_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.CombinedProjectHistory",
@@ -77,7 +77,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
-        eventBus.addProjectEventHandler(getProjectId(), PROJECT_LINEARIZATION_CHANGED, this::handleLinearizationChanged);
+        eventBus.addProjectEventHandler(getProjectId(), UI_HISTORY_CHANGED, this::handleHistoryChanged);
         reload();
     }
 
@@ -94,7 +94,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         lastRevisionNumber = event.getRevisionNumber();
     }
 
-    private void handleLinearizationChanged(ProjectLinearizationChangedEvent event) {
+    private void handleHistoryChanged(UiHistoryChangedEvent event) {
         refreshAction.setEnabled(true);
     }
 

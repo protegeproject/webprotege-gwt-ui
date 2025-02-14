@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -14,8 +13,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.gwt.user.client.ui.FormPanel.ENCODING_MULTIPART;
-import static com.google.gwt.user.client.ui.FormPanel.METHOD_POST;
+import static com.google.gwt.user.client.ui.FormPanel.*;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 16 Nov 2017
@@ -50,7 +48,17 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @Nonnull
     private final MessageBox messageBox;
 
-    private HandlerRegistration submitCompleteHandlerRegistraion = () -> {};
+    @UiField
+    ListBox fileSourceType;
+
+    private HandlerRegistration submitCompleteHandlerRegistraion = () -> {
+    };
+
+    @UiField
+    HTMLPanel backupFileBranchContainer;
+
+    @UiField
+    TextBox backupFileBranchField;
 
 
     @Inject
@@ -137,5 +145,45 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
         super.onAttach();
         projectNameField.setFocus(true);
         fileUpload.getElement().setId(FILE_UPLOAD_ID);
+
+        fileSourceType.addChangeHandler(event -> {
+            String selectedType = getFileSourceType();
+            boolean isBackupFiles = "backup".equals(selectedType);
+            backupFileBranchContainer.setVisible(isBackupFiles);
+        });
+    }
+
+    @Override
+    public String getFileSourceType() {
+        int selectedIndex = fileSourceType.getSelectedIndex();
+        return selectedIndex >= 0 ? fileSourceType.getValue(selectedIndex) : "";
+    }
+
+    @Override
+    public void setFileSourceTypeOptions() {
+        fileSourceType.clear();
+        fileSourceType.addItem("OWL file", "owl");
+        fileSourceType.addItem("Backup files", "backup");
+        fileSourceType.setSelectedIndex(0); // Default to the first option
+    }
+
+    @Override
+    public boolean isBackupFilesBranchSet() {
+        return !backupFileBranchField.getText().trim().isEmpty();
+    }
+
+    @Override
+    public void showBranchNameMissingMessage() {
+        messageBox.showAlert("Missing Branch Name", "Please enter the Git branch name for the backup files.");
+    }
+
+    @Override
+    public boolean isBackupFileSourceType() {
+        return "backup".equals(getFileSourceType());
+    }
+
+    @Override
+    public String getProjectVersioningBranch() {
+        return backupFileBranchField.getValue().trim();
     }
 }

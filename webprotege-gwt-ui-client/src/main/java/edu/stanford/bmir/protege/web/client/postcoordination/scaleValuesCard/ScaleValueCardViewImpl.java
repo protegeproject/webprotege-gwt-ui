@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.postcoordination.ScaleValueIriAndName;
 
 public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
@@ -19,6 +20,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     private boolean isCollapsed = false;
     private final String collapseIcon = "&#9660;";
     private final String expandIcon = "&#9654;";
+    private final String spaceSymbol = "&nbsp;";
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss postCoordinationStyle = PostCoordinationTableResourceBundle.INSTANCE.style();
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
@@ -31,9 +33,12 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private Button addButton;
 
+    private boolean isReadOnly = true;
+
     public ScaleValueCardViewImpl() {
         rootPanel = uiBinder.createAndBindUi(this);
         createAddButton();
+        setReadOnly(isReadOnly);
     }
 
     private void createAddButton() {
@@ -53,11 +58,29 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
     @Override
-    public void addHeader(String headerText, String description) {
+    public void addHeader(String headerText, ScaleAllowMultiValue scaleAllowMultiValue) {
         GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
+        String imageUri = "";
+        if (scaleAllowMultiValue.getImage().isPresent()) {
+            imageUri = scaleAllowMultiValue.getImage().get().getSafeUri().asString();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<span class=\"")
+                .append(postCoordinationStyle.toggleIcon())
+                .append("\">")
+                .append(collapseIcon)
+                .append("</span> ")
+                .append(headerText)
+                .append(spaceSymbol)
+                .append("<img src='")
+                .append(imageUri)
+                .append("' class='")
+                .append(postCoordinationStyle.headerIcon())
+                .append("' title='")
+                .append(scaleAllowMultiValue.getTooltip())
+                .append("'/>");
 
-        headerHtml = new HTML("<span class=\"" + postCoordinationStyle.toggleIcon() + "\">" + collapseIcon + "</span> " + headerText + "<br><span class=\"" + postCoordinationStyle.scaleValueHeaderDescription() + "\">" + description + "</span>");
-        headerHtml.setStyleName(postCoordinationStyle.scaleValueHeader());
+        headerHtml = new HTML(sb.toString());
 
         valueTable.setWidget(0, 0, headerHtml);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
@@ -69,7 +92,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
     @Override
-    public void addRow(String value) {
+    public void addRow(ScaleValueIriAndName value) {
         int addButtonRowIndex = valueTable.getRowCount();
 
         valueTable.insertRow(addButtonRowIndex - 1);
@@ -77,8 +100,8 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     }
 
 
-    private void setRowContents(int rowIndex, String value) {
-        valueTable.setWidget(rowIndex, 0, new Label(value));
+    private void setRowContents(int rowIndex, ScaleValueIriAndName value) {
+        valueTable.setWidget(rowIndex, 0, new Label(value.getScaleValueName()));
 
         Button deleteButton = new DeleteButton();
 
@@ -138,4 +161,23 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     public Widget asWidget() {
         return rootPanel;
     }
+
+    @Override
+    public void setEditMode(boolean enabled) {
+        setReadOnly(!enabled);
+    }
+
+    private void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
+
+        for (int i = 1; i < valueTable.getRowCount(); i++) {
+            int cellsInRow = valueTable.getCellCount(i);
+            if (readOnly) {
+                valueTable.getCellFormatter().addStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
+            } else {
+                valueTable.getCellFormatter().removeStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
+            }
+        }
+    }
+
 }
