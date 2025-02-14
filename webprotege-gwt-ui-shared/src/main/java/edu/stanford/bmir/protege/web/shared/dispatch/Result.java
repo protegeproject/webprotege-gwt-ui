@@ -210,6 +210,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
+        @JsonSubTypes.Type(SaveEntityChildReorderingResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {
