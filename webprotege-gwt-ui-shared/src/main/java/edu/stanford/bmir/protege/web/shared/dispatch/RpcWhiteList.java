@@ -606,6 +606,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PrimitiveFormControlData primitiveFormControlData;
     SetNamedHierarchiesAction _SetNamedHierarchiesAction;
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
+    ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
+    ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
 
     public RpcWhiteList() {
     }
