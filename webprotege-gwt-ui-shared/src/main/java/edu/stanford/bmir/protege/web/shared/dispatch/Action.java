@@ -226,7 +226,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
-        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class),
+        @Type(value = SaveEntityChildReorderingAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {
