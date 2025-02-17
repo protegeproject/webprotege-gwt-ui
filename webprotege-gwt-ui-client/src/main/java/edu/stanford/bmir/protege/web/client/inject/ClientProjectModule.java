@@ -7,6 +7,8 @@ import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
+import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.*;
 import edu.stanford.bmir.protege.web.client.crud.supplied.*;
 import edu.stanford.bmir.protege.web.client.crud.uuid.*;
@@ -41,7 +43,10 @@ import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.searchIcd.*;
 import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
-import edu.stanford.bmir.protege.web.client.tab.*;
+import edu.stanford.bmir.protege.web.client.tab.TabBarView;
+import edu.stanford.bmir.protege.web.client.tab.TabBarViewImpl;
+import edu.stanford.bmir.protege.web.client.tab.TabView;
+import edu.stanford.bmir.protege.web.client.tab.TabViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.*;
@@ -765,6 +770,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    IcatxNameSuffixSettingsView provideIcatxNameSuffixSettingsView(IcatxNameSuffixSettingsViewImpl impl) {
+        return impl;
+    }
     @Provides
     OboIdSuffixSettingsView provideOboIdSuffixSettingsView(OboIdSuffixSettingsViewImpl impl) {
         return impl;
