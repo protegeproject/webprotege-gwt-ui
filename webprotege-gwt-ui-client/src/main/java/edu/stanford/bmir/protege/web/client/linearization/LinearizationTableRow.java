@@ -144,7 +144,6 @@ public class LinearizationTableRow {
                         logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
                         return new RuntimeException();
                     });
-            this.parentIri = mainRow.linearizationParentSelector.getSelectedValue();
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());

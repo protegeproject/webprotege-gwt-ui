@@ -2,10 +2,12 @@ package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.icatx.IcatxSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
@@ -26,6 +28,8 @@ public class EntityCrudKitSuffixSettingsPresenter {
 
     public static final String OBO_IDENTIFIER = "OBO Identifier";
 
+    public static final String ICATX_IDENTIFIER = "IcatX Identifier";
+
     @Nonnull
     private final EntityCrudKitSuffixSettingsView view;
 
@@ -36,16 +40,22 @@ public class EntityCrudKitSuffixSettingsPresenter {
     private final SuppliedNameSuffixSettingsPresenter suppliedNameSuffixSettingsPresenter;
 
     @Nonnull
+    private final IcatxNameSuffixSettingsPresenter icatxNameSuffixSettingsPresenter;
+
+    @Nonnull
     private final OboIdSuffixSettingsPresenter oboIdSuffixSettingsPresenter;
+
 
     @Inject
     public EntityCrudKitSuffixSettingsPresenter(@Nonnull EntityCrudKitSuffixSettingsView view,
                                                 @Nonnull UuidSuffixSettingsPresenter uuidSuffixSettingsPresenter,
                                                 @Nonnull SuppliedNameSuffixSettingsPresenter suppliedNameSuffixSettingsPresenter,
+                                                @Nonnull IcatxNameSuffixSettingsPresenter icatxNameSuffixSettingsPresenter,
                                                 @Nonnull OboIdSuffixSettingsPresenter oboIdSuffixSettingsPresenter) {
         this.view = view;
         this.uuidSuffixSettingsPresenter = uuidSuffixSettingsPresenter;
         this.suppliedNameSuffixSettingsPresenter = suppliedNameSuffixSettingsPresenter;
+        this.icatxNameSuffixSettingsPresenter = icatxNameSuffixSettingsPresenter;
         this.oboIdSuffixSettingsPresenter = oboIdSuffixSettingsPresenter;
     }
 
@@ -57,7 +67,7 @@ public class EntityCrudKitSuffixSettingsPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         view.setAvailableSuffixSettingNames(ImmutableList.of(
-                UUID, SUPPLIED_NAME, OBO_IDENTIFIER
+                UUID, SUPPLIED_NAME,ICATX_IDENTIFIER, OBO_IDENTIFIER
         ));
         uuidSuffixSettingsPresenter.clear();
         suppliedNameSuffixSettingsPresenter.clear();
@@ -70,7 +80,7 @@ public class EntityCrudKitSuffixSettingsPresenter {
     private void handleSuffixSettingNameChanged() {
         String settingName = view.getSelectedSuffixSettingName();
         AcceptsOneWidget settingsViewContainer = view.getSettingsViewContainer();
-        switch(settingName) {
+        switch (settingName) {
             case UUID:
                 uuidSuffixSettingsPresenter.start(settingsViewContainer);
                 break;
@@ -79,6 +89,9 @@ public class EntityCrudKitSuffixSettingsPresenter {
                 break;
             case OBO_IDENTIFIER:
                 oboIdSuffixSettingsPresenter.start(settingsViewContainer);
+                break;
+            case ICATX_IDENTIFIER:
+                icatxNameSuffixSettingsPresenter.start(settingsViewContainer);
                 break;
             default:
                 uuidSuffixSettingsPresenter.start(settingsViewContainer);
@@ -102,6 +115,11 @@ public class EntityCrudKitSuffixSettingsPresenter {
             oboIdSuffixSettingsPresenter.start(settingsViewContainer);
             view.setSelectedSuffixSettingName(OBO_IDENTIFIER);
         }
+        else if (settings instanceof IcatxSuffixSettings) {
+            icatxNameSuffixSettingsPresenter.setSettings((IcatxSuffixSettings) settings);
+            icatxNameSuffixSettingsPresenter.start(settingsViewContainer);
+            view.setSelectedSuffixSettingName(ICATX_IDENTIFIER);
+        }
         else {
             throw new RuntimeException("Unknown kind of suffix settings: " + settings);
         }
@@ -117,6 +135,8 @@ public class EntityCrudKitSuffixSettingsPresenter {
                 return suppliedNameSuffixSettingsPresenter.getSettings();
             case OBO_IDENTIFIER:
                 return oboIdSuffixSettingsPresenter.getSettings();
+            case ICATX_IDENTIFIER:
+                return icatxNameSuffixSettingsPresenter.getSettings();
             default:
                 return uuidSuffixSettingsPresenter.getSettings();
         }

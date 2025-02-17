@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>7.0.13-WHO</version>
+        <version>7.0.14-WHO</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-server</artifactId>
@@ -172,9 +172,9 @@
         <!-- The org.codehaus.janino:commons-compiler:3.0.6 dependency -->
         <!-- required for logback' conditional processing of paths -->
         <dependency>
-          <groupId>org.codehaus.janino</groupId>
-          <artifactId>janino</artifactId>
-          <version>3.0.6</version>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.0.6</version>
         </dependency>
 
     </dependencies>

@@ -264,6 +264,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetClassFrameResult _GetClassFrameResult;
     GetCommentedEntitiesAction _GetCommentedEntitiesAction;
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
+
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
     GetDataPropertyFrameResult _GetDataPropertyFrameResult;
     GetDeprecatedEntitiesAction _GetDeprecatedEntitiesAction;
@@ -551,6 +552,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetSearchSettingsAction _SetSearchSettingsAction;
     SetSearchSettingsResult _SetSearchSettingsResult;
     SetUserProjectEntityGraphSettingsAction _SetUserProjectEntityGraphSettingsAction;
+
     SetUserProjectEntityGraphSettingsResult _SetUserProjectEntityGraphSettingsResult;
     ShortForm _ShortForm;
     SingleChoiceControlDescriptor _SingleChoiceControlDescriptor;
