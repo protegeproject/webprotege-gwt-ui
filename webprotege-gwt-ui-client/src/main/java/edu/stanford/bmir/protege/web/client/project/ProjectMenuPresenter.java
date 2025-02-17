@@ -146,7 +146,6 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 UploadAndProcessLinearizationHandler linearizationChangesHandler,
                                 PostCoordinationChangesHandler postCoordinationChangesHandler, UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler,
-                                UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
@@ -188,6 +187,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
+
 
     }
 

@@ -17,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchySiblingsAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

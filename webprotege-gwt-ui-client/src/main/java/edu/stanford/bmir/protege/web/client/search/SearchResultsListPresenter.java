@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination.PageNumberChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 

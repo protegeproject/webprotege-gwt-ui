@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
