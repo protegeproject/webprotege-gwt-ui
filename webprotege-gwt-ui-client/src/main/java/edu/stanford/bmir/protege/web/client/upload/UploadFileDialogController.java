@@ -26,15 +26,14 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
     Logger logger = java.util.logging.Logger.getLogger("UploadFileDialogController");
 
     private final DispatchServiceManager dispatch;
-
     private final ProgressDisplay progressDisplay;
-
-    private UploadFileDialogForm form = new UploadFileDialogForm();
+    private final UploadFileDialogForm form;
 
     private ApplicationEnvironmentManager applicationEnvironmentManager;
 
     public UploadFileDialogController(String title,
                                       final UploadFileResultHandler resultHandler,
+                                      boolean showOverrideCheckbox,
                                       @Provided DispatchServiceManager dispatch,
                                       @Provided ProgressDisplay progressDisplay,
                                       @Provided ApplicationEnvironmentManager applicationEnvironmentManager) {
@@ -42,28 +41,30 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
         this.dispatch = dispatch;
         this.progressDisplay = progressDisplay;
         this.applicationEnvironmentManager = applicationEnvironmentManager;
+        this.form = new UploadFileDialogForm(showOverrideCheckbox);
+
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> handleButtonPress(resultHandler, closer));
         form.getFileUpload().getElement().setId(UuidV4.uuidv4());
     }
 
     private void handleButtonPress(UploadFileResultHandler resultHandler, WebProtegeDialogCloser closer) {
-        progressDisplay.displayProgress("Uploading file", "Uploading file.  Please wait.");
+        progressDisplay.displayProgress("Uploading file", "Uploading file. Please wait.");
         dispatch.execute(new GetUserInfoAction(), userInfo -> {
             String token = userInfo.getToken();
             String fileUploadId = form.getFileUpload().getElement().getId();
+            boolean overrideExisting = form.shouldOverrideExisting();
+
             FileUploader fileUploader = new FileUploader(applicationEnvironmentManager.getAppEnvVariables().getFileUploadUrl());
             fileUploader.uploadFile(fileUploadId, token, fileSubmissionId -> {
                 progressDisplay.hideProgress();
                 closer.hide();
-                resultHandler.handleFileUploaded(new DocumentId(fileSubmissionId));
+                resultHandler.handleFileUploaded(new DocumentId(fileSubmissionId), overrideExisting);
             }, errorCode -> {
                 progressDisplay.hideProgress();
                 closer.hide();
-                resultHandler.handleFileUploadFailed("An error occurred uploading the file.  Error code: " + errorCode);
+                resultHandler.handleFileUploadFailed("An error occurred uploading the file. Error code: " + errorCode);
             });
         });
-
-
     }
 
     @Nonnull
