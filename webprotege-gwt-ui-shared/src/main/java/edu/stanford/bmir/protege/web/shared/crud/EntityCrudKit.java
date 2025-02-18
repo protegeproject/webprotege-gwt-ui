@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
+import edu.stanford.bmir.protege.web.shared.crud.icatx.IcatxSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
@@ -33,6 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonSubTypes({
         @JsonSubTypes.Type(OBOIdSuffixKit.class),
         @JsonSubTypes.Type(UuidSuffixKit.class),
+        @JsonSubTypes.Type(IcatxSuffixKit.class),
         @JsonSubTypes.Type(SuppliedNameSuffixKit.class)
 })
 public abstract class EntityCrudKit implements HasKitId, HasDisplayName, Serializable, IsSerializable {
