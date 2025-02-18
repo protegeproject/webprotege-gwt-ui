@@ -47,7 +47,7 @@ public class UploadAndMergeProjectWorkflow {
         UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create(
                 "Upload ontologies", new UploadFileResultHandler() {
                     @Override
-                    public void handleFileUploaded(DocumentId fileDocumentId) {
+                    public void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting) {
                         startMergeWorkflow(projectId, fileDocumentId);
                     }
 
@@ -55,7 +55,8 @@ public class UploadAndMergeProjectWorkflow {
                     public void handleFileUploadFailed(String errorMessage) {
                         GWT.log("Upload failed");
                     }
-                }
+                },
+                false
         );
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
