@@ -185,6 +185,7 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         changeChildrenOrderingUIAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setHandleAfterSave(v -> this.handleRefresh());
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
 
@@ -198,7 +199,7 @@ public class EntityHierarchyContextMenuPresenter {
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
         watchUiAction.setEnabled(false);
-
+        changeChildrenOrderingUIAction.setEnabled(true);
         int selSize = treeWidget.getSelectedKeys().size();
         boolean selIsNonEmpty = selSize > 0;
         boolean selIsSingleton = selSize == 1;
