@@ -21,8 +21,6 @@ import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
@@ -195,6 +193,7 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         changeChildrenOrderingUIAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setHandleAfterSave(v -> this.handleRefresh());
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
 
@@ -208,7 +207,7 @@ public class EntityHierarchyContextMenuPresenter {
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
         watchUiAction.setEnabled(false);
-
+        changeChildrenOrderingUIAction.setEnabled(true);
         int selSize = treeWidget.getSelectedKeys().size();
         boolean selIsNonEmpty = selSize > 0;
         boolean selIsSingleton = selSize == 1;

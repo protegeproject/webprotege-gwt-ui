@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -22,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -44,8 +44,11 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
     @Nonnull
     private final MessageBox messageBox;
     private final Messages messages;
+
+    private Consumer<Void> handleAfterSave;
     @Nonnull
     private final ChangeChildrenOrderingDialogView view;
+
     @Inject
     public ChangeChildrenOrderingUIAction(@Nonnull Messages messages,
                                           @Nonnull DispatchServiceManager dispatchServiceManager,
@@ -74,9 +77,12 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
             modalPresenter.setPrimaryButton(DialogButton.UPDATE);
             modalPresenter.setButtonHandler(DialogButton.UPDATE, closer -> {
                 dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren()),
-                        saveResult -> messageBox.showMessage("Children ordering",
-                                "The new children ordering has been applied."));
-                closer.closeModal();
+                        saveResult -> {
+                            messageBox.showMessage("Children ordering",
+                                    "The new children ordering has been applied.");
+                            closer.closeModal();
+                            handleAfterSave.accept(null);
+                        });
             });
             modalManager.showModal(modalPresenter);
             view.setChildren(result.getChildren().getPageElements().stream().map(GraphNode::getUserObject).collect(Collectors.toList()));
@@ -86,6 +92,10 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
 
     public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntityData>> selectionSupplier) {
         this.selectionSupplier = checkNotNull(selectionSupplier);
+    }
+
+    public void setHandleAfterSave(Consumer<Void> handleAfterSave) {
+        this.handleAfterSave = handleAfterSave;
     }
 
     @Override
