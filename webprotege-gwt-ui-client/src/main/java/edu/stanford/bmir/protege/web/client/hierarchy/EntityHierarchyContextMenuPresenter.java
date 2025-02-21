@@ -23,19 +23,19 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 3 Dec 2017
@@ -280,9 +280,12 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     private void handleRefresh() {
-        Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
+        Collection<Path<OWLEntity>> selectedPaths = treeWidget.getSelectedKeyPaths();
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
-        firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
+        for(Path<OWLEntity> selectedPath : selectedPaths) {
+            treeWidget.setSelected(selectedPath, true, ()-> {});
+            treeWidget.setExpanded(selectedPath);
+        }
     }
 
 }
