@@ -7,11 +7,13 @@ import edu.stanford.bmir.protege.web.client.app.HasForbiddenView;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -51,4 +53,9 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
     String getNodeProperty(@Nonnull String propertyName, String defaultValue);
 
     void setNodePropertiesChangedHandler(BiConsumer<PortletUi, NodeProperties> handler);
+
+    void setViewNodeId(ViewNodeId viewNodeId);
+
+    @Nonnull
+    Optional<ViewNodeId> getViewNodeId();
 }

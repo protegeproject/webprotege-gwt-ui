@@ -7,12 +7,17 @@ import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
 public class DispatchServiceCallback<T> {
+
+    private static final Logger logger = Logger.getLogger(DispatchServiceCallback.class.getName());
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
 
@@ -102,7 +107,7 @@ public class DispatchServiceCallback<T> {
 
     private void displayAndLogError(Throwable throwable) {
         errorMessageDisplay.displayGeneralErrorMessage(getErrorMessageTitle(), getErrorMessage(throwable));
-        GWT.log("Error", throwable);
+        logger.log(Level.SEVERE, getErrorMessage(throwable), throwable);
     }
 
     private void _handleIncompatibleRemoteServiceException(IncompatibleRemoteServiceException e) {

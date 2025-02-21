@@ -9,6 +9,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -29,7 +32,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter implements HasFormRegionFilterChangedHandler {
+public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     @Nonnull
     private final FormView formView;
@@ -74,6 +77,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     private boolean fieldsCollapsible = true;
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
     @AutoFactory
     @Inject
@@ -200,7 +205,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.setCollapsible(fieldsCollapsible);
         presenter.start();
-
+        presenter.setParentDisplayContextBuilder(this);
         fieldPresenters.add(presenter);
         if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
@@ -324,5 +329,19 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
                               .filter(ValidationStatus::isInvalid)
                               .findFirst()
                               .orElse(ValidationStatus.VALID);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        currentFormDescriptor.ifPresent(fd -> context.addFormId(fd.getFormId()));
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

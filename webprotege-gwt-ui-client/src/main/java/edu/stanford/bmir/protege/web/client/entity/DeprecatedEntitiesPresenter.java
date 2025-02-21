@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -52,12 +53,13 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
 
     @Inject
     public DeprecatedEntitiesPresenter(@Nonnull SelectionModel selectionModel,
+                                       @Nonnull SelectedPathsModel selectedPathsModel,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull DeprecatedEntitiesView view,
                                        @Nonnull DispatchServiceManager dispatchServiceManager,
                                        DisplayNameRenderer displayNameRenderer,
                                        DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = checkNotNull(view);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }

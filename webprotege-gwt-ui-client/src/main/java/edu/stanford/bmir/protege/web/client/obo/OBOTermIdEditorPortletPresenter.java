@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction;
@@ -41,12 +42,13 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
 
     @Inject
     public OBOTermIdEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                           @Nonnull SelectedPathsModel selectedPathsModel,
                                            @Nonnull ProjectId projectId,
                                            @Nonnull OBOTermIdEditor editor,
                                            @Nonnull DispatchServiceManager dispatchServiceManager,
                                            @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                            DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager);
+        super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatchServiceManager);
         this.editor = editor;
         this.dispatch = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

@@ -210,6 +210,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(GetHierarchyDescriptorResult.class),
         @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
         @JsonSubTypes.Type(SaveEntityChildReorderingResult.class)
 })

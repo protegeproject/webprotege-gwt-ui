@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent.ON_HIERARCHY_CHANGED;
@@ -27,6 +28,8 @@ import static java.util.Collections.singletonList;
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
 public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, EntityNodeIndex {
+
+    private final Logger logger = Logger.getLogger("EntityHierarchyModel");
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -111,6 +114,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
 
     @Override
     public void getRootNodes(GetRootNodesCallback<EntityNode> callback) {
+        logger.info("Getting root nodes for descriptor " + hierarchyDescriptor);
         dispatchServiceManager.execute(GetHierarchyRootsAction.create(projectId, hierarchyDescriptor), result -> {
             cacheRootNodes(result);
             try {

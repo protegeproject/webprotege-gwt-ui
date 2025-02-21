@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -14,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -35,12 +37,13 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 
     @Inject
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
+                                         @Nonnull SelectedPathsModel selectedPathsModel,
                                          LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
                                          ChangeListPresenter presenter,
                                          DisplayNameRenderer displayNameRenderer,
                                          DispatchServiceManager dispatch) {
-		super(selectionModel, projectId, displayNameRenderer, dispatch);
+		super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
 	}
