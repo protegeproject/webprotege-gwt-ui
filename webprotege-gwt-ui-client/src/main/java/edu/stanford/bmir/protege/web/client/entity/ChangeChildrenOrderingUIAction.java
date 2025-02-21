@@ -41,8 +41,6 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
 
     @Nonnull
     private final ModalManager modalManager;
-    @Nonnull
-    private final MessageBox messageBox;
     private final Messages messages;
 
     private Consumer<Void> handleAfterSave;
@@ -53,13 +51,13 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
     public ChangeChildrenOrderingUIAction(@Nonnull Messages messages,
                                           @Nonnull DispatchServiceManager dispatchServiceManager,
                                           @Nonnull ProjectId projectId,
-                                          @Nonnull ModalManager modalManager, @Nonnull MessageBox messageBox, @Nonnull ChangeChildrenOrderingDialogView view) {
+                                          @Nonnull ModalManager modalManager,
+                                          @Nonnull ChangeChildrenOrderingDialogView view) {
         super(messages.reorderChildren());
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.modalManager = modalManager;
         this.messages = messages;
-        this.messageBox = messageBox;
         this.view = view;
     }
 
@@ -78,10 +76,8 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
             modalPresenter.setButtonHandler(DialogButton.UPDATE, closer -> {
                 dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren()),
                         saveResult -> {
-                            messageBox.showMessage("Children ordering",
-                                    "The new children ordering has been applied.");
-                            closer.closeModal();
                             handleAfterSave.accept(null);
+                            closer.closeModal();
                         });
             });
             modalManager.showModal(modalPresenter);
