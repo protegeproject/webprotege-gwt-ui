@@ -4,6 +4,7 @@ package edu.stanford.bmir.protege.web.shared.crud;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.crud.icatx.IcatxSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
@@ -28,7 +29,8 @@ import java.io.Serializable;
                 @JsonSubTypes.Type(value = SuppliedNameSuffixSettings.class,name = "edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings"),
                 @JsonSubTypes.Type(value = SuppliedNameSuffixSettings.class, name = SuppliedNameSuffixSettings.TYPE_ID),
                 @JsonSubTypes.Type(value = OboIdSuffixSettings.class,name = "edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings"),
-                @JsonSubTypes.Type(value = OboIdSuffixSettings.class,name = OboIdSuffixSettings.TYPE_ID)
+                @JsonSubTypes.Type(value = OboIdSuffixSettings.class,name = OboIdSuffixSettings.TYPE_ID),
+                @JsonSubTypes.Type(value = IcatxSuffixSettings.class, name = IcatxSuffixSettings.TYPE_ID)
         }
 )
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
