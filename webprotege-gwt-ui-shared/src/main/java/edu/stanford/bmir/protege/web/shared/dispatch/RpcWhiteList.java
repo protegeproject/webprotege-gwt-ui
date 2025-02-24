@@ -5,6 +5,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
