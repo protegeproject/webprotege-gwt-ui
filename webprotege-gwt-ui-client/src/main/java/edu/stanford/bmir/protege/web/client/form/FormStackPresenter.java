@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -152,15 +153,15 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     private boolean formsAreCurrent(@Nonnull ImmutableList<FormDataDto> forms) {
-        List<FormDescriptor> currentFormDescriptors = getFormPresenters().stream()
-                                                                         .map(p -> p.getFormData()
-                                                                                    .map(FormData::getFormDescriptor))
-                                                                         .filter(Optional::isPresent)
-                                                                         .map(Optional::get)
-                                                                         .collect(Collectors.toList());
-        List<FormDescriptor> nextFormDescriptors = forms.stream()
+        List<FormId> currentFormDescriptors = getFormPresenters().stream()
+                .map(p -> p.getFormData().map(FormData::getFormId)).filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
+        if(forms.size() != getFormPresenters().size()) {
+            return false;
+        }
+        List<FormId> nextFormDescriptors = forms.stream()
                                                         .map(FormDataDto::getFormDescriptor)
-                                                        .map(FormDescriptorDto::toFormDescriptor)
+                .map(FormDescriptorDto::getFormId)
                                                         .collect(Collectors.toList());
         return currentFormDescriptors.equals(nextFormDescriptors);
     }

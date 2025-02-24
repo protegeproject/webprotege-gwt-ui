@@ -138,15 +138,10 @@ public class LogicalDefinitionTable implements IsWidget {
     }
 
     private String getAxisName(String axisIri, List<PostCoordinationTableAxisLabel> labels) {
-        String response = labels.stream()
+        return labels.stream()
                 .filter(entry -> entry.getPostCoordinationAxis().equalsIgnoreCase(axisIri))
                 .map(PostCoordinationTableAxisLabel::getTableLabel).findFirst()
                 .orElse("");
-
-        if(response.equalsIgnoreCase("")){
-            logger.info("ALEX nu am gasit label pentru " + axisIri);
-        }
-        return response;
     }
 
     private void setAvailableAxis(Map<String, DropdownElement> specification) {
