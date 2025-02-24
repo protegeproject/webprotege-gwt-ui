@@ -615,6 +615,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     DisplayContext _DisplayContext;
     ViewId _ViewId;
     ViewNodeId _ViewNodeId;
+    ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
+    ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
 
     public RpcWhiteList() {
     }
