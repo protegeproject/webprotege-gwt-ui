@@ -203,7 +203,6 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
-        @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
         @JsonSubTypes.Type(GetClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
@@ -219,10 +218,12 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(SaveEntityCustomScaleResult.class),
         @JsonSubTypes.Type(GetEntityLogicalDefinitionResult.class),
         @JsonSubTypes.Type(UpdateLogicalDefinitionResult.class),
+        @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
-        @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class)
+        @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
+        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

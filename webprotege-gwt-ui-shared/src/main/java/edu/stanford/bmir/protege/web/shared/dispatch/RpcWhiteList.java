@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -70,7 +71,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  * <p>
  * Do not use this class in any client code.  It is here to whitelist objects
  * that don't get added to the serialization whitelist.
- *
  * @noinspection unused
  */
 public class RpcWhiteList implements IsSerializable, Action, Result {
@@ -265,7 +265,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetClassFrameResult _GetClassFrameResult;
     GetCommentedEntitiesAction _GetCommentedEntitiesAction;
     GetCommentedEntitiesResult _GetCommentedEntitiesResult;
-
     GetDataPropertyFrameAction _GetDataPropertyFrameAction;
     GetDataPropertyFrameResult _GetDataPropertyFrameResult;
     GetDeprecatedEntitiesAction _GetDeprecatedEntitiesAction;
@@ -550,7 +549,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetSearchSettingsAction _SetSearchSettingsAction;
     SetSearchSettingsResult _SetSearchSettingsResult;
     SetUserProjectEntityGraphSettingsAction _SetUserProjectEntityGraphSettingsAction;
-
     SetUserProjectEntityGraphSettingsResult _SetUserProjectEntityGraphSettingsResult;
     ShortForm _ShortForm;
     SingleChoiceControlDescriptor _SingleChoiceControlDescriptor;
@@ -590,8 +588,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
-    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
-    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     AppEnvVariables _AppEnvVariables;
     GetLinearizationDefinitionsResult _GetLinearizationDefinitionsResult;
     ProcessUploadedCustomScalesResult _ProcessUploadedCustomScalesResult;
@@ -627,12 +623,16 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     LogicalDefinition _LogicalDefinition;
     LogicalConditions _LogicalConditions;
     GetEntityLogicalDefinitionResult _GetEntityLogicalDefinitionResult;
+    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
+    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     CreateNewProjectFromProjectBackupResult _CreateNewProjectFromProjectBackupResult;
     CreateNewProjectFromProjectBackupAction _CreateNewProjectFromProjectBackupAction;
     MoveEntitiesToParentIcdAction _MoveEntitiesToParentIcdAction;
     MoveEntitiesToParentIcdResult _MoveEntitiesToParentIcdResult;
     MoveHierarchyNodeIcdAction _MoveHierarchyNodeIcdAction;
     MoveHierarchyNodeIcdResult _MoveHierarchyNodeIcdResult;
+    ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
+    ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
 
     public RpcWhiteList() {
     }

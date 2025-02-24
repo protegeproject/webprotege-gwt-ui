@@ -34,8 +34,6 @@ import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationCha
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletView;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationPortletViewImpl;
-import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
-import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandlerImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
@@ -43,10 +41,7 @@ import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.searchIcd.*;
 import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
-import edu.stanford.bmir.protege.web.client.tab.TabBarView;
-import edu.stanford.bmir.protege.web.client.tab.TabBarViewImpl;
-import edu.stanford.bmir.protege.web.client.tab.TabView;
-import edu.stanford.bmir.protege.web.client.tab.TabViewImpl;
+import edu.stanford.bmir.protege.web.client.tab.*;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.*;
@@ -101,6 +96,11 @@ public class ClientProjectModule {
 
     @Provides
     UploadAndMergeHandler provideUploadAndMergeHandler(UploadAndMergeHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
+    UploadAndProcessSiblingsOrderingHandler provideUploadAndProcessSiblingsOrderingHandler(UploadAndProcessSiblingsOrderingHandlerImpl handler) {
         return handler;
     }
 
@@ -805,9 +805,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                objectListPresenterProvider,
-                objectViewHolderProvider,
-                defaultObjectProvider);
+                                         objectListPresenterProvider,
+                                         objectViewHolderProvider,
+                                         defaultObjectProvider);
     }
 
     @Provides

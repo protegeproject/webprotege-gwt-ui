@@ -32,6 +32,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
+    private final UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler;
+
     private final UploadAndProcessLinearizationHandler linearizationChangesHandler;
 
     private final PostCoordinationChangesHandler postCoordinationChangesHandler;
@@ -62,6 +64,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         @Override
         public void execute() {
             uploadAndMergeHandler.handleUploadAndMerge();
+        }
+    };
+
+    private final AbstractUiAction uploadSiblingsOrdering = new AbstractUiAction(MESSAGES.siblingsOrdering()) {
+        @Override
+        public void execute() {
+            uploadAndProcessSiblingsOrderingHandler.handleUploadSiblingsOrdering();
         }
     };
 
@@ -133,6 +142,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
+                                UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler,
                                 UploadAndProcessLinearizationHandler linearizationChangesHandler,
                                 PostCoordinationChangesHandler postCoordinationChangesHandler, UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
@@ -144,6 +154,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
+        this.uploadAndProcessSiblingsOrderingHandler = uploadAndProcessSiblingsOrderingHandler;
         this.linearizationChangesHandler = linearizationChangesHandler;
         this.postCoordinationChangesHandler = postCoordinationChangesHandler;
         this.uploadAndMergeAdditionsHandler = uploadAndMergeAdditionsHandler;
@@ -159,6 +170,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         editProjectSettings.setEnabled(false);
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
+        uploadSiblingsOrdering.setEnabled(false);
         uploadLinearizationChanges.setEnabled(false);
         uploadPostCoordinationChanges.setEnabled(false);
         uploadPostCoordinationCustomScales.setEnabled(false);
@@ -171,6 +183,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
         permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
@@ -191,6 +204,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectForms);
         view.addMenuAction(editProjectPrefixes);
         view.addSeparator();
+        view.addMenuAction(uploadSiblingsOrdering);
         view.addMenuAction(uploadLinearizationChanges);
         view.addMenuAction(uploadPostCoordinationChanges);
         view.addMenuAction(uploadPostCoordinationCustomScales);
