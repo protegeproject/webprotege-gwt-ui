@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -23,17 +25,21 @@ public class ResetPerspectiveLayoutAction_TestCase {
     @Mock
     private PerspectiveId perspectiveId;
 
+    @Mock
+    private ChangeRequestId changeRequestId;
+
     @Before
     public void setUp()
         throws Exception
     {
-        resetPerspectiveLayoutAction = ResetPerspectiveLayoutAction.create(projectId, perspectiveId);
+        resetPerspectiveLayoutAction = ResetPerspectiveLayoutAction.create(
+                projectId, perspectiveId, changeRequestId);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        ResetPerspectiveLayoutAction.create(null, perspectiveId);
+        ResetPerspectiveLayoutAction.create(null, perspectiveId, changeRequestId);
     }
 
     @Test
@@ -44,7 +50,7 @@ public class ResetPerspectiveLayoutAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_perspectiveId_IsNull() {
-        ResetPerspectiveLayoutAction.create(projectId, null);
+        ResetPerspectiveLayoutAction.create(projectId, null, changeRequestId);
     }
 
     @Test
@@ -65,22 +71,22 @@ public class ResetPerspectiveLayoutAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(resetPerspectiveLayoutAction, is(ResetPerspectiveLayoutAction.create(projectId, perspectiveId)));
+        assertThat(resetPerspectiveLayoutAction, is(ResetPerspectiveLayoutAction.create(projectId, perspectiveId, changeRequestId)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(resetPerspectiveLayoutAction, is(not(ResetPerspectiveLayoutAction.create(mock(ProjectId.class), perspectiveId))));
+        assertThat(resetPerspectiveLayoutAction, is(not(ResetPerspectiveLayoutAction.create(mock(ProjectId.class), perspectiveId, changeRequestId))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_perspectiveId() {
-        assertThat(resetPerspectiveLayoutAction, is(not(ResetPerspectiveLayoutAction.create(projectId, mock(PerspectiveId.class)))));
+        assertThat(resetPerspectiveLayoutAction, is(not(ResetPerspectiveLayoutAction.create(projectId, mock(PerspectiveId.class), changeRequestId))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(resetPerspectiveLayoutAction.hashCode(), is(ResetPerspectiveLayoutAction.create(projectId, perspectiveId)
+        assertThat(resetPerspectiveLayoutAction.hashCode(), is(ResetPerspectiveLayoutAction.create(projectId, perspectiveId, changeRequestId)
                                                                                            .hashCode()));
     }
 
