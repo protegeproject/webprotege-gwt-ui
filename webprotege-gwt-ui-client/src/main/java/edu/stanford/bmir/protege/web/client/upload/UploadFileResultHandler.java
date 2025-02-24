@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
  */
 public interface UploadFileResultHandler {
 
-    void handleFileUploaded(DocumentId fileDocumentId);
+    void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting);
 
     void handleFileUploadFailed(String errorMessage);
 }
