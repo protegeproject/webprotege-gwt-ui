@@ -1,33 +1,23 @@
 package edu.stanford.bmir.protege.web.client.card;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.card.CardId;
-import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.HasDirty;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-
-import java.util.Optional;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 
-public interface EntityCardPresenter {
+public interface EntityCardPresenter extends HasDirty {
 
-    CardId getCardId();
-
-    LanguageMap getLabel();
-
-    Optional<Color> getColor();
-
-    Optional<Color> getBackgroundColor();
-
-    void start(AcceptsOneWidget container, WebProtegeEventBus eventBus);
-
-    boolean isEditor();
-
-    void setEditable(boolean editable);
-
-    void commitChanges();
-
-    void cancelChanges();
+    void start(EntityCardUi ui, WebProtegeEventBus eventBus);
 
     void requestFocus();
+
+    void stop();
+
+    default boolean isEditor() {
+        return this instanceof EntityCardEditorPresenter;
+    }
+
+    void setEntity(OWLEntity entity);
+
+    void clearEntity();
 }

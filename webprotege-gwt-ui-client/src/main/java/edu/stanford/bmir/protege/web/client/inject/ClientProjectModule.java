@@ -5,8 +5,7 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
-import edu.stanford.bmir.protege.web.client.card.CardStackPortletView;
-import edu.stanford.bmir.protege.web.client.card.CardStackPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.*;
@@ -952,6 +951,11 @@ public class ClientProjectModule {
 
     @Provides
     CardStackPortletView provideCardPortletView(CardStackPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
         return impl;
     }
 }

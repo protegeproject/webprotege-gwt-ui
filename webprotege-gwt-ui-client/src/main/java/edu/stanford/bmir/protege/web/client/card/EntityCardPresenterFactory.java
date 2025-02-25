@@ -4,17 +4,18 @@ import edu.stanford.bmir.protege.web.shared.card.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 public class EntityCardPresenterFactory {
 
-    private final FormCardPresenterFactory formCardPresenterFactory;
+    private final FormContentEntityCardPresenterFactory formContentPresenterFactory;
 
-    private final PortletCardPresenterFactory portletCardPresenterFactory;
+    private final CustomContentEntityCardPresenterFactory customContentEntityCardPresenterFactory;
 
     @Inject
-    public EntityCardPresenterFactory(FormCardPresenterFactory formCardPresenterFactory, PortletCardPresenterFactory portletCardPresenterFactory) {
-        this.formCardPresenterFactory = formCardPresenterFactory;
-        this.portletCardPresenterFactory = portletCardPresenterFactory;
+    public EntityCardPresenterFactory(FormContentEntityCardPresenterFactory formContentPresenterFactory, CustomContentEntityCardPresenterFactory customContentEntityCardPresenterFactory) {
+        this.formContentPresenterFactory = formContentPresenterFactory;
+        this.customContentEntityCardPresenterFactory = customContentEntityCardPresenterFactory;
     }
 
     /**
@@ -24,25 +25,19 @@ public class EntityCardPresenterFactory {
      * @return An EntityCardPresenter.
      */
     @Nonnull
-    public EntityCardPresenter create(@Nonnull CardDescriptor cardDescriptor) {
-        CardContentDescriptor contentDescriptor = cardDescriptor.getContentDescriptor();
-        return contentDescriptor.accept(new CardContentDescriptorVisitor<EntityCardPresenter>() {
+    public Optional<? extends EntityCardPresenter> create(@Nonnull CardDescriptor cardDescriptor) {
+        EntityCardContentDescriptor contentDescriptor = cardDescriptor.getContentDescriptor();
+        return contentDescriptor.accept(new EntityCardContentDescriptorVisitor<Optional<? extends EntityCardPresenter>>() {
             @Override
-            public EntityCardPresenter visit(FormCardContentDescriptor formCardContentDescriptor) {
-                return formCardPresenterFactory.create(cardDescriptor.getId(),
-                        formCardContentDescriptor.getFormId(),
-                        cardDescriptor.getLabel(),
-                        cardDescriptor.getColor().orElse(null),
-                        cardDescriptor.getBackgroundColor().orElse(null));
+            public Optional<? extends EntityCardPresenter> visit(FormContentDescriptor descriptor) {
+                return Optional.of(formContentPresenterFactory.create(
+                        descriptor.getFormId()));
             }
 
             @Override
-            public EntityCardPresenter visit(PortletCardContentDescriptor portletCardContentDescriptor) {
-                return portletCardPresenterFactory.create(cardDescriptor.getId(),
-                        portletCardContentDescriptor.getPortletId(),
-                        cardDescriptor.getLabel(),
-                        cardDescriptor.getColor().orElse(null),
-                        cardDescriptor.getBackgroundColor().orElse(null));
+            public Optional<? extends EntityCardPresenter> visit(CustomContentDescriptor descriptor) {
+                return customContentEntityCardPresenterFactory.create(cardDescriptor.getId(),
+                        descriptor.getCustomContentId());
             }
         });
     }

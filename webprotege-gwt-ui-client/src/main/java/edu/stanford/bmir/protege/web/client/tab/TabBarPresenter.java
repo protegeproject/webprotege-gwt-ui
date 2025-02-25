@@ -98,7 +98,7 @@ public class TabBarPresenter<K> {
         addTab(key, label, null, null, tabContentContainer);
     }
 
-    public void addTab(@Nonnull K key, @Nonnull LanguageMap label, Color color, Color backgroundColor, @Nonnull TabContentContainer tabContentContainer) {
+    public TabPresenter<K> addTab(@Nonnull K key, @Nonnull LanguageMap label, Color color, Color backgroundColor, @Nonnull TabContentContainer tabContentContainer) {
         TabPresenter<K> tabPresenter = tabPresenterFactory.create(key);
         itemPresenters.add(tabPresenter);
         view.addView(tabPresenter.getView());
@@ -112,6 +112,7 @@ public class TabBarPresenter<K> {
         tabPresenter.setTabContentContainer(tabContentContainer);
         tabPresenter.setClickHandler(event -> selectTabAndStashId(key));
         view.setVisible(itemPresenters.size() > 1);
+        return tabPresenter;
     }
 
 

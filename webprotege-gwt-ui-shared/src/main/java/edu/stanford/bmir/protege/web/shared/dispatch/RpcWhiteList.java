@@ -19,7 +19,6 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
@@ -69,6 +68,8 @@ import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
+import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
+import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
@@ -110,9 +111,10 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     AvailableProject _AvailableProject;
     BatchAction _BatchAction;
     BatchResult _BatchResult;
-    CardContentDescriptor _CardContentDescriptor;
+    EntityCardContentDescriptor _CardContentDescriptor;
     CardDescriptor _CardDescriptor;
     CardId _CardId;
+    CustomContentId _CustomContentId;
     ChangePasswordAction _ChangePasswordAction;
     ChangePasswordResult _ChangePasswordResult;
     CheckManchesterSyntaxFrameAction _CheckManchesterSyntaxFrameAction;
@@ -345,6 +347,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetSearchSettingsResult _GetSearchSettingsResult;
     GetUsageAction _GetUsageAction;
     GetUsageResult _GetUsageResult;
+    UsageReference _UsageReference;
     GetUserIdCompletionsAction _GetUserIdCompletionsAction;
     GetUserIdCompletionsResult _GetUserIdCompletionsResult;
     GetUserInfoResult _GetUserInfoResult;
@@ -553,6 +556,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
+    UsageFilter _UsageFilter;
 
     public RpcWhiteList() {
     }

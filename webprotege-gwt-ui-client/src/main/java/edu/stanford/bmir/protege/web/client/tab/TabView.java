@@ -23,4 +23,8 @@ public interface TabView extends IsWidget {
     void setBackgroundColor(@Nonnull Color backgroundColor);
 
     void setSelected(boolean selected);
+
+    void setDirty(boolean dirty);
+
+    void addStyleName(String s);
 }

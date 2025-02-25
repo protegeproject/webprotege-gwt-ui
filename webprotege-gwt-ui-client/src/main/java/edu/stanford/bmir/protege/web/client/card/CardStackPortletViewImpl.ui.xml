@@ -15,6 +15,7 @@
         .tabBarContainer {
             flex-grow: 0;
             flex-shrink: 0;
+            padding: 2px;
         }
         .stack {
             flex-grow: 1;
@@ -36,9 +37,9 @@
             margin-left: 0.7em;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:SimplePanel ui:field="tabBarContainer" addStyleNames="{style.tabBarContainer}"/>
-        <g:HTMLPanel ui:field="stack" addStyleNames="{style.stack}">
+    <g:HTMLPanel addStyleNames="{style.main}  {wp.style.entityCardStack}">
+        <g:SimplePanel ui:field="tabBarContainer" addStyleNames="{style.tabBarContainer}  {wp.style.entityCardStack__tabBar}"/>
+        <g:HTMLPanel ui:field="stack" addStyleNames="{style.stack}  {wp.style.entityCardStack__cardContainer}">
 
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.buttonBar} {wp.style.panelFilled}" ui:field="buttonBar">

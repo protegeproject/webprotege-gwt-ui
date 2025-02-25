@@ -127,4 +127,8 @@ public class TabPresenter<K> {
     public TabView getView() {
         return view;
     }
+
+    public void setDirty(boolean dirty) {
+        view.setDirty(dirty);
+    }
 }

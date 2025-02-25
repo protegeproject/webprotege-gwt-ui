@@ -11,12 +11,12 @@ import javax.annotation.Nonnull;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("FormCardContentDescriptor")
-public abstract class FormCardContentDescriptor implements CardContentDescriptor {
+@JsonTypeName("FormContent")
+public abstract class FormContentDescriptor implements EntityCardContentDescriptor {
 
     @JsonCreator
-    public static FormCardContentDescriptor create(@JsonProperty("formId") FormId formId) {
-        return new AutoValue_FormCardContentDescriptor(formId);
+    public static FormContentDescriptor create(@JsonProperty("formId") FormId formId) {
+        return new AutoValue_FormContentDescriptor(formId);
     }
 
     @JsonProperty("formId")
@@ -24,7 +24,7 @@ public abstract class FormCardContentDescriptor implements CardContentDescriptor
     public abstract FormId getFormId();
 
     @Override
-    public <R> R accept(CardContentDescriptorVisitor<R> visitor) {
+    public <R> R accept(EntityCardContentDescriptorVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

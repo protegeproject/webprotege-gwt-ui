@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -37,6 +38,9 @@ public class TabViewImpl extends Composite implements TabView {
     @UiField
     Label label;
 
+    @UiField
+    HTMLPanel dirtyIndicator;
+
     private HandlerRegistration handlerRegistration = () -> {};
 
     private final LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
@@ -44,6 +48,7 @@ public class TabViewImpl extends Composite implements TabView {
     @Inject
     public TabViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        dirtyIndicator.setVisible(false);
     }
 
     @Override
@@ -67,6 +72,11 @@ public class TabViewImpl extends Composite implements TabView {
                 getElement().getStyle().setBackgroundColor(backgroundColor.getHex());
             }
         }
+    }
+
+    @Override
+    public void setDirty(boolean dirty) {
+        dirtyIndicator.setVisible(dirty);
     }
 
     @Override

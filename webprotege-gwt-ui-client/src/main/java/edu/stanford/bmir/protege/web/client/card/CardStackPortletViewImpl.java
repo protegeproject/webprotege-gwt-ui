@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,8 +44,18 @@ public class CardStackPortletViewImpl extends Composite implements CardStackPort
     }
 
     @Override
-    public void addView(EntityCardContainer view) {
+    public void addView(EntityCardUi view) {
         stack.add(view);
+    }
+
+    @Override
+    public void setEditModeActive(boolean editModeActive) {
+        if (editModeActive) {
+            addStyleName(WebProtegeClientBundle.BUNDLE.style().entityCardStackEditModeActive());
+        }
+        else {
+            removeStyleName(WebProtegeClientBundle.BUNDLE.style().entityCardStackEditModeActive());
+        }
     }
 
     @Nonnull

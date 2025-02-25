@@ -20,9 +20,10 @@ public abstract class GetEntityCardDescriptorsResult implements Result {
 
     @JsonCreator
     public static GetEntityCardDescriptorsResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                        @JsonProperty("descriptors") @Nonnull List<CardDescriptor> descriptors) {
+                                                        @JsonProperty("descriptors") @Nonnull List<CardDescriptor> descriptors,
+                                                        @JsonProperty("writableCards") @Nonnull List<CardId> writableCards) {
         return new AutoValue_GetEntityCardDescriptorsResult(projectId,
-                new ArrayList<>(descriptors));
+                new ArrayList<>(descriptors), new ArrayList<>(writableCards));
     }
 
     @JsonProperty("projectId")
@@ -32,4 +33,8 @@ public abstract class GetEntityCardDescriptorsResult implements Result {
     @JsonProperty("descriptors")
     @Nonnull
     public abstract List<CardDescriptor> getDescriptors();
+
+    @JsonProperty("writableCards")
+    @Nonnull
+    public abstract List<CardId> getWritableCards();
 }

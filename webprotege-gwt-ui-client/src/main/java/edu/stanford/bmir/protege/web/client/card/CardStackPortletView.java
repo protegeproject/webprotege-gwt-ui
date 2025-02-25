@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 public interface CardStackPortletView extends IsWidget {
 
 
+    void setEditModeActive(boolean editModeActive);
+
     interface EnterEditModeHandler {
         void handleEnterEditMode();
     }
@@ -24,7 +26,7 @@ public interface CardStackPortletView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getTabBarContainer();
 
-    void addView(EntityCardContainer view);
+    void addView(EntityCardUi view);
 
     void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler);
 

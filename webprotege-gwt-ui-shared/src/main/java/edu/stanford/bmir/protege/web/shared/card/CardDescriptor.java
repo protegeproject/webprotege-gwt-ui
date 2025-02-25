@@ -24,7 +24,7 @@ public abstract class CardDescriptor {
                                         @JsonProperty("label") LanguageMap label,
                                         @JsonProperty("color") Color color,
                                         @JsonProperty("backgroundColor") Color backgroundColor,
-                                        @JsonProperty("content") CardContentDescriptor contentDescriptor,
+                                        @JsonProperty("content") EntityCardContentDescriptor contentDescriptor,
                                         @JsonProperty("requiredReadActions") Set<ActionId> requiredReadActions,
                                         @JsonProperty("requiredWriteActions") Set<ActionId> requiredWriteActions,
                                         @JsonProperty("visibilityCriteria") CompositeRootCriteria criteria) {
@@ -72,7 +72,7 @@ public abstract class CardDescriptor {
 
     @Nonnull
     @JsonProperty("content")
-    public abstract CardContentDescriptor getContentDescriptor();
+    public abstract EntityCardContentDescriptor getContentDescriptor();
 
     @Nonnull
     @JsonProperty("requiredReadActions")

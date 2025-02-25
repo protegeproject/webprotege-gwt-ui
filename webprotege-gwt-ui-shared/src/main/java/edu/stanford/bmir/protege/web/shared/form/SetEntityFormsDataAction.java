@@ -26,20 +26,24 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
 
     private OWLEntity entity;
 
+    private String commitMessage;
+
     private ImmutableMap<FormId, FormData> pristineFormsData;
 
     private FormDataByFormId editedFormsData;
 
     public SetEntityFormsDataAction(@Nonnull ProjectId projectId,
                                     @Nonnull OWLEntity entity,
+                                    @Nonnull String commitMessage,
                                     @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
                                     @Nonnull FormDataByFormId editedFormsData) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+        this.commitMessage = checkNotNull(commitMessage);
         this.pristineFormsData = checkNotNull(pristineFormsData);
         this.editedFormsData = checkNotNull(editedFormsData);
         checkArgument(editedFormsData.getFormIds().stream().allMatch(pristineFormsData::containsKey),
-                      "Missing pristine forms data");
+                      "Missing pristine forms data.  Edited forms: " + editedFormsData.getFormIds() + " Pristine forms: " + pristineFormsData.keySet());
     }
 
     @GwtSerializationConstructor
@@ -54,6 +58,10 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
 
     public OWLEntity getEntity() {
         return entity;
+    }
+
+    public String getCommitMessage() {
+        return commitMessage;
     }
 
     @Nonnull
