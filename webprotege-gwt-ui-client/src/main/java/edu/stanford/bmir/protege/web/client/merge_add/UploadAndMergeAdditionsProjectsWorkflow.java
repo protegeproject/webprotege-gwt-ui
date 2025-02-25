@@ -1,27 +1,17 @@
 package edu.stanford.bmir.protege.web.client.merge_add;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogControllerFactory;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.upload.*;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
-import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
-import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesResult;
+import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UploadAndMergeAdditionsProjectsWorkflow {
 
@@ -60,7 +50,7 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     private void uploadProject(final ProjectId projectId) {
         UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create("Upload ontologies", new UploadFileResultHandler() {
             @Override
-            public void handleFileUploaded(DocumentId fileDocumentId) {
+            public void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting) {
                 getOntologies(projectId, fileDocumentId);
             }
 
@@ -68,7 +58,8 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
             public void handleFileUploadFailed(String errorMessage) {
                 GWT.log("Upload failed");
             }
-        });
+        },
+                false);
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
 

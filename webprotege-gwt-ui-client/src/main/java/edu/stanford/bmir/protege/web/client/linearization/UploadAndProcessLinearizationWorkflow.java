@@ -41,7 +41,7 @@ public class UploadAndProcessLinearizationWorkflow {
         UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create(
                 MESSAGES.linearizationUpload(), new UploadFileResultHandler() {
                     @Override
-                    public void handleFileUploaded(DocumentId fileDocumentId) {
+                    public void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting) {
                         startLinearizationWorkflow(projectId, fileDocumentId);
                     }
 
@@ -49,7 +49,8 @@ public class UploadAndProcessLinearizationWorkflow {
                     public void handleFileUploadFailed(String errorMessage) {
                         GWT.log("Upload failed");
                     }
-                }
+                },
+                false
         );
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
