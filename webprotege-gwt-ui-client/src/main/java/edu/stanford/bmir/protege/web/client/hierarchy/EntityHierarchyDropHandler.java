@@ -106,8 +106,9 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
 
         Optional<EntityNode> parentEntityOptional = targetPath.getLast();
         String parentEntityBrowserText = parentEntityOptional.map(EntityNode::getBrowserText).orElse("");
-        messageBoxWithReasonForChange.showConfirmBoxWithReasonForChange("Move entities?",
-                "You are about to move selected entities to new parent " + parentEntityBrowserText + ". Are you sure?",
+        String entityBrowserText = nodePath.getLast().get().getBrowserText();
+        messageBoxWithReasonForChange.showConfirmBoxWithReasonForChange(messages.classHierarchy_dragAndDropEntityTitle(),
+                messages.classHierarchy_dragAndDropEntityMessage(entityBrowserText, parentEntityBrowserText),
                 DialogButton.CANCEL,
                 dropEndHandler::handleDropCancelled,
                 DialogButton.YES,

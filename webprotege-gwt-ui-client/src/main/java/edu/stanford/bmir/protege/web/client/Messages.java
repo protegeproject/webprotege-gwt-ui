@@ -156,6 +156,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please fill in the Reason for change field.")
     String reasonForChangeError();
 
+    @DefaultMessage("Please enter a reason for this change:")
+    String reasonForChangeMessage();
 
     @DefaultMessage("Enter one name per line (press CTRL+ENTER to accept and close panel)")
     @Key("createEntityInstructions")
@@ -1256,10 +1258,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please correct this in order to save changes")
     SafeHtml classHierarchy_parentsHaveRetiredAncestors(String classesWithRetiredParents);
 
-    @DefaultMessage("<em>A Linearization Path Parent cannot be removed <br>" +
-            "Following parent is a linearization path parent: <strong>{0}</strong></em><br>" +
-            "<br>" +
-            "Please change the linearization path parent before removing the parent")
+    @DefaultMessage("The parent: <br>" +
+            "&emsp;<strong>{0}</strong><br>" +
+            "Cannot be removed, because it is also a Linearization Path Parent.<br><br>" +
+            "Please remove this class as a Linearization Path Parent in the Linearization Tab, and then try again.")
     SafeHtml classHierarchy_removeParentThatIsLinearizationPathParent(String linearizationPathParent);
 
     @DefaultMessage("<em>A released class cannot be moved to a retired parent!")
@@ -1271,6 +1273,16 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
     @DefaultMessage("<em>Cannot move entities")
     String classHierarchy_cannotMoveEntities();
+
+    @DefaultMessage("<em>Move entities")
+    String classHierarchy_dragAndDropEntityTitle();
+
+    @DefaultMessage("You are about to move the selected entities: <br>" +
+            "&emsp;<em>{0}</em><br>" +
+            "to new parent:<br>" +
+            "&emsp;<em>{1}</em><br><br>" +
+            "Are you sure?")
+    String classHierarchy_dragAndDropEntityMessage(String entityName, String parentName);
 
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
