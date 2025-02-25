@@ -3,6 +3,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+
 
     <ui:style>
         .main-panel-style {
@@ -39,6 +41,9 @@
         .padding-top {
         padding-top: 5px;
         }
+        .margin-bottom {
+        margin-bottom: 20px !important;
+        }
     </ui:style>
 
 
@@ -57,13 +62,14 @@
                 <td valign="top">
                     <g:HTMLPanel addStyleNames="{style.message-block}">
                         <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.settings.title}"/>
-                        <g:HTML ui:field="messageLabel" addStyleNames="{style.sub-message-style}"/>
+                        <g:HTML ui:field="messageLabel"
+                                addStyleNames="{style.sub-message-style} {style.margin-bottom}"/>
                         <div class="{wp.style.formGroup}" addStyleNames="{style.padding-top}">
-                            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
+                            <g:Label text="{msg.reasonForChangeMessage}" addStyleNames="{wp.style.formLabel}"/>
                             <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
                                                        mode="MULTI_LINE"
                                                        anchorVisible="false"
-                            addStyleNames="{style.text-box}"/>
+                                                       addStyleNames="{style.text-box}"/>
                             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
                         </div>
                     </g:HTMLPanel>
