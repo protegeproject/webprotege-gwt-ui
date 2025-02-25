@@ -9,13 +9,22 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
-@Card(id = "Hello.World")
-public class EntityIriCardPresenter implements CustomContentEntityCardPresenter, EntityCardEditorPresenter {
+/**
+ * An example implementation of an {@link EntityCardPresenter}.  Entity card presenters
+ * implement {@link CustomContentEntityCardPresenter}.  If editing support is required
+ * then {@link EntityCardEditorPresenter} should also be implemented.  Finally, entity
+ * card presenters should be annotated with @{@link Card} where the id for the card content
+ * is specified.
+ *
+ * For this example, we just display the IRI of the selected entity and the length of the IRI.
+ */
+@Card(id = "example.card")
+public class ExampleEntityCardPresenter implements CustomContentEntityCardPresenter {
 
-    private final EntityIriCardViewImpl view;
+    private final ExampleEntityCardView view;
 
     @Inject
-    public EntityIriCardPresenter(EntityIriCardViewImpl view) {
+    public ExampleEntityCardPresenter(ExampleEntityCardView view) {
         this.view = view;
     }
 
@@ -46,31 +55,18 @@ public class EntityIriCardPresenter implements CustomContentEntityCardPresenter,
 
     @Override
     public boolean isDirty() {
+        // We are never dirty because we don't edit anything
         return false;
     }
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
+        // We don't change the dirty state so just return an empty HandlerRegistration.
         return () -> {};
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
-
-    }
-
-    @Override
-    public void beginEditing() {
-
-    }
-
-    @Override
-    public void cancelEditing() {
-
-    }
-
-    @Override
-    public void finishEditing(String commitMessage) {
 
     }
 }

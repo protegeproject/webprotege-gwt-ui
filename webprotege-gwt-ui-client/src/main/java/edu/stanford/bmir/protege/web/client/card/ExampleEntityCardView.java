@@ -9,18 +9,21 @@ import com.google.gwt.user.client.ui.Label;
 
 import javax.inject.Inject;
 
-public class EntityIriCardViewImpl extends Composite {
-    interface EntityIriCardViewImplUiBinder extends UiBinder<HTMLPanel, EntityIriCardViewImpl> {
+public class ExampleEntityCardView extends Composite {
+
+    interface EntityIriCardViewImplUiBinder extends UiBinder<HTMLPanel, ExampleEntityCardView> {
     }
 
     private static EntityIriCardViewImplUiBinder ourUiBinder = GWT.create(EntityIriCardViewImplUiBinder.class);
+
     @UiField
     Label iriLabel;
+
     @UiField
     Label iriLength;
 
     @Inject
-    public EntityIriCardViewImpl() {
+    public ExampleEntityCardView() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
