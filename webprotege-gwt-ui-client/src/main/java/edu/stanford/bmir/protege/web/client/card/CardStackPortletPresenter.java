@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.card;
 
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -26,8 +25,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Portlet(id = "webprotege.card",
@@ -56,13 +55,13 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     private Optional<WebProtegeEventBus> eventBus = Optional.empty();
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
-
-    private final CardWorkflow cardWorkflow;
-
     private final InputBox inputBox;
 
     private final MessageBox messageBox;
+    @Nonnull
+    private final Messages messages;
+
+    private final CommitChangesWorkflow commitChangesWorkflow;
 
     @Inject
     public CardStackPortletPresenter(@Nonnull ProjectId projectId,
@@ -72,19 +71,19 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                                      @Nonnull EntityCardPresenterFactory entityCardPresenterFactory,
                                      @Nonnull Provider<EntityCardUi> entityCardViewProvider,
                                      @Nonnull TabBarPresenter<CardId> tabBarPresenter,
-                                     LoggedInUserProjectPermissionChecker permissionChecker,
-                                     CardWorkflow cardWorkflow,
-                                     InputBox inputBox, MessageBox messageBox) {
+                                     @Nonnull InputBox inputBox,
+                                     @Nonnull MessageBox messageBox,
+                                     @Nonnull Messages messages, CommitChangesWorkflow commitChangesWorkflow) {
         super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.entityCardPresenterFactory = entityCardPresenterFactory;
         this.entityCardViewProvider = entityCardViewProvider;
         this.tabBarPresenter = tabBarPresenter;
         this.dispatch = dispatch;
-        this.permissionChecker = permissionChecker;
-        this.cardWorkflow = cardWorkflow;
         this.inputBox = inputBox;
         this.messageBox = messageBox;
+        this.messages = messages;
+        this.commitChangesWorkflow = commitChangesWorkflow;
     }
 
     @Override
@@ -93,28 +92,14 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         portletUi.setWidget(view);
         tabBarPresenter.setSelectedKeyStash(new SelectedTabIdStash<>(portletUi, new CardIdSerializer()));
         tabBarPresenter.start(view.getTabBarContainer());
-        tabBarPresenter.setSelectedTabChangedHandler(this::handleSelectedTabChanged);
-        view.setEnterEditModeHandler(this::handleStartEdits);
-        view.setApplyEditsHandler(this::handleFinishEditing);
-        view.setCancelEditsHandler(this::handleCancelEdits);
+        view.setBeginEditingHandler(this::handleStartEditing);
+        view.setFinishEditingHandler(this::handleFinishEditing);
+        view.setCancelEditingHandler(this::handleCancelEditing);
         initializeSelection();
     }
 
     private void initializeSelection() {
         handleAfterSetEntity(getSelectedEntity());
-    }
-
-    private void handleStartEdits() {
-        view.setEditModeActive(true);
-        view.setEditButtonVisible(false);
-        view.setCancelEditsButtonVisible(true);
-        view.setApplyEditsButtonVisible(true);
-        processCurrentCards(card -> {
-            if(card instanceof EntityCardEditorPresenter) {
-                ((EntityCardEditorPresenter) card).beginEditing();
-            }
-        });
-        getSelectedCardPresenter().ifPresent(EntityCardPresenter::requestFocus);
     }
 
     private void displayCardsForSelectedEntity() {
@@ -222,9 +207,9 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         if(isDirty()) {
             // NO - Cancel
             messageBox.showConfirmBox(MessageStyle.QUESTION,
-                    "Save changes?", "Do you want to save the changes before switching selection?",
+                    messages.editing_saveChangesPrompt_title(), messages.editing_saveChangesPrompt_message(),
                     DialogButton.NO,
-                    this::handleCancelEdits,
+                    this::handleCancelEditing,
                     DialogButton.YES,
                     this::commitChangesAndUpdateSelection,
                     DialogButton.YES);
@@ -260,16 +245,6 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         }
     }
 
-    private void handleSelectedTabChanged() {
-        // This doesn't affect anything.  If we are in edit mode then we stay in edit mode.
-    }
-
-    @Override
-    protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {
-        // Any outstanding edits?  If so, handle outstanding edits
-
-    }
-
     private Optional<EntityCardPresenter> getSelectedCardPresenter() {
         return tabBarPresenter.getSelectedTab()
                 .map(cardComponents::get)
@@ -277,60 +252,21 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                 .map(EntityCardComponents::getPresenter);
     }
 
-    private void handleFinishEditing() {
-        commitChanges(() -> {});
+
+    private void handleStartEditing() {
+        view.setEditModeActive(true);
+        view.setEditButtonVisible(false);
+        view.setCancelButtonVisible(true);
+        view.setApplyButtonVisible(true);
+        processCurrentCards(card -> {
+            if(card instanceof EntityCardEditorPresenter) {
+                ((EntityCardEditorPresenter) card).beginEditing();
+            }
+        });
+        getSelectedCardPresenter().ifPresent(EntityCardPresenter::requestFocus);
     }
 
-    private void commitChanges(Runnable commitFinished) {
-        view.setEditModeActive(false);
-        inputBox.showDialog("Enter a commit message",
-                true, "", new InputBoxHandler() {
-                    @Override
-                    public void handleAcceptInput(String commitMessage) {
-                        saveChangesWithCommitMessage(commitMessage);
-                        commitFinished.run();
-                    }
-
-                    @Override
-                    public void handleCancelInput() {
-                        updateButtonVisibility();
-                        commitFinished.run();
-                    }
-                });
-    }
-
-    private void saveChangesWithCommitMessage(String commitMessage) {
-        try {
-            dispatch.beginBatch();
-            processCurrentCards(card -> {
-                if(card instanceof EntityCardEditorPresenter) {
-                    try {
-                        ((EntityCardEditorPresenter) card).finishEditing(commitMessage);
-                    }
-                    catch (Exception e) {
-                        logger.log(Level.SEVERE, "Error when finishing editing in card", e);
-                    }
-                }
-            });
-        }
-        finally {
-            dispatch.executeCurrentBatch();
-        }
-        updateButtonVisibility();
-    }
-
-    private Stream<EntityCardPresenter> getCurrentPresenters() {
-        return currentCardIds.stream()
-                .map(cardComponents::get)
-                .filter(Objects::nonNull)
-                .map(EntityCardComponents::getPresenter);
-    }
-
-    private void processCurrentCards(Consumer<EntityCardPresenter> consumer) {
-        getCurrentPresenters().forEach(consumer);
-    }
-
-    private void handleCancelEdits() {
+    private void handleCancelEditing() {
         view.setEditModeActive(false);
         dispatch.beginBatch();
         processCurrentCards(card -> {
@@ -344,11 +280,34 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
     }
 
+    private void handleFinishEditing() {
+        commitChanges(() -> {});
+    }
+
+    private void commitChanges(Runnable commitFinished) {
+        view.setEditModeActive(false);
+        commitChangesWorkflow.run(getCurrentPresenters().collect(Collectors.toList()),
+                commitFinished);
+    }
+
+    private Stream<EntityCardPresenter> getCurrentPresenters() {
+        return currentCardIds.stream()
+                .map(cardComponents::get)
+                .filter(Objects::nonNull)
+                .map(EntityCardComponents::getPresenter);
+    }
+
+    private void processCurrentCards(Consumer<EntityCardPresenter> consumer) {
+        getCurrentPresenters().forEach(consumer);
+    }
+
+
+
     private void updateButtonVisibility() {
-        view.setCancelEditsButtonVisible(false);
+        view.setCancelButtonVisible(false);
         boolean containsAtLeastOneWritableCard = !writableCardIds.isEmpty();
         view.setEditButtonVisible(containsAtLeastOneWritableCard);
-        view.setApplyEditsButtonVisible(false);
+        view.setApplyButtonVisible(false);
         view.setButtonBarVisible(containsAtLeastOneWritableCard);
     }
 

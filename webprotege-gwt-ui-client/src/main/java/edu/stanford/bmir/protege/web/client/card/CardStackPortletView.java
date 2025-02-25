@@ -10,16 +10,16 @@ public interface CardStackPortletView extends IsWidget {
 
     void setEditModeActive(boolean editModeActive);
 
-    interface EnterEditModeHandler {
-        void handleEnterEditMode();
+    interface BeginEditingHandler {
+        void handleBeginEditing();
     }
 
-    interface ApplyEditsHandler {
-        void handleApplyEdits();
+    interface FinishEditingHandler {
+        void handleFinishEditing();
     }
 
-    interface CancelEditsHandler {
-        void handleCancelEdits();
+    interface CancelEditingHandler {
+        void handleCancelEditing();
     }
 
 
@@ -28,19 +28,17 @@ public interface CardStackPortletView extends IsWidget {
 
     void addView(EntityCardUi view);
 
-    void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler);
+    void setBeginEditingHandler(@Nonnull BeginEditingHandler beginEditingHandler);
 
-    void setEnterEditModeHandler(@Nonnull EnterEditModeHandler enterEditModeHandler);
+    void setFinishEditingHandler(@Nonnull FinishEditingHandler handler);
 
-    void setApplyEditsHandler(@Nonnull ApplyEditsHandler handler);
-
-    void setCancelEditsHandler(@Nonnull CancelEditsHandler handler);
+    void setCancelEditingHandler(@Nonnull CancelEditingHandler handler);
 
     void setEditButtonVisible(boolean visible);
 
-    void setApplyEditsButtonVisible(boolean visible);
+    void setApplyButtonVisible(boolean visible);
 
-    void setCancelEditsButtonVisible(boolean visible);
+    void setCancelButtonVisible(boolean visible);
 
     void setButtonBarVisible(boolean visible);
 }

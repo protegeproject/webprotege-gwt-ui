@@ -11,9 +11,9 @@ import javax.inject.Inject;
 
 public class CardStackPortletViewImpl extends Composite implements CardStackPortletView {
 
-    private EnterEditModeHandler enterEditModeHandler = () -> {};
-    private ApplyEditsHandler applyEditsHandler = () -> {};
-    private CancelEditsHandler cancelEditsHandler = () -> {};
+    private BeginEditingHandler beginEditingHandler = () -> {};
+    private FinishEditingHandler finishEditingHandler = () -> {};
+    private CancelEditingHandler cancelEditingHandler = () -> {};
 
     interface CardStackPortletViewImplUiBinder extends UiBinder<HTMLPanel, CardStackPortletViewImpl> {
     }
@@ -38,9 +38,9 @@ public class CardStackPortletViewImpl extends Composite implements CardStackPort
         applyEditsButton.setVisible(true);
         cancelEditsButton.setVisible(true);
         editButton.setVisible(true);
-        editButton.addClickHandler(event -> enterEditModeHandler.handleEnterEditMode());
-        cancelEditsButton.addClickHandler(event -> cancelEditsHandler.handleCancelEdits());
-        applyEditsButton.addClickHandler(event -> applyEditsHandler.handleApplyEdits());
+        editButton.addClickHandler(event -> beginEditingHandler.handleBeginEditing());
+        cancelEditsButton.addClickHandler(event -> cancelEditingHandler.handleCancelEditing());
+        applyEditsButton.addClickHandler(event -> finishEditingHandler.handleFinishEditing());
     }
 
     @Override
@@ -65,23 +65,18 @@ public class CardStackPortletViewImpl extends Composite implements CardStackPort
     }
 
     @Override
-    public void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler) {
-
+    public void setBeginEditingHandler(@Nonnull BeginEditingHandler handler) {
+        this.beginEditingHandler = handler;
     }
 
     @Override
-    public void setEnterEditModeHandler(@Nonnull EnterEditModeHandler handler) {
-        this.enterEditModeHandler = handler;
+    public void setFinishEditingHandler(@Nonnull FinishEditingHandler handler) {
+        this.finishEditingHandler = handler;
     }
 
     @Override
-    public void setApplyEditsHandler(@Nonnull ApplyEditsHandler handler) {
-        this.applyEditsHandler = handler;
-    }
-
-    @Override
-    public void setCancelEditsHandler(@Nonnull CancelEditsHandler handler) {
-        this.cancelEditsHandler = handler;
+    public void setCancelEditingHandler(@Nonnull CancelEditingHandler handler) {
+        this.cancelEditingHandler = handler;
     }
 
     @Override
@@ -90,12 +85,12 @@ public class CardStackPortletViewImpl extends Composite implements CardStackPort
     }
 
     @Override
-    public void setApplyEditsButtonVisible(boolean visible) {
+    public void setApplyButtonVisible(boolean visible) {
         this.applyEditsButton.setVisible(visible);
     }
 
     @Override
-    public void setCancelEditsButtonVisible(boolean visible) {
+    public void setCancelButtonVisible(boolean visible) {
         this.cancelEditsButton.setVisible(visible);
     }
 
