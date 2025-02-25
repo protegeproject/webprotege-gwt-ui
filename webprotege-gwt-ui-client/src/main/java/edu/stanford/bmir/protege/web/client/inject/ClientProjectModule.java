@@ -116,6 +116,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    UploadAndProcessSiblingsOrderingHandler provideUploadAndProcessSiblingsOrderingHandler(UploadAndProcessSiblingsOrderingHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
     UploadAndMergeAdditionsHandler provideUploadAndMergeAdditionsHandler(UploadAndMergeAdditionsHandlerImpl handler) {
         return handler;
     }
@@ -656,7 +661,7 @@ public class ClientProjectModule {
     GridHeaderCellView provideGridColumnHeaderView(GridHeaderCellViewImpl view) {
         return view;
     }
-    
+
     @Provides
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;

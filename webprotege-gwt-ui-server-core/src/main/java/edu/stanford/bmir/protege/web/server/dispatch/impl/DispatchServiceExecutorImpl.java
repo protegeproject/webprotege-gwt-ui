@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -57,9 +58,14 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         try {
             if(action instanceof TranslateEventListAction){
                 var translateEventsAction = (TranslateEventListAction) action;
-
-                GetProjectEventsResult result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
-                return DispatchServiceResultContainer.create(result);
+                try {
+                    GetProjectEventsResult<?> result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
+                    return DispatchServiceResultContainer.create(result);
+                } catch (JsonProcessingException e) {
+                    logger.error("Error when translating event list", e);
+                    logger.error(translateEventsAction.getEventList());
+                    throw new ActionExecutionException("An error occurred when translating the given event list.  See logs for more information.");
+                }
             }
             if(action instanceof GetUserInfoAction) {
                 var websocketUrl = System.getenv("webprotege.websocketUrl");
@@ -90,6 +96,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                                HttpResponse.BodyHandlers.ofString());
 
             var userId = executionContext.getUserId();
+            logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
             if(httpResponse.statusCode() == 400) {
                 logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 if(action instanceof BatchAction) {

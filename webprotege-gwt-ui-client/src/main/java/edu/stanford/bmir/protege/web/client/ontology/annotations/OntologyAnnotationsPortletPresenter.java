@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
@@ -19,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -43,12 +45,13 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
     @Inject
     public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView,
                                                SelectionModel selectionModel,
+                                               @Nonnull SelectedPathsModel selectedPathsModel,
                                                DispatchServiceManager dispatchServiceManager,
                                                ProjectId projectId,
                                                LoggedInUserProjectPermissionChecker permissionChecker,
                                                DisplayNameRenderer displayNameRenderer,
                                                DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

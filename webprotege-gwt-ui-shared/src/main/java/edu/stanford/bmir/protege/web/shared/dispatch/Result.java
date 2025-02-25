@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
@@ -212,7 +210,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(UpdateDataPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateAnnotationPropertyFrameResult.class),
         @JsonSubTypes.Type(UpdateNamedIndividualFrameResult.class),
-        @JsonSubTypes.Type(GetUserInfoResult.class)
+        @JsonSubTypes.Type(GetUserInfoResult.class),
+        @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(GetHierarchyDescriptorResult.class),
+        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

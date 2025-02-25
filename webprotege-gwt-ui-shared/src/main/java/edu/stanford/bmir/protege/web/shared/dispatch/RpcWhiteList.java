@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.PortletId;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -88,6 +91,7 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 
 /**
  * Matthew Horridge
@@ -226,7 +230,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetApplicationSettingsAction _GetApplicationSettingsAction;
     GetApplicationSettingsResult _GetApplicationSettingsResult;
     GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
-
     GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
     GetAvailableProjectsAction _GetAvailableProjectsAction;
     GetAvailableProjectsResult _GetAvailableProjectsResult;
@@ -311,6 +314,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetPersonIdCompletionsResult _GetPersonIdCompletionsResult;
     GetPerspectiveDetailsAction _GetPerspectiveDetailsAction;
     GetPerspectiveDetailsResult _GetPerspectiveDetailsResult;
+    PerspectiveDetails _PerspectiveDetails;
     GetPerspectiveLayoutAction _GetPerspectiveLayoutAction;
     GetPerspectiveLayoutResult _GetPerspectiveLayoutResult;
     GetPerspectivesAction _GetPerspectivesAction;
@@ -367,6 +371,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GridControlDescriptor _GridControlDescriptor;
     GridRowData _GridRowData;
     GridRowDataDto _GridRowDataDto;
+    HierarchyDescriptor _HierarchyDescriptor;
     HierarchyFilterType _HierarchyFilterType;
     HierarchyPositionCriteria _HierarchyPositionCriteria;
     IRI _IRI;
@@ -557,6 +562,15 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
     UsageFilter _UsageFilter;
+    SetNamedHierarchiesAction _SetNamedHierarchiesAction;
+    SetNamedHierarchiesResult _SetNamedHierarchiesResult;
+    GetHierarchyDescriptorAction _GetHierarchyDescriptorAction;
+    GetHierarchyDescriptorResult _GetHierarchyDescriptorResult;
+    DisplayContext _DisplayContext;
+    ViewId _ViewId;
+    ViewNodeId _ViewNodeId;
+    ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
+    ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
 
     public RpcWhiteList() {
     }

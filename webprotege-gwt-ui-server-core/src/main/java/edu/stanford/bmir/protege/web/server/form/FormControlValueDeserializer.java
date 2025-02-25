@@ -60,6 +60,7 @@ public class FormControlValueDeserializer extends StdDeserializer<PrimitiveFormC
                             return PrimitiveFormControlData.get(df.getOWLObjectProperty(iri));
                         case "owl:DatatypeProperty" :
                         case "DatatypeProperty" :
+                        case "DataProperty" :
                             return PrimitiveFormControlData.get(df.getOWLDataProperty(iri));
                         case "owl:AnnotationProperty":
                         case "AnnotationProperty" :

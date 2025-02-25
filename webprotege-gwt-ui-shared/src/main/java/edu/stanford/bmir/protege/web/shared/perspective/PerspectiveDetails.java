@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -19,25 +22,31 @@ import java.util.Optional;
 public abstract class PerspectiveDetails {
 
 
+    @JsonCreator
     @Nonnull
-    public static PerspectiveDetails get(@Nonnull PerspectiveId perspectiveId,
-                                         @Nonnull LanguageMap label,
-                                         boolean favorite,
-                                         @Nullable Node layout) {
+    public static PerspectiveDetails get(@JsonProperty("perspectiveId") @Nonnull PerspectiveId perspectiveId,
+                                         @JsonProperty("label") @Nonnull LanguageMap label,
+                                         @JsonProperty("favorite") boolean favorite,
+                                         @JsonProperty("layout") @Nullable Node layout) {
         return new AutoValue_PerspectiveDetails(perspectiveId, label, favorite, layout);
     }
 
+    @JsonProperty("perspectiveId")
     @Nonnull
     public abstract PerspectiveId getPerspectiveId();
 
+    @JsonProperty("label")
     @Nonnull
     public abstract LanguageMap getLabel();
 
+    @JsonProperty("favorite")
     public abstract boolean isFavorite();
 
+    @JsonProperty("layout")
     @Nullable
     protected abstract Node getLayoutInternal();
 
+    @JsonIgnore
     @Nonnull
     public Optional<Node> getLayout() {
         return Optional.ofNullable(getLayoutInternal());
