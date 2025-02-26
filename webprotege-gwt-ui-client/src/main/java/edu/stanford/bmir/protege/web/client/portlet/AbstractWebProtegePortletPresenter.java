@@ -70,7 +70,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer,
-                                              @Nonnull DispatchServiceManager dispatch, SelectedPathsModel selectedPathsModel) {
+                                              @Nonnull DispatchServiceManager dispatch,
+                                              SelectedPathsModel selectedPathsModel) {
 
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
@@ -257,7 +258,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
             displayContextBuilder.setViewProperties(map);
         });
         portletUi.ifPresent(ui -> displayContextBuilder.setViewId(ViewId.create(ui.getNodeProperty("portlet", ""))));
-        portletUi.flatMap(PortletUi::getViewNodeId).ifPresent(viewNodeId -> displayContextBuilder.setViewNodeId(viewNodeId));
+        portletUi.flatMap(PortletUi::getViewNodeId).ifPresent(displayContextBuilder::setViewNodeId);
         displayContextBuilder.setProjectId(getProjectId());
         displayContextBuilder.setSelectedPaths(selectedPathsModel.getSelectedPaths());
 
