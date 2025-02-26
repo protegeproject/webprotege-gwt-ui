@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.tab.TabBarPresenter;
@@ -73,8 +74,10 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                                      @Nonnull TabBarPresenter<CardId> tabBarPresenter,
                                      @Nonnull InputBox inputBox,
                                      @Nonnull MessageBox messageBox,
-                                     @Nonnull Messages messages, CommitChangesWorkflow commitChangesWorkflow) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                     @Nonnull Messages messages,
+                                     @Nonnull CommitChangesWorkflow commitChangesWorkflow,
+                                     @Nonnull SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = view;
         this.entityCardPresenterFactory = entityCardPresenterFactory;
         this.entityCardViewProvider = entityCardViewProvider;
