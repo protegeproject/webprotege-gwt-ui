@@ -10,4 +10,5 @@ public interface InputBoxHandler {
 
     void handleAcceptInput(String input);
 
+    default void handleCancelInput() {}
 }

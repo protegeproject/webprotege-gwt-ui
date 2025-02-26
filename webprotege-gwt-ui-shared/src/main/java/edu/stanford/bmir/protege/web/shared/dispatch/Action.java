@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
+import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
@@ -129,6 +130,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetHierarchyPathsToRootAction.class),
         @Type(value = GetHierarchyRootsAction.class),
         @Type(value = GetHierarchySiblingsAction.class),
+        @Type(value = GetEntityCardDescriptorsAction.class),
         @Type(value = GetEntityHtmlRenderingAction.class),
         @Type(value = GetIndividualsAction.class),
         @Type(value = GetIndividualsPageContainingIndividualAction.class),

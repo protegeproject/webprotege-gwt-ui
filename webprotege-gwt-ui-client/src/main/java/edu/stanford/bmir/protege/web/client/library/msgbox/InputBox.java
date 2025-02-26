@@ -67,6 +67,10 @@ public class InputBox {
         modalPresenter.setView(view);
         if(showCancelButton) {
             modalPresenter.setEscapeButton(DialogButton.CANCEL);
+            modalPresenter.setButtonHandler(DialogButton.CANCEL, closer -> {
+                closer.closeModal();
+                handler.handleCancelInput();
+            });
         }
         modalPresenter.setPrimaryButton(DialogButton.OK);
         modalPresenter.setPrimaryButtonFocusedOnShow(false);

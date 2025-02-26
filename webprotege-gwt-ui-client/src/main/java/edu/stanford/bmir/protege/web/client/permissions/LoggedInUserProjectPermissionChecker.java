@@ -6,6 +6,9 @@ import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -24,6 +27,32 @@ public interface LoggedInUserProjectPermissionChecker {
      */
     void hasPermission(@Nonnull ActionId actionId,
                        @Nonnull DispatchServiceCallback<Boolean> callback);
+
+    default void hasPermissions(@Nonnull Collection<ActionId> actionIds,
+                                @Nonnull Consumer<Boolean> callback) {
+        // A running lis of everything that needs to be checked
+        Set<ActionId> toCheck = new HashSet<>(actionIds);
+        // A record of any failures that accumulate as we go
+        Set<ActionId> failed = new HashSet<>();
+        for(ActionId actionId : actionIds) {
+            hasPermission(actionId, b -> {
+                // One more action has been checked
+                toCheck.remove(actionId);
+                if(!b) {
+                    // If it failed add it to the list of failed
+                    failed.add(actionId);
+                    // Early termination on failure
+                    callback.accept(false);
+                }
+                if(toCheck.isEmpty() && failed.isEmpty()) {
+                    // Done checking everything and everything passed
+                    // Note: We do not need to tell the callback about failure because this is
+                    // handled by early termination above.
+                    callback.accept(true);
+                }
+            });
+        }
+    }
 
     /**
      * Checks that the logged in user has permission to execute the specified
