@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.HasPerspectiveId;
 import edu.stanford.protege.widgetmap.client.HasRootNode;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasDispose, HasPerspectiveId {
+public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasDispose, HasPerspectiveId, HasDisplayContextBuilder {
 
     void setRootNode(Optional<Node> rootNode);
 

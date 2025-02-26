@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
@@ -83,6 +84,8 @@ public class PortletUiImpl extends Composite implements PortletUi {
     private NodeProperties nodeProperties = NodeProperties.emptyNodeProperties();
 
     private BiConsumer<PortletUi, NodeProperties> nodePropertiesChangedHandler = (ui, np) -> {};
+
+    private Optional<ViewNodeId> viewNodeId = Optional.empty();
 
     @Inject
     public PortletUiImpl(@Nonnull ForbiddenView forbiddenView,
@@ -281,5 +284,15 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void dispose() {
         tooltips.forEach(Tooltip::dispose);
+    }
+
+    @Override
+    public void setViewNodeId(ViewNodeId viewNodeId) {
+        this.viewNodeId = Optional.of(viewNodeId);
+    }
+
+    @Override
+    public Optional<ViewNodeId> getViewNodeId() {
+        return viewNodeId;
     }
 }

@@ -52,6 +52,7 @@ public abstract class SetPerspectivesAction implements ProjectAction<SetPerspect
         return new AutoValue_SetPerspectivesAction(projectId, userId, perspectiveIds);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public abstract ProjectId getProjectId();
