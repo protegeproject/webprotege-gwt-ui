@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermRelationshipsAction;
@@ -43,11 +44,12 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
 
     @Inject
     public OBOTermRelationshipPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                               @Nonnull SelectedPathsModel selectedPathsModel,
                                                @Nonnull ProjectId projectId,
                                                @Nonnull DispatchServiceManager dispatch,
                                                @Nonnull OBOTermRelationshipEditor editor,
                                                @Nonnull DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
     }

@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -41,13 +42,14 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
 
     @Inject
     public CommentedEntitiesPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                             @Nonnull SelectedPathsModel selectedPathsModel,
                                              @Nonnull ProjectId projectId,
                                              @Nonnull CommentedEntitiesPresenter presenter,
                                              @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                              @Nonnull Messages messages,
                                              DisplayNameRenderer displayNameRenderer,
                                              DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.messages = messages;

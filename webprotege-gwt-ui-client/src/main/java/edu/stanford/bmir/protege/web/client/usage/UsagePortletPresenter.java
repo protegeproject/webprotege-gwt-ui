@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -20,6 +21,7 @@ import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
@@ -56,12 +58,13 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Inject
     public UsagePortletPresenter(SelectionModel selectionModel,
+                                 @Nonnull SelectedPathsModel selectedPathsModel,
                                  DispatchServiceManager dispatchServiceManager,
                                  FilterView filterView,
                                  ProjectId projectId,
                                  DisplayNameRenderer displayNameRenderer,
                                  DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -46,6 +47,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     @Inject
     public IndividualsListPortletPresenter(@Nonnull IndividualsListPresenter presenter,
                                            @Nonnull SelectionModel selectionModel,
+                                           @Nonnull SelectedPathsModel selectedPathsModel,
                                            @Nonnull ProjectId projectId,
                                            @Nonnull DisplayNameRenderer displayNameRenderer,
                                            @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
@@ -54,7 +56,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
                                            @Nonnull Messages messages,
                                            @Nonnull SearchModal searchModal,
                                            DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = checkNotNull(presenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.filterView = checkNotNull(filterView);

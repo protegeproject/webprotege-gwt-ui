@@ -50,6 +50,7 @@ public class WebProtege implements EntryPoint {
         BUNDLE.style().ensureInjected();
         BUNDLE.buttons().ensureInjected();
         BUNDLE.discussion().ensureInjected();
+        BUNDLE.dragAndDrop().ensureInjected();
         BUNDLE.menu().ensureInjected();
         BUNDLE.settings().ensureInjected();
         BUNDLE.valueList().ensureInjected();

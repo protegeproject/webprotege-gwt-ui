@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @AutoValue
@@ -21,7 +22,7 @@ public abstract class DataPropertyHierarchyDescriptor implements HierarchyDescri
 
     @JsonCreator
     public static DataPropertyHierarchyDescriptor get(@JsonProperty("roots") Set<OWLDataProperty> roots) {
-        return new AutoValue_DataPropertyHierarchyDescriptor(roots);
+        return new AutoValue_DataPropertyHierarchyDescriptor(new LinkedHashSet<>(roots));
     }
 
     public static DataPropertyHierarchyDescriptor get() {

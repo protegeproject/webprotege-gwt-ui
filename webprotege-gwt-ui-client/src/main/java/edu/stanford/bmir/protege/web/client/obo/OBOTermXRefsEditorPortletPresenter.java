@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -43,11 +44,12 @@ public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPr
 
     @Inject
     public OBOTermXRefsEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                              @Nonnull SelectedPathsModel selectedPathsModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DispatchServiceManager dispatch,
                                               @Nonnull XRefListEditor editor,
                                               @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
         this.editorHolder = new SimplePanel(editor);

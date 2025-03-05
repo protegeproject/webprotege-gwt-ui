@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
 
@@ -16,80 +21,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 15 Mar 2017
  */
 @JsonTypeName("webprotege.perspectives.ResetPerspectiveLayout")
-public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
-
-    private ChangeRequestId changeRequestId;
-
-    private ProjectId projectId;
-
-    private PerspectiveId perspectiveId;
-
-    @GwtSerializationConstructor
-    private ResetPerspectiveLayoutAction() {
-    }
-
-    /**
-     * Requests that the perspective identified by the specified id in the specified project is reset to
-     * the default for the current user.
-     * @param projectId The project id.
-     * @param perspectiveId The perspective id.
-     */
-    private ResetPerspectiveLayoutAction(@Nonnull ChangeRequestId changeRequestId, @Nonnull ProjectId projectId, @Nonnull PerspectiveId perspectiveId) {
-        this.projectId = checkNotNull(projectId);
-        this.perspectiveId = checkNotNull(perspectiveId);
-        this.changeRequestId = checkNotNull(changeRequestId);
-    }
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspectiveLayoutResult> {
 
     public static ResetPerspectiveLayoutAction resetPerspective(@Nonnull ChangeRequestId changeRequestId,
                                                                 @Nonnull ProjectId projectId,
                                                                 @Nonnull PerspectiveId perspectiveId) {
-        return create(changeRequestId, projectId, perspectiveId);
+        return create(projectId, perspectiveId, changeRequestId);
     }
 
-    public static ResetPerspectiveLayoutAction create(@Nonnull ChangeRequestId changeRequestId,
-                                                      @Nonnull ProjectId projectId,
-                                                      @Nonnull PerspectiveId perspectiveId) {
-        return new ResetPerspectiveLayoutAction(changeRequestId, projectId, perspectiveId);
-    }
-
-    @Nonnull
-    @Override
-    public ProjectId getProjectId() {
-        return projectId;
+    @JsonCreator
+    public static ResetPerspectiveLayoutAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                      @JsonProperty("perspectiveId") @Nonnull PerspectiveId perspectiveId,
+                                                      @JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId) {
+        return new AutoValue_ResetPerspectiveLayoutAction(
+                projectId, perspectiveId, changeRequestId);
     }
 
     @Nonnull
-    public PerspectiveId getPerspectiveId() {
-        return perspectiveId;
-    }
-
-    public ChangeRequestId getChangeRequestId() {
-        return changeRequestId;
-    }
-
     @Override
-    public int hashCode() {
-        return projectId.hashCode();
-    }
+    @JsonProperty("projectId")
+    public abstract ProjectId getProjectId();
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ResetPerspectiveLayoutAction)) {
-            return false;
-        }
-        ResetPerspectiveLayoutAction other = (ResetPerspectiveLayoutAction) obj;
-        return this.projectId.equals(other.projectId)
-                && this.perspectiveId.equals(other.perspectiveId);
-    }
+    @Nonnull
+    @JsonProperty("perspectiveId")
+    public abstract PerspectiveId getPerspectiveId();
 
+    @JsonProperty("changeRequestId")
+    @Nonnull
+    public abstract ChangeRequestId getChangeRequestId();
 
-    @Override
-    public String toString() {
-        return toStringHelper("ResetPerspectiveLayoutAction" )
-                .addValue(projectId)
-                .toString();
-    }
 }

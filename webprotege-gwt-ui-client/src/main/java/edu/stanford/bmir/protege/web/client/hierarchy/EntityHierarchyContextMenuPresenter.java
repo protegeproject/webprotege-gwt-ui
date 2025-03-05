@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.ChangeChildrenOrderingUIAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
@@ -68,6 +69,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final MoveToParentUiAction moveToParentUiAction;
 
     @Nonnull
+    private final ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction;
+
+    @Nonnull
     private final EditParentsUiAction editParentsUiAction;
 
     @Nonnull
@@ -107,7 +111,9 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull ProjectId projectId,
                                                @Provided @Nonnull DispatchServiceManager dispatch,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
-                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction,
+                                               @Provided @Nonnull ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction,
+                                               @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
@@ -128,6 +134,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
+        this.changeChildrenOrderingUIAction = changeChildrenOrderingUIAction;
         this.watchUiAction = checkNotNull(watchUiAction);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.inputBox = checkNotNull(inputBox);
@@ -159,6 +166,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(editEntityTagsAction);
         contextMenu.addSeparator();
         contextMenu.addItem(moveToParentUiAction);
+        contextMenu.addItem(changeChildrenOrderingUIAction);
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(editAnnotationsUiAction);
@@ -185,6 +193,8 @@ public class EntityHierarchyContextMenuPresenter {
                         .collect(toImmutableSet());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setHandleAfterSave(v -> this.handleRefresh());
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
 
@@ -198,7 +208,7 @@ public class EntityHierarchyContextMenuPresenter {
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
         watchUiAction.setEnabled(false);
-
+        changeChildrenOrderingUIAction.setEnabled(true);
         int selSize = treeWidget.getSelectedKeys().size();
         boolean selIsNonEmpty = selSize > 0;
         boolean selIsSingleton = selSize == 1;

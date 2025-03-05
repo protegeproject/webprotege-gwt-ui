@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @AutoValue
@@ -19,7 +20,7 @@ public abstract class ObjectPropertyHierarchyDescriptor implements HierarchyDesc
 
     @JsonCreator
     public static ObjectPropertyHierarchyDescriptor get(@JsonProperty("roots") Set<OWLObjectProperty> roots) {
-        return new AutoValue_ObjectPropertyHierarchyDescriptor(roots);
+        return new AutoValue_ObjectPropertyHierarchyDescriptor(new LinkedHashSet<>(roots));
     }
 
     public static ObjectPropertyHierarchyDescriptor get() {

@@ -189,6 +189,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    ChangeChildrenOrderingDialogView providesChildrenOrderingDialogView(ChangeChildrenOrderingDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     WhoCreateClassDialogView providesWhoCreateEntityDialogView(WhoCreateClassDialogViewImpl impl) {
         return impl;
     }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.obo;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermDefinitionAction;
@@ -31,10 +32,11 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
 
     @Inject
     public OBOTermDefinitionPortletPresenter(SelectionModel selectionModel,
+                                             @Nonnull SelectedPathsModel selectedPathsModel,
                                              ProjectId projectId,
                                              @Nonnull DispatchServiceManager dispatch,
                                              @Nonnull OBOTermDefinitionEditor editor, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
     }

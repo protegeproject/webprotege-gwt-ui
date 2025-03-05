@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
@@ -28,13 +31,19 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     private boolean enabled = true;
 
     private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
 
     private boolean collapsibile = true;
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        context.setFormFieldId(getFormRegionId());
+    }
 
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
@@ -272,5 +281,15 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public boolean isNonEmpty() {
         return stackPresenter.isNonEmpty();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }
