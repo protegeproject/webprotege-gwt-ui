@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentIcdAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
+import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsAction;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
@@ -229,7 +230,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = GetHierarchyDescriptorAction.class),
-        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
