@@ -6,7 +6,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.client.WidgetMapPanel;
@@ -42,6 +45,8 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
 
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
     @Inject
     public PerspectiveImpl(@Nonnull final PerspectiveId perspectiveId,
                            @Nonnull DispatchServiceManager dispatchServiceManager,
@@ -56,6 +61,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
         rootNode = Optional.empty();
+        widgetMapper.setParentDisplayContextBuilder(this);
     }
 
     @Override
@@ -150,5 +156,19 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         return toStringHelper("Perspective")
                 .add("perspectiveId", perspectiveId)
                 .toString();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    private void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        displayContextBuilder.setPerspectiveId(perspectiveId);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

@@ -1454,6 +1454,18 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("entityDeprecationSettings.title")
     String entityDeprecationSettings_title();
 
+    @DefaultMessage("Enter a commit message")
+    @Key("editing.commitMessage.title")
+    String editing_commitMessage_title();
+
+    @DefaultMessage("Save changes?")
+    @Key("editing.saveChangesPrompt.title")
+    String editing_saveChangesPrompt_title();
+
+    @DefaultMessage("Do you want to save the changes before switching selection?")
+    @Key("editing.saveChangesPrompt.message")
+    String editing_saveChangesPrompt_message();
+
     @DefaultMessage("Processing siblings ordering")
     @Key("siblingsOrdering.processing.title")
     String processingSiblingsOrdering();

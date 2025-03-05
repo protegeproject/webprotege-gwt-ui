@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -11,11 +12,16 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdModal;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorResult;
 import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.*;
@@ -26,12 +32,15 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -42,6 +51,8 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
+
+    private static final Logger logger = Logger.getLogger("ClassHierarchyPortletPresenter");
 
     @Nonnull
     private final SearchModal searchModal;
@@ -86,12 +97,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     @Nonnull
     private final TagVisibilityPresenter tagVisibilityPresenter;
-
-    private boolean transmittingSelectionFromTree = false;
-
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+    @Nonnull
+    private final SelectedPathsModel selectedPathsModel;
 
+    private boolean transmittingSelectionFromTree = false;
     private TreeWidgetUpdater updater;
 
     private boolean settingSelectionInTree = false;
@@ -118,9 +131,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull DisplayNameRenderer displayNameRenderer,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory,
-                                          @Nonnull DispatchServiceManager dispatch,
-                                          @Nonnull LoggedInUserManager loggedInUserManager, @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                          @Nonnull DispatchServiceManager dispatch, 
+                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                          @Nonnull SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.searchModal = searchModal;
         this.searchIcdModal = searchIcdModal;
         this.messages = checkNotNull(messages);
@@ -150,6 +164,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
+        this.dispatch = dispatch;
+        this.selectedPathsModel = selectedPathsModel;
         this.permissionChecker = checkNotNull(permissionChecker);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
         this.updater = updaterFactory.create(treeWidget, hierarchyModel);
@@ -178,7 +194,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);
 
-
         createClassAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
         /* TODO uncomment this after delete is implemented*/
@@ -189,25 +204,39 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         actionStatePresenter.start(eventBus);
 
-        hierarchyModel.start(eventBus, ClassHierarchyDescriptor.get());
         renderer.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
+
+        logger.info("Getting display context");
+        DisplayContext displayContext = fillDisplayContextBuilder().build();
+        dispatch.execute(GetHierarchyDescriptorAction.create(getProjectId(), displayContext),
+                result -> setupHierarchy(eventBus, result));
+        eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
+        updater.start(eventBus);
+    }
+
+    private void setupHierarchy(WebProtegeEventBus eventBus, GetHierarchyDescriptorResult result) {
+        HierarchyDescriptor hierarchyDescriptor = result.getHierarchyDescriptor();
+        logger.info("Setting up hierarchy for descriptor: " + hierarchyDescriptor);
+        if (hierarchyDescriptor == null) {
+            hierarchyDescriptor = ClassHierarchyDescriptor.get();
+        }
+        hierarchyModel.start(eventBus, hierarchyDescriptor);
+        dropHandler.start(hierarchyDescriptor);
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                 node -> node.getEntity()));
         treeWidget.setDropHandler(this.dropHandler);
-        dropHandler.start(ClassHierarchyDescriptor.get());
         contextMenuPresenterFactory.create(hierarchyModel,
-                                           treeWidget,
-                                           createClassAction,
-                                           deleteClassAction,
+                        treeWidget,
+                        createClassAction,
+                        deleteClassAction,
                         getProjectId())
-                                   .install();
-
+                .install();
+        treeWidget.addAttachHandler(event -> {
+            updateSelectedPaths();
+        });
         tagVisibilityPresenter.start(filterView, treeWidget);
         setSelectionInTree(getSelectedEntity());
-
-        eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
-        updater.start(eventBus);
     }
 
     private void handleDisplayLanguageChanged(@Nonnull DisplayNameSettingsChangedEvent event) {
@@ -236,9 +265,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         try {
             transmittingSelectionFromTree = true;
             treeWidget.getFirstSelectedKey()
-                    .ifPresent(sel -> getSelectionModel().setSelection(sel));
+                    .ifPresent(sel -> {
+                        updateSelectedPaths();
+                        getSelectionModel().setSelection(sel);
+                    });
+
             if (!treeWidget.getFirstSelectedKey().isPresent()) {
                 getSelectionModel().clearSelection();
+                updateSelectedPaths();
             }
         } finally {
             transmittingSelectionFromTree = false;
@@ -279,6 +313,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         if (transmittingSelectionFromTree) {
             return;
         }
+        updateSelectedPaths();
         if (treeWidget.getSelectedKeys().contains(selection.orElse(null))) {
             return;
         }
@@ -287,10 +322,27 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
             selection.ifPresent(sel -> {
                 if (sel.isOWLClass()) {
                     treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST);
+                    updateSelectedPaths();
                 }
             });
         } finally {
             settingSelectionInTree = false;
         }
+    }
+
+    private void updateSelectedPaths() {
+        if(treeWidget.isAttached()) {
+            selectedPathsModel.setSelectedPaths(treeWidget.getSelectedKeyPaths());
+        }
+    }
+
+    @Override
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        super.fillDisplayContext(displayContextBuilder);
+        List<List<OWLEntity>> selectedPaths = treeWidget.getSelectedKeyPaths()
+                .stream()
+                .map(path -> path.asList())
+                .collect(Collectors.toList());
+        displayContextBuilder.setSelectedPaths(selectedPaths);
     }
 }

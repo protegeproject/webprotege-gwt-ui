@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -20,10 +21,11 @@ import java.util.Optional;
 public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     protected AbstractOBOTermPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                              @Nonnull SelectedPathsModel selectedPathsModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer,
                                               DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
     }
 
     @Override

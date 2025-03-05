@@ -143,6 +143,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
                                 UploadAndProcessSiblingsOrderingHandler uploadAndProcessSiblingsOrderingHandler,
+                                UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 UploadAndProcessLinearizationHandler linearizationChangesHandler,
                                 PostCoordinationChangesHandler postCoordinationChangesHandler, UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,

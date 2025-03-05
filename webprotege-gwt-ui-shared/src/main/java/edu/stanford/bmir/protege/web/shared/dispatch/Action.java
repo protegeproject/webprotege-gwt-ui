@@ -130,6 +130,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetHierarchyPathsToRootAction.class),
         @Type(value = GetHierarchyRootsAction.class),
         @Type(value = GetHierarchySiblingsAction.class),
+        @Type(value = GetEntityCardDescriptorsAction.class),
         @Type(value = GetEntityHtmlRenderingAction.class),
         @Type(value = GetIndividualsAction.class),
         @Type(value = GetIndividualsPageContainingIndividualAction.class),
@@ -226,6 +227,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
+        @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = GetHierarchyDescriptorAction.class),
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
@@ -241,11 +245,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SaveEntityCustomScaleAction.class),
         @Type(value = UpdateLogicalDefinitionAction.class),
         @Type(value = GetEntityLogicalDefinitionAction.class),
-        @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = CreateNewProjectFromProjectBackupAction.class),
         @Type(value = MoveEntitiesToParentIcdAction.class),
-        @Type(value = MoveHierarchyNodeIcdAction.class),
-        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
+        @Type(value = MoveHierarchyNodeIcdAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

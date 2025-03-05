@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @AutoValue
@@ -18,7 +19,7 @@ public abstract class AnnotationPropertyHierarchyDescriptor implements Hierarchy
     
     @JsonCreator
     public static AnnotationPropertyHierarchyDescriptor get(@JsonProperty("roots") Set<OWLAnnotationProperty> roots) {
-        return new AutoValue_AnnotationPropertyHierarchyDescriptor(roots);
+        return new AutoValue_AnnotationPropertyHierarchyDescriptor(new LinkedHashSet<>(roots));
     }
 
     public static AnnotationPropertyHierarchyDescriptor get() {

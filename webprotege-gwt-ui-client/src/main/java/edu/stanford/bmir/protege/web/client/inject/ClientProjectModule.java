@@ -5,6 +5,7 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
 import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsView;
@@ -666,13 +667,13 @@ public class ClientProjectModule {
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
             GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
-                numberFieldDescriptorPresenterFactory,
-                choiceFieldDescriptorPresenterFactory,
-                multiChoiceControlDescriptorPresenterFactory,
-                imageDescriptorPresenterFactory,
-                entityNameFieldDescriptorPresenterFactory,
-                subFormControlDescriptorPresenterFactory,
-                gridControlDescriptorPresenterFactory);
+                                numberFieldDescriptorPresenterFactory,
+                                choiceFieldDescriptorPresenterFactory,
+                                multiChoiceControlDescriptorPresenterFactory,
+                                imageDescriptorPresenterFactory,
+                                entityNameFieldDescriptorPresenterFactory,
+                                subFormControlDescriptorPresenterFactory,
+                                gridControlDescriptorPresenterFactory);
     }
 
     @Provides
@@ -998,6 +999,16 @@ public class ClientProjectModule {
 
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CardStackPortletView provideCardPortletView(CardStackPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
         return impl;
     }
 

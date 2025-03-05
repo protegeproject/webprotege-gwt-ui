@@ -13,9 +13,13 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -38,7 +42,7 @@ import static edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveL
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/05/2014
  */
-public class PerspectivePresenter implements HasDispose {
+public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilder {
     private final static Logger logger = Logger.getLogger("PerspectivePresenter");
 
     private final ProjectId projectId;
@@ -69,10 +73,13 @@ public class PerspectivePresenter implements HasDispose {
 
     private final LanguageMapCurrentLocaleMapper localeMapper;
 
+    private final SelectedPathsModel selectedPathsModel;
+
     private HandlerRegistration placeChangedHandlerRegistration;
 
-    private UuidV4Provider uuidV4Provider;
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
+    private UuidV4Provider uuidV4Provider;
 
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
@@ -83,8 +90,10 @@ public class PerspectivePresenter implements HasDispose {
                                 PerspectiveFactory perspectiveFactory,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter,
-                                UuidV4Provider uuidV4Provider,
-                                MessageBox messageBox, LanguageMapCurrentLocaleMapper localeMapper) {
+                                MessageBox messageBox,
+                                LanguageMapCurrentLocaleMapper localeMapper,
+                                SelectedPathsModel selectedPathsModel,
+                                UuidV4Provider uuidV4Provider) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
@@ -95,6 +104,7 @@ public class PerspectivePresenter implements HasDispose {
         this.portletChooserPresenter = portletChooserPresenter;
         this.messageBox = messageBox;
         this.localeMapper = localeMapper;
+        this.selectedPathsModel = selectedPathsModel;
         this.uuidV4Provider = uuidV4Provider;
     }
 
@@ -138,6 +148,7 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
+        selectedPathsModel.clearSelectedPaths();
         if(currentPerspective.equals(java.util.Optional.of(perspectiveId))) {
             return;
         }
@@ -198,6 +209,7 @@ public class PerspectivePresenter implements HasDispose {
                 savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
             });
             perspective.setNodePropertiesChangedHandler(node -> savePerspectiveLayout(perspectiveId, perspective.getRootNode()));
+            perspective.setParentDisplayContextBuilder(this);
             perspectiveCache.put(perspectiveId, perspective);
             perspectiveView.setWidget(perspective);
             rootNode.ifPresent(node -> originalRootNodeMap.put(perspectiveId, node.duplicate()));
@@ -248,8 +260,6 @@ public class PerspectivePresenter implements HasDispose {
 
         private final LoggedInUserProvider loggedInUserProvider;
 
-
-
         public SavePerspectiveRunner(ProjectId projectId, PerspectiveId perspectiveId, Optional<Node> node, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
             this.projectId = projectId;
             this.perspectiveId = perspectiveId;
@@ -271,5 +281,19 @@ public class PerspectivePresenter implements HasDispose {
             logger.log(Level.FINE, "[PerspectivePresenter]        perspective: " + perspectiveLayoutAction);
             dispatchServiceManager.execute(perspectiveLayoutAction, result -> {});
         }
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    private void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        displayContextBuilder.setProjectId(projectId);
     }
 }

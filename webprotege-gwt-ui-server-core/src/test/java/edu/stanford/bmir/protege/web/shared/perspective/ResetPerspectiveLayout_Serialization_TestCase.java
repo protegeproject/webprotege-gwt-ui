@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
@@ -19,8 +20,9 @@ public class ResetPerspectiveLayout_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = ResetPerspectiveLayoutAction.create(ChangeRequestId.get("12345678-1234-1234-1234-123456789abc"), mockProjectId(),
-                                                         PerspectiveId.generate());
+        var action = ResetPerspectiveLayoutAction.create(mockProjectId(),
+                                                         PerspectiveId.generate(),
+                ChangeRequestId.get(UUID.randomUUID().toString()));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

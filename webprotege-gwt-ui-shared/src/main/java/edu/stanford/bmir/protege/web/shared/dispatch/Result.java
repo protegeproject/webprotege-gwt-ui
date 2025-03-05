@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
+import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsResult;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.*;
@@ -49,7 +50,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- * The basic interface for results which are returned from the dispatch service
+ *     The basic interface for results which are returned from the dispatch service
  * </p>
  */
 @JsonSubTypes({
@@ -105,6 +106,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(GetHierarchyPathsToRootResult.class),
         @JsonSubTypes.Type(GetHierarchyRootsResult.class),
         @JsonSubTypes.Type(GetHierarchySiblingsResult.class),
+        @JsonSubTypes.Type(GetEntityCardDescriptorsResult.class),
         @JsonSubTypes.Type(GetEntityHtmlRenderingResult.class),
         @JsonSubTypes.Type(GetIndividualsResult.class),
         @JsonSubTypes.Type(GetIndividualsPageContainingIndividualResult.class),
@@ -220,10 +222,11 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(UpdateLogicalDefinitionResult.class),
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
+        @JsonSubTypes.Type(GetHierarchyDescriptorResult.class),
+        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
-        @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
-        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class)
+        @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {
