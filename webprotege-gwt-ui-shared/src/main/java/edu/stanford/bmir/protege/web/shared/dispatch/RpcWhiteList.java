@@ -6,10 +6,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -541,7 +538,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectFormDescriptorsAction _SetProjectFormDescriptorsAction;
     SetProjectFormDescriptorsResult _SetProjectFormDescriptorsResult;
     SetProjectPrefixDeclarationsAction _SetProjectPrefixDeclarationsAction;
-
     SaveEntityChildReorderingAction _SaveEntityChildReorderingAction;
     SaveEntityChildReorderingResult _SaveEntityChildReorderingResult;
     SetProjectPrefixDeclarationsResult _SetProjectPrefixDeclarationsResult;
