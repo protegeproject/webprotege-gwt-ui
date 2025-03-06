@@ -39,20 +39,21 @@ public class UploadAndProcessSiblingsOrderingWorkflow {
         UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create(
                 MESSAGES.siblingsOrdering(), new UploadFileResultHandler() {
                     @Override
-                    public void handleFileUploaded(DocumentId fileDocumentId) {
-                        startSiblingsOrderingWorkflow(projectId, fileDocumentId);
+                    public void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting) {
+                        startSiblingsOrderingWorkflow(projectId, fileDocumentId, overrideExisting);
                     }
 
                     @Override
                     public void handleFileUploadFailed(String errorMessage) {
                         GWT.log("Upload failed");
                     }
-                }
+                },
+                true
         );
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
 
-    private void startSiblingsOrderingWorkflow(ProjectId projectId, DocumentId documentId) {
-        processSiblingsOrderingWorkflow.start(projectId, documentId);
+    private void startSiblingsOrderingWorkflow(ProjectId projectId, DocumentId documentId, boolean overrideExisting) {
+        processSiblingsOrderingWorkflow.start(projectId, documentId, overrideExisting);
     }
 }
