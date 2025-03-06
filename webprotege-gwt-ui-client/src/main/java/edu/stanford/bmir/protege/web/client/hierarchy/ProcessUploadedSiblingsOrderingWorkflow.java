@@ -41,14 +41,14 @@ public class ProcessUploadedSiblingsOrderingWorkflow {
     }
 
 
-    public void start(ProjectId projectId, DocumentId documentId) {
-        processSiblingsOrdering(projectId, documentId);
+    public void start(ProjectId projectId, DocumentId documentId, boolean overrideExisting) {
+        processSiblingsOrdering(projectId, documentId, overrideExisting);
     }
 
 
-    private void processSiblingsOrdering(final ProjectId projectId, final DocumentId uploadedProjectDocumentId) {
+    private void processSiblingsOrdering(final ProjectId projectId, final DocumentId uploadedProjectDocumentId, boolean overrideExisting) {
         dispatchServiceManager.execute(
-                ProcessUploadedSiblingsOrderingAction.create(projectId, uploadedProjectDocumentId),
+                ProcessUploadedSiblingsOrderingAction.create(projectId, uploadedProjectDocumentId, overrideExisting),
                 new DispatchServiceCallbackWithProgressDisplay<ProcessUploadedSiblingsOrderingResult>(errorDisplay, progressDisplay) {
 
                     @Override
