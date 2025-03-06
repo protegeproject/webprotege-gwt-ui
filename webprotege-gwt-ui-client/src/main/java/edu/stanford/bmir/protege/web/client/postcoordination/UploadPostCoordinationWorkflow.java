@@ -57,7 +57,7 @@ public class UploadPostCoordinationWorkflow {
         UploadFileDialogController uploadFileDialogController = uploadFileDialogControllerFactory.create(
                 configuration.getMenuTitle(), new UploadFileResultHandler() {
                     @Override
-                    public void handleFileUploaded(DocumentId fileDocumentId) {
+                    public void handleFileUploaded(DocumentId fileDocumentId, boolean overrideExisting) {
                         handleAfterFileUpload(projectId, fileDocumentId, configuration);
                     }
 
@@ -65,7 +65,8 @@ public class UploadPostCoordinationWorkflow {
                     public void handleFileUploadFailed(String errorMessage) {
                         GWT.log("Upload failed");
                     }
-                }
+                },
+                false
         );
         WebProtegeDialog.showDialog(uploadFileDialogController);
     }
