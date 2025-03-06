@@ -26,7 +26,6 @@ public abstract class PerspectiveDetails {
 
     @JsonCreator
     @Nonnull
-    @JsonCreator
     public static PerspectiveDetails get(@JsonProperty("perspectiveId") @Nonnull PerspectiveId perspectiveId,
                                          @JsonProperty("label") @Nonnull LanguageMap label,
                                          @JsonProperty("favorite") boolean favorite,
