@@ -70,7 +70,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer,
-                                              @Nonnull DispatchServiceManager dispatch, SelectedPathsModel selectedPathsModel) {
+                                              @Nonnull DispatchServiceManager dispatch,
+                                              SelectedPathsModel selectedPathsModel) {
 
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);

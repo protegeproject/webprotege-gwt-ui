@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -31,8 +32,9 @@ public class LogicalDefinitionPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull ProjectId projectId,
                                              @Nonnull DisplayNameRenderer displayNameRenderer,
                                              @Nonnull DispatchServiceManager dispatch,
-                                             @Nonnull LogicalDefinitionPortletView view) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                             @Nonnull LogicalDefinitionPortletView view,
+                                             @Nonnull SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = view;
         this.dispatch = dispatch;
     }

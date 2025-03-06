@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -51,8 +52,9 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                                          @Nonnull LinearizationPortletView view,
                                          @Nonnull EventBus eventBus,
                                          @Nonnull MessageBox messageBox,
-                                         @Nonnull LoggedInUserManager loggedInUserManager) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                         @Nonnull LoggedInUserManager loggedInUserManager,
+                                         @Nonnull SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;

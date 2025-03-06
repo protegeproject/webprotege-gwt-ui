@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -38,8 +39,9 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  ProjectId projectId,
                                                  CombinedChangeListPresenter presenter,
                                                  DisplayNameRenderer displayNameRenderer,
-                                                 DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                                 DispatchServiceManager dispatch,
+                                                 SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
     }
@@ -47,7 +49,7 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
-                ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+                ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addProjectEventHandler(getProjectId(), UI_HISTORY_CHANGED, this::handleHistoryChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
         portletUi.setWidget(presenter.getView().asWidget());
@@ -63,7 +65,6 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                 return;
             }
         }
-        ;
     }
 
     private void handleProjectChanged(ProjectChangedEvent event) {
