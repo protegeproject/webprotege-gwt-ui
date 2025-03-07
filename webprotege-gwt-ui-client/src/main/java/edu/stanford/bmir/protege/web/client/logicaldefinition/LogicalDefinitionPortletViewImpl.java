@@ -188,7 +188,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = new ArrayList<>(result);
 
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
+            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
                 this.labels = config.getLabels();
                 this.postCoordinationTableConfiguration = config.getTableConfiguration();
                 necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);

@@ -37,8 +37,8 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     private String entityIri;
     private ProjectId projectId;
 
-    private Map<String, PostCoordinationTableAxisLabel> labels;
-    private Map<String, LinearizationDefinition> definitionMap;
+    private Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+    private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
 
     private List<PostCoordinationTableRow> tableRows = new ArrayList<>();
     private final DispatchServiceManager dispatch;
@@ -164,6 +164,13 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     public void initializeTable() {
         initializeTableHeader();
         initializeTableContent();
+    }
+
+    @Override
+    public void resetTable() {
+        flexTable.clear();
+        labels.clear();
+        tableRows.clear();
     }
 
     @Override
