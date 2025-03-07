@@ -182,52 +182,56 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             setDisplayedEntity(Optional.empty());
         } else {
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entityData.get().getIRI(), getProjectId()), result -> {
-                Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
-                List<String> scaleCardsOrder = new LinkedList<>();
+                if(result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
+                    setNothingSelectedVisible(true);
+                    setDisplayedEntity(Optional.empty());
+                } else {
+                    Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
+                    List<String> scaleCardsOrder = new LinkedList<>();
 
-                for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
-                    PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                            .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
-                            .findFirst()
-                            .orElseThrow(() -> {
-                                logger.info("Couldn't find label for " + availableAxis);
-                                return new RuntimeException("Couldn't find label for " + availableAxis);
-                            });
-                    tableLabels.put(availableAxis, existingLabel);
-                    scaleCardsOrder.add(availableAxis);
+                    for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
+                        PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
+                                .findFirst()
+                                .orElseThrow(() -> {
+                                    logger.info("Couldn't find label for " + availableAxis);
+                                    return new RuntimeException("Couldn't find label for " + availableAxis);
+                                });
+                        tableLabels.put(availableAxis, existingLabel);
+                        scaleCardsOrder.add(availableAxis);
+                    }
+
+
+                    Map<String, PostCoordinationTableAxisLabel> scaleLabels = new HashMap<>(tableLabels);
+
+                    List<PostCoordinationCompositeAxis> compositeAxis = new ArrayList<>(result.getTableConfiguration().getCompositePostCoordinationAxes());
+
+                    compositeAxis.forEach(axis ->
+                            axis.getSubAxis()
+                                    .forEach(subAxis -> {
+                                                PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                                        .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
+                                                        .findFirst()
+                                                        .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
+                                                scaleLabels.put(subAxis, existingLabel);
+                                                scaleLabels.remove(axis.getPostCoordinationAxis());
+                                            }
+                                    )
+                    );
+
+                    List<String> orderedAxisListWithSubAxis = this.createOrderAxisListWithSubAxis(result.getTableConfiguration().getPostCoordinationAxes(),
+                            result.getTableConfiguration().getCompositePostCoordinationAxes());
+
+                    scaleCardsOrder.addAll(orderedAxisListWithSubAxis);
+                    if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder)) {
+                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis);
+                    }
+
+                    fetchEntityPostCoordinationAndNavigate(entityData);
                 }
 
-
-                Map<String, PostCoordinationTableAxisLabel> scaleLabels = new HashMap<>(tableLabels);
-
-                List<PostCoordinationCompositeAxis> compositeAxis = new ArrayList<>(result.getTableConfiguration().getCompositePostCoordinationAxes());
-
-                compositeAxis.forEach(axis ->
-                        axis.getSubAxis()
-                                .forEach(subAxis -> {
-                                            PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                                                    .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
-                                                    .findFirst()
-                                                    .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
-                                            scaleLabels.put(subAxis, existingLabel);
-                                            scaleLabels.remove(axis.getPostCoordinationAxis());
-                                        }
-                                )
-                );
-
-                List<String> orderedAxisListWithSubAxis = this.createOrderAxisListWithSubAxis(result.getTableConfiguration().getPostCoordinationAxes(),
-                        result.getTableConfiguration().getCompositePostCoordinationAxes());
-
-                scaleCardsOrder.addAll(orderedAxisListWithSubAxis);
-                if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder)) {
-                    populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis);
-                }
-
-                fetchEntityPostCoordinationAndNavigate(entityData);
             });
-
         }
-
 
     }
 
