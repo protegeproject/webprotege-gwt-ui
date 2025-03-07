@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
@@ -49,11 +51,12 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
                                           LoggedInUserProjectPermissionChecker permissionChecker,
                                           FilterView filterView,
                                           SelectionModel selectionModel,
+                                          @Nonnull SelectedPathsModel selectedPathsModel,
                                           ProjectId projectId,
                                           Messages messages,
                                           DisplayNameRenderer displayNameRenderer,
                                           DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.filterView = filterView;

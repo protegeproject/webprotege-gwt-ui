@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
+import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
@@ -61,6 +61,7 @@ import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import edu.stanford.protege.widgetmap.shared.node.*;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 
 /**
  * Matthew Horridge
@@ -537,6 +538,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectFormDescriptorsAction _SetProjectFormDescriptorsAction;
     SetProjectFormDescriptorsResult _SetProjectFormDescriptorsResult;
     SetProjectPrefixDeclarationsAction _SetProjectPrefixDeclarationsAction;
+    SaveEntityChildReorderingAction _SaveEntityChildReorderingAction;
+    SaveEntityChildReorderingResult _SaveEntityChildReorderingResult;
     SetProjectPrefixDeclarationsResult _SetProjectPrefixDeclarationsResult;
     SetProjectSettingsAction _SetProjectSettingsAction;
     SetProjectSettingsResult _SetProjectSettingsResult;
@@ -623,6 +626,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityLogicalDefinitionResult _GetEntityLogicalDefinitionResult;
     SetNamedHierarchiesAction _SetNamedHierarchiesAction;
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
+    GetHierarchyDescriptorAction _GetHierarchyDescriptorAction;
+    GetHierarchyDescriptorResult _GetHierarchyDescriptorResult;
+    DisplayContext _DisplayContext;
+    ViewId _ViewId;
+    ViewNodeId _ViewNodeId;
     CreateNewProjectFromProjectBackupResult _CreateNewProjectFromProjectBackupResult;
     CreateNewProjectFromProjectBackupAction _CreateNewProjectFromProjectBackupAction;
     MoveEntitiesToParentIcdAction _MoveEntitiesToParentIcdAction;

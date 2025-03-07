@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResul
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -33,11 +35,12 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
 
     @Inject
     public OWLEntityDescriptionBrowserPortletPresenter(SelectionModel selectionModel,
+                                                       @Nonnull SelectedPathsModel selectedPathsModel,
                                                        EventBus eventBus,
                                                        DispatchServiceManager dsm,
                                                        ProjectId projectId,
                                                        DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dsm);
+        super(selectionModel, projectId, displayNameRenderer, dsm, selectedPathsModel);
         this.dsm = dsm;
         html = new HTML();
     }

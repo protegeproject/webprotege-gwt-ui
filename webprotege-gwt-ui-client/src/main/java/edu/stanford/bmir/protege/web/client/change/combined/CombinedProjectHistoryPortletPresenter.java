@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.filter.*;
@@ -50,8 +51,9 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
                                                   ProjectId projectId,
                                                   Messages messages,
                                                   DisplayNameRenderer displayNameRenderer,
-                                                  DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                                  DispatchServiceManager dispatch,
+                                                  SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.filterView = filterView;
@@ -103,7 +105,6 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         permissionChecker.hasPermission(VIEW_CHANGES,
                 canViewChanges -> {
                     if (canViewChanges) {
-                        ProjectId projectId = getProjectId();
                         presenter.setRevertChangesVisible(true);
                         presenter.displayChangesForProject();
                         setForbiddenVisible(false);
