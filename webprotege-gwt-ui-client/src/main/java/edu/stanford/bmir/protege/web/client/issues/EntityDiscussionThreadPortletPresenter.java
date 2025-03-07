@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
@@ -58,6 +59,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     @Inject
     public EntityDiscussionThreadPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                                  @Nonnull SelectedPathsModel selectedPathsModel,
                                                   @Nonnull FilterView filterView,
                                                   @Nonnull Messages messages,
                                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
@@ -65,7 +67,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull DiscussionThreadListPresenter presenter,
                                                   DisplayNameRenderer displayNameRenderer,
                                                   DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.filterView = filterView;
         this.messages = messages;
         this.displayResolvedThreadsFilter = new FilterId(messages.discussionThread_DisplayResolvedThreads());

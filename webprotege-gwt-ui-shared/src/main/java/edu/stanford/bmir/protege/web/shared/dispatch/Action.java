@@ -76,7 +76,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- *     The basic interface for actions that are sent to the dispatch service
+ * The basic interface for actions that are sent to the dispatch service
  * </p>
  */
 @JsonSubTypes(value = {
@@ -226,6 +226,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
+        @Type(value = GetHierarchyDescriptorAction.class),
+        @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class),
+        @Type(value = SaveEntityChildReorderingAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
@@ -241,7 +245,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SaveEntityCustomScaleAction.class),
         @Type(value = UpdateLogicalDefinitionAction.class),
         @Type(value = GetEntityLogicalDefinitionAction.class),
-        @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = CreateNewProjectFromProjectBackupAction.class),
         @Type(value = MoveEntitiesToParentIcdAction.class),
         @Type(value = MoveHierarchyNodeIcdAction.class),

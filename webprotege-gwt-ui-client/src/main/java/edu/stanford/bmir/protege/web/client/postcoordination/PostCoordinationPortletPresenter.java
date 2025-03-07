@@ -8,8 +8,8 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -34,7 +34,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private final DispatchServiceManager dispatch;
 
-    private final LoggedInUserManager loggedInUserManager;
     private final MessageBox messageBox;
 
     private Map<String, ScaleValueCardPresenter> scaleValueCardPresenters = new LinkedHashMap<>();
@@ -63,14 +62,13 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                             @Nonnull DispatchServiceManager dispatch,
                                             @Nonnull PostCoordinationPortletView view,
                                             @Nonnull MessageBox messageBox,
-                                            @Nonnull LoggedInUserManager loggedInUserManager,
                                             ModalManager modalManager,
-                                            ScaleValueSelectionViewPresenter scaleSelectionPresenter) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+                                            ScaleValueSelectionViewPresenter scaleSelectionPresenter,
+                                            SelectedPathsModel selectedPathsModel) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
-        this.loggedInUserManager = loggedInUserManager;
         this.modalManager = modalManager;
         this.scaleSelectionPresenter = scaleSelectionPresenter;
         this.view.setProjectId(projectId);
@@ -156,7 +154,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                 .map(scalePresenter -> {
                     List<String> scaleValueIris = scalePresenter.getValues().getValueIris()
                             .stream()
-                            .map(scaleValueIriAndName -> scaleValueIriAndName.getScaleValueIri()) // Directly map
+                            .map(ScaleValueIriAndName::getScaleValueIri)
                             .collect(Collectors.toList());
 
                     return PostCoordinationCustomScales.create(scaleValueIris, scalePresenter.getValues().getAxisIri());

@@ -108,6 +108,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                                HttpResponse.BodyHandlers.ofString());
 
             var userId = executionContext.getUserId();
+            logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
             if(httpResponse.statusCode() == 400) {
                 logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 if(action instanceof BatchAction) {
