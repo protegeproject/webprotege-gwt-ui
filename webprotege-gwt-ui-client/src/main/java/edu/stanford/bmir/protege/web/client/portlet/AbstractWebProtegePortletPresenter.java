@@ -258,7 +258,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
             displayContextBuilder.setViewProperties(map);
         });
         portletUi.ifPresent(ui -> displayContextBuilder.setViewId(ViewId.create(ui.getNodeProperty("portlet", ""))));
-        portletUi.flatMap(PortletUi::getViewNodeId).ifPresent(viewNodeId -> displayContextBuilder.setViewNodeId(viewNodeId));
+        portletUi.flatMap(PortletUi::getViewNodeId).ifPresent(displayContextBuilder::setViewNodeId);
         displayContextBuilder.setProjectId(getProjectId());
         displayContextBuilder.setSelectedPaths(selectedPathsModel.getSelectedPaths());
 

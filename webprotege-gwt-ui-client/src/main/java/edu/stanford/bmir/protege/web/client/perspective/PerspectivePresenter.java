@@ -209,7 +209,7 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
                 savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
             });
             perspective.setNodePropertiesChangedHandler(node -> savePerspectiveLayout(perspectiveId, perspective.getRootNode()));
-            perspective.setParentDisplayContextBuilder(this);
+        perspective.setParentDisplayContextBuilder(this);
             perspectiveCache.put(perspectiveId, perspective);
             perspectiveView.setWidget(perspective);
             rootNode.ifPresent(node -> originalRootNodeMap.put(perspectiveId, node.duplicate()));

@@ -131,7 +131,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull DisplayNameRenderer displayNameRenderer,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory,
-                                          @Nonnull DispatchServiceManager dispatch, 
+                                          @Nonnull DispatchServiceManager dispatch,
+                                          @Nonnull LoggedInUserManager loggedInUserManager,
                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                           @Nonnull SelectedPathsModel selectedPathsModel) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
@@ -164,9 +165,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
+        this.permissionChecker = checkNotNull(permissionChecker);
         this.dispatch = dispatch;
         this.selectedPathsModel = selectedPathsModel;
-        this.permissionChecker = checkNotNull(permissionChecker);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
         this.updater = updaterFactory.create(treeWidget, hierarchyModel);
     }
