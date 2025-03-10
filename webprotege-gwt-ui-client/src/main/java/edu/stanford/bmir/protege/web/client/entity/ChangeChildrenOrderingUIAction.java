@@ -74,13 +74,15 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
             modalPresenter.setEscapeButton(DialogButton.CANCEL);
             modalPresenter.setPrimaryButton(DialogButton.UPDATE);
             modalPresenter.setButtonHandler(DialogButton.UPDATE, closer -> {
-                dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren()),
+                dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren(), view
+                                .getCommitMessage()),
                         saveResult -> {
                             handleAfterSave.accept(null);
                             closer.closeModal();
                         });
             });
             modalManager.showModal(modalPresenter);
+            view.setEntityName(entityData.getBrowserText());
             view.setChildren(result.getChildren().getPageElements().stream().map(GraphNode::getUserObject).collect(Collectors.toList()));
         });
 

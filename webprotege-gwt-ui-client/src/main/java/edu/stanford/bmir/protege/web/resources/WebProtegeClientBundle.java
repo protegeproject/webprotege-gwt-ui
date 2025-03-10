@@ -134,6 +134,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIcon();
 
+    @Source("draggable.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource draggableIcon();
+
     @Source("eye-down.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIconDown();
@@ -646,6 +650,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-draggable-list")
         String draggableList();
+
+        @ClassName("wp-title")
+        String title();
     }
 
     interface ToolbarCss extends CssResource {
