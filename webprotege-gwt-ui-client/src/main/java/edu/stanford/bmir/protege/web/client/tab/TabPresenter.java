@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.tab;
 
 
 import com.google.gwt.event.dom.client.ClickHandler;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -67,6 +68,25 @@ public class TabPresenter<K> {
     }
 
     /**
+     * Sets the color of the tab.
+     *
+     * @param color The color to set for the tab.
+     *
+     */
+    public void setColor(Color color) {
+        view.setColor(color);
+    }
+
+    /**
+     * Sets the background color for the view.
+     *
+     * @param backgroundColor The color to set as the background color.
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        view.setBackgroundColor(backgroundColor);
+    }
+
+    /**
      * Sets the selected state of the tab.  If the selected state is set to true then
      * the {@link TabContentContainer} that is associated with this tab will have its visibility
      * set to true.  If the selected stat is set to false then the {@link TabContentContainer} that
@@ -106,5 +126,9 @@ public class TabPresenter<K> {
     @Nonnull
     public TabView getView() {
         return view;
+    }
+
+    public void setDirty(boolean dirty) {
+        view.setDirty(dirty);
     }
 }

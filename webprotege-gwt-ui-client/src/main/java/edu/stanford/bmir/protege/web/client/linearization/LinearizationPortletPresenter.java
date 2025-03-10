@@ -34,15 +34,15 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
 
-    private Map<String, String> entityParentsMap = new HashMap<>();
+    private final Map<String, String> entityParentsMap = new HashMap<>();
 
-    private DispatchServiceManager dispatch;
+    private final DispatchServiceManager dispatch;
     private final EventBus eventBus;
 
     private final LoggedInUserManager loggedInUserManager;
 
 
-    private MessageBox messageBox;
+    private final MessageBox messageBox;
 
     @Inject
     public LinearizationPortletPresenter(@Nonnull SelectionModel selectionModel,

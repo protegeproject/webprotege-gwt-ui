@@ -43,6 +43,8 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter impl
         vizPresenter.setEntityDisplay(this);
         vizPresenter.start(portletUi);
         vizPresenter.setHasBusy(portletUi);
+        getSelectedEntity().ifPresent(vizPresenter::displayEntity);
+        vizPresenter.reload();
     }
 
     @Override

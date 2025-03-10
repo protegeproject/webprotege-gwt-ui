@@ -40,8 +40,8 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
         super(title);
         this.dispatch = dispatch;
         this.progressDisplay = progressDisplay;
-        this.applicationEnvironmentManager = applicationEnvironmentManager;
         this.form = new UploadFileDialogForm(showOverrideCheckbox);
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
 
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> handleButtonPress(resultHandler, closer));
         form.getFileUpload().getElement().setId(UuidV4.uuidv4());
