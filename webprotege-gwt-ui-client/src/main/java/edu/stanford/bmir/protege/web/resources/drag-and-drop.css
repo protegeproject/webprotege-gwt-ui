@@ -17,13 +17,23 @@
 }
 .wp-draggable-list li {
     margin: 0 3px 3px 3px;
-    padding: 0.4em;
-    padding-left: 1.5em;
-    font-size: 1.4em;
-    height: 18px;
-     position: relative !important;
-     touch-action: none;
+    padding-left: 0.5em;
+    height: 22px;
+    position: relative !important;
+    touch-action: none;
+    background: white;
+    line-height: 16px;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--separator--color);
+    display: flex;
+    align-items: center;
 }
 .wp-draggable-list li div {
     position: absolute; margin-left: -1.3em;
+}
+
+
+.wp-title {
+    margin-left: 5px;
+    margin-bottom: 18px;
 }
