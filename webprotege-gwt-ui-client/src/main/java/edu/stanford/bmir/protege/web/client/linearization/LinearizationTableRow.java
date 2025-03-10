@@ -35,7 +35,7 @@ public class LinearizationTableRow {
 
 
     private String parentIri;
-    LinearizationPortletViewImpl.TableRefresh tableRefresh;
+    TableRefresh tableRefresh;
 
     ListBox linearizationParentSelector;
     Label linearizationParentLabel;
@@ -52,7 +52,7 @@ public class LinearizationTableRow {
                                  LinearizationSpecification linearizationSpecification,
                                  Map<String, String> baseEntityParentsMap,
                                  LinearizationCommentsModal commentsModal,
-                                 LinearizationPortletViewImpl.TableRefresh tableRefresh) {
+                                 TableRefresh tableRefresh) {
         try {
             this.baseEntityParentsMap = baseEntityParentsMap;
             this.tableRefresh = tableRefresh;
@@ -99,7 +99,7 @@ public class LinearizationTableRow {
             this.parentIri = this.linearizationSpecification.getLinearizationParent() != null ? this.linearizationSpecification.getLinearizationParent() : "";
             this.baseEntityParentsMap.forEach(
                     (iri, parentsText) -> {
-                        String browserText = parentsText != null && !parentsText.equals("") ? parentsText : iri;
+                        String browserText = parentsText != null && !parentsText.isEmpty() ? parentsText : iri;
 
                         this.linearizationParentSelector.addItem(browserText, iri);
                     }
@@ -124,11 +124,11 @@ public class LinearizationTableRow {
 
     private void setLinearizationParentLabel() {
         String selectedItemText = "Select a parent";
-        if (linearizationParentSelector.getSelectedValue().equals("") && baseEntityParentsMap.size() == 1) {
+        if (linearizationParentSelector.getSelectedValue().isEmpty() && baseEntityParentsMap.size() == 1) {
             Optional<String> keysOptional = baseEntityParentsMap.keySet().stream().findFirst();
             selectedItemText = "[" + baseEntityParentsMap.get(keysOptional.get()) + "]";
             this.linearizationParentLabel.addStyleName(linearizationCss.italic());
-        } else if (!linearizationParentSelector.getSelectedValue().equals("")) {
+        } else if (!linearizationParentSelector.getSelectedValue().isEmpty()) {
             selectedItemText = linearizationParentSelector.getSelectedItemText();
             this.linearizationParentLabel.removeStyleName(linearizationCss.italic());
         }
@@ -192,7 +192,7 @@ public class LinearizationTableRow {
 
 
     public LinearizationSpecification asLinearizationSpecification() {
-        LinearizationSpecification response = new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
+        return new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
                 this.isGroupingCheckbox.getValue().getValue(),
                 this.isPartOfCheckbox.getValue().getValue(),
                 this.parentIri,
@@ -200,7 +200,6 @@ public class LinearizationTableRow {
                 this.linearizationDefinition.getLinearizationUri(),
                 this.commentsWidget.getText()
         );
-        return response;
     }
 
 

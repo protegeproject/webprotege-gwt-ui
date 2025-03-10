@@ -1,27 +1,35 @@
-package edu.stanford.bmir.protege.web.client.linearization;
+package edu.stanford.bmir.protege.web.client.card.linearization;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.*;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.*;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
-import edu.stanford.bmir.protege.web.client.progress.*;
+import edu.stanford.bmir.protege.web.client.linearization.*;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class LinearizationPortletViewImpl extends Composite implements LinearizationPortletView, HasBusy {
+public class LinearizationCardViewImpl extends Composite implements LinearizationCardView, HasBusy {
 
 
-    Logger logger = java.util.logging.Logger.getLogger("LinearizationPortletViewImpl");
+    Logger logger = Logger.getLogger("LinearizationCardViewImpl");
 
     private WhoficEntityLinearizationSpecification specification;
+    private WhoficEntityLinearizationSpecification dirtySpecification;
     @UiField
     BusyView busyView;
 
@@ -30,14 +38,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     @UiField
     protected FlexTable flexTable;
-
-    @UiField
-    Button editValuesButton;
-    @UiField
-    Button cancelButton;
-
-    @UiField
-    Button saveValuesButton;
 
     @UiField(provided = true)
     ConfigurableCheckbox suppressOthersSpecifiedResidual;
@@ -68,17 +68,15 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     private Map<String, LinearizationDefinition> linearizationDefinitonMap = new HashMap<>();
     private Map<String, String> entityParentsMap = new HashMap<>();
-    private static LinearizationPortletViewImplUiBinder ourUiBinder = GWT.create(LinearizationPortletViewImplUiBinder.class);
+    private static LinearizationCardViewImplUiBinder ourUiBinder = GWT.create(LinearizationCardViewImplUiBinder.class);
 
     LinearizationTableResourceBundle.LinearizationCss style;
 
-    private DispatchServiceManager dispatch;
+    private final DispatchServiceManager dispatch;
 
-    private LinearizationCommentsModal commentsModal;
+    private final LinearizationCommentsModal commentsModal;
 
     private ProjectId projectId;
-
-    private IRI entityIri;
 
     boolean isReadOnly = true;
 
@@ -101,21 +99,14 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
 
     @Inject
-    public LinearizationPortletViewImpl(DispatchServiceManager dispatch,
-                                        LinearizationCommentsModal commentsModal) {
+    public LinearizationCardViewImpl(DispatchServiceManager dispatch,
+                                     LinearizationCommentsModal commentsModal) {
         this.suppressOthersSpecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
         this.suppressUnspecifiedResidual = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), "");
         LinearizationTableResourceBundle.INSTANCE.style().ensureInjected();
         style = LinearizationTableResourceBundle.INSTANCE.style();
         initWidget(ourUiBinder.createAndBindUi(this));
-        editValuesButton.addClickHandler(event -> setEditable());
-        cancelButton.addClickHandler(event -> setReadOnly());
         this.commentsModal = commentsModal;
-
-        saveValuesButton.addClickHandler(event -> saveValues());
-        saveValuesButton.setVisible(false);
-        cancelButton.setVisible(false);
-        editValuesButton.setVisible(true);
 
         disableResiduals();
         this.dispatch = dispatch;
@@ -144,9 +135,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         backupRows = new ArrayList<>();
         isReadOnly = true;
         entityParentsMap = new HashMap<>();
-        saveValuesButton.setVisible(false);
-        cancelButton.setVisible(false);
-        editValuesButton.setVisible(true);
     }
 
     @Override
@@ -157,7 +145,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             initializeTableHeader();
 
             if (specification != null) {
-                this.entityIri = specification.getEntityIRI();
 
                 initializeTableRows();
                 if (specification.getLinearizationResiduals() != null) {
@@ -196,7 +183,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         return isReadOnly;
     }
 
-    private void setEditable() {
+    public void setEditable() {
         if (isReadOnly) {
             this.backupRows.clear();
             tableRowList.forEach(tableRow -> {
@@ -219,12 +206,11 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
             this.suppressUnspecifiedResidual.setReadOnly(false);
             this.suppressUnspecifiedResidual.setEnabled(true);
-            toggleSaveButtons();
         }
 
     }
 
-    private void setReadOnly() {
+    public void setReadOnly() {
         if (!isReadOnly) {
             this.tableRowList.clear();
             flexTable.removeAllRows();
@@ -242,15 +228,8 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             disableResiduals();
             isReadOnly = true;
             this.backupRows.clear();
-            toggleSaveButtons();
         }
 
-    }
-
-    private void toggleSaveButtons() {
-        editValuesButton.setVisible(isReadOnly);
-        cancelButton.setVisible(!isReadOnly);
-        saveValuesButton.setVisible(!isReadOnly);
     }
 
     @Override
@@ -258,7 +237,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         this.busyView.setVisible(busy);
     }
 
-    interface LinearizationPortletViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationPortletViewImpl> {
+    interface LinearizationCardViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationCardViewImpl> {
 
     }
 
@@ -297,21 +276,9 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     public void saveValues() {
         if (!isReadOnly) {
             setBusy(true);
-            List<LinearizationSpecification> specifications = this.tableRowList.stream()
-                    .map(LinearizationTableRow::asLinearizationSpecification)
-                    .collect(Collectors.toList());
-
-            LinearizationResiduals residuals = new LinearizationResiduals(this.suppressOthersSpecifiedResidual.getValue().getValue(),
-                    this.suppressUnspecifiedResidual.getValue().getValue(),
-                    this.otherSpecifiedResidualTitle.getValue(),
-                    this.unspecifiedResidualTitle.getValue());
-
-            WhoficEntityLinearizationSpecification linearizationSpecification = new WhoficEntityLinearizationSpecification(specification.getEntityIRI(),
-                    residuals,
-                    specifications);
+            WhoficEntityLinearizationSpecification linearizationSpecification = getLinSpec();
 
             this.isReadOnly = true;
-            toggleSaveButtons();
             for (LinearizationTableRow row : this.tableRowList) {
                 row.setReadOnly();
             }
@@ -365,6 +332,23 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
     @Override
     public void setLinearizationChangeEventHandler(LinearizationChangeEventHandler eventHandler) {
         this.linearizationChangeEventHandler = eventHandler;
+    }
+
+
+    @Override
+    public WhoficEntityLinearizationSpecification getLinSpec() {
+        List<LinearizationSpecification> specifications = this.tableRowList.stream()
+                .map(LinearizationTableRow::asLinearizationSpecification)
+                .collect(Collectors.toList());
+
+        LinearizationResiduals residuals = new LinearizationResiduals(this.suppressOthersSpecifiedResidual.getValue().getValue(),
+                this.suppressUnspecifiedResidual.getValue().getValue(),
+                this.otherSpecifiedResidualTitle.getValue(),
+                this.unspecifiedResidualTitle.getValue());
+
+        return new WhoficEntityLinearizationSpecification(specification.getEntityIRI(),
+                residuals,
+                specifications);
     }
 
 
