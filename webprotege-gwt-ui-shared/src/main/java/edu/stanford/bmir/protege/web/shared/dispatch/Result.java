@@ -45,7 +45,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsRes
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
@@ -77,7 +76,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(CreateEntityDiscussionThreadResult.class),
         @JsonSubTypes.Type(CreateEntityFromFormDataResult.class),
         @JsonSubTypes.Type(CreateNewProjectResult.class),
-        @JsonSubTypes.Type(CreateUserAccountResult.class),
         @JsonSubTypes.Type(LoadProjectResult.class),
         @JsonSubTypes.Type(LogOutUserResult.class),
         @JsonSubTypes.Type(RebuildPermissionsResult.class),

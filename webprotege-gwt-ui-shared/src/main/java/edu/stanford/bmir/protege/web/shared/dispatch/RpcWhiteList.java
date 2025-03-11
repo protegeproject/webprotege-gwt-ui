@@ -70,8 +70,6 @@ import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.viz.*;
@@ -189,10 +187,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     CreateObjectPropertiesAction _CreateObjectPropertiesAction;
 
     CreateObjectPropertiesResult _CreateObjectPropertiesResult;
-
-    CreateUserAccountAction _CreateUserAccountAction;
-
-    CreateUserAccountResult _CreateUserAccountResult;
 
     Criteria _Criteria;
 

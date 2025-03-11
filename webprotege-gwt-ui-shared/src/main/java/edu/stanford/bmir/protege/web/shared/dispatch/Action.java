@@ -58,7 +58,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAct
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetUserProjectEntityGraphCriteriaAction;
@@ -97,7 +96,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
         @Type(value = RebuildPermissionsAction.class),
-        @Type(value = CreateUserAccountAction.class),
         @Type(value = DeleteEntitiesAction.class),
         @Type(value = DeleteEntityCommentAction.class),
         @Type(value = DeleteFormAction.class),

@@ -20,10 +20,8 @@ import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresent
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
@@ -53,8 +51,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ProjectManagerPresenter projectManagerPresenter;
 
-    private final SignUpPresenter signUpPresenter;
-
     private final ApplicationSettingsPresenter applicationSettingsPresenter;
 
     private final LoggedInUserProvider loggedInUserProvider;
@@ -69,14 +65,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
                                     ProjectManagerPresenter projectListPresenter,
-                                    SignUpPresenter signUpPresenter,
                                     ApplicationSettingsPresenter applicationSettingsPresenter,
                                     PlaceController placeController,
                                     EventBus eventBus) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectManagerPresenter = projectListPresenter;
-        this.signUpPresenter = signUpPresenter;
         this.applicationSettingsPresenter = applicationSettingsPresenter;
         this.placeController = placeController;
         this.eventBus = eventBus;
@@ -172,13 +166,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             else {
                 logger.log(Level.SEVERE, "No code for handling login place");
             }
-        }
-
-        if (place instanceof SignUpPlace) {
-            SignUpPlace signUpPlace = (SignUpPlace) place;
-            Optional<Place> continueTo = signUpPlace.getContinueTo();
-            continueTo.ifPresent(signUpPresenter::setContinueTo);
-            return new SignUpActivity(signUpPresenter);
         }
 
         if (place instanceof ProjectListPlace) {

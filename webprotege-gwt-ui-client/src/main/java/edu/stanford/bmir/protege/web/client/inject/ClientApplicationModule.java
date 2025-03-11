@@ -68,8 +68,6 @@ import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContaine
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.signup.SignUpView;
-import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
@@ -171,11 +169,6 @@ public class ClientApplicationModule {
     @ApplicationSingleton
     SignOutRequestHandler provideSignOutRequestHandler(SignOutRequestHandlerImpl impl) {
         return impl;
-    }
-
-    @Provides
-    SignUpView provideSignUpView(SignUpViewImpl signUpView) {
-        return signUpView;
     }
 
     @Provides

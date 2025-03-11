@@ -58,7 +58,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsRes
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import edu.stanford.bmir.protege.web.shared.viz.GetUserProjectEntityGraphCriteriaResult;
