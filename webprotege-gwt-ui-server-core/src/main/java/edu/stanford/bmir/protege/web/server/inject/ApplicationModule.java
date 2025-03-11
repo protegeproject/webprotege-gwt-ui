@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.*;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
@@ -53,11 +52,6 @@ public class ApplicationModule {
 
     @Provides
     ApplicationSettingsChecker provideApplicationSettingsChecker(ApplicationSettingsCheckerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AccessManager provideAccessManager(AccessManagerImpl impl) {
         return impl;
     }
 
