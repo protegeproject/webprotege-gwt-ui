@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -88,7 +88,7 @@ public class EditorPresenter implements HasDispose {
         container.setWidget(editorHolder);
         editorHolder.getElement().getStyle().setOverflowY(Style.Overflow.AUTO);
         eventBus.addProjectEventHandler(projectId,
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
                                             event -> updatePermissionBasedItems());

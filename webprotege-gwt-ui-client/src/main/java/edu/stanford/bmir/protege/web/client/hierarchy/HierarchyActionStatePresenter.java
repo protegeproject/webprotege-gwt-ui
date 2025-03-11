@@ -15,7 +15,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 6 Dec 2017
@@ -28,7 +28,7 @@ public class HierarchyActionStatePresenter {
     @Nonnull
     private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
-    private final Map<BasicCapability, UIAction> actionMap = new HashMap<>();
+    private final Map<BasicCapability, UIAction> capabilityUiActionMap = new HashMap<>();
 
     private boolean selectionPresent = false;
 
@@ -39,20 +39,20 @@ public class HierarchyActionStatePresenter {
         this.capabilityChecker = capabilityChecker;
     }
 
-    public void registerAction(@Nonnull BuiltInCapability actionId,
+    public void registerAction(@Nonnull BuiltInCapability capability,
                                @Nonnull UIAction uiAction) {
-        registerAction(actionId.getCapability(), uiAction);
+        registerAction(capability.getCapability(), uiAction);
     }
 
     public void registerAction(@Nonnull BasicCapability basicCapability,
                                @Nonnull UIAction action) {
-        actionMap.put(checkNotNull(basicCapability),
+        capabilityUiActionMap.put(checkNotNull(basicCapability),
                       checkNotNull(action));
     }
 
     public void start(@Nonnull WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(projectId,
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> updateActionStates());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> updateActionStates());
@@ -70,7 +70,7 @@ public class HierarchyActionStatePresenter {
     }
 
     private void updateActionStates() {
-        actionMap.forEach(this::updateState);
+        capabilityUiActionMap.forEach(this::updateState);
     }
 
     private void updateState(@Nonnull BasicCapability basicCapability,

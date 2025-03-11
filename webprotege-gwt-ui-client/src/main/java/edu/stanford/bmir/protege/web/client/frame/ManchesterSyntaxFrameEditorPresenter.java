@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
@@ -120,7 +120,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         editor.setApplyChangesHandler(applyChangesActionHandler);
         eventBus.addProjectEventHandler(projectId, ON_USER_LOGGED_IN, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ON_USER_LOGGED_OUT, event -> updateState());
-        eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, ON_CAPABILITIES_CHANGED, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> refreshIfPristine());
         updateState();
     }

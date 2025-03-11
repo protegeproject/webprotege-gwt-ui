@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_SHARING_SETTINGS;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -58,7 +58,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
      */
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
-        eventBus.addHandlerToSource(ON_PERMISSIONS_CHANGED,
+        eventBus.addHandlerToSource(ON_CAPABILITIES_CHANGED,
                                     projectId,
                                     event -> updateButtonState(container));
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,

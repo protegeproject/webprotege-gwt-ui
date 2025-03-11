@@ -25,7 +25,7 @@ import java.util.Optional;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.OFF;
 import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -83,7 +83,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         this::handlePemissionsChange);
         this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView());

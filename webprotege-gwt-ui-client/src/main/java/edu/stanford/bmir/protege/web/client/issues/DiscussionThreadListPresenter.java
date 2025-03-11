@@ -22,7 +22,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREA
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.create;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -91,7 +91,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     }
 
     public void start(WebProtegeEventBus eventBus) {
-        eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
+        eventBus.addProjectEventHandler(projectId, ON_CAPABILITIES_CHANGED, event -> updateEnabled());
         eventBus.addProjectEventHandler(projectId, ON_DISCUSSION_THREAD_CREATED, this::handleDiscussionThreadCreated);
         eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
         updateEnabled();

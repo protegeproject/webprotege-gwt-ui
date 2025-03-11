@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_OBJECT_COMMENT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -69,7 +69,7 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
                                             }
                                         });
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT,
                                                                                  canView -> portletUi.setForbiddenVisible(!canView)));
         presenter.setHasBusy(portletUi);

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 @Portlet(id = "portlets.ProjectHistory",
          title = "Project History",
@@ -81,7 +81,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setFilterView(filterView);
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
-        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
+        eventBus.addApplicationEventHandler(ON_CAPABILITIES_CHANGED, event -> reload());
         reload();
     }
 

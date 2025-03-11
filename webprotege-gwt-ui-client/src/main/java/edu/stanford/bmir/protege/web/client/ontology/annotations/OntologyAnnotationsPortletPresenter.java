@@ -65,7 +65,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         eventBus.addProjectEventHandler(getProjectId(),
                 OntologyFrameChangedEvent.TYPE, event -> updateView());
         eventBus.addProjectEventHandler(getProjectId(),
-                PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                PermissionsChangedEvent.ON_CAPABILITIES_CHANGED,
                 event -> updateState());
         capabilityChecker.hasCapability(BuiltInCapability.VIEW_PROJECT, permission -> {
             portletUi.setForbiddenVisible(!permission);

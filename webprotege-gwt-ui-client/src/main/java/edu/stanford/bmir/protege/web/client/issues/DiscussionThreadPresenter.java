@@ -25,7 +25,7 @@ import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON
 import static edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction.deleteComment;
 import static edu.stanford.bmir.protege.web.shared.issues.EditCommentAction.editComment;
 import static edu.stanford.bmir.protege.web.shared.issues.SetDiscussionThreadStatusAction.setDiscussionThreadStatus;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -100,7 +100,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     public void start() {
         eventBus.registerHandlerToProject(projectId,
-                                          ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                           event -> updateDisplayedViews());
         eventBus.registerHandlerToProject(projectId,
                                           ON_COMMENT_UPDATED,

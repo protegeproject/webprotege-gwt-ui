@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 @Portlet(id = "portlets.ChangesByEntity",
         title = "Entity Changes",
@@ -52,7 +52,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
                                         ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
-        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
+        eventBus.addApplicationEventHandler(ON_CAPABILITIES_CHANGED, event -> updateDisplayForSelectedEntity());
         portletUi.setWidget(presenter.getView().asWidget());
         portletUi.setForbiddenMessage(FORBIDDEN_MESSAGE);
         setDisplaySelectedEntityNameAsSubtitle(true);

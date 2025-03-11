@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.WATCH_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
 
@@ -75,7 +75,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
                                         ON_WATCH_REMOVED,
                                         event -> refreshDelayed());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> onRefresh());
         portletUi.setForbiddenMessage("You do not have permission to watch changes in this project");
 
