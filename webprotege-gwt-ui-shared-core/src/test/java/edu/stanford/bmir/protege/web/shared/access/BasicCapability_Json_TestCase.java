@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class BasicCapability_Json_TestCase {
 
-    private static final String ID = "TheActionId";
+    private static final String ID = "TheCapability";
 
     private BasicCapability basicCapability;
 
@@ -26,14 +26,15 @@ public class BasicCapability_Json_TestCase {
     @Test
     public void shouldSerializeJson() throws Exception {
         String result = new ObjectMapper().writeValueAsString(basicCapability);
-        assertThat(result, is("\"" + ID + "\""));
+        result = result.replaceAll("\\s", "");
+        assertThat(result, is("{\"@type\":\"BasicCapability\",\"id\":\"TheCapability\"}"));
     }
 
     @Test
     public void shouldDeserializeJson() throws Exception {
         BasicCapability readBasicCapability = new ObjectMapper()
                 .readerFor(BasicCapability.class)
-                .readValue("\"" + ID + "\"");
+                .readValue("{\"@type\":\"BasicCapability\",\"id\":\"TheCapability\"}");
         assertThat(readBasicCapability, is(basicCapability));
     }
 }

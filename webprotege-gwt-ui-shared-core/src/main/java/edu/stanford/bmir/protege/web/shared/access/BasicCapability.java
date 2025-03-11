@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.access;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -16,7 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Jan 2017
  */
-public class BasicCapability implements IsSerializable, Comparator<BasicCapability> {
+@JsonRootName("BasicCapability")
+public class BasicCapability implements IsSerializable, Comparator<BasicCapability>, Capability {
 
     private String id;
 
@@ -29,8 +32,9 @@ public class BasicCapability implements IsSerializable, Comparator<BasicCapabili
         this.id = checkNotNull(id);
     }
 
+    @Override
     @Nonnull
-    @JsonValue
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
