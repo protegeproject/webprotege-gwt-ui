@@ -42,10 +42,6 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.login.LoginView;
-import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
@@ -173,12 +169,6 @@ public class ClientApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    SignInRequestHandler provideSignInRequestHandler(SignInRequestHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
     SignOutRequestHandler provideSignOutRequestHandler(SignOutRequestHandlerImpl impl) {
         return impl;
     }
@@ -251,11 +241,6 @@ public class ClientApplicationModule {
     @Provides
     TrashManagerRequestHandler provideTrashManagerRequestHandler(TrashManagerRequestHandlerImpl impl) {
         return impl;
-    }
-
-    @Provides
-    LoginView provideLoginView(LoginViewImpl loginView) {
-        return loginView;
     }
 
     @Provides

@@ -7,7 +7,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
@@ -181,7 +180,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = MoveProjectsToTrashAction.class),
         @Type(value = NewOntologyMergeAddAction.class),
         @Type(value = PerformEntitySearchAction.class),
-        @Type(value = PerformLoginAction.class),
         @Type(value = RebuildPermissionsAction.class),
         @Type(value = RemoveProjectFromTrashAction.class),
         @Type(value = ResetPasswordAction.class),

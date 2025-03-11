@@ -165,7 +165,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(MoveProjectsToTrashResult.class),
         @JsonSubTypes.Type(NewOntologyMergeAddResult.class),
         @JsonSubTypes.Type(PerformEntitySearchResult.class),
-        @JsonSubTypes.Type(PerformLoginResult.class),
         @JsonSubTypes.Type(RebuildPermissionsResult.class),
         @JsonSubTypes.Type(RemoveProjectFromTrashResult.class),
         @JsonSubTypes.Type(ResetPasswordResult.class),

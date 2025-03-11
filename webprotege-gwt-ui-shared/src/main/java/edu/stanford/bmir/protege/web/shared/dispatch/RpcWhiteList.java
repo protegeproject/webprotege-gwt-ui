@@ -477,8 +477,6 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     Path<EntityNode> _Path;
     PerformEntitySearchAction _PerformEntitySearchAction;
     PerformEntitySearchResult _PerformEntitySearchResult;
-    PerformLoginAction _PerformLoginAction;
-    PerformLoginResult _PerformLoginResult;
     PerspectiveDescriptor _PerspectiveDescriptor;
     PerspectiveLayout _PerspectiveLayout;
     PlainAnnotationPropertyFrame _PlainAnnotationPropertyFrame;

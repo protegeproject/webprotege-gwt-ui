@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -13,7 +12,6 @@ import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
-import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerActivity;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPlace;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
@@ -37,6 +35,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,8 +53,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ProjectManagerPresenter projectManagerPresenter;
 
-    private final LoginPresenter loginPresenter;
-
     private final SignUpPresenter signUpPresenter;
 
     private final ApplicationSettingsPresenter applicationSettingsPresenter;
@@ -72,7 +69,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
                                     ProjectManagerPresenter projectListPresenter,
-                                    LoginPresenter loginPresenter,
                                     SignUpPresenter signUpPresenter,
                                     ApplicationSettingsPresenter applicationSettingsPresenter,
                                     PlaceController placeController,
@@ -81,7 +77,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectManagerPresenter = projectListPresenter;
         this.signUpPresenter = signUpPresenter;
-        this.loginPresenter = loginPresenter;
         this.applicationSettingsPresenter = applicationSettingsPresenter;
         this.placeController = placeController;
         this.eventBus = eventBus;
@@ -138,10 +133,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         logger.info("Map place: " + place);
         if (shouldRedirectToLogin(place)) {
             logger.info("User is not logged in.  Redirecting to login.");
-            logger.info("User is not logged in.  Redirecting to login.");
-            loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
-            return new LoginActivity(loginPresenter);
+
         }
         if (place instanceof ApplicationSettingsPlace) {
             return new AdminActivity(applicationSettingsPresenter);
@@ -177,15 +170,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
             else {
-                LoginPlace loginPlace = (LoginPlace) place;
-                Optional<Place> continueTo = loginPlace.getContinueTo();
-                if (continueTo.isPresent()) {
-                    loginPresenter.setNextPlace(continueTo.get());
-                }
-                else {
-                    loginPresenter.setNextPlace(new ProjectListPlace());
-                }
-                return new LoginActivity(loginPresenter);
+                logger.log(Level.SEVERE, "No code for handling login place");
             }
         }
 
