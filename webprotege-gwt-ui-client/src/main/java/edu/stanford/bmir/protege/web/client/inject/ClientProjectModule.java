@@ -34,8 +34,8 @@ import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityCheckerImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
@@ -125,7 +125,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
+    LoggedInUserProjectCapabilityChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectCapabilityCheckerImpl checker) {
         return checker;
     }
 

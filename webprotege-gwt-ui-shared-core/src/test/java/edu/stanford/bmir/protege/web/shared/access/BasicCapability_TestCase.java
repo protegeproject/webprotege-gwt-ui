@@ -11,57 +11,57 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
-public class ActionId_TestCase {
+public class BasicCapability_TestCase {
 
-    private ActionId actionId;
+    private BasicCapability basicCapability;
 
     private String id = "The id";
 
     @Before
     public void setUp() {
-        actionId = new ActionId(id);
+        basicCapability = new BasicCapability(id);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_id_IsNull() {
-        new ActionId(null);
+        new BasicCapability(null);
     }
 
     @Test
     public void shouldReturnSupplied_id() {
-        assertThat(actionId.getId(), is(this.id));
+        assertThat(basicCapability.getId(), is(this.id));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(actionId, is(actionId));
+        assertThat(basicCapability, is(basicCapability));
     }
 
     @Test
     @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(actionId.equals(null), is(false));
+        assertThat(basicCapability.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(actionId, is(new ActionId(id)));
+        assertThat(basicCapability, is(new BasicCapability(id)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(actionId, is(not(new ActionId("String-49f80fc5-f0c4-4013-accc-4f37f60d5632"))));
+        assertThat(basicCapability, is(not(new BasicCapability("String-49f80fc5-f0c4-4013-accc-4f37f60d5632"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(actionId.hashCode(), is(new ActionId(id).hashCode()));
+        assertThat(basicCapability.hashCode(), is(new BasicCapability(id).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(actionId.toString(), Matchers.startsWith("ActionId"));
+        assertThat(basicCapability.toString(), Matchers.startsWith("BasicCapability"));
     }
 
 }

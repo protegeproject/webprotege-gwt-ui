@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -26,27 +26,27 @@ public class HierarchyActionStatePresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
-    private final Map<ActionId, UIAction> actionMap = new HashMap<>();
+    private final Map<BasicCapability, UIAction> actionMap = new HashMap<>();
 
     private boolean selectionPresent = false;
 
     @Inject
     public HierarchyActionStatePresenter(@Nonnull ProjectId projectId,
-                                         @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                         @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.projectId = projectId;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
     }
 
-    public void registerAction(@Nonnull BuiltInAction actionId,
+    public void registerAction(@Nonnull BuiltInCapability actionId,
                                @Nonnull UIAction uiAction) {
-        registerAction(actionId.getActionId(), uiAction);
+        registerAction(actionId.getCapability(), uiAction);
     }
 
-    public void registerAction(@Nonnull ActionId actionId,
+    public void registerAction(@Nonnull BasicCapability basicCapability,
                                @Nonnull UIAction action) {
-        actionMap.put(checkNotNull(actionId),
+        actionMap.put(checkNotNull(basicCapability),
                       checkNotNull(action));
     }
 
@@ -73,10 +73,10 @@ public class HierarchyActionStatePresenter {
         actionMap.forEach(this::updateState);
     }
 
-    private void updateState(@Nonnull ActionId actionId,
+    private void updateState(@Nonnull BasicCapability basicCapability,
                              @Nonnull UIAction action) {
         action.setEnabled(false);
-        permissionChecker.hasPermission(actionId,
+        capabilityChecker.hasCapability(basicCapability,
                                         perm -> {
                                             action.setEnabled(perm && (!action.requiresSelection() || selectionPresent));
                                         });

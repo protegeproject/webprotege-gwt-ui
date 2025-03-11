@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
@@ -44,7 +44,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     private final HandlerRegistrationManager eventBus;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final LoggedInUserProvider loggedInUserProvider;
@@ -76,7 +76,7 @@ public class DiscussionThreadPresenter implements HasDispose {
                                      @Nonnull ProjectId projectId,
                                      @Nonnull DispatchServiceManager dispatch,
                                      @Nonnull HandlerRegistrationManager eventBus,
-                                     @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                     @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
                                      @Nonnull CommentViewFactory commentViewFactory,
                                      @Nonnull MessageBox messageBox,
@@ -86,7 +86,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
         this.eventBus = eventBus;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.loggedInUserProvider = loggedInUserProvider;
         this.commentViewFactory = checkNotNull(commentViewFactory);
         this.commentEditorModal = commentEditorModal;
@@ -119,13 +119,13 @@ public class DiscussionThreadPresenter implements HasDispose {
                 .getCreatedBy()
                 .equals(Optional.of(loggedInUserProvider.getCurrentUserId()));
         if (userIsCommentCreator) {
-            permissionChecker.hasPermission(EDIT_OWN_OBJECT_COMMENT, commentView::setEditButtonVisible);
+            capabilityChecker.hasCapability(EDIT_OWN_OBJECT_COMMENT, commentView::setEditButtonVisible);
         }
         else {
-            permissionChecker.hasPermission(EDIT_ANY_OBJECT_COMMENT, commentView::setEditButtonVisible);
+            capabilityChecker.hasCapability(EDIT_ANY_OBJECT_COMMENT, commentView::setEditButtonVisible);
         }
         commentView.setReplyButtonVisible(false);
-        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT, commentView::setReplyButtonVisible);
+        capabilityChecker.hasCapability(CREATE_OBJECT_COMMENT, commentView::setReplyButtonVisible);
     }
 
 
@@ -144,7 +144,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         view.clear();
         commentViewMap.clear();
         view.setStatus(thread.getStatus());
-        permissionChecker.hasPermission(SET_OBJECT_COMMENT_STATUS, canSetStatus -> {
+        capabilityChecker.hasCapability(SET_OBJECT_COMMENT_STATUS, canSetStatus -> {
             view.setStatusVisible(canSetStatus);
             view.setStatusChangedHandler(() -> handleToggleStatus(thread.getId()));
         });

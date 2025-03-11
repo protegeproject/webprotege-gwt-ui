@@ -7,7 +7,7 @@ import com.google.common.base.CaseFormat;
  * Stanford Center for Biomedical Informatics Research
  * 5 Jan 2017
  */
-public enum BuiltInAction {
+public enum BuiltInCapability {
 
 
     CREATE_ACCOUNT,
@@ -124,13 +124,13 @@ public enum BuiltInAction {
 
 
 
-    private final ActionId actionId;
+    private final BasicCapability basicCapability;
 
-    BuiltInAction() {
-        this.actionId = new ActionId(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name()));
+    BuiltInCapability() {
+        this.basicCapability = new BasicCapability(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name()));
     }
 
-    public ActionId getActionId() {
-        return actionId;
+    public BasicCapability getCapability() {
+        return basicCapability;
     }
 }

@@ -5,8 +5,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 03/01/16
  */
-public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserProjectPermissionChecker {
+public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserProjectCapabilityChecker {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -34,7 +34,7 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     private final DispatchErrorMessageDisplay errorDisplay;
 
     @Inject
-    public LoggedInUserProjectPermissionCheckerImpl(@Nonnull LoggedInUserProvider loggedInUserProvider,
+    public LoggedInUserProjectCapabilityCheckerImpl(@Nonnull LoggedInUserProvider loggedInUserProvider,
                                                     @Nonnull ActiveProjectManager activeProjectManager,
                                                     @Nonnull PermissionManager permissionManager, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
@@ -44,7 +44,7 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasPermission(@Nonnull ActionId actionId,
+    public void hasCapability(@Nonnull BasicCapability basicCapability,
                               @Nonnull DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if (!projectId.isPresent()) {
@@ -52,14 +52,14 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
             return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        GWT.log("[LoggedInUserProjectPermissionCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
-        permissionManager.hasPermissionForProject(userId, actionId, projectId.get(), callback);
+        GWT.log("[LoggedInUserProjectCapabilityCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
+        permissionManager.hasPermissionForProject(userId, basicCapability, projectId.get(), callback);
     }
 
     @Override
-    public void hasPermission(@Nonnull ActionId action,
+    public void hasCapability(@Nonnull BasicCapability action,
                               @Nonnull Consumer<Boolean> callback) {
-        hasPermission(action, new DispatchServiceCallback<Boolean>(errorDisplay) {
+        hasCapability(action, new DispatchServiceCallback<Boolean>(errorDisplay) {
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);
@@ -68,9 +68,9 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasPermission(@Nonnull BuiltInAction action,
+    public void hasCapability(@Nonnull BuiltInCapability action,
                               @Nonnull Consumer<Boolean> callback) {
-        hasPermission(action.getActionId(), new DispatchServiceCallback<Boolean>(errorDisplay) {
+        hasCapability(action.getCapability(), new DispatchServiceCallback<Boolean>(errorDisplay) {
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListPresenter;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.WATCH_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
@@ -32,7 +32,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
 
     private final ChangeListPresenter presenter;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final Timer refreshTimer = new Timer() {
         @Override
@@ -47,7 +47,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
 
     @Inject
     public WatchedEntitiesPortletPresenter(ChangeListPresenter presenter,
-                                           LoggedInUserProjectPermissionChecker permissionChecker,
+                                           LoggedInUserProjectCapabilityChecker capabilityChecker,
                                            SelectionModel selectionModel,
                                            @Nonnull SelectedPathsModel selectedPathsModel,
                                            ProjectId projectId,
@@ -57,7 +57,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         changeListView = presenter.getView();
 
     }
@@ -97,7 +97,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
     private void onRefresh() {
 
         ui.ifPresent(portletUi -> {
-            permissionChecker.hasPermission(WATCH_CHANGES,
+            capabilityChecker.hasCapability(WATCH_CHANGES,
                                             canWatch -> {
                                                 if (canWatch) {
                                                     presenter.displayChangesForWatches(loggedInUserProvider.getCurrentUserId());

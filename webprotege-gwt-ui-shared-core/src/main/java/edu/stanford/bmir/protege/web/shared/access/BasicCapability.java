@@ -16,16 +16,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Jan 2017
  */
-public class ActionId implements IsSerializable, Comparator<ActionId> {
+public class BasicCapability implements IsSerializable, Comparator<BasicCapability> {
 
     private String id;
 
     @GwtSerializationConstructor
-    private ActionId() {
+    private BasicCapability() {
     }
 
     @JsonCreator
-    public ActionId(@Nonnull String id) {
+    public BasicCapability(@Nonnull String id) {
         this.id = checkNotNull(id);
     }
 
@@ -36,7 +36,7 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
     }
 
     @Override
-    public int compare(ActionId o1, ActionId o2) {
+    public int compare(BasicCapability o1, BasicCapability o2) {
         return o1.id.compareTo(o2.id);
     }
 
@@ -45,10 +45,10 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ActionId)) {
+        if (!(obj instanceof BasicCapability)) {
             return false;
         }
-        ActionId other = (ActionId) obj;
+        BasicCapability other = (BasicCapability) obj;
         return this.id.equals(other.id);
     }
 
@@ -60,7 +60,7 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
 
     @Override
     public String toString() {
-        return toStringHelper("ActionId")
+        return toStringHelper("BasicCapability")
                 .addValue(id)
                 .toString();
     }

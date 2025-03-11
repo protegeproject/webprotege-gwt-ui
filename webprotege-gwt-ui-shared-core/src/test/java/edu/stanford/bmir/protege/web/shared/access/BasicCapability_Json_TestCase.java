@@ -12,28 +12,28 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 2 Feb 2018
  */
-public class ActionId_Json_TestCase {
+public class BasicCapability_Json_TestCase {
 
     private static final String ID = "TheActionId";
 
-    private ActionId actionId;
+    private BasicCapability basicCapability;
 
     @Before
     public void setUp() throws Exception {
-        actionId = new ActionId(ID);
+        basicCapability = new BasicCapability(ID);
     }
 
     @Test
     public void shouldSerializeJson() throws Exception {
-        String result = new ObjectMapper().writeValueAsString(actionId);
+        String result = new ObjectMapper().writeValueAsString(basicCapability);
         assertThat(result, is("\"" + ID + "\""));
     }
 
     @Test
     public void shouldDeserializeJson() throws Exception {
-        ActionId readActionId = new ObjectMapper()
-                .readerFor(ActionId.class)
+        BasicCapability readBasicCapability = new ObjectMapper()
+                .readerFor(BasicCapability.class)
                 .readValue("\"" + ID + "\"");
-        assertThat(readActionId, is(actionId));
+        assertThat(readBasicCapability, is(basicCapability));
     }
 }

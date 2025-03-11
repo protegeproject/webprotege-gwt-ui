@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
@@ -26,7 +26,7 @@ public class UserInSession implements IsSerializable {
 
     private UserDetails userDetails;
 
-    private ImmutableSet<ActionId> allowedApplicationActions;
+    private ImmutableSet<BasicCapability> allowedApplicationActions;
 
     /**
      * For serialization
@@ -37,7 +37,7 @@ public class UserInSession implements IsSerializable {
 
     @JsonCreator
     public UserInSession(@JsonProperty("userDetails") @Nonnull UserDetails userDetails,
-                         @JsonProperty("allowedApplicationActions") @Nonnull Set<ActionId> allowedApplicationActions) {
+                         @JsonProperty("allowedApplicationActions") @Nonnull Set<BasicCapability> allowedApplicationActions) {
         this.userDetails = checkNotNull(userDetails);
         this.allowedApplicationActions = ImmutableSet.copyOf(checkNotNull(allowedApplicationActions));
     }
@@ -52,7 +52,7 @@ public class UserInSession implements IsSerializable {
      * @return A set of action ids representing the allowed application actions.
      */
     @Nonnull
-    public Set<ActionId> getAllowedApplicationActions() {
+    public Set<BasicCapability> getAllowedApplicationActions() {
         return allowedApplicationActions;
     }
 
@@ -91,7 +91,7 @@ public class UserInSession implements IsSerializable {
                 .toString();
     }
 
-    public boolean isAllowedApplicationAction(@Nonnull ActionId actionId) {
-        return allowedApplicationActions.contains(actionId);
+    public boolean isAllowedApplicationAction(@Nonnull BasicCapability basicCapability) {
+        return allowedApplicationActions.contains(basicCapability);
     }
 }

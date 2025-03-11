@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
@@ -32,7 +32,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -59,7 +59,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private Set<OWLEntityData> freshEntities = new HashSet<OWLEntityData>();
 
-    private LoggedInUserProjectPermissionChecker permissionChecker;
+    private LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private CreateAsEntityTypeHandler createAsEntityTypeHandler = new CreateAsEntityTypeHandler() {
         @Override
@@ -92,9 +92,9 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private EntityDisplay entityDisplay = entityData -> {};
 
     @Inject
-    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay, @Nonnull InputBox inputBox) {
+    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectCapabilityChecker capabilityChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay, @Nonnull InputBox inputBox) {
         this.editor = editor;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.projectId = projectId;
         this.dsm = dispatchServiceManager;
         this.errorDisplay = errorDisplay;
@@ -163,7 +163,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private void updateState() {
         setEnabled(false);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY,
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY,
                                         canEdit -> setEnabled(canEdit));
     }
 

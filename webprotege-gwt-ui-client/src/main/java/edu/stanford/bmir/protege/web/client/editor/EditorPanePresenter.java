@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -25,7 +25,7 @@ public interface EditorPanePresenter extends HasDispose {
     String getAdditionalStyles();
 
     @Nonnull
-    BuiltInAction getRequiredAction();
+    BuiltInCapability getRequiredAction();
 
     void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus);
 
