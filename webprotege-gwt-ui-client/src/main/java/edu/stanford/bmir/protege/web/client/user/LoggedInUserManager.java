@@ -73,10 +73,6 @@ public class LoggedInUserManager {
         });
     }
 
-    public Set<ActionId> getLoggedInUserApplicationActions() {
-        return loggedInUser.getUserInSession().getAllowedApplicationActions();
-    }
-
     public boolean isAllowedApplicationAction(ActionId actionId) {
         return loggedInUser.isAllowedApplicationAction(actionId);
     }
@@ -84,20 +80,4 @@ public class LoggedInUserManager {
     public boolean isAllowedApplicationAction(BuiltInAction action) {
         return isAllowedApplicationAction(action.getActionId());
     }
-
-//    private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-//        dispatchServiceManager.execute(GetAuthenticatedUserDetailsAction.create(), new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorDisplay) {
-//            @Override
-//            public void handleExecutionException(Throwable cause) {
-//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
-//            }
-//
-//            @Override
-//            public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
-//                loggedInUser.setLoggedInUser(result.getUserInSession());
-//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onSuccess(result.getUserInSession().getUserDetails()));
-//            }
-//
-//        });
-//    }
 }
