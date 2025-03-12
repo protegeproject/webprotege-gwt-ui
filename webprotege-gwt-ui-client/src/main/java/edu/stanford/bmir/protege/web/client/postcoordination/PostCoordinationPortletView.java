@@ -19,6 +19,8 @@ public interface PostCoordinationPortletView extends AcceptsOneWidget, IsWidget,
 
     void initializeTable();
 
+    void resetTable();
+
     VerticalPanel getScaleValueCardsView();
 
     void setTableCellChangedHandler(TableCellChangedHandler handler);
