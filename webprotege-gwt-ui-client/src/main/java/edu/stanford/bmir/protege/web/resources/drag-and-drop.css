@@ -1,6 +1,7 @@
 .wp-draggable-item {
     cursor: grab !important;
     user-select: none;
+    display: flex;
 }
 
 .wp-draggable-item:hover {
