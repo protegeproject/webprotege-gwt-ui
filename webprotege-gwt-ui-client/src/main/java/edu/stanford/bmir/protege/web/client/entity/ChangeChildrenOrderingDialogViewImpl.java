@@ -44,8 +44,14 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
         sortableList.addStyleName(BUNDLE.dragAndDrop().draggableList());
         description.addStyleName(BUNDLE.dragAndDrop().title());
         for (EntityNode child : children) {
-            HTMLPanel liElement = new HTMLPanel(renderer.getHtmlRendering(child));
-            sortableList.add(liElement);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<img style='padding-right: 10px; width: 15px; height: 15px;'  src='");
+            sb.append(BUNDLE.draggableIcon().getSafeUri().asString());
+            sb.append("'/>");
+            sb.append(renderer.getHtmlRendering(child));
+            HTMLPanel panel = new HTMLPanel(sb.toString());
+            panel.addStyleName(BUNDLE.dragAndDrop().draggableItem());
+            sortableList.add(panel);
         }
 
         if (isJQueryLoaded()) {
