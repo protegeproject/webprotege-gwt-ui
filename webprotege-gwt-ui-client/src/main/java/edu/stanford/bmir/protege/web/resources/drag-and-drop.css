@@ -5,7 +5,7 @@
 }
 
 .wp-draggable-item:hover {
-    background-color: #ccc;
+    background-color: #f5f5f5;
 }
 
 .wp-draggable-list {
@@ -35,6 +35,6 @@
 
 
 .wp-title {
-    margin-left: 5px;
+    margin-left: 3px;
     margin-bottom: 18px;
 }
