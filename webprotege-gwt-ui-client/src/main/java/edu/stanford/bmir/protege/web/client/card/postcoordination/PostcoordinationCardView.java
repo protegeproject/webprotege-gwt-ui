@@ -22,14 +22,14 @@ public interface PostcoordinationCardView {
 
     void initializeTable();
 
+    void resetTable();
+
     VerticalPanel getScaleValueCardsView();
 
     void setTableCellChangedHandler(TableCellChangedHandler handler);
 
     void setTableData(WhoficEntityPostCoordinationSpecification specification);
-    void setEditButtonHandler(EditButtonHandler handler);
-    void setCancelButtonHandler(CancelButtonHandler handler);
-    void setSaveButtonHandler(SaveButtonHandler handler);
+
     void setEditMode(boolean editMode);
 
     Optional<WhoficEntityPostCoordinationSpecification> getTableData();

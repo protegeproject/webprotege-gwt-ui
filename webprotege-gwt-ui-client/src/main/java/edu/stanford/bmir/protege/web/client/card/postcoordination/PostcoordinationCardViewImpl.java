@@ -54,10 +54,6 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     private TableCellChangedHandler tableCellChanged = (isAxisEnabledOnAnyRow, checkboxValue, tableAxisLabel) -> {
     };
 
-    private EditButtonHandler editButtonHandler = () -> {
-    };
-    private CancelButtonHandler cancelButtonHandler = () -> {
-    };
     private SaveButtonHandler saveButtonHandler = (Optional<WhoficEntityPostCoordinationSpecification> specificationOptional) -> {
     };
 
@@ -70,8 +66,6 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         initWidget(ourUiBinder.createAndBindUi(this));
 
         saveValuesButton.addClickHandler(event -> saveButtonHandler.saveValues(createEditedSpec()));
-        cancelButton.addClickHandler(event -> cancelButtonHandler.handleCancelButton());
-        editValuesButton.addClickHandler(event -> editButtonHandler.enableEditMode());
         saveValuesButton.setVisible(!readOnly);
         editValuesButton.setVisible(readOnly);
         this.dispatch = dispatch;
@@ -93,27 +87,19 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         return createEditedSpec();
     }
 
-    @Override
-    public void setEditButtonHandler(EditButtonHandler handler) {
-        this.editButtonHandler = handler;
-    }
-
-    @Override
-    public void setCancelButtonHandler(CancelButtonHandler handler) {
-        this.cancelButtonHandler = handler;
-    }
-
-    @Override
-    public void setSaveButtonHandler(SaveButtonHandler handler) {
-        this.saveButtonHandler = handler;
-    }
-
     private void setTableState(boolean readOnly) {
         for (PostCoordinationTableRow row : tableRows) {
             for (PostCoordinationTableCell cell : row.getCellList()) {
                 cell.setState(readOnly);
             }
         }
+    }
+
+    @Override
+    public void resetTable() {
+        flexTable.clear();
+        labels.clear();
+        tableRows.clear();
     }
 
     private Optional<WhoficEntityPostCoordinationSpecification> createEditedSpec() {
