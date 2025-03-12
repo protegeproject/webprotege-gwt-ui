@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
 import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
@@ -23,11 +24,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -54,7 +53,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @UiField
     HTMLPanel necessaryConditionsTooltip;
 
-    private static final LogicalDefinitionPortletViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionPortletViewImplUiBinder.class);
+    private static final LogicalDefinitionCardViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionCardViewImplUiBinder.class);
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -196,44 +195,46 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
-        dispatchServiceManager.execute(GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()), (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
-            this.pristineData = LogicalConditions.create(getEntityLogicalDefinitionResult.getLogicalDefinitions(), getEntityLogicalDefinitionResult.getNecessaryConditions());
-            if (getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
-                definitions.getElement().getStyle().setBackgroundImage(null);
+        dispatchServiceManager.execute(
+                GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()),
+                (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
+                    this.pristineData = LogicalConditions.create(getEntityLogicalDefinitionResult.getLogicalDefinitions(), getEntityLogicalDefinitionResult.getNecessaryConditions());
+                    if (getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
+                        definitions.getElement().getStyle().setBackgroundImage(null);
 
-                for (LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
-                    List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
-                            .map(LogicalDefinitionTableRow::new)
-                            .collect(Collectors.toList());
+                        for (LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
+                            List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
+                                    .map(LogicalDefinitionTableRow::new)
+                                    .collect(Collectors.toList());
 
-                    LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
-                            projectId,
-                            this::handleAxisValueChanged)
-                            .withLabels(this.labels)
-                            .withAncestorsList(this.ancestorsList)
-                            .withPostCoordinationTableConfiguration(postCoordinationTableConfiguration)
-                            .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
-                            .withRemoveHandler((this::removeWrapper))
-                            .asExistingTable();
+                            LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
+                                    projectId,
+                                    this::handleAxisValueChanged)
+                                    .withLabels(this.labels)
+                                    .withAncestorsList(this.ancestorsList)
+                                    .withPostCoordinationTableConfiguration(postCoordinationTableConfiguration)
+                                    .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
+                                    .withRemoveHandler((this::removeWrapper))
+                                    .asExistingTable();
 
-                    this.tableWrappers.add(newTable);
-                    this.definitions.add(newTable.asWidget());
+                            this.tableWrappers.add(newTable);
+                            this.definitions.add(newTable.asWidget());
 
-                    newTable.addExistingRows(superClassTableRows);
-                }
+                            newTable.addExistingRows(superClassTableRows);
+                        }
 
-            } else {
-                displayPlaceholder();
-            }
-            if (getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
+                    } else {
+                        displayPlaceholder();
+                    }
+                    if (getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
 
-                List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
-                        .map(LogicalDefinitionTableRow::new)
-                        .collect(Collectors.toList());
+                        List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
+                                .map(LogicalDefinitionTableRow::new)
+                                .collect(Collectors.toList());
 
-                necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
-            }
-        });
+                        necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
+                    }
+                });
     }
 
     private void displayPlaceholder() {
@@ -254,7 +255,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             selectedScales.addAll(equivalentRoots);
         }
 
-        Set<OWLClass> roots = selectedScales.stream().map(scale -> new OWLClassImpl(IRI.create(scale)))
+        Set<OWLClass> roots = selectedScales.stream().map(scale -> DataFactory.getOWLClass(IRI.create(scale)))
                 .collect(Collectors.toSet());
 
         logicalDefinitionModal.showModal(roots, table::addNewRow);
@@ -299,9 +300,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void saveValues(String commitMessage) {
-        List<LogicalDefinition> definitions = this.tableWrappers.stream().map(LogicalDefinitionTableWrapper::getLogicalDefinition).collect(Collectors.toList());
+        LogicalConditions logCond = getEditedData();
 
-        boolean hasDuplicates = verifyForDuplicates(definitions);
+        boolean hasDuplicates = verifyForDuplicates(logCond.getLogicalDefinitions());
 
         if (!hasDuplicates) {
             this.dispatchServiceManager.execute(
@@ -310,8 +311,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                             projectId,
                             this.currentEntity.asOWLClass(),
                             this.pristineData,
-                            LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
-                            MessageFormat.format("{0}: Edited the Logical Definitons and/or Necessary Conditions for {1}", commitMessage, this.entityData.getBrowserText())
+                            logCond,
+                            commitMessage +
+                                    ": Edited the Logical Definitons and/or Necessary Conditions for " +
+                                    this.entityData.getBrowserText()
                     ),
                     response -> setEntity(currentEntity, projectId)
             );
@@ -379,7 +382,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         helpTooltip.updateTitleContent(text);
     }
 
-    interface LogicalDefinitionPortletViewImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionCardViewImpl> {
+    interface LogicalDefinitionCardViewImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionCardViewImpl> {
 
     }
 

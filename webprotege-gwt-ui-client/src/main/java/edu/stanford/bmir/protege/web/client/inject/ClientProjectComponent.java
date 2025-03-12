@@ -26,7 +26,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
         modules = {
                 ClientProjectModule.class,
                 ClientIssuesModule.class,
-                PrimitiveDataEditorClientModule.class
+                PrimitiveDataEditorClientModule.class,
+                CardModule.class
         }
 )
 @ProjectSingleton
