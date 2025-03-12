@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Composite;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import org.w3c.dom.html.HTMLElement;
 
 import javax.inject.Inject;
 import com.google.gwt.user.client.ui.TextArea;
@@ -20,15 +21,18 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
     @UiField
     HTMLPanel sortableList;
 
+    private final EntityNodeHtmlRenderer renderer;
+
     @UiField
     HTMLPanel description;
     @UiField
     TextArea commitMessage;
 
     @Inject
-    public ChangeChildrenOrderingDialogViewImpl() {
+    public ChangeChildrenOrderingDialogViewImpl(EntityNodeHtmlRenderer renderer) {
         initWidget(ourUiBinder.createAndBindUi(this));
         sortableList.getElement().setTabIndex(0);
+        this.renderer = renderer;
         commitMessage.setText("");
         commitMessage.getElement().setAttribute("placeholder", "Optional explanation for why the children were reordered");
     }
@@ -40,17 +44,7 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
         sortableList.addStyleName(BUNDLE.dragAndDrop().draggableList());
         description.addStyleName(BUNDLE.dragAndDrop().title());
         for (EntityNode child : children) {
-            HTMLPanel liElement = new HTMLPanel("li", "");
-            liElement.addStyleName("ui-state-default");
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("<img style='padding-right: 10px; width: 15px; height: 15px;'  src='");
-            sb.append(BUNDLE.draggableIcon().getSafeUri().asString());
-            sb.append("'/>");
-            sb.append(child.getBrowserText());
-
-            liElement.getElement().setInnerHTML(sb.toString());
-            liElement.getElement().setId(child.getEntity().getIRI().toString());
+            HTMLPanel liElement = new HTMLPanel(renderer.getHtmlRendering(child));
             sortableList.add(liElement);
         }
 
@@ -69,7 +63,7 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
 
     @Override
     public void setEntityName(String browserText) {
-        this.description.getElement().setInnerHTML("Use drag-n-drop to reorder the children of " + browserText);
+        this.description.getElement().setInnerHTML("Use drag-n-drop to reorder the children of <b>" + browserText + "</b>");
     }
 
     @Override
