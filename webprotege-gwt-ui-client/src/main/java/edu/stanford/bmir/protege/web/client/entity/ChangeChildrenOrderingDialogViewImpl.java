@@ -45,7 +45,7 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
         description.addStyleName(BUNDLE.dragAndDrop().title());
         for (EntityNode child : children) {
             StringBuilder sb = new StringBuilder();
-            sb.append("<img style='padding-right: 10px; width: 15px; height: 15px;'  src='");
+            sb.append("<img style='width: 15px; height: 15px;'  src='");
             sb.append(BUNDLE.draggableIcon().getSafeUri().asString());
             sb.append("'/>");
             sb.append(renderer.getHtmlRendering(child));
@@ -69,7 +69,7 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
 
     @Override
     public void setEntityName(String browserText) {
-        this.description.getElement().setInnerHTML("Use drag-n-drop to reorder the children of <b>" + browserText + "</b>");
+        this.description.getElement().setInnerHTML("Drag and drop the children of <b>" + browserText + "</b> in the desired order");
     }
 
     @Override
