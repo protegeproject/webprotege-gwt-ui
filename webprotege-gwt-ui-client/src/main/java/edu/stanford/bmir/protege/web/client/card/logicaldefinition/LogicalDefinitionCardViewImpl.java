@@ -177,7 +177,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = new ArrayList<>(result);
 
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create("ICD"), config -> {
+            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(currentEntity.getIRI(), projectId), config -> {
                 this.labels = config.getLabels();
                 this.postCoordinationTableConfiguration = config.getTableConfiguration();
                 necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
