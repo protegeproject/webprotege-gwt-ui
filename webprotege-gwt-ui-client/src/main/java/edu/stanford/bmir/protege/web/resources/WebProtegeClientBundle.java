@@ -229,6 +229,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("discussion.css")
     DiscussionCss discussion();
 
+    @Source("drag-and-drop.css")
+    DragAndDropCss dragAndDrop();
+
     @Source("WebProtegeSettingsPage.css")
     SettingsPageCss settings();
 
@@ -650,6 +653,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-comment__user-mention")
         String userMention();
 
+    }
+
+    interface DragAndDropCss extends CssResource {
+        @ClassName("wp-draggable-item")
+        String draggableItem();
+
+        @ClassName("wp-draggable-list")
+        String draggableList();
     }
 
     interface ToolbarCss extends CssResource {

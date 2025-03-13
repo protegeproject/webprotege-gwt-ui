@@ -195,6 +195,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    ChangeChildrenOrderingDialogView providesChildrenOrderingDialogView(ChangeChildrenOrderingDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     BlankCriteriaView provideEntityIsDeprecatedCriteriaView(BlankCriteriaViewImpl impl) {
         return impl;
     }

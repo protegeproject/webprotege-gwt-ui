@@ -35,6 +35,8 @@ public final class DialogButton {
 
     public static final DialogButton SELECT = new DialogButton(getMessages().dialog_select());
 
+    public static final DialogButton UPDATE = new DialogButton(getMessages().update());
+
     public static Messages getMessages() {
         return messages;
     }
