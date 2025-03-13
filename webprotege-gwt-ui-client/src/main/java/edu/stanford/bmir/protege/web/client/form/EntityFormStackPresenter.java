@@ -283,7 +283,7 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
             FormDataByFormId editedFormData = formStackPresenter.getFormData();
             Collection<FormId> editedFormIds = editedFormData.getFormIds();
             ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
-            dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+            dispatch.execute(new SetEntityFormsDataAction(projectId, entity, "", pristineFormData, editedFormData),
                     // Refresh the pristine data to what was committed
                     result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
         }catch (Exception e) {

@@ -17,7 +17,7 @@ public class LinearizationCheckboxConfig extends CheckBoxConfig {
                                                                              new CheckboxValue(X_SVG, "FALSE", "Not allowed"));
 
 
-    protected LinearizationCheckboxConfig() {
+    public LinearizationCheckboxConfig() {
         super(new CheckboxValue(UNKNOWN_SVG, "UNKNOWN", "Not set value"), AVAILABLE_VALUES_LIST);
     }
 

@@ -1,0 +1,33 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .holder {
+            flex-grow: 1;
+            flex-shrink: 1;
+            position: relative;
+            margin: 0.3em;
+        }
+        .holder > div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: scroll;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:SimplePanel ui:field="cardHolder" addStyleNames="{style.holder} {wp.style.entityCard}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
