@@ -18,8 +18,9 @@ public abstract class ProcessUploadedSiblingsOrderingAction extends AbstractHasP
 
     @JsonCreator
     public static ProcessUploadedSiblingsOrderingAction create(@JsonProperty("projectId") ProjectId projectId,
-                                                               @JsonProperty("documentId") DocumentId uploadedDocumentId) {
-        return new AutoValue_ProcessUploadedSiblingsOrderingAction(projectId, uploadedDocumentId);
+                                                               @JsonProperty("documentId") DocumentId uploadedDocumentId,
+                                                               @JsonProperty("overrideExisting") boolean overrideExisting) {
+        return new AutoValue_ProcessUploadedSiblingsOrderingAction(projectId, uploadedDocumentId, overrideExisting);
     }
 
 
@@ -28,4 +29,6 @@ public abstract class ProcessUploadedSiblingsOrderingAction extends AbstractHasP
     public abstract ProjectId getProjectId();
 
     public abstract DocumentId getDocumentId();
+
+    public abstract boolean getOverrideExisting();
 }

@@ -227,7 +227,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = GetHierarchyDescriptorAction.class),
-        @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = ProcessUploadedSiblingsOrderingAction.class),
         @Type(value = SaveEntityChildReorderingAction.class)
 })
