@@ -273,6 +273,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEditorIcon();
 
+    @Source("dirty-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDirtyIcon();
+
     @Source("changes-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgChangesIcon();
@@ -478,8 +482,17 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form__form-tab-bar__tab")
         String formTabBar__tab();
 
+        @ClassName("wp-form__form-tab-bar__icon")
+        String formTabBar__icon();
+
+        @ClassName("wp-form__form-tab-bar__label")
+        String formTabBar__label();
+
         @ClassName("wp-form__form-tab-bar__tab--selected")
         String formTabBar__tab__selected();
+
+        @ClassName("wp-form__form-tab-bar__tab__dirty-indicator")
+        String formTabBar__tab__dirtyIndicator();
 
         @ClassName("wp-form__text-block")
         String formTextBlock();
@@ -511,6 +524,33 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__filtered-indication")
         String formFilteredIndication();
+
+        @ClassName("wp-entity-card-stack--edit-mode-active")
+        String entityCardStackEditModeActive();
+
+        @ClassName("wp-entity-card-stack")
+        String entityCardStack();
+
+        @ClassName("wp-entity-card")
+        String entityCard();
+
+        @ClassName("wp-entity-card--writable")
+        String entityCard__writable();
+
+        @ClassName("wp-entity-card-stack__tab-bar")
+        String entityCardStack__tabBar();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab")
+        String entityCardStack__tabBar__tab();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab--writable")
+        String entityCardStack__tabBar__tabWritable();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab--read-only")
+        String entityCardStack__tabBar__tabReadOnly();
+
+        @ClassName("wp-entity-card-stack__card-container")
+        String entityCardStack__cardContainer();
     }
 
     interface DateTimePicker extends CssResource {

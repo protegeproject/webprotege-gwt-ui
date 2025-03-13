@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
@@ -13,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
+import edu.stanford.bmir.protege.web.shared.card.*;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
@@ -70,6 +72,8 @@ import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
+import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
+import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
@@ -96,130 +100,75 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  * <p>
  * Do not use this class in any client code.  It is here to whitelist objects
  * that don't get added to the serialization whitelist.
+ *
  * @noinspection unused
  */
 public class RpcWhiteList implements IsSerializable, Action, Result {
 
     AuthenticationResponse _AUAuthenticationResponse;
-
     ActionExecutionResult _ActionExecutionResult;
-
     AddEntityCommentAction _AddEntityCommentAction;
-
     AddEntityCommentResult _AddEntityCommentResult;
-
     AddProjectTagAction _AddProjectTagAction;
-
     AddProjectTagResult _AddProjectTagResult;
-
     AnnotationPropertyFrame _AnnotationPropertyFrame;
-
     AvailableProject _AvailableProject;
-
     BatchAction _BatchAction;
-
     BatchResult _BatchResult;
-
+    EntityCardContentDescriptor _CardContentDescriptor;
+    CardDescriptor _CardDescriptor;
+    CardId _CardId;
+    CustomContentId _CustomContentId;
     ChangePasswordAction _ChangePasswordAction;
-
     ChangePasswordResult _ChangePasswordResult;
-
     CheckManchesterSyntaxFrameAction _CheckManchesterSyntaxFrameAction;
-
     CheckManchesterSyntaxFrameResult _CheckManchesterSyntaxFrameResult;
-
     ChoiceDescriptor _ChoiceDescriptor;
-
     ChoiceDescriptorDto _ChoiceDescriptorDto;
-
     ChoiceListSourceDescriptor _ChoiceListSourceDescriptor;
-
     ClassFrame _ClassFrame;
-
     Color _Color;
-
     Comment _Comment;
-
     CommentId _CommentId;
-
     CommentedEntityData _CommentedEntityData;
-
     CompositeRelationshipValueCriteria _CompositeRelationshipValueCriteria;
-
     ComputeProjectMergeAction _ComputeProjectMergeAction;
-
     ComputeProjectMergeResult _ComputeProjectMergeResult;
-
     ConditionalIriPrefix _ConditionalIriPrefix;
-
     CopyFormDescriptorsFromProjectAction _CopyFormDescriptorsFromProjectAction;
-
     CopyFormDescriptorsFromProjectResult _CopyFormDescriptorsFromProjectResult;
-
     CreateAnnotationPropertiesAction _CreateAnnotationPropertiesAction;
-
     CreateAnnotationPropertiesResult _CreateAnnotationPropertiesResult;
-
     CreateClassesAction _CreateClassesAction;
-
     CreateClassesResult _CreateClassesResult;
-
     CreateDataPropertiesAction _CreateDataPropertiesAction;
-
     CreateDataPropertiesResult _CreateDataPropertiesResult;
-
     CreateEntitiesInHierarchyAction _CreateEntitiesInHierarchyAction;
-
     CreateEntityDiscussionThreadAction _CreateEntityDiscussionThreadAction;
-
     CreateEntityDiscussionThreadResult _CreateEntityDiscussionThreadResult;
-
     CreateEntityFromFormDataAction _CreateEntityFromFormDataAction;
-
     CreateEntityFromFormDataResult _CreateEntityFromFormDataResult;
-
     CreateNamedIndividualsAction _CreateNamedIndividualsAction;
-
     CreateNamedIndividualsResult _CreateNamedIndividualsResult;
-
     CreateNewProjectAction _CreateNewProjectAction;
-
     CreateNewProjectResult _CreateNewProjectResult;
-
     CreateObjectPropertiesAction _CreateObjectPropertiesAction;
-
     CreateObjectPropertiesResult _CreateObjectPropertiesResult;
-
     CreateUserAccountAction _CreateUserAccountAction;
-
     CreateUserAccountResult _CreateUserAccountResult;
-
     Criteria _Criteria;
-
     DataPropertyFrame _DataPropertyFrame;
-
     DeleteEntitiesAction _DeleteEntitiesAction;
-
     DeleteEntitiesResult _DeleteEntitiesResult;
-
     DeleteEntityCommentAction _DeleteEntityCommentAction;
-
     DeleteEntityCommentResult _DeleteEntityCommentResult;
-
     DeleteFormAction _DeleteFormAction;
-
     DeleteFormResult _DeleteFormResult;
-
     DeprecateEntityByFormAction _DeprecateEntityByFormAction;
-
     DictionaryLanguage _DictionaryLanguage;
-
     DictionaryLanguageData _DictionaryLanguageData;
-
     DictionaryLanguageUsage _DictionaryLanguageUsage;
-
     DiffElement<String, String> _DiffElement;
-
     DisplayNameSettings _DisplayNameSettings;
     DocumentId _DocumentId;
     DropType _DropType;
@@ -296,6 +245,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetDeprecatedEntitiesResult _GetDeprecatedEntitiesResult;
     GetEmailAddressAction _GetEmailAddressAction;
     GetEmailAddressResult _GetEmailAddressResult;
+    GetEntityCardDescriptorsAction _GetEntityCardDescriptorsAction;
+    GetEntityCardDescriptorsResult _GetEntityCardDescriptorsResult;
     GetEntityCreationFormsAction _GetEntityCreationFormsAction;
     GetEntityCreationFormsResult _GetEntityCreationFormsResult;
     GetEntityCrudKitsAction _GetEntityCrudKitsAction;
@@ -400,6 +351,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetSearchSettingsResult _GetSearchSettingsResult;
     GetUsageAction _GetUsageAction;
     GetUsageResult _GetUsageResult;
+    UsageReference _UsageReference;
     GetUserIdCompletionsAction _GetUserIdCompletionsAction;
     GetUserIdCompletionsResult _GetUserIdCompletionsResult;
     GetUserInfoResult _GetUserInfoResult;
@@ -487,6 +439,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     PlainNamedIndividualFrame _PlainNamedIndividualFrame;
     PlainObjectPropertyFrame _PlainObjectPropertyFrame;
     PlainPropertyValue _PlainPropertyValue;
+    PortletId _PortletId;
     PrefixNameMatchType _PrefixNameMatchType;
     PrimitiveFormControlData _PrimitiveFormControlData;
     PrimitiveFormControlDataDto _PrimitiveFormControlDataDto;
@@ -611,6 +564,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     OwlBinding get_OwlBinding;
     PlainPropertyValue get_PlainPropertyValue;
     PrimitiveFormControlData primitiveFormControlData;
+    UsageFilter _UsageFilter;
     SetNamedHierarchiesAction _SetNamedHierarchiesAction;
     SetNamedHierarchiesResult _SetNamedHierarchiesResult;
     GetHierarchyDescriptorAction _GetHierarchyDescriptorAction;
