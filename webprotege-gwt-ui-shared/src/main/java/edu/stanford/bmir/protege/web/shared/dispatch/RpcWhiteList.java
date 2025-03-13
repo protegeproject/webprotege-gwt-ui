@@ -559,6 +559,9 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectFormDescriptorsAction _SetProjectFormDescriptorsAction;
     SetProjectFormDescriptorsResult _SetProjectFormDescriptorsResult;
     SetProjectPrefixDeclarationsAction _SetProjectPrefixDeclarationsAction;
+
+    SaveEntityChildReorderingAction _SaveEntityChildReorderingAction;
+    SaveEntityChildReorderingResult _SaveEntityChildReorderingResult;
     SetProjectPrefixDeclarationsResult _SetProjectPrefixDeclarationsResult;
     SetProjectSettingsAction _SetProjectSettingsAction;
     SetProjectSettingsResult _SetProjectSettingsResult;
