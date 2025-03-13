@@ -217,8 +217,8 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("The selected value is not a known ancestor"));
 
-        return LogicalDefinition.create(OWLClassData.get(selectedAncestor.asEntity().get().asOWLClass(),
-        ImmutableMap.of()),this.superClassTable.getValues());
+        return LogicalDefinition.create(OWLClassData.get(selectedAncestor.getEntity().asOWLClass(),
+        selectedAncestor.getShortFormsMap()),this.superClassTable.getValues());
     }
 
     interface LogicalDefinitionTableWrapperImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionTableWrapperImpl> {
