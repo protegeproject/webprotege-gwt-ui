@@ -50,6 +50,7 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
             sb.append("'/>");
             sb.append(renderer.getHtmlRendering(child));
             HTMLPanel panel = new HTMLPanel(sb.toString());
+            panel.getElement().setId(child.getEntity().getIRI().toString());
             panel.addStyleName(BUNDLE.dragAndDrop().draggableItem());
             sortableList.add(panel);
         }
@@ -63,7 +64,6 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
 
     @Override
     public List<String> getOrderedChildren() {
-
         return Arrays.asList(getOrderedIds(sortableList.getElement().getId()).split(","));
     }
 
