@@ -74,8 +74,7 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
             modalPresenter.setEscapeButton(DialogButton.CANCEL);
             modalPresenter.setPrimaryButton(DialogButton.UPDATE);
             modalPresenter.setButtonHandler(DialogButton.UPDATE, closer -> {
-                dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren(), view
-                                .getCommitMessage()),
+                dispatchServiceManager.execute(SaveEntityChildReorderingAction.create(projectId, owlClass.getIRI(), view.getOrderedChildren()),
                         saveResult -> {
                             handleAfterSave.accept(null);
                             closer.closeModal();

@@ -20,25 +20,21 @@ public class SaveEntityChildReorderingAction implements ProjectAction<SaveEntity
 
     private IRI entityIri;
 
-    private String commitMessage;
-
     private List<String> orderedChildren;
     @GwtSerializationConstructor
     private SaveEntityChildReorderingAction() {
     }
 
-    public SaveEntityChildReorderingAction(ProjectId projectId, IRI entityIri, List<String> orderedChildren, String commitMessage) {
+    public SaveEntityChildReorderingAction(ProjectId projectId, IRI entityIri, List<String> orderedChildren) {
         this.projectId = projectId;
         this.orderedChildren = orderedChildren;
         this.entityIri = entityIri;
-        this.commitMessage = commitMessage;
     }
 
     public static SaveEntityChildReorderingAction create(@Nonnull ProjectId projectId,
                                                          @Nonnull IRI entityIri,
-                                                         @Nonnull List<String> orderedChildren,
-                                                         String commitMessage) {
-        return new SaveEntityChildReorderingAction(projectId, entityIri, orderedChildren, commitMessage);
+                                                         @Nonnull List<String> orderedChildren) {
+        return new SaveEntityChildReorderingAction(projectId, entityIri, orderedChildren);
     }
 
 
@@ -54,9 +50,5 @@ public class SaveEntityChildReorderingAction implements ProjectAction<SaveEntity
 
     public List<String> getOrderedChildren() {
         return orderedChildren;
-    }
-
-    public String getCommitMessage() {
-        return commitMessage;
     }
 }

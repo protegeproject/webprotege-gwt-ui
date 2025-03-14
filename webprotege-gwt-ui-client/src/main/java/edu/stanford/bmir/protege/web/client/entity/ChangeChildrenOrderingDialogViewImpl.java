@@ -25,16 +25,12 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
 
     @UiField
     HTMLPanel description;
-    @UiField
-    TextArea commitMessage;
 
     @Inject
     public ChangeChildrenOrderingDialogViewImpl(EntityNodeHtmlRenderer renderer) {
         initWidget(ourUiBinder.createAndBindUi(this));
         sortableList.getElement().setTabIndex(0);
         this.renderer = renderer;
-        commitMessage.setText("");
-        commitMessage.getElement().setAttribute("placeholder", "Optional explanation for why the children were reordered");
     }
 
     @Override
@@ -70,11 +66,6 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
     @Override
     public void setEntityName(String browserText) {
         this.description.getElement().setInnerHTML("Drag and drop the children of <b>" + browserText + "</b> in the desired order");
-    }
-
-    @Override
-    public String getCommitMessage() {
-        return this.commitMessage.getText();
     }
 
     public native void makeSortable(String elementId) /*-{

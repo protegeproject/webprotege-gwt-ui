@@ -8,10 +8,5 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel ui:field="description"/>
         <g:HTMLPanel ui:field="sortableList" tag="ul"/>
-        <div style="display: flex; flex-direction: column; margin: 3px; margin-top: 10px;">
-            <div style="margin-bottom: 5px;">Reason for change:</div>
-            <g:TextArea ui:field="commitMessage" visibleLines="5"/>
-        </div>
-
     </g:HTMLPanel>
 </ui:UiBinder>

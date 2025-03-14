@@ -13,5 +13,4 @@ public interface ChangeChildrenOrderingDialogView extends IsWidget {
 
     void setEntityName(String browserText);
 
-    String getCommitMessage();
 }
