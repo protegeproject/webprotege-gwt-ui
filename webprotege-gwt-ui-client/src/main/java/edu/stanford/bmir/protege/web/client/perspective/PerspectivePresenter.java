@@ -90,8 +90,10 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
                                 PerspectiveFactory perspectiveFactory,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter,
-                                MessageBox messageBox, LanguageMapCurrentLocaleMapper localeMapper,
-                                SelectedPathsModel selectedPathsModel, UuidV4Provider uuidV4Provider) {
+                                MessageBox messageBox,
+                                LanguageMapCurrentLocaleMapper localeMapper,
+                                SelectedPathsModel selectedPathsModel,
+                                UuidV4Provider uuidV4Provider) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;

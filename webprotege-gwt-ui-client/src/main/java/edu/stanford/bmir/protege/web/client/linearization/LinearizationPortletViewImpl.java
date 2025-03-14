@@ -362,10 +362,6 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
     }
 
-    interface TableRefresh {
-        void refreshTable(LinearizationTableRow newRow);
-    }
-
     @Override
     public void setLinearizationChangeEventHandler(LinearizationChangeEventHandler eventHandler) {
         this.linearizationChangeEventHandler = eventHandler;

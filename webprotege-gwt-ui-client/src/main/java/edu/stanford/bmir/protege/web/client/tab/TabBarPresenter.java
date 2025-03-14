@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tab;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -49,6 +51,7 @@ public class TabBarPresenter<K> {
      * Additionally, sets the visibility of the view to false.
      */
     public void clear() {
+        itemPresenters.forEach(p -> p.setSelected(false));
         itemPresenters.clear();
         view.clear();
         view.setVisible(false);
@@ -92,13 +95,39 @@ public class TabBarPresenter<K> {
      * @param tabContentContainer     The container that holds the content of the tab.
      */
     public void addTab(@Nonnull K key, @Nonnull LanguageMap label, @Nonnull TabContentContainer tabContentContainer) {
+        addTab(key, label, null, null, tabContentContainer);
+    }
+
+    public TabPresenter<K> addTab(@Nonnull K key, @Nonnull LanguageMap label, Color color, Color backgroundColor, @Nonnull TabContentContainer tabContentContainer) {
         TabPresenter<K> tabPresenter = tabPresenterFactory.create(key);
         itemPresenters.add(tabPresenter);
         view.addView(tabPresenter.getView());
         tabPresenter.setLabel(label);
+        if (color != null) {
+            tabPresenter.setColor(color);
+        }
+        if (backgroundColor != null) {
+            tabPresenter.setBackgroundColor(backgroundColor);
+        }
         tabPresenter.setTabContentContainer(tabContentContainer);
         tabPresenter.setClickHandler(event -> selectTabAndStashId(key));
         view.setVisible(itemPresenters.size() > 1);
+        return tabPresenter;
+    }
+
+
+    public void setColor(K key, Color color) {
+        itemPresenters.stream()
+                .filter(p -> p.getKey().equals(key))
+                .findFirst()
+                .ifPresent(tabPresenter -> tabPresenter.setColor(color));
+    }
+
+    public void setBackgroundColor(K key, Color backgroundColor) {
+        itemPresenters.stream()
+                .filter(p -> p.getKey().equals(key))
+                .findFirst()
+                .ifPresent(tabPresenter -> tabPresenter.setBackgroundColor(backgroundColor));
     }
 
     private void selectTabAndStashId(@Nonnull K key) {
