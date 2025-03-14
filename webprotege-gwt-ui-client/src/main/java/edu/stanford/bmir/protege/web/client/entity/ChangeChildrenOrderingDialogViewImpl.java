@@ -4,10 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import org.w3c.dom.html.HTMLElement;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import com.google.gwt.user.client.ui.TextArea;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,10 +21,16 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
     @UiField
     HTMLPanel sortableList;
 
+    private final EntityNodeHtmlRenderer renderer;
+
+    @UiField
+    HTMLPanel description;
+
     @Inject
-    public ChangeChildrenOrderingDialogViewImpl() {
+    public ChangeChildrenOrderingDialogViewImpl(EntityNodeHtmlRenderer renderer) {
         initWidget(ourUiBinder.createAndBindUi(this));
         sortableList.getElement().setTabIndex(0);
+        this.renderer = renderer;
     }
 
     @Override
@@ -30,13 +38,17 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
         sortableList.clear();
         sortableList.getElement().setId("sortableList");
         sortableList.addStyleName(BUNDLE.dragAndDrop().draggableList());
-
+        description.addStyleName(BUNDLE.dragAndDrop().title());
         for (EntityNode child : children) {
-            HTMLPanel liElement = new HTMLPanel("li", "");
-            liElement.addStyleName("ui-state-default");
-            liElement.getElement().setInnerHTML(child.getBrowserText());
-            liElement.getElement().setId(child.getEntity().getIRI().toString());
-            sortableList.add(liElement);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<img style='width: 15px; height: 15px;'  src='");
+            sb.append(BUNDLE.draggableIcon().getSafeUri().asString());
+            sb.append("'/>");
+            sb.append(renderer.getHtmlRendering(child));
+            HTMLPanel panel = new HTMLPanel(sb.toString());
+            panel.getElement().setId(child.getEntity().getIRI().toString());
+            panel.addStyleName(BUNDLE.dragAndDrop().draggableItem());
+            sortableList.add(panel);
         }
 
         if (isJQueryLoaded()) {
@@ -48,8 +60,12 @@ public class ChangeChildrenOrderingDialogViewImpl extends Composite implements C
 
     @Override
     public List<String> getOrderedChildren() {
-
         return Arrays.asList(getOrderedIds(sortableList.getElement().getId()).split(","));
+    }
+
+    @Override
+    public void setEntityName(String browserText) {
+        this.description.getElement().setInnerHTML("Drag and drop the children of <b>" + browserText + "</b> in the desired order");
     }
 
     public native void makeSortable(String elementId) /*-{

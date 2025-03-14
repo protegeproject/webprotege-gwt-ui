@@ -6,6 +6,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel ui:field="description"/>
         <g:HTMLPanel ui:field="sortableList" tag="ul"/>
     </g:HTMLPanel>
 </ui:UiBinder>
