@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSett
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.entity.*;
@@ -966,6 +967,16 @@ public class ClientProjectModule {
 
     @Provides
     CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
+        return impl;
+    }
+
+    @Provides
+    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    DirectParentView provideDirectParentView(DirectParentViewImpl impl){
         return impl;
     }
 }
