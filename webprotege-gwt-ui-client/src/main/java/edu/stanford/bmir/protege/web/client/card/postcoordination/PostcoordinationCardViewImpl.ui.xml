@@ -1,59 +1,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style>
-
-        .buttonsWrapper {
-        flex-direction: row;
-        align-content: end;
-        display: flex;
-        justify-content: end;
-        width: 97%;
-        margin:15px;
-        padding: 3px;
-        }
-
-        .editValuesButton {
-        background-color: #186cd4;
-        border: none;
-        color: white;
-        padding: 10px 15px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px;
-        }
-
-        .cancelButton {
-        background-color: #F7F7F7;
-        border: none;
-        color: var(--primary--color);
-        padding: 10px 15px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px;
-        }
-
-        .cancelButton:hover {
-        background-color: #E3E3E3;
-        }
-    </ui:style>
     <g:HTMLPanel ui:field="paneContainer">
         <g:HTMLPanel width="100%">
             <g:FlexTable width="97%" height="100%" ui:field="flexTable"/>
         </g:HTMLPanel>
         <g:VerticalPanel width="100%" ui:field="scaleValueCardList"/>
-        <div class="{style.buttonsWrapper}">
-            <g:Button ui:field="editValuesButton" addStyleNames="{style.editValuesButton}">Edit values</g:Button>
-            <g:Button ui:field="saveValuesButton" addStyleNames="{style.editValuesButton}">Save values</g:Button>
-            <g:Button ui:field="cancelButton" addStyleNames="{style.cancelButton}">Cancel</g:Button>
-        </div>
     </g:HTMLPanel>
 
 </ui:UiBinder>

@@ -4,20 +4,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficEntityPostCoordinationSpecification;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -32,29 +27,15 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     protected FlexTable flexTable;
     @UiField
     public VerticalPanel scaleValueCardList;
-    @UiField
-    Button saveValuesButton;
-    @UiField
-    Button editValuesButton;
-
-    @UiField
-    Button cancelButton;
-
-    private boolean readOnly = true;
 
     private String entityIri;
-    private ProjectId projectId;
 
-    private Map<String, PostCoordinationTableAxisLabel> labels;
-    private Map<String, LinearizationDefinition> definitionMap;
+    private Map<String, PostCoordinationTableAxisLabel> labels = new HashMap<>();
+    private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
 
     private List<PostCoordinationTableRow> tableRows = new ArrayList<>();
-    private final DispatchServiceManager dispatch;
 
     private TableCellChangedHandler tableCellChanged = (isAxisEnabledOnAnyRow, checkboxValue, tableAxisLabel) -> {
-    };
-
-    private SaveButtonHandler saveButtonHandler = (Optional<WhoficEntityPostCoordinationSpecification> specificationOptional) -> {
     };
 
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss style = PostCoordinationTableResourceBundle.INSTANCE.style();
@@ -62,24 +43,17 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     private static final PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder ourUiBinder = GWT.create(PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder.class);
 
     @Inject
-    public PostcoordinationCardViewImpl(DispatchServiceManager dispatch) {
+    public PostcoordinationCardViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        saveValuesButton.addClickHandler(event -> saveButtonHandler.saveValues(createEditedSpec()));
-        saveValuesButton.setVisible(!readOnly);
-        editValuesButton.setVisible(readOnly);
-        this.dispatch = dispatch;
         style.ensureInjected();
     }
 
 
 
     public void setEditMode(boolean editMode) {
-        readOnly = !editMode;
+        boolean readOnly = !editMode;
         setTableState(readOnly);
-        saveValuesButton.setVisible(editMode);
-        cancelButton.setVisible(editMode);
-        editValuesButton.setVisible(!editMode);
     }
 
     @Override
@@ -138,11 +112,6 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
 
         return Optional.empty();
-    }
-
-    @Override
-    public void setProjectId(ProjectId projectId) {
-        this.projectId = projectId;
     }
 
     @Override
@@ -359,15 +328,23 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
 
         setTableState(true);
-        editValuesButton.setVisible(true);
-        saveValuesButton.setVisible(false);
-        cancelButton.setVisible(false);
     }
 
     private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
 
             "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M3 7V8.2C3 9.88016 3 10.7202 3.32698 11.362C3.6146 11.9265 4.07354 12.3854 4.63803 12.673C5.27976 13 6.11984 13 7.8 13H21M21 13L17 9M21 13L17 17\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>" +
             "</div>";
+
+    @Override
+    public void setWidget(IsWidget w) {
+        paneContainer.clear();
+        paneContainer.add(w);
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 
     interface PostcoordinationCardViewImplUiBinder extends UiBinder<HTMLPanel, PostcoordinationCardViewImpl> {
 

@@ -8,9 +8,7 @@ import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
 import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardPresenter;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
@@ -20,7 +18,6 @@ import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefini
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -59,7 +56,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Inject
     @AutoFactory
-    public PostcoordinationCardPresenter(PostcoordinationCardView view, DispatchServiceManager dispatch,
+    public PostcoordinationCardPresenter(PostcoordinationCardView view,
+                                         DispatchServiceManager dispatch,
                                          ProjectId projectid, ModalManager modalManager, ScaleValueSelectionViewPresenter scaleSelectionPresenter) {
         this.view = view;
         this.dispatch = dispatch;
@@ -71,6 +69,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         try {
+            ui.setWidget(view);
             this.eventBus = eventBus;
             clearAllDate();
             selectedEntity = Optional.empty();
@@ -115,21 +114,17 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void setEntity(OWLEntity entity) {
-        logger.info("In setEntity");
         this.selectedEntity = Optional.of(entity);
-        handleAfterSetEntity();
+        loadEntity();
     }
 
     @Override
     public void clearEntity() {
-        logger.info("In clearEntity");
-
+        this.selectedEntity = Optional.empty();
     }
 
     @Override
     public void beginEditing() {
-        logger.info("In beginEditing");
-
         editMode = true;
         view.setEditMode(true);
     }
@@ -138,6 +133,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void cancelEditing() {
         editMode = false;
         view.setEditMode(false);
+        loadEntity();
     }
 
     @Override
@@ -146,37 +142,33 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-        
-        if (!newCustomScales.equals(postCoordinationCustomScalesList)) {
-            dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
-            });
-        }
-
-        specification.ifPresent(whoficEntityPostCoordinationSpecification ->
-                dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, whoficEntityPostCoordinationSpecification),
-                        (result) -> {
-                        }
-                )
-
+        dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
+        });
+        dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification.get()),
+                (result) -> {
+                    loadEntity();
+                }
         );
     }
 
     @Override
     public boolean isDirty() {
-        return false;
+        List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
+        Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
+        List<String> newCustomScalesList = newCustomScales.stream().map(PostCoordinationCustomScales::getPostcoordinationAxis).sorted().collect(Collectors.toList());
+        List<String> existingScalesList = postCoordinationCustomScalesList.stream().map(PostCoordinationCustomScales::getPostcoordinationAxis)
+                .sorted().collect(Collectors.toList());
+        return (!newCustomScalesList.isEmpty() && !newCustomScalesList.
+                equals(existingScalesList)) || specification.isPresent();
     }
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        logger.info("In addDirtyChangedHandler");
-
         return null;
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
-        logger.info("In fireEvent");
-
     }
 
 
@@ -219,7 +211,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
     
 
-    protected void handleAfterSetEntity() {
+    protected void loadEntity() {
         if (!this.selectedEntity.isPresent()) {
             logger.log(Level.INFO, "No entity to display");
         } else {
@@ -227,48 +219,52 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 if(result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     cancelEditing();
                 } else {
-                    Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
-                    List<String> scaleCardsOrder = new LinkedList<>();
+                    try {
+                        Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
+                        List<String> scaleCardsOrder = new LinkedList<>();
 
-                    for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
-                        PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                                .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
-                                .findFirst()
-                                .orElseThrow(() -> {
-                                    logger.info("Couldn't find label for " + availableAxis);
-                                    return new RuntimeException("Couldn't find label for " + availableAxis);
-                                });
-                        tableLabels.put(availableAxis, existingLabel);
-                        scaleCardsOrder.add(availableAxis);
-                    }
+                        for (String availableAxis : result.getTableConfiguration().getPostCoordinationAxes()) {
+                            PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                    .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(availableAxis))
+                                    .findFirst()
+                                    .orElseThrow(() -> {
+                                        logger.info("Couldn't find label for " + availableAxis);
+                                        return new RuntimeException("Couldn't find label for " + availableAxis);
+                                    });
+                            tableLabels.put(availableAxis, existingLabel);
+                            scaleCardsOrder.add(availableAxis);
+                        }
 
 
-                    Map<String, PostCoordinationTableAxisLabel> scaleLabels = new HashMap<>(tableLabels);
+                        Map<String, PostCoordinationTableAxisLabel> scaleLabels = new HashMap<>(tableLabels);
 
-                    List<PostCoordinationCompositeAxis> compositeAxis = new ArrayList<>(result.getTableConfiguration().getCompositePostCoordinationAxes());
+                        List<PostCoordinationCompositeAxis> compositeAxis = new ArrayList<>(result.getTableConfiguration().getCompositePostCoordinationAxes());
 
-                    compositeAxis.forEach(axis ->
-                            axis.getSubAxis()
-                                    .forEach(subAxis -> {
-                                                PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
-                                                        .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
-                                                        .findFirst()
-                                                        .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
-                                                scaleLabels.put(subAxis, existingLabel);
-                                                scaleLabels.remove(axis.getPostCoordinationAxis());
-                                            }
-                                    )
-                    );
+                        compositeAxis.forEach(axis ->
+                                axis.getSubAxis()
+                                        .forEach(subAxis -> {
+                                                    PostCoordinationTableAxisLabel existingLabel = result.getLabels().stream()
+                                                            .filter(label -> label.getPostCoordinationAxis().equalsIgnoreCase(subAxis))
+                                                            .findFirst()
+                                                            .orElseGet(() -> new PostCoordinationTableAxisLabel(subAxis, "hardCodedTableName", "hardCodedTableName"));
+                                                    scaleLabels.put(subAxis, existingLabel);
+                                                    scaleLabels.remove(axis.getPostCoordinationAxis());
+                                                }
+                                        )
+                        );
 
-                    List<String> orderedAxisListWithSubAxis = this.createOrderAxisListWithSubAxis(result.getTableConfiguration().getPostCoordinationAxes(),
-                            result.getTableConfiguration().getCompositePostCoordinationAxes());
+                        List<String> orderedAxisListWithSubAxis = this.createOrderAxisListWithSubAxis(result.getTableConfiguration().getPostCoordinationAxes(),
+                                result.getTableConfiguration().getCompositePostCoordinationAxes());
 
-                    scaleCardsOrder.addAll(orderedAxisListWithSubAxis);
-                    if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder)) {
-                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis);
-                    }
+                        scaleCardsOrder.addAll(orderedAxisListWithSubAxis);
+                        if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder)) {
+                            populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis);
+                        }
 
-                    navigateToEntity(this.selectedEntity.get());
+                        navigateToEntity(this.selectedEntity.get());
+                    }catch (Exception e) {
+                        logger.log(Level.SEVERE, "Error ", e);
+                }
                 }
 
             });

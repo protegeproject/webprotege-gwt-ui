@@ -284,7 +284,7 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void handleFinishEditing() {
-        commitChanges(() -> {});
+        commitChanges(this::updateButtonVisibility);
     }
 
     private void commitChanges(Runnable commitFinished) {
