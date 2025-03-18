@@ -3,17 +3,9 @@
 >
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        .main {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            padding: 2px;
-            border-bottom: 1px solid #f0f0f0;
-            padding-left: 7px;
-            padding-right: 7px;
-        }
+
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelNeutral}">
+    <g:HTMLPanel >
         <g:ScrollPanel>
             <g:FlowPanel ui:field="directParentsContainer"/>
         </g:ScrollPanel>

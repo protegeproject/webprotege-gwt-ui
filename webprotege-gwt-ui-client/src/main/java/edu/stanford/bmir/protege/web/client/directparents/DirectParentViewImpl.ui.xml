@@ -3,7 +3,16 @@
 >
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        .main {
+            display: flex;
+            padding-left: 7px;
+            padding-right: 7px;
+            cursor: default;
+        }
 
+        .main:hover {
+            background-color: literal("var(--item--hover--background-color)");
+        }
     </ui:style>
-    <g:HTMLPanel ui:field="entityRenderingField"/>
+    <g:HTMLPanel addStyleNames="{style.main}" ui:field="entityRenderingField"/>
 </ui:UiBinder>

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.directparents;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -15,6 +16,9 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
 
     @UiField
     HTMLPanel entityRenderingField;
+
+    private ClickHandler clickHandler = (event) -> {
+    };
 
     @Inject
     public DirectParentViewImpl() {
@@ -34,10 +38,16 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
     @Override
     public void setEntity(String entityHtml) {
         this.entityRenderingField.getElement().setInnerHTML(entityHtml);
+        this.entityRenderingField.addDomHandler(clickHandler, ClickEvent.getType());
     }
 
     @Override
     public void clear() {
         this.entityRenderingField.clear();
+    }
+
+    @Override
+    public void setSelectionHandler(ClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
     }
 }

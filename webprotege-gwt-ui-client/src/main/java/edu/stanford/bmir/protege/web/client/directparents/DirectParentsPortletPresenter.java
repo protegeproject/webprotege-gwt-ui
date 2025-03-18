@@ -19,7 +19,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-@Portlet(id = "portlets.DirectParents", title = "Direct Parents", tooltip = "Displays the direct parents of the entity")
+@Portlet(id = "portlets.DirectParents", title = "Parents", tooltip = "Displays the direct parents of the entity")
 public class DirectParentsPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
@@ -27,30 +27,21 @@ public class DirectParentsPortletPresenter extends AbstractWebProtegePortletPres
     @Nonnull
     private final DirectParentsListPresenter presenter;
 
-    @Nonnull
-    private final Messages messages;
-
-    private Optional<PortletUi> portletUi = Optional.empty();
-
-
-
     @Inject
     public DirectParentsPortletPresenter(@Nonnull SelectionModel selectionModel,
                                          @Nonnull SelectedPathsModel selectedPathsModel,
-                                         @Nonnull Messages messages,
                                          @Nonnull ProjectId projectId,
-                                         DisplayNameRenderer displayNameRenderer,
-                                         DispatchServiceManager dispatch,
-                                         DirectParentsListPresenter presenter) {
+                                         @Nonnull DisplayNameRenderer displayNameRenderer,
+                                         @Nonnull DispatchServiceManager dispatch,
+                                         @Nonnull DirectParentsListPresenter presenter) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
-        this.messages = messages;
         this.presenter = presenter;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView().asWidget());
+        presenter.setDirectParentSelectionHandler((entity) -> getSelectionModel().setSelection(entity));
         presenter.setHasBusy(portletUi);
         presenter.start(eventBus);
         presenter.setEntityDisplay(this);

@@ -39,9 +39,7 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
         directParentViews.forEach(parentView -> {
             try {
                 logger.info("Adding widget to UI: " + parentView.asWidget());
-                SimplePanel contentWidgetWrapper = new SimplePanel();
-                contentWidgetWrapper.setWidget(parentView.asWidget());
-                directParentsContainer.add(contentWidgetWrapper);
+                directParentsContainer.add(parentView.asWidget());
                 logger.info("After adding, directParentsContainer = " + directParentsContainer);
             } catch (Exception e) {
                 logger.severe("Error while adding widget: " + e.getMessage());

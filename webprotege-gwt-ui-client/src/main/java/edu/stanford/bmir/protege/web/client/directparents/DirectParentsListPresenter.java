@@ -42,6 +42,8 @@ public class DirectParentsListPresenter implements HasDispose {
     private HasBusy hasBusy = busy -> {
     };
 
+    private ParentSelectionHandler selectionHandler = entity -> {};
+
     @Inject
     public DirectParentsListPresenter(@Nonnull DirectParentsListView view,
                                       @Nonnull DispatchServiceManager dispatch,
@@ -99,7 +101,7 @@ public class DirectParentsListPresenter implements HasDispose {
     private void displayParents(List<EntityNode> parents) {
         logger.info("Direct parents count: " + parents.size());
         List<DirectParentPresenter> presenters = parents.stream()
-                .map(directParentFactory::create)
+                .map(parent -> directParentFactory.create(parent, selectionHandler))
                 .collect(Collectors.toList());
         redisplayParents(presenters);
     }
@@ -111,8 +113,8 @@ public class DirectParentsListPresenter implements HasDispose {
         directParentPresenters.addAll(presenters);
         directParentPresenters.forEach(DirectParentPresenter::start);
         List<DirectParentView> directParents = directParentPresenters.stream()
-                        .map(DirectParentPresenter::getView)
-                                .collect(Collectors.toList());
+                .map(DirectParentPresenter::getView)
+                .collect(Collectors.toList());
 
         view.setDirectParentView(directParents);
     }
@@ -127,5 +129,9 @@ public class DirectParentsListPresenter implements HasDispose {
     public void dispose() {
         logger.info("disposing list presenters ");
         stopDirectParentPresenters();
+    }
+
+    public void setDirectParentSelectionHandler(ParentSelectionHandler handler) {
+        this.selectionHandler = handler;
     }
 }

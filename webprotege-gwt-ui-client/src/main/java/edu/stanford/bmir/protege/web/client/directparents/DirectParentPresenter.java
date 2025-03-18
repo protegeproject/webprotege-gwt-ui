@@ -22,18 +22,23 @@ public class DirectParentPresenter implements HasDispose {
 
     private final EntityNodeHtmlRenderer nodeRenderer;
 
+    private final ParentSelectionHandler selectionHandler;
+
     @AutoFactory
     @Inject
     public DirectParentPresenter(@Nonnull EntityNode entityNode,
+                                 @Nonnull ParentSelectionHandler selectionHandler,
                                  @Provided @Nonnull DirectParentView view,
                                  @Provided @Nonnull EntityNodeHtmlRenderer nodeRenderer) {
         this.entityNode = checkNotNull(entityNode);
         this.view = checkNotNull(view);
         this.nodeRenderer = nodeRenderer;
+        this.selectionHandler = selectionHandler;
     }
 
     public void start() {
         logger.info("Rendering entity: " + nodeRenderer.getHtmlRendering(entityNode));
+        this.view.setSelectionHandler((event) -> selectionHandler.handleSelection(entityNode.getEntity()));
         this.view.setEntity(nodeRenderer.getHtmlRendering(entityNode));
     }
 
