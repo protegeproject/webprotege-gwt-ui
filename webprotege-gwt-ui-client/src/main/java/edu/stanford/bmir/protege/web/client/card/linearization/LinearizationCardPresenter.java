@@ -69,6 +69,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
             }
             view.setLinearizationDefinitonMap(this.definitionMap);
         });
+        this.view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -98,9 +99,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         view.dispose();
                         view.setEntityParentsMap(this.entityParentsMap);
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-                        view.setLinearizationChangeEventHandler(() -> {
-                            handlerManager.fireEvent(new DirtyChangedEvent());
-                        });
+                        view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
                         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
                     });
                 }
@@ -122,12 +121,14 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void cancelEditing() {
         view.setReadOnly();
+        fireEvent(new DirtyChangedEvent());
     }
 
     @Override
     public void finishEditing(String commitMessage) {
         view.saveValues();
         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
+        fireEvent(new DirtyChangedEvent());
     }
 
     @Override

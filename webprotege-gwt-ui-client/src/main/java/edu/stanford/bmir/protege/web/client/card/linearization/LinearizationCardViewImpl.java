@@ -29,7 +29,6 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     Logger logger = Logger.getLogger("LinearizationCardViewImpl");
 
     private WhoficEntityLinearizationSpecification specification;
-    private WhoficEntityLinearizationSpecification dirtySpecification;
     @UiField
     BusyView busyView;
 
@@ -319,7 +318,8 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                     linearizationSpecification,
                     entityParentsMap,
                     commentsModal,
-                    tableRefresh);
+                    tableRefresh,
+                    linearizationChangeEventHandler);
             tableRowList.add(row);
         }
         for (LinearizationTableRow row : tableRowList) {
