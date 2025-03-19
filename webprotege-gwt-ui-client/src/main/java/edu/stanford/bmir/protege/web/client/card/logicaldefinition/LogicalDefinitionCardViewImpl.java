@@ -198,7 +198,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         dispatchServiceManager.execute(
                 GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()),
                 (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
-                    this.pristineData = LogicalConditions.create(getEntityLogicalDefinitionResult.getLogicalDefinitions(), getEntityLogicalDefinitionResult.getNecessaryConditions());
                     if (getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
                         definitions.getElement().getStyle().setBackgroundImage(null);
 
@@ -234,6 +233,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
                     }
+                    this.pristineData = getEditedData();
                 });
     }
 
