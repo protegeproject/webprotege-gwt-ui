@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.directparents.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -574,6 +575,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ViewNodeId _ViewNodeId;
     ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
     ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
+    GetEntityDirectParentsAction _GetEntityDirectParentsAction;
+    GetEntityDirectParentsResult _GetEntityDirectParentsResult;
 
     public RpcWhiteList() {
     }
