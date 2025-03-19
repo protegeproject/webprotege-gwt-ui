@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.card.logicaldefinition;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
@@ -25,4 +24,7 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
     LogicalConditions getEditedData();
 
     OWLEntity getEntity();
+
+    void clearDefinitions();
+
 }

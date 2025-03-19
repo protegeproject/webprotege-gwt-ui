@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.client.card.logicaldefinition;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
@@ -118,7 +115,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
         this.addDefinitionButton.addClickHandler((event -> {
             if (tableWrappers.isEmpty()) {
-                definitions.clear();
+                clearDefinitions();
             }
             LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
                     projectId,
@@ -153,7 +150,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void dispose() {
-
+        this.necessaryConditionsTable.resetTable();
+        this.tableWrappers = new ArrayList<>();
+        clearDefinitions();
     }
 
     @Override
@@ -161,7 +160,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         this.projectId = projectId;
         this.necessaryConditionsTable.resetTable();
         this.tableWrappers = new ArrayList<>();
-        this.definitions.clear();
+        clearDefinitions();
         this.currentEntity = owlEntity;
 
         necessaryConditionsContainer.add(necessaryConditionsTable);
@@ -177,7 +176,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = new ArrayList<>(result);
 
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(currentEntity.getIRI(), projectId), config -> {
+            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
                 this.labels = config.getLabels();
                 this.postCoordinationTableConfiguration = config.getTableConfiguration();
                 necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
@@ -238,7 +237,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     }
 
     private void displayPlaceholder() {
-        definitions.clear();
+        clearDefinitions();
     }
 
     private void handleAxisValueChanged(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue) {
@@ -317,8 +316,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     this.entityData.getBrowserText()
                     ),
                     response -> {
-                        this.pristineData = getEditedData();
-                        switchToReadOnly();
                     }
             );
         } else {
@@ -401,5 +398,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     public OWLEntity getEntity() {
         return this.currentEntity;
+    }
+
+    @Override
+    public void clearDefinitions() {
+        this.definitions.forEach(Widget::removeFromParent);
+        this.definitions.clear();
     }
 }
