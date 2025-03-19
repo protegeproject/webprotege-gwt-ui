@@ -10,4 +10,7 @@ public interface ChangeChildrenOrderingDialogView extends IsWidget {
     void setChildren(List<EntityNode> children);
 
     List<String> getOrderedChildren();
+
+    void setEntityName(String browserText);
+
 }

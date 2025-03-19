@@ -81,6 +81,7 @@ public class ChangeChildrenOrderingUIAction extends AbstractUiAction {
                         });
             });
             modalManager.showModal(modalPresenter);
+            view.setEntityName(entityData.getBrowserText());
             view.setChildren(result.getChildren().getPageElements().stream().map(GraphNode::getUserObject).collect(Collectors.toList()));
         });
 
