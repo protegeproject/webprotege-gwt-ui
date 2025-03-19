@@ -316,7 +316,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     ": Edited the Logical Definitons and/or Necessary Conditions for " +
                                     this.entityData.getBrowserText()
                     ),
-                    response -> setEntity(currentEntity, projectId)
+                    response -> {
+                        this.pristineData = getEditedData();
+                        switchToReadOnly();
+                    }
             );
         } else {
             messageBox.showAlert(
