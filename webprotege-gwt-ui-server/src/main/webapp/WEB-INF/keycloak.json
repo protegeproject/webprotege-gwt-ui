@@ -1,6 +1,6 @@
 {
   "realm": "webprotege",
-  "auth-server-url": "${env.KEYCLOAK_AUTH_URL:http://webprotege-local.edu/auth/}",
+  "auth-server-url": "${env.KEYCLOAK_AUTH_URL:http://webprotege-local.edu/keycloak-admin/}",
   "ssl-required": "none",
   "resource": "webprotege",
   "public-client": true,
