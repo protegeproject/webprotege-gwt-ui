@@ -18,7 +18,6 @@ public class GetUserInfoResult implements Result, Serializable, IsSerializable {
 
     private String token;
 
-    private String websocketUrl;
 
 
     @GwtSerializationConstructor
@@ -29,10 +28,9 @@ public class GetUserInfoResult implements Result, Serializable, IsSerializable {
 
     @JsonCreator
     @NotNull
-    public static GetUserInfoResult create(@JsonProperty("token") String token, @JsonProperty("websocketUrl") String websocketUrl) {
+    public static GetUserInfoResult create(@JsonProperty("token") String token) {
         GetUserInfoResult response = new GetUserInfoResult();
         response.token = token;
-        response.websocketUrl = websocketUrl;
         return response;
     }
 
@@ -41,10 +39,6 @@ public class GetUserInfoResult implements Result, Serializable, IsSerializable {
         return token;
     }
 
-
-    public String getWebsocketUrl() {
-        return websocketUrl;
-    }
 
     public void setToken(String token) {
         this.token = token;

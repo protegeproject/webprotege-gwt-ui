@@ -87,5 +87,8 @@
 		<servlet-name>remoteLogging</servlet-name>
 		<url-pattern>/webprotege/remote_logging</url-pattern>
 	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.auth.LogoutServlet</servlet-class>
+	</servlet>
 </web-app>

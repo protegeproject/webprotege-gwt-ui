@@ -1,17 +1,20 @@
 package edu.stanford.bmir.protege.web.client.user;
 
+import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,12 +36,18 @@ public class LoggedInUserManager {
     @Nonnull
     private final DispatchErrorMessageDisplay errorDisplay;
 
+    @Nonnull
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
+
     @Inject
     public LoggedInUserManager(@Nonnull LoggedInUser loggedInUser,
-                               @Nonnull DispatchServiceManager dispatchServiceManager, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+                               @Nonnull DispatchServiceManager dispatchServiceManager,
+                               @Nonnull DispatchErrorMessageDisplay errorDisplay,
+                               @Nonnull ApplicationEnvironmentManager applicationEnvironmentManager) {
         this.loggedInUser = loggedInUser;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.errorDisplay = checkNotNull(errorDisplay);
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
     }
 
     /**
@@ -68,9 +77,34 @@ public class LoggedInUserManager {
         if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
-        dispatchServiceManager.execute(new LogOutUserAction(), result -> {
-            loggedInUser.setLoggedInUser(result.getUserInSession());
-        });
+
+     RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
+                applicationEnvironmentManager.getAppEnvVariables().getLogoutUrl());
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    if (200 == response.getStatusCode()) {
+                        // Process the response
+                        Window.Location.assign(applicationEnvironmentManager.getAppEnvVariables().getRedirectAfterLogoutUrl());
+
+                    } else {
+                        // Handle the error
+                        Window.alert("Failed to get response: " + response.getStatusText());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    // Handle the error
+                    Window.alert("Request error: " + exception.getMessage());
+                }
+            });
+        } catch (RequestException e) {
+            // Handle the exception
+            Window.alert("Request exception: " + e.getMessage());
+        }
     }
 
     public Set<ActionId> getLoggedInUserApplicationActions() {
