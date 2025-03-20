@@ -184,6 +184,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                 necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
                 populateWithExistingDefinition(owlEntity, projectId);
                 populateAvailableAxisValues(owlEntity);
+                this.changeHandler.handleLogicalDefinitionCHange();
             });
         });
 
@@ -319,6 +320,8 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     this.entityData.getBrowserText()
                     ),
                     response -> {
+                        this.pristineData = LogicalConditions.create(new ArrayList<>(logCond.getLogicalDefinitions()), necessaryConditionsTable.getValues());
+                        switchToReadOnly();
                     }
             );
         } else {

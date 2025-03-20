@@ -1,33 +1,21 @@
 package edu.stanford.bmir.protege.web.client.card.linearization;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.card.CustomContentEntityCardPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
+import com.google.auto.factory.*;
+import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 
 @Card(id = "linearization.card")
 public class LinearizationCardPresenter implements CustomContentEntityCardPresenter, EntityCardEditorPresenter {
@@ -101,6 +89,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
                         view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
                         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
+                        fireEvent(new DirtyChangedEvent());
                     });
                 }
             });
