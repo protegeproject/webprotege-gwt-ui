@@ -148,9 +148,13 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                 initializeTableRows();
                 if (specification.getLinearizationResiduals() != null) {
                     this.suppressOthersSpecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressedOtherSpecifiedResiduals());
+                    this.suppressOthersSpecifiedResidual.addValueChangeHandler((e)-> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.suppressUnspecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressUnspecifiedResiduals());
+                    this.suppressUnspecifiedResidual.addValueChangeHandler((e)-> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.unspecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
+                    this.unspecifiedResidualTitle.addValueChangeHandler((e)->linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.otherSpecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getOtherSpecifiedResidualTitle());
+                    this.otherSpecifiedResidualTitle.addValueChangeHandler(event -> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                 }
                 orderAndPopulateViewWithRows();
                 disableResiduals();
