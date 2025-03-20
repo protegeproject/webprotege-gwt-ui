@@ -16,8 +16,7 @@ import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 @Component(
         modules = {
                 ClientApplicationModule.class,
-                SharedApplicationModule.class,
-                CardModule.class})
+                SharedApplicationModule.class})
 @ApplicationSingleton
 public interface ClientApplicationComponent {
 

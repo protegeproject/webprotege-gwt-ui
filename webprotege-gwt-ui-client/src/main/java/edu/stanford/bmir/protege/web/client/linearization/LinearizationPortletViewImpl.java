@@ -352,7 +352,8 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                     linearizationSpecification,
                     entityParentsMap,
                     commentsModal,
-                    tableRefresh);
+                    tableRefresh,
+                    linearizationChangeEventHandler);
             tableRowList.add(row);
         }
         for (LinearizationTableRow row : tableRowList) {

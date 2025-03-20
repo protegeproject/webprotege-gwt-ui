@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.*;
 
@@ -22,8 +21,10 @@ public class LinearizationComments  implements ClickHandler {
 
     private LinearizationCommentsResourceBundle.LinearizationCommentsCss style = LinearizationCommentsResourceBundle.INSTANCE.style();
 
+    private LinearizationChangeEventHandler handler = () -> {};
+
     // Constructor
-    public LinearizationComments(String text, LinearizationCommentsModal linearizationParentModal) {
+    public LinearizationComments(String text, LinearizationCommentsModal linearizationParentModal, LinearizationChangeEventHandler handler) {
         style.ensureInjected();
         markDownText = text;
         shownWidget = new Button();
@@ -31,6 +32,7 @@ public class LinearizationComments  implements ClickHandler {
         shownWidget.addClickHandler(this);
         shownWidget.addStyleName(style.getLinearizationComments());
         this.linearizationCommentsModal = linearizationParentModal;
+        this.handler = handler;
     }
 
 
@@ -58,6 +60,9 @@ public class LinearizationComments  implements ClickHandler {
         // For example, you can change the label's text on click
         Consumer<String> handler = body -> {
             if(!isReadOnly) {
+                if(!markDownText.equals(body)){
+                    this.handler.handleLinearizationChangeEvent();
+                }
                 this.markDownText = body;
                 setText(body);
             }
