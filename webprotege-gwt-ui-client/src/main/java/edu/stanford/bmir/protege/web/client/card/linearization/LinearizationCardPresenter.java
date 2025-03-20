@@ -110,6 +110,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void clearEntity() {
         view.dispose();
+        fireEvent(new DirtyChangedEvent());
     }
 
     @Override

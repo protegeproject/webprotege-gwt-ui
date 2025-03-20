@@ -87,6 +87,8 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
+    private LogicalDefinitionChangeHandler changeHandler;
+
 
     @Inject
     public LogicalDefinitionCardViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
@@ -258,6 +260,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                 .collect(Collectors.toSet());
 
         logicalDefinitionModal.showModal(roots, table::addNewRow);
+        this.changeHandler.handleLogicalDefinitionCHange();
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
@@ -345,6 +348,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         if (tableWrappers.isEmpty()) {
             displayPlaceholder();
         }
+        this.changeHandler.handleLogicalDefinitionCHange();
     }
 
     private void populateAncestorsFromTree(AncestorClassHierarchy node, Set<OWLEntityData> accumulator) {
@@ -404,5 +408,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     public void clearDefinitions() {
         this.definitions.forEach(Widget::removeFromParent);
         this.definitions.clear();
+    }
+
+    @Override
+    public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler handler) {
+        this.changeHandler = handler;
     }
 }
