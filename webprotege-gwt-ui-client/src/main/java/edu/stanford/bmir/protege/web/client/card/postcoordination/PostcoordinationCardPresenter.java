@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.card.CustomContentEntityCardPresenter;
 import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardPresenter;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
@@ -50,6 +52,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
     private Optional<OWLEntity> selectedEntity;
+    private HandlerManager handlerManager = new HandlerManager(this);
 
     private boolean editMode = false;
 
@@ -125,14 +128,12 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void beginEditing() {
-        editMode = true;
-        view.setEditMode(true);
+        this.setEditMode(true);
     }
 
     @Override
     public void cancelEditing() {
-        editMode = false;
-        view.setEditMode(false);
+        setEditMode(false);
         loadEntity();
     }
 
@@ -155,20 +156,20 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public boolean isDirty() {
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-        List<String> newCustomScalesList = newCustomScales.stream().map(PostCoordinationCustomScales::getPostcoordinationAxis).sorted().collect(Collectors.toList());
-        List<String> existingScalesList = postCoordinationCustomScalesList.stream().map(PostCoordinationCustomScales::getPostcoordinationAxis)
-                .sorted().collect(Collectors.toList());
+        List<PostCoordinationCustomScales> newCustomScalesList = newCustomScales.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
+        List<PostCoordinationCustomScales> existingScalesList = postCoordinationCustomScalesList.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
         return (!newCustomScalesList.isEmpty() && !newCustomScalesList.
                 equals(existingScalesList)) || specification.isPresent();
     }
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return null;
+        return handlerManager.addHandler(DirtyChangedEvent.TYPE, handler);
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
+        handlerManager.fireEvent(event);
     }
 
 
@@ -207,6 +208,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         cardPresenter.setScaleValue(scaleValue);
         cardPresenter.setPostCoordinationAxis(axis);
         cardPresenter.setScaleValueSelectionPresenter(scaleSelectionPresenter);
+        cardPresenter.setHandleChange(() -> {
+            logger.info("Emitting dirty changed event");
+            handlerManager.fireEvent(new DirtyChangedEvent());
+            
+        });
         return cardPresenter;
     }
     
@@ -361,7 +367,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         scaleValueCardPresenters.clear();
         scaleValueCardPresenters.putAll(orderedScaleValueCardPresenters);
 
-        scaleValueCardPresenters.values().forEach(scaleValueCardPresenter -> view.getScaleValueCardsView().add(scaleValueCardPresenter.getView().asWidget()));
+        scaleValueCardPresenters.values().forEach(scaleValueCardPresenter -> {
+            view.getScaleValueCardsView().add(scaleValueCardPresenter.getView().asWidget());
+        });
     }
 
     private Map<String, ScaleValueCardPresenter> getOrderedScaleValueCardPresenters() {
@@ -410,6 +418,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                     removeScaleValueCardPresenter(tableAxisIri);
                 }
             }
+            handlerManager.fireEvent(new DirtyChangedEvent());
         };
     }
 
