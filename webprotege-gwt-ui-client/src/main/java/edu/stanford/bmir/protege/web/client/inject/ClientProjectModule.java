@@ -39,6 +39,7 @@ import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.*;
 import edu.stanford.bmir.protege.web.client.search.*;
+import edu.stanford.bmir.protege.web.client.searchClassInHierarchy.*;
 import edu.stanford.bmir.protege.web.client.searchIcd.*;
 import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
@@ -1019,6 +1020,11 @@ public class ClientProjectModule {
 
     @Provides
     SearchInputManager provideSearchInputManager(SearchInputManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchClassUnderHierarchyView provideClassUnderHierarchyView(SearchClassUnderHierarchyViewImpl impl){
         return impl;
     }
 }

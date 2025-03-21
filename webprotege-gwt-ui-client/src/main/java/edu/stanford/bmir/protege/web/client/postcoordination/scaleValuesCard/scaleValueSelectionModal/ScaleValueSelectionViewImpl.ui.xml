@@ -30,6 +30,13 @@
         <tr>
             <td valign="top">
                 <g:HTMLPanel addStyleNames="{style.message-block}">
+                    <g:SimplePanel ui:field="editorField"/>
+                </g:HTMLPanel>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <g:HTMLPanel addStyleNames="{style.message-block}">
                     <g:SimplePanel ui:field="hierarchyContainer"/>
                 </g:HTMLPanel>
             </td>

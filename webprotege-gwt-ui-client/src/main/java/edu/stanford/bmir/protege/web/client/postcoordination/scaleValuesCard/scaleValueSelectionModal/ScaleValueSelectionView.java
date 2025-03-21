@@ -9,4 +9,7 @@ public interface ScaleValueSelectionView extends IsWidget, HasBusy {
 
     @Nonnull
     AcceptsOneWidget getHierarchyContainer();
+
+    @Nonnull
+    AcceptsOneWidget getEditorField();
 }
