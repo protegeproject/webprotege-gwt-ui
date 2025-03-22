@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
+import com.google.gwt.event.shared.HandlerManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -32,6 +34,7 @@ public class ScaleValueCardPresenter {
 
     private WebProtegeEventBus eventBus;
 
+    private Runnable handleChange;
 
     public ScaleValueCardPresenter(DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId,
@@ -43,6 +46,10 @@ public class ScaleValueCardPresenter {
 
     public void setPostCoordinationAxis(PostCoordinationTableAxisLabel postCoordinationAxis) {
         this.postCoordinationAxis = postCoordinationAxis;
+    }
+
+    public void setHandleChange(Runnable runnable) {
+        this.handleChange = runnable;
     }
 
     public void setScaleValue(PostcoordinationScaleValue scaleValue) {
@@ -126,6 +133,9 @@ public class ScaleValueCardPresenter {
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
             selectChosenEntity();
+            if(this.handleChange != null) {
+                this.handleChange.run();
+            }
         });
         Set<OWLClass> roots = new HashSet<>(Collections.singletonList(new OWLClassImpl(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
         scaleValueSelectionPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));

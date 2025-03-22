@@ -6,6 +6,8 @@ import dagger.Module;
 import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.card.*;
+import edu.stanford.bmir.protege.web.client.card.postcoordination.PostcoordinationCardView;
+import edu.stanford.bmir.protege.web.client.card.postcoordination.PostcoordinationCardViewImpl;
 import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
 import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsView;
@@ -262,6 +264,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    PostcoordinationCardView providePostcoordinationCardView(PostcoordinationCardViewImpl impl) {
+        return impl;
+    }
 
     @Provides
     LinearizationCommentsView provideLienarizationCommentsView(LinearizationCommentsViewImpl impl){
