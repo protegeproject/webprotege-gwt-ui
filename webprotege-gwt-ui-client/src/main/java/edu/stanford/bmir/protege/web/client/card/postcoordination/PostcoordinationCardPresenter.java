@@ -125,6 +125,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void clearEntity() {
         this.selectedEntity = Optional.empty();
         handlerManager.fireEvent(new DirtyChangedEvent());
+        this.view.initializeTable();
     }
 
     @Override
@@ -156,6 +157,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public boolean isDirty() {
+        if(!this.editMode){
+            return false;
+        }
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         List<PostCoordinationCustomScales> newCustomScalesList = newCustomScales.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
