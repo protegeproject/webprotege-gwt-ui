@@ -83,6 +83,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void setEntity(OWLEntity entity) {
+
         if (entity != null) {
             this.entityParentsMap.clear();
             dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
