@@ -149,6 +149,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification.get()),
                 (result) -> {
                     loadEntity();
+                    fireEvent(new DirtyChangedEvent());
                 }
         );
     }
