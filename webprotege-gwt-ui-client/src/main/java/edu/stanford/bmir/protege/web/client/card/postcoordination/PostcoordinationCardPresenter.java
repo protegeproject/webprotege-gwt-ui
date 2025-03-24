@@ -72,7 +72,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         try {
-            ui.setWidget(view);
             this.eventBus = eventBus;
             clearAllDate();
             selectedEntity = Optional.empty();
@@ -95,10 +94,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
             });
 
             view.setTableCellChangedHandler(handleTableCellChanged());
-
             this.setEditMode(false);
-
             dispatch.executeCurrentBatch();
+            ui.setWidget(view);
         }catch (Exception e) {
             logger.log(Level.SEVERE, "Erroare " , e);
         }
@@ -125,7 +123,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void clearEntity() {
         this.selectedEntity = Optional.empty();
         handlerManager.fireEvent(new DirtyChangedEvent());
-        this.view.initializeTable();
     }
 
     @Override
@@ -164,8 +161,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         List<PostCoordinationCustomScales> newCustomScalesList = newCustomScales.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
         List<PostCoordinationCustomScales> existingScalesList = postCoordinationCustomScalesList.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
-        return (!newCustomScalesList.isEmpty() && !newCustomScalesList.
-                equals(existingScalesList)) || specification.isPresent();
+        return !newCustomScalesList.isEmpty() && !newCustomScalesList.
+                equals(existingScalesList) && specification.isPresent();
     }
 
     @Override
