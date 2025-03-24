@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
 import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
+import edu.stanford.bmir.protege.web.client.uuid.*;
 import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
@@ -22,7 +23,7 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -107,8 +108,9 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
     }
 
     public void dropView(String className) {
+
         NodeProperties nodeProperties = NodeProperties.builder().setValue("portlet", className).build();
-        TerminalNode terminalNode = new TerminalNode(TerminalNodeId.get(), nodeProperties);
+        TerminalNode terminalNode = new TerminalNode(TerminalNodeId.get(UuidV4.uuidv4()), nodeProperties);
         widgetMapPanel.doDrop(terminalNode);
     }
 
