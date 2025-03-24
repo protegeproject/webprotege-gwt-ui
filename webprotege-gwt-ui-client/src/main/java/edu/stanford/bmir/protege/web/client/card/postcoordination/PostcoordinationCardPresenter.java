@@ -124,6 +124,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void clearEntity() {
         this.selectedEntity = Optional.empty();
+        handlerManager.fireEvent(new DirtyChangedEvent());
     }
 
     @Override
