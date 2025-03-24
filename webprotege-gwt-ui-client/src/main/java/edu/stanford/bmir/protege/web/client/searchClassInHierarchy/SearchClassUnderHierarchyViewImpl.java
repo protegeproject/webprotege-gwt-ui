@@ -5,7 +5,7 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -23,7 +23,8 @@ public class SearchClassUnderHierarchyViewImpl extends Composite implements Sear
 
     }
 
-    private SearchSelectionChangedHandler handler = (entity) -> {};
+    private SearchSelectionChangedHandler handler = (entity) -> {
+    };
 
     @UiField(provided = true)
     PrimitiveDataEditor editorField;
@@ -35,12 +36,13 @@ public class SearchClassUnderHierarchyViewImpl extends Composite implements Sear
         initWidget(ourUiBinder.createAndBindUi(this));
         this.editorField.addValueChangeHandler(value -> {
             Optional<OWLPrimitiveData> valueChanged = value.getValue();
-            if(valueChanged.isPresent()){
+            if (valueChanged.isPresent()) {
                 OWLPrimitiveData primitiveData = valueChanged.get();
                 Optional<OWLEntity> optionalOWLEntity = primitiveData.asEntity();
                 handler.handleSelectionChanged(optionalOWLEntity);
             }
         });
+        this.editorField.setEntityLinkMode(EntityLinkMode.DO_NOT_SHOW_LINKS_FOR_ENTITIES);
     }
 
     @Nonnull

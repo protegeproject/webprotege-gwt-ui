@@ -24,7 +24,6 @@ public class SearchClassUnderHierarchyPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        view.setSelectionChangedHandler(handler);
     }
 
 
@@ -42,5 +41,6 @@ public class SearchClassUnderHierarchyPresenter {
 
     public void setSelectionChangedHandler(SearchSelectionChangedHandler searchSelection) {
         this.handler = searchSelection;
+        this.view.setSelectionChangedHandler(handler);
     }
 }
