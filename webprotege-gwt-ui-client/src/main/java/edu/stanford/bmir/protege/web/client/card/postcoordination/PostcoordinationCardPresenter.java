@@ -85,6 +85,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                             )
             );
 
+
+            view.setTableCellChangedHandler(handleTableCellChanged());
+            this.setEditMode(false);
+            dispatch.executeCurrentBatch();
             dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
                 for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
@@ -92,13 +96,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 }
                 view.setLinearizationDefinitonMap(definitionMap);
             });
-
-            view.setTableCellChangedHandler(handleTableCellChanged());
-            this.setEditMode(false);
-            dispatch.executeCurrentBatch();
             ui.setWidget(view);
-        }catch (Exception e) {
-            logger.log(Level.SEVERE, "Erroare " , e);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error ", e);
         }
     }
 
@@ -115,6 +115,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void setEntity(OWLEntity entity) {
+        this.setEditMode(false);
         this.selectedEntity = Optional.of(entity);
         loadEntity();
     }
@@ -154,15 +155,24 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public boolean isDirty() {
-        if(!this.editMode){
+        if (!this.editMode) {
             return false;
         }
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-        List<PostCoordinationCustomScales> newCustomScalesList = newCustomScales.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
-        List<PostCoordinationCustomScales> existingScalesList = postCoordinationCustomScalesList.stream().sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis)).collect(Collectors.toList());
-        return !newCustomScalesList.isEmpty() && !newCustomScalesList.
-                equals(existingScalesList) && specification.isPresent();
+
+        List<PostCoordinationCustomScales> newCustomScalesList =
+                newCustomScales.stream()
+                        .map(coord -> PostCoordinationCustomScales.create(coord.getPostcoordinationScaleValues().stream().sorted().collect(Collectors.toList()), coord.getPostcoordinationAxis()))
+                        .sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis))
+                        .collect(Collectors.toList());
+
+        List<PostCoordinationCustomScales> existingScalesList = postCoordinationCustomScalesList.stream()
+                .map(coord -> PostCoordinationCustomScales.create(coord.getPostcoordinationScaleValues().stream().sorted().collect(Collectors.toList()), coord.getPostcoordinationAxis()))
+                .sorted(Comparator.comparing(PostCoordinationCustomScales::getPostcoordinationAxis))
+                .collect(Collectors.toList());
+
+        return !newCustomScalesList.equals(existingScalesList) || specification.isPresent();
     }
 
     @Override
@@ -214,18 +224,18 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         cardPresenter.setHandleChange(() -> {
             logger.info("Emitting dirty changed event");
             handlerManager.fireEvent(new DirtyChangedEvent());
-            
+
         });
         return cardPresenter;
     }
-    
+
 
     protected void loadEntity() {
         if (!this.selectedEntity.isPresent()) {
             logger.log(Level.INFO, "No entity to display");
         } else {
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(this.selectedEntity.get().getIRI(), projectId), result -> {
-                if(result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
+                if (result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     cancelEditing();
                 } else {
                     try {
@@ -271,9 +281,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                         }
 
                         navigateToEntity(this.selectedEntity.get());
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
-                }
+                    }
                 }
 
             });
@@ -305,11 +315,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         boolean tableLabelsAreTheSame = tableLabels.equals(this.tableLabelsForAxes);
         return !scaleCardsAreTheSame || !compositeAxisAreTheSame || !scaleLabelsAreTheSame || !tableLabelsAreTheSame;
     }
+
     private void navigateToEntity(OWLEntity entityData) {
         dispatch.execute(GetEntityCustomScalesAction.create(entityData.getIRI().toString(), projectId),
                 (result) -> {
-                    logger.info(result.toString());
-                    clearScaleValueCards();
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
                 });
 

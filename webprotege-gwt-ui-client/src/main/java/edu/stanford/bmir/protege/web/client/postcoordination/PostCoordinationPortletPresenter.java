@@ -182,6 +182,8 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
             setDisplayedEntity(Optional.empty());
         } else {
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entityData.get().getIRI(), getProjectId()), result -> {
+                clearAllDate();
+                view.resetTable();
                 if(result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     setNothingSelectedVisible(true);
                     setDisplayedEntity(Optional.empty());
