@@ -60,18 +60,21 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void stop() {
-
+        this.view.dispose();
     }
 
     @Override
     public void setEntity(OWLEntity entity) {
+        logger.log(Level.INFO, "Set logical definitions card entity: " + entity.toStringID());
+
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                 (result) -> view.setEntityData(result.getEntityData()));
-        view.setEntity(entity, projectId);
+        view.setEntity(entity);
     }
 
     @Override
     public void clearEntity() {
+        logger.log(Level.INFO, "logical definitions card clear entity !");
         view.dispose();
         fireEvent(new DirtyChangedEvent());
     }
@@ -83,7 +86,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void cancelEditing() {
-        view.setEntity(view.getEntity(), projectId);
+        view.setEntity(view.getEntity());
         fireEvent(new DirtyChangedEvent());
     }
 
