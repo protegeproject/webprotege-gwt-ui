@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, HasDispose {
 
-    void setEntity(OWLEntity owlEntity, ProjectId projectId);
+    void setEntity(OWLEntity owlEntity);
 
     void setEntityData(OWLEntityData entityData);
 
@@ -29,4 +29,8 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
     void clearDefinitions();
 
     void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler handler);
+
+    void clearTables();
+
+    void clearData();
 }

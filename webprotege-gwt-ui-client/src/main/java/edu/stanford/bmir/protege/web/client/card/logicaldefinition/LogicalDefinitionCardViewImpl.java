@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.card.logicaldefinition;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -12,15 +11,12 @@ import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
-import edu.stanford.bmir.protege.web.shared.icd.GetClassAncestorsAction;
+import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -56,7 +52,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     private final MessageBox messageBox;
 
-    private ProjectId projectId;
+    private final ProjectId projectId;
 
     private final LogicalDefinitionModal logicalDefinitionModal;
 
@@ -94,11 +90,13 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     public LogicalDefinitionCardViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                          @Nonnull MessageBox messageBox,
                                          @Nonnull UuidV4Provider uuidV4Provider,
-                                         @Nonnull LogicalDefinitionModal logicalDefinitionModal) {
+                                         @Nonnull LogicalDefinitionModal logicalDefinitionModal,
+                                         @Nonnull ProjectId projectId) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
         this.logicalDefinitionModal = logicalDefinitionModal;
+        this.projectId = projectId;
         buttonCss.ensureInjected();
         necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
                 "Value",
@@ -152,22 +150,36 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void dispose() {
-        this.necessaryConditionsTable.resetTable();
-        this.tableWrappers = new ArrayList<>();
-        clearDefinitions();
+        clearTables();
+        clearData();
     }
 
     @Override
-    public void setEntity(OWLEntity owlEntity, ProjectId projectId) {
-        this.projectId = projectId;
+    public void clearTables() {
         this.necessaryConditionsTable.resetTable();
         this.tableWrappers = new ArrayList<>();
         clearDefinitions();
+        necessaryConditionsContainer.clear();
+        necessaryConditionsContainer.add(necessaryConditionsTable);
+    }
+
+    @Override
+    public void clearData() {
+        this.pristineData = null;
+        this.currentEntity = null;
+    }
+
+    @Override
+    public void setEntity(OWLEntity owlEntity) {
+        if (Objects.equals(this.currentEntity, owlEntity)) {
+            return;
+        }
+
+        clearData();
+        clearTables();
         this.currentEntity = owlEntity;
 
-        necessaryConditionsContainer.add(necessaryConditionsTable);
-
-
+        dispatchServiceManager.beginBatch();
         dispatchServiceManager.execute(GetEntityCustomScalesAction.create(owlEntity.getIRI().toString(), projectId), postcoordination -> {
             this.superclassScalesValue = postcoordination.getWhoficCustomScaleValues();
             this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
@@ -177,16 +189,17 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = new ArrayList<>(result);
-
-            dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
-                this.labels = config.getLabels();
-                this.postCoordinationTableConfiguration = config.getTableConfiguration();
-                necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
-                populateWithExistingDefinition(owlEntity, projectId);
-                populateAvailableAxisValues(owlEntity);
-                this.changeHandler.handleLogicalDefinitionCHange();
-            });
         });
+
+        dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
+            this.labels = config.getLabels();
+            this.postCoordinationTableConfiguration = config.getTableConfiguration();
+            necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
+            populateWithExistingDefinition(owlEntity, projectId);
+            populateAvailableAxisValues(owlEntity);
+            this.changeHandler.handleLogicalDefinitionCHange();
+        });
+        dispatchServiceManager.executeCurrentBatch();
 
         switchToReadOnly();
     }
@@ -394,7 +407,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     }
 
     public LogicalConditions getPristineData() {
-        return this.pristineData;
+        if (pristineData != null) {
+            return this.pristineData;
+        }
+
+        return LogicalConditions.create(Collections.emptyList(), Collections.emptyList());
     }
 
     public LogicalConditions getEditedData() {
