@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsResult;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
@@ -224,10 +225,11 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
         @JsonSubTypes.Type(GetHierarchyDescriptorResult.class),
         @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
+        @JsonSubTypes.Type(SaveEntityChildReorderingResult.class),
+        @JsonSubTypes.Type(GetEntityDirectParentsResult.class),
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
         @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
-        @JsonSubTypes.Type(SaveEntityChildReorderingResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

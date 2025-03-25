@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.crud.icatx.IcatxNameSuffixSettingsVi
 import edu.stanford.bmir.protege.web.client.crud.obo.*;
 import edu.stanford.bmir.protege.web.client.crud.supplied.*;
 import edu.stanford.bmir.protege.web.client.crud.uuid.*;
+import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.*;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
@@ -1014,6 +1015,16 @@ public class ClientProjectModule {
 
     @Provides
     CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
+        return impl;
+    }
+
+    @Provides
+    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    DirectParentView provideDirectParentView(DirectParentViewImpl impl){
         return impl;
     }
 
