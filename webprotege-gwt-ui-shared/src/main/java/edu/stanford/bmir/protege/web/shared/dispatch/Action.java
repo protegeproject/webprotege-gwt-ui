@@ -229,9 +229,11 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
-        @Type(value = GetHierarchyDescriptorAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = GetHierarchyDescriptorAction.class),
         @Type(value = ProcessUploadedSiblingsOrderingAction.class),
+        @Type(value = SaveEntityChildReorderingAction.class),
+        @Type(value = GetEntityDirectParentsAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
@@ -250,8 +252,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = CreateNewProjectFromProjectBackupAction.class),
         @Type(value = MoveEntitiesToParentIcdAction.class),
         @Type(value = MoveHierarchyNodeIcdAction.class),
-        @Type(value = SaveEntityChildReorderingAction.class),
-        @Type(value = GetEntityDirectParentsAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

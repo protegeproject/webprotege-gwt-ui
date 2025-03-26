@@ -219,7 +219,6 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         }
         else {
             displayCardsForSelectedEntity();
-            getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
         }
     }
 
@@ -227,7 +226,6 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         commitChanges(() -> {
             // Proceed as normal
             displayCardsForSelectedEntity();
-            getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
         });
     }
 
@@ -280,11 +278,10 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         dispatch.executeCurrentBatch();
         updateButtonVisibility();
         displayCardsForSelectedEntity();
-        getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
     }
 
     private void handleFinishEditing() {
-        commitChanges(() -> {});
+        commitChanges(this::updateButtonVisibility);
     }
 
     private void commitChanges(Runnable commitFinished) {

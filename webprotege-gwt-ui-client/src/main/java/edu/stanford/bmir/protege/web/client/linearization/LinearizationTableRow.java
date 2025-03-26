@@ -44,6 +44,8 @@ public class LinearizationTableRow {
 
     LinearizationTableResourceBundle.LinearizationCss linearizationCss = LinearizationTableResourceBundle.INSTANCE.style();
 
+    LinearizationChangeEventHandler handler = () -> {};
+
     private LinearizationTableRow() {
 
     }
@@ -52,8 +54,10 @@ public class LinearizationTableRow {
                                  LinearizationSpecification linearizationSpecification,
                                  Map<String, String> baseEntityParentsMap,
                                  LinearizationCommentsModal commentsModal,
-                                 TableRefresh tableRefresh) {
+                                 TableRefresh tableRefresh,
+                                 LinearizationChangeEventHandler handler) {
         try {
+            this.handler = handler;
             this.baseEntityParentsMap = baseEntityParentsMap;
             this.tableRefresh = tableRefresh;
             this.linearizationCommentsModal = commentsModal;
@@ -79,8 +83,11 @@ public class LinearizationTableRow {
             this.parentSelectionPanel.setVisible(true);
 
             this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
+            this.isPartOfCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
             this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
+            this.isGroupingCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
             this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+            this.isAuxAxChildCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
 
             initCodingNotes(linearizationSpecification.getCodingNote());
             this.codingNotes = this.commentsWidget.asWidget();
@@ -240,14 +247,18 @@ public class LinearizationTableRow {
         clone.parentSelectionPanel.add(clone.linearizationParentSelector);
         clone.parentSelectionPanel.add(clone.linearizationParentLabel);
         clone.tableRefresh = this.tableRefresh;
+        clone.handler = this.handler;
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
         clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsIncludedInLinearization());
+        clone.isPartOfCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
         clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsGrouping());
+        clone.isGroupingCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
         clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsAuxiliaryAxisChild());
+        clone.isAuxAxChildCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
 
-        LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal);
+        LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal, handler);
 
         clone.codingNotes = commentsClone.asWidget();
         clone.commentsWidget = commentsClone;
@@ -257,9 +268,9 @@ public class LinearizationTableRow {
 
     private void initCodingNotes(String value) {
         if (value != null && !value.isEmpty()) {
-            this.commentsWidget = new LinearizationComments(value, linearizationCommentsModal);
+            this.commentsWidget = new LinearizationComments(value, linearizationCommentsModal, handler);
         } else {
-            this.commentsWidget = new LinearizationComments(DEFAULT_COMMENTS_MESSAGE, linearizationCommentsModal);
+            this.commentsWidget = new LinearizationComments(DEFAULT_COMMENTS_MESSAGE, linearizationCommentsModal, handler);
         }
     }
 
@@ -277,6 +288,7 @@ public class LinearizationTableRow {
 
         this.setEnabled();
         tableRefresh.refreshTable(this);
+        handler.handleLinearizationChangeEvent();
     }
 
 
