@@ -75,27 +75,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
             this.eventBus = eventBus;
             clearEverything();
             selectedEntity = Optional.empty();
-
-            dispatch.beginBatch();
-
-            dispatch.execute(GetPostcoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult ->
-                    axisToGenericScaleResult.getPostcoordinationAxisToGenericScales()
-                            .forEach(axisToGenericScale ->
-                                    genericScale.put(axisToGenericScale.getPostcoordinationAxis(), axisToGenericScale)
-                            )
-            );
-
-
             view.setTableCellChangedHandler(handleTableCellChanged());
             this.setEditMode(false);
-            dispatch.executeCurrentBatch();
-            dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
-                Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
-                for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
-                    definitionMap.put(definition.getLinearizationUri(), definition);
-                }
-                view.setLinearizationDefinitonMap(definitionMap);
-            });
             ui.setWidget(view);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error ", e);
@@ -298,7 +279,21 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         compositeAxisList = compositeAxis;
         scaleCardsOrderByAxis = scaleCardsOrder;
         view.setLabels(tableLabelsForAxes);
-        view.initializeTable();
+        dispatch.execute(GetPostcoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult -> {
+                    axisToGenericScaleResult.getPostcoordinationAxisToGenericScales()
+                            .forEach(axisToGenericScale ->
+                                    genericScale.put(axisToGenericScale.getPostcoordinationAxis(), axisToGenericScale)
+                            );
+                    dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
+                        Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
+                        for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
+                            definitionMap.put(definition.getLinearizationUri(), definition);
+                        }
+                        view.setLinearizationDefinitonMap(definitionMap);
+                        view.initializeTable();
+                    });
+                }
+        );
     }
 
     private boolean tableNeedsToBeReset(Map<String, PostCoordinationTableAxisLabel> tableLabels,
