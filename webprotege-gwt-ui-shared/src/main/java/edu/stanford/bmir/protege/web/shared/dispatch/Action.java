@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -77,7 +78,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- *     The basic interface for actions that are sent to the dispatch service
+ * The basic interface for actions that are sent to the dispatch service
  * </p>
  */
 @JsonSubTypes(value = {
@@ -228,10 +229,11 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
         @Type(value = TranslateEventListAction.class),
-        @Type(value = GetHierarchyDescriptorAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = GetHierarchyDescriptorAction.class),
         @Type(value = ProcessUploadedSiblingsOrderingAction.class),
         @Type(value = SaveEntityChildReorderingAction.class),
+        @Type(value = GetEntityDirectParentsAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
         @Type(value = GetClassAncestorsAction.class),
