@@ -73,7 +73,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         try {
             this.eventBus = eventBus;
-            clearAllDate();
+            clearEverything();
             selectedEntity = Optional.empty();
 
             dispatch.beginBatch();
@@ -319,6 +319,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private void navigateToEntity(OWLEntity entityData) {
         dispatch.execute(GetEntityCustomScalesAction.create(entityData.getIRI().toString(), projectId),
                 (result) -> {
+                    clearScaleValueCards();
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
                 });
 
@@ -335,7 +336,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         view.getScaleValueCardsView().clear();
     }
 
-    private void clearAllDate() {
+    private void clearEverything() {
         clearScaleValueCards();
         tableLabelsForAxes.clear();
         compositeAxisList.clear();
