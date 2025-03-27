@@ -264,7 +264,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                         logger.log(Level.SEVERE, "Error ", e);
                     }
                 } else {
-                    logger.log(Level.INFO, "No postcoordination info to display");
+                    logger.log(Level.INFO, "No postcoordination axes to display for the entity type");
                 }
 
             });
