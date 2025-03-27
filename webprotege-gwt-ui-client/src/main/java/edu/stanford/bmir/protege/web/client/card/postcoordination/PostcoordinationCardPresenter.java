@@ -216,9 +216,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
             logger.log(Level.INFO, "No entity to display");
         } else {
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(this.selectedEntity.get().getIRI(), projectId), result -> {
-                if (result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
-                    cancelEditing();
-                } else {
+                if (result.getTableConfiguration().getPostCoordinationAxes() != null && !result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     try {
                         Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
                         List<String> scaleCardsOrder = new LinkedList<>();
@@ -265,6 +263,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
                     }
+                } else {
+                    logger.log(Level.INFO, "No postcoordination info to display");
                 }
 
             });
