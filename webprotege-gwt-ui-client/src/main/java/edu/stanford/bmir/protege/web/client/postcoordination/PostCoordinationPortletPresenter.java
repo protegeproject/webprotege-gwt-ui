@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.client.postcoordination;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
-import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -49,11 +48,9 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
     private boolean editMode = false;
 
-    private final ModalManager modalManager;
-
-    private final ScaleValueSelectionViewPresenter scaleSelectionPresenter;
-
     private WebProtegeEventBus eventBus;
+
+    private final HierarchySelectionModalManager hierarchySelectionManager;
 
     @Inject
     public PostCoordinationPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -62,15 +59,13 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                                             @Nonnull DispatchServiceManager dispatch,
                                             @Nonnull PostCoordinationPortletView view,
                                             @Nonnull MessageBox messageBox,
-                                            ModalManager modalManager,
-                                            ScaleValueSelectionViewPresenter scaleSelectionPresenter,
-                                            SelectedPathsModel selectedPathsModel) {
+                                            SelectedPathsModel selectedPathsModel,
+                                            HierarchySelectionModalManager hierarchySelectionManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
-        this.modalManager = modalManager;
-        this.scaleSelectionPresenter = scaleSelectionPresenter;
+        this.hierarchySelectionManager = hierarchySelectionManager;
         this.view.setProjectId(projectId);
     }
 
@@ -164,10 +159,9 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
-        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), modalManager);
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), hierarchySelectionManager);
         cardPresenter.setScaleValue(scaleValue);
         cardPresenter.setPostCoordinationAxis(axis);
-        cardPresenter.setScaleValueSelectionPresenter(scaleSelectionPresenter);
         return cardPresenter;
     }
 

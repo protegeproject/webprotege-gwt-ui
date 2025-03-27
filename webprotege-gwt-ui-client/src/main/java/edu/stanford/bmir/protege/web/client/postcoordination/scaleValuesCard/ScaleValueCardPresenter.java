@@ -1,18 +1,13 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
-import com.google.gwt.event.shared.HandlerManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.*;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
+import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.*;
 import java.util.stream.*;
@@ -28,20 +23,18 @@ public class ScaleValueCardPresenter {
 
     private boolean isReadOnly = true;
 
-    private final ModalManager modalManager;
-
-    private ScaleValueSelectionViewPresenter scaleValueSelectionPresenter;
-
     private WebProtegeEventBus eventBus;
 
     private Runnable handleChange;
 
+    private final HierarchySelectionModalManager hierarchySelectionManager;
+
     public ScaleValueCardPresenter(DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId,
-                                   ModalManager modalManager) {
+                                   HierarchySelectionModalManager hierarchySelectionManager) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
-        this.modalManager = modalManager;
+        this.hierarchySelectionManager = hierarchySelectionManager;
     }
 
     public void setPostCoordinationAxis(PostCoordinationTableAxisLabel postCoordinationAxis) {
@@ -60,14 +53,6 @@ public class ScaleValueCardPresenter {
         isReadOnly = readOnly;
     }
 
-    public void setScaleValueSelectionPresenter(ScaleValueSelectionViewPresenter scaleValueSelectionPresenter) {
-        this.scaleValueSelectionPresenter = scaleValueSelectionPresenter;
-    }
-
-    /*
-        ToDo:
-            implement here the pop-up modal for selecting a scale value
-     */
     private void bindView() {
         view.setAddButtonClickHandler(event -> showModalForSelection());
     }
@@ -125,24 +110,13 @@ public class ScaleValueCardPresenter {
     }
 
     public void showModalForSelection() {
-        ModalPresenter modalPresenter = modalManager.createPresenter();
-        modalPresenter.setTitle("Select Scale Value for " + this.scaleValue.getAxisLabel());
-        modalPresenter.setView(scaleValueSelectionPresenter.getView());
-        modalPresenter.setEscapeButton(DialogButton.CANCEL);
-        modalPresenter.setPrimaryButton(DialogButton.SELECT);
-        modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
-            closer.closeModal();
-            selectChosenEntity();
-            if(this.handleChange != null) {
+        String title = "Select Scale Value for " + this.scaleValue.getAxisLabel();
+        Set<OWLClass> roots = new HashSet<>(Collections.singletonList(DataFactory.getOWLClass(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
+        hierarchySelectionManager.showModal(title, roots, (entityNode) -> {
+            addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+            if (this.handleChange != null) {
                 this.handleChange.run();
             }
         });
-        Set<OWLClass> roots = new HashSet<>(Collections.singletonList(new OWLClassImpl(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
-        scaleValueSelectionPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));
-        modalManager.showModal(modalPresenter);
-    }
-
-    private void selectChosenEntity() {
-        scaleValueSelectionPresenter.getSelection().ifPresent(owlEntity -> addRow(owlEntity.getEntity().toStringID(), owlEntity.getBrowserText()));
     }
 }

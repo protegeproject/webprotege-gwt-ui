@@ -1,0 +1,19 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .message-block {
+            width: 100%;
+            padding-left: 10px;
+            box-sizing: border-box;
+        }
+        .next-block-padding-top {
+            padding-top: 20px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:SimplePanel ui:field="editorField" addStyleNames="{style.message-block}"/>
+        <g:SimplePanel ui:field="hierarchyContainer" addStyleNames="{style.message-block} {style.next-block-padding-top}"/>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

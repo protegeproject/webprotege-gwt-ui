@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.client.form.input.*;
 import edu.stanford.bmir.protege.web.client.frame.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.parents.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.*;
 import edu.stanford.bmir.protege.web.client.individualslist.*;
 import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
@@ -1042,6 +1043,11 @@ public class ClientProjectModule {
 
     @Provides
     SearchClassUnderHierarchyView provideClassUnderHierarchyView(SearchClassUnderHierarchyViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    HierarchySelectionModalView provideHierarchySelectionModalView(HierarchySelectionModalViewImpl impl){
         return impl;
     }
 }

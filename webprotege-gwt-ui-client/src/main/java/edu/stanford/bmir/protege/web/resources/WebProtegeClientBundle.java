@@ -724,6 +724,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-modal__button-bar")
         String buttonBar();
 
+
+        @ClassName("wp-modal__tree-width")
+        String treeWidth();
     }
 
     interface ButtonsCss extends CssResource {

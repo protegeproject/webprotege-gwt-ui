@@ -18,7 +18,6 @@ public class LogicalDefinitionModal {
     @Nonnull
     private final ModalManager modalManager;
 
-    private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
     private final  LogicalDefinitionModalView logicalDefinitionModalView;
 
     private final LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
@@ -27,11 +26,9 @@ public class LogicalDefinitionModal {
 
     @Inject
     public LogicalDefinitionModal(@Nonnull ModalManager modalManager,
-                                  LogicalDefinitionModalView logicalDefinitionModalView,
-                                  HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory) {
+                                  LogicalDefinitionModalView logicalDefinitionModalView) {
         this.modalManager = modalManager;
         this.logicalDefinitionModalView = logicalDefinitionModalView;
-        this.hierarchyPopupPresenterFactory = hierarchyPopupPresenterFactory;
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
         presenter = modalManager.createPresenter();
