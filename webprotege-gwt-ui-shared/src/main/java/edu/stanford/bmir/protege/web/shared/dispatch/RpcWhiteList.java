@@ -8,10 +8,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.card.*;
@@ -230,6 +227,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
     GetApplicationSettingsAction _GetApplicationSettingsAction;
     GetApplicationSettingsResult _GetApplicationSettingsResult;
+
+    ApplicationSettings _ApplicationSettings;
     GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
     GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
     GetAvailableProjectsAction _GetAvailableProjectsAction;
