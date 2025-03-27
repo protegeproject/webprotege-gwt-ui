@@ -18,6 +18,9 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
     @UiField
     public SimplePanel hierarchyContainer;
 
+    @UiField
+    public SimplePanel editorField;
+
     interface ScaleValueSelectionModalImplUiBinder extends UiBinder<HTMLPanel, ScaleValueSelectionViewImpl> {
     }
 
@@ -45,5 +48,11 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
     @Override
     public AcceptsOneWidget getHierarchyContainer() {
         return hierarchyContainer;
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getEditorField() {
+        return editorField;
     }
 }
