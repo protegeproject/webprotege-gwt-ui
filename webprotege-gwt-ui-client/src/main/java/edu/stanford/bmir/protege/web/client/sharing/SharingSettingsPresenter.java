@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
@@ -28,6 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHA
  * 01/03/16
  */
 public class SharingSettingsPresenter implements Presenter {
+    private final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SharingSettingsPresenter.class.getName());
 
     @Nonnull
     private final ProjectId projectId;
@@ -101,14 +103,19 @@ public class SharingSettingsPresenter implements Presenter {
 
     private void displaySharingSettings(AcceptsOneWidget container) {
         dispatchServiceManager.execute(GetProjectSharingSettingsAction.create(projectId), result -> {
-            ProjectSharingSettings settings = result.getProjectSharingSettings();
-            settingsPresenter.start(container);
-            settingsPresenter.setSettingsTitle(messages.share());
-            settingsPresenter.addSection(messages.sharing_settings_title()).setWidget(view);
-            settingsPresenter.setApplySettingsHandler(this::applyChangesAndGoToNextPlace);
-            settingsPresenter.setCancelSettingsHandler(this::cancelChangesAndGoToNextPlace);
-            view.setLinkSharingPermission(settings.getLinkSharingPermission());
-            view.setSharingSettings(settings.getSharingSettings());
+            try{
+                ProjectSharingSettings settings = result.getProjectSharingSettings();
+                settingsPresenter.start(container);
+                settingsPresenter.setSettingsTitle(messages.share());
+                settingsPresenter.addSection(messages.sharing_settings_title()).setWidget(view);
+                settingsPresenter.setApplySettingsHandler(this::applyChangesAndGoToNextPlace);
+                settingsPresenter.setCancelSettingsHandler(this::cancelChangesAndGoToNextPlace);
+                view.setLinkSharingPermission(settings == null ? Optional.empty() : settings.getLinkSharingPermission());
+                view.setSharingSettings(settings.getSharingSettings());
+            }catch (Exception e) {
+                logger.log(Level.SEVERE,"Error populating settings ", e);
+            }
+
         });
     }
 

@@ -24,7 +24,7 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         logger.info("Logging out the user");
         try {
-            var logout = getEnvVariable("webprotege.keycloakLogoutUrl").orElse("http://webprotege-local.edu/auth/realms/webprotege/protocol/openid-connect/logout");
+            var logout = getEnvVariable("webprotege.keycloakLogoutUrl").orElse("http://webprotege-local.edu/keycloak-admin/realms/webprotege/protocol/openid-connect/logout");
             var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
 
             request.getSession().invalidate();
