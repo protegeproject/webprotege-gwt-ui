@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -684,6 +683,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             public String visit(OWLClassData data) throws RuntimeException {
                 setTooltipAndDeprecationStatus(data, "owl:Class");
                 view.setDeprecated(data.isDeprecated());
+                if(containsIgnoreCase(data.getStatuses(), "released")){
+                    return BUNDLE.releasedClassIcon().getSafeUri().asString();
+                }
                 return BUNDLE.style().classIconInset();
             }
 
@@ -781,6 +783,13 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         else {
             view.clearPrimitiveDataStyleName();
         }
+    }
+
+    private static boolean containsIgnoreCase(Set<EntityStatus> entityStatuses, String searchStr) {
+        if (searchStr == null || entityStatuses == null ||entityStatuses.isEmpty()) {
+            return false;
+        }
+        return entityStatuses.stream().anyMatch(entityStatus -> entityStatus.getStatus().equalsIgnoreCase(searchStr));
     }
 
     /**

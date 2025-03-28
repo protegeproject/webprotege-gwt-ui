@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -39,7 +38,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
     private Map<String, PostcoordinationAxisToGenericScale> genericScale = new HashMap<>();
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
-    private final ModalManager modalManager;
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
     private Optional<OWLEntity> selectedEntity;
     private HandlerManager handlerManager = new HandlerManager(this);
@@ -54,12 +52,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public PostcoordinationCardPresenter(PostcoordinationCardView view,
                                          DispatchServiceManager dispatch,
                                          ProjectId projectid,
-                                         ModalManager modalManager,
                                          HierarchySelectionModalManager hierarchySelectionManager) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectid;
-        this.modalManager = modalManager;
         this.hierarchySelectionManager = hierarchySelectionManager;
     }
 
