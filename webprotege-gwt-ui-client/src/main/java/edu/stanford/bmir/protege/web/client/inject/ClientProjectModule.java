@@ -245,11 +245,6 @@ public class ClientProjectModule {
         return impl;
     }
 
-    @Provides
-    LogicalDefinitionModalView provideLogicalDefinitionModalView(LogicalDefinitionModalViewImpl impl) {
-        return impl;
-    }
-
 
     @Provides
     LinearizationParentView provideLinearizationParentView(LinearizationParentViewImpl impl) {
