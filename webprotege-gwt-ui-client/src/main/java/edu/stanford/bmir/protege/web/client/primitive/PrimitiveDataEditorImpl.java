@@ -684,7 +684,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 setTooltipAndDeprecationStatus(data, "owl:Class");
                 view.setDeprecated(data.isDeprecated());
                 if(containsIgnoreCase(data.getStatuses(), "released")){
-                    return BUNDLE.releasedClassIcon().getSafeUri().asString();
+                    return BUNDLE.style().releasedClassIconInset();
                 }
                 return BUNDLE.style().classIconInset();
             }

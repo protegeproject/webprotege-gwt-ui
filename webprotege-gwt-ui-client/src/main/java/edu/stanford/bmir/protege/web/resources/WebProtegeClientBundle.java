@@ -433,6 +433,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String classIconInset();
 
+        String releasedClassIconInset();
+
         String objectPropertyIconInset();
 
         String dataPropertyIconInset();
