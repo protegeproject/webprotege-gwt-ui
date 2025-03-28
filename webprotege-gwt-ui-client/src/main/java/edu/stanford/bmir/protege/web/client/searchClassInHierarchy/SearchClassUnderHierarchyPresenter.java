@@ -15,8 +15,6 @@ public class SearchClassUnderHierarchyPresenter {
     @Nonnull
     private final SearchClassUnderHierarchyView view;
 
-    private SearchSelectionChangedHandler handler = (entity) -> {};
-
     @Inject
     public SearchClassUnderHierarchyPresenter(@Nonnull SearchClassUnderHierarchyView view) {
         this.view = view;
@@ -36,11 +34,11 @@ public class SearchClassUnderHierarchyPresenter {
                 ImmutableList.copyOf(subClassOfCriteria),
                 MultiMatchType.ALL
         );
+        this.view.clearValue();
         this.view.setCriteria(criteria);
     }
 
     public void setSelectionChangedHandler(SearchSelectionChangedHandler searchSelection) {
-        this.handler = searchSelection;
-        this.view.setSelectionChangedHandler(handler);
+        this.view.setSelectionChangedHandler(searchSelection);
     }
 }

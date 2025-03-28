@@ -72,4 +72,9 @@ public class SearchClassUnderHierarchyViewImpl extends Composite implements Sear
     public void setSelectionChangedHandler(SearchSelectionChangedHandler handler) {
         this.handler = handler;
     }
+
+    @Override
+    public void clearValue() {
+        this.editorField.clearValue();
+    }
 }
