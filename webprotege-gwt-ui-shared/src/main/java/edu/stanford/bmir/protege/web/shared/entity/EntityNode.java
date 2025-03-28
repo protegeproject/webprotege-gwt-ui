@@ -125,7 +125,7 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     @JsonIgnore
     public OWLEntityData getEntityData() {
-        return DataFactory.getOWLEntityData(getEntity(), getShortForms(), isDeprecated());
+        return DataFactory.getOWLEntityData(getEntity(), getShortForms(), isDeprecated(), getStatuses());
     }
 
     public abstract ImmutableSet<Tag> getTags();

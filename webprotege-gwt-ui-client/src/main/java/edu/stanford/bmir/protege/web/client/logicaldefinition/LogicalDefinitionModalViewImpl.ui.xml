@@ -1,9 +1,0 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style>
-    </ui:style>
-    <g:HTMLPanel ui:field="paneContainer">
-    </g:HTMLPanel>
-
-</ui:UiBinder>

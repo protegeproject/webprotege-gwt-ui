@@ -1,16 +1,13 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        .field {
-            min-width: 170px;
-            max-width: 170px;
-        }
     </ui:style>
     <g:HTMLPanel>
+        <g:Label ui:field="searchLabel" addStyleNames="{wp.style.formLabel}"/>
         <primitive:PrimitiveDataEditor
                 ui:field="editorField"
-                addStyleNames="{style.field}"
                 placeholder="Enter a class name" classesAllowed="true" namedIndividualsAllowed="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>

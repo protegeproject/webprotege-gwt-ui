@@ -1092,6 +1092,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("hierarchy.editParents")
     String hierarchy_editParents();
 
+    @DefaultMessage("Search in hierarchy")
+    @Key("hierarchy.searchInHierarchy")
+    String hierarchy_searchInHierarchy();
+
     @DefaultMessage("Merge {0}")
     @Key("merge.mergeEntity")
     String merge_mergeEntity(String typeName);

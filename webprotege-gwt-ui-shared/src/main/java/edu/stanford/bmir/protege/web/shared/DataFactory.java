@@ -16,8 +16,7 @@ import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -133,17 +132,24 @@ public class DataFactory {
 
     public static OWLEntityData getOWLEntityData(OWLEntity entity,
                                                  ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return getOWLEntityData(entity, shortForms, false);
+        return getOWLEntityData(entity, shortForms, false, ImmutableSet.of());
     }
 
     public static OWLEntityData getOWLEntityData(OWLEntity entity,
                                                  ImmutableMap<DictionaryLanguage, String> shortForms,
                                                  boolean deprecated) {
+        return getOWLEntityData(entity, shortForms, deprecated, ImmutableSet.of());
+    }
+
+    public static OWLEntityData getOWLEntityData(OWLEntity entity,
+                                                 ImmutableMap<DictionaryLanguage, String> shortForms,
+                                                 boolean deprecated,
+                                                 ImmutableSet<EntityStatus> statuses) {
         return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLClass owlClass) {
-                return OWLClassData.get(owlClass, shortForms, deprecated);
+                return OWLClassData.get(owlClass, shortForms, deprecated, statuses);
             }
 
             @Nonnull

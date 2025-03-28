@@ -1,23 +1,15 @@
 package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.card.CustomContentEntityCardPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
+import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.ScaleValueCardPresenter;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.ScaleValueSelectionViewPresenter;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
+import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Card;
@@ -25,8 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 @Card(id = "postcoordination.card")
@@ -47,26 +38,25 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
     private Map<String, PostcoordinationAxisToGenericScale> genericScale = new HashMap<>();
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
-    private final ModalManager modalManager;
-    private final ScaleValueSelectionViewPresenter scaleSelectionPresenter;
-
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
     private Optional<OWLEntity> selectedEntity;
     private HandlerManager handlerManager = new HandlerManager(this);
 
     private boolean editMode = false;
 
+    private final HierarchySelectionModalManager hierarchySelectionManager;
+
 
     @Inject
     @AutoFactory
     public PostcoordinationCardPresenter(PostcoordinationCardView view,
                                          DispatchServiceManager dispatch,
-                                         ProjectId projectid, ModalManager modalManager, ScaleValueSelectionViewPresenter scaleSelectionPresenter) {
+                                         ProjectId projectid,
+                                         HierarchySelectionModalManager hierarchySelectionManager) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectid;
-        this.modalManager = modalManager;
-        this.scaleSelectionPresenter = scaleSelectionPresenter;
+        this.hierarchySelectionManager = hierarchySelectionManager;
     }
 
     @Override
@@ -198,10 +188,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
-        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, projectId, modalManager);
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, projectId, hierarchySelectionManager);
         cardPresenter.setScaleValue(scaleValue);
         cardPresenter.setPostCoordinationAxis(axis);
-        cardPresenter.setScaleValueSelectionPresenter(scaleSelectionPresenter);
         cardPresenter.setHandleChange(() -> {
             logger.info("Emitting dirty changed event");
             handlerManager.fireEvent(new DirtyChangedEvent());
@@ -375,9 +364,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         scaleValueCardPresenters.clear();
         scaleValueCardPresenters.putAll(orderedScaleValueCardPresenters);
 
-        scaleValueCardPresenters.values().forEach(scaleValueCardPresenter -> {
-            view.getScaleValueCardsView().add(scaleValueCardPresenter.getView().asWidget());
-        });
+        scaleValueCardPresenters.values()
+                .forEach(
+                        scaleValueCardPresenter -> view.getScaleValueCardsView().add(scaleValueCardPresenter.getView().asWidget())
+                );
     }
 
     private Map<String, ScaleValueCardPresenter> getOrderedScaleValueCardPresenters() {

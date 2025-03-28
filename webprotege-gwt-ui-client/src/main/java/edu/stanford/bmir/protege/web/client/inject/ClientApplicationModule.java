@@ -73,7 +73,6 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
-import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
@@ -546,11 +545,6 @@ public class ClientApplicationModule {
 
     @Provides
     EntityCardUi provideEntityCardView(EntityCardUiImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ScaleValueSelectionView provideScaleValueSelectionView(ScaleValueSelectionViewImpl impl) {
         return impl;
     }
 }
