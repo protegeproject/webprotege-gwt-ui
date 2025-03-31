@@ -64,8 +64,6 @@ public class SharingSettingsPresenter implements Presenter {
     @Nonnull
     private UuidV4Provider uuidV4Provider;
 
-    private final static Logger logger = Logger.getLogger(SharingSettingsPresenter.class.getName());
-
     @Inject
     public SharingSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull SharingSettingsView view,
