@@ -201,6 +201,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetAnnotationPropertyFrameResult _GetAnnotationPropertyFrameResult;
     GetApplicationSettingsAction _GetApplicationSettingsAction;
     GetApplicationSettingsResult _GetApplicationSettingsResult;
+    ApplicationSettings _ApplicationSettings;
     GetAuthenticatedUserDetailsAction _GetAuthenticatedUserDetailsAction;
     GetAuthenticatedUserDetailsResult _GetAuthenticatedUserDetailsResult;
     GetAvailableProjectsAction _GetAvailableProjectsAction;

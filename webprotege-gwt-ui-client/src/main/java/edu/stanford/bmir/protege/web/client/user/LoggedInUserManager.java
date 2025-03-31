@@ -41,7 +41,9 @@ public class LoggedInUserManager {
 
     @Inject
     public LoggedInUserManager(@Nonnull LoggedInUser loggedInUser,
-                               @Nonnull DispatchServiceManager dispatchServiceManager, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ApplicationEnvironmentManager applicationEnvironmentManager) {
+                               @Nonnull DispatchServiceManager dispatchServiceManager,
+                               @Nonnull DispatchErrorMessageDisplay errorDisplay,
+                               @Nonnull ApplicationEnvironmentManager applicationEnvironmentManager) {
         this.loggedInUser = loggedInUser;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.errorDisplay = checkNotNull(errorDisplay);
