@@ -1045,6 +1045,11 @@ public class ClientProjectModule {
     HierarchySelectionModalView provideHierarchySelectionModalView(HierarchySelectionModalViewImpl impl){
         return impl;
     }
+
+    @Provides
+    DirectCheckboxView provideDirectCheckboxView(DirectCheckboxViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -1,27 +1,25 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.inject.*;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,11 +28,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 06/04/16
  */
-public class EntityNameControl extends Composite implements FormControl, HasPlaceholder {
+public class EntityNameControl extends Composite implements FormControl, HasPlaceholder, ContextSensitiveControl {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("EntityNameControl");
 
     private EntityNameControlDescriptorDto descriptor;
 
-    private FormDataChangedHandler formDataChangedHandler = () -> {};
+    private FormDataChangedHandler formDataChangedHandler = () -> {
+    };
 
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
@@ -61,11 +62,12 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     }
 
     public void setDescriptor(@Nonnull EntityNameControlDescriptorDto descriptor) {
+        logger.info("geo entityNameControl " + descriptor);
         this.descriptor = checkNotNull(descriptor);
         descriptor.getMatchCriteria().ifPresent(c -> editor.setCriteria(c));
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
         editor.setPlaceholder(descriptor.getPlaceholder()
-                                        .get(localeInfo.getLocaleName()));
+                .get(localeInfo.getLocaleName()));
     }
 
     private void handleEditorValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
@@ -75,11 +77,10 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
 
     @Override
     public void setValue(@Nonnull FormControlDataDto object) {
-        if(object instanceof EntityNameControlDataDto) {
+        if (object instanceof EntityNameControlDataDto) {
             EntityNameControlDataDto data = (EntityNameControlDataDto) object;
             data.getEntity().ifPresent(editor::setValue);
-        }
-        else {
+        } else {
             editor.clearValue();
         }
 
@@ -147,5 +148,22 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
 
+    }
+//updateContextSensitiveCriteria
+    @Override
+    public void updateDynamicCriteria(DisplayContext context) {
+        descriptor.getMatchCriteria().ifPresent(c -> {
+            ImmutableList<RootCriteria> criteriaList = c.getRootCriteria()
+                    .stream()
+                    .map(rootCriteria -> {
+                                if (rootCriteria instanceof ContextSensitiveCriteria) {
+                                    return ((ContextSensitiveCriteria) rootCriteria).getEffectiveCriteria(context);
+                                }
+                                return rootCriteria;
+                            }
+                    ).collect(ImmutableList.toImmutableList());
+            CompositeRootCriteria newDynamicCriteria = CompositeRootCriteria.get(criteriaList, c.getMatchType());
+            editor.setCriteria(newDynamicCriteria);
+        });
     }
 }

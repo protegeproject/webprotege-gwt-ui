@@ -1,26 +1,16 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
-import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
-import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
-import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionPresenter;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +25,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     private boolean enabled = true;
 
-    private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
+    private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {
+    };
 
     private boolean collapsibile = true;
 
@@ -62,7 +53,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     private final FormControlStackPresenter stackPresenter;
 
     @Nonnull
-    private Runnable beforeExpandRunner = () -> {};
+    private Runnable beforeExpandRunner = () -> {
+    };
 
     @Nonnull
     private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
@@ -116,24 +108,22 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public void toggleExpansionState() {
-        if(!collapsibile) {
+        if (!collapsibile) {
             return;
         }
-        if(expansionState == ExpansionState.EXPANDED) {
+        if (expansionState == ExpansionState.EXPANDED) {
             setExpansionState(ExpansionState.COLLAPSED);
-        }
-        else {
+        } else {
             setExpansionState(ExpansionState.EXPANDED);
         }
     }
 
     public void setExpansionState(ExpansionState expansionState) {
         this.expansionState = expansionState;
-        if(expansionState == ExpansionState.EXPANDED) {
+        if (expansionState == ExpansionState.EXPANDED) {
             runBeforeExpand();
             view.expand();
-        }
-        else {
+        } else {
             view.collapse();
         }
 
@@ -147,7 +137,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public Stream<FormRegionOrdering> getOrderings() {
         List<FormRegionOrdering> orderings = new ArrayList<>();
         stackPresenter.forEachFormControl(formControl -> {
-            if(formControl instanceof GridControl) {
+            if (formControl instanceof GridControl) {
                 ImmutableList<FormRegionOrdering> ordering = ((GridControl) formControl).getOrdering();
                 orderings.addAll(ordering);
             }
@@ -156,7 +146,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public FormFieldData getValue() {
-        if(stackPresenter == null) {
+        if (stackPresenter == null) {
             return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), Page.emptyPage());
         }
         runBeforeExpand();
@@ -174,11 +164,11 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
         checkNotNull(formFieldData);
-        if(currentValue.equals(Optional.of(formFieldData))) {
+        if (currentValue.equals(Optional.of(formFieldData))) {
             return;
         }
         currentValue = Optional.of(formFieldData);
-        if(!formFieldData.getFormFieldDescriptor().equals(formFieldDescriptor)) {
+        if (!formFieldData.getFormFieldDescriptor().equals(formFieldDescriptor)) {
             throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
         }
         Runnable setValuesRunnable = () -> {
@@ -188,10 +178,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
             stackPresenter.setPageNumber(page.getPageNumber());
             updateRequiredValuePresent();
         };
-        if(view.isExpanded()) {
+        if (view.isExpanded()) {
             setValuesRunnable.run();
-        }
-        else {
+        } else {
             beforeExpandRunner = setValuesRunnable;
         }
     }
@@ -209,8 +198,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         if (isValueRequired()) {
             boolean requiredValueNotPresent = !stackPresenter.isNonEmpty();
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
-        }
-        else {
+        } else {
             view.setRequiredValueNotPresentVisible(false);
         }
     }
@@ -226,7 +214,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         stackPresenter.forEachFormControl(formControl -> {
-            if(formControl instanceof GridControl) {
+            if (formControl instanceof GridControl) {
                 ((GridControl) formControl).setGridOrderByChangedHandler(orderByChangedHandler);
             }
         });
@@ -237,7 +225,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         // TODO: Filter for stack?
 
         ImmutableSet.Builder<FormRegionFilter> filters = ImmutableSet.builder();
-        stackPresenter.forEachFormControl(formControl ->  {
+        stackPresenter.forEachFormControl(formControl -> {
             filters.addAll(formControl.getFilters());
         });
         return filters.build();
@@ -254,10 +242,10 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public ValidationStatus getValidationStatus() {
         ValidationStatus validationStatus = stackPresenter.getValidationStatus();
-        if(validationStatus.isInvalid()) {
+        if (validationStatus.isInvalid()) {
             return validationStatus;
         }
-        if(isValueRequired() && stackPresenter.isEmpty()) {
+        if (isValueRequired() && stackPresenter.isEmpty()) {
             return ValidationStatus.INVALID;
         }
         return ValidationStatus.VALID;
@@ -270,7 +258,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public void setCollapsible(boolean collapsible) {
         this.collapsibile = collapsible;
         view.setCollapsible(collapsible);
-        if(!collapsible) {
+        if (!collapsible) {
             setExpansionState(ExpansionState.EXPANDED);
         }
     }
@@ -292,4 +280,17 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public DisplayContextBuilder fillDisplayContextBuilder() {
         return displayContextManager.fillDisplayContextBuilder();
     }
+
+    public void updateDynamicCriteriaForControls() {
+        DisplayContextBuilder builder = displayContextManager.fillDisplayContextBuilder();
+        DisplayContext currentContext = builder.build();
+
+        this.stackPresenter.forEachFormControl(control -> {
+                    if (control instanceof ContextSensitiveControl) {
+                        ((ContextSensitiveControl) control).updateDynamicCriteria(currentContext);
+                    }
+                }
+        );
+    }
+
 }

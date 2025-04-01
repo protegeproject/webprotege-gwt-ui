@@ -11,9 +11,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.client.selection.*;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -23,9 +23,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -52,17 +50,23 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private HandlerManager handlerManager = new HandlerManager(this);
 
+    private final SelectedPathsModel selectedPathsModel;
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
     @AutoFactory
     @Inject
     public FormContentEntityCardPresenter(FormId formId,
                                           @Provided DispatchServiceManager dispatch,
                                           @Provided ProjectId projectId,
                                           @Provided FormPresenter formPresenter,
-                                          @Provided SelectionModel selectionModel) {
+                                          @Provided SelectionModel selectionModel,
+                                          @Provided SelectedPathsModel selectedPathsModel) {
         this.dispatch = dispatch;
         this.projectId = projectId;
         this.formId = formId;
         this.formPresenter = formPresenter;
+        this.selectedPathsModel = selectedPathsModel;
     }
 
     @Override
@@ -196,6 +200,22 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     @Override
     public void requestFocus() {
         formPresenter.requestFocus();
+    }
+
+
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        displayContextBuilder.setProjectId(projectId);
+        displayContextBuilder.setSelectedPaths(selectedPathsModel.getSelectedPaths());
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 }
 

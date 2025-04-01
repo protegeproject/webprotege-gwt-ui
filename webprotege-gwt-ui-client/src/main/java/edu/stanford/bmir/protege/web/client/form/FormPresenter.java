@@ -4,14 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
 import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
-import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -124,6 +123,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
+        updateDynamicCriteriaForControls();
     }
 
     public boolean isEnabled() {
@@ -342,5 +342,11 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     @Override
     public DisplayContextBuilder fillDisplayContextBuilder() {
         return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    public void updateDynamicCriteriaForControls() {
+        for (FormFieldPresenter presenter : fieldPresenters) {
+            presenter.updateDynamicCriteriaForControls();
+        }
     }
 }

@@ -6,6 +6,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import java.util.logging.Logger;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -14,6 +16,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2020-01-08
  */
 public class FormFieldPresenterFactory {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("FormFieldPresenterFactory");
+
 
     @Nonnull
     private final Provider<FormFieldView> viewProvider;
@@ -37,6 +42,7 @@ public class FormFieldPresenterFactory {
 
     @Nonnull
     public FormFieldPresenter create(@Nonnull FormFieldDescriptorDto fieldDescriptor) {
+        logger.info("geo field descriptor: "+fieldDescriptor);
 
         FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
                                                                                               fieldDescriptor.getRepeatability(),
