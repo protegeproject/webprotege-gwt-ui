@@ -149,20 +149,23 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
 
     }
-//updateContextSensitiveCriteria
+
     @Override
-    public void updateDynamicCriteria(DisplayContext context) {
+    public void updateContextSensitiveCriteria(DisplayContext context) {
         descriptor.getMatchCriteria().ifPresent(c -> {
             ImmutableList<RootCriteria> criteriaList = c.getRootCriteria()
                     .stream()
                     .map(rootCriteria -> {
+                        logger.info("geo log: suntem in update contextSEnsitiveCriteria");
                                 if (rootCriteria instanceof ContextSensitiveCriteria) {
+                                    logger.info("geo log: inainte de getEffectiveCriteria :"+context);
                                     return ((ContextSensitiveCriteria) rootCriteria).getEffectiveCriteria(context);
                                 }
                                 return rootCriteria;
                             }
                     ).collect(ImmutableList.toImmutableList());
             CompositeRootCriteria newDynamicCriteria = CompositeRootCriteria.get(criteriaList, c.getMatchType());
+            editor.clearCriteria();
             editor.setCriteria(newDynamicCriteria);
         });
     }

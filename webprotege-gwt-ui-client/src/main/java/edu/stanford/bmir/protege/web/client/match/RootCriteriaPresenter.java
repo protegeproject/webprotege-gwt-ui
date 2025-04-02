@@ -46,7 +46,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private final SubClassOfCriteriaPresenterFactory subClassOfFactory;
 
     @Nonnull
-    private final ContextSensitiveSubClassOfCriteriaPresenterFactory subClassOfSubjectFactory;
+    private final ContextSensitiveSubClassOfCriteriaPresenterFactory contextSensitiveSubClassOfFactory;
 
     @Nonnull
     private final NotSubClassOfCriteriaPresenterFactory notSubClassOfFactory;
@@ -83,7 +83,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
                                  @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags,
                                  @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory,
                                  @Nonnull SubClassOfCriteriaPresenterFactory subClassOfFactory,
-                                 @Nonnull ContextSensitiveSubClassOfCriteriaPresenterFactory subClassOfSubjectFactory,
+                                 @Nonnull ContextSensitiveSubClassOfCriteriaPresenterFactory contextSensitiveSubClassOfFactory,
                                  @Nonnull NotSubClassOfCriteriaPresenterFactory notSubClassOfFactory,
                                  @Nonnull InstanceOfCriteriaPresenterFactory instanceOfFactory,
                                  @Nonnull EntityRelationshipPresenterFactory entityRelationshipFactory,
@@ -103,7 +103,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
         this.notDisjointFactory = checkNotNull(notDisjointFactory);
         this.subClassOfFactory = checkNotNull(subClassOfFactory);
-        this.subClassOfSubjectFactory = checkNotNull(subClassOfSubjectFactory);
+        this.contextSensitiveSubClassOfFactory = checkNotNull(contextSensitiveSubClassOfFactory);
         this.notSubClassOfFactory = checkNotNull(notSubClassOfFactory);
         this.instanceOfFactory = checkNotNull(instanceOfFactory);
         this.entityRelationshipFactory = checkNotNull(entityRelationshipFactory);
@@ -132,7 +132,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(notDisjointFactory);
         factoryRegistry.addPresenter(subClassOfFactory);
         factoryRegistry.addPresenter(notSubClassOfFactory);
-        factoryRegistry.addPresenter(subClassOfSubjectFactory);
+        factoryRegistry.addPresenter(contextSensitiveSubClassOfFactory);
         factoryRegistry.addPresenter(isLeafClassCriteriaPresenterFactory);
         factoryRegistry.addPresenter(instanceOfFactory);
 
@@ -215,7 +215,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
             @Nonnull
             @Override
             public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull ContextSensitiveSubClassOfCriteria criteria) {
-                return subClassOfSubjectFactory;
+                return contextSensitiveSubClassOfFactory;
             }
 
             @Nonnull

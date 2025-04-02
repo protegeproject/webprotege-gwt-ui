@@ -52,7 +52,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private final SelectedPathsModel selectedPathsModel;
 
-    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+    private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @AutoFactory
     @Inject
@@ -82,6 +82,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         formPresenter.start(ui);
         formPresenter.setEnabled(false);
+        formPresenter.setParentDisplayContextBuilder(this);
         formPresenter.setFormDataChangedHandler(() -> {
             handlerManager.fireEvent(new DirtyChangedEvent());
         });
@@ -202,12 +203,6 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
         formPresenter.requestFocus();
     }
 
-
-    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
-        displayContextBuilder.setProjectId(projectId);
-        displayContextBuilder.setSelectedPaths(selectedPathsModel.getSelectedPaths());
-    }
-
     @Override
     public DisplayContextBuilder fillDisplayContextBuilder() {
         return displayContextManager.fillDisplayContextBuilder();
@@ -215,6 +210,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormContentEntityCardPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
         displayContextManager.setParentDisplayContextBuilder(parent);
     }
 }

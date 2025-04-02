@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCard
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
+import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
@@ -46,6 +47,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private final HierarchySelectionModalManager hierarchySelectionManager;
 
+
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Inject
     @AutoFactory
@@ -442,5 +445,15 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         this.editMode = editMode;
         scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(editMode));
         view.setEditMode(editMode);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 }

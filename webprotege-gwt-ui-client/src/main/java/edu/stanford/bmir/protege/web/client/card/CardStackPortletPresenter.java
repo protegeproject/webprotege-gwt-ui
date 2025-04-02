@@ -14,7 +14,9 @@ import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.tab.TabBarPresenter;
 import edu.stanford.bmir.protege.web.client.tab.TabPresenter;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.card.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -196,7 +198,11 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
             view.addView(ui);
             eventBus.ifPresent(webProtegeEventBus -> pp.start(ui, webProtegeEventBus));
             EntityCardComponents components = EntityCardComponents.get(descriptor, pp, ui);
+            EntityCardPresenter presenter = components.getPresenter();
             cardComponents.put(descriptor.getId(), components);
+            if(presenter instanceof EntityCardEditorPresenter){
+                ((EntityCardEditorPresenter) presenter).setParentDisplayContextBuilder(this);
+            }
         });
     }
 
@@ -313,6 +319,17 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     public boolean isDirty() {
         return getCurrentPresenters().anyMatch(EntityCardPresenter::isDirty);
+    }
+
+    @Override
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        super.fillDisplayContext(displayContextBuilder);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("CardStackPortletPresenter: set parent displaycontextbuilder"+super.fillDisplayContextBuilder());
+        super.setParentDisplayContextBuilder(parent);
     }
 }
 

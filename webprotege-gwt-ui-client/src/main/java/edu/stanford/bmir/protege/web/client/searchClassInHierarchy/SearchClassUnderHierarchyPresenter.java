@@ -35,6 +35,7 @@ public class SearchClassUnderHierarchyPresenter {
                 MultiMatchType.ALL
         );
         this.view.clearValue();
+        this.view.clearCriteria();
         this.view.setCriteria(criteria);
     }
 

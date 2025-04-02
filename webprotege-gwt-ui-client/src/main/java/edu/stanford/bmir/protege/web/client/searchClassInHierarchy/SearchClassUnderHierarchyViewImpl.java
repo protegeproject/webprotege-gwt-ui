@@ -77,4 +77,9 @@ public class SearchClassUnderHierarchyViewImpl extends Composite implements Sear
     public void clearValue() {
         this.editorField.clearValue();
     }
+
+    @Override
+    public void clearCriteria() {
+        this.editorField.clearCriteria();
+    }
 }

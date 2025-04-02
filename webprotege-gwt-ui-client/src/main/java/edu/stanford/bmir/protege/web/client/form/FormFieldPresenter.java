@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.logging.*;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,7 +23,9 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder, DisplayContextFiller {
+
+    private final Logger logger = Logger.getLogger(AbstractWebProtegePortletPresenter.class.getName());
 
     private boolean enabled = true;
 
@@ -31,14 +35,6 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     private boolean collapsibile = true;
 
     private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
-
-    private void fillDisplayContext(DisplayContextBuilder context) {
-        context.setFormFieldId(getFormRegionId());
-    }
-
-    private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
-        updateRequiredValuePresent();
-    }
 
     @Nonnull
     private final FormFieldView view;
@@ -100,6 +96,10 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
         updateRequiredValuePresent();
         return view;
+    }
+
+    private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
+        updateRequiredValuePresent();
     }
 
     @Nonnull
@@ -273,6 +273,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormFieldPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
         this.displayContextManager.setParentDisplayContextBuilder(parent);
     }
 
@@ -282,15 +283,24 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public void updateDynamicCriteriaForControls() {
-        DisplayContextBuilder builder = displayContextManager.fillDisplayContextBuilder();
-        DisplayContext currentContext = builder.build();
+        DisplayContextBuilder builder = fillDisplayContextBuilder();
+        try{
+            DisplayContext currentContext = builder.build();
 
-        this.stackPresenter.forEachFormControl(control -> {
-                    if (control instanceof ContextSensitiveControl) {
-                        ((ContextSensitiveControl) control).updateDynamicCriteria(currentContext);
+            this.stackPresenter.forEachFormControl(control -> {
+                        if (control instanceof ContextSensitiveControl) {
+                            ((ContextSensitiveControl) control).updateContextSensitiveCriteria(currentContext);
+                        }
                     }
-                }
-        );
+            );
+        } catch (IllegalStateException e){
+            logger.info("IllegalStateException: "+e.getMessage());
+        }
+
+    }
+
+    public void fillDisplayContext(DisplayContextBuilder context) {
+        context.setFormFieldId(getFormRegionId());
     }
 
 }

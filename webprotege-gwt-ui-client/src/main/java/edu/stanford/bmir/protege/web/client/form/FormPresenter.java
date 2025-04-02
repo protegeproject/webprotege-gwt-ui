@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,6 +33,8 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Presents a form and its associated form data.
  */
 public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
+
+    private final Logger logger = Logger.getLogger(FormPresenter.class.getName());
 
     @Nonnull
     private final FormView formView;
@@ -332,6 +335,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
 
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormPresenter: set parent displaycontextbuilder :"+displayContextManager.fillDisplayContextBuilder());
         this.displayContextManager.setParentDisplayContextBuilder(parent);
     }
 
@@ -346,6 +350,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
 
     public void updateDynamicCriteriaForControls() {
         for (FormFieldPresenter presenter : fieldPresenters) {
+            presenter.setParentDisplayContextBuilder(this);
             presenter.updateDynamicCriteriaForControls();
         }
     }
