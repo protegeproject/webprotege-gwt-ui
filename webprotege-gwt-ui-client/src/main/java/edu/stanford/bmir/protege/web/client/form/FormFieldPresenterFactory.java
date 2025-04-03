@@ -43,6 +43,7 @@ public class FormFieldPresenterFactory {
     @Nonnull
     public FormFieldPresenter create(@Nonnull FormFieldDescriptorDto fieldDescriptor) {
         logger.info("geo field descriptor: "+fieldDescriptor);
+        logger.info("geo formControl descriptor: "+fieldDescriptor.getFormControlDescriptor());
 
         FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
                                                                                               fieldDescriptor.getRepeatability(),

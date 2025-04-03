@@ -109,17 +109,17 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     private void displayCardsForSelectedEntity() {
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
-        selectedEntity.ifPresent(sel -> {
-            retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards);
-        });
+        selectedEntity.ifPresent(sel -> retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards));
         setNothingSelectedVisible(!selectedEntity.isPresent());
     }
 
     private void retrieveAndSetDisplayedCardsForEntity(OWLEntity entity,
                                                        Runnable successCallback) {
-        dispatch.execute(GetEntityCardDescriptorsAction.get(getProjectId(), entity), this, result -> {
-            setDisplayedCards(result, successCallback);
-        });
+        dispatch.execute(
+                GetEntityCardDescriptorsAction.get(getProjectId(), entity),
+                this,
+                result -> setDisplayedCards(result, successCallback)
+        );
     }
 
     private void setDisplayedCards(GetEntityCardDescriptorsResult result, Runnable successCallback) {
@@ -194,6 +194,9 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         }
         Optional<? extends EntityCardPresenter> p = entityCardPresenterFactory.create(descriptor);
         p.ifPresent(pp -> {
+            if(pp instanceof EntityCardEditorPresenter){
+                ((EntityCardEditorPresenter) pp).setParentDisplayContextBuilder(this);
+            }
             EntityCardUi ui = entityCardViewProvider.get();
             view.addView(ui);
             eventBus.ifPresent(webProtegeEventBus -> pp.start(ui, webProtegeEventBus));
@@ -229,10 +232,8 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void commitChangesAndUpdateSelection() {
-        commitChanges(() -> {
-            // Proceed as normal
-            displayCardsForSelectedEntity();
-        });
+        // Proceed as normal
+        commitChanges(this::displayCardsForSelectedEntity);
     }
 
 

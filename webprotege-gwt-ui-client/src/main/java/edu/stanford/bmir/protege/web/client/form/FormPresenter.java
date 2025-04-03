@@ -166,6 +166,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             FormFieldDataDto fieldData = nextFormFieldData.get(i);
             FormFieldPresenter formFieldPresenter = fieldPresenters.get(i);
             formFieldPresenter.setValue(fieldData);
+            formFieldPresenter.updateDynamicCriteriaForControls();
         }
         dispatchServiceManager.executeCurrentBatch();
     }
@@ -200,14 +201,15 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             collapsedFields.add(formFieldData.getFormFieldDescriptor().getId());
         }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
+        presenter.setParentDisplayContextBuilder(this);
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
         presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.setCollapsible(fieldsCollapsible);
+        presenter.updateDynamicCriteriaForControls();
         presenter.start();
-        presenter.setParentDisplayContextBuilder(this);
         fieldPresenters.add(presenter);
         if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
@@ -219,11 +221,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     }
 
     private RegionPageChangedHandler newRegionPageChangedHandler() {
-        return () -> {
-            formId.ifPresent(id -> {
-                formRegionPageChangedHandler.handleFormRegionPageChanged(FormRegionPageChangedEvent.get(id));
-            });
-        };
+        return () -> formId.ifPresent(id -> formRegionPageChangedHandler.handleFormRegionPageChanged(FormRegionPageChangedEvent.get(id)));
     }
 
     public void expandAll() {
@@ -232,9 +230,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
 
     public void setFieldsCollapsible(boolean collapsible) {
         this.fieldsCollapsible = collapsible;
-        fieldPresenters.forEach(presenter -> {
-            presenter.setCollapsible(collapsible);
-        });
+        fieldPresenters.forEach(presenter -> presenter.setCollapsible(collapsible));
     }
 
     /**
@@ -319,9 +315,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         formRegionFilterChangeHandler = checkNotNull(handler);
-        fieldPresenters.forEach(formFieldPresenter -> {
-            formFieldPresenter.setFormRegionFilterChangedHandler(handler);
-        });
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionFilterChangedHandler(handler));
     }
 
     @Inject
@@ -337,6 +331,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         logger.info("FormPresenter: set parent displaycontextbuilder :"+displayContextManager.fillDisplayContextBuilder());
         this.displayContextManager.setParentDisplayContextBuilder(parent);
+        fieldPresenters.forEach(fieldPresenter -> fieldPresenter.setParentDisplayContextBuilder(this));
     }
 
     private void fillDisplayContext(DisplayContextBuilder context) {

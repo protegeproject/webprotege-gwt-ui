@@ -1,41 +1,32 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
+import com.google.auto.factory.*;
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.logical.shared.*;
+import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.FormControlContainer;
-import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
-import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
+import edu.stanford.bmir.protege.web.client.pagination.*;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.pagination.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 public class FormControlStackRepeatingPresenter implements FormControlStackPresenter, ValueChangeHandler<Optional<FormControlData>> {
+
+    private final Logger logger = Logger.getLogger(FormControlStackRepeatingPresenter.class.getName());
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
@@ -56,12 +47,18 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     private FormRegionPosition position;
 
     @Nonnull
-    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {
+    };
 
     @Nonnull
-    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {
+    };
 
-    private FormDataChangedHandler formDataChangedHandler = () -> {};
+    private FormDataChangedHandler formDataChangedHandler = () -> {
+    };
+
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
+    });
 
     @AutoFactory
     @Inject
@@ -102,9 +99,9 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         paginatorPresenter.setElementCount(value.getTotalElements());
         paginatorPresenter.setPageNumberChangedHandler(page -> regionPageChangedHandler.handleRegionPageChanged());
         value.getPageElements()
-             .stream()
-             .map(this::createFormControl)
-             .forEach(this::addFormControl);
+                .stream()
+                .map(this::createFormControl)
+                .forEach(this::addFormControl);
     }
 
     private void handleAddControl() {
@@ -133,6 +130,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     }
 
     private FormControl createFormControl(@Nullable FormControlDataDto dto) {
+        logger.info("FormControlStackRepeatingPresenter createFormCOntrol:" + dto);
         FormControl formControl = formControlFactory.createFormControl();
         formControl.setPosition(position);
         if (dto != null) {
@@ -142,6 +140,9 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControl.addValueChangeHandler(this);
         formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
         formControl.setFormDataChangedHandler(formDataChangedHandler);
+        if (formControl instanceof ContextSensitiveControl) {
+            ((ContextSensitiveControl) formControl).updateContextSensitiveCriteria(displayContextManager.fillDisplayContextBuilder().build());
+        }
         return formControl;
     }
 
@@ -155,10 +156,10 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public ImmutableList<FormControlData> getValue() {
         return formControls.stream()
-                           .map(FormControl::getValue)
-                           .filter(Optional::isPresent)
-                           .map(Optional::get)
-                           .collect(toImmutableList());
+                .map(FormControl::getValue)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toImmutableList());
     }
 
     @Override
@@ -248,10 +249,10 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public ValidationStatus getValidationStatus() {
         return formControls.stream()
-                    .map(FormControl::getValidationStatus)
-                    .filter(ValidationStatus::isInvalid)
-                    .findFirst()
-                    .orElse(ValidationStatus.VALID);
+                .map(FormControl::getValidationStatus)
+                .filter(ValidationStatus::isInvalid)
+                .findFirst()
+                .orElse(ValidationStatus.VALID);
     }
 
     @Override
@@ -263,5 +264,16 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         this.formRegionFilterChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormControlStackRepeatingPresenter: set parent displaycontextbuilder :" + displayContextManager.fillDisplayContextBuilder());
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

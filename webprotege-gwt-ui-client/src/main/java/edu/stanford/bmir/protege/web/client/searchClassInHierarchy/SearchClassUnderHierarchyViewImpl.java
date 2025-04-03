@@ -10,10 +10,8 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.inject.*;
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class SearchClassUnderHierarchyViewImpl extends Composite implements SearchClassUnderHierarchyView {
@@ -38,9 +36,9 @@ public class SearchClassUnderHierarchyViewImpl extends Composite implements Sear
 
     @Inject
     SearchClassUnderHierarchyViewImpl(Messages messages,
-                                      @Nonnull PrimitiveDataEditorImpl editorField) {
+                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         this.messages = messages;
-        this.editorField = checkNotNull(editorField);
+        this.editorField = primitiveDataEditorProvider.get();
         initWidget(ourUiBinder.createAndBindUi(this));
         this.searchLabel.setText(messages.hierarchy_searchInHierarchy());
         this.editorField.addValueChangeHandler(value -> {

@@ -52,7 +52,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private final SelectedPathsModel selectedPathsModel;
 
-    private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @AutoFactory
     @Inject
@@ -82,10 +82,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         formPresenter.start(ui);
         formPresenter.setEnabled(false);
-        formPresenter.setParentDisplayContextBuilder(this);
-        formPresenter.setFormDataChangedHandler(() -> {
-            handlerManager.fireEvent(new DirtyChangedEvent());
-        });
+        formPresenter.setFormDataChangedHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -146,17 +143,19 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
      * and displays the form if there is only one form in the result.
      */
     private void updateDisplayedForm() {
-        entity.ifPresent(e -> {
-            dispatch.execute(GetEntityFormsAction.create(projectId,
-                            e,
-                            ImmutableSet.copyOf(formPresenter.getPageRequest()),
-                            LangTagFilter.get(ImmutableSet.of()),
-                            ImmutableSet.copyOf(formPresenter.getOrderings().collect(Collectors.toList())),
-                            ImmutableSet.of(formId),
-                            formPresenter.getFilters()
-                    ),
-                    this::updateDisplayedForm);
-        });
+        entity.ifPresent(e -> dispatch.execute(
+                        GetEntityFormsAction.create(
+                                projectId,
+                                e,
+                                ImmutableSet.copyOf(formPresenter.getPageRequest()),
+                                LangTagFilter.get(ImmutableSet.of()),
+                                ImmutableSet.copyOf(formPresenter.getOrderings().collect(Collectors.toList())),
+                                ImmutableSet.of(formId),
+                                formPresenter.getFilters()
+                        ),
+                        this::updateDisplayedForm
+                )
+        );
     }
 
     private void updateDisplayedForm(GetEntityFormsResult result) {
@@ -212,6 +211,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         logger.info("FormContentEntityCardPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
         displayContextManager.setParentDisplayContextBuilder(parent);
+        formPresenter.setParentDisplayContextBuilder(this);
     }
 }
 
