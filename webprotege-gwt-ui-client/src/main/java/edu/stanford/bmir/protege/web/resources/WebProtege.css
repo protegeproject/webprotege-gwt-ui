@@ -3,6 +3,7 @@
 @external gwt-TabLayoutPanelTab-selected;
 @external blockquote;
 @url classIconUrl svgClassIcon;
+@url releasedClassIconUrl releasedClassIcon;
 @url datatypeIconUrl svgDatatypeIcon;
 @url propertyIconUrl svgPropertyIcon;
 @url objectPropertyIconUrl svgObjectPropertyIcon;
@@ -196,6 +197,15 @@
 
 .classIconInset {
     background-image: classIconUrl;
+    background-repeat: no-repeat;
+    background-position: 2px 1px;
+    padding-left: 22px;
+    width: auto;
+    height: auto;
+}
+
+.releasedClassIconInset {
+    background-image: releasedClassIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
     padding-left: 22px;

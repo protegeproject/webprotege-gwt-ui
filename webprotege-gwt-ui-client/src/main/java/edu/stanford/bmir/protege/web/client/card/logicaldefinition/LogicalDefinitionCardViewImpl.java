@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
@@ -54,8 +55,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     private final ProjectId projectId;
 
-    private final LogicalDefinitionModal logicalDefinitionModal;
-
     private List<OWLEntityData> ancestorsList = new ArrayList<>();
 
     private List<PostCoordinationTableAxisLabel> labels;
@@ -85,18 +84,19 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     private LogicalDefinitionChangeHandler changeHandler;
 
+    private final HierarchySelectionModalManager hierarchyModal;
+
 
     @Inject
     public LogicalDefinitionCardViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
                                          @Nonnull MessageBox messageBox,
                                          @Nonnull UuidV4Provider uuidV4Provider,
-                                         @Nonnull LogicalDefinitionModal logicalDefinitionModal,
-                                         @Nonnull ProjectId projectId) {
+                                         @Nonnull ProjectId projectId, HierarchySelectionModalManager hierarchyModal) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.uuidV4Provider = uuidV4Provider;
-        this.logicalDefinitionModal = logicalDefinitionModal;
         this.projectId = projectId;
+        this.hierarchyModal = hierarchyModal;
         buttonCss.ensureInjected();
         necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
                 "Value",
@@ -273,7 +273,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         Set<OWLClass> roots = selectedScales.stream().map(scale -> DataFactory.getOWLClass(IRI.create(scale)))
                 .collect(Collectors.toSet());
 
-        logicalDefinitionModal.showModal(roots, table::addNewRow);
+        hierarchyModal.showModal("Select axis value", roots, table::addNewRow);
         this.changeHandler.handleLogicalDefinitionCHange();
     }
 

@@ -1,19 +1,17 @@
-package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal;
+package edu.stanford.bmir.protege.web.client.hierarchy.selectionModal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.Messages;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 
-public class ScaleValueSelectionViewImpl extends Composite implements ScaleValueSelectionView {
+public class HierarchySelectionModalViewImpl extends Composite implements HierarchySelectionModalView {
 
-    private final Messages messages;
 
-    private static final Logger logger = Logger.getLogger(ScaleValueSelectionViewImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(HierarchySelectionModalViewImpl.class.getName());
 
     @UiField
     public SimplePanel hierarchyContainer;
@@ -21,16 +19,15 @@ public class ScaleValueSelectionViewImpl extends Composite implements ScaleValue
     @UiField
     public SimplePanel editorField;
 
-    interface ScaleValueSelectionModalImplUiBinder extends UiBinder<HTMLPanel, ScaleValueSelectionViewImpl> {
+    interface HierarchySelectionModalViewImplUiBinder extends UiBinder<HTMLPanel, HierarchySelectionModalViewImpl> {
     }
 
-    private static ScaleValueSelectionViewImpl.ScaleValueSelectionModalImplUiBinder ourUiBinder = GWT
-            .create(ScaleValueSelectionModalImplUiBinder.class);
+    private static final HierarchySelectionModalViewImpl.HierarchySelectionModalViewImplUiBinder ourUiBinder = GWT
+            .create(HierarchySelectionModalViewImpl.HierarchySelectionModalViewImplUiBinder.class);
 
     @Inject
-    public ScaleValueSelectionViewImpl(@Nonnull Messages messages) {
+    public HierarchySelectionModalViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        this.messages = messages;
     }
 
     @Override

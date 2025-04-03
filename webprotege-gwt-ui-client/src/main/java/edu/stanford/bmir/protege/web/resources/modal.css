@@ -51,3 +51,7 @@
 .wp-modal__button-bar button+button {
     margin-left: 5px;
 }
+
+.wp-modal__tree-width {
+    width: auto !important;
+}

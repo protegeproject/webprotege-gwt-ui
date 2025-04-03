@@ -1,7 +1,8 @@
-package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.scaleValueSelectionModal;
+package edu.stanford.bmir.protege.web.client.hierarchy.selectionModal;
 
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.searchClassInHierarchy.SearchClassUnderHierarchyPresenter;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 
@@ -9,9 +10,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class ScaleValueSelectionViewPresenter {
+public class HierarchySelectionModalPresenter {
 
-    private ScaleValueSelectionView view;
+    private final HierarchySelectionModalView view;
 
     @Nonnull
     private final HierarchyPopupView hierarchyView;
@@ -21,11 +22,11 @@ public class ScaleValueSelectionViewPresenter {
 
     private Optional<EntityNode> selectedEntity = Optional.empty();
 
-    private SearchClassUnderHierarchyPresenter searchClassUnderHierarchyPresenter;
+    private final SearchClassUnderHierarchyPresenter searchClassUnderHierarchyPresenter;
 
 
     @Inject
-    public ScaleValueSelectionViewPresenter(ScaleValueSelectionView view,
+    public HierarchySelectionModalPresenter(HierarchySelectionModalView view,
                                             @Nonnull HierarchyPopupView hierarchyView,
                                             @Nonnull EntityHierarchyModel model,
                                             @Nonnull SearchClassUnderHierarchyPresenter searchClassUnderHierarchyPresenter) {
@@ -36,7 +37,7 @@ public class ScaleValueSelectionViewPresenter {
     }
 
     @Nonnull
-    public ScaleValueSelectionView getView() {
+    public HierarchySelectionModalView getView() {
         return view;
     }
 
@@ -48,14 +49,11 @@ public class ScaleValueSelectionViewPresenter {
         hierarchyView.setSelectionChangedHandler(
                 entityNode -> selectedEntity = Optional.of(entityNode)
         );
+        hierarchyView.addCssClassToMain(WebProtegeClientBundle.BUNDLE.modal().treeWidth());
         this.view.getHierarchyContainer().setWidget(hierarchyView);
         this.searchClassUnderHierarchyPresenter.start(this.view.getEditorField());
         this.searchClassUnderHierarchyPresenter.setRoots(hierarchyDescriptor);
-        this.searchClassUnderHierarchyPresenter.setSelectionChangedHandler((entity) -> {
-            entity.ifPresent(owlENtity -> {
-                this.hierarchyView.revealEntity(owlENtity);
-            });
-        });
+        this.searchClassUnderHierarchyPresenter.setSelectionChangedHandler((entity) -> entity.ifPresent(this.hierarchyView::revealEntity));
     }
 
     public Optional<EntityNode> getSelection() {
