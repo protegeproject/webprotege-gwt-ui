@@ -25,7 +25,7 @@ public class ContextSensitiveSubClassOfCriteriaPresenterFactory implements Crite
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Is a subclass of subject";
+        return "Is a subclass of selected";
     }
 
     @Nonnull
