@@ -280,24 +280,6 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         return displayContextManager.fillDisplayContextBuilder();
     }
 
-    public void updateDynamicCriteriaForControls() {
-        try {
-            DisplayContext currentContext = this.fillDisplayContextBuilder().build();
-            logger.info("FormFIeldPresenter: StackPresenter size:" + this.stackPresenter.getValue().size());
-
-            this.stackPresenter.forEachFormControl(control -> {
-                        logger.info("FormFIeldPresenter control " + control.toString() + " value:" + control.getValue());
-                        if (control instanceof ContextSensitiveControl) {
-                            ((ContextSensitiveControl) control).updateContextSensitiveCriteria(currentContext);
-                        }
-                    }
-            );
-        } catch (IllegalStateException e) {
-            logger.info("IllegalStateException: " + e.getMessage());
-        }
-
-    }
-
     public void fillDisplayContext(DisplayContextBuilder context) {
         context.setFormFieldId(getFormRegionId());
     }

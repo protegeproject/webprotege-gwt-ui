@@ -80,7 +80,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
 
     private boolean fieldsCollapsible = true;
 
-    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
     @AutoFactory
     @Inject
@@ -126,7 +126,6 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
-        updateDynamicCriteriaForControls();
     }
 
     public boolean isEnabled() {
@@ -166,7 +165,6 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             FormFieldDataDto fieldData = nextFormFieldData.get(i);
             FormFieldPresenter formFieldPresenter = fieldPresenters.get(i);
             formFieldPresenter.setValue(fieldData);
-            formFieldPresenter.updateDynamicCriteriaForControls();
         }
         dispatchServiceManager.executeCurrentBatch();
     }
@@ -208,7 +206,6 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.setCollapsible(fieldsCollapsible);
-        presenter.updateDynamicCriteriaForControls();
         presenter.start();
         fieldPresenters.add(presenter);
         if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
@@ -343,10 +340,4 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         return displayContextManager.fillDisplayContextBuilder();
     }
 
-    public void updateDynamicCriteriaForControls() {
-        for (FormFieldPresenter presenter : fieldPresenters) {
-            presenter.setParentDisplayContextBuilder(this);
-            presenter.updateDynamicCriteriaForControls();
-        }
-    }
 }

@@ -183,7 +183,6 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler, Ha
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
             formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
-            formPresenter.updateDynamicCriteriaForControls();
             formPresenters.put(formData.getFormId(), formPresenter);
             tabBarPresenter.addTab(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),
