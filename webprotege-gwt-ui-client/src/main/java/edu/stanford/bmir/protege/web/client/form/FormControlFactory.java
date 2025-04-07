@@ -11,6 +11,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import java.util.logging.Logger;
+
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -19,6 +21,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 14 Jul 2017
  */
 public class FormControlFactory {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("FormControlFactory");
 
     @Nonnull
     private final Provider<TextControl> textFieldEditorProvider;
@@ -173,6 +177,7 @@ public class FormControlFactory {
     private FormControlDataEditorFactory getEntityNameEditorFactory(EntityNameControlDescriptorDto formFieldDescriptor) {
         return () -> {
             EntityNameControl editor = classNameFieldEditorProvider.get();
+            logger.info("getEntityNameEditorFactory: descriptor="+formFieldDescriptor);
             editor.setDescriptor(formFieldDescriptor);
             return editor;
         };

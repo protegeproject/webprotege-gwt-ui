@@ -11,9 +11,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.client.selection.*;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -23,9 +23,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -52,17 +50,23 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private HandlerManager handlerManager = new HandlerManager(this);
 
+    private final SelectedPathsModel selectedPathsModel;
+
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+
     @AutoFactory
     @Inject
     public FormContentEntityCardPresenter(FormId formId,
                                           @Provided DispatchServiceManager dispatch,
                                           @Provided ProjectId projectId,
                                           @Provided FormPresenter formPresenter,
-                                          @Provided SelectionModel selectionModel) {
+                                          @Provided SelectionModel selectionModel,
+                                          @Provided SelectedPathsModel selectedPathsModel) {
         this.dispatch = dispatch;
         this.projectId = projectId;
         this.formId = formId;
         this.formPresenter = formPresenter;
+        this.selectedPathsModel = selectedPathsModel;
     }
 
     @Override
@@ -78,9 +82,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         formPresenter.start(ui);
         formPresenter.setEnabled(false);
-        formPresenter.setFormDataChangedHandler(() -> {
-            handlerManager.fireEvent(new DirtyChangedEvent());
-        });
+        formPresenter.setFormDataChangedHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -141,17 +143,19 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
      * and displays the form if there is only one form in the result.
      */
     private void updateDisplayedForm() {
-        entity.ifPresent(e -> {
-            dispatch.execute(GetEntityFormsAction.create(projectId,
-                            e,
-                            ImmutableSet.copyOf(formPresenter.getPageRequest()),
-                            LangTagFilter.get(ImmutableSet.of()),
-                            ImmutableSet.copyOf(formPresenter.getOrderings().collect(Collectors.toList())),
-                            ImmutableSet.of(formId),
-                            formPresenter.getFilters()
-                    ),
-                    this::updateDisplayedForm);
-        });
+        entity.ifPresent(e -> dispatch.execute(
+                        GetEntityFormsAction.create(
+                                projectId,
+                                e,
+                                ImmutableSet.copyOf(formPresenter.getPageRequest()),
+                                LangTagFilter.get(ImmutableSet.of()),
+                                ImmutableSet.copyOf(formPresenter.getOrderings().collect(Collectors.toList())),
+                                ImmutableSet.of(formId),
+                                formPresenter.getFilters()
+                        ),
+                        this::updateDisplayedForm
+                )
+        );
     }
 
     private void updateDisplayedForm(GetEntityFormsResult result) {
@@ -196,6 +200,18 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     @Override
     public void requestFocus() {
         formPresenter.requestFocus();
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormContentEntityCardPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
+        displayContextManager.setParentDisplayContextBuilder(parent);
+        formPresenter.setParentDisplayContextBuilder(this);
     }
 }
 

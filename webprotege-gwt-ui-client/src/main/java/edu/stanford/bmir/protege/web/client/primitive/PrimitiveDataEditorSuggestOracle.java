@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
@@ -17,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,6 +25,8 @@ import java.util.Set;
  * Date: 19/01/2013
  */
 public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
+
+    private final Logger logger = Logger.getLogger(PrimitiveDataEditorSuggestOracle.class.getName());
 
     private EntitySuggestOracle delegate;
 
@@ -93,7 +95,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         lastRequest = request;
         delegate.requestSuggestions(request, (req, response) -> {
             if(req != lastRequest) {
-                GWT.log("[PrimitiveDataEditorSuggestOracle] Ignoring stale request: " + request.getQuery());
+                logger.info("[PrimitiveDataEditorSuggestOracle] Ignoring stale request: " + request.getQuery());
                 return;
             }
             List<EntitySuggestion> suggestions = (List<EntitySuggestion>) response.getSuggestions();

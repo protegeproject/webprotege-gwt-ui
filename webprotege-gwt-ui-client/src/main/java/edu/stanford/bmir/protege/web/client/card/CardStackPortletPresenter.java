@@ -14,7 +14,9 @@ import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.tab.TabBarPresenter;
 import edu.stanford.bmir.protege.web.client.tab.TabPresenter;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.card.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -107,17 +109,17 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     private void displayCardsForSelectedEntity() {
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
-        selectedEntity.ifPresent(sel -> {
-            retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards);
-        });
+        selectedEntity.ifPresent(sel -> retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards));
         setNothingSelectedVisible(!selectedEntity.isPresent());
     }
 
     private void retrieveAndSetDisplayedCardsForEntity(OWLEntity entity,
                                                        Runnable successCallback) {
-        dispatch.execute(GetEntityCardDescriptorsAction.get(getProjectId(), entity), this, result -> {
-            setDisplayedCards(result, successCallback);
-        });
+        dispatch.execute(
+                GetEntityCardDescriptorsAction.get(getProjectId(), entity),
+                this,
+                result -> setDisplayedCards(result, successCallback)
+        );
     }
 
     private void setDisplayedCards(GetEntityCardDescriptorsResult result, Runnable successCallback) {
@@ -192,11 +194,18 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         }
         Optional<? extends EntityCardPresenter> p = entityCardPresenterFactory.create(descriptor);
         p.ifPresent(pp -> {
+            if(pp instanceof EntityCardEditorPresenter){
+                ((EntityCardEditorPresenter) pp).setParentDisplayContextBuilder(this);
+            }
             EntityCardUi ui = entityCardViewProvider.get();
             view.addView(ui);
             eventBus.ifPresent(webProtegeEventBus -> pp.start(ui, webProtegeEventBus));
             EntityCardComponents components = EntityCardComponents.get(descriptor, pp, ui);
+            EntityCardPresenter presenter = components.getPresenter();
             cardComponents.put(descriptor.getId(), components);
+            if(presenter instanceof EntityCardEditorPresenter){
+                ((EntityCardEditorPresenter) presenter).setParentDisplayContextBuilder(this);
+            }
         });
     }
 
@@ -223,10 +232,8 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void commitChangesAndUpdateSelection() {
-        commitChanges(() -> {
-            // Proceed as normal
-            displayCardsForSelectedEntity();
-        });
+        // Proceed as normal
+        commitChanges(this::displayCardsForSelectedEntity);
     }
 
 
@@ -313,6 +320,17 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     public boolean isDirty() {
         return getCurrentPresenters().anyMatch(EntityCardPresenter::isDirty);
+    }
+
+    @Override
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        super.fillDisplayContext(displayContextBuilder);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("CardStackPortletPresenter: set parent displaycontextbuilder"+super.fillDisplayContextBuilder());
+        super.setParentDisplayContextBuilder(parent);
     }
 }
 

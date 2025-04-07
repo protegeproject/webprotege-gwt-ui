@@ -242,6 +242,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("AbstractWebProtegePortletPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
         displayContextManager.setParentDisplayContextBuilder(parent);
     }
 

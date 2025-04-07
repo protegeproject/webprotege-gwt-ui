@@ -8,6 +8,8 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
@@ -21,10 +23,14 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FormControlStackNonRepeatingPresenter implements FormControlStackPresenter {
+
+    private final Logger logger = Logger.getLogger(FormControlStackNonRepeatingPresenter.class.getName());
+
 
     @Nonnull
     private final FormControl formControl;
@@ -33,6 +39,8 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
 
     @Nonnull
     private final HandlerManager handlerManager = new HandlerManager(this);
+
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Inject
     @AutoFactory
@@ -161,5 +169,17 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         formControl.setFormRegionFilterChangedHandler(handler);
+    }
+
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        logger.info("FormControlStackRepeatingPresenter: set parent displaycontextbuilder :"+displayContextManager.fillDisplayContextBuilder());
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

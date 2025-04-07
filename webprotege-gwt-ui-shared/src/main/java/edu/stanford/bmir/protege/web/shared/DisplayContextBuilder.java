@@ -113,4 +113,18 @@ public class DisplayContextBuilder {
         this.viewNodeId = viewNodeId;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "DisplayContextBuilder{" +
+                "projectId=" + projectId +
+                ", perspectiveId=" + perspectiveId +
+                ", viewId=" + viewId +
+                ", viewNodeId=" + viewNodeId +
+                ", nodeProperties=" + nodeProperties +
+                ", formIds=" + formIds +
+                ", formFieldId=" + formFieldId +
+                ", selectedPaths=" + selectedPaths +
+                '}';
+    }
 }

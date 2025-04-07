@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.client.card.CustomContentEntityCardPresente
 import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
 import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -36,6 +36,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Inject
     @AutoFactory
@@ -118,5 +119,15 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public boolean isEditor() {
         return true;
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 }

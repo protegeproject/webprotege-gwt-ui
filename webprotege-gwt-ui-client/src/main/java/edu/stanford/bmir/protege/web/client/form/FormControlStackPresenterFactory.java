@@ -6,9 +6,13 @@ import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.logging.Logger;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FormControlStackPresenterFactory {
+
+    private final static java.util.logging.Logger logger = Logger.getLogger("FormControlStackPresenterFactory");
 
     @Nonnull
     private final FormControlStackRepeatingPresenterFactory repeatingPresenterFactory;
@@ -30,6 +34,7 @@ public class FormControlStackPresenterFactory {
     public FormControlStackPresenter create(@Nonnull FormControlDescriptorDto descriptor,
                                             @Nonnull Repeatability repeatability,
                                             @Nonnull FormRegionPosition position) {
+        logger.info("geo descriptor: "+descriptor);
         FormControlDataEditorFactory factory = formControlFactory.getDataEditorFactory(descriptor);
         if(checkNotNull(repeatability).equals(Repeatability.NON_REPEATABLE)) {
             FormControl formControl = factory.createFormControl();

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -388,8 +387,15 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
         ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortFormsMap)
                                                                          .orElse(ImmutableMap.of());
+
+        ImmutableSet<EntityStatus> statuses = currentData.map(data -> {
+            if(data instanceof OWLClassData){
+                return ((OWLClassData) data).getStatuses().stream().collect(ImmutableSet.toImmutableSet());
+            }
+            return null;
+        }).orElse(ImmutableSet.of());
         boolean deprecated = currentData.map(OWLPrimitiveData::isDeprecated).orElse(false);
-        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms, deprecated);
+        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms, deprecated, statuses);
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
         updateDisplayForCurrentData();
     }
@@ -595,9 +601,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             } else {
                 lang = Optional.empty();
             }
-            if (!lang.equals(languageEditor.getValue())) {
-                return false;
-            }
+            return lang.equals(languageEditor.getValue());
         }
         return true;
     }
