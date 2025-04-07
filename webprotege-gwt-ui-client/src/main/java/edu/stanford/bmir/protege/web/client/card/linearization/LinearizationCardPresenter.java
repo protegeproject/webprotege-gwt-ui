@@ -127,11 +127,15 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
         Optional<WhoficEntityLinearizationSpecification> currSpec = Optional.ofNullable(view.getLinSpec());
         logger.log(Level.INFO, "Pristine linSpec data: " + pristineLinearizationData);
         logger.log(Level.INFO, "Edited linSpec data: " + currSpec);
+        if(this.view.isReadOnly()){
+            return false;
+        }
         //todo this is because sometimes view is not loaded on quick entity changes
         if(currSpec.isPresent() && pristineLinearizationData.isPresent() && !currSpec.get().getEntityIRI().equals(pristineLinearizationData.get().getEntityIRI())) {
             logger.warning("Pristine entity is different from changed entity. Pristine " + pristineLinearizationData.get().getEntityIRI() + " changed : " + currSpec.get().getEntityIRI());
             return false;
         }
+
         return !pristineLinearizationData.equals(currSpec);
     }
 
