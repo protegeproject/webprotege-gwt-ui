@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -185,11 +185,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
         });
 
-        dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
-            Set<OWLEntityData> result = new HashSet<>();
-            populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
-        });
+        dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(),projectId), ancestors -> ancestorsList = new ArrayList<>(ancestors.getAncestors()));
 
         dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
             this.labels = config.getLabels();

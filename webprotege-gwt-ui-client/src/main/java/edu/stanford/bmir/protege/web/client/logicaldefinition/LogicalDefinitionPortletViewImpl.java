@@ -9,7 +9,8 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsAction;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -178,10 +179,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
         });
 
-        dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
-            Set<OWLEntityData> result = new HashSet<>();
-            populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
+        dispatchServiceManager.execute(GetEntityDirectParentsAction.create(projectId, owlEntity), directParents -> {
+            ancestorsList = directParents.getDirectParents()
+                    .stream()
+                    .map(EntityNode::getEntityData)
+                    .collect(Collectors.toList());
 
             dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
                 this.labels = config.getLabels();
