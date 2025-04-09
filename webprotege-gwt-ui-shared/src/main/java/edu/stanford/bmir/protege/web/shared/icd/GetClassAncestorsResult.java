@@ -6,20 +6,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-
-import java.util.*;
 
 
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.entities.GetClassAncestors")
 public abstract class GetClassAncestorsResult implements Result {
-    public abstract Set<OWLEntityData> getAncestors();
+    public abstract AncestorClassHierarchy getAncestorsTree();
 
     @JsonCreator
-    public static GetClassAncestorsResult create(@JsonProperty("ancestors")  Set<OWLEntityData> ancestors) {
-        return new AutoValue_GetClassAncestorsResult(ancestors);
+    public static GetClassAncestorsResult create(@JsonProperty("ancestorTree")  AncestorClassHierarchy ancestorTree ) {
+        return new AutoValue_GetClassAncestorsResult(ancestorTree);
     }
 }
