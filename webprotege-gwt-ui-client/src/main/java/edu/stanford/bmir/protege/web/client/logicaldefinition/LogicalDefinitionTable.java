@@ -143,9 +143,6 @@ public class LogicalDefinitionTable implements IsWidget {
                 .map(PostCoordinationTableAxisLabel::getTableLabel).findFirst()
                 .orElse("");
 
-        if(response.equalsIgnoreCase("")){
-            logger.info("ALEX nu am gasit label pentru " + axisIri);
-        }
         return response;
     }
 
