@@ -125,8 +125,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public boolean isDirty() {
         Optional<WhoficEntityLinearizationSpecification> currSpec = Optional.ofNullable(view.getLinSpec());
-        logger.log(Level.INFO, "Pristine linSpec data: " + pristineLinearizationData);
-        logger.log(Level.INFO, "Edited linSpec data: " + currSpec);
+        logger.log(Level.FINE, "Pristine linSpec data: " + pristineLinearizationData);
+        logger.log(Level.FINE, "Edited linSpec data: " + currSpec);
         if(this.view.isReadOnly()){
             return false;
         }

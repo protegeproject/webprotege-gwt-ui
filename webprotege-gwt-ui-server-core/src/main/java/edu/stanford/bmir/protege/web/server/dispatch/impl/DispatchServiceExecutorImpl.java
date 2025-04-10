@@ -61,7 +61,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         try {
-            if(action instanceof TranslateEventListAction){
+            if (action instanceof TranslateEventListAction) {
                 var translateEventsAction = (TranslateEventListAction) action;
                 try {
                     GetProjectEventsResult<?> result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
@@ -72,11 +72,11 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                     throw new ActionExecutionException("An error occurred when translating the given event list.  See logs for more information.");
                 }
             }
-            if(action instanceof GetUserInfoAction) {
+            if (action instanceof GetUserInfoAction) {
                 GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
                 return DispatchServiceResultContainer.create(result);
             }
-            if(action instanceof FetchAppEnvVariables) {
+            if (action instanceof FetchAppEnvVariables) {
                 var websocketUrl = getEnvVariable("webprotege.websocketUrl").orElse("ws://webprotege-local.edu/wsapps");
                 var logoutUrl = getEnvVariable("webprotege.logoutUrl").orElse("http://webprotege-local.edu/webprotege/logout");
                 var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
@@ -91,8 +91,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         catch (PermissionDeniedException e) {
             logger.error("An exception was thrown when executing {} {}", action.getClass().getName(), e.getMessage(), e);
             throw e;
-        }
-        catch(ActionExecutionException e) {
+        } catch (ActionExecutionException e) {
             throw new ActionExecutionException(e.getMessage());
         } catch (Exception e) {
             logger.error("An error occurred whilst executing an action", e);
@@ -105,35 +104,34 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
             var httpResponse = httpClient.send(httpRequest,
-                                               HttpResponse.BodyHandlers.ofString());
+                    HttpResponse.BodyHandlers.ofString());
 
             var userId = executionContext.getUserId();
-            logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
-            if(httpResponse.statusCode() == 400) {
+            logger.debug("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
+            if (httpResponse.statusCode() == 400) {
                 logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                if(action instanceof BatchAction) {
+                if (action instanceof BatchAction) {
                     ((BatchAction) action).getActions()
-                                          .stream()
-                                          .map(a -> a.getClass().getSimpleName())
-                                          .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
+                            .stream()
+                            .map(a -> a.getClass().getSimpleName())
+                            .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
                 }
-            }
-            else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+            } else if (httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
                 var headers = httpResponse.headers()
                         .map()
                         .entrySet()
                         .stream()
-                        .map(e -> e.getKey() + ": " +  e.getValue())
+                        .map(e -> e.getKey() + ": " + e.getValue())
                         .collect(Collectors.joining("  &&  "));
                 var reason = httpResponse.headers().firstValue("www-authenticate");
-                logger.debug("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
-                            action.getClass().getSimpleName(),
-                            executionContext.getUserId(),
-                            headers,
-                            executionContext.getToken());
+                logger.info("Permission denied for {} , reason {},  when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
+                        reason,
+                        action.getClass().getSimpleName(),
+                        executionContext.getUserId(),
+                        headers,
+                        executionContext.getToken());
                 throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
-            }
-            else if(httpResponse.statusCode() == 504) {
+            } else if (httpResponse.statusCode() == 504) {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 throw new ActionExecutionException("Gateway Timeout (504)");
             }
