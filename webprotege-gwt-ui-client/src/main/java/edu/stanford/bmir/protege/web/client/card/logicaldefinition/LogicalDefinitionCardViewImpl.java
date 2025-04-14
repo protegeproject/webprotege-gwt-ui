@@ -188,7 +188,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
+            ancestorsList = result.stream()
+                    .filter(ancestor -> !ancestor.getIri().equals(owlEntity.getIRI()))
+                    .collect(Collectors.toList());
         });
 
         dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
