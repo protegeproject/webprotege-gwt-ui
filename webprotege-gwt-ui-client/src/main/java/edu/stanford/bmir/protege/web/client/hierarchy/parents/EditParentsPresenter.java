@@ -3,25 +3,19 @@ package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ChangeEntityParentsAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import javax.inject.Inject;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -42,7 +36,7 @@ public class EditParentsPresenter {
     @Nullable
     private OWLEntity entity;
 
-    private Optional<HierarchyDescriptor> hierarchyDescriptor = Optional.empty();
+    private Optional<ClassHierarchyDescriptor> classHierarchyDescriptor = Optional.empty();
 
     @Nonnull
     private final ModalManager modalManager;
@@ -66,6 +60,9 @@ public class EditParentsPresenter {
     }
 
     public void start(@Nonnull OWLEntity entity) {
+        if (!entity.isOWLClass()) {
+            return;
+        }
         view.clear();
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.hierarchy_editParents());
@@ -78,8 +75,11 @@ public class EditParentsPresenter {
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
                 result -> view.setOwlEntityData(result.getEntityData()));
 
-        hierarchyDescriptor.ifPresent(id -> dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, hierarchyDescriptor.get()),
-                result -> view.setEntityParents(result.getParents())));
+        classHierarchyDescriptor.ifPresent(id -> dispatch.execute(GetClassHierarchyParentsByAxiomTypeAction.create(projectId, entity.asOWLClass(), classHierarchyDescriptor.get()),
+                result -> {
+                    view.setEntityParents(result.getParentsBySubclassOf());
+                    view.setParentsFromEquivalentClasses(result.getParentsByEquivalentClass());
+                }));
     }
 
     @Nonnull
@@ -87,8 +87,8 @@ public class EditParentsPresenter {
         return view;
     }
 
-    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
-        this.hierarchyDescriptor = Optional.of(hierarchyDescriptor);
+    public void setHierarchyDescriptor(@Nonnull ClassHierarchyDescriptor classHierarchyDescriptor) {
+        this.classHierarchyDescriptor = Optional.of(classHierarchyDescriptor);
     }
 
     private void handleHierarchyChange(ModalCloser closer) {
@@ -108,19 +108,19 @@ public class EditParentsPresenter {
                             return;
                         }
 
-                        if(changeEntityParentsResult.hasClassesWithRetiredParents()){
+                        if (changeEntityParentsResult.hasClassesWithRetiredParents()) {
                             view.clearClassesWithRetiredParentsErrors();
                             Set<OWLEntityData> classesWithRetiredParents = changeEntityParentsResult.getClassesWithRetiredParents();
                             view.markClassesWithRetiredParents(classesWithRetiredParents);
                         }
 
-                        if(changeEntityParentsResult.hasClassesWithCycle()){
+                        if (changeEntityParentsResult.hasClassesWithCycle()) {
                             view.clearClassesWithCycleErrors();
                             Set<OWLEntityData> classesWithCycles = changeEntityParentsResult.getClassesWithCycle();
                             view.markClassesWithCycles(classesWithCycles);
                         }
 
-                        if(changeEntityParentsResult.hasOldParentAsLinearizationPathParent()){
+                        if (changeEntityParentsResult.hasOldParentAsLinearizationPathParent()) {
                             view.clearLinearizationPathParentErrors();
                             String parents = changeEntityParentsResult.getOldParentsThatAreLinearizationPathParents()
                                     .stream()

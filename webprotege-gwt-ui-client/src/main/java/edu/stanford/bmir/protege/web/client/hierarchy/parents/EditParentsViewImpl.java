@@ -35,7 +35,10 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     private final Messages messages;
 
     @UiField(provided = true)
-    final PrimitiveDataListEditor domains;
+    final PrimitiveDataListEditor parents;
+
+    @UiField(provided = true)
+    final PrimitiveDataListEditor equivalentClassParents;
 
     @UiField
     ExpandingTextBoxImpl reasonForChangeTextBox;
@@ -64,12 +67,16 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public EditParentsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                @Nonnull Messages messages) {
         this.messages = messages;
-        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
+        parents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
+        equivalentClassParents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
         initWidget(ourUiBinder.createAndBindUi(this));
-        domains.setPlaceholder(messages.frame_enterAClassName());
-        domains.setValue(new ArrayList<>());
-        domains.setEnabled(true);
+        parents.setPlaceholder(messages.frame_enterAClassName());
+        parents.setValue(new ArrayList<>());
+        parents.setEnabled(true);
         textBox.setEnabled(false);
+
+        equivalentClassParents.setValue(new ArrayList<>());
+        equivalentClassParents.setEnabled(false);
     }
 
     @Override
@@ -86,9 +93,13 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void setEntityParents(Set<OWLEntityData> entityParents) {
-        this.domains.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
+        this.parents.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
     }
 
+    @Override
+    public void setParentsFromEquivalentClasses(Set<OWLEntityData> equivalentClassParents) {
+        this.equivalentClassParents.setValue(equivalentClassParents.stream().map(equivalentClassParent -> (OWLPrimitiveData) equivalentClassParent).collect(Collectors.toList()));
+    }
 
     @Override
     protected void onAttach() {
@@ -130,7 +141,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public List<OWLPrimitiveData> getNewParentList() {
-        return this.domains.getValue().orElseGet(ArrayList::new);
+        return this.parents.getValue().orElseGet(ArrayList::new);
     }
 
     @Override

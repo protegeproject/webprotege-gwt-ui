@@ -1336,6 +1336,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("hierarchy.parents")
     String hierarchy_parents();
 
+    @DefaultMessage("Parents from equivalent classes")
+    @Key("hierarchy.equivalentClassParents")
+    String hierarchy_equivalentClassParents();
+
     @DefaultMessage("Watches")
     @Key("watch.watches")
     String watch_watches();

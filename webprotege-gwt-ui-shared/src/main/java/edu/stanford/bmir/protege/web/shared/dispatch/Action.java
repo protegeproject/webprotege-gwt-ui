@@ -252,6 +252,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = CreateNewProjectFromProjectBackupAction.class),
         @Type(value = MoveEntitiesToParentIcdAction.class),
         @Type(value = MoveHierarchyNodeIcdAction.class),
+        @Type(value = GetClassHierarchyParentsByAxiomTypeAction.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

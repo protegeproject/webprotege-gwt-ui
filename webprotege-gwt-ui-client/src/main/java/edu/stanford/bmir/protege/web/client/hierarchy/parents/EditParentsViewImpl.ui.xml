@@ -18,7 +18,11 @@
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.hierarchy_parents}" addStyleNames="{wp.style.formLabel}"/>
-            <wp:PrimitiveDataListEditor ui:field="domains"/>
+            <wp:PrimitiveDataListEditor ui:field="parents"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.hierarchy_equivalentClassParents}" addStyleNames="{wp.style.formLabel}"/>
+            <wp:PrimitiveDataListEditor ui:field="equivalentClassParents"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>

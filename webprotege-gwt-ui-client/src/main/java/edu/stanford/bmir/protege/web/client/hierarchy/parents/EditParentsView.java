@@ -15,6 +15,8 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     void setEntityParents(Set<OWLEntityData> entityParents);
 
+    void setParentsFromEquivalentClasses(Set<OWLEntityData> entityParents);
+
     boolean isReasonForChangeSet();
 
     void clear();
