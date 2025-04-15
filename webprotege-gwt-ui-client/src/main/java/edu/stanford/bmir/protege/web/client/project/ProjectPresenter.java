@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
@@ -115,8 +117,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
-
+            String userName = this.loggedInUserProvider.getCurrentUserId().getUserName();
+            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), userName);
         });
 
     }

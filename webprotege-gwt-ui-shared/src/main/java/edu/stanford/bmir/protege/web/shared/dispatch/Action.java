@@ -42,6 +42,7 @@ import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -223,7 +224,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = TranslateEventListAction.class),
         @Type(value = SetNamedHierarchiesAction.class),
         @Type(value = GetHierarchyDescriptorAction.class),
-        @Type(value = ProcessUploadedSiblingsOrderingAction.class)
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class),
+        @Type(value = GetProjectRoleDefinitionsAction.class),
+        @Type(value = GetFormRegionAccessRestrictionsAction.class),
+        @Type(value = SetFormRegionAccessRestrictionsAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

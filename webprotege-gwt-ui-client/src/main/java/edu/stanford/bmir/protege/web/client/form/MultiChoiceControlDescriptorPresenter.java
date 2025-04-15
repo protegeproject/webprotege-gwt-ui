@@ -9,6 +9,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescrip
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -59,6 +62,11 @@ public class MultiChoiceControlDescriptorPresenter implements FormControlDescrip
         else {
             clear();
         }
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Collections.singletonList(this);
     }
 
 }

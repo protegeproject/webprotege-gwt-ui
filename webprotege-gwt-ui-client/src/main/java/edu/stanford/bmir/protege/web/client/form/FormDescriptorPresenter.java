@@ -13,9 +13,9 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,28 +24,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class FormDescriptorPresenter implements Presenter {
+public class FormDescriptorPresenter implements Presenter, FormDescriptorComponentPresenter {
 
     @Nonnull
     private final FormDescriptorView view;
 
     @Nonnull
-    private final FormFieldDescriptorObjectListPresenter elementDescriptorListPresenter;
+    private final FormFieldDescriptorObjectListPresenter formFieldDescriptorObjectListPresenter;
 
     @Nullable
     private FormId formId;
 
     @Inject
     public FormDescriptorPresenter(@Nonnull FormDescriptorView view,
-                                   @Nonnull FormFieldDescriptorObjectListPresenter elementDescriptorListPresenter) {
+                                   @Nonnull FormFieldDescriptorObjectListPresenter formFieldDescriptorObjectListPresenter) {
         this.view = checkNotNull(view);
-        this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
+        this.formFieldDescriptorObjectListPresenter = checkNotNull(formFieldDescriptorObjectListPresenter);
         this.formId = FormId.valueOf(UuidV4.uuidv4());
     }
 
     public void clear() {
         formId = FormId.get(UuidV4.uuidv4());
-        elementDescriptorListPresenter.clear();
+        formFieldDescriptorObjectListPresenter.clear();
     }
 
     @Nonnull
@@ -60,30 +60,42 @@ public class FormDescriptorPresenter implements Presenter {
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);
-        elementDescriptorListPresenter.start(
+        formFieldDescriptorObjectListPresenter.start(
                 view.getFieldDescriptorListContainer(),
                 eventBus);
-        elementDescriptorListPresenter.setDefaultStateCollapsed();
+        formFieldDescriptorObjectListPresenter.setDefaultStateCollapsed();
         // TODO: Resource bundle
-        elementDescriptorListPresenter.setAddObjectText("Add field");
+        formFieldDescriptorObjectListPresenter.setAddObjectText("Add field");
         view.setAddFormFieldHandler(this::handleAddFormElement);
-
     }
 
     private void handleAddFormElement() {
-        elementDescriptorListPresenter.addElement();
+        formFieldDescriptorObjectListPresenter.addElement();
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
         this.formId = checkNotNull(formDescriptor.getFormId(), "formId in supplied FormDescriptor is null");
         view.setLabel(formDescriptor.getLabel());
-        elementDescriptorListPresenter.setValues(formDescriptor.getFields());
+        formFieldDescriptorObjectListPresenter.setValues(formDescriptor.getFields());
+    }
+
+    public List<FormDescriptorComponentPresenter> getRegionDescriptorPresenters() {
+        List<FormFieldDescriptorPresenter> fieldDescriptorPresenters = formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters();
+        return new ArrayList<>(fieldDescriptorPresenters);
     }
 
     @Nonnull
     public FormDescriptor getFormDescriptor() {
         LanguageMap label = view.getLabel();
-        List<FormFieldDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
+        List<FormFieldDescriptor> elementDescriptors = formFieldDescriptorObjectListPresenter.getValues();
         return new FormDescriptor(this.formId, label, elementDescriptors, Optional.empty());
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
+        result.add(this);
+        result.addAll(formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters());
+        return result;
     }
 }

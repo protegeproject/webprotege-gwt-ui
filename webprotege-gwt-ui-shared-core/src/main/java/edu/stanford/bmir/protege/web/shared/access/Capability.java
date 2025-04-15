@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.access;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.annotation.Nonnull;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, visible = true, defaultImpl = GenericParameterizedCapability.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(BasicCapability.class)
+        @JsonSubTypes.Type(BasicCapability.class),
+        @JsonSubTypes.Type(GenericParameterizedCapability.class)
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface Capability {
 
     /**

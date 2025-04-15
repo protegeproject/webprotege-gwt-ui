@@ -4,7 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.permissions.ProjectRoleSelectorPresenter;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
@@ -14,6 +18,10 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -81,16 +89,37 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     @UiField
     HTMLPanel deprecationStrategyView;
 
+    @UiField(provided = true)
+    ValueListEditor<RoleId> viewRolesListEditor;
+
+    @UiField(provided = true)
+    ValueListEditor<RoleId> editRolesListEditor;
+
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
-                                       LanguageMapEditor helpEditor) {
+                                       LanguageMapEditor helpEditor,
+                                       Provider<ProjectRoleSelectorPresenter> projectRoleSelectorPresenterProvider) {
         counter.increment();
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
+        this.viewRolesListEditor = new ValueListFlexEditorImpl<>(() -> {
+            ProjectRoleSelectorPresenter presenter = projectRoleSelectorPresenterProvider.get();
+            presenter.start();
+            return presenter;
+        });
+        this.editRolesListEditor = new ValueListFlexEditorImpl<>(() -> {
+            ProjectRoleSelectorPresenter presenter = projectRoleSelectorPresenterProvider.get();
+            presenter.start();
+            return presenter;
+        });
+        this.editRolesListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        this.editRolesListEditor.setValue(new ArrayList<>());
+        this.editRolesListEditor.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
         labelEditor.addValueChangeHandler(event -> {
             labelChangedHander.accept(getLabel());
         });
+
     }
 
     @Override
@@ -247,5 +276,25 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
         else {
             return FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT;
         }
+    }
+
+    @Override
+    public void setViewRolesList(List<RoleId> viewRoles) {
+        viewRolesListEditor.setValue(viewRoles);
+    }
+
+    @Override
+    public List<RoleId> getViewRolesList() {
+        return viewRolesListEditor.getValue().orElse(Collections.emptyList());
+    }
+
+    @Override
+    public void setEditRolesList(List<RoleId> editRoles) {
+        editRolesListEditor.setValue(editRoles);
+    }
+
+    @Override
+    public List<RoleId> getEditRolesList() {
+        return editRolesListEditor.getValue().orElse(Collections.emptyList());
     }
 }

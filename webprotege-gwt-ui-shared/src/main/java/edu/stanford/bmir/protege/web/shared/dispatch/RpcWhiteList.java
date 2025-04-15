@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
@@ -51,10 +52,7 @@ import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.obo.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
@@ -609,6 +607,16 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     ViewNodeId _ViewNodeId;
     ProcessUploadedSiblingsOrderingAction _ProcessUploadedSiblingsOrderingAction;
     ProcessUploadedSiblingsOrderingResult _ProcessUploadedSiblingsOrderingResult;
+    GetProjectRoleDefinitionsAction _GetProjectRoleDefinitionsAction;
+    GetProjectRoleDefinitionsResult _GetProjectRoleDefinitionsResult;
+    RoleDefinition _RoleDefinition;
+    RoleId _RoleId;
+    FormRegionAccessRestrictions _FormRegionAccessRestrictions;
+    GetFormRegionAccessRestrictionsAction _GetFormRegionAccessRestrictionsAction;
+    GetFormRegionAccessRestrictionsResult _GetFormRegionAccessRestrictionsResult;
+    SetFormRegionAccessRestrictionsAction _SetFormRegionAccessRestrictionsAction;
+    SetFormRegionAccessRestrictionsResult _SetFormRegionAccessRestrictionsResult;
+    FormFieldAccessMode _FormFieldAccessMode;
 
     public RpcWhiteList() {
     }

@@ -19,7 +19,7 @@ public class JsonRpcResponse_Test {
     public void shouldDeserailzeResponse() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapperProvider().get();
 
-        String json = "{ \"jsonrpc\":\"2.0\",\n" + "\t\"method\": \"webprotege.users.GetAuthenticatedUserDetails\",\n" + "\t\"result\": { \"@type\":\"webprotege.users.GetAuthenticatedUserDetails\",\n" + "\t\t\"userDetails\": {\n" + "\t\t\t\"userId\": \"guest\",\n" + "\t\t\t\"displayName\": \"Guest\",\n" + "\t\t\t\"emailAddress\": null\n" + "\t\t},\n" + "\t\t\"permittedActions\": [\n" + "\t\t\t\"CreateAccount\",\n" + "\t\t\t\"CreateEmptyProject\"\n" + "\t\t]\n" + "\t}\n" + "}";
+        String json = "{ \"jsonrpc\":\"2.0\",\n" + "\t\"method\": \"webprotege.users.GetAuthenticatedUserDetails\",\n" + "\t\"result\": { \"@type\":\"webprotege.users.GetAuthenticatedUserDetails\",\n" + "\t\t\"userDetails\": {\n" + "\t\t\t\"userId\": \"guest\",\n" + "\t\t\t\"displayName\": \"Guest\",\n" + "\t\t\t\"emailAddress\": null\n" + "\t\t},\n" + "\t\t\"permittedActions\": []\n" + "\t}\n" + "}";
 
         JsonRpcResponse response = objectMapper.readValue(json, JsonRpcResponse.class);
         assertThat(response.getErrorInternal(), is(nullValue()));

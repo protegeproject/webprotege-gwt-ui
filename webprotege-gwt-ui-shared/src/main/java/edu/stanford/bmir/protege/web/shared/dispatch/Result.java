@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -208,7 +209,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetUserInfoResult.class),
         @JsonSubTypes.Type(SetNamedHierarchiesResult.class),
         @JsonSubTypes.Type(GetHierarchyDescriptorResult.class),
-        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class)
+        @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
+        @JsonSubTypes.Type(GetProjectRoleDefinitionsResult.class),
+        @JsonSubTypes.Type(GetFormRegionAccessRestrictionsResult.class),
+        @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

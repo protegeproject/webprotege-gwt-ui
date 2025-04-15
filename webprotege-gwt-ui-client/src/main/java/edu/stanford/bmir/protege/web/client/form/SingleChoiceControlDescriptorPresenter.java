@@ -10,6 +10,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -17,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class SingleControlDescriptorPresenter implements FormControlDescriptorPresenter {
+public class SingleChoiceControlDescriptorPresenter implements FormControlDescriptorPresenter {
 
     private static final SingleChoiceControlDescriptor DEFAULT_DESCRIPTOR = SingleChoiceControlDescriptor.get(
             SingleChoiceControlType.SEGMENTED_BUTTON,
@@ -30,8 +33,8 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
     private final ChoiceListSourceDescriptorPresenter choiceListSourceDescriptorPresenter;
 
     @Inject
-    public SingleControlDescriptorPresenter(@Nonnull SingleChoiceControlDescriptorView view,
-                                            @Nonnull ChoiceListSourceDescriptorPresenter choiceListSourceDescriptorPresenter) {
+    public SingleChoiceControlDescriptorPresenter(@Nonnull SingleChoiceControlDescriptorView view,
+                                                  @Nonnull ChoiceListSourceDescriptorPresenter choiceListSourceDescriptorPresenter) {
         this.view = checkNotNull(view);
         this.choiceListSourceDescriptorPresenter = checkNotNull(choiceListSourceDescriptorPresenter);
     }
@@ -70,5 +73,10 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         choiceListSourceDescriptorPresenter.start(view.getSourceContainer());
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Collections.singletonList(this);
     }
 }
