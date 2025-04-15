@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
@@ -80,6 +82,7 @@ public class EditParentsPresenter {
                     view.setEntityParents(result.getParentsBySubclassOf());
                     view.setParentsFromEquivalentClasses(result.getParentsByEquivalentClass());
                 }));
+        this.setHelpText(view.getHelpTooltip(), messages.hierarchy_editParents_equivalentClassParent());
     }
 
     @Nonnull
@@ -130,5 +133,11 @@ public class EditParentsPresenter {
                         }
                     });
         }
+    }
+
+
+    private void setHelpText(IsWidget tooltipWrapper, String text) {
+        Tooltip helpTooltip = Tooltip.create(tooltipWrapper, text);
+        helpTooltip.updateTitleContent(text);
     }
 }

@@ -1,30 +1,19 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
-import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
+import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.inject.*;
+import java.util.*;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class EditParentsViewImpl extends Composite implements EditParentsView {
@@ -55,12 +44,18 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     HTML linearizationPathParentField;
 
+    @UiField
+    HTMLPanel equivalentParentClassTooltip;
+
+    @UiField
+    HTMLPanel equivalentParentClassContainer;
+
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
     interface EditParentsViewImplUiBinder extends UiBinder<HTMLPanel, EditParentsViewImpl> {
     }
 
-    private static EditParentsViewImpl.EditParentsViewImplUiBinder ourUiBinder = GWT
+    private static final EditParentsViewImpl.EditParentsViewImplUiBinder ourUiBinder = GWT
             .create(EditParentsViewImpl.EditParentsViewImplUiBinder.class);
 
     @Inject
@@ -73,6 +68,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         parents.setPlaceholder(messages.frame_enterAClassName());
         parents.setValue(new ArrayList<>());
         parents.setEnabled(true);
+        this.parents.setEnforceMinOneValue(true);
         textBox.setEnabled(false);
 
         equivalentClassParents.setValue(new ArrayList<>());
@@ -98,6 +94,11 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void setParentsFromEquivalentClasses(Set<OWLEntityData> equivalentClassParents) {
+        if (equivalentClassParents.isEmpty()) {
+            this.equivalentParentClassContainer.setVisible(false);
+            return;
+        }
+        this.equivalentParentClassContainer.setVisible(true);
         this.equivalentClassParents.setValue(equivalentClassParents.stream().map(equivalentClassParent -> (OWLPrimitiveData) equivalentClassParent).collect(Collectors.toList()));
     }
 
@@ -180,5 +181,10 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public void markLinearizationPathParent(String linearizationPathParents) {
         linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParents));
         linearizationPathParentField.setVisible(true);
+    }
+
+    @Override
+    public IsWidget getHelpTooltip() {
+        return equivalentParentClassTooltip.asWidget();
     }
 }
