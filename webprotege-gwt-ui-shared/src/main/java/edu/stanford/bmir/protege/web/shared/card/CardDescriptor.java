@@ -25,10 +25,10 @@ public abstract class CardDescriptor {
                                         @JsonProperty("color") Color color,
                                         @JsonProperty("backgroundColor") Color backgroundColor,
                                         @JsonProperty("content") EntityCardContentDescriptor contentDescriptor,
-                                        @JsonProperty("requiredReadActions") Set<Capability> requiredReadActions,
-                                        @JsonProperty("requiredWriteActions") Set<Capability> requiredWriteActions,
+                                        @JsonProperty("requiredReadCapabilities") Set<Capability> requiredReadCapabilities,
+                                        @JsonProperty("requiredWriteCapabilities") Set<Capability> requiredWriteCapabilities,
                                         @JsonProperty("visibilityCriteria") CompositeRootCriteria criteria) {
-        return new AutoValue_CardDescriptor(cardId, label, color, backgroundColor, contentDescriptor, requiredReadActions, requiredWriteActions, criteria);
+        return new AutoValue_CardDescriptor(cardId, label, color, backgroundColor, contentDescriptor, requiredReadCapabilities, requiredWriteCapabilities, criteria);
     }
 
     @JsonProperty("id")
@@ -75,12 +75,12 @@ public abstract class CardDescriptor {
     public abstract EntityCardContentDescriptor getContentDescriptor();
 
     @Nonnull
-    @JsonProperty("requiredReadActions")
-    public abstract Set<Capability> getRequiredReadActions();
+    @JsonProperty("requiredReadCapabilities")
+    public abstract Set<Capability> getRequiredReadCapabilities();
 
     @Nonnull
-    @JsonProperty("requiredWriteActions")
-    public abstract Set<Capability> getRequiredWriteActions();
+    @JsonProperty("requiredWriteCapabilities")
+    public abstract Set<Capability> getRequiredWriteCapabilities();
 
     @Nonnull
     @JsonProperty("visibilityCriteria")
