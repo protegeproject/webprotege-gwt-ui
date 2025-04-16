@@ -148,6 +148,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         textBox.setText("");
         reasonForChangeTextBox.setText("");
         clearReasonForChangeErrors();
+        clearNoParentSetErrors();
         clearClassesWithCycleErrors();
         clearLinearizationPathParentErrors();
     }
