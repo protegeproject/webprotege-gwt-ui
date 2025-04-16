@@ -10,9 +10,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 
-/**
- * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
- */
+
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.hierarchies.GetClassHierarchyParentsByAxiomType")
