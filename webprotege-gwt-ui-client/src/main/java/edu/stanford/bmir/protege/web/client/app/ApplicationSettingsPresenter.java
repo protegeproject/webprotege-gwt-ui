@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_APPLICATION_SETTINGS;
 import static edu.stanford.bmir.protege.web.shared.app.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.app.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.app.NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS;

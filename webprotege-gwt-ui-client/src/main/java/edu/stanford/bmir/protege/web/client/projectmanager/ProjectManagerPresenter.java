@@ -28,7 +28,7 @@ import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_U
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent.ON_PROJECT_CREATED;
 import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerViewFilter.*;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent.ON_PROJECT_MOVED_FROM_TRASH;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent.ON_PROJECT_MOVED_TO_TRASH;
 import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKNOWN;

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ENTITY_TAGS;
 
 /**
  * Matthew Horridge
@@ -41,7 +41,7 @@ public class ProjectTagsPresenter implements Presenter {
     private final ForbiddenView forbiddenView;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -62,7 +62,7 @@ public class ProjectTagsPresenter implements Presenter {
     public ProjectTagsPresenter(@Nonnull ProjectId projectId,
                                 @Nonnull ProjectTagsView projectTagsView,
                                 @Nonnull ForbiddenView forbiddenView,
-                                @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 @Nonnull DispatchServiceManager dispatchServiceManager,
                                 @Nonnull SettingsPresenter settingsPresenter,
                                 @Nonnull TagCriteriaListPresenter tagCriteriaListPresenter,
@@ -70,7 +70,7 @@ public class ProjectTagsPresenter implements Presenter {
         this.projectId = checkNotNull(projectId);
         this.projectTagsView = checkNotNull(projectTagsView);
         this.forbiddenView = checkNotNull(forbiddenView);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.tagCriteriaListPresenter = checkNotNull(tagCriteriaListPresenter);
@@ -86,7 +86,7 @@ public class ProjectTagsPresenter implements Presenter {
         settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
         settingsPresenter.setCancelSettingsHandler(this::handleCancelChanges);
         settingsPresenter.setSettingsTitle(messages.tags_projectTagsTitle());
-        permissionChecker.hasPermission(EDIT_ENTITY_TAGS, canEditTags -> {
+        capabilityChecker.hasCapability(EDIT_ENTITY_TAGS, canEditTags -> {
             if(canEditTags) {
                 settingsPresenter.addSection(messages.tags_EditProjectTags())
                                  .setWidget(projectTagsView);

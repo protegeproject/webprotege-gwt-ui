@@ -7,6 +7,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -17,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-26
  */
-public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumnDescriptor> {
+public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumnDescriptor>, FormDescriptorComponentPresenter {
 
     @Nonnull
     private final GridColumnDescriptorView view;
@@ -90,5 +93,10 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
         bindingPresenter.start(view.getBindingViewContainer());
         view.setLabelChangedHandler(() -> headerLabelChangedHandler.accept(getHeaderLabel()));
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Arrays.asList(this, fieldDescriptorChooserPresenter);
     }
 }

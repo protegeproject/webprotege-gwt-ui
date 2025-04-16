@@ -7,7 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -24,8 +24,8 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -41,7 +41,7 @@ public class EditorPresenter implements HasDispose {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final ContextMapper contextMapper;
 
@@ -77,18 +77,18 @@ public class EditorPresenter implements HasDispose {
     @Inject
     public EditorPresenter(@Nonnull ProjectId projectId, DispatchServiceManager dispatchServiceManager,
                            ContextMapper contextMapper,
-                           LoggedInUserProjectPermissionChecker permissionChecker) {
+                           LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.projectId = projectId;
         this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(editorHolder);
         editorHolder.getElement().getStyle().setOverflowY(Style.Overflow.AUTO);
         eventBus.addProjectEventHandler(projectId,
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
                                             event -> updatePermissionBasedItems());
@@ -211,7 +211,7 @@ public class EditorPresenter implements HasDispose {
         if (editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, hasEnabled::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, hasEnabled::setEnabled);
         }
     }
 

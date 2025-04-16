@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 
@@ -18,12 +18,12 @@ public class CommentViewFactory {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
-    public CommentViewFactory(@Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+    public CommentViewFactory(@Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                               @Nonnull LoggedInUserProvider loggedInUserProvider) {
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.loggedInUserProvider = loggedInUserProvider;
     }
 

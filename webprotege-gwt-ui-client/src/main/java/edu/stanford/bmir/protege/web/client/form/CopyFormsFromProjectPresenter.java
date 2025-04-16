@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
@@ -124,7 +124,7 @@ public class CopyFormsFromProjectPresenter {
 
     public void reload() {
         this.container.ifPresent(c -> {
-            dispatch.execute(GetAvailableProjectsWithPermissionAction.create(BuiltInAction.VIEW_PROJECT.getActionId()),
+            dispatch.execute(GetAvailableProjectsWithPermissionAction.create(BuiltInCapability.VIEW_PROJECT.getCapability()),
                              busy -> {
                                  if(busy) {
                                      c.setWidget(busyView);

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.app;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.Resource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,8 +23,8 @@ public class AccessManagerImpl implements AccessManager {
 
     @Nonnull
     @Override
-    public Set<ActionId> getActionClosure(@Nonnull Subject subject,
-                                          @Nonnull Resource resource) {
+    public Set<Capability> getActionClosure(@Nonnull Subject subject,
+                                            @Nonnull Resource resource) {
         return Collections.emptySet();
     }
 }

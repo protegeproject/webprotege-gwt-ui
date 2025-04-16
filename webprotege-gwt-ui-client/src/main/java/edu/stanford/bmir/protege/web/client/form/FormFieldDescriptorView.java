@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -68,4 +70,12 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
 
     @Nonnull
     FormFieldDeprecationStrategy getDeprecationStrategy();
+
+    void setViewRolesList(List<RoleId> viewRoles);
+
+    List<RoleId> getViewRolesList();
+
+    void setEditRolesList(List<RoleId> editRoles);
+
+    List<RoleId> getEditRolesList();
 }

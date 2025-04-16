@@ -5,7 +5,6 @@ import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueResult;
@@ -59,7 +58,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsRes
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import edu.stanford.bmir.protege.web.shared.viz.GetUserProjectEntityGraphCriteriaResult;

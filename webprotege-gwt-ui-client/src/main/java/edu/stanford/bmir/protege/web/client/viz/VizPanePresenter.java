@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.viz;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.editor.EditorPanePresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -42,8 +42,8 @@ public class VizPanePresenter implements EditorPanePresenter {
 
     @Nonnull
     @Override
-    public BuiltInAction getRequiredAction() {
-        return BuiltInAction.VIEW_PROJECT;
+    public BuiltInCapability getRequiredAction() {
+        return BuiltInCapability.VIEW_PROJECT;
     }
 
     @Override

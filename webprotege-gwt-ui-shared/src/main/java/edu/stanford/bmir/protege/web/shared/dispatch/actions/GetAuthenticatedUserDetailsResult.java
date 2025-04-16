@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
@@ -26,11 +25,11 @@ public abstract class GetAuthenticatedUserDetailsResult implements Result {
 
     public abstract UserDetails getUserDetails();
 
-    public abstract ImmutableSet<ActionId> getPermittedActions();
+    public abstract ImmutableSet<BasicCapability> getPermittedActions();
 
     @JsonCreator
     public static GetAuthenticatedUserDetailsResult create(@JsonProperty("userDetails") UserDetails userDetails,
-                                                           @JsonProperty("permittedActions")ImmutableSet<ActionId> permittedActions) {
+                                                           @JsonProperty("permittedActions")ImmutableSet<BasicCapability> permittedActions) {
         return new AutoValue_GetAuthenticatedUserDetailsResult(userDetails, permittedActions);
     }
 

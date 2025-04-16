@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.MoreObjects;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import javax.annotation.Nonnull;
@@ -25,10 +23,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class GetAvailableProjectsWithPermissionAction implements Action<GetAvailableProjectsWithPermissionResult> {
 
     @JsonCreator
-    public static GetAvailableProjectsWithPermissionAction create(@JsonProperty("permission") @Nonnull ActionId permission) {
+    public static GetAvailableProjectsWithPermissionAction create(@JsonProperty("permission") @Nonnull BasicCapability permission) {
         return new AutoValue_GetAvailableProjectsWithPermissionAction(permission);
     }
 
     @Nonnull
-    public abstract ActionId getPermission();
+    public abstract BasicCapability getPermission();
 }

@@ -7,8 +7,11 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter<GridColumnDescriptor> {
+public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter<GridColumnDescriptor> implements FormDescriptorComponentPresenter{
 
     @Inject
     public GridColumnDescriptorObjectListPresenter(@Nonnull ObjectListView view,
@@ -27,5 +30,20 @@ public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter
                 LanguageMap.empty(),
                 TextControlDescriptor.getDefault()
         );
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
+        result.add(this);
+        getObjectPresenters()
+                .stream()
+                .filter(p -> p instanceof FormDescriptorComponentPresenter)
+                .map(p -> (FormDescriptorComponentPresenter) p)
+                .forEach(p -> {
+                    result.add(p);
+                    result.addAll(p.getSubComponentPresenters());
+                });
+        return result;
     }
 }

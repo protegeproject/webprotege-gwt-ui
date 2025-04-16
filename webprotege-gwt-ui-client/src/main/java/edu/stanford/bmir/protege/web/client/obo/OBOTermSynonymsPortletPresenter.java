@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -18,7 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
 
 /**
  * Author: Matthew Horridge<br>
@@ -39,7 +39,7 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
     private final IsWidget editorHolder;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
     public OBOTermSynonymsPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -47,19 +47,19 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
                                            @Nonnull ProjectId projectId,
                                            @Nonnull DispatchServiceManager dispatch,
                                            @Nonnull OBOTermSynonymListEditor editor,
-                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
+                                           @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker, DisplayNameRenderer displayNameRenderer) {
         super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
         this.editorHolder = new SimplePanel(editor);
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editorHolder);
         editor.setEnabled(false);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, perm -> editor.setEnabled(perm));
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY, perm -> editor.setEnabled(perm));
     }
 
     @Override

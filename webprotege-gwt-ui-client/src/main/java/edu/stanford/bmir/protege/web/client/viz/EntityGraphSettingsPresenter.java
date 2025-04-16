@@ -3,10 +3,10 @@ package edu.stanford.bmir.protege.web.client.viz;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
@@ -46,7 +46,7 @@ public class EntityGraphSettingsPresenter {
     private Runnable cancelHandler = () -> {};
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final LoggedInUserProvider loggedInUserProvider;
@@ -56,13 +56,13 @@ public class EntityGraphSettingsPresenter {
                                         @Nonnull EntityGraphSettingsView view,
                                         @Nonnull EntityGraphFilterListPresenter filterListPresenter,
                                         @Nonnull DispatchServiceManager dispatchServiceManager,
-                                        @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                        @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                         @Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.view = view;
         this.filterListPresenter = filterListPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.loggedInUserProvider = loggedInUserProvider;
     }
 
@@ -78,7 +78,7 @@ public class EntityGraphSettingsPresenter {
         dispatchServiceManager.execute(GetUserProjectEntityGraphCriteriaAction.create(projectId),
                                        hasBusy,
                                        this::displaySettings);
-        permissionChecker.hasPermission(BuiltInAction.EDIT_DEFAULT_VISUALIZATION_SETTINGS,
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_DEFAULT_VISUALIZATION_SETTINGS,
                                         this::updateApplySettingsForProject);
 
     }

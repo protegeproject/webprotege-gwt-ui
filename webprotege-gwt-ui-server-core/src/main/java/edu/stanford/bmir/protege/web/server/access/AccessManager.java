@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.access;
 
 
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -20,6 +20,6 @@ public interface AccessManager {
      * @return A collection of action ids that belong to the role closure of the specified subject and resource pair.
      */
     @Nonnull
-    Set<ActionId> getActionClosure(@Nonnull Subject subject,
-                                   @Nonnull Resource resource);
+    Set<Capability> getActionClosure(@Nonnull Subject subject,
+                                     @Nonnull Resource resource);
 }

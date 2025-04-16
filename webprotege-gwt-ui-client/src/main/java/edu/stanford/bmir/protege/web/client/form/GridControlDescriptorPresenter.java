@@ -8,6 +8,10 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Matthew Horridge
@@ -65,5 +69,20 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         columnListPresenter.setAddObjectText("Add column");
         formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectFactoryDescriptorContainer());
         columnListPresenter.setDefaultStateCollapsed();
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
+        result.add(this);
+        columnListPresenter.getObjectPresenters()
+                .stream()
+                .filter(p -> p instanceof FormDescriptorComponentPresenter)
+                .map(p -> (FormDescriptorComponentPresenter) p)
+                .forEach(p -> {
+                    result.add(p);
+                    result.addAll(p.getSubComponentPresenters());
+                });
+        return result;
     }
 }

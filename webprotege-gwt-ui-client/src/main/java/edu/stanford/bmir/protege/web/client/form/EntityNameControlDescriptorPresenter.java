@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -63,5 +66,10 @@ public class EntityNameControlDescriptorPresenter implements FormControlDescript
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         entityCriteriaPresenter.start(view.getCriteriaViewContainer());
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Collections.singletonList(this);
     }
 }

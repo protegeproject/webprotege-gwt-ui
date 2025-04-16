@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.user;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -60,12 +60,12 @@ public class LoggedInUser implements LoggedInUserProvider {
 
     /**
      * Determines if the specified action is an allowed application action for the logged in user.
-     * @param actionId The action to test for
+     * @param basicCapability The action to test for
      * @return true if the application is an allowed application action for the logged in user,
      * otherwise false.
      */
-    public boolean isAllowedApplicationAction(@Nonnull ActionId actionId) {
-        return userInSession.isAllowedApplicationAction(actionId);
+    public boolean isAllowedApplicationAction(@Nonnull BasicCapability basicCapability) {
+        return userInSession.isAllowedApplicationAction(basicCapability);
     }
 
     /**

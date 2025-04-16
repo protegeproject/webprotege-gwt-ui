@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -40,5 +42,10 @@ public class ImageDescriptorPresenter implements FormControlDescriptorPresenter 
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Collections.singletonList(this);
     }
 }

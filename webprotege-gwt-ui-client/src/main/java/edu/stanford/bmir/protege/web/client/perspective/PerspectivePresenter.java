@@ -10,7 +10,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.ADD_OR_REMOVE_VIEW;
 import static edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutAction.resetPerspective;
 
 /**
@@ -66,7 +66,7 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
 
     private final MessageBox messageBox;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private java.util.Optional<PerspectiveId> currentPerspective = java.util.Optional.empty();
 
@@ -83,7 +83,7 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
                                 final LoggedInUserProvider loggedInUserProvider,
-                                LoggedInUserProjectPermissionChecker permissionChecker,
+                                LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 ProjectId projectId,
                                 DispatchServiceManager dispatchServiceManager,
                                 PerspectiveFactory perspectiveFactory,
@@ -93,7 +93,7 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
                                 SelectedPathsModel selectedPathsModel, UuidV4Provider uuidV4Provider) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.perspectiveFactory = perspectiveFactory;
@@ -183,7 +183,7 @@ public class PerspectivePresenter implements HasDispose, HasDisplayContextBuilde
     }
 
     private void installPerspective(PerspectiveLayout perspective) {
-        permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
+        capabilityChecker.hasCapability(ADD_OR_REMOVE_VIEW,
                                         canAddRemove -> {
                                             GWT.log("[PerspectivePresenter] Can close views: " + canAddRemove);
                                             PerspectiveId perspectiveId = perspective.getPerspectiveId();

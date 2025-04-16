@@ -8,6 +8,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldAccessMode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -38,6 +39,7 @@ public abstract class FormDataDto implements FormControlDataDto {
      */
     @Nonnull
     public static FormDataDto get(@Nonnull FormSubjectDto subject,
+                                  @Nonnull FormFieldAccessMode mode,
                                   @Nonnull FormDescriptorDto formDescriptor,
                                   int depth) {
         ImmutableList<FormFieldDataDto> emptyFields = formDescriptor.getFields()

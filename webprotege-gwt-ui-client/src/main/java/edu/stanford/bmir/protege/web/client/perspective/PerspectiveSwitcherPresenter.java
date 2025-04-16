@@ -8,7 +8,7 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -22,8 +22,8 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.ADD_OR_REMOVE_PERSPECTIVE;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.ADD_OR_REMOVE_VIEW;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
@@ -40,7 +40,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
     private final CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final Map<PerspectiveId, ItemSelection> perspective2Selection = new HashMap<>();
 
@@ -52,13 +52,13 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                         CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler,
                                         PlaceController placeController,
                                         final EventBus eventBus,
-                                        LoggedInUserProjectPermissionChecker permissionChecker) {
+                                        LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.projectId = checkNotNull(projectId);
         this.view = view;
         this.createFreshPerspectiveRequestHandler = createFreshPerspectiveRequestHandler;
         this.projectPerspectivesService = projectPerspectivesService;
         this.placeController = placeController;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
             if(event.getNewPlace() instanceof ProjectViewPlace) {
                 displayPlace((ProjectViewPlace) event.getNewPlace());
@@ -82,7 +82,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
         view.setManagePerspectivesAllowed(false);
-        permissionChecker.hasPermission(ADD_OR_REMOVE_PERSPECTIVE,
+        capabilityChecker.hasCapability(ADD_OR_REMOVE_PERSPECTIVE,
                                         canAddRemove -> {
                                             view.setClosePerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveAllowed(canAddRemove);
@@ -93,7 +93,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                                 view.setManagePerspectivesHandler(this::handleManage);
                                             }
         });
-        permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
+        capabilityChecker.hasCapability(ADD_OR_REMOVE_VIEW,
                                         view::setAddViewAllowed);
     }
 

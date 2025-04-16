@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -22,10 +22,10 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.OFF;
 import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -42,7 +42,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     private final DiscussionThreadListPresenter presenter;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final UIAction addCommentAction;
@@ -62,7 +62,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull SelectedPathsModel selectedPathsModel,
                                                   @Nonnull FilterView filterView,
                                                   @Nonnull Messages messages,
-                                                  @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                                  @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                   @Nonnull ProjectId projectId,
                                                   @Nonnull DiscussionThreadListPresenter presenter,
                                                   DisplayNameRenderer displayNameRenderer,
@@ -74,7 +74,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         filterView.addFilter(displayResolvedThreadsFilter, OFF);
         filterView.addValueChangeHandler(event -> handleFilterSettingChanged());
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
                                                   "wp-btn-g--create-thread",
                                                   presenter::createThread);
@@ -83,7 +83,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         this::handlePemissionsChange);
         this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView());
@@ -121,7 +121,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     private void handleSetEntity(Optional<OWLEntity> entity) {
         addCommentAction.setEnabled(entity.isPresent());
         portletUi.ifPresent(portletUi -> {
-            permissionChecker.hasPermission(VIEW_OBJECT_COMMENT, canViewComments -> {
+            capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT, canViewComments -> {
                 portletUi.setForbiddenVisible(!canViewComments);
                 if(canViewComments) {
                     if(entity.isPresent()) {

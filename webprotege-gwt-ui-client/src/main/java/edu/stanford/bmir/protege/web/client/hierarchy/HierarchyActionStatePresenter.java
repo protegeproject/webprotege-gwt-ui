@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 6 Dec 2017
@@ -26,33 +26,33 @@ public class HierarchyActionStatePresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
-    private final Map<ActionId, UIAction> actionMap = new HashMap<>();
+    private final Map<BasicCapability, UIAction> capabilityUiActionMap = new HashMap<>();
 
     private boolean selectionPresent = false;
 
     @Inject
     public HierarchyActionStatePresenter(@Nonnull ProjectId projectId,
-                                         @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                         @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.projectId = projectId;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
     }
 
-    public void registerAction(@Nonnull BuiltInAction actionId,
+    public void registerAction(@Nonnull BuiltInCapability capability,
                                @Nonnull UIAction uiAction) {
-        registerAction(actionId.getActionId(), uiAction);
+        registerAction(capability.getCapability(), uiAction);
     }
 
-    public void registerAction(@Nonnull ActionId actionId,
+    public void registerAction(@Nonnull BasicCapability basicCapability,
                                @Nonnull UIAction action) {
-        actionMap.put(checkNotNull(actionId),
+        capabilityUiActionMap.put(checkNotNull(basicCapability),
                       checkNotNull(action));
     }
 
     public void start(@Nonnull WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(projectId,
-                                        ON_PERMISSIONS_CHANGED,
+                ON_CAPABILITIES_CHANGED,
                                         event -> updateActionStates());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> updateActionStates());
@@ -70,13 +70,13 @@ public class HierarchyActionStatePresenter {
     }
 
     private void updateActionStates() {
-        actionMap.forEach(this::updateState);
+        capabilityUiActionMap.forEach(this::updateState);
     }
 
-    private void updateState(@Nonnull ActionId actionId,
+    private void updateState(@Nonnull BasicCapability basicCapability,
                              @Nonnull UIAction action) {
         action.setEnabled(false);
-        permissionChecker.hasPermission(actionId,
+        capabilityChecker.hasCapability(basicCapability,
                                         perm -> {
                                             action.setEnabled(perm && (!action.requiresSelection() || selectionPresent));
                                         });

@@ -5,7 +5,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.YES;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_PREFIXES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_PROJECT_PREFIXES;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -45,7 +45,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     private final ProjectPrefixDeclarationsView view;
 
     @Nonnull
-    private final PermissionScreener permissionScreener;
+    private final CapabilityScreener capabilityScreener;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -71,14 +71,14 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Inject
     public ProjectPrefixDeclarationsPresenter(@Nonnull ProjectId projectId,
                                               @Nonnull ProjectPrefixDeclarationsView view,
-                                              @Nonnull PermissionScreener permissionScreener,
+                                              @Nonnull CapabilityScreener capabilityScreener,
                                               @Nonnull DispatchServiceManager dispatchServiceManager,
                                               @Nonnull PlaceController placeController,
                                               @Nonnull SettingsPresenter settingsPresenter,
                                               @Nonnull Messages messages, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.permissionScreener = checkNotNull(permissionScreener);
+        this.capabilityScreener = checkNotNull(capabilityScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.placeController = checkNotNull(placeController);
         this.settingsPresenter = checkNotNull(settingsPresenter);
@@ -91,7 +91,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Override
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
-        permissionScreener.checkPermission(EDIT_PROJECT_PREFIXES.getActionId(),
+        capabilityScreener.checkCapability(EDIT_PROJECT_PREFIXES.getCapability(),
                                            container,
                                            () -> displayProjectPrefixes(container));
     }
