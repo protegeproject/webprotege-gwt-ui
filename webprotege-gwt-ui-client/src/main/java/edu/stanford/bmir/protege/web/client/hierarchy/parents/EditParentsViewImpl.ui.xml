@@ -9,6 +9,34 @@
         .warningField {
             margin-top: 20px;
         }
+
+        .helpIconHolder {
+            flex-grow: 1;
+            flex-shrink: 1;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .helpIcon {
+            justify-self: flex-end;
+            width: 1.7em;
+            height: 1.7em;
+        }
+        .labelHeader {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            width: 100%;
+            align-items: center;
+        }
+        .label {
+            flex-grow: 0;
+            flex-shrink: 0;
+            justify-self: flex-start;
+            margin-right: 0.3em;
+            cursor: pointer;
+        }
     </ui:style>
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
@@ -18,14 +46,26 @@
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.hierarchy_parents}" addStyleNames="{wp.style.formLabel}"/>
-            <wp:PrimitiveDataListEditor ui:field="domains"/>
+            <wp:PrimitiveDataListEditor ui:field="parents"/>
         </div>
+        <g:HTMLPanel ui:field="equivalentParentClassContainer" addStyleNames="{wp.style.formGroup}">
+            <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
+                <g:Label text="{msg.hierarchy_equivalentClassParents}" addStyleNames="{wp.style.formLabel} {style.label}"/>
+                <g:HTMLPanel addStyleNames="{style.helpIconHolder}">
+                    <g:HTMLPanel ui:field="equivalentParentClassTooltip"
+                                 addStyleNames="{wp.style.helpIcon} {style.helpIcon}">
+                    </g:HTMLPanel>
+                </g:HTMLPanel>
+            </g:HTMLPanel>
+            <wp:PrimitiveDataListEditor ui:field="equivalentClassParents"/>
+        </g:HTMLPanel>
         <div class="{wp.style.formGroup}">
             <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
             <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
                                        mode="MULTI_LINE"
                                        anchorVisible="false"/>
             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
+            <g:Label ui:field='noParentSetErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
             <g:HTML ui:field="classesWithCyclesWarningField"
                     visible="false"
                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>
