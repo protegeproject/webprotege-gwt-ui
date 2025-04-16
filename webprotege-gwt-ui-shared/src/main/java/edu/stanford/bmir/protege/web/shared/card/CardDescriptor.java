@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
@@ -25,8 +25,8 @@ public abstract class CardDescriptor {
                                         @JsonProperty("color") Color color,
                                         @JsonProperty("backgroundColor") Color backgroundColor,
                                         @JsonProperty("content") EntityCardContentDescriptor contentDescriptor,
-                                        @JsonProperty("requiredReadActions") Set<ActionId> requiredReadActions,
-                                        @JsonProperty("requiredWriteActions") Set<ActionId> requiredWriteActions,
+                                        @JsonProperty("requiredReadActions") Set<Capability> requiredReadActions,
+                                        @JsonProperty("requiredWriteActions") Set<Capability> requiredWriteActions,
                                         @JsonProperty("visibilityCriteria") CompositeRootCriteria criteria) {
         return new AutoValue_CardDescriptor(cardId, label, color, backgroundColor, contentDescriptor, requiredReadActions, requiredWriteActions, criteria);
     }
@@ -76,11 +76,11 @@ public abstract class CardDescriptor {
 
     @Nonnull
     @JsonProperty("requiredReadActions")
-    public abstract Set<ActionId> getRequiredReadActions();
+    public abstract Set<Capability> getRequiredReadActions();
 
     @Nonnull
     @JsonProperty("requiredWriteActions")
-    public abstract Set<ActionId> getRequiredWriteActions();
+    public abstract Set<Capability> getRequiredWriteActions();
 
     @Nonnull
     @JsonProperty("visibilityCriteria")
