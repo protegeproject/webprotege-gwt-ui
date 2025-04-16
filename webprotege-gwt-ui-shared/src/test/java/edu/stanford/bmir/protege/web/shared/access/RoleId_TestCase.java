@@ -7,61 +7,60 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
-public class BasicCapability_TestCase {
+public class RoleId_TestCase {
 
-    private BasicCapability basicCapability;
+    private RoleId roleId;
 
     private String id = "The id";
 
     @Before
     public void setUp() {
-        basicCapability = new BasicCapability(id);
+        roleId = new RoleId(id);
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = java.lang.NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_id_IsNull() {
-        new BasicCapability(null);
+        new RoleId(null);
     }
 
     @Test
     public void shouldReturnSupplied_id() {
-        assertThat(basicCapability.getId(), is(this.id));
+        assertThat(roleId.getId(), is(this.id));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(basicCapability, is(basicCapability));
+        assertThat(roleId, is(roleId));
     }
 
     @Test
     @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(basicCapability.equals(null), is(false));
+        assertThat(roleId.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(basicCapability, is(new BasicCapability(id)));
+        assertThat(roleId, is(new RoleId(id)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(basicCapability, is(not(new BasicCapability("String-49f80fc5-f0c4-4013-accc-4f37f60d5632"))));
+        assertThat(roleId, is(Matchers.not(new RoleId("String-fefb9f3e-0859-40e3-89d5-06ac997b1794"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(basicCapability.hashCode(), is(new BasicCapability(id).hashCode()));
+        assertThat(roleId.hashCode(), is(new RoleId(id).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(basicCapability.toString(), Matchers.startsWith("BasicCapability"));
+        assertThat(roleId.toString(), startsWith("RoleId"));
     }
 
 }

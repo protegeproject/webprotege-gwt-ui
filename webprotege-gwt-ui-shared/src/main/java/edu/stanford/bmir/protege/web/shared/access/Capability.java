@@ -7,7 +7,8 @@ import javax.annotation.Nonnull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, visible = true, defaultImpl = GenericParameterizedCapability.class)
 @JsonSubTypes({
         @JsonSubTypes.Type(BasicCapability.class),
-        @JsonSubTypes.Type(GenericParameterizedCapability.class)
+        @JsonSubTypes.Type(GenericParameterizedCapability.class),
+        @JsonSubTypes.Type(FormRegionCapability.class)
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public interface Capability {

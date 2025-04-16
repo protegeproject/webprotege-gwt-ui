@@ -7,7 +7,6 @@ import com.google.common.annotations.GwtCompatible;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @AutoValue
 @GwtCompatible(serializable = true)

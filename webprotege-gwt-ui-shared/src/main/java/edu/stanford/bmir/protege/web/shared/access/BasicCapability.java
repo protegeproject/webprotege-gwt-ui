@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.access;
 
 import com.fasterxml.jackson.annotation.*;
-import com.google.auto.value.AutoValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
