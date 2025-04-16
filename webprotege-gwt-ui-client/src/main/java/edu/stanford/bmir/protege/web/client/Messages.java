@@ -156,6 +156,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please fill in the Reason for change field.")
     String reasonForChangeError();
 
+    @DefaultMessage("At least one parent needs to be set")
+    String noParentSetError();
+
     @DefaultMessage("Please enter a reason for this change:")
     String reasonForChangeMessage();
 

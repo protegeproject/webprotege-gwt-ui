@@ -36,6 +36,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     Label reasonForChangeErrorLabel;
 
     @UiField
+    Label noParentSetErrorLabel;
+
+    @UiField
     HTML classesWithCyclesWarningField;
 
     @UiField
@@ -73,6 +76,9 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
         equivalentClassParents.setValue(new ArrayList<>());
         equivalentClassParents.setEnabled(false);
+
+        reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+        noParentSetErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
     }
 
     @Override
@@ -108,20 +114,32 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
 
-    @Override
-    public boolean isReasonForChangeSet() {
+    private boolean isReasonForChangeSet() {
         if (reasonForChangeTextBox.getText().isEmpty()) {
             reasonForChangeErrorLabel.setText(messages.reasonForChangeError());
-            reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
             return false;
         }
         clearReasonForChangeErrors();
         return true;
     }
 
-    public void clearReasonForChangeErrors() {
+    private void clearReasonForChangeErrors() {
         reasonForChangeErrorLabel.setText("");
-        reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+    }
+
+
+    private boolean isAtLestOneParentSet() {
+        Optional<List<OWLPrimitiveData>> parentsOptional = this.parents.getValue();
+        if (parentsOptional.isPresent() && !parentsOptional.get().isEmpty()) {
+            clearNoParentSetErrors();
+            return true;
+        }
+        noParentSetErrorLabel.setText(messages.noParentSetError());
+        return false;
+    }
+
+    private void clearNoParentSetErrors() {
+        noParentSetErrorLabel.setText("");
     }
 
 
@@ -186,5 +204,12 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Override
     public IsWidget getHelpTooltip() {
         return equivalentParentClassTooltip.asWidget();
+    }
+
+    @Override
+    public boolean isValid() {
+        boolean isReasonSet = this.isReasonForChangeSet();
+        boolean isParentSet = this.isAtLestOneParentSet();
+        return isReasonSet&&isParentSet;
     }
 }

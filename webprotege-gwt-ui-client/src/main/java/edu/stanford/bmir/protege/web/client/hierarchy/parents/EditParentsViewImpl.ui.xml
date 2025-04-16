@@ -65,6 +65,7 @@
                                        mode="MULTI_LINE"
                                        anchorVisible="false"/>
             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
+            <g:Label ui:field='noParentSetErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
             <g:HTML ui:field="classesWithCyclesWarningField"
                     visible="false"
                     addStyleNames="{wp.style.warningLabel} {style.warningField}"/>

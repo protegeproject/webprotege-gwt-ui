@@ -17,8 +17,6 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     void setParentsFromEquivalentClasses(Set<OWLEntityData> entityParents);
 
-    boolean isReasonForChangeSet();
-
     void clear();
 
     @Nonnull
@@ -39,4 +37,6 @@ public interface EditParentsView extends IsWidget, HasBusy {
     void markLinearizationPathParent(String linearizationPathParents);
 
     IsWidget getHelpTooltip();
+
+    boolean isValid();
 }
