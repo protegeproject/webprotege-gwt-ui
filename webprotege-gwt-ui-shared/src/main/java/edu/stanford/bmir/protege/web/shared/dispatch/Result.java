@@ -7,10 +7,12 @@ import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
+import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsResult;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
+import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
@@ -112,6 +114,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetHierarchyPathsToRootResult.class),
         @JsonSubTypes.Type(GetHierarchyRootsResult.class),
         @JsonSubTypes.Type(GetHierarchySiblingsResult.class),
+        @JsonSubTypes.Type(GetEntityCardDescriptorsResult.class),
         @JsonSubTypes.Type(GetEntityHtmlRenderingResult.class),
         @JsonSubTypes.Type(GetIndividualsResult.class),
         @JsonSubTypes.Type(GetIndividualsPageContainingIndividualResult.class),
@@ -212,7 +215,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(ProcessUploadedSiblingsOrderingResult.class),
         @JsonSubTypes.Type(GetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(GetFormRegionAccessRestrictionsResult.class),
-        @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class)
+        @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class),
+        @JsonSubTypes.Type(SaveEntityChildReorderingResult.class),
+        @JsonSubTypes.Type(GetEntityDirectParentsResult.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

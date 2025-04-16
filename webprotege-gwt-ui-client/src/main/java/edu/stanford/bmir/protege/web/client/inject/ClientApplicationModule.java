@@ -16,6 +16,8 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
+import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
+import edu.stanford.bmir.protege.web.client.card.EntityCardUiImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
@@ -496,6 +498,11 @@ public class ClientApplicationModule {
 
     @Provides
     CreateEntityFormView provideCreateEntityFormView(CreateEntityFormViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCardUi provideEntityCardView(EntityCardUiImpl impl) {
         return impl;
     }
 }

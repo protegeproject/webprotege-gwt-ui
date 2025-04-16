@@ -5,6 +5,7 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.*;
@@ -16,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSett
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.entity.*;
@@ -189,6 +191,11 @@ public class ClientProjectModule {
 
     @Provides
     CreateEntityDialogView providesCreateEntityDialogView(CreateEntitiesDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChangeChildrenOrderingDialogView providesChildrenOrderingDialogView(ChangeChildrenOrderingDialogViewImpl impl) {
         return impl;
     }
 
@@ -955,6 +962,26 @@ public class ClientProjectModule {
     @Provides
     ProjectRoleSelectorView provideProjectRoleSelectorPresenter(ProjectRoleSelectorViewImpl view) {
         return view;
+    }
+
+    @Provides
+    CardStackPortletView provideCardPortletView(CardStackPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
+        return impl;
+    }
+
+    @Provides
+    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    DirectParentView provideDirectParentView(DirectParentViewImpl impl){
+        return impl;
     }
 }
 

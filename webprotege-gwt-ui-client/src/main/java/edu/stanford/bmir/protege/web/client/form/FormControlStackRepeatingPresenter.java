@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     }
 
     private void handleAddControl() {
-        FormControl formControl = formControlFactory.createFormControl();
+        FormControl formControl = createFormControl(null);
         addFormControl(formControl);
         formControl.requestFocus();
         ValueChangeEvent.fire(this, getValue());
@@ -128,13 +129,16 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
             formControls.remove(formControl);
             view.removeFormControlContainer(container);
             ValueChangeEvent.fire(this, getValue());
+            formDataChangedHandler.handleFormDataChanged();
         });
     }
 
-    private FormControl createFormControl(FormControlDataDto dto) {
+    private FormControl createFormControl(@Nullable FormControlDataDto dto) {
         FormControl formControl = formControlFactory.createFormControl();
         formControl.setPosition(position);
-        formControl.setValue(dto);
+        if (dto != null) {
+            formControl.setValue(dto);
+        }
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
         formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);

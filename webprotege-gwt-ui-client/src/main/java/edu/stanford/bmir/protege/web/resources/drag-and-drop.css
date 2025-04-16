@@ -1,0 +1,40 @@
+.wp-draggable-item {
+    cursor: grab !important;
+    user-select: none;
+    display: flex;
+}
+
+.wp-draggable-item:hover {
+    background-color: #f5f5f5;
+}
+
+.wp-draggable-list {
+    z-index: 999999;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    cursor: move;
+    position: relative !important;
+}
+.wp-draggable-list li {
+    margin: 0 3px 3px 3px;
+    padding-left: 0.5em;
+    height: 22px;
+    position: relative !important;
+    touch-action: none;
+    background: white;
+    line-height: 16px;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--separator--color);
+    display: flex;
+    align-items: center;
+}
+.wp-draggable-list li div {
+    position: absolute; margin-left: -1.3em;
+}
+
+
+.wp-title {
+    margin-left: 3px;
+    margin-bottom: 18px;
+}

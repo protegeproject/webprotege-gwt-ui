@@ -19,6 +19,8 @@
 @url datetimeIconUrl dateTimeIcon;
 @url homeIconUrl homeIcon;
 @url helpIconUrl svgHelpIcon;
+@url editorIconUrl svgEditorIcon;
+@url dirtyIconUrl svgDirtyIcon;
 
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
@@ -547,13 +549,77 @@
     align-items: stretch;
     flex-wrap: wrap;
 }
-
 .wp-form__form-tab-bar__tab {
     padding: 0.4em;
     font-weight: bold;
     cursor: pointer;
     border-radius: 0.4em;
     background-color: literal("var(--tab--background-color)");
+    display: flex;
+    flex-direction: row;
+}
+
+.wp-form__form-tab-bar__icon {
+
+}
+
+.wp-form__form-tab-bar__label {
+
+}
+
+.wp-entity-card-stack {
+
+}
+
+.wp-entity-card-stack--edit-mode-active {
+}
+
+.wp-entity-card-stack__tab-bar {
+
+}
+
+.wp-entity-card-stack__card-container {
+
+}
+
+.wp-entity-card {
+    border: 2px solid transparent;
+}
+
+.wp-entity-card--writable {
+}
+
+.wp-entity-card-stack__tab-bar__tab {
+}
+
+.wp-entity-card-stack__tab-bar__tab--writable {
+}
+
+.wp-entity-card-stack__tab-bar__tab--read-only {
+}
+
+.wp-entity-card-stack--edit-mode-active .wp-entity-card-stack__tab-bar__tab--writable .wp-form__form-tab-bar__icon {
+    mask-image: editorIconUrl;
+    mask-repeat: no-repeat;
+    mask-position: 0 -2px;
+    width: 26px;
+    background-color: literal("var(--primary--color)");
+}
+
+.wp-entity-card-stack--edit-mode-active .wp-form__form-tab-bar__tab--selected .wp-form__form-tab-bar__icon {
+    background-color: literal("var(--selected-item--color)");
+}
+
+
+.wp-form__form-tab-bar__tab__dirty-indicator {
+    background-image: dirtyIconUrl;
+    background-repeat: no-repeat;
+    width: 10px;
+    height: 10px;
+}
+
+.wp-entity-card-stack--edit-mode-active .wp-entity-card-stack__tab-bar__tab--read-only {
+    opacity: 30%;
 }
 
 .wp-form__form-tab-bar > div {

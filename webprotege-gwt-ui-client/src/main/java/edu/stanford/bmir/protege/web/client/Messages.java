@@ -1043,6 +1043,18 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("watch")
     String watch();
 
+    @DefaultMessage("Reorder children")
+    @Key("reorderChildren")
+    String reorderChildren();
+
+    @DefaultMessage("Update")
+    @Key("updateButtonTitle")
+    String update();
+
+    @DefaultMessage("Reorder children of {0}")
+    @Key("reorderChildrenDialogTitle")
+    String reorderChildrenDialogTitle(String entityName);
+
     @DefaultMessage("Merge Into...")
     @Key("merge.mergeInto")
     String merge_mergeInto();
@@ -1381,6 +1393,18 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Entity Deprecation Settings")
     @Key("entityDeprecationSettings.title")
     String entityDeprecationSettings_title();
+
+    @DefaultMessage("Enter a commit message")
+    @Key("editing.commitMessage.title")
+    String editing_commitMessage_title();
+
+    @DefaultMessage("Save changes?")
+    @Key("editing.saveChangesPrompt.title")
+    String editing_saveChangesPrompt_title();
+
+    @DefaultMessage("Do you want to save the changes before switching selection?")
+    @Key("editing.saveChangesPrompt.message")
+    String editing_saveChangesPrompt_message();
 
     @DefaultMessage("Processing siblings ordering")
     @Key("siblingsOrdering.processing.title")

@@ -41,6 +41,13 @@
 
     <dependencyManagement>
         <dependencies>
+
+                <dependency>
+                    <groupId>edu.stanford.protege</groupId>
+                    <artifactId>webprotege-annotations</artifactId>
+                    <version>1.2.2</version>
+                </dependency>
+
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt</artifactId>
@@ -222,7 +229,7 @@
                 <plugin>
                     <groupId>edu.stanford.protege</groupId>
                     <artifactId>webprotege-maven-plugin</artifactId>
-                    <version>1.1.1</version>
+                    <version>1.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
