@@ -318,9 +318,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     public void saveValues(String commitMessage) {
         LogicalConditions logCond = getEditedData();
 
-        boolean hasDuplicates = verifyForDuplicates(logCond.getLogicalDefinitions());
-
-        if (!hasDuplicates) {
+        if (isValid()) {
             this.dispatchServiceManager.execute(
                     UpdateLogicalDefinitionAction.create(
                             ChangeRequestId.get(uuidV4Provider.get()),
@@ -332,17 +330,16 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     ": Edited the Logical Definitons and/or Necessary Conditions for " +
                                     this.entityData.getBrowserText()
                     ),
-                    response -> {
-                        this.pristineData = LogicalConditions.create(new ArrayList<>(logCond.getLogicalDefinitions()), necessaryConditionsTable.getValues());
-                        switchToReadOnly();
-                    }
+                    response -> this.pristineData = LogicalConditions.create(
+                            new ArrayList<>(logCond.getLogicalDefinitions()),
+                            necessaryConditionsTable.getValues())
             );
         } else {
-            messageBox.showAlert(
-                    "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
-                    "");
+            clearTables();
+            populateWithExistingDefinition(getEntity(), projectId);
+            populateAvailableAxisValues(getEntity());
         }
-
+        switchToReadOnly();
     }
 
     private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {
@@ -433,5 +430,22 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @Override
     public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler handler) {
         this.changeHandler = handler;
+    }
+
+    public boolean isValid() {
+        LogicalConditions currState = getEditedData();
+        boolean duplicateFound = verifyForDuplicates(currState.getLogicalDefinitions());
+        boolean axisWithNoValueFound = currState.getLogicalDefinitions().stream().anyMatch(def -> def.getAxis2filler().isEmpty());
+        if (duplicateFound) {
+            messageBox.showAlert(
+                    "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
+                    "");
+        }
+        if (axisWithNoValueFound) {
+            messageBox.showAlert(
+                    "There are logical definitions with super class set but with no value. Please add values if you wish to save.",
+                    "");
+        }
+        return !axisWithNoValueFound && !duplicateFound;
     }
 }

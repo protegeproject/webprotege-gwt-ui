@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionC
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, HasDispose {
@@ -33,4 +32,6 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
     void clearTables();
 
     void clearData();
+
+    boolean isValid();
 }
