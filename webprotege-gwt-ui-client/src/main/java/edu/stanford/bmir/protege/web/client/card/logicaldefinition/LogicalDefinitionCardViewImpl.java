@@ -98,7 +98,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         this.projectId = projectId;
         this.hierarchyModal = hierarchyModal;
         buttonCss.ensureInjected();
-        necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
+        necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Axis",
                 "Value",
                 this::initializeTable,
                 this::handleAxisValueChanged));
@@ -335,11 +335,15 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                             necessaryConditionsTable.getValues())
             );
         } else {
-            clearTables();
-            populateWithExistingDefinition(getEntity(), projectId);
-            populateAvailableAxisValues(getEntity());
+            resetPristineState();
         }
         switchToReadOnly();
+    }
+
+    public void resetPristineState() {
+        clearTables();
+        populateWithExistingDefinition(getEntity(), projectId);
+        populateAvailableAxisValues(getEntity());
     }
 
     private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {

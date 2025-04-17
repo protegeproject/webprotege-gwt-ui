@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalDefinition;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,6 +29,9 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @UiField
     Button deleteTableWrapper;
+
+    @UiField
+    Label superClassLabel;
     private final DispatchServiceManager dispatchServiceManager;
 
     private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
@@ -64,22 +63,22 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
         LogicalDefinitionResourceBundle.INSTANCE.style().ensureInjected();
         style = LogicalDefinitionResourceBundle.INSTANCE.style();
 
-        this.ancestorDropdown.addChangeHandler((changeEvent) -> {
-            fetchDropdownData(ancestorDropdown.getSelectedValue());
-        });
+        this.ancestorDropdown.addChangeHandler(
+                changeEvent -> fetchDropdownData(ancestorDropdown.getSelectedValue())
+        );
 
-        dispatchServiceManager.execute(GetPostcoordinationAxisToGenericScaleAction.create(), result -> {
-            this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales();
-        });
-        superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Logical Definition Axis",
+        dispatchServiceManager.execute(
+                GetPostcoordinationAxisToGenericScaleAction.create(),
+                result -> this.axisToGenericScales = result.getPostcoordinationAxisToGenericScales()
+        );
+        superClassTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Axis",
                 "Value",
                 this::initializeTable,
                 addAxisValueHandler));
 
         paneContainer.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
-        this.deleteTableWrapper.setStyleName(buttonCss.deleteButton());
-
+        superClassLabel.setText("Superclass");
     }
 
     @Override
@@ -119,7 +118,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 .flatMap(s -> s.getPostcoordinationScaleValues().stream())
                 .collect(Collectors.toList());
 
-        if(selectedScales.isEmpty()) {
+        if (selectedScales.isEmpty()) {
             List<String> equivalentRoots = axisToGenericScales.stream()
                     .filter(axis -> axis.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
                     .map(PostcoordinationAxisToGenericScale::getGenericPostcoordinationScaleTopClass)
@@ -128,7 +127,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
         }
 
         Map<String, String> map = new HashMap<>();
-        for(String availableAxis : selectedScales) {
+        for (String availableAxis : selectedScales) {
             map.put(availableAxis, availableAxis);
         }
 
@@ -143,7 +142,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     @Override
     public void setAncestorList(List<OWLEntityData> ancestorsList) {
         this.ancestorsList = ancestorsList;
-        for(OWLEntityData ancestor: ancestorsList) {
+        for (OWLEntityData ancestor : ancestorsList) {
             ancestorDropdown.addItem(ancestor.getBrowserText(), ancestor.getIri().toString());
         }
     }
@@ -179,10 +178,9 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     public void asExistingTable() {
         ancestorWrapper.clear();
 
-        for(OWLEntityData ancestor : ancestorsList) {
-            if(ancestor.getIri().toString().equalsIgnoreCase(this.parentIri)) {
+        for (OWLEntityData ancestor : ancestorsList) {
+            if (ancestor.getIri().toString().equalsIgnoreCase(this.parentIri)) {
                 Label label = new Label();
-                label.addStyleName(style.superClassName());
                 label.setText(ancestor.getBrowserText());
                 this.ancestorWrapper.add(label);
                 fetchDropdownData(ancestor.getIri().toString());
@@ -198,7 +196,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void asNewTable() {
-        if(ancestorDropdown.getItemCount() > 1) {
+        if (ancestorDropdown.getItemCount() > 1) {
             ancestorDropdown.setItemSelected(1, true);
             fetchDropdownData(ancestorDropdown.getSelectedValue());
         }
@@ -218,12 +216,13 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 .orElseThrow(() -> new RuntimeException("The selected value is not a known ancestor"));
 
         return LogicalDefinition.create(OWLClassData.get(selectedAncestor.getEntity().asOWLClass(),
-        selectedAncestor.getShortFormsMap()),this.superClassTable.getValues());
+                selectedAncestor.getShortFormsMap()), this.superClassTable.getValues());
     }
 
     interface LogicalDefinitionTableWrapperImplUiBinder extends UiBinder<HTMLPanel, LogicalDefinitionTableWrapperImpl> {
 
     }
+
     public interface RemoveTableHandler {
         void removeTable(LogicalDefinitionTableWrapper wrapper);
     }

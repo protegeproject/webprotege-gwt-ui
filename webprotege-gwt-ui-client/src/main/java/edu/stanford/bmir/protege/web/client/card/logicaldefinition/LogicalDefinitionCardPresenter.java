@@ -86,7 +86,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void cancelEditing() {
-        view.setEntity(view.getEntity());
+        view.resetPristineState();
         fireEvent(new DirtyChangedEvent());
     }
 
