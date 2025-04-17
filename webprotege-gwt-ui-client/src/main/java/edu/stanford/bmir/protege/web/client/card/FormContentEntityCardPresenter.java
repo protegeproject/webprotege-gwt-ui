@@ -105,8 +105,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     public boolean isDirty() {
         Optional<FormData> formData = formPresenter.getFormData();
-        logger.log(Level.INFO, "Pristine form data: " + pristineFormData);
-        logger.log(Level.INFO, "Edited form data: " + formData);
+        logger.log(Level.FINE, "Pristine form data: " + pristineFormData);
+        logger.log(Level.FINE, "Edited form data: " + formData);
         return !pristineFormData.equals(formData);
     }
 
@@ -160,7 +160,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
         Optional<FormDataDto> nextFormData = formData.stream()
                 .filter(formDataDto -> formDataDto.getFormId().equals(formId))
                 .findFirst();
-        logger.info("Retrieved form data: " + result.getFormData());
+        logger.fine("Retrieved form data: " + result.getFormData());
 
         nextFormData.ifPresent(formPresenter::displayForm);
         if(!nextFormData.isPresent()) {
