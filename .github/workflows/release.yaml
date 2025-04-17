@@ -55,7 +55,7 @@ jobs:
         id: release-outputs
         run: |
           echo "version=${{ steps.bump.outputs.tag }}" >> $GITHUB_OUTPUT
-          echo "service=webprotege-postcoordination-service" >> $GITHUB_OUTPUT
+          echo "service=webprotege-gwt-ui-server" >> $GITHUB_OUTPUT
 
   notify-bump:
     needs: build
