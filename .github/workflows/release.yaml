@@ -3,12 +3,16 @@ name: Release
 on:
   push:
     branches:
-      - master*
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'protegeproject-bot[bot]' }}
+    outputs:
+      version: ${{ steps.release-outputs.outputs.version }}
+      service: ${{ steps.release-outputs.outputs.service }}
+
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -46,6 +50,23 @@ jobs:
         with:
           tag_name: ${{ steps.bump.outputs.tag }}
           generate_release_notes: true
+
+      - name: Set outputs
+        id: release-outputs
+        run: |
+          echo "version=${{ steps.bump.outputs.tag }}" >> $GITHUB_OUTPUT
+          echo "service=webprotege-postcoordination-service" >> $GITHUB_OUTPUT
+
+  notify-bump:
+    needs: build
+    uses: ./.github/workflows/notify-deploy-project.yaml
+    with:
+      version: ${{ needs.build.outputs.version }}
+      service: ${{ needs.build.outputs.service }}
+      branch_var: ${{vars.BUMP_WEBPROTEGE_BRANCH}}
+    secrets:
+      PROTEGE_PROJECT_CLIENT_ID: ${{ secrets.PROTEGE_PROJECT_CLIENT_ID }}
+      PROTEGE_PROJECT_CLIENT_SECRET: ${{ secrets.PROTEGE_PROJECT_CLIENT_SECRET }}
 
 env:
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
