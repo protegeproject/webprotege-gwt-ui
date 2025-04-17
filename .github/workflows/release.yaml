@@ -65,8 +65,8 @@ jobs:
       service: ${{ needs.build.outputs.service }}
       branch_var: ${{vars.BUMP_WEBPROTEGE_BRANCH}}
     secrets:
-      PROTEGE_PROJECT_CLIENT_ID: ${{ secrets.PROTEGE_PROJECT_CLIENT_ID }}
-      PROTEGE_PROJECT_CLIENT_SECRET: ${{ secrets.PROTEGE_PROJECT_CLIENT_SECRET }}
+      PROTEGE_PROJECT_CLIENT_ID: ${{ secrets.PROTEGEPROJECT_BOT_APP_TOKEN }}
+      PROTEGE_PROJECT_CLIENT_SECRET: ${{ secrets.PROTEGEPROJECT_BOT_APP_PRIVATE_KEY }}
 
 env:
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
