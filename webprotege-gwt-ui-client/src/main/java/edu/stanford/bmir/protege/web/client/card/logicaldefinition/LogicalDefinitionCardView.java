@@ -36,4 +36,6 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
     boolean isValid();
 
     void resetPristineState();
+
+    boolean isReadOnly();
 }

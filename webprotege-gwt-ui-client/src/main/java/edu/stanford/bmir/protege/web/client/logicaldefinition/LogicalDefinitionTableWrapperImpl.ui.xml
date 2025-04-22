@@ -7,11 +7,6 @@
         .gwt-SuggestBox {
         }
 
-        .card {
-            border-bottom: 2px solid #f2f2f2;
-            padding-bottom: 15px;
-        }
-
         .label {
             font-size: 13px;
             white-space: nowrap;
@@ -43,26 +38,6 @@
             justify-content: flex-end;
         }
 
-        .main {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .main textarea {
-            border-left: 1px solid transparent;
-            border-right: 1px solid transparent;
-            border-top: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-        }
-
-        .main input {
-            border-left: 1px solid transparent;
-            border-right: 1px solid transparent;
-            border-top: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-        }
-
         .ancestorFlex {
             flex: 1 1 auto;
             min-width: 0; /* very important to allow it to shrink on overflow */
@@ -85,8 +60,7 @@
 
     </ui:style>
 
-    <g:HTMLPanel ui:field="paneContainer" addStyleNames="{style.card} {wp.style.formGroup} {style.main}">
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+    <g:HTMLPanel ui:field="paneContainer">
             <g:HTMLPanel addStyleNames="{wp.style.form}">
                 <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                     <g:HTMLPanel addStyleNames="{wp.style.formGroupSingleCol}">
@@ -115,7 +89,8 @@
                         </g:HTMLPanel>
                     </g:HTMLPanel>
                 </g:HTMLPanel>
+                <g:HTMLPanel ui:field="tableWrapper" addStyleNames="{wp.style.formGroupRow}">
+                </g:HTMLPanel>
             </g:HTMLPanel>
-        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

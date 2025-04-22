@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -54,9 +55,9 @@ public class LogicalDefinitionTable implements IsWidget {
         valuesButton.addStyleName(style.addAxisValueButton());
         valuesButton.setStyleName(buttonCss.addButton());
         valuesButton.setEnabled(false);
-        valuesButton.addClickHandler(event -> {
-            config.getAddAxisValueHandler().handleAddAxisValue(this.axisDropdown.getSelectedValue(), this, this.superclassScalesValue);
-        });
+        valuesButton.addClickHandler(event -> config.getAddAxisValueHandler()
+                .handleAddAxisValue(this.axisDropdown.getSelectedValue(), this, this.superclassScalesValue)
+        );
     }
 
     @Override
@@ -102,9 +103,11 @@ public class LogicalDefinitionTable implements IsWidget {
                 })
                 .collect(Collectors.toList());
 
-        sortedRequiredAxes.forEach((requiredAxis) -> {
-            availableAxis.put(requiredAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(requiredAxis, labels), style.dropDownMandatory()));
-        });
+        sortedRequiredAxes.forEach((requiredAxis) -> availableAxis.put(
+                        requiredAxis,
+                        new DropdownElement(getAxisName(requiredAxis, labels), style.dropDownMandatory())
+                )
+        );
 
         if(!sortedRequiredAxes.isEmpty()){
             String lastAxis = sortedRequiredAxes.get(sortedRequiredAxes.size() -1);
@@ -119,9 +122,11 @@ public class LogicalDefinitionTable implements IsWidget {
                 })
                 .collect(Collectors.toList());
 
-        sortedAllowedAxis.forEach((allowedAxis) -> {
-            availableAxis.put(allowedAxis, new LogicalDefinitionTable.DropdownElement(getAxisName(allowedAxis, labels), style.dropDownAllowed()));
-        });
+        sortedAllowedAxis.forEach((allowedAxis) -> availableAxis.put(
+                        allowedAxis,
+                        new DropdownElement(getAxisName(allowedAxis, labels), style.dropDownAllowed())
+                )
+        );
 
         if(!sortedAllowedAxis.isEmpty()) {
             String lastAllowedAxis = sortedAllowedAxis.get(sortedAllowedAxis.size() -1);
@@ -173,7 +178,7 @@ public class LogicalDefinitionTable implements IsWidget {
         this.availableValues = new HashSet<>();
 
         for(String axis: availableValues.keySet()) {
-            this.availableValues.add(new OWLClassImpl(IRI.create(axis)));
+            this.availableValues.add(DataFactory.getOWLClass(axis));
         }
     }
 
@@ -186,15 +191,12 @@ public class LogicalDefinitionTable implements IsWidget {
         }
     }
 
-    public void setEditable(){
-        this.axisDropdown.setEnabled(true);
-        this.readOnly = false;
-    }
-
-    public void setReadOnly(){
-        this.axisDropdown.setEnabled(false);
-        this.valuesButton.setEnabled(false);
-        this.readOnly = true;
+    public void setReadOnly(boolean readOnly){
+        this.axisDropdown.setEnabled(!readOnly);
+        this.axisDropdown.setVisible(!readOnly);
+        this.valuesButton.setEnabled(!readOnly);
+        this.valuesButton.setVisible(!readOnly);
+        this.readOnly = readOnly;
     }
 
     public List<LogicalDefinitionTableRow> getRows(){
@@ -217,7 +219,7 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private void initializeSuperClassTableHeader() {
         flexTable.setStyleName(style.superClassTable());
-        addHeaderCell(config.getAxisLabel(), 0);
+        addHeaderCell(config.getAxisLabel(),  0);
         addHeaderCell(config.getValueLabel(), 1);
         addHeaderCell("", 2);
         flexTable.getRowFormatter().addStyleName(0, style.superClassTableHeader());

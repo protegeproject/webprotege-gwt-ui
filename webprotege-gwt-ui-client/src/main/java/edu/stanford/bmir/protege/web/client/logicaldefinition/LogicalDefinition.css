@@ -1,6 +1,5 @@
 .superClassTable {
     overflow: hidden;
-    margin-top: 15px;
     border-collapse: collapse;
     padding: 3px;
     width: 100%;
@@ -79,16 +78,22 @@
 }
 
 
-.superClassTableHeader {
-    color: literal("var(--grid-header--color)");
+.superClassTableHeader td {
     background-color: literal("var(--grid-header--background-color)");
-    font-weight: bold;
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    border-radius: literal("var(--grid-header--border-radius)");
-    line-height: 1rem;
-    padding: 3px;
+    color:            literal("var(--grid-header--color)");
+    font-weight:      bold;
+    padding:          0.3em 0.75em;
 }
+
+.superClassTableHeader td:first-child {
+    border-top-left-radius:  literal("var(--grid-header--border-radius)");
+    border-bottom-left-radius: literal("var(--grid-header--border-radius)");
+}
+.superClassTableHeader td:last-child {
+    border-top-right-radius: literal("var(--grid-header--border-radius)");
+    border-bottom-right-radius: literal("var(--grid-header--border-radius)");
+}
+
 
 .dropDownMandatory{
     color: red;

@@ -98,6 +98,9 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public boolean isDirty() {
+        if(this.view.isReadOnly()){
+            return false;
+        }
         Optional<LogicalConditions> currLogicalDefinition = Optional.ofNullable(view.getEditedData());
         Optional<LogicalConditions> pristineLogicalDefinition = Optional.ofNullable(view.getPristineData());
         logger.log(Level.INFO, "Pristine linSpec data: " + pristineLogicalDefinition);

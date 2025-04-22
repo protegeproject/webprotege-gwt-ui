@@ -47,6 +47,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @UiField
     HTMLPanel necessaryConditionsTooltip;
 
+    @UiField
+    HTMLPanel necessaryConditionsTableWrapper;
+
     private static final LogicalDefinitionCardViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionCardViewImplUiBinder.class);
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -85,6 +88,8 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     private LogicalDefinitionChangeHandler changeHandler;
 
     private final HierarchySelectionModalManager hierarchyModal;
+
+    private boolean isReadOnly = true;
 
 
     @Inject
@@ -159,8 +164,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         this.necessaryConditionsTable.resetTable();
         this.tableWrappers = new ArrayList<>();
         clearDefinitions();
-        necessaryConditionsContainer.clear();
-        necessaryConditionsContainer.add(necessaryConditionsTable);
+        necessaryConditionsTableWrapper.add(necessaryConditionsTable);
     }
 
     @Override
@@ -344,6 +348,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         clearTables();
         populateWithExistingDefinition(getEntity(), projectId);
         populateAvailableAxisValues(getEntity());
+        switchToReadOnly();
     }
 
     private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {
@@ -377,8 +382,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void switchToReadOnly() {
+        this.isReadOnly = true;
         toggleButtons(true);
-        this.necessaryConditionsTable.setReadOnly();
+        this.necessaryConditionsTable.setReadOnly(true);
+        this.addDefinitionButton.setEnabled(false);
+        this.addDefinitionButton.setVisible(false);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableReadOnly();
         }
@@ -391,8 +399,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void switchToEditable() {
+        this.isReadOnly = false;
         this.toggleButtons(false);
-        this.necessaryConditionsTable.setEditable();
+        this.necessaryConditionsTable.setReadOnly(false);
+        this.addDefinitionButton.setEnabled(true);
+        this.addDefinitionButton.setVisible(true);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }
@@ -451,5 +462,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     "");
         }
         return !axisWithNoValueFound && !duplicateFound;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return this.isReadOnly;
     }
 }

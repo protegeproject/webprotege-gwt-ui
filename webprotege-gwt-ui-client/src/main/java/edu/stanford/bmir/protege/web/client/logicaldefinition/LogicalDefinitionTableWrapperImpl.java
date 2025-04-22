@@ -32,9 +32,13 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @UiField
     Label superClassLabel;
+
+    @UiField
+    HTMLPanel tableWrapper;
+
     private final DispatchServiceManager dispatchServiceManager;
 
-    private LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
+    private final LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
 
     private final ProjectId projectId;
     private List<PostCoordinationTableAxisLabel> labels;
@@ -76,7 +80,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 this::initializeTable,
                 addAxisValueHandler));
 
-        paneContainer.add(superClassTable);
+        tableWrapper.add(superClassTable);
         ancestorDropdown.setStyleName(style.logicalDefinitionDropdown());
         superClassLabel.setText("Superclass");
     }
@@ -165,13 +169,17 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     @Override
     public void enableReadOnly() {
         this.ancestorDropdown.setEnabled(false);
-        this.superClassTable.setReadOnly();
+        this.deleteTableWrapper.setEnabled(false);
+        this.deleteTableWrapper.setVisible(false);
+        this.superClassTable.setReadOnly(true);
     }
 
     @Override
     public void enableEditable() {
         this.ancestorDropdown.setEnabled(true);
-        this.superClassTable.setEditable();
+        this.deleteTableWrapper.setEnabled(true);
+        this.deleteTableWrapper.setVisible(true);
+        this.superClassTable.setReadOnly(false);
     }
 
     @Override
