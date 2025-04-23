@@ -196,7 +196,14 @@ public class LogicalDefinitionTable implements IsWidget {
         this.axisDropdown.setVisible(!readOnly);
         this.valuesButton.setEnabled(!readOnly);
         this.valuesButton.setVisible(!readOnly);
+        this.setDeleteRowButtonVisible(!readOnly);
         this.readOnly = readOnly;
+    }
+
+    private void setDeleteRowButtonVisible(boolean visible) {
+        for(int i = 1; i<=this.tableRows.size(); i++){
+            this.flexTable.getWidget(i, 2).setVisible(visible);
+        }
     }
 
     public List<LogicalDefinitionTableRow> getRows(){

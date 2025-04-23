@@ -204,8 +204,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.changeHandler.handleLogicalDefinitionCHange();
         });
         dispatchServiceManager.executeCurrentBatch();
-
-        switchToReadOnly();
     }
 
     @Override
@@ -253,6 +251,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
                     }
                     this.pristineData = getEditedData();
+                    switchToReadOnly();
                 });
     }
 
@@ -348,7 +347,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         clearTables();
         populateWithExistingDefinition(getEntity(), projectId);
         populateAvailableAxisValues(getEntity());
-        switchToReadOnly();
     }
 
     private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {
