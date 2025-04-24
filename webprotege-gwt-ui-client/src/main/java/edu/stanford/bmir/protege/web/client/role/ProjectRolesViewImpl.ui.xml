@@ -1,10 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:settings="urn:import:edu.stanford.bmir.protege.web.client.settings">
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <g:HTMLPanel>
-        <g:Label text="Project roles view"/>
-        <g:HTMLPanel>
-            <settings:SettingsView ui:field="settingsView"/>
-        </g:HTMLPanel>
+        <g:SimplePanel ui:field="container"/>
     </g:HTMLPanel>
 </ui:UiBinder>

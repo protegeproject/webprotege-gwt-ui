@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.settings.ApplySettingsHandler;
 import edu.stanford.bmir.protege.web.client.settings.CancelSettingsHandler;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
@@ -21,32 +22,16 @@ public class ProjectRolesViewImpl extends Composite implements ProjectRolesView 
 
     private static ProjectRolesViewImplUiBinder ourUiBinder = GWT.create(ProjectRolesViewImplUiBinder.class);
 
-    @UiField(provided = true)
-    protected final SettingsView settingsView;
-
-    private final SettingsSectionViewContainer sectionViewContainer;
+    @UiField
+    SimplePanel container;
 
     @Inject
-    public ProjectRolesViewImpl(SettingsView settingsView,
-                                SettingsSectionViewContainer sectionViewContainer) {
-        this.settingsView = settingsView;
-        this.sectionViewContainer = sectionViewContainer;
+    public ProjectRolesViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        settingsView.addSectionViewContainer(sectionViewContainer);
     }
 
     @Override
     public AcceptsOneWidget getRoleDefinitionsContainer() {
-        return sectionViewContainer;
-    }
-
-    @Override
-    public void setApplySettingsHandler(ApplySettingsHandler applySettingsHandler) {
-        settingsView.setApplySettingsHandler(applySettingsHandler);
-    }
-
-    @Override
-    public void setCancelSettingsHandler(CancelSettingsHandler cancelSettingsHandler) {
-        settingsView.setCancelSettingsHandler(cancelSettingsHandler);
+        return container;
     }
 }

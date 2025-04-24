@@ -9,7 +9,4 @@ public interface ProjectRolesView extends IsWidget {
 
     AcceptsOneWidget getRoleDefinitionsContainer();
 
-    void setApplySettingsHandler(ApplySettingsHandler applySettingsHandler);
-
-    void setCancelSettingsHandler(CancelSettingsHandler cancelSettingsHandler);
 }

@@ -149,6 +149,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                 ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(((ProjectRolesPlace) place).getProjectId());
                 ProjectRolesPresenter presenter = projectComponent.getProjectRolesPresenter();
                 return ProjectRolesActivity.get(projectRolesPlace.getProjectId(),
+                        projectRolesPlace.getNextPlace().orElse(null),
                         presenter);
             } catch (Exception e) {
                 logger.severe(e.getMessage());
