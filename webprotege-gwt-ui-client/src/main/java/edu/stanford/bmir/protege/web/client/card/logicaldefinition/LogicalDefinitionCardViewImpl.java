@@ -462,7 +462,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     .collect(Collectors.joining(","));
 
             messageBox.showAlert(
-                    "Logical definitions with superclass "+superClassesWithNoValues+" has no value. Please add values if you wish to save.",
+                    "Logical definition with superclass "+superClassesWithNoValues+" has no value. Please add values if you wish to save.",
                     "");
         }
         return !axisWithNoValueFound && !duplicateFound;
