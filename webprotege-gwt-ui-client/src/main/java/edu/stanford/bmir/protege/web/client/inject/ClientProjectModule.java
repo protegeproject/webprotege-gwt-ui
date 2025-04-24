@@ -63,6 +63,7 @@ import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
@@ -1015,7 +1016,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ValueListEditor<Capability> provideCapabilitiesEditor(CapabilityValueEditorFactory factory) {
+    ValueListFlexEditorImpl<Capability> provideCapabilitiesEditor(CapabilityValueEditorFactory factory) {
+        return new ValueListFlexEditorImpl<>(factory);
+    }
+
+    @Provides
+    ValueListFlexEditorImpl<RoleId> provideParentRolesEditor(RoleIdValueEditorFactory factory) {
         return new ValueListFlexEditorImpl<>(factory);
     }
 }

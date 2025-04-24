@@ -26,5 +26,7 @@ public interface RoleDefinitionView extends IsWidget {
 
     String getDescription();
 
-    ValueListEditor<Capability> getCapabilitiesEditor();
+    void setCapabilities(List<Capability> capabilities);
+
+    List<Capability> getCapabilities();
 }

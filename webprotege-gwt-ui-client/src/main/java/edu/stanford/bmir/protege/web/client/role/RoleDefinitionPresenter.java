@@ -40,9 +40,8 @@ public class RoleDefinitionPresenter implements ObjectPresenter<RoleDefinition> 
         currentRoleId = Optional.of(value.getRoleId());
         view.setRoleId(value.getRoleId());
         view.setDescription(value.getDescription());
-
-        ValueListEditor<Capability> capabilitiesEditor = view.getCapabilitiesEditor();
-        capabilitiesEditor.setValue(value.getRoleCapabilities());
+        view.setParentRoles(value.getParentRoles());
+        view.setCapabilities(value.getRoleCapabilities());
 
         headerLabelChangedHandler.accept(getHeaderLabel());
     }
@@ -53,7 +52,8 @@ public class RoleDefinitionPresenter implements ObjectPresenter<RoleDefinition> 
         return Optional.of(RoleDefinition.get(
                 view.getRoleId().orElse(new RoleId("")),
                 view.getDescription(),
-                new ArrayList<>()
+                view.getParentRoles(),
+                view.getCapabilities()
         ));
     }
 

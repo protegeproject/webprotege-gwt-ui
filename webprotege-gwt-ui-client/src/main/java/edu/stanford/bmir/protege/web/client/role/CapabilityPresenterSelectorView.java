@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 
 public interface CapabilityPresenterSelectorView extends IsWidget {
 
+    void clearTypeIds();
+
     interface SelectedTypeIdChangedHandler {
         void handleSelectedTypeIdChanged(String selectedTypeId);
     }

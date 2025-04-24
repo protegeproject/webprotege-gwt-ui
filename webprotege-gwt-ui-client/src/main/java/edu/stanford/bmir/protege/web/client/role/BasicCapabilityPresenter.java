@@ -57,6 +57,7 @@ public class BasicCapabilityPresenter implements CapabilityPresenter {
         List<String> availableCapabilities = Arrays.stream(BuiltInCapability.values())
                 .map(BuiltInCapability::getCapability)
                 .map(BasicCapability::getId)
+                .sorted()
                 .collect(Collectors.toList());
         view.setAvailableIds(availableCapabilities);
     }

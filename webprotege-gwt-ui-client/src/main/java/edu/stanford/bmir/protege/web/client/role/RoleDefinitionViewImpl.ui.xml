@@ -4,6 +4,12 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
+    <ui:style>
+        .capabilitiesList {
+            min-width: 380px;
+        }
+    </ui:style>
+
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Role Id" addStyleNames="{wp.style.formLabel}"/>
@@ -15,10 +21,11 @@
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Parents" addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl ui:field="parentRolesEditor"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Capabilities" addStyleNames="{wp.style.formLabel}"/>
-            <editor:ValueListEditor ui:field="capabilitiesEditor"/>
+            <editor:ValueListFlexEditorImpl ui:field="capabilitiesEditor" addStyleNames="{style.capabilitiesList}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

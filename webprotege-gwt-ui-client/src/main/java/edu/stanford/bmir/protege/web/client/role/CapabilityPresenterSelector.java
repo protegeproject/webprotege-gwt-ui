@@ -28,6 +28,7 @@ public class CapabilityPresenterSelector {
 
     public void start(AcceptsOneWidget container) {
         container.setWidget(view);
+        view.clearTypeIds();
         capabilityPresenterFactories.forEach(pf -> {
             view.addTypeId(pf.getTypeId(), pf.getLabel());
         });

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -40,6 +39,13 @@ public class CapabilityPresenterSelectorViewImpl extends Composite implements Ca
         typeIds.add(typeId);
         labels.add(label);
         typeIdSelector.addItem(label, typeId);
+    }
+
+    @Override
+    public void clearTypeIds() {
+        typeIds.clear();
+        labels.clear();
+        typeIdSelector.clear();
     }
 
     @Nonnull

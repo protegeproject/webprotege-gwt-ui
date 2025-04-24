@@ -1,6 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
         <g:ListBox ui:field="typeIdSelector"/>
         <g:SimplePanel ui:field="presenterContainer"/>
     </g:HTMLPanel>

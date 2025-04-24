@@ -7,12 +7,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.permissions.RoleDefinition;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,11 +33,20 @@ public class RoleDefinitionViewImpl extends Composite implements RoleDefinitionV
     TextArea descriptionField;
 
     @UiField(provided = true)
-    ValueListEditor<Capability> capabilitiesEditor;
+    ValueListFlexEditorImpl<RoleId> parentRolesEditor;
+
+    @UiField(provided = true)
+    ValueListFlexEditorImpl<Capability> capabilitiesEditor;
 
     @Inject
-    public RoleDefinitionViewImpl(ValueListEditor<Capability> capabilitiesEditor) {
+    public RoleDefinitionViewImpl(ValueListFlexEditorImpl<RoleId> parentRolesEditor,
+                                  ValueListFlexEditorImpl<Capability> capabilitiesEditor) {
+        this.parentRolesEditor = parentRolesEditor;
+        parentRolesEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        parentRolesEditor.setEnabled(true);
         this.capabilitiesEditor = capabilitiesEditor;
+        capabilitiesEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        capabilitiesEditor.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -56,12 +67,12 @@ public class RoleDefinitionViewImpl extends Composite implements RoleDefinitionV
 
     @Override
     public void setParentRoles(List<RoleId> parentRoles) {
-
+        parentRolesEditor.setValue(parentRoles);
     }
 
     @Override
     public List<RoleId> getParentRoles() {
-        return new ArrayList<>();
+        return parentRolesEditor.getValue().orElse(Collections.emptyList());
     }
 
     @Override
@@ -75,7 +86,12 @@ public class RoleDefinitionViewImpl extends Composite implements RoleDefinitionV
     }
 
     @Override
-    public ValueListEditor<Capability> getCapabilitiesEditor() {
-        return capabilitiesEditor;
+    public void setCapabilities(List<Capability> capabilities) {
+        capabilitiesEditor.setValue(capabilities);
+    }
+
+    @Override
+    public List<Capability> getCapabilities() {
+        return capabilitiesEditor.getValue().orElse(Collections.emptyList());
     }
 }

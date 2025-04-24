@@ -22,6 +22,6 @@ public class RoleDefinitionsObjectListPresenter extends ObjectListPresenter<Role
     }
 
     private static RoleDefinition blankRoleDefinition() {
-        return RoleDefinition.get(new RoleId(""), "" , new ArrayList<>());
+        return RoleDefinition.get(new RoleId(""), "" , new ArrayList<>(), new ArrayList<>());
     }
 }
