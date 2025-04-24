@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientM
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.role.ProjectRolesPresenter;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
@@ -60,4 +61,6 @@ public interface ClientProjectComponent extends HasDispose {
         getProjectPresenter().dispose();
         getProjectSelectionModel().dispose();
     }
+
+    ProjectRolesPresenter getProjectRolesPresenter();
 }

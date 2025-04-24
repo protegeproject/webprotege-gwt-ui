@@ -18,6 +18,9 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPrese
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsActivity;
+import edu.stanford.bmir.protege.web.client.role.ProjectRolesActivity;
+import edu.stanford.bmir.protege.web.client.role.ProjectRolesPlace;
+import edu.stanford.bmir.protege.web.client.role.ProjectRolesPresenter;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
@@ -138,6 +141,19 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(projectSettingsPlace.getProjectId());
             return new ProjectSettingsActivity(projectComponent.getProjectSettingsPresenter(),
                                                projectSettingsPlace.getNextPlace());
+        }
+        if(place instanceof ProjectRolesPlace) {
+            logger.info("Mapping place to project roles activity");
+            try {
+                ProjectRolesPlace projectRolesPlace = (ProjectRolesPlace) place;
+                ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(((ProjectRolesPlace) place).getProjectId());
+                ProjectRolesPresenter presenter = projectComponent.getProjectRolesPresenter();
+                return ProjectRolesActivity.get(projectRolesPlace.getProjectId(),
+                        presenter);
+            } catch (Exception e) {
+                logger.severe(e.getMessage());
+                throw new RuntimeException(e);
+            }
         }
         if (place instanceof LanguageSettingsPlace) {
             LanguageSettingsPlace languageSettingsPlace = (LanguageSettingsPlace) place;
