@@ -13,6 +13,7 @@
             position: relative !important;
             display: flex;
             flex-direction: column;
+            padding-bottom: 30px;
         }
 
         .cardLabel {
