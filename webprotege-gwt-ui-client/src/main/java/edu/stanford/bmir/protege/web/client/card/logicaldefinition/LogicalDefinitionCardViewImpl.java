@@ -455,8 +455,14 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     "");
         }
         if (axisWithNoValueFound) {
+            String superClassesWithNoValues = currState.getLogicalDefinitions()
+                    .stream()
+                    .filter(def -> def.getAxis2filler().isEmpty())
+                    .map(def -> def.getLogicalDefinitionParent().getBrowserText())
+                    .collect(Collectors.joining(","));
+
             messageBox.showAlert(
-                    "There are logical definitions with super class set but with no value. Please add values if you wish to save.",
+                    "Logical definitions with superclass "+superClassesWithNoValues+" has no value. Please add values if you wish to save.",
                     "");
         }
         return !axisWithNoValueFound && !duplicateFound;
