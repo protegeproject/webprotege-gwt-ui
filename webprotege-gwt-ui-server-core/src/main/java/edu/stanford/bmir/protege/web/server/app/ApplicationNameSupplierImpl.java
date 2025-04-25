@@ -15,6 +15,6 @@ public class ApplicationNameSupplierImpl implements ApplicationNameSupplier {
 
     @Override
     public String get() {
-        return "WebProtégé";
+        return "iCAT-X";
     }
 }

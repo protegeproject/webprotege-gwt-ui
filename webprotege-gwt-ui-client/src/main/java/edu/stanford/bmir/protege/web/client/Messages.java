@@ -1029,20 +1029,20 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
-    @DefaultMessage("Apply Siblings Ordering")
+    @DefaultMessage("Apply sibling ordering")
     @Key("siblingsOrdering.upload")
     String siblingsOrdering();
 
-    @DefaultMessage("Apply Linearization Changes")
+    @DefaultMessage("Apply linearization specification changes")
     @Key("linearization.upload")
     String linearizationUpload();
 
-    @DefaultMessage("Apply PostCoordination changes")
+    @DefaultMessage("Apply postcoordination specification changes")
     @Key("postcoordination.upload")
     String postCoordinationUpload();
 
 
-    @DefaultMessage("Apply PostCoordination custom scales")
+    @DefaultMessage("Apply postcoordination custom scale changes")
     @Key("postcoordination.customscales")
     String postCoordinationCustomScales();
 
