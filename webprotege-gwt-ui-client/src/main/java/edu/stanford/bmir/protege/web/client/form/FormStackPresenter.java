@@ -35,7 +35,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FormStackPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
-    private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Nonnull
     public ImmutableList<FormId> getSelectedForms() {
@@ -128,9 +128,7 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler, Ha
     @Nonnull
     public FormDataByFormId getFormData() {
         Map<FormId, FormData> resultMap = new LinkedHashMap<>();
-        formPresenters.forEach((formId, formPresenter) -> {
-            resultMap.put(formId, formPresenter.getFormData().orElse(null));
-        });
+        formPresenters.forEach((formId, formPresenter) -> resultMap.put(formId, formPresenter.getFormData().orElse(null)));
         return new FormDataByFormId(resultMap);
     }
 
@@ -179,12 +177,12 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler, Ha
             FormDescriptorDto formDescriptor = formData.getFormDescriptor();
             TabContentContainer tabContentContainer = view.addContainer(formDescriptor.getLabel());
             formPresenter.start(tabContentContainer);
+            formPresenter.setParentDisplayContextBuilder(this);
             formPresenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
             formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
             formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
-            formPresenter.setParentDisplayContextBuilder(this);
             formPresenters.put(formData.getFormId(), formPresenter);
             tabBarPresenter.addTab(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),

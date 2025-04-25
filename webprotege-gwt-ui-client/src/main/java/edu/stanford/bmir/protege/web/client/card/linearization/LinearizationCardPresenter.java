@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
@@ -36,6 +37,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private Optional<WhoficEntityLinearizationSpecification> pristineLinearizationData = Optional.empty();
 
     private final HandlerManager handlerManager = new HandlerManager(this);
+
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Inject
     @AutoFactory
@@ -152,5 +155,15 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public boolean isEditor() {
         return true;
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
     }
 }
