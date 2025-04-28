@@ -9,6 +9,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -75,5 +78,14 @@ public class SubFormControlDescriptorPresenter implements FormControlDescriptorP
         container.setWidget(view);
         subFormPresenter.start(view.getSubFormContainer(), new SimpleEventBus());
         formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectDescriptorViewContainr());
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
+        result.add(this);
+        result.add(subFormPresenter);
+        result.addAll(subFormPresenter.getSubComponentPresenters());
+        return result;
     }
 }

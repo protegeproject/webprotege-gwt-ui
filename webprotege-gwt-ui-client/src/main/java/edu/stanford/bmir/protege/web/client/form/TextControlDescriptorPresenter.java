@@ -10,6 +10,9 @@ import edu.stanford.bmir.protege.web.shared.lang.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -66,5 +69,10 @@ public class TextControlDescriptorPresenter implements FormControlDescriptorPres
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Collections.singletonList(this);
     }
 }

@@ -44,10 +44,6 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.login.LoginView;
-import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
@@ -74,8 +70,6 @@ import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContaine
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.signup.SignUpView;
-import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
@@ -175,19 +169,8 @@ public class ClientApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    SignInRequestHandler provideSignInRequestHandler(SignInRequestHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
     SignOutRequestHandler provideSignOutRequestHandler(SignOutRequestHandlerImpl impl) {
         return impl;
-    }
-
-    @Provides
-    SignUpView provideSignUpView(SignUpViewImpl signUpView) {
-        return signUpView;
     }
 
     @Provides
@@ -253,11 +236,6 @@ public class ClientApplicationModule {
     @Provides
     TrashManagerRequestHandler provideTrashManagerRequestHandler(TrashManagerRequestHandlerImpl impl) {
         return impl;
-    }
-
-    @Provides
-    LoginView provideLoginView(LoginViewImpl loginView) {
-        return loginView;
     }
 
     @Provides

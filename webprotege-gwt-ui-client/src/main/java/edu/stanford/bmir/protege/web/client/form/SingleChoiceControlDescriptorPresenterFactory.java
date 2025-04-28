@@ -21,11 +21,11 @@ public class SingleChoiceControlDescriptorPresenterFactory implements FormContro
 
 
     @Nonnull
-    private final Provider<SingleControlDescriptorPresenter> presenterProvider;
+    private final Provider<SingleChoiceControlDescriptorPresenter> presenterProvider;
 
 
     @Inject
-    public SingleChoiceControlDescriptorPresenterFactory(@Nonnull Provider<SingleControlDescriptorPresenter> presenterProvider) {
+    public SingleChoiceControlDescriptorPresenterFactory(@Nonnull Provider<SingleChoiceControlDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 

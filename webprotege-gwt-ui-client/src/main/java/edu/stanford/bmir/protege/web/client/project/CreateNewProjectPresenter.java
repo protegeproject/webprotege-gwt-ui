@@ -15,14 +15,12 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.*;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileAction;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.UPLOAD_PROJECT;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 16 Nov 2017

@@ -48,7 +48,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     private final FormControlDataEditorFactory formControlFactory;
 
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @Nonnull
     private final List<FormControl> formControls = new ArrayList<>();
@@ -81,6 +81,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         PaginatorView paginatorView = paginatorPresenter.getView();
         view.getPaginatorContainer().setWidget(paginatorView);
         view.setAddFormControlHandler(this::handleAddControl);
+        view.setEnabled(enabled);
     }
 
     @Override

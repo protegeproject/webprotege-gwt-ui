@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,6 +46,7 @@ public class FormDataDto_Serialization_TestCase {
                                                                       Repeatability.NON_REPEATABLE,
                                                                       FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                       true,
+                                                                      FormFieldAccessMode.READ_WRITE,
                                                                       ExpansionState.EXPANDED,
                                                                       LanguageMap.empty()
                                                               )
@@ -66,9 +68,11 @@ public class FormDataDto_Serialization_TestCase {
                                                     Repeatability.NON_REPEATABLE,
                                                     FormFieldDeprecationStrategy.DELETE_VALUES,
                                                     true,
+                                                    FormFieldAccessMode.READ_WRITE,
                                                     ExpansionState.EXPANDED,
                                                     LanguageMap.empty()
-                                            ), Page.of(
+                                            ),
+                                                Page.of(
                                                     ImageControlDataDto.get(
                                                             new ImageControlDescriptor(), IRI.create("http://example.org"),
                                                             3

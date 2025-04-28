@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormDescriptorAction;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDescriptorAction;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
@@ -24,6 +21,8 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -49,13 +48,13 @@ public class FormEditorPresenter implements Presenter {
     @Nonnull
     private final EntityFormSelectorPresenter entityFormSelectorPresenter;
 
-    private Optional<Place> nextPlace = Optional.empty();
-
     @Nonnull
     private final PlaceController placeController;
 
     @Nonnull
     private final MessageBox messageBox;
+
+    private Optional<Place> nextPlace = Optional.empty();
 
     @Nonnull
     private FormsMessages formsMessages;
@@ -81,19 +80,23 @@ public class FormEditorPresenter implements Presenter {
 
     public void setFormId(@Nonnull FormId formId) {
         dispatch.execute(GetEntityFormDescriptorAction.create(projectId, formId),
-                         settingsPresenter,
-                         result -> {
-                             formDescriptorPresenter.clear();
-                             formDescriptorPresenter.setFormId(formId);
-                             Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
-                             formDescriptor.ifPresent(this::setDescriptor);
-                             entityFormSelectorPresenter.clear();
-                             Optional<CompositeRootCriteria> formSelectorCriteria = result.getFormSelectorCriteria();
-                             formSelectorCriteria
-                                   .ifPresent(this::setSelector);
-                             entityFormSelectorPresenter.setPurpose(result.getPurpose());
+                settingsPresenter,
+                result -> {
+                    formDescriptorPresenter.clear();
+                    formDescriptorPresenter.setFormId(formId);
+                    Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
+                    formDescriptor.ifPresent(this::setDescriptor);
+                    entityFormSelectorPresenter.clear();
+                    Optional<CompositeRootCriteria> formSelectorCriteria = result.getFormSelectorCriteria();
+                    formSelectorCriteria
+                            .ifPresent(this::setSelector);
+                    entityFormSelectorPresenter.setPurpose(result.getPurpose());
+                    dispatch.execute(GetFormRegionAccessRestrictionsAction.get(projectId), result2 -> {
+                        formDescriptorPresenter.getSubComponentPresenters()
+                                .forEach(p -> p.setFormRegionAccessRestrictions(result2.getAccessRestrictions()));
+                    });
+                });
 
-                         });
 
     }
 
@@ -130,16 +133,26 @@ public class FormEditorPresenter implements Presenter {
 
     private void handleApply() {
         LanguageMap languageMap = formDescriptorPresenter.getFormLabel();
-        if(languageMap.asMap().isEmpty()) {
-            messageBox.showAlert("Please provide a label for this form");
+        if (languageMap.asMap().isEmpty()) {
+            messageBox.showAlert("Please provide a label for this form" );
             return;
         }
+        List<FormRegionAccessRestrictions> accessRestrictions = new ArrayList<>();
+        formDescriptorPresenter.getRegionDescriptorPresenters()
+                .forEach(p -> {
+                    List<FormRegionAccessRestrictions> r = p.getFormRegionAccessRestrictions();
+                    accessRestrictions.addAll(r);
+                });
+
         dispatch.execute(new SetEntityFormDescriptorAction(projectId,
-                                                           formDescriptorPresenter.getFormDescriptor(),
-                                                           entityFormSelectorPresenter.getPurpose(),
-                                                           entityFormSelectorPresenter.getSelectorCriteria().orElse(null)),
-                         settingsPresenter,
-                         result -> nextPlace.ifPresent(placeController::goTo));
+                        formDescriptorPresenter.getFormDescriptor(),
+                        entityFormSelectorPresenter.getPurpose(),
+                        entityFormSelectorPresenter.getSelectorCriteria().orElse(null)),
+                settingsPresenter,
+                setFormsResult -> {
+                    dispatch.execute(SetFormRegionAccessRestrictionsAction.get(projectId, accessRestrictions),
+                            setAccessRestrictionsResult -> nextPlace.ifPresent(placeController::goTo));
+                });
 
     }
 

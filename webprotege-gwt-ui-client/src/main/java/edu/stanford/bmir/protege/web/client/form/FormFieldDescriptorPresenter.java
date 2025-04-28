@@ -1,14 +1,19 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionAccessRestrictions;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor> {
+public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor>, FormDescriptorComponentPresenter {
 
     @Nonnull
     private ProjectId projectId;
@@ -139,5 +144,39 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         container.setWidget(view);
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorViewContainer());
         bindingPresenter.start(view.getOwlBindingViewContainer());
+    }
+
+    @Override
+    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
+        return Arrays.asList(this, fieldDescriptorChooserPresenter);
+    }
+
+    @Override
+    public List<FormRegionAccessRestrictions> getFormRegionAccessRestrictions() {
+        List<FormRegionAccessRestrictions> result = new ArrayList<>();
+        formFieldId.ifPresent(id -> {
+            SetMultimap<String, RoleId> capabilitiesByRole = HashMultimap.create();
+            capabilitiesByRole.putAll("ViewFormRegion", view.getViewRolesList());
+            capabilitiesByRole.putAll("EditFormRegion", view.getEditRolesList());
+            result.add(FormRegionAccessRestrictions.get(id, capabilitiesByRole));
+        });
+        return result;
+    }
+
+    @Override
+    public void setFormRegionAccessRestrictions(List<FormRegionAccessRestrictions> formRegionAccessRestrictions) {
+        Set<RoleId> viewRoles = new HashSet<>();
+        Set<RoleId> editRoles = new HashSet<>();
+        formFieldId.ifPresent(id -> {
+            formRegionAccessRestrictions.stream()
+                    .filter(r -> r.getFormRegionId().equals(id))
+                    .forEach(r -> {
+                        Multimap<String, RoleId> roles = r.getCapabilityRoles();
+                        viewRoles.addAll(roles.get("ViewFormRegion"));
+                        editRoles.addAll(roles.get("EditFormRegion"));
+                    });
+        });
+        view.setViewRolesList(new ArrayList<>(viewRoles));
+        view.setEditRolesList(new ArrayList<>(editRoles));
     }
 }
