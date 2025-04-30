@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            column-gap: 15px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Capability" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="capabilityIdField"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Form region" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="formRegionIdField"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -9,6 +9,12 @@ public interface CapabilityPresenterSelectorView extends IsWidget {
 
     void clearTypeIds();
 
+    void setSelectedTypeId(String selectedTypeId);
+
+    void clearPresenter();
+
+    void setCapabilityEditable(boolean editable);
+
     interface SelectedTypeIdChangedHandler {
         void handleSelectedTypeIdChanged(String selectedTypeId);
     }

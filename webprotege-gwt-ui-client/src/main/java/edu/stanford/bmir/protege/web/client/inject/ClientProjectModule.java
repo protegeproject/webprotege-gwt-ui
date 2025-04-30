@@ -1024,6 +1024,16 @@ public class ClientProjectModule {
     ValueListFlexEditorImpl<RoleId> provideParentRolesEditor(RoleIdValueEditorFactory factory) {
         return new ValueListFlexEditorImpl<>(factory);
     }
+
+    @Provides
+    FormRegionCapabilityView providerFormRegionCapabilityView(FormRegionCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ParentRoleSelectorView parentRoleSelectorView(ParentRoleSelectorViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -4,6 +4,7 @@
         .main {
             display: flex;
             flex-direction: row;
+            column-gap: 10px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

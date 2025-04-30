@@ -16,14 +16,20 @@
             <g:TextBox ui:field="roleIdField"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="labelField"/>
+            <g:Label text="Specify a label if this role should be assignable to a user via the project sharing settings" addStyleNames="{wp.style.formHelpText}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Description" addStyleNames="{wp.style.formLabel}"/>
             <g:TextArea ui:field="descriptionField" characterWidth="50"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Parents" addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl ui:field="parentRolesEditor"/>
+            <g:Label ui:field="cycleMessageField" addStyleNames="{wp.style.errorLabel}"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:Label text="Capabilities" addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl ui:field="capabilitiesEditor" addStyleNames="{style.capabilitiesList}"/>
         </g:HTMLPanel>

@@ -10,8 +10,11 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class CapabilityPresenterSelectorViewImpl extends Composite implements CapabilityPresenterSelectorView {
+
+    private final static Logger logger = Logger.getLogger(CapabilityPresenterSelectorView.class.getName());
 
     interface CapabilityPresenterSelectorViewImplUiBinder extends UiBinder<HTMLPanel, CapabilityPresenterSelectorViewImpl> {
 
@@ -46,6 +49,28 @@ public class CapabilityPresenterSelectorViewImpl extends Composite implements Ca
         typeIds.clear();
         labels.clear();
         typeIdSelector.clear();
+    }
+
+    @Override
+    public void clearPresenter() {
+    }
+
+    @Override
+    public void setCapabilityEditable(boolean editable) {
+        typeIdSelector.setEnabled(editable);
+    }
+
+    @Override
+    public void setSelectedTypeId(String selectedTypeId) {
+        logger.info("Setting selected type id to " + selectedTypeId);
+        for(int i = 0; i < typeIdSelector.getItemCount(); i++) {
+            String value = typeIdSelector.getValue(i);
+            logger.info("Value is " + value);
+            if(value.equals(selectedTypeId)) {
+                typeIdSelector.setSelectedIndex(i);
+                break;
+            }
+        }
     }
 
     @Nonnull

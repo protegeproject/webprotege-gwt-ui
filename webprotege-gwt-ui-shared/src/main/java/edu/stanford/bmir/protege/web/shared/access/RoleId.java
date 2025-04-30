@@ -28,6 +28,10 @@ public class RoleId implements IsSerializable {
         this.id = checkNotNull(id);
     }
 
+    public static RoleId valueOf(String id) {
+        return new RoleId(id);
+    }
+
     @Nonnull
     @JsonValue
     public String getId() {

@@ -3,92 +3,95 @@ package edu.stanford.bmir.protege.web.client.role;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
+import elemental.html.Console;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class CapabilityPresenterSelector {
 
-    private final List<CapabilityPresenterFactory> capabilityPresenterFactories = new ArrayList<>();
+    private static Logger logger = Logger.getLogger(CapabilityPresenterSelector.class.getName());
 
-    private Optional<CapabilityPresenter> selectedPresenter = Optional.empty();
+
+
+    private final List<CapabilityPresenterFactory> capabilityPresenterFactories = new ArrayList<>();
 
     private String selectedTypeId = "";
 
     private final CapabilityPresenterSelectorView view;
 
+    private final Map<String, CapabilityPresenter> presenters = new HashMap<>();
+
+
     @Inject
     public CapabilityPresenterSelector(BasicCapabilityPresenterFactory f0,
+                                       FormRegionCapabilityPresenterFactory f1,
                                        CapabilityPresenterSelectorView view) {
         this.view = view;
         capabilityPresenterFactories.add(f0);
+        capabilityPresenterFactories.add(f1);
+        capabilityPresenterFactories.forEach(pf -> {
+            view.addTypeId(pf.getTypeId(), pf.getLabel());
+        });
+        view.setSelectedTypeIdChangedHandler(this::handleSelectedTypeIdChanged);
     }
 
     public void start(AcceptsOneWidget container) {
         container.setWidget(view);
-        view.clearTypeIds();
-        capabilityPresenterFactories.forEach(pf -> {
-            view.addTypeId(pf.getTypeId(), pf.getLabel());
-        });
-        this.selectedTypeId = capabilityPresenterFactories.get(0).getTypeId();
-        updateSelectedPresenter();
-        view.setSelectedTypeIdChangedHandler(this::handleSelectedTypeIdChanged);
     }
 
     private void handleSelectedTypeIdChanged(String nextSelectedTypeId) {
+        logger.info("Selected type id changed: " + nextSelectedTypeId);
         this.selectedTypeId = nextSelectedTypeId;
         updateSelectedPresenter();
     }
 
-//    @Nonnull
-//    public String getTypeId() {
-//        return selectedTypeId;
-//    }
-//
-//    public void setSelectedTypeId(@Nonnull String selectedTypeId) {
-//        this.selectedTypeId = selectedTypeId;
-//        updateSelectedPresenter();
-//    }
-
     private void updateSelectedPresenter() {
-        if(selectedPresenter.isPresent()) {
-            if(selectedPresenter.get().getTypeId().equals(selectedTypeId)) {
-                return;
-            }
+        logger.info("Updating selected presenter");
+        view.setSelectedTypeId(selectedTypeId);
+        view.clearPresenter();
+        if(selectedTypeId.isEmpty()) {
+            return;
         }
-        selectedPresenter = Optional.empty();
-        for (CapabilityPresenterFactory pf : capabilityPresenterFactories) {
-            if (pf.getTypeId().equals(selectedTypeId)) {
-                CapabilityPresenter presenter = pf.createPresenter();
-                selectedPresenter = Optional.of(presenter);
-                presenter.start(view.getPresenterContainer());
-                break;
-            }
-        }
+        CapabilityPresenter presenter = getPresenter();
+        presenter.start(view.getPresenterContainer());
     }
 
-    ////////////
+    private CapabilityPresenter getPresenter() {
+        CapabilityPresenter presenter = presenters.get(selectedTypeId);
+        if(presenter == null) {
+            for (CapabilityPresenterFactory pf : capabilityPresenterFactories) {
+                if (pf.getTypeId().equals(selectedTypeId)) {
+                    presenter = pf.createPresenter();
+                    presenter.start(view.getPresenterContainer());
+                    presenters.put(selectedTypeId, presenter);
+                    break;
+                }
+            }
+        }
+        return presenter;
+    }
 
     public void setValue(Capability capability) {
+        logger.info("Setting capability in presenter: " + capability);
         capabilityPresenterFactories.stream()
                 .filter(pf -> pf.isPresenterFor(capability))
                 .findFirst()
                 .ifPresent(pf -> {
                     selectedTypeId = pf.getTypeId();
                     updateSelectedPresenter();
-                    selectedPresenter.ifPresent(p -> p.setCapability(capability));
+                    getPresenter().setCapability(capability);
                 });
     }
 
     public Optional<Capability> getValue() {
-        return selectedPresenter.flatMap(CapabilityPresenter::getCapability);
+        return getPresenter().getCapability();
     }
 
     public void clearValue() {
         selectedTypeId = "";
-        selectedPresenter = Optional.empty();
+        updateSelectedPresenter();
     }
 
 

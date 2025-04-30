@@ -570,6 +570,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetProjectRoleDefinitionsAction _GetProjectRoleDefinitionsAction;
     GetProjectRoleDefinitionsResult _GetProjectRoleDefinitionsResult;
     RoleDefinition _RoleDefinition;
+    RoleType _RoleType;
     RoleId _RoleId;
     FormRegionAccessRestrictions _FormRegionAccessRestrictions;
     GetFormRegionAccessRestrictionsAction _GetFormRegionAccessRestrictionsAction;
@@ -579,6 +580,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     FormFieldAccessMode _FormFieldAccessMode;
     GetEntityDirectParentsAction _GetEntityDirectParentsAction;
     GetEntityDirectParentsResult _GetEntityDirectParentsResult;
+    SetProjectRoleDefinitionsAction _SetProjectRoleDefinitionsAction;
+    SetProjectRoleDefinitionsResult _SetProjectRoleDefinitionsResult;
+    ResetProjectRoleDefinitionsAction _ResetProjectRoleDefinitionsAction;
+    ResetProjectRoleDefinitionsResult _ResetProjectRoleDefinitionsResult;
+
 
     public RpcWhiteList() {
     }
