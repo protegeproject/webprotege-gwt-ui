@@ -232,7 +232,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SaveEntityChildReorderingAction.class),
         @Type(value = GetEntityDirectParentsAction.class),
         @Type(value = SetProjectRoleDefinitionsAction.class),
-        @Type(value = ResetProjectRoleDefinitionsAction.class)
+        @Type(value = ResetProjectRoleDefinitionsAction.class),
+        @Type(value = GetProjectRoleAssignmentsAction.class),
+        @Type(value = SetProjectRoleAssignmentsAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

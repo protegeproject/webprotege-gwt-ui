@@ -24,6 +24,10 @@ public abstract class CompositeRootCriteria implements RootCriteria, EntityMatch
 
     private static final String CRITERIA = "criteria";
 
+    public static CompositeRootCriteria any() {
+        return get(ImmutableList.of(), MultiMatchType.ANY);
+    }
+
     @JsonProperty(CRITERIA)
     @Nonnull
     public abstract ImmutableList<? extends RootCriteria> getRootCriteria();

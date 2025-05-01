@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
@@ -584,6 +585,13 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectRoleDefinitionsResult _SetProjectRoleDefinitionsResult;
     ResetProjectRoleDefinitionsAction _ResetProjectRoleDefinitionsAction;
     ResetProjectRoleDefinitionsResult _ResetProjectRoleDefinitionsResult;
+    ProjectRoleAssignments _ProjectRoleAssignments;
+    ProjectUserRoleAssignment _ProjectUserRoleAssignment;
+    GetProjectRoleAssignmentsAction _GetProjectRoleAssignmentsAction;
+    GetProjectRoleAssignmentsResult _GetProjectRoleAssignmentsResult;
+    SetProjectRoleAssignmentsAction _SetProjectRoleAssignmentsAction;
+    SetProjectRoleAssignmentsResult _SetProjectRoleAssignmentsResult;
+    CapabilityId _CapabilityId;
 
 
     public RpcWhiteList() {

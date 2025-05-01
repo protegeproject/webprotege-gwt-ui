@@ -20,7 +20,6 @@ import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
@@ -1032,6 +1031,16 @@ public class ClientProjectModule {
 
     @Provides
     ParentRoleSelectorView parentRoleSelectorView(ParentRoleSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectRoleAssignmentsView provideRoleAssignmentsView(ProjectRoleAssignmentsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CapabilityContextView provideCapabilityContextView(CapabilityContextViewImpl impl) {
         return impl;
     }
 }

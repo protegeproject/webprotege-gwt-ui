@@ -5,6 +5,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class BasicCapabilityPresenter implements CapabilityPresenter {
     @Override
     public void setCapability(Capability capability) {
         if(capability instanceof BasicCapability) {
-            view.setId(capability.getId());
+            view.setId(capability.getId().getId());
         }
     }
 
@@ -48,7 +49,7 @@ public class BasicCapabilityPresenter implements CapabilityPresenter {
         if(id.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(new BasicCapability(id));
+        return Optional.of(new BasicCapability(CapabilityId.valueOf(id)));
     }
 
     @Override
@@ -58,6 +59,7 @@ public class BasicCapabilityPresenter implements CapabilityPresenter {
                 .map(BuiltInCapability::getCapability)
                 .map(BasicCapability::getId)
                 .sorted()
+                .map(CapabilityId::getId)
                 .collect(Collectors.toList());
         view.setAvailableIds(availableCapabilities);
     }

@@ -27,7 +27,7 @@ public class BasicCapabilityTest {
                       "                    \"id\" : \"PerformActionX\"" +
                       "                }";
         var parsed = tester.parse(json);
-        assertThat(parsed).isEqualTo(BasicCapability.valueOf("PerformActionX"));
+        assertThat(parsed).isEqualTo(BasicCapability.valueOf(CapabilityId.valueOf("PerformActionX")));
 
         var written = tester.write(parsed.getObject());
         assertThat(written).extractingJsonPathStringValue("['@type']").isEqualTo("BasicCapability");

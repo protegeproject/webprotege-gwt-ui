@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.match.CriteriaPresenter;
+import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.FormRegionCapability;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -14,9 +17,12 @@ public class FormRegionCapabilityPresenter implements CapabilityPresenter {
 
     private Optional<Capability> capability = Optional.empty();
 
+    private CapabilityContextPresenter capabilityContextPresenter;
+
     @Inject
-    public FormRegionCapabilityPresenter(FormRegionCapabilityView view) {
+    public FormRegionCapabilityPresenter(FormRegionCapabilityView view, CapabilityContextPresenter capabilityContextPresenter) {
         this.view = view;
+        this.capabilityContextPresenter = capabilityContextPresenter;
     }
 
     @Nonnull
@@ -30,8 +36,9 @@ public class FormRegionCapabilityPresenter implements CapabilityPresenter {
         this.capability = Optional.of(capability);
         if(capability instanceof FormRegionCapability) {
             FormRegionCapability formRegionCapability = (FormRegionCapability) capability;
-            view.setCapabilityId(formRegionCapability.getId());
+            view.setCapabilityId(formRegionCapability.getId().getId());
             view.setFormRegionId(formRegionCapability.getFormRegionId());
+            capabilityContextPresenter.setCriteria(formRegionCapability.getContextCriteria());
         }
     }
 
@@ -43,5 +50,6 @@ public class FormRegionCapabilityPresenter implements CapabilityPresenter {
     @Override
     public void start(AcceptsOneWidget container) {
         container.setWidget(view);
+        capabilityContextPresenter.start(view.getContextCriteriaContainer());
     }
 }

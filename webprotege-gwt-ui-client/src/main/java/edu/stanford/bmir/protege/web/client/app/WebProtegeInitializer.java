@@ -8,7 +8,9 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +19,8 @@ import java.util.List;
  *
  */
 public class WebProtegeInitializer {
+
+    private static final Logger logger = Logger.getLogger(WebProtegeInitializer.class.getName());
 
     /**
      * A flag which should only be set once all initialization is complete.  This is set below by the initialization
@@ -50,7 +54,7 @@ public class WebProtegeInitializer {
         }
         GWT.setUncaughtExceptionHandler(e -> {
             // Consider logging and posting to server.
-            GWT.log("Uncaught exception", e);
+            logger.severe("Uncaught exception: " + e.getMessage() + " " + Arrays.toString(e.getStackTrace()));
             if (e instanceof SerializationException) {
                 messageBox.showMessage("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
             }

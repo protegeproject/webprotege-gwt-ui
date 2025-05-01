@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class BasicCapability_Json_TestCase {
 
-    private static final String ID = "TheCapability";
+    private static final CapabilityId ID = CapabilityId.valueOf("TheCapability");
 
     private BasicCapability basicCapability;
 
@@ -26,6 +26,7 @@ public class BasicCapability_Json_TestCase {
     @Test
     public void shouldSerializeJson() throws Exception {
         String result = new ObjectMapper().writeValueAsString(basicCapability);
+        System.out.println(result);
         result = result.replaceAll("\\s", "");
         assertThat(result, is("{\"@type\":\"BasicCapability\",\"id\":\"TheCapability\"}"));
     }
