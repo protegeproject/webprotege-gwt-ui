@@ -5,40 +5,29 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
-import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
+import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
-import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
-import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.client.*;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.inject.*;
 import java.util.Optional;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.*;
 
@@ -179,19 +168,19 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
 
         startTree(ObjectPropertyHierarchyDescriptor.get(),
-                  messages.hierarchy_objectproperties(),
-                  eventBus,
-                  objectPropertyHierarchyModel, objectPropertyTree);
+                messages.hierarchy_objectproperties(),
+                eventBus,
+                objectPropertyHierarchyModel, objectPropertyTree);
 
         startTree(DataPropertyHierarchyDescriptor.get(),
-                  messages.hierarchy_dataproperties(),
-                  eventBus,
-                  dataPropertyHierarchyModel, dataPropertyTree);
+                messages.hierarchy_dataproperties(),
+                eventBus,
+                dataPropertyHierarchyModel, dataPropertyTree);
 
         startTree(AnnotationPropertyHierarchyDescriptor.get(),
-                  messages.hierarchy_annotationproperties(),
-                  eventBus,
-                  annotationPropertyHierarchyModel, annotationPropertyTree);
+                messages.hierarchy_annotationproperties(),
+                eventBus,
+                annotationPropertyHierarchyModel, annotationPropertyTree);
         view.setSelectedHierarchy(ObjectPropertyHierarchyDescriptor.get());
         view.setHierarchyIdSelectedHandler(hierarchyDescriptor -> handleHierarchySwitched(hierarchyDescriptor));
         tagVisibilityPresenter.start(filterView, view);
@@ -205,10 +194,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
      * context menu will be installed.
      *
      * @param hierarchyDescriptor The hierarchy descriptor
-     * @param label       The label for the tree
-     * @param eventBus    The event bus
-     * @param model       The model
-     * @param treeWidget  The tree
+     * @param label               The label for the tree
+     * @param eventBus            The event bus
+     * @param model               The model
+     * @param treeWidget          The tree
      */
     private void startTree(@Nonnull HierarchyDescriptor hierarchyDescriptor,
                            @Nonnull String label,
@@ -217,26 +206,26 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                            @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
         model.start(eventBus, hierarchyDescriptor);
         eventBus.addProjectEventHandler(getProjectId(),
-                                        DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
-                                        event -> {
-                                            renderer.setDisplayLanguage(event.getDisplayNameSettings());
-                                            treeWidget.setRenderer(renderer);
-                                        });
+                DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
+                event -> {
+                    renderer.setDisplayLanguage(event.getDisplayNameSettings());
+                    treeWidget.setRenderer(renderer);
+                });
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
         treeWidget.addSelectionChangeHandler(event -> handleSelectionChanged(event, treeWidget));
         contextMenuPresenterFactory.create(model,
-                                           treeWidget,
-                                           createAction,
-                                           deleteAction,
+                        treeWidget,
+                        createAction,
+                        deleteAction,
                         getProjectId())
                 .install();
         EntityHierarchyDropHandler entityHierarchyDropHandler = entityHierarchyDropHandlerProvider.get();
         treeWidget.setDropHandler(entityHierarchyDropHandler);
         entityHierarchyDropHandler.start(hierarchyDescriptor);
         view.addHierarchy(hierarchyDescriptor,
-                          label,
-                          treeWidget);
+                label,
+                treeWidget);
         TreeWidgetUpdater updater = updaterFactory.create(treeWidget, model);
         updater.start(eventBus);
     }
@@ -315,15 +304,13 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
             if (!objectPropertyTree.getSelectedKeys().contains(sel)) {
                 objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
-        }
-        else if (sel.isOWLDataProperty()) {
+        } else if (sel.isOWLDataProperty()) {
             view.setSelectedHierarchy(DataPropertyHierarchyDescriptor.get());
             selectedPathsModel.setSelectedPaths(dataPropertyTree.getSelectedKeyPaths());
             if (!dataPropertyTree.getSelectedKeys().contains(sel)) {
                 dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
-        }
-        else if (sel.isOWLAnnotationProperty()) {
+        } else if (sel.isOWLAnnotationProperty()) {
             view.setSelectedHierarchy(AnnotationPropertyHierarchyDescriptor.get());
             selectedPathsModel.setSelectedPaths(annotationPropertyTree.getSelectedKeyPaths());
             if (!annotationPropertyTree.getSelectedKeys().contains(sel)) {
@@ -333,14 +320,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleCreate() {
-        view.getSelectedHierarchyDescriptor().ifPresent(hierarchyId -> {
-            if (hierarchyId.equals(OBJECT_PROPERTY_HIERARCHY)) {
+        view.getSelectedHierarchyDescriptor().ifPresent(hierarchyDescriptor -> {
+            if (hierarchyDescriptor instanceof ObjectPropertyHierarchyDescriptor) {
                 handleCreateObjectProperty();
-            }
-            else if (hierarchyId.equals(DATA_PROPERTY_HIERARCHY)) {
+            } else if (hierarchyDescriptor instanceof DataPropertyHierarchyDescriptor) {
                 handleCreateDataProperty();
-            }
-            else if (hierarchyId.equals(ANNOTATION_PROPERTY_HIERARCHY)) {
+            } else if (hierarchyDescriptor instanceof AnnotationPropertyHierarchyDescriptor) {
                 handleCreateAnnotationProperty();
             }
         });
@@ -348,20 +333,20 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleCreateAnnotationProperty() {
         createEntityPresenter.createEntities(ANNOTATION_PROPERTY,
-                                             getSelectedAnnotationProperties().stream().findFirst(),
-                                             CreateEntitiesInHierarchyHandler.get(annotationPropertyTree));
+                getSelectedAnnotationProperties().stream().findFirst(),
+                CreateEntitiesInHierarchyHandler.get(annotationPropertyTree));
     }
 
     private void handleCreateDataProperty() {
         createEntityPresenter.createEntities(DATA_PROPERTY,
-                                             getSelectedDataProperties().stream().findFirst(),
-                                             CreateEntitiesInHierarchyHandler.get(dataPropertyTree));
+                getSelectedDataProperties().stream().findFirst(),
+                CreateEntitiesInHierarchyHandler.get(dataPropertyTree));
     }
 
     private void handleCreateObjectProperty() {
         createEntityPresenter.createEntities(OBJECT_PROPERTY,
-                                             getSelectedObjectProperties().stream().findFirst(),
-                                             CreateEntitiesInHierarchyHandler.get(objectPropertyTree));
+                getSelectedObjectProperties().stream().findFirst(),
+                CreateEntitiesInHierarchyHandler.get(objectPropertyTree));
     }
 
     private ImmutableSet<OWLObjectProperty> getSelectedObjectProperties() {
