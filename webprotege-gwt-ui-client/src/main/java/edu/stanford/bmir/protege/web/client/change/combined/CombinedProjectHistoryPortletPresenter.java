@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -18,9 +18,9 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.event.UiHistoryChangedEvent.UI_HISTORY_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 @Portlet(id = "portlets.CombinedProjectHistory",
         title = "iCat-X Project History",
@@ -33,7 +33,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
 
     private final UIAction refreshAction;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
@@ -45,7 +45,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
 
     @Inject
     public CombinedProjectHistoryPortletPresenter(CombinedChangeListPresenter presenter,
-                                                  LoggedInUserProjectPermissionChecker permissionChecker,
+                                                  LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                   FilterView filterView,
                                                   SelectionModel selectionModel,
                                                   ProjectId projectId,
@@ -55,7 +55,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
                                                   SelectedPathsModel selectedPathsModel) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.filterView = filterView;
         this.messages = messages;
         presenter.setDownloadVisible(true);
@@ -78,7 +78,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
         portletUi.setFilterView(filterView);
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
-        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
+        eventBus.addApplicationEventHandler(ON_CAPABILITIES_CHANGED, event -> reload());
         eventBus.addProjectEventHandler(getProjectId(), UI_HISTORY_CHANGED, this::handleHistoryChanged);
         reload();
     }
@@ -102,7 +102,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
 
     private void reload() {
         refreshAction.setEnabled(false);
-        permissionChecker.hasPermission(VIEW_CHANGES,
+        capabilityChecker.hasCapability(VIEW_CHANGES,
                 canViewChanges -> {
                     if (canViewChanges) {
                         presenter.setRevertChangesVisible(true);

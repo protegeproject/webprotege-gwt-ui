@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.*;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdModal;
@@ -109,7 +109,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private boolean settingSelectionInTree = false;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
@@ -132,7 +132,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory,
                                           @Nonnull DispatchServiceManager dispatch,
                                           @Nonnull LoggedInUserManager loggedInUserManager,
-                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                          @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                           @Nonnull SelectedPathsModel selectedPathsModel) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.searchModal = searchModal;
@@ -164,7 +164,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatch = dispatch;
         this.selectedPathsModel = selectedPathsModel;
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
@@ -200,7 +200,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
        // deleteClassAction.setRequiresSelection(true);
        // actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
 
-        permissionChecker.hasPermission(DELETE_CLASS, deleteClassAction::setVisible);
+        capabilityChecker.hasCapability(DELETE_CLASS, deleteClassAction::setVisible);
 
         actionStatePresenter.start(eventBus);
 

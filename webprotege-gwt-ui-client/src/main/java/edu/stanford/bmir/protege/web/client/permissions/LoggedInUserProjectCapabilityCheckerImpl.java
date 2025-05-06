@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
@@ -22,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserProjectCapabilityChecker {
 
-    private final Logger logger = Logger.getLogger(LoggedInUserProjectPermissionCheckerImpl.class.getName());
+    private final Logger logger = Logger.getLogger(LoggedInUserProjectCapabilityCheckerImpl.class.getName());
 
     private final LoggedInUserProvider loggedInUserProvider;
 

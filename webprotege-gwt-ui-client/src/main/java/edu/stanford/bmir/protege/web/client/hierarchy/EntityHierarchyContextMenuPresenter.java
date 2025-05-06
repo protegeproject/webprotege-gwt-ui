@@ -120,7 +120,6 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
-                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                @Provided @Nonnull EditParentsUiAction editParentsUiAction,
                                                @Provided @Nonnull InputBox inputBox) {
         this.projectId = projectId;
@@ -230,9 +229,9 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setVisible(isNotClassHierarchy);
 
         if (isClassHierarchy) {
-            permissionChecker.hasPermission(DELETE_CLASS, deleteEntityAction::setVisible);
+            capabilityChecker.hasCapability(DELETE_CLASS, deleteEntityAction::setVisible);
         } else {
-            permissionChecker.hasPermission(DELETE_PROPERTY, deleteEntityAction::setVisible);
+            capabilityChecker.hasCapability(DELETE_PROPERTY, deleteEntityAction::setVisible);
         }
 
         if (selIsNonEmpty) {

@@ -109,7 +109,6 @@ public class PermissionManager implements HasDispose {
             callback.onSuccess(capabilitiesCache.get(key).contains(basicCapability));
             return;
         }
-        logger.info("[PermissionManager] permissions no cache: " + permittedActionCache.get(key));
         dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId, userId),
                                        new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
