@@ -3,7 +3,8 @@ package edu.stanford.bmir.protege.web.shared.permissions;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import java.util.Set;
@@ -18,20 +19,20 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 @JsonTypeName("webprotege.auth.GetProjectPermissions")
 public class GetProjectPermissionsResult implements Result {
 
-    private Set<ActionId> allowedActions;
+    private Set<Capability> allowedActions;
 
     private GetProjectPermissionsResult() {
     }
 
-    private GetProjectPermissionsResult(Set<ActionId> allowedActions) {
+    private GetProjectPermissionsResult(Set<Capability> allowedActions) {
         this.allowedActions = ImmutableSet.copyOf(allowedActions);
     }
 
-    public static GetProjectPermissionsResult create(Set<ActionId> allowedActions) {
+    public static GetProjectPermissionsResult create(Set<Capability> allowedActions) {
         return new GetProjectPermissionsResult(allowedActions);
     }
 
-    public Set<ActionId> getAllowedActions() {
+    public Set<Capability> getAllowedActions() {
         return allowedActions;
     }
 

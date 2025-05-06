@@ -6,6 +6,12 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
+import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
@@ -21,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_SHARING_SETTINGS;
 
 /**
  * Matthew Horridge
@@ -47,7 +53,7 @@ public class SharingSettingsPresenter implements Presenter {
     private final PermissionManager permissionManager;
 
     @Nonnull
-    private final PermissionScreener permissionScreener;
+    private final CapabilityScreener capabilityScreener;
 
     @Nonnull
     private final SettingsPresenter settingsPresenter;
@@ -70,7 +76,7 @@ public class SharingSettingsPresenter implements Presenter {
                                     @Nonnull BusyView busyView,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
                                     @Nonnull PermissionManager permissionManager,
-                                    @Nonnull PermissionScreener permissionScreener,
+                                    @Nonnull CapabilityScreener capabilityScreener,
                                     @Nonnull UuidV4Provider uuidV4Provider,
                                     @Nonnull SettingsPresenter settingsPresenter,
                                     @Nonnull Messages messages, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
@@ -79,7 +85,7 @@ public class SharingSettingsPresenter implements Presenter {
         this.busyView = checkNotNull(busyView);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionManager = checkNotNull(permissionManager);
-        this.permissionScreener = checkNotNull(permissionScreener);
+        this.capabilityScreener = checkNotNull(capabilityScreener);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.messages = checkNotNull(messages);
         this.errorDisplay = checkNotNull(errorDisplay);
@@ -92,8 +98,8 @@ public class SharingSettingsPresenter implements Presenter {
                       @Nonnull EventBus eventBus) {
         busyView.setMessage(messages.sharing_settings_loading());
         container.setWidget(busyView);
-        permissionScreener.checkPermission(
-                EDIT_SHARING_SETTINGS.getActionId(),
+        capabilityScreener.checkCapability(
+                EDIT_SHARING_SETTINGS.getCapability(),
                 container, () -> displaySharingSettings(container));
     }
 

@@ -33,6 +33,9 @@ import edu.stanford.bmir.protege.web.client.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.*;
 import edu.stanford.bmir.protege.web.client.permissions.*;
+import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
+import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
+import edu.stanford.bmir.protege.web.client.permissions.*;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
@@ -126,7 +129,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
+    LoggedInUserProjectCapabilityChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectCapabilityCheckerImpl checker) {
         return checker;
     }
 
@@ -1009,6 +1012,11 @@ public class ClientProjectModule {
     @Provides
     EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    ProjectRoleSelectorView provideProjectRoleSelectorPresenter(ProjectRoleSelectorViewImpl view) {
+        return view;
     }
 
     @Provides

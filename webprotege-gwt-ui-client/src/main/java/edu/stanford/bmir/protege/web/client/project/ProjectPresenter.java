@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
@@ -19,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
@@ -31,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_PROJECT;
 
 /**
  * Matthew Horridge
@@ -55,7 +59,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final PerspectivePresenter perspectivePresenter;
 
-    private final PermissionScreener permissionScreener;
+    private final CapabilityScreener capabilityScreener;
 
     private final EventPollingManager eventPollingManager;
 
@@ -80,7 +84,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
                             PerspectivePresenter perspectivePresenter,
-                            PermissionScreener permissionScreener,
+                            CapabilityScreener capabilityScreener,
                             WebProtegeEventBus eventBus,
                             ProjectTagsStyleManager projectTagsStyleManager,
                             LargeNumberOfChangesManager largeNumberOfChangesHandler, LoggedInUserProvider loggedInUserProvider,
@@ -90,7 +94,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.busyView = busyView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.eventPollingManager = eventPollingManager;
-        this.permissionScreener = permissionScreener;
+        this.capabilityScreener = capabilityScreener;
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
@@ -113,7 +117,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         logger.log(Level.FINE, "[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
         busyView.setMessage("Loading project.  Please wait.");
         container.setWidget(busyView);
-        permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
+        capabilityScreener.checkCapability(VIEW_PROJECT.getCapability(),
                                            container,
                                            () -> displayProject(container, eventBus, place));
     }

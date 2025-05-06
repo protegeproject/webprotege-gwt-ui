@@ -9,13 +9,16 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationChangesHandler;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
 
 /**
  * Matthew Horridge
@@ -40,7 +43,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final UploadAndMergeAdditionsHandler uploadAndMergeAdditionsHandler;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler;
 
@@ -138,7 +141,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     };
 
     @Inject
-    public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
+    public ProjectMenuPresenter(LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
@@ -151,7 +154,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
                                 ProjectSettingsDownloader projectSettingsDownloader,
                                 ProjectSettingsImporter projectSettingsImporter) {
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
@@ -176,18 +179,18 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadPostCoordinationChanges.setEnabled(false);
         uploadPostCoordinationCustomScales.setEnabled(false);
         displayButton(container);
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
-        permissionChecker.hasPermission(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
-        permissionChecker.hasPermission(EDIT_PROJECT_PREFIXES, editProjectPrefixes::setEnabled);
-        permissionChecker.hasPermission(EDIT_PROJECT_TAGS, editProjectTags::setEnabled);
-        permissionChecker.hasPermission(EDIT_FORMS, editProjectForms::setEnabled);
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
-        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
-        permissionChecker.hasPermission(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
+        capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
+        capabilityChecker.hasCapability(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
+        capabilityChecker.hasCapability(EDIT_PROJECT_PREFIXES, editProjectPrefixes::setEnabled);
+        capabilityChecker.hasCapability(EDIT_PROJECT_TAGS, editProjectTags::setEnabled);
+        capabilityChecker.hasCapability(EDIT_FORMS, editProjectForms::setEnabled);
+        capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
+        capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
+        capabilityChecker.hasCapability(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
 
     }
 

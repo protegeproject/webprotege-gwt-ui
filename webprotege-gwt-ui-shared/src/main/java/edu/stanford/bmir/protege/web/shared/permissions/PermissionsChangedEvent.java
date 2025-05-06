@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.events.projects.PermissionsChanged")
 public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHandler> {
 
-    public static final transient Event.Type<PermissionsChangedHandler> ON_PERMISSIONS_CHANGED = new Event.Type<>();
+    public static final transient Event.Type<PermissionsChangedHandler> ON_CAPABILITIES_CHANGED = new Event.Type<>();
 
 
     public PermissionsChangedEvent(@Nonnull ProjectId source) {
@@ -36,7 +36,7 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
 
     @Override
     public Event.Type<PermissionsChangedHandler> getAssociatedType() {
-        return ON_PERMISSIONS_CHANGED;
+        return ON_CAPABILITIES_CHANGED;
     }
 
     @Override

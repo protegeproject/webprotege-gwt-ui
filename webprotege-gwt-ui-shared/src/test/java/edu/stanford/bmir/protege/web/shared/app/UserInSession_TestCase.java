@@ -2,7 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.app;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class UserInSession_TestCase {
     @Mock
     private UserDetails userDetails;
 
-    private Set<ActionId> allowedActions = ImmutableSet.of(mock(ActionId.class));
+    private Set<BasicCapability> allowedActions = ImmutableSet.of(mock(BasicCapability.class));
 
     @Before
     public void setUp() {
@@ -77,7 +77,7 @@ public class UserInSession_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_allowedActions() {
-        assertThat(userInSession, is(not(new UserInSession(userDetails, ImmutableSet.of(mock(ActionId.class))))));
+        assertThat(userInSession, is(not(new UserInSession(userDetails, ImmutableSet.of(mock(BasicCapability.class))))));
     }
 
     @Test

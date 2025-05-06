@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
 import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
-import edu.stanford.bmir.protege.web.client.uuid.*;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
