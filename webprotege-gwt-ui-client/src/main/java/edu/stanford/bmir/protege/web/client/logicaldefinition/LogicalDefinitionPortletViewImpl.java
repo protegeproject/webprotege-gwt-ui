@@ -357,7 +357,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private void switchToReadOnly() {
         toggleButtons(true);
-        this.necessaryConditionsTable.setReadOnly();
+        this.necessaryConditionsTable.setReadOnly(true);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableReadOnly();
         }
@@ -372,7 +372,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private void switchToEditable() {
         this.toggleButtons(false);
-        this.necessaryConditionsTable.setEditable();
+        this.necessaryConditionsTable.setReadOnly(false);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }
