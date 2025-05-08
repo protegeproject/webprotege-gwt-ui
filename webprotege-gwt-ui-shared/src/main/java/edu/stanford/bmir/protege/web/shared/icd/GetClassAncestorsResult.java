@@ -8,9 +8,6 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 
-import java.util.List;
-
-
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("webprotege.entities.GetClassAncestors")

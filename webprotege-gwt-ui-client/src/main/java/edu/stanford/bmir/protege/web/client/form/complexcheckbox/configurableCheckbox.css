@@ -3,7 +3,7 @@
 @url checkbox__inputMask__url svg_checkBox__inputMask;
 @url checkbox__checkMask__url svg_checkBox__checkMask;
 
-.wp-checkbox {
+.wp-checkbox-configurable {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,27 +21,27 @@
 }
 
 
-.wp-checkbox__input {
+.wp-checkbox-configurable__input {
     display: inline-block;
 }
 
-.wp-checkbox__input--checked {
+.wp-checkbox-configurable__input--checked {
 }
 
-.wp-checkbox__input__box {
+.wp-checkbox-configurable__input__box {
     stroke-width: 1.5;
     stroke: literal("var(--tertiary--color)");
     fill: none;
 }
 
 
-.wp-checkbox__input__check-mark {
+.wp-checkbox-configurable__input__check-mark {
     stroke-width: 2;
     stroke: #ffffff;
 }
 
 
-.wp-checkbox__label {
+.wp-checkbox-configurable__label {
     text-wrap: none;
     flex-grow: 0;
     flex-shrink: 0;

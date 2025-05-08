@@ -15,4 +15,6 @@ public interface SearchClassUnderHierarchyView extends IsWidget {
     void setSelectionChangedHandler(SearchSelectionChangedHandler handler);
 
     void clearValue();
+
+    void clearCriteria();
 }

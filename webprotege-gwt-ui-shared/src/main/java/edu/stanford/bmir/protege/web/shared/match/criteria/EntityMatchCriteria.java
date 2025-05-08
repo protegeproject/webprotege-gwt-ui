@@ -27,7 +27,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(CompositeRootCriteria.class),
         @Type(EntityRelationshipCriteria.class),
         @Type(EntityIsCriteria.class),
-        @Type(IsLeafClassCriteria.class)
+        @Type(IsLeafClassCriteria.class),
+        @Type(ContextSensitiveSubClassOfCriteria.class)
 })
 public interface EntityMatchCriteria extends RootCriteria {
 

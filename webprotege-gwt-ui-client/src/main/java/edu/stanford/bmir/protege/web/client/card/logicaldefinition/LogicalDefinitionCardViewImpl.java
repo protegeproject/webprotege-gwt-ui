@@ -47,6 +47,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @UiField
     HTMLPanel necessaryConditionsTooltip;
 
+    @UiField
+    HTMLPanel necessaryConditionsTableWrapper;
+
     private static final LogicalDefinitionCardViewImplUiBinder ourUiBinder = GWT.create(LogicalDefinitionCardViewImplUiBinder.class);
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -86,6 +89,8 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     private final HierarchySelectionModalManager hierarchyModal;
 
+    private boolean isReadOnly = true;
+
 
     @Inject
     public LogicalDefinitionCardViewImpl(@Nonnull DispatchServiceManager dispatchServiceManager,
@@ -98,7 +103,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         this.projectId = projectId;
         this.hierarchyModal = hierarchyModal;
         buttonCss.ensureInjected();
-        necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Necessary Axis",
+        necessaryConditionsTable = new LogicalDefinitionTable(new LogicalDefinitionTableConfig("Axis",
                 "Value",
                 this::initializeTable,
                 this::handleAxisValueChanged));
@@ -159,8 +164,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         this.necessaryConditionsTable.resetTable();
         this.tableWrappers = new ArrayList<>();
         clearDefinitions();
-        necessaryConditionsContainer.clear();
-        necessaryConditionsContainer.add(necessaryConditionsTable);
+        necessaryConditionsTableWrapper.add(necessaryConditionsTable);
     }
 
     @Override
@@ -188,7 +192,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
+            ancestorsList = result.stream()
+                    .filter(ancestor -> !ancestor.getIri().equals(owlEntity.getIRI()))
+                    .collect(Collectors.toList());
         });
 
         dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
@@ -200,8 +206,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.changeHandler.handleLogicalDefinitionCHange();
         });
         dispatchServiceManager.executeCurrentBatch();
-
-        switchToReadOnly();
     }
 
     @Override
@@ -249,6 +253,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
                     }
                     this.pristineData = getEditedData();
+                    switchToReadOnly();
                 });
     }
 
@@ -318,9 +323,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     public void saveValues(String commitMessage) {
         LogicalConditions logCond = getEditedData();
 
-        boolean hasDuplicates = verifyForDuplicates(logCond.getLogicalDefinitions());
-
-        if (!hasDuplicates) {
+        if (isValid()) {
             this.dispatchServiceManager.execute(
                     UpdateLogicalDefinitionAction.create(
                             ChangeRequestId.get(uuidV4Provider.get()),
@@ -332,17 +335,20 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     ": Edited the Logical Definitons and/or Necessary Conditions for " +
                                     this.entityData.getBrowserText()
                     ),
-                    response -> {
-                        this.pristineData = LogicalConditions.create(new ArrayList<>(logCond.getLogicalDefinitions()), necessaryConditionsTable.getValues());
-                        switchToReadOnly();
-                    }
+                    response -> this.pristineData = LogicalConditions.create(
+                            new ArrayList<>(logCond.getLogicalDefinitions()),
+                            necessaryConditionsTable.getValues())
             );
         } else {
-            messageBox.showAlert(
-                    "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
-                    "");
+            resetPristineState();
         }
+        switchToReadOnly();
+    }
 
+    public void resetPristineState() {
+        clearTables();
+        populateWithExistingDefinition(getEntity(), projectId);
+        populateAvailableAxisValues(getEntity());
     }
 
     private boolean verifyForDuplicates(List<LogicalDefinition> definitions) {
@@ -376,8 +382,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void switchToReadOnly() {
+        this.isReadOnly = true;
         toggleButtons(true);
-        this.necessaryConditionsTable.setReadOnly();
+        this.necessaryConditionsTable.setReadOnly(true);
+        this.addDefinitionButton.setEnabled(false);
+        this.addDefinitionButton.setVisible(false);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableReadOnly();
         }
@@ -390,8 +399,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     @Override
     public void switchToEditable() {
+        this.isReadOnly = false;
         this.toggleButtons(false);
-        this.necessaryConditionsTable.setEditable();
+        this.necessaryConditionsTable.setReadOnly(false);
+        this.addDefinitionButton.setEnabled(true);
+        this.addDefinitionButton.setVisible(true);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }
@@ -433,5 +445,33 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @Override
     public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler handler) {
         this.changeHandler = handler;
+    }
+
+    public boolean isValid() {
+        LogicalConditions currState = getEditedData();
+        boolean duplicateFound = verifyForDuplicates(currState.getLogicalDefinitions());
+        boolean axisWithNoValueFound = currState.getLogicalDefinitions().stream().anyMatch(def -> def.getAxis2filler().isEmpty());
+        if (duplicateFound) {
+            messageBox.showAlert(
+                    "There are several logical definitions with the same superclass, only one is allowed. Please remove the logical definitions that you do not want to keep.",
+                    "");
+        }
+        if (axisWithNoValueFound) {
+            String superClassesWithNoValues = currState.getLogicalDefinitions()
+                    .stream()
+                    .filter(def -> def.getAxis2filler().isEmpty())
+                    .map(def -> def.getLogicalDefinitionParent().getBrowserText())
+                    .collect(Collectors.joining(","));
+
+            messageBox.showAlert(
+                    "Logical definition with superclass "+superClassesWithNoValues+" has no value. Please add values if you wish to save.",
+                    "");
+        }
+        return !axisWithNoValueFound && !duplicateFound;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return this.isReadOnly;
     }
 }

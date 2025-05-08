@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -181,7 +181,9 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = new ArrayList<>(result);
+            ancestorsList = result.stream()
+                    .filter(ancestor -> !ancestor.getIri().equals(owlEntity.getIRI()))
+                    .collect(Collectors.toList());
 
             dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
                 this.labels = config.getLabels();
@@ -355,7 +357,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private void switchToReadOnly() {
         toggleButtons(true);
-        this.necessaryConditionsTable.setReadOnly();
+        this.necessaryConditionsTable.setReadOnly(true);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableReadOnly();
         }
@@ -370,7 +372,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
     private void switchToEditable() {
         this.toggleButtons(false);
-        this.necessaryConditionsTable.setEditable();
+        this.necessaryConditionsTable.setReadOnly(false);
         for (LogicalDefinitionTableWrapper wrapper : this.tableWrappers) {
             wrapper.enableEditable();
         }

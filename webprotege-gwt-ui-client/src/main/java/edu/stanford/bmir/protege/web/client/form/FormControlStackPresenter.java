@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
@@ -19,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, HasPagination, HasValueChangeHandlers<List<FormControlData>>, HasFormRegionFilterChangedHandler {
+public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, HasPagination, HasValueChangeHandlers<List<FormControlData>>, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     void start(@Nonnull AcceptsOneWidget container);
 

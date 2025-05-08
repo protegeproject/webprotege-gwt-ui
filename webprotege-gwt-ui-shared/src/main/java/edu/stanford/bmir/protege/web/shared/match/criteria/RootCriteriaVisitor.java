@@ -40,6 +40,9 @@ public interface RootCriteriaVisitor<R> {
     R visit(@Nonnull SubClassOfCriteria criteria);
 
     @Nonnull
+    R visit(@Nonnull ContextSensitiveSubClassOfCriteria criteria);
+
+    @Nonnull
     R visit(@Nonnull InstanceOfCriteria instanceOfCriteria);
 
     @Nonnull
