@@ -27,10 +27,8 @@ import javax.inject.*;
 import java.util.Optional;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_PROPERTY;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.*;
 

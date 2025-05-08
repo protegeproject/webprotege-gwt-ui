@@ -161,6 +161,14 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         };
     }
 
+    private void propagateEnabled() {
+        if(formFieldDescriptor.isReadOnly() || formFieldDescriptor.getAccessMode().isReadOnly()) {
+            stackPresenter.setEnabled(false);
+        }
+        else {
+            stackPresenter.setEnabled(enabled);
+        }
+    }
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
         checkNotNull(formFieldData);
         if (currentValue.equals(Optional.of(formFieldData))) {
