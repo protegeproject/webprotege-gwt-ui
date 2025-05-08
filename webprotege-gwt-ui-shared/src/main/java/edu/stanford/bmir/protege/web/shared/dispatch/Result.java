@@ -235,6 +235,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
         @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
+        @JsonSubTypes.Type(GetClassHierarchyParentsByAxiomTypeResult.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

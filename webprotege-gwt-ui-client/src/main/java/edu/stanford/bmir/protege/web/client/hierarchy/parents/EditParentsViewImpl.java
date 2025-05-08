@@ -1,30 +1,19 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
-import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
+import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.inject.*;
+import java.util.*;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class EditParentsViewImpl extends Composite implements EditParentsView {
@@ -35,13 +24,19 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     private final Messages messages;
 
     @UiField(provided = true)
-    final PrimitiveDataListEditor domains;
+    final PrimitiveDataListEditor parents;
+
+    @UiField(provided = true)
+    final PrimitiveDataListEditor equivalentClassParents;
 
     @UiField
     ExpandingTextBoxImpl reasonForChangeTextBox;
 
     @UiField
     Label reasonForChangeErrorLabel;
+
+    @UiField
+    Label noParentSetErrorLabel;
 
     @UiField
     HTML classesWithCyclesWarningField;
@@ -52,24 +47,38 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     HTML linearizationPathParentField;
 
+    @UiField
+    HTMLPanel equivalentParentClassTooltip;
+
+    @UiField
+    HTMLPanel equivalentParentClassContainer;
+
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
     interface EditParentsViewImplUiBinder extends UiBinder<HTMLPanel, EditParentsViewImpl> {
     }
 
-    private static EditParentsViewImpl.EditParentsViewImplUiBinder ourUiBinder = GWT
+    private static final EditParentsViewImpl.EditParentsViewImplUiBinder ourUiBinder = GWT
             .create(EditParentsViewImpl.EditParentsViewImplUiBinder.class);
 
     @Inject
     public EditParentsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                @Nonnull Messages messages) {
         this.messages = messages;
-        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
+        parents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
+        equivalentClassParents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
         initWidget(ourUiBinder.createAndBindUi(this));
-        domains.setPlaceholder(messages.frame_enterAClassName());
-        domains.setValue(new ArrayList<>());
-        domains.setEnabled(true);
+        parents.setPlaceholder(messages.frame_enterAClassName());
+        parents.setValue(new ArrayList<>());
+        parents.setEnabled(true);
+        this.parents.setEnforceMinOneValue(true);
         textBox.setEnabled(false);
+
+        equivalentClassParents.setValue(new ArrayList<>());
+        equivalentClassParents.setEnabled(false);
+
+        reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+        noParentSetErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
     }
 
     @Override
@@ -86,9 +95,18 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void setEntityParents(Set<OWLEntityData> entityParents) {
-        this.domains.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
+        this.parents.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
     }
 
+    @Override
+    public void setParentsFromEquivalentClasses(Set<OWLEntityData> equivalentClassParents) {
+        if (equivalentClassParents.isEmpty()) {
+            this.equivalentParentClassContainer.setVisible(false);
+            return;
+        }
+        this.equivalentParentClassContainer.setVisible(true);
+        this.equivalentClassParents.setValue(equivalentClassParents.stream().map(equivalentClassParent -> (OWLPrimitiveData) equivalentClassParent).collect(Collectors.toList()));
+    }
 
     @Override
     protected void onAttach() {
@@ -96,20 +114,32 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     }
 
 
-    @Override
-    public boolean isReasonForChangeSet() {
+    private boolean isReasonForChangeSet() {
         if (reasonForChangeTextBox.getText().isEmpty()) {
             reasonForChangeErrorLabel.setText(messages.reasonForChangeError());
-            reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
             return false;
         }
         clearReasonForChangeErrors();
         return true;
     }
 
-    public void clearReasonForChangeErrors() {
+    private void clearReasonForChangeErrors() {
         reasonForChangeErrorLabel.setText("");
-        reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+    }
+
+
+    private boolean isAtLestOneParentSet() {
+        Optional<List<OWLPrimitiveData>> parentsOptional = this.parents.getValue();
+        if (parentsOptional.isPresent() && !parentsOptional.get().isEmpty()) {
+            clearNoParentSetErrors();
+            return true;
+        }
+        noParentSetErrorLabel.setText(messages.noParentSetError());
+        return false;
+    }
+
+    private void clearNoParentSetErrors() {
+        noParentSetErrorLabel.setText("");
     }
 
 
@@ -118,6 +148,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         textBox.setText("");
         reasonForChangeTextBox.setText("");
         clearReasonForChangeErrors();
+        clearNoParentSetErrors();
         clearClassesWithCycleErrors();
         clearLinearizationPathParentErrors();
     }
@@ -130,7 +161,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public List<OWLPrimitiveData> getNewParentList() {
-        return this.domains.getValue().orElseGet(ArrayList::new);
+        return this.parents.getValue().orElseGet(ArrayList::new);
     }
 
     @Override
@@ -169,5 +200,17 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public void markLinearizationPathParent(String linearizationPathParents) {
         linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParents));
         linearizationPathParentField.setVisible(true);
+    }
+
+    @Override
+    public IsWidget getHelpTooltip() {
+        return equivalentParentClassTooltip.asWidget();
+    }
+
+    @Override
+    public boolean isValid() {
+        boolean isReasonSet = this.isReasonForChangeSet();
+        boolean isParentSet = this.isAtLestOneParentSet();
+        return isReasonSet&&isParentSet;
     }
 }
