@@ -5,8 +5,8 @@ import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -107,31 +107,11 @@ public class LoggedInUserManager {
         }
     }
 
-    public Set<ActionId> getLoggedInUserApplicationActions() {
-        return loggedInUser.getUserInSession().getAllowedApplicationActions();
+    public boolean isAllowedApplicationAction(BasicCapability basicCapability) {
+        return loggedInUser.isAllowedApplicationAction(basicCapability);
     }
 
-    public boolean isAllowedApplicationAction(ActionId actionId) {
-        return loggedInUser.isAllowedApplicationAction(actionId);
+    public boolean isAllowedApplicationAction(BuiltInCapability action) {
+        return isAllowedApplicationAction(action.getCapability());
     }
-
-    public boolean isAllowedApplicationAction(BuiltInAction action) {
-        return isAllowedApplicationAction(action.getActionId());
-    }
-
-//    private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-//        dispatchServiceManager.execute(GetAuthenticatedUserDetailsAction.create(), new DispatchServiceCallback<GetAuthenticatedUserDetailsResult>(errorDisplay) {
-//            @Override
-//            public void handleExecutionException(Throwable cause) {
-//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
-//            }
-//
-//            @Override
-//            public void handleSuccess(GetAuthenticatedUserDetailsResult result) {
-//                loggedInUser.setLoggedInUser(result.getUserInSession());
-//                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onSuccess(result.getUserInSession().getUserDetails()));
-//            }
-//
-//        });
-//    }
 }

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
+import edu.stanford.bmir.protege.web.shared.form.HasFormRegionId;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -21,26 +23,28 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
     @Nonnull
     public static FormFieldDescriptorDto get(@JsonProperty(PropertyNames.ID) FormRegionId formFieldId,
                                              @JsonProperty(PropertyNames.OWL_BINDING) OwlBinding owlBinding,
-                                               @JsonProperty(PropertyNames.LABEL)  LanguageMap newlabel,
-                                              @JsonProperty(PropertyNames.FIELD_RUN)   FieldRun fieldRun,
-                                              @JsonProperty(PropertyNames.CONTROL)   FormControlDescriptorDto descriptorDto,
-                                              @JsonProperty(PropertyNames.OPTIONALITY)   Optionality optionality,
-                                              @JsonProperty(PropertyNames.REPEATABILITY)   Repeatability repeatability,
-                                              @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)   FormFieldDeprecationStrategy deprecationStrategy,
-                                              @JsonProperty(PropertyNames.READ_ONLY)   boolean newReadOnly,
-                                              @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE)   ExpansionState initialExpansionState,
-                                              @JsonProperty(PropertyNames.HELP)   LanguageMap help) {
+                                             @JsonProperty(PropertyNames.LABEL) LanguageMap newlabel,
+                                             @JsonProperty(PropertyNames.FIELD_RUN) FieldRun fieldRun,
+                                             @JsonProperty(PropertyNames.CONTROL) FormControlDescriptorDto descriptorDto,
+                                             @JsonProperty(PropertyNames.OPTIONALITY) Optionality optionality,
+                                             @JsonProperty(PropertyNames.REPEATABILITY) Repeatability repeatability,
+                                             @JsonProperty(PropertyNames.DEPRECATION_STRATEGY) FormFieldDeprecationStrategy deprecationStrategy,
+                                             @JsonProperty(PropertyNames.READ_ONLY) boolean newReadOnly,
+                                             @JsonProperty(PropertyNames.ACCESS_MODE) FormFieldAccessMode accessMode,
+                                             @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) ExpansionState initialExpansionState,
+                                             @JsonProperty(PropertyNames.HELP) LanguageMap help) {
         return new AutoValue_FormFieldDescriptorDto(formFieldId,
-                                                    owlBinding,
-                                                    newlabel,
-                                                    fieldRun,
-                                                    descriptorDto,
-                                                    optionality,
-                                                    repeatability,
-                                                    deprecationStrategy,
-                                                    newReadOnly,
-                                                    initialExpansionState,
-                                                    help);
+                owlBinding,
+                newlabel,
+                fieldRun,
+                descriptorDto,
+                optionality,
+                repeatability,
+                deprecationStrategy,
+                newReadOnly,
+                accessMode,
+                initialExpansionState,
+                help);
     }
 
 
@@ -85,6 +89,9 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
 
     @JsonProperty(PropertyNames.READ_ONLY)
     public abstract boolean isReadOnly();
+
+    @JsonProperty(PropertyNames.ACCESS_MODE)
+    public abstract FormFieldAccessMode getAccessMode();
 
     @Nonnull
     @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE)

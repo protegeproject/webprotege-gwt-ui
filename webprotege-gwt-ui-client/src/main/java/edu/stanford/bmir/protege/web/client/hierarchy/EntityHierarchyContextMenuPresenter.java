@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
@@ -84,7 +84,7 @@ public class EntityHierarchyContextMenuPresenter {
     private final WatchUiAction watchUiAction;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nullable
     private PopupMenu contextMenu;
@@ -119,7 +119,7 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
-                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                               @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                @Provided @Nonnull EditParentsUiAction editParentsUiAction,
                                                @Provided @Nonnull InputBox inputBox) {
         this.projectId = projectId;
@@ -136,7 +136,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
         this.changeChildrenOrderingUIAction = changeChildrenOrderingUIAction;
         this.watchUiAction = checkNotNull(watchUiAction);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.inputBox = checkNotNull(inputBox);
         this.editParentsUiAction = checkNotNull(editParentsUiAction);
     }
@@ -229,18 +229,18 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setVisible(isNotClassHierarchy);
 
         if (isClassHierarchy) {
-            permissionChecker.hasPermission(DELETE_CLASS, deleteEntityAction::setVisible);
+            capabilityChecker.hasCapability(DELETE_CLASS, deleteEntityAction::setVisible);
         } else {
-            permissionChecker.hasPermission(DELETE_PROPERTY, deleteEntityAction::setVisible);
+            capabilityChecker.hasCapability(DELETE_PROPERTY, deleteEntityAction::setVisible);
         }
 
         if (selIsNonEmpty) {
-            permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
-            permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
+            capabilityChecker.hasCapability(WATCH_CHANGES, watchUiAction::setEnabled);
+            capabilityChecker.hasCapability(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
     }
 

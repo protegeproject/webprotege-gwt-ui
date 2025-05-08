@@ -169,4 +169,8 @@ public class ObjectListPresenter<T> implements Presenter {
                                .map(Optional::get)
                                .collect(toImmutableList());
     }
+
+    protected List<ObjectPresenter<T>> getObjectPresenters() {
+        return new ArrayList<>(objectPresenters);
+    }
 }

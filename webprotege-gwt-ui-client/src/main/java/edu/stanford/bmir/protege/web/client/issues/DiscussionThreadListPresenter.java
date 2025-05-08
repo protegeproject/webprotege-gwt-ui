@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
@@ -18,11 +18,11 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.create;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -40,7 +40,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final ProjectId projectId;
@@ -70,13 +70,13 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
             @Nonnull DispatchServiceManager dispatch,
-            @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+            @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
             @Nonnull ProjectId projectId,
             @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider,
             @Nonnull CommentEditorModal commentEditorModal) {
         this.view = view;
         this.dispatch = dispatch;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.projectId = projectId;
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
         this.commentEditorModal = commentEditorModal;
@@ -91,7 +91,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     }
 
     public void start(WebProtegeEventBus eventBus) {
-        eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
+        eventBus.addProjectEventHandler(projectId, ON_CAPABILITIES_CHANGED, event -> updateEnabled());
         eventBus.addProjectEventHandler(projectId, ON_DISCUSSION_THREAD_CREATED, this::handleDiscussionThreadCreated);
         eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
         updateEnabled();
@@ -196,7 +196,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     private void updateEnabled() {
         view.setEnabled(false);
-        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT, view::setEnabled);
+        capabilityChecker.hasCapability(CREATE_OBJECT_COMMENT, view::setEnabled);
     }
 
     /**

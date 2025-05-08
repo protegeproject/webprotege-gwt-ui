@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -27,7 +27,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
@@ -44,7 +44,7 @@ public class CombinedChangeListPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final Messages messages;
@@ -70,12 +70,12 @@ public class CombinedChangeListPresenter {
     public CombinedChangeListPresenter(@Nonnull ProjectId projectId,
                                        @Nonnull ChangeListView view,
                                        @Nonnull DispatchServiceManager dispatch,
-                                       @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                       @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                        @Nonnull Messages messages,
                                        @Nonnull MessageBox messageBox) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatch = checkNotNull(dispatch);
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
@@ -125,7 +125,7 @@ public class CombinedChangeListPresenter {
     private void fillView(HasProjectChanges result) {
         Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
-        permissionChecker.hasPermission(VIEW_CHANGES,
+        capabilityChecker.hasCapability(VIEW_CHANGES,
                 viewChanges -> {
                     if (viewChanges) {
                         insertChangesIntoView(changes);

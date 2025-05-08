@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
@@ -20,8 +20,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_SHARING_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -36,17 +36,17 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
 
     private final PlaceController placeController;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final Button button;
 
     @Inject
     public SharingButtonPresenter(@Nonnull ProjectId projectId,
                                   @Nonnull PlaceController placeController,
-                                  @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                  @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.projectId = projectId;
         this.placeController = placeController;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         button = new Button(MESSAGES.share(), (ClickHandler) event -> goToSharingSettingsPlace());
         button.asWidget().addStyleName(BUNDLE.buttons().topBarButton());
     }
@@ -58,7 +58,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
      */
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
-        eventBus.addHandlerToSource(ON_PERMISSIONS_CHANGED,
+        eventBus.addHandlerToSource(ON_CAPABILITIES_CHANGED,
                                     projectId,
                                     event -> updateButtonState(container));
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
@@ -69,7 +69,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
     }
 
     private void updateButtonState(AcceptsOneWidget container) {
-        permissionChecker.hasPermission(EDIT_SHARING_SETTINGS, canEdit -> {
+        capabilityChecker.hasCapability(EDIT_SHARING_SETTINGS, canEdit -> {
             GWT.log("[SharingButtonPresenter] Signed in user can edit sharing settings: " + canEdit);
             button.setVisible(canEdit);
             container.setWidget(button);

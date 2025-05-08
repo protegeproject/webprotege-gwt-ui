@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -58,8 +58,8 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Nonnull
     @Override
-    public BuiltInAction getRequiredAction() {
-        return BuiltInAction.VIEW_CHANGES;
+    public BuiltInCapability getRequiredAction() {
+        return BuiltInCapability.VIEW_CHANGES;
     }
 
     @Override

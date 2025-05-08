@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.*;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.searchIcd.SearchIcdModal;
@@ -32,7 +31,6 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -40,7 +38,8 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -110,7 +109,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private boolean settingSelectionInTree = false;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
@@ -133,7 +132,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory,
                                           @Nonnull DispatchServiceManager dispatch,
                                           @Nonnull LoggedInUserManager loggedInUserManager,
-                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                          @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                           @Nonnull SelectedPathsModel selectedPathsModel) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.searchModal = searchModal;
@@ -165,7 +164,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatch = dispatch;
         this.selectedPathsModel = selectedPathsModel;
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
@@ -201,7 +200,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
        // deleteClassAction.setRequiresSelection(true);
        // actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
 
-        permissionChecker.hasPermission(DELETE_CLASS, deleteClassAction::setVisible);
+        capabilityChecker.hasCapability(DELETE_CLASS, deleteClassAction::setVisible);
 
         actionStatePresenter.start(eventBus);
 

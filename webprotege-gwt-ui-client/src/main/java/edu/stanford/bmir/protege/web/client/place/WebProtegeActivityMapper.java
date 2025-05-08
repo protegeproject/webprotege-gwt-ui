@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -13,7 +12,6 @@ import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
-import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerActivity;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPlace;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
@@ -22,10 +20,8 @@ import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresent
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
@@ -55,10 +51,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ProjectManagerPresenter projectManagerPresenter;
 
-    private final LoginPresenter loginPresenter;
-
-    private final SignUpPresenter signUpPresenter;
-
     private final ApplicationSettingsPresenter applicationSettingsPresenter;
 
     private final LoggedInUserProvider loggedInUserProvider;
@@ -73,16 +65,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
                                     ProjectManagerPresenter projectListPresenter,
-                                    LoginPresenter loginPresenter,
-                                    SignUpPresenter signUpPresenter,
                                     ApplicationSettingsPresenter applicationSettingsPresenter,
                                     PlaceController placeController,
                                     EventBus eventBus) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectManagerPresenter = projectListPresenter;
-        this.signUpPresenter = signUpPresenter;
-        this.loginPresenter = loginPresenter;
         this.applicationSettingsPresenter = applicationSettingsPresenter;
         this.placeController = placeController;
         this.eventBus = eventBus;
@@ -105,18 +93,18 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     private ClientProjectComponent getClientProjectComponentForProjectAndLoggedInUser(@Nonnull ProjectId projectId) {
-        logger.log(Level.FINE, "Getting project component for " + projectId + ".  The current project is " + currentClientProjectComponent);
+        logger.info("Getting project component for " + projectId + ".  The current project is " + currentClientProjectComponent);
         if(currentClientProjectComponent.isPresent()) {
             ClientProjectComponent projectComponent = currentClientProjectComponent.get();
             if(isProjectComponentForProject(projectComponent, projectId) && isLastUserSameAsLoggedInUser()) {
                 return projectComponent;
             }
-            logger.log(Level.FINE, "Disposing of project component for " + projectComponent.getProjectId());
+            logger.info("Disposing of project component for " + projectComponent.getProjectId());
             projectComponent.dispose();
         }
         ClientProjectComponent nextProjectComponent = instantiateClientProjectComponent(projectId);
         // Reset project component and user
-        logger.log(Level.FINE, "Instantiating new project component");
+        logger.info("Instantiating new project component");
         lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
         currentClientProjectComponent = Optional.of(nextProjectComponent);
         return nextProjectComponent;
@@ -136,12 +124,11 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     public Activity getActivity(final Place place) {
-        logger.log(Level.FINE, "Map place: " + place);
+        logger.info("Map place: " + place);
         if (shouldRedirectToLogin(place)) {
-            logger.log(Level.FINE, "User is not logged in.  Redirecting to login.");
-            loginPresenter.setNextPlace(place);
+            logger.info("User is not logged in.  Redirecting to login.");
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
-            return new LoginActivity(loginPresenter);
+
         }
         if (place instanceof ApplicationSettingsPlace) {
             return new AdminActivity(applicationSettingsPresenter);
@@ -172,32 +159,17 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         if (place instanceof LoginPlace) {
             if (!loggedInUserProvider.getCurrentUserId().isGuest()) {
-                logger.log(Level.FINE, "Schedule to project list after login.");
+                logger.info("Schedule to project list after login.");
 
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
             else {
-                LoginPlace loginPlace = (LoginPlace) place;
-                Optional<Place> continueTo = loginPlace.getContinueTo();
-                if (continueTo.isPresent()) {
-                    loginPresenter.setNextPlace(continueTo.get());
-                }
-                else {
-                    loginPresenter.setNextPlace(new ProjectListPlace());
-                }
-                return new LoginActivity(loginPresenter);
+                logger.log(Level.SEVERE, "No code for handling login place");
             }
         }
 
-        if (place instanceof SignUpPlace) {
-            SignUpPlace signUpPlace = (SignUpPlace) place;
-            Optional<Place> continueTo = signUpPlace.getContinueTo();
-            continueTo.ifPresent(signUpPresenter::setContinueTo);
-            return new SignUpActivity(signUpPresenter);
-        }
-
         if (place instanceof ProjectListPlace) {
-            logger.log(Level.FINE, "Route to project list activity");
+            logger.info("Route to project list activity");
             return new ProjectListActivity(projectManagerPresenter);
         }
 

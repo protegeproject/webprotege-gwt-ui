@@ -4,12 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY_ANNOTATIONS;
 
 /**
  * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 05/07/2013
@@ -36,7 +36,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
@@ -48,13 +48,13 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
                                                @Nonnull SelectedPathsModel selectedPathsModel,
                                                DispatchServiceManager dispatchServiceManager,
                                                ProjectId projectId,
-                                               LoggedInUserProjectPermissionChecker permissionChecker,
+                                               LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                DisplayNameRenderer displayNameRenderer,
                                                DispatchServiceManager dispatch) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         annotationsView.addValueChangeHandler(event -> handleOntologyAnnotationsChanged());
     }
 
@@ -65,9 +65,9 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         eventBus.addProjectEventHandler(getProjectId(),
                 OntologyFrameChangedEvent.TYPE, event -> updateView());
         eventBus.addProjectEventHandler(getProjectId(),
-                PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                PermissionsChangedEvent.ON_CAPABILITIES_CHANGED,
                 event -> updateState());
-        permissionChecker.hasPermission(BuiltInAction.VIEW_PROJECT, permission -> {
+        capabilityChecker.hasCapability(BuiltInCapability.VIEW_PROJECT, permission -> {
             portletUi.setForbiddenVisible(!permission);
             if (permission) {
                 updateState();
@@ -97,7 +97,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private void updateState() {
         annotationsView.setEnabled(false);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY_ANNOTATIONS, annotationsView::setEnabled);
+        capabilityChecker.hasCapability(EDIT_ONTOLOGY_ANNOTATIONS, annotationsView::setEnabled);
     }
 
     private void handleOntologyAnnotationsChanged() {

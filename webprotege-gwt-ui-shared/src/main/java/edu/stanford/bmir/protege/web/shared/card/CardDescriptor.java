@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
@@ -25,10 +25,10 @@ public abstract class CardDescriptor {
                                         @JsonProperty("color") Color color,
                                         @JsonProperty("backgroundColor") Color backgroundColor,
                                         @JsonProperty("content") EntityCardContentDescriptor contentDescriptor,
-                                        @JsonProperty("requiredReadActions") Set<ActionId> requiredReadActions,
-                                        @JsonProperty("requiredWriteActions") Set<ActionId> requiredWriteActions,
+                                        @JsonProperty("requiredReadCapabilities") Set<Capability> requiredReadCapabilities,
+                                        @JsonProperty("requiredWriteCapabilities") Set<Capability> requiredWriteCapabilities,
                                         @JsonProperty("visibilityCriteria") CompositeRootCriteria criteria) {
-        return new AutoValue_CardDescriptor(cardId, label, color, backgroundColor, contentDescriptor, requiredReadActions, requiredWriteActions, criteria);
+        return new AutoValue_CardDescriptor(cardId, label, color, backgroundColor, contentDescriptor, requiredReadCapabilities, requiredWriteCapabilities, criteria);
     }
 
     @JsonProperty("id")
@@ -75,12 +75,12 @@ public abstract class CardDescriptor {
     public abstract EntityCardContentDescriptor getContentDescriptor();
 
     @Nonnull
-    @JsonProperty("requiredReadActions")
-    public abstract Set<ActionId> getRequiredReadActions();
+    @JsonProperty("requiredReadCapabilities")
+    public abstract Set<Capability> getRequiredReadCapabilities();
 
     @Nonnull
-    @JsonProperty("requiredWriteActions")
-    public abstract Set<ActionId> getRequiredWriteActions();
+    @JsonProperty("requiredWriteCapabilities")
+    public abstract Set<Capability> getRequiredWriteCapabilities();
 
     @Nonnull
     @JsonProperty("visibilityCriteria")

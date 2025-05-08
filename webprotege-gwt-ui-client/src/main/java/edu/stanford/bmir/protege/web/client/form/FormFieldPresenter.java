@@ -78,16 +78,16 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
+        propagateEnabled();
     }
 
     protected FormFieldView start() {
-        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
         view.setId(formFieldDescriptor.getId());
         view.setFormLabel(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getLabel()));
         view.setRequired(formFieldDescriptor.getOptionality());
         view.setHelpText(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getHelp()));
         stackPresenter.start(view.getFormStackContainer());
+        propagateEnabled();
         view.setHeaderClickedHandler(this::toggleExpansionState);
 
         // Update the required value missing display when the value changes
@@ -161,6 +161,14 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         };
     }
 
+    private void propagateEnabled() {
+        if(formFieldDescriptor.isReadOnly() || formFieldDescriptor.getAccessMode().isReadOnly()) {
+            stackPresenter.setEnabled(false);
+        }
+        else {
+            stackPresenter.setEnabled(enabled);
+        }
+    }
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
         checkNotNull(formFieldData);
         if (currentValue.equals(Optional.of(formFieldData))) {

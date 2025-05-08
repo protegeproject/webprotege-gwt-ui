@@ -6,13 +6,13 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityModal;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
 import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
 import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -62,7 +62,7 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
     private final FormStackPresenter formStackPresenter;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final LangTagFilterPresenter langTagFilterPresenter;
@@ -81,14 +81,14 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
                                     @Nonnull EntityFormStackView view,
                                     @Nonnull DispatchServiceManager dispatch,
                                     @Nonnull FormStackPresenter formStackPresenter,
-                                    @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                    @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                     @Nonnull LangTagFilterPresenter langTagFilterPresenter,
                                     @Nonnull DeprecateEntityModal deprecateEntityModal) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatch);
         this.formStackPresenter = checkNotNull(formStackPresenter);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
         this.deprecateEntityModal = deprecateEntityModal;
         this.displayContextManager = new DisplayContextManager(this::fillDisplayContext);
@@ -112,7 +112,7 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
         view.setDeprecateEntityHandler(this::handleDeprecateEntity);
         view.setCancelEditsHandler(this::handleCancelEdits);
 
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, view::setEditButtonVisible);
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, view::setEditButtonVisible);
         setMode(FormMode.READ_ONLY_MODE);
     }
 
@@ -233,7 +233,7 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
     }
 
     private void handleEnterEditMode() {
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> setMode(FormMode.EDIT_MODE));
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, canEdit -> setMode(FormMode.EDIT_MODE));
     }
 
     private void handleApplyEdits() {
@@ -244,7 +244,7 @@ public class EntityFormStackPresenter implements HasDisplayContextBuilder {
     private void applyEdits(@Nonnull OWLEntity entity) {
         // TODO: Offer a commit message
         setMode(FormMode.READ_ONLY_MODE);
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> {
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, canEdit -> {
             if (canEdit) {
                 commitEdits(entity);
             }

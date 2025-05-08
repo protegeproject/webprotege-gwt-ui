@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -58,6 +60,7 @@ public class FormFieldPresenter_TestCase {
                                                                             Repeatability.NON_REPEATABLE,
                                                                             FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                             true,
+                                                                            FormFieldAccessMode.READ_WRITE,
                                                                             ExpansionState.COLLAPSED,
                                                                             helpMap);
 

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -28,8 +28,8 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REVERT_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.REVERT_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
@@ -46,7 +46,7 @@ public class ChangeListPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final Messages messages;
@@ -72,12 +72,12 @@ public class ChangeListPresenter {
     public ChangeListPresenter(@Nonnull ProjectId projectId,
                                @Nonnull ChangeListView view,
                                @Nonnull DispatchServiceManager dispatch,
-                               @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                               @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                @Nonnull Messages messages,
                                @Nonnull MessageBox messageBox) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatch = checkNotNull(dispatch);
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
@@ -140,12 +140,12 @@ public class ChangeListPresenter {
     private void fillView(HasProjectChanges result) {
         Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
-        permissionChecker.hasPermission(VIEW_CHANGES,
-                viewChanges -> {
-                    if (viewChanges) {
-                        insertChangesIntoView(changes);
-                    }
-                });
+        capabilityChecker.hasCapability(VIEW_CHANGES,
+                                        viewChanges -> {
+                                            if (viewChanges) {
+                                                insertChangesIntoView(changes);
+                                            }
+                                        });
     }
 
     private void insertChangesIntoView(Page<ProjectChange> changes) {
@@ -171,8 +171,8 @@ public class ChangeListPresenter {
             view.setHighLevelDescription(projectChange.getSummary());
             view.setRevertRevisionVisible(false);
             if (revertChangesVisible) {
-                permissionChecker.hasPermission(REVERT_CHANGES,
-                        view::setRevertRevisionVisible);
+                capabilityChecker.hasCapability(REVERT_CHANGES,
+                                                view::setRevertRevisionVisible);
             }
             view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
