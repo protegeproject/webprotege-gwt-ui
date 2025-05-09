@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
-import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.Timer;
@@ -8,42 +8,34 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
-import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
-import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.client.entity.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
-import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
-import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
+import edu.stanford.bmir.protege.web.shared.individuals.*;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.pagination.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.*;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_INDIVIDUAL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_INDIVIDUAL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
-import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
@@ -92,6 +84,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private MessageBox messageBox;
 
+    private UuidV4Provider uuidV4Provider;
+
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
                                     @Nonnull ProjectId projectId,
@@ -100,7 +94,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     LoggedInUserProjectCapabilityChecker capabilityChecker,
                                     HierarchyFieldPresenter hierarchyFieldPresenter,
                                     Messages messages,
-                                    @Nonnull CreateEntityPresenter createEntityPresenter, EntityNodeUpdater entityNodeUpdater, MessageBox messageBox) {
+                                    @Nonnull CreateEntityPresenter createEntityPresenter,
+                                    EntityNodeUpdater entityNodeUpdater,
+                                    MessageBox messageBox,
+                                    UuidV4Provider uuidV4Provider) {
         this.projectId = projectId;
         this.selectionModel = selectionModel;
         this.capabilityChecker = capabilityChecker;
@@ -111,6 +108,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         this.createEntityPresenter = createEntityPresenter;
         this.entityNodeUpdater = entityNodeUpdater;
         this.messageBox = messageBox;
+        this.uuidV4Provider = uuidV4Provider;
         this.view.addSelectionHandler(this::handleSelectionChangedInView);
         this.view.setSearchStringChangedHandler(this::handleSearchStringChangedInView);
         this.view.setPageNumberChangedHandler(pageNumber -> updateList());
@@ -123,21 +121,20 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         GWT.log("[IndividualsListPresenter] Started Individuals List");
         container.setWidget(view.asWidget());
         eventBus.addProjectEventHandler(projectId,
-                                        ON_DISPLAY_LANGUAGE_CHANGED,
-                                        event -> setDisplayLanguage(event.getDisplayNameSettings()));
+                ON_DISPLAY_LANGUAGE_CHANGED,
+                event -> setDisplayLanguage(event.getDisplayNameSettings()));
         entityNodeUpdater.start(eventBus, this);
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
         hierarchyFieldPresenter.setHierarchyDescriptor(ClassHierarchyDescriptor.get());
         hierarchyFieldPresenter.start(view.getTypeFieldContainer(), eventBus);
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
-        if(selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {
+        if (selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {
             selectionModel.getSelection()
                     .filter(Entity::isOWLNamedIndividual)
                     .map(Entity::asOWLNamedIndividual)
                     .ifPresent(this::setDisplayedIndividual);
-        }
-        else {
+        } else {
             reset();
         }
     }
@@ -170,8 +167,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         checkNotNull(individual);
         if (isIndividualContainedInView(individual)) {
             setIndividualSelectedInView(individual);
-        }
-        else {
+        } else {
             dsm.execute(getPageContaining(individual), this::handlePageContainingIndividual);
         }
     }
@@ -182,12 +178,12 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void updateList() {
         Optional<PageRequest> pageRequest = Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
-                                                                                        PAGE_SIZE));
+                PAGE_SIZE));
         GetIndividualsAction action = GetIndividualsAction.create(projectId,
-                                                                  currentType,
-                                                                  view.getSearchString(),
-                                                                  view.getRetrievalMode(),
-                                                                  pageRequest);
+                currentType,
+                view.getSearchString(),
+                view.getRetrievalMode(),
+                pageRequest);
         dsm.execute(action, view, result -> {
             Page<EntityNode> page = result.getIndividuals();
             displayPageOfIndividuals(page);
@@ -221,14 +217,12 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         String suffix;
         if (totalIndividuals == 1) {
             suffix = " instance";
-        }
-        else {
+        } else {
             suffix = " instances";
         }
         if (displayedIndividuals == totalIndividuals) {
             view.setStatusMessage(format(displayedIndividuals) + suffix);
-        }
-        else {
+        } else {
             view.setStatusMessage(format(displayedIndividuals) + " of " + format(totalIndividuals) + suffix);
         }
     }
@@ -246,8 +240,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     private void handleCreateIndividuals() {
         OWLClass parent = currentType.orElse(DataFactory.getOWLThing());
         createEntityPresenter.createEntities(NAMED_INDIVIDUAL,
-                                             Optional.of(parent),
-                                             this::handleIndividualsCreated);
+                Optional.of(parent),
+                this::handleIndividualsCreated);
     }
 
     private void handleIndividualsCreated(ImmutableCollection<EntityNode> individuals) {
@@ -271,27 +265,30 @@ public class IndividualsListPresenter implements EntityNodeIndex {
             String browserText = sel.iterator().next().getBrowserText();
             title = messages.delete_entity_title(browserText);
             subMessage = messages.delete_entity_msg("individual", browserText);
-        }
-        else {
+        } else {
             title = messages.delete_entity_title("individuals");
             subMessage = "Are you sure you want to delete " + sel.size() + " individuals?";
         }
         messageBox.showConfirmBox(title,
-                                  subMessage,
-                                  CANCEL, DELETE,
-                                  this::deleteSelectedIndividuals,
-                                  CANCEL);
+                subMessage,
+                CANCEL, DELETE,
+                this::deleteSelectedIndividuals,
+                CANCEL);
     }
 
 
     private void deleteSelectedIndividuals() {
         Collection<EntityNode> selection = view.getSelectedIndividuals();
-        Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
+        ImmutableSet<OWLEntity> entities = view.getSelectedIndividuals().stream()
                 .map(EntityNode::getEntity)
-                .collect(toSet());
-        dsm.execute(new DeleteEntitiesAction(projectId, entities),
-                    view,
-                                       result -> updateList());
+                .collect(toImmutableSet());
+        dsm.execute(new DeleteEntitiesAction(
+                        ChangeRequestId.get(uuidV4Provider.get()),
+                        projectId,
+                        entities
+                ),
+                view,
+                result -> updateList());
     }
 
     private void updateButtonStates() {
