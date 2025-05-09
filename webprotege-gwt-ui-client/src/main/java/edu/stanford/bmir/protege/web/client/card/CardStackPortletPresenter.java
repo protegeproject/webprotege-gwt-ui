@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.card.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -93,6 +94,7 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        setDisplaySelectedEntityNameAsSubtitle(true);
         this.eventBus = Optional.of(eventBus);
         portletUi.setWidget(view);
         tabBarPresenter.setSelectedKeyStash(new SelectedTabIdStash<>(portletUi, new CardIdSerializer()));
@@ -109,7 +111,11 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
 
     private void displayCardsForSelectedEntity() {
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
-        selectedEntity.ifPresent(sel -> retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards));
+        selectedEntity.ifPresent(sel -> {
+            retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards);
+            dispatch.execute(GetEntityRenderingAction.create(getProjectId(), sel),
+                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
+        });
         setNothingSelectedVisible(!selectedEntity.isPresent());
     }
 
