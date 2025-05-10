@@ -23,6 +23,12 @@
             margin-right: 0.3em;
             cursor: pointer;
         }
+        .editableIndicator {
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
         .handle {
             flex-grow: 0;
             flex-shrink: 0;
@@ -50,6 +56,8 @@
     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {style.main}">
         <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
             <g:Label ui:field="label" addStyleNames="{wp.style.formLabel} {style.label}"/>
+            <g:HTML addStyleNames="{style.editableIndicator} {wp.style.editableIcon}" ui:field="editableIcon">
+            </g:HTML>
             <g:HTMLPanel>
                 <g:Image ui:field="expansionHandle"
                          addStyleNames="{style.handle}"/>

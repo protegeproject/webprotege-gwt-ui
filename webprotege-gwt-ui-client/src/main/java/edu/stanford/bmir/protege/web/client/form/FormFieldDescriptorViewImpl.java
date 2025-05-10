@@ -4,12 +4,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
-import edu.stanford.bmir.protege.web.client.permissions.ProjectRoleSelectorPresenter;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
-import edu.stanford.bmir.protege.web.shared.access.RoleId;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionAccessRestriction;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -90,31 +92,26 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     HTMLPanel deprecationStrategyView;
 
     @UiField(provided = true)
-    ValueListEditor<RoleId> viewRolesListEditor;
+    ValueListEditor<RoleCriteriaBinding> viewAccessRestrictionsListEditor;
 
     @UiField(provided = true)
-    ValueListEditor<RoleId> editRolesListEditor;
+    ValueListEditor<RoleCriteriaBinding> editAccessRestrictionsListEditor;
 
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
                                        LanguageMapEditor helpEditor,
-                                       Provider<ProjectRoleSelectorPresenter> projectRoleSelectorPresenterProvider) {
+                                       Provider<FormRegionRoleCriteriaValueEditor> formRegionAccessRestrictionValueEditorProvider) {
         counter.increment();
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
-        this.viewRolesListEditor = new ValueListFlexEditorImpl<>(() -> {
-            ProjectRoleSelectorPresenter presenter = projectRoleSelectorPresenterProvider.get();
-            presenter.start();
-            return presenter;
-        });
-        this.editRolesListEditor = new ValueListFlexEditorImpl<>(() -> {
-            ProjectRoleSelectorPresenter presenter = projectRoleSelectorPresenterProvider.get();
-            presenter.start();
-            return presenter;
-        });
-        this.editRolesListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
-        this.editRolesListEditor.setValue(new ArrayList<>());
-        this.editRolesListEditor.setEnabled(true);
+        ValueEditorFactory<RoleCriteriaBinding> viewCapEditorFactory = formRegionAccessRestrictionValueEditorProvider::get;
+        this.viewAccessRestrictionsListEditor = new ValueListFlexEditorImpl<>(viewCapEditorFactory);
+
+        ValueEditorFactory<RoleCriteriaBinding> editCapEditorFactory = formRegionAccessRestrictionValueEditorProvider::get;
+        this.editAccessRestrictionsListEditor = new ValueListFlexEditorImpl<>(editCapEditorFactory);
+        this.editAccessRestrictionsListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        this.editAccessRestrictionsListEditor.setValue(new ArrayList<>());
+        this.editAccessRestrictionsListEditor.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
         labelEditor.addValueChangeHandler(event -> {
             labelChangedHander.accept(getLabel());
@@ -279,22 +276,22 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     }
 
     @Override
-    public void setViewRolesList(List<RoleId> viewRoles) {
-        viewRolesListEditor.setValue(viewRoles);
+    public void setViewAccessRoles(List<RoleCriteriaBinding> restrictions) {
+        viewAccessRestrictionsListEditor.setValue(restrictions);
     }
 
     @Override
-    public List<RoleId> getViewRolesList() {
-        return viewRolesListEditor.getValue().orElse(Collections.emptyList());
+    public List<RoleCriteriaBinding> getViewAccessRoles() {
+        return viewAccessRestrictionsListEditor.getValue().orElse(Collections.emptyList());
     }
 
     @Override
-    public void setEditRolesList(List<RoleId> editRoles) {
-        editRolesListEditor.setValue(editRoles);
+    public void setEditAccessRoles(List<RoleCriteriaBinding> restrictions) {
+        editAccessRestrictionsListEditor.setValue(restrictions);
     }
 
     @Override
-    public List<RoleId> getEditRolesList() {
-        return editRolesListEditor.getValue().orElse(Collections.emptyList());
+    public List<RoleCriteriaBinding> getEditAccessRoles() {
+        return editAccessRestrictionsListEditor.getValue().orElse(Collections.emptyList());
     }
 }

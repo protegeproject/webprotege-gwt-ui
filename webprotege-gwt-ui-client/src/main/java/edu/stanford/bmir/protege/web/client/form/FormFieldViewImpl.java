@@ -63,6 +63,9 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel content;
 
+    @UiField
+    HTML editableIcon;
+
     @Inject
     public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -176,6 +179,11 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public boolean isExpanded() {
         return content.isVisible();
+    }
+
+    @Override
+    public void setEditableIconVisible(boolean visible) {
+        editableIcon.setVisible(visible);
     }
 
     @Override

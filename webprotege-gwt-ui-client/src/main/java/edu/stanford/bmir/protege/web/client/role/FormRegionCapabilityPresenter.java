@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.match.CriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.FormRegionCapability;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

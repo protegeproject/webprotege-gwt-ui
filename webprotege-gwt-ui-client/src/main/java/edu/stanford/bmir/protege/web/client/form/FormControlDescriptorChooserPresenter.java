@@ -134,4 +134,12 @@ public class FormControlDescriptorChooserPresenter implements FormDescriptorComp
         });
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "FormControlDescriptorChooserPresenter{" +
+               "selectedType=" + view.getFieldType() +
+               ", presenter" + currentFieldPresenter +
+               '}';
+    }
 }

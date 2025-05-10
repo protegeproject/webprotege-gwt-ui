@@ -573,11 +573,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     RoleDefinition _RoleDefinition;
     RoleType _RoleType;
     RoleId _RoleId;
-    FormRegionAccessRestrictions _FormRegionAccessRestrictions;
     GetFormRegionAccessRestrictionsAction _GetFormRegionAccessRestrictionsAction;
     GetFormRegionAccessRestrictionsResult _GetFormRegionAccessRestrictionsResult;
     SetFormRegionAccessRestrictionsAction _SetFormRegionAccessRestrictionsAction;
     SetFormRegionAccessRestrictionsResult _SetFormRegionAccessRestrictionsResult;
+    FormRegionAccessRestriction _FormRegionAccessRestriction;
     FormFieldAccessMode _FormFieldAccessMode;
     GetEntityDirectParentsAction _GetEntityDirectParentsAction;
     GetEntityDirectParentsResult _GetEntityDirectParentsResult;

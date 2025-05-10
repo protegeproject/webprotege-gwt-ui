@@ -18,7 +18,7 @@ public abstract class SetFormRegionAccessRestrictionsAction implements ProjectAc
 
     @JsonCreator
     public static SetFormRegionAccessRestrictionsAction get(@JsonProperty("projectId") ProjectId projectId,
-                                                            @JsonProperty("accessRestrictions") List<FormRegionAccessRestrictions> accessRestrictions) {
+                                                            @JsonProperty("accessRestrictions") List<FormRegionAccessRestriction> accessRestrictions) {
         return new AutoValue_SetFormRegionAccessRestrictionsAction(projectId, accessRestrictions);
     }
 
@@ -28,5 +28,5 @@ public abstract class SetFormRegionAccessRestrictionsAction implements ProjectAc
     public abstract ProjectId getProjectId();
 
     @JsonProperty("accessRestrictions")
-    public abstract List<FormRegionAccessRestrictions> getAccessRestrictions();
+    public abstract List<FormRegionAccessRestriction> getAccessRestrictions();
 }

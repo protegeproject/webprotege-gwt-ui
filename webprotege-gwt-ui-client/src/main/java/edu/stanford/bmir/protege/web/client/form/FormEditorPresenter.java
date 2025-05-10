@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +35,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-12-20
  */
 public class FormEditorPresenter implements Presenter {
+
+    private static final Logger logger = Logger.getLogger(FormEditorPresenter.class.getName());
 
     private final ProjectId projectId;
 
@@ -137,12 +141,16 @@ public class FormEditorPresenter implements Presenter {
             messageBox.showAlert("Please provide a label for this form" );
             return;
         }
-        List<FormRegionAccessRestrictions> accessRestrictions = new ArrayList<>();
-        formDescriptorPresenter.getRegionDescriptorPresenters()
+        List<FormRegionAccessRestriction> accessRestrictions = new ArrayList<>();
+        formDescriptorPresenter.getSubComponentPresenters()
                 .forEach(p -> {
-                    List<FormRegionAccessRestrictions> r = p.getFormRegionAccessRestrictions();
+                    logger.info("Form region descriptor presenter: " + p);
+                    List<FormRegionAccessRestriction> r = p.getFormRegionAccessRestrictions();
                     accessRestrictions.addAll(r);
                 });
+
+        logger.info("Collected access restrictions:");
+        accessRestrictions.forEach(ar -> logger.info("  " + ar));
 
         dispatch.execute(new SetEntityFormDescriptorAction(projectId,
                         formDescriptorPresenter.getFormDescriptor(),

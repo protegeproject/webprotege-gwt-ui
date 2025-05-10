@@ -62,7 +62,6 @@ import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
-import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
@@ -1020,11 +1019,6 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ValueListFlexEditorImpl<RoleId> provideParentRolesEditor(RoleIdValueEditorFactory factory) {
-        return new ValueListFlexEditorImpl<>(factory);
-    }
-
-    @Provides
     FormRegionCapabilityView providerFormRegionCapabilityView(FormRegionCapabilityViewImpl impl) {
         return impl;
     }
@@ -1041,6 +1035,11 @@ public class ClientProjectModule {
 
     @Provides
     CapabilityContextView provideCapabilityContextView(CapabilityContextViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormRegionRoleCriteriaView provideFormRegionAccessRestrictionView(FormRegionRoleCriteriaViewImpl impl) {
         return impl;
     }
 }

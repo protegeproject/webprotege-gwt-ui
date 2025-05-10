@@ -111,7 +111,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         saveExpansionState();
         currentSubject = formData.getSubject();
         this.formId = Optional.of(formData.getFormDescriptor().getFormId());
-        if (currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
+        if (isCurrentForm(formData)) {
             updateFormData(formData);
         }
         else {
@@ -124,6 +124,10 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
+    }
+
+    private boolean isCurrentForm(FormDataDto formData) {
+        return currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()));
     }
 
     public boolean isEnabled() {

@@ -31,6 +31,12 @@ public class CapabilityContextViewImpl extends Composite implements CapabilityCo
         });
     }
 
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        updateView();
+    }
+
     private void updateView() {
         criteriaContainer.setVisible(contextSelectionBox.getSelectedIndex() != 0);
     }
