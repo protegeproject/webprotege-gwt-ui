@@ -44,6 +44,8 @@ public class ObjectListPresenter<T> implements Presenter {
 
     private boolean setDefaultStateCollapsed = false;
 
+    private ObjectListChangedHandler objectListChangedHandler = () -> {};
+
     @Inject
     public ObjectListPresenter(@Nonnull ObjectListView view,
                                @Nonnull Provider<ObjectPresenter<T>> objectListPresenter,
@@ -103,6 +105,7 @@ public class ObjectListPresenter<T> implements Presenter {
 
     public void addValue(T value, boolean focus) {
         ObjectPresenter<T> descriptorPresenter = objectListPresenter.get();
+        customizePresenter(descriptorPresenter);
         objectPresenters.add(descriptorPresenter);
         ObjectListViewHolder viewHolder = objectViewHolderProvider.get();
         viewHolders.add(viewHolder);
@@ -119,19 +122,31 @@ public class ObjectListPresenter<T> implements Presenter {
                 viewHolders.remove(viewHolder);
                 view.removeView(viewHolder);
                 renumberHolders();
+                handleListChanged();
             });
         });
         viewHolder.setMoveUpHandler(() -> {
             moveUp(descriptorPresenter);
             view.moveUp(viewHolder);
+            handleListChanged();
         });
         viewHolder.setMoveDownHandler(() -> {
             moveDown(descriptorPresenter);
             view.moveDown(viewHolder);
+            handleListChanged();
         });
         if(focus) {
             viewHolder.requestFocus();
         }
+        handleListChanged();
+    }
+
+    protected void customizePresenter(ObjectPresenter<T> presenter) {
+
+    }
+
+    private void handleListChanged() {
+        objectListChangedHandler.handleObjectListChanged();
     }
 
     public void moveUp(ObjectPresenter<T> objectPresenter) {

@@ -79,11 +79,6 @@ public class FormDescriptorPresenter implements Presenter, FormDescriptorCompone
         formFieldDescriptorObjectListPresenter.setValues(formDescriptor.getFields());
     }
 
-    public List<FormDescriptorComponentPresenter> getRegionDescriptorPresenters() {
-        List<FormFieldDescriptorPresenter> fieldDescriptorPresenters = formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters();
-        return new ArrayList<>(fieldDescriptorPresenters);
-    }
-
     @Nonnull
     public FormDescriptor getFormDescriptor() {
         LanguageMap label = view.getLabel();
@@ -92,10 +87,11 @@ public class FormDescriptorPresenter implements Presenter, FormDescriptorCompone
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
-        result.addAll(formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters());
-        return result;
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters()
+                .forEach(presenter -> {
+                    FormDescriptorComponentPresenterHierarchyNode presenterNode = thisNode.addChildForPresenter(presenter);
+                    presenter.addChildren(presenterNode);
+                });
     }
 }

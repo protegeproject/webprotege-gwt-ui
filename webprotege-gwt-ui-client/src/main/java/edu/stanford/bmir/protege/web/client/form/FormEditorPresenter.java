@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +34,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-12-20
  */
 public class FormEditorPresenter implements Presenter {
+
+    private static final Logger logger = Logger.getLogger(FormEditorPresenter.class.getName());
 
     private final ProjectId projectId;
 
@@ -91,13 +94,28 @@ public class FormEditorPresenter implements Presenter {
                     formSelectorCriteria
                             .ifPresent(this::setSelector);
                     entityFormSelectorPresenter.setPurpose(result.getPurpose());
-                    dispatch.execute(GetFormRegionAccessRestrictionsAction.get(projectId), result2 -> {
-                        formDescriptorPresenter.getSubComponentPresenters()
-                                .forEach(p -> p.setFormRegionAccessRestrictions(result2.getAccessRestrictions()));
-                    });
+                    setupFormAccessRestrictions();
                 });
 
 
+    }
+
+    private void setupFormAccessRestrictions() {
+        dispatch.execute(GetFormRegionAccessRestrictionsAction.get(projectId), result -> {
+            FormDescriptorComponentPresenterHierarchyNode node = getPresenterHierarchy();
+            StringBuilder stringBuilder = new StringBuilder();
+            node.dump(stringBuilder);
+            logger.info(stringBuilder.toString());
+            node.visit(p -> {
+                p.setFormRegionAccessRestrictions(result.getAccessRestrictions());
+            });
+        });
+    }
+
+    private FormDescriptorComponentPresenterHierarchyNode getPresenterHierarchy() {
+        FormDescriptorComponentPresenterHierarchyNode node = new FormDescriptorComponentPresenterHierarchyNode(formDescriptorPresenter);
+        formDescriptorPresenter.addChildren(node);
+        return node;
     }
 
     private void setSelector(CompositeRootCriteria selectorCriteria) {
@@ -137,12 +155,15 @@ public class FormEditorPresenter implements Presenter {
             messageBox.showAlert("Please provide a label for this form" );
             return;
         }
-        List<FormRegionAccessRestrictions> accessRestrictions = new ArrayList<>();
-        formDescriptorPresenter.getRegionDescriptorPresenters()
-                .forEach(p -> {
-                    List<FormRegionAccessRestrictions> r = p.getFormRegionAccessRestrictions();
-                    accessRestrictions.addAll(r);
-                });
+        List<FormRegionAccessRestriction> accessRestrictions = new ArrayList<>();
+        FormDescriptorComponentPresenterHierarchyNode node = getPresenterHierarchy();
+        node.visit(p -> {
+            List<FormRegionAccessRestriction> restrictions = p.getFormRegionAccessRestrictions();
+            accessRestrictions.addAll(restrictions);
+        });
+
+        logger.info("Collected access restrictions:");
+        accessRestrictions.forEach(ar -> logger.info("  " + ar));
 
         dispatch.execute(new SetEntityFormDescriptorAction(projectId,
                         formDescriptorPresenter.getFormDescriptor(),

@@ -127,7 +127,7 @@ public enum BuiltInCapability {
     private final BasicCapability basicCapability;
 
     BuiltInCapability() {
-        this.basicCapability = new BasicCapability(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name()));
+        this.basicCapability = new BasicCapability(CapabilityId.valueOf(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name())));
     }
 
     public BasicCapability getCapability() {

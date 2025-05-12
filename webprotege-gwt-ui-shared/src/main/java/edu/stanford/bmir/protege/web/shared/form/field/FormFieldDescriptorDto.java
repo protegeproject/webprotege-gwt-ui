@@ -121,4 +121,8 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                 getHelp()
         );
     }
+
+    public boolean isReadWrite() {
+        return getAccessMode().equals(FormFieldAccessMode.READ_WRITE);
+    }
 }

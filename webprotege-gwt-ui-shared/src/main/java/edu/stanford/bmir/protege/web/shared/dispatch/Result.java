@@ -31,9 +31,7 @@ import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.obo.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
@@ -218,6 +216,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class),
         @JsonSubTypes.Type(SaveEntityChildReorderingResult.class),
         @JsonSubTypes.Type(GetEntityDirectParentsResult.class),
+        @JsonSubTypes.Type(SetProjectRoleDefinitionsResult.class),
+        @JsonSubTypes.Type(ResetProjectRoleDefinitionsResult.class),
+        @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),
+        @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

@@ -11,10 +11,8 @@ import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionPresenter;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -91,6 +89,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        LanguageMap label = formFieldDescriptor.getLabel();
+        boolean hasLabel = !label.asMap().isEmpty();
+        view.setEditableIconVisible(hasLabel && enabled && formFieldDescriptor.isReadWrite());
         propagateEnabled();
     }
 
@@ -299,5 +300,13 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     @Override
     public DisplayContextBuilder fillDisplayContextBuilder() {
         return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public String toString() {
+        return "FormFieldPresenter{" +
+               "formRegionId=" + formFieldDescriptor.getId() +
+               ", controlType=" + formFieldDescriptor.getFormControlDescriptor().toFormControlDescriptor().getAssociatedType() +
+               '}';
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.rpc;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
@@ -13,8 +14,8 @@ import com.google.auto.value.AutoValue;
 public abstract class JsonRpcError {
 
     @JsonCreator
-    public static JsonRpcError create(@JsonProperty("code") int code,
-                                      @JsonProperty("message") String message) {
+    public static JsonRpcError create(@JsonProperty("code") @JsonAlias("status") int code,
+                                      @JsonProperty("message") @JsonAlias("error") String message) {
         return new AutoValue_JsonRpcError(code, message);
     }
 

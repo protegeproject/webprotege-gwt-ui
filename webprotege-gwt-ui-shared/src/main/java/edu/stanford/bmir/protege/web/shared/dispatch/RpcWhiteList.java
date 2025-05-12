@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
@@ -570,15 +571,28 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetProjectRoleDefinitionsAction _GetProjectRoleDefinitionsAction;
     GetProjectRoleDefinitionsResult _GetProjectRoleDefinitionsResult;
     RoleDefinition _RoleDefinition;
+    RoleType _RoleType;
     RoleId _RoleId;
-    FormRegionAccessRestrictions _FormRegionAccessRestrictions;
     GetFormRegionAccessRestrictionsAction _GetFormRegionAccessRestrictionsAction;
     GetFormRegionAccessRestrictionsResult _GetFormRegionAccessRestrictionsResult;
     SetFormRegionAccessRestrictionsAction _SetFormRegionAccessRestrictionsAction;
     SetFormRegionAccessRestrictionsResult _SetFormRegionAccessRestrictionsResult;
+    FormRegionAccessRestriction _FormRegionAccessRestriction;
     FormFieldAccessMode _FormFieldAccessMode;
     GetEntityDirectParentsAction _GetEntityDirectParentsAction;
     GetEntityDirectParentsResult _GetEntityDirectParentsResult;
+    SetProjectRoleDefinitionsAction _SetProjectRoleDefinitionsAction;
+    SetProjectRoleDefinitionsResult _SetProjectRoleDefinitionsResult;
+    ResetProjectRoleDefinitionsAction _ResetProjectRoleDefinitionsAction;
+    ResetProjectRoleDefinitionsResult _ResetProjectRoleDefinitionsResult;
+    ProjectRoleAssignments _ProjectRoleAssignments;
+    ProjectUserRoleAssignment _ProjectUserRoleAssignment;
+    GetProjectRoleAssignmentsAction _GetProjectRoleAssignmentsAction;
+    GetProjectRoleAssignmentsResult _GetProjectRoleAssignmentsResult;
+    SetProjectRoleAssignmentsAction _SetProjectRoleAssignmentsAction;
+    SetProjectRoleAssignmentsResult _SetProjectRoleAssignmentsResult;
+    CapabilityId _CapabilityId;
+
 
     public RpcWhiteList() {
     }

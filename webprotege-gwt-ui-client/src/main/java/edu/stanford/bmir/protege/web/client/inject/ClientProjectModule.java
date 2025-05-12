@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
@@ -47,6 +48,7 @@ import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRender
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.role.*;
 import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
@@ -59,11 +61,13 @@ import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.RoleDefinition;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -981,6 +985,61 @@ public class ClientProjectModule {
 
     @Provides
     DirectParentView provideDirectParentView(DirectParentViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    ProjectRolesView provideProjectRolesView(ProjectRolesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CapabilityPresenterSelectorView provideCapabilityPresenterSelectorView(CapabilityPresenterSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    BasicCapabilityView provideBasicCapabilityView(BasicCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RoleDefinitionView provideProjectRoleView(RoleDefinitionViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPresenter<RoleDefinition>  providesRoleDefinitionPresenter(RoleDefinitionPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ValueListFlexEditorImpl<Capability> provideCapabilitiesEditor(CapabilityValueEditorFactory factory) {
+        return new ValueListFlexEditorImpl<>(factory);
+    }
+
+    @Provides
+    FormRegionCapabilityView providerFormRegionCapabilityView(FormRegionCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ParentRoleSelectorView parentRoleSelectorView(ParentRoleSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectRoleAssignmentsView provideRoleAssignmentsView(ProjectRoleAssignmentsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CapabilityContextView provideCapabilityContextView(CapabilityContextViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormRegionRoleCriteriaView provideFormRegionAccessRestrictionView(FormRegionRoleCriteriaViewImpl impl) {
         return impl;
     }
 }
