@@ -5,6 +5,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.WebProtege;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 
 import javax.inject.Inject;
@@ -75,5 +77,10 @@ public class FormViewImpl extends Composite implements FormView {
             return;
         }
         elementViews.get(0).requestFocus();
+    }
+
+    @Override
+    public void clearStyle() {
+        holder.removeStyleName(WebProtegeClientBundle.BUNDLE.style().form());
     }
 }

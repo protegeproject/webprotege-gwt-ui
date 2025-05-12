@@ -72,7 +72,7 @@ public class TextControlDescriptorPresenter implements FormControlDescriptorPres
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        return Collections.singletonList(this);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        // Nothing to do
     }
 }

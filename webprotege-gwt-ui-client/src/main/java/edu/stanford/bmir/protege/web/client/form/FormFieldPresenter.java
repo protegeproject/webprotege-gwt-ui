@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -78,6 +80,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        LanguageMap label = formFieldDescriptor.getLabel();
+        boolean hasLabel = !label.asMap().isEmpty();
+        view.setEditableIconVisible(hasLabel && enabled && formFieldDescriptor.isReadWrite());
         propagateEnabled();
     }
 
@@ -292,4 +297,12 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         context.setFormFieldId(getFormRegionId());
     }
 
+
+    @Override
+    public String toString() {
+        return "FormFieldPresenter{" +
+               "formRegionId=" + formFieldDescriptor.getId() +
+               ", controlType=" + formFieldDescriptor.getFormControlDescriptor().toFormControlDescriptor().getAssociatedType() +
+               '}';
+    }
 }

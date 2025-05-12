@@ -125,13 +125,19 @@ public class FormControlDescriptorChooserPresenter implements FormDescriptorComp
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
         currentFieldPresenter.ifPresent(p -> {
-            result.add(p);
-            result.addAll(p.getSubComponentPresenters());
+            FormDescriptorComponentPresenterHierarchyNode presenterNode = new FormDescriptorComponentPresenterHierarchyNode(p);
+            thisNode.addChild(presenterNode);
+            p.addChildren(presenterNode);
         });
-        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "FormControlDescriptorChooserPresenter{" +
+               "selectedType=" + view.getFieldType() +
+               ", presenter" + currentFieldPresenter +
+               '}';
     }
 }

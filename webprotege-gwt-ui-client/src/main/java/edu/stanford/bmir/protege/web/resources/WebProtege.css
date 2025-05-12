@@ -672,3 +672,9 @@
     margin-top: 1px;
     margin-bottom: 1px;
 }
+
+.wp-editable-icon {
+    mask-image: editorIconUrl;
+    mask-repeat: no-repeat;
+    background-color: literal("var(--create--color)");
+}

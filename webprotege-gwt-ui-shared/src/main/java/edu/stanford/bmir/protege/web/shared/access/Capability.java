@@ -17,7 +17,7 @@ public interface Capability {
      * Gets the identifier of this capability
      * @return A string that represents the identifier of this capability
      */
-    @JsonProperty
+    @JsonProperty("id")
     @Nonnull
-    String getId();
+    CapabilityId getId();
 }

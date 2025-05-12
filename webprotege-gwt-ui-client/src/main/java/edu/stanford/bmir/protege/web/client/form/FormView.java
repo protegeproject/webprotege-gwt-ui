@@ -20,4 +20,6 @@ public interface FormView extends IsWidget {
     void clear();
 
     void requestFocus();
+
+    void clearStyle();
 }

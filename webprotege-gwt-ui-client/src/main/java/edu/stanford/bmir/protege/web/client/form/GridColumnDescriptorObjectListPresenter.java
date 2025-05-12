@@ -33,17 +33,13 @@ public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
         getObjectPresenters()
                 .stream()
-                .filter(p -> p instanceof FormDescriptorComponentPresenter)
-                .map(p -> (FormDescriptorComponentPresenter) p)
-                .forEach(p -> {
-                    result.add(p);
-                    result.addAll(p.getSubComponentPresenters());
+                .map(presenter -> (GridColumnDescriptorPresenter) presenter)
+                .forEach(presenter -> {
+                    FormDescriptorComponentPresenterHierarchyNode presenterNode = thisNode.addChildForPresenter(presenter);
+                    presenter.addChildren(presenterNode);
                 });
-        return result;
     }
 }

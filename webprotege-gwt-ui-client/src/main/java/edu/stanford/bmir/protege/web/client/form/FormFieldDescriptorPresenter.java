@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.SetMultimap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
-import edu.stanford.bmir.protege.web.shared.access.RoleId;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionAccessRestrictions;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionAccessRestriction;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -15,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -147,36 +145,51 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        return Arrays.asList(this, fieldDescriptorChooserPresenter);
-    }
-
-    @Override
-    public List<FormRegionAccessRestrictions> getFormRegionAccessRestrictions() {
-        List<FormRegionAccessRestrictions> result = new ArrayList<>();
+    public List<FormRegionAccessRestriction> getFormRegionAccessRestrictions() {
+        List<FormRegionAccessRestriction> result = new ArrayList<>();
         formFieldId.ifPresent(id -> {
-            SetMultimap<String, RoleId> capabilitiesByRole = HashMultimap.create();
-            capabilitiesByRole.putAll("ViewFormRegion", view.getViewRolesList());
-            capabilitiesByRole.putAll("EditFormRegion", view.getEditRolesList());
-            result.add(FormRegionAccessRestrictions.get(id, capabilitiesByRole));
+            view.getViewAccessRoles().forEach(r -> {
+                FormRegionAccessRestriction accessRestriction = FormRegionAccessRestriction.get(id, r.getRoleId(), CapabilityId.valueOf("ViewFormRegion"), r.getCriteria());
+                result.add(accessRestriction);
+            });
+            view.getEditAccessRoles().forEach(r -> {
+                FormRegionAccessRestriction accessRestriction = FormRegionAccessRestriction.get(id, r.getRoleId(), CapabilityId.valueOf("EditFormRegion"), r.getCriteria());
+                result.add(accessRestriction);
+            });
         });
         return result;
     }
 
     @Override
-    public void setFormRegionAccessRestrictions(List<FormRegionAccessRestrictions> formRegionAccessRestrictions) {
-        Set<RoleId> viewRoles = new HashSet<>();
-        Set<RoleId> editRoles = new HashSet<>();
+    public void setFormRegionAccessRestrictions(List<FormRegionAccessRestriction> formRegionAccessRestrictions) {
         formFieldId.ifPresent(id -> {
-            formRegionAccessRestrictions.stream()
+            List<RoleCriteriaBinding> viewRoles = formRegionAccessRestrictions.stream()
                     .filter(r -> r.getFormRegionId().equals(id))
-                    .forEach(r -> {
-                        Multimap<String, RoleId> roles = r.getCapabilityRoles();
-                        viewRoles.addAll(roles.get("ViewFormRegion"));
-                        editRoles.addAll(roles.get("EditFormRegion"));
-                    });
+                    .filter(r -> r.getCapabilityId().equals(CapabilityId.valueOf("ViewFormRegion")))
+                    .map(r -> RoleCriteriaBinding.get(r.getRoleId(), r.getContextCriteria()))
+                    .collect(Collectors.toList());
+            view.setViewAccessRoles(viewRoles);
+
+            List<RoleCriteriaBinding> editRoles = formRegionAccessRestrictions.stream()
+                    .filter(r -> r.getFormRegionId().equals(id))
+                    .filter(r -> r.getCapabilityId().equals(CapabilityId.valueOf("EditFormRegion")))
+                    .map(r -> RoleCriteriaBinding.get(r.getRoleId(), r.getContextCriteria()))
+                    .collect(Collectors.toList());
+            view.setEditAccessRoles(editRoles);
         });
-        view.setViewRolesList(new ArrayList<>(viewRoles));
-        view.setEditRolesList(new ArrayList<>(editRoles));
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode chooserNode = thisNode.addChildForPresenter(fieldDescriptorChooserPresenter);
+        fieldDescriptorChooserPresenter.addChildren(chooserNode);
+    }
+
+    @Override
+    public String toString() {
+        return "FormFieldDescriptorPresenter{" +
+               "formFieldId=" + formFieldId +
+               ", label=" + view.getLabel().asMap() +
+               '}';
     }
 }
