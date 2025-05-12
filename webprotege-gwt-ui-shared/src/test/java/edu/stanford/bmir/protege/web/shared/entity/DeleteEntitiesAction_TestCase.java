@@ -1,21 +1,21 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DeleteEntitiesAction_TestCase {
 
     private DeleteEntitiesAction deleteEntitiesAction;
@@ -23,18 +23,18 @@ public class DeleteEntitiesAction_TestCase {
     @Mock
     private ProjectId projectId;
 
-    private Set<OWLEntity> entities = new HashSet<>();
+    private ImmutableSet<OWLEntityData> entities;
 
     @Before
     public void setUp() {
-        entities.add(mock(OWLEntity.class));
-        deleteEntitiesAction = new DeleteEntitiesAction(projectId, entities);
+        entities = ImmutableSet.of(mock(OWLEntityData.class));
+        deleteEntitiesAction = new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entities);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new DeleteEntitiesAction(null, entities);
+        new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), null, entities);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class DeleteEntitiesAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entities_IsNull() {
-        new DeleteEntitiesAction(projectId, null);
+        new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, null);
     }
 
     @Test
@@ -66,22 +66,22 @@ public class DeleteEntitiesAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(deleteEntitiesAction, is(new DeleteEntitiesAction(projectId, entities)));
+        assertThat(deleteEntitiesAction, is(new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entities)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(deleteEntitiesAction, is(not(new DeleteEntitiesAction(mock(ProjectId.class), entities))));
+        assertThat(deleteEntitiesAction, is(not(new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), mock(ProjectId.class), entities))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entities() {
-        assertThat(deleteEntitiesAction, is(not(new DeleteEntitiesAction(projectId, new HashSet<>()))));
+        assertThat(deleteEntitiesAction, is(not(new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, ImmutableSet.of()))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(deleteEntitiesAction.hashCode(), is(new DeleteEntitiesAction(projectId, entities).hashCode()));
+        assertThat(deleteEntitiesAction.hashCode(), is(new DeleteEntitiesAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entities).hashCode()));
     }
 
     @Test
