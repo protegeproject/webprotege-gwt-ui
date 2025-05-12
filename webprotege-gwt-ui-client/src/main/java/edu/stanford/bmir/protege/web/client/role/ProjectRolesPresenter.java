@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @ProjectSingleton
 public class ProjectRolesPresenter implements Presenter {
 
-    private static final Logger logger = Logger.getLogger(ProjectRolesPresenter.class.getName());
+    Logger logger = java.util.logging.Logger.getLogger("ProjectRolesPresenter");
 
     private final ProjectId projectId;
 
@@ -102,7 +102,7 @@ public class ProjectRolesPresenter implements Presenter {
 
     private void displayProjectRoles(AcceptsOneWidget container, EventBus eventBus) {
         settingsPresenter.setApplySettingsHandler(() -> {
-            logger.info(roleDefinitionsObjectListPresenter.getValues().toString());
+            logger.info("Setting role definitions " + roleDefinitionsObjectListPresenter.getValues());
             dispatch.execute(SetProjectRoleDefinitionsAction.get(projectId, roleDefinitionsObjectListPresenter.getValues()),
                     result -> {
                     });
