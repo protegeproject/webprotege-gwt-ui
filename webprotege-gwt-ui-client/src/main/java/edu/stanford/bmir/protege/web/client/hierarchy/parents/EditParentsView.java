@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy.parents;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
@@ -15,7 +15,7 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     void setEntityParents(Set<OWLEntityData> entityParents);
 
-    boolean isReasonForChangeSet();
+    void setParentsFromEquivalentClasses(Set<OWLEntityData> entityParents);
 
     void clear();
 
@@ -35,4 +35,8 @@ public interface EditParentsView extends IsWidget, HasBusy {
     void clearLinearizationPathParentErrors();
 
     void markLinearizationPathParent(String linearizationPathParents);
+
+    IsWidget getHelpTooltip();
+
+    boolean isValid();
 }

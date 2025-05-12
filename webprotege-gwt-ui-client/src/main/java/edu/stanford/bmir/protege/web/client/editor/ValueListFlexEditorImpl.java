@@ -76,6 +76,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     private EventRemover focusOutEventRemover = () -> {
     };
 
+
+    // Flag to control whether the "at least one value" behavior is active.
+    private boolean enforceMinOneValue = false;
+
     public ValueListFlexEditorImpl(ValueEditorFactory<O> valueEditorFactory) {
         this.valueEditorFactory = valueEditorFactory;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -336,6 +340,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         }
         currentEditors.remove(editor);
         container.remove(index);
+        updateEnabled();
         return index;
     }
 
@@ -443,8 +448,49 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         if(newRowMode == NewRowMode.MANUAL) {
             addButton.setVisible(enabled);
         }
+        if(enforceMinOneValue) {
+            updateDeleteButtonStateByValue();
+        }
         ensureBlank();
     }
+
+
+    public void setEnforceMinOneValue(boolean enforce) {
+        this.enforceMinOneValue = enforce;
+        if(enforce){
+            updateDeleteButtonStateByValue();
+        }
+    }
+
+    public void updateDeleteButtonStateByValue() {
+        int nonEmptyCount = 0;
+        int emptyCount = 0;
+        // Count the non-empty and empty editors
+        for (ValueEditor<O> editor : currentEditors) {
+            if (editor.getValue().isPresent()) {
+                nonEmptyCount++;
+            } else {
+                emptyCount++;
+            }
+        }
+
+        // Iterate over each container row and adjust its delete button
+        for (int i = 0; i < container.getWidgetCount(); i++) {
+            ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(i);
+            boolean isPopulated = currentEditors.get(i).getValue().isPresent();
+            if (isPopulated) {
+                // For a populated row, enable delete only if there's more than one populated editor.
+                editorContainer.setDeleteButtonVisible(nonEmptyCount > 1);
+            } else {
+                // For an empty row, enable delete only if there’s more than one empty editor.
+                // In AUTOMATIC mode this means the lone empty row remains undeletable.
+                editorContainer.setDeleteButtonVisible(emptyCount > 1);
+            }
+        }
+    }
+
+
+
 
     interface ValueListInlineEditorImplUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorImpl> {
 

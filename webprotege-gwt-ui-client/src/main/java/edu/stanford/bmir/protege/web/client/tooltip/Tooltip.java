@@ -74,7 +74,11 @@ public class Tooltip {
         TooltipOptions options = new TooltipOptions();
         options.setTitle(title);
         options.setPlacement("top");
-        options.setContainer(Browser.getDocument().getBody());
+        if (element.getParentElement() != null) {
+            options.setContainer(element.getParentElement());
+        } else {
+            options.setContainer(Browser.getDocument().getBody());
+        }
         return new Tooltip(element, options);
     }
 
