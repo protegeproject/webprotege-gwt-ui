@@ -279,8 +279,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void deleteSelectedIndividuals() {
         Collection<EntityNode> selection = view.getSelectedIndividuals();
-        ImmutableSet<OWLEntity> entities = view.getSelectedIndividuals().stream()
-                .map(EntityNode::getEntity)
+        ImmutableSet<OWLEntityData> entities = view.getSelectedIndividuals().stream()
+                .map(EntityNode::getEntityData)
                 .collect(toImmutableSet());
         dsm.execute(new DeleteEntitiesAction(
                         ChangeRequestId.get(uuidV4Provider.get()),

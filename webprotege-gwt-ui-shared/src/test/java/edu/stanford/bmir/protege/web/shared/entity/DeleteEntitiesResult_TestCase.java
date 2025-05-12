@@ -1,34 +1,26 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import com.google.common.collect.ImmutableSet;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DeleteEntitiesResult_TestCase {
 
     private DeleteEntitiesResult deleteEntitiesResult;
 
-    private Set<OWLEntity> deletedEntities;
+    private ImmutableSet<OWLEntityData> deletedEntities;
 
     @Before
     public void setUp() {
-        deletedEntities = new HashSet<>();
-        deletedEntities.add(mock(OWLEntity.class));
+        deletedEntities = ImmutableSet.of(mock(OWLEntityData.class));
         deleteEntitiesResult = new DeleteEntitiesResult(deletedEntities);
     }
 
@@ -61,7 +53,7 @@ public class DeleteEntitiesResult_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_deletedEntities() {
-        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(new HashSet<>()))));
+        assertThat(deleteEntitiesResult, is(not(new DeleteEntitiesResult(ImmutableSet.of()))));
     }
 
     @Test

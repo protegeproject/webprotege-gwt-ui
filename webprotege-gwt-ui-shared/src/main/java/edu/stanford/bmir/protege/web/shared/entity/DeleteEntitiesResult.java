@@ -1,24 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.auto.value.AutoValue;
-import com.google.common.annotations.GwtCompatible;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -28,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.entities.DeleteEntities")
 public class DeleteEntitiesResult implements Result {
 
-    private Set<OWLEntity> deletedEntities;
+    private ImmutableSet<OWLEntityData> deletedEntities;
 
     @GwtSerializationConstructor
     private DeleteEntitiesResult() {
@@ -36,14 +26,13 @@ public class DeleteEntitiesResult implements Result {
 
 
     @JsonCreator
-    public DeleteEntitiesResult(@JsonProperty("deletedEntities") @Nonnull Set<OWLEntity> deletedEntities) {
-        this.deletedEntities = new HashSet<>(deletedEntities);
+    public DeleteEntitiesResult(@JsonProperty("deletedEntities") @Nonnull ImmutableSet<OWLEntityData> deletedEntities) {
+        this.deletedEntities = deletedEntities;
     }
 
 
-
-    public Set<OWLEntity> getDeletedEntities() {
-        return new HashSet<>(deletedEntities);
+    public ImmutableSet<OWLEntityData> getDeletedEntities() {
+        return deletedEntities;
     }
 
     @Override

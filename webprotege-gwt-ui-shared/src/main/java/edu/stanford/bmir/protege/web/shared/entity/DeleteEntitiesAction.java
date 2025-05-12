@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +25,7 @@ public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult>
 
     private ProjectId projectId;
 
-    private ImmutableSet<OWLEntity> entities;
+    private ImmutableSet<OWLEntityData> entities;
 
     @GwtSerializationConstructor
     private DeleteEntitiesAction() {
@@ -34,9 +33,9 @@ public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult>
 
     @JsonCreator
     public DeleteEntitiesAction(
-            @JsonProperty("projectId") @Nonnull ChangeRequestId changeRequestId,
+            @JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
             @JsonProperty("projectId") @Nonnull ProjectId projectId,
-            @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntity> entities) {
+            @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntityData> entities) {
         this.changeRequestId = changeRequestId;
         this.entities = entities;
         this.projectId = checkNotNull(projectId);
@@ -52,7 +51,7 @@ public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult>
         return projectId;
     }
 
-    public ImmutableSet<OWLEntity> getEntities() {
+    public ImmutableSet<OWLEntityData> getEntities() {
         return entities;
     }
 

@@ -123,7 +123,7 @@ public class DeleteEntitiesPresenter {
     private void deleteEntity(@Nonnull Set<OWLEntityData> entities,
                               @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
         treeWidget.moveSelectionDown();
-        ImmutableSet<OWLEntity> entitiesToDelete = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
+        ImmutableSet<OWLEntityData> entitiesToDelete = entities.stream().collect(toImmutableSet());
         dispatchServiceManager.execute(
                 new DeleteEntitiesAction(
                         ChangeRequestId.get(uuidV4Provider.get()),
