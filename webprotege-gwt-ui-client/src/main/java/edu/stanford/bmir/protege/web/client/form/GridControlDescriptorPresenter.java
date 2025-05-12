@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -72,17 +73,10 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
-        columnListPresenter.getObjectPresenters()
-                .stream()
-                .filter(p -> p instanceof FormDescriptorComponentPresenter)
-                .map(p -> (FormDescriptorComponentPresenter) p)
-                .forEach(p -> {
-                    result.add(p);
-                    result.addAll(p.getSubComponentPresenters());
-                });
-        return result;
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        List<ObjectPresenter<GridColumnDescriptor>> objectPresenters = columnListPresenter.getObjectPresenters();
+        objectPresenters.stream()
+                .map(op -> (GridColumnDescriptorPresenter) op)
+                .forEach(pr -> pr.addChildren(thisNode));
     }
 }

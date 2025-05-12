@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
@@ -95,13 +94,28 @@ public class FormEditorPresenter implements Presenter {
                     formSelectorCriteria
                             .ifPresent(this::setSelector);
                     entityFormSelectorPresenter.setPurpose(result.getPurpose());
-                    dispatch.execute(GetFormRegionAccessRestrictionsAction.get(projectId), result2 -> {
-                        formDescriptorPresenter.getSubComponentPresenters()
-                                .forEach(p -> p.setFormRegionAccessRestrictions(result2.getAccessRestrictions()));
-                    });
+                    setupFormAccessRestrictions();
                 });
 
 
+    }
+
+    private void setupFormAccessRestrictions() {
+        dispatch.execute(GetFormRegionAccessRestrictionsAction.get(projectId), result -> {
+            FormDescriptorComponentPresenterHierarchyNode node = getPresenterHierarchy();
+            StringBuilder stringBuilder = new StringBuilder();
+            node.dump(stringBuilder);
+            logger.info(stringBuilder.toString());
+            node.visit(p -> {
+                p.setFormRegionAccessRestrictions(result.getAccessRestrictions());
+            });
+        });
+    }
+
+    private FormDescriptorComponentPresenterHierarchyNode getPresenterHierarchy() {
+        FormDescriptorComponentPresenterHierarchyNode node = new FormDescriptorComponentPresenterHierarchyNode(formDescriptorPresenter);
+        formDescriptorPresenter.addChildren(node);
+        return node;
     }
 
     private void setSelector(CompositeRootCriteria selectorCriteria) {
@@ -142,12 +156,11 @@ public class FormEditorPresenter implements Presenter {
             return;
         }
         List<FormRegionAccessRestriction> accessRestrictions = new ArrayList<>();
-        formDescriptorPresenter.getSubComponentPresenters()
-                .forEach(p -> {
-                    logger.info("Form region descriptor presenter: " + p);
-                    List<FormRegionAccessRestriction> r = p.getFormRegionAccessRestrictions();
-                    accessRestrictions.addAll(r);
-                });
+        FormDescriptorComponentPresenterHierarchyNode node = getPresenterHierarchy();
+        node.visit(p -> {
+            List<FormRegionAccessRestriction> restrictions = p.getFormRegionAccessRestrictions();
+            accessRestrictions.addAll(restrictions);
+        });
 
         logger.info("Collected access restrictions:");
         accessRestrictions.forEach(ar -> logger.info("  " + ar));

@@ -96,7 +96,9 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        return Arrays.asList(this, fieldDescriptorChooserPresenter);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode chooserPresenterNode =  new FormDescriptorComponentPresenterHierarchyNode(fieldDescriptorChooserPresenter);
+        thisNode.addChild(chooserPresenterNode);
+        fieldDescriptorChooserPresenter.addChildren(thisNode);
     }
 }

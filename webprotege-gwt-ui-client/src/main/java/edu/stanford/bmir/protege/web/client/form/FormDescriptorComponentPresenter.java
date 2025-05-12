@@ -7,10 +7,7 @@ import java.util.List;
 
 public interface FormDescriptorComponentPresenter {
 
-    /**
-     * Returns a list containing this presenter and all descendant component presenters.
-     */
-    List<FormDescriptorComponentPresenter> getSubComponentPresenters();
+    void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode);
 
     default List<FormRegionAccessRestriction> getFormRegionAccessRestrictions() {
         return Collections.emptyList();

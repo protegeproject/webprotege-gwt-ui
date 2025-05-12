@@ -87,14 +87,11 @@ public class FormDescriptorPresenter implements Presenter, FormDescriptorCompone
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
         formFieldDescriptorObjectListPresenter.getFormFieldDescriptorPresenters()
-                        .forEach(p -> {
-                            result.add(p);
-                            result.addAll(p.getSubComponentPresenters());
-                        });
-        return result;
+                .forEach(presenter -> {
+                    FormDescriptorComponentPresenterHierarchyNode presenterNode = thisNode.addChildForPresenter(presenter);
+                    presenter.addChildren(presenterNode);
+                });
     }
 }

@@ -40,6 +40,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     @Nonnull
     private final NoFormView noFormView;
 
+    private boolean displayNoFormViewIfEmpty = true;
+
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -97,6 +99,10 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         fieldPresenters.forEach(FormFieldPresenter::clearValue);
     }
 
+    public void clearStyle() {
+        formView.clearStyle();
+    }
+
     public void collapseAll() {
         fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.COLLAPSED));
     }
@@ -118,7 +124,11 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
             createFormAndSetFormData(formData);
         }
         if (formData.getFormDescriptor().getFields().isEmpty()) {
-            container.ifPresent(c -> c.setWidget(noFormView));
+            container.ifPresent(c -> {
+                if (displayNoFormViewIfEmpty) {
+                    c.setWidget(noFormView);
+                }
+            });
         }
         else {
             container.ifPresent(c -> c.setWidget(formView));
@@ -193,7 +203,11 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
         fieldPresenters.clear();
         formView.clear();
         currentFormDescriptor = Optional.empty();
-        container.ifPresent(c -> c.setWidget(noFormView));
+        container.ifPresent(c -> {
+            if (displayNoFormViewIfEmpty) {
+                c.setWidget(noFormView);
+            }
+        });
     }
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
@@ -305,7 +319,9 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
      */
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
-        container.setWidget(noFormView);
+        if (displayNoFormViewIfEmpty) {
+            container.setWidget(noFormView);
+        }
     }
 
     public Stream<FormRegionOrdering> getOrderings() {
@@ -347,5 +363,9 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
     @Override
     public DisplayContextBuilder fillDisplayContextBuilder() {
         return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    public void setDisplayNoFormViewIfEmpty(boolean b) {
+        displayNoFormViewIfEmpty = b;
     }
 }

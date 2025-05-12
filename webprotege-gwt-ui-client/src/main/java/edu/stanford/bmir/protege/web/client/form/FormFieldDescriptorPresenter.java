@@ -145,11 +145,6 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        return Arrays.asList(this, fieldDescriptorChooserPresenter);
-    }
-
-    @Override
     public List<FormRegionAccessRestriction> getFormRegionAccessRestrictions() {
         List<FormRegionAccessRestriction> result = new ArrayList<>();
         formFieldId.ifPresent(id -> {
@@ -182,6 +177,12 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                     .collect(Collectors.toList());
             view.setEditAccessRoles(editRoles);
         });
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode chooserNode = thisNode.addChildForPresenter(fieldDescriptorChooserPresenter);
+        fieldDescriptorChooserPresenter.addChildren(chooserNode);
     }
 
     @Override

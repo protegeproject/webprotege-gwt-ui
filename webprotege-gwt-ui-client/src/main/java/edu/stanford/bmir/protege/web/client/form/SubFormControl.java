@@ -47,6 +47,8 @@ public class SubFormControl implements FormControl {
         formPresenter.start(container);
         formPresenter.setFormDataChangedHandler(this::handleFormDataChanged);
         formPresenter.clear();
+        formPresenter.clearStyle();
+        formPresenter.setDisplayNoFormViewIfEmpty(false);
     }
 
     @Override

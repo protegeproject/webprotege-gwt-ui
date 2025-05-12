@@ -82,10 +82,9 @@ public class SubFormControlDescriptorPresenter implements FormControlDescriptorP
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        List<FormDescriptorComponentPresenter> result = new ArrayList<>();
-        result.add(this);
-        result.addAll(subFormPresenter.getSubComponentPresenters());
-        return result;
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode subFormPresenterNode = new FormDescriptorComponentPresenterHierarchyNode(subFormPresenter);
+        thisNode.addChild(subFormPresenterNode);
+        subFormPresenter.addChildren(subFormPresenterNode);
     }
 }
