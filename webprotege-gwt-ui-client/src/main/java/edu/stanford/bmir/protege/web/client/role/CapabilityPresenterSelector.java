@@ -27,10 +27,12 @@ public class CapabilityPresenterSelector {
     @Inject
     public CapabilityPresenterSelector(BasicCapabilityPresenterFactory f0,
                                        FormRegionCapabilityPresenterFactory f1,
+                                       LinearizationRowsCapabilityPresenterFactory f2,
                                        CapabilityPresenterSelectorView view) {
         this.view = view;
         capabilityPresenterFactories.add(f0);
         capabilityPresenterFactories.add(f1);
+        capabilityPresenterFactories.add(f2);
         capabilityPresenterFactories.forEach(pf -> {
             view.addTypeId(pf.getTypeId(), pf.getLabel());
         });

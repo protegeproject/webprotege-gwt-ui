@@ -1108,6 +1108,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    LinearizationRowsCapabilityView providerLinearizationRowsCapabilityView(LinearizationRowsCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ParentRoleSelectorView parentRoleSelectorView(ParentRoleSelectorViewImpl impl) {
         return impl;
     }

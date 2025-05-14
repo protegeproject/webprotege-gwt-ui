@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
 @JsonSubTypes({
         @JsonSubTypes.Type(BasicCapability.class),
         @JsonSubTypes.Type(GenericParameterizedCapability.class),
-        @JsonSubTypes.Type(FormRegionCapability.class)
+        @JsonSubTypes.Type(FormRegionCapability.class),
+        @JsonSubTypes.Type(LinearizationRowsCapability.class)
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public interface Capability {
