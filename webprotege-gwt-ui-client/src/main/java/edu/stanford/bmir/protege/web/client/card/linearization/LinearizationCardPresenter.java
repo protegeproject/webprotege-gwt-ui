@@ -54,13 +54,6 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         ui.setWidget(view);
-        dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
-            for (LinearizationDefinition definition : result.getDefinitionList()) {
-                this.definitionMap.put(definition.getLinearizationUri(), definition);
-            }
-            view.setLinearizationDefinitonMap(this.definitionMap);
-        });
-        this.view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -78,25 +71,33 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
         if (entity != null) {
             this.entityParentsMap.clear();
-            dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
-
-                this.view.dispose();
-                if (response.getWhoficEntityLinearizationSpecification() != null &&
-                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
-
-                    dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), result -> {
-                        if (result.getParents() != null) {
-                            result.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
-                        }
-                        view.dispose();
-                        view.setEntityParentsMap(this.entityParentsMap);
-                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-                        view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
-                        pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
-                        fireEvent(new DirtyChangedEvent());
-                    });
+            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(),projectId), linearizationDefResult -> {
+                for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
+                    this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
+                view.setLinearizationDefinitonMap(this.definitionMap);
+
+                dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
+
+                    this.view.dispose();
+                    if (response.getWhoficEntityLinearizationSpecification() != null &&
+                            response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
+
+                        dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
+                            if (hierarchyParentsResult.getParents() != null) {
+                                hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
+                            }
+                            view.dispose();
+                            view.setEntityParentsMap(this.entityParentsMap);
+                            view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                            view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
+                            pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
+                            fireEvent(new DirtyChangedEvent());
+                        });
+                    }
+                });
             });
+
         }
     }
 

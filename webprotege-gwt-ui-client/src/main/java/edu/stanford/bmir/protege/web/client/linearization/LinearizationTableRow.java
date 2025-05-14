@@ -161,21 +161,23 @@ public class LinearizationTableRow {
     }
 
     public void setEnabled() {
-        this.isPartOfCheckbox.setEnabled(true);
-        this.isPartOfCheckbox.setReadOnly(false);
+        if(linearizationDefinition.getAccess().equals(LinearizationAccess.CAN_WRITE)){
+            this.isPartOfCheckbox.setEnabled(true);
+            this.isPartOfCheckbox.setReadOnly(false);
 
 
-        this.isGroupingCheckbox.setEnabled(true);
-        this.isGroupingCheckbox.setReadOnly(false);
+            this.isGroupingCheckbox.setEnabled(true);
+            this.isGroupingCheckbox.setReadOnly(false);
 
-        this.isAuxAxChildCheckbox.setEnabled(true);
-        this.isAuxAxChildCheckbox.setReadOnly(false);
+            this.isAuxAxChildCheckbox.setEnabled(true);
+            this.isAuxAxChildCheckbox.setReadOnly(false);
 
-        this.commentsWidget.enable();
-        if (!isDerived()) {
-            linearizationParentSelector.setEnabled(true);
-            linearizationParentSelector.setVisible(true);
-            linearizationParentLabel.setVisible(false);
+            this.commentsWidget.enable();
+            if (!isDerived()) {
+                linearizationParentSelector.setEnabled(true);
+                linearizationParentSelector.setVisible(true);
+                linearizationParentLabel.setVisible(false);
+            }
         }
     }
 
