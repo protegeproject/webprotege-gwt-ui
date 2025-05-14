@@ -79,11 +79,11 @@
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                             <g:Label text="Limit viewing to roles" addStyleNames="{wp.style.formLabel}"/>
-                            <editor:ValueListEditor ui:field="viewRolesListEditor" enabled="true" newRowMode="MANUAL"/>
+                            <editor:ValueListEditor ui:field="viewAccessRestrictionsListEditor" enabled="true" newRowMode="MANUAL"/>
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                             <g:Label text="Limit editing to roles" addStyleNames="{wp.style.formLabel}"/>
-                            <editor:ValueListEditor ui:field="editRolesListEditor" enabled="true" newRowMode="MANUAL"/>
+                            <editor:ValueListEditor ui:field="editAccessRestrictionsListEditor" enabled="true" newRowMode="MANUAL"/>
                         </g:HTMLPanel>
                     </g:HTMLPanel>
                     <g:SimplePanel ui:field="fieldViewContainer"/>

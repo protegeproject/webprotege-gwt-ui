@@ -582,6 +582,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-entity-card-stack__card-container")
         String entityCardStack__cardContainer();
+
+        @ClassName("wp-editable-icon")
+        String editableIcon();
     }
 
     interface DateTimePicker extends CssResource {

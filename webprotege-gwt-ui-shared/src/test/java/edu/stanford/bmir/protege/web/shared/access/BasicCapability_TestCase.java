@@ -15,7 +15,7 @@ public class BasicCapability_TestCase {
 
     private BasicCapability basicCapability;
 
-    private String id = "The id";
+    private CapabilityId id = CapabilityId.valueOf("The id");
 
     @Before
     public void setUp() {
@@ -51,7 +51,7 @@ public class BasicCapability_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(basicCapability, is(Matchers.not(new BasicCapability("String-49f80fc5-f0c4-4013-accc-4f37f60d5632"))));
+        assertThat(basicCapability, is(Matchers.not(new BasicCapability(CapabilityId.valueOf("String-49f80fc5-f0c4-4013-accc-4f37f60d5632")))));
     }
 
     @Test

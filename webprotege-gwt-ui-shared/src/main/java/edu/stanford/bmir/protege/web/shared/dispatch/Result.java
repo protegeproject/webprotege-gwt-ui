@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -232,6 +233,10 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class),
         @JsonSubTypes.Type(SaveEntityChildReorderingResult.class),
         @JsonSubTypes.Type(GetEntityDirectParentsResult.class),
+        @JsonSubTypes.Type(SetProjectRoleDefinitionsResult.class),
+        @JsonSubTypes.Type(ResetProjectRoleDefinitionsResult.class),
+        @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),
+        @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class),
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),
         @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),

@@ -21,7 +21,7 @@ public abstract class GetFormRegionAccessRestrictionsResult implements Result, H
 
     @JsonCreator
     public static GetFormRegionAccessRestrictionsResult get(@JsonProperty("projectId") ProjectId projectId,
-                                                            @JsonProperty("accessRestrictions") List<FormRegionAccessRestrictions> accessRestrictions) {
+                                                            @JsonProperty("accessRestrictions") List<FormRegionAccessRestriction> accessRestrictions) {
         return new AutoValue_GetFormRegionAccessRestrictionsResult(projectId, accessRestrictions);
     }
 
@@ -31,5 +31,5 @@ public abstract class GetFormRegionAccessRestrictionsResult implements Result, H
     public abstract ProjectId getProjectId();
 
     @JsonProperty("accessRestrictions")
-    public abstract List<FormRegionAccessRestrictions> getAccessRestrictions();
+    public abstract List<FormRegionAccessRestriction> getAccessRestrictions();
 }

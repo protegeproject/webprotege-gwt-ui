@@ -16,7 +16,7 @@ public abstract class GenericParameterizedCapability implements Capability {
     @Nonnull
     @Override
     @JsonProperty("id")
-    public abstract String getId();
+    public abstract CapabilityId getId();
 
     @Nonnull
     @JsonProperty("@type")
@@ -35,7 +35,7 @@ public abstract class GenericParameterizedCapability implements Capability {
      * @throws NullPointerException if {@code type} or {@code id} is {@code null}.
      */
     public static GenericParameterizedCapability get(@JsonProperty("@type") String type,
-                                                     @JsonProperty("id") String id,
+                                                     @JsonProperty("id") CapabilityId id,
                                                      Map<String, Object> otherFields) {
         return new AutoValue_GenericParameterizedCapability(id,  type, otherFields);
     }
@@ -49,7 +49,7 @@ public abstract class GenericParameterizedCapability implements Capability {
      */
     @JsonCreator
     public static GenericParameterizedCapability fromJson(@JsonProperty("@type") String type,
-                                                          @JsonProperty("id") String id) {
+                                                          @JsonProperty("id") CapabilityId id) {
         return new AutoValue_GenericParameterizedCapability(id,  type, new HashMap<>());
     }
 

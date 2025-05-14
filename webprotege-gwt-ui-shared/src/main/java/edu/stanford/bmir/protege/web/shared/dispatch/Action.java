@@ -43,9 +43,7 @@ import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAc
 import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.obo.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -253,6 +251,11 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = MoveEntitiesToParentIcdAction.class),
         @Type(value = MoveHierarchyNodeIcdAction.class),
         @Type(value = GetClassHierarchyParentsByAxiomTypeAction.class),
+        @Type(value = GetEntityDirectParentsAction.class),
+        @Type(value = SetProjectRoleDefinitionsAction.class),
+        @Type(value = ResetProjectRoleDefinitionsAction.class),
+        @Type(value = GetProjectRoleAssignmentsAction.class),
+        @Type(value = SetProjectRoleAssignmentsAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

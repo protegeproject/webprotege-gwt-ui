@@ -65,8 +65,7 @@ public class MultiChoiceControlDescriptorPresenter implements FormControlDescrip
     }
 
     @Override
-    public List<FormDescriptorComponentPresenter> getSubComponentPresenters() {
-        return Collections.singletonList(this);
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        // Nothing to do
     }
-
 }

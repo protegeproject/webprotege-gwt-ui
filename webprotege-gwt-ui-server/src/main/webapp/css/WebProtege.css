@@ -57,6 +57,7 @@
     --inlay-panel--border:                          1px solid var(--alternate--separator--color);
 
     --inlay-panel--border-radius:                   3px;
+    --inlay-panel--border-radius--large:            0.7em;
 
     --inlay-panel--alternate-background-color:      #f0f0f0;
 

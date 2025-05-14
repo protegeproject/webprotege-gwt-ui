@@ -74,6 +74,7 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         return displayLabel;
     }
 
+
     @Override
     public String toString() {
         return "LinearizationDefinition{" +

@@ -21,6 +21,8 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
 
     boolean isExpanded();
 
+    void setEditableIconVisible(boolean enabled);
+
     interface HeaderClickedHandler {
         void handleHeaderClicked();
     }

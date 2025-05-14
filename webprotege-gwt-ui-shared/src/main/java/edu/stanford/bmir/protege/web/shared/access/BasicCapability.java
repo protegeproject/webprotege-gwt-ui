@@ -18,25 +18,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("BasicCapability")
 public class BasicCapability implements IsSerializable, Comparator<BasicCapability>, Capability {
 
-    private String id;
+    private CapabilityId id;
 
     @GwtSerializationConstructor
     private BasicCapability() {
     }
 
-    public static BasicCapability valueOf(String id) {
+    public static BasicCapability valueOf(CapabilityId id) {
         return new BasicCapability(id);
     }
 
     @JsonCreator
-    public BasicCapability(@Nonnull String id) {
+    public static BasicCapability valueOf(String id) {
+        return new BasicCapability(CapabilityId.valueOf(id));
+    }
+
+    public BasicCapability(@Nonnull CapabilityId id) {
         this.id = checkNotNull(id);
     }
 
     @Override
     @Nonnull
     @JsonProperty("id")
-    public String getId() {
+    public CapabilityId getId() {
         return id;
     }
 
