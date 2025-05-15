@@ -23,9 +23,11 @@ public abstract class GetContextAwareLinearizationDefinitionAction implements Ac
         return new AutoValue_GetContextAwareLinearizationDefinitionAction(entityIRI, projectId);
     }
 
-    public abstract IRI entityIri();
+    @JsonProperty("entityIRI")
+    public abstract IRI getEntityIri();
 
-    public abstract ProjectId projectId();
+    @JsonProperty("projectId")
+    public abstract ProjectId getProjectId();
 }
 
 

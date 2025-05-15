@@ -255,7 +255,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SetProjectRoleDefinitionsAction.class),
         @Type(value = ResetProjectRoleDefinitionsAction.class),
         @Type(value = GetProjectRoleAssignmentsAction.class),
-        @Type(value = SetProjectRoleAssignmentsAction.class)
+        @Type(value = SetProjectRoleAssignmentsAction.class),
+        @Type(value = GetContextAwareLinearizationDefinitionAction.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

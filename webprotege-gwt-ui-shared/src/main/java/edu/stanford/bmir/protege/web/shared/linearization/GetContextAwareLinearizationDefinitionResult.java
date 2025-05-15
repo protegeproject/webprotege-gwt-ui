@@ -15,8 +15,8 @@ import static edu.stanford.bmir.protege.web.shared.linearization.GetContextAware
 public abstract class GetContextAwareLinearizationDefinitionResult implements Result {
 
     @JsonCreator
-    public static GetLinearizationDefinitionsResult create(@JsonProperty("definitionList") List<LinearizationDefinition> definitionsResponses) {
-        return new AutoValue_GetLinearizationDefinitionsResult(definitionsResponses);
+    public static GetContextAwareLinearizationDefinitionResult create(@JsonProperty("definitionList") List<LinearizationDefinition> definitionsResponses) {
+        return new AutoValue_GetContextAwareLinearizationDefinitionResult(definitionsResponses);
     }
 
     public abstract List<LinearizationDefinition> getDefinitionList();

@@ -161,7 +161,7 @@ public class LinearizationTableRow {
     }
 
     public void setEnabled() {
-        if(linearizationDefinition.getAccess().equals(LinearizationAccess.CAN_WRITE)){
+        if(linearizationDefinition.getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)){
             this.isPartOfCheckbox.setEnabled(true);
             this.isPartOfCheckbox.setReadOnly(false);
 
