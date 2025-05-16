@@ -79,6 +79,8 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
     boolean isReadOnly = true;
 
+    boolean canEditResiduals = false;
+
     private final TableRefresh tableRefresh = (linearizationTableRow) -> {
         flexTable.removeAllRows();
         this.tableRowList = this.tableRowList.stream().map(row -> {
@@ -188,27 +190,29 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
     public void setEditable() {
         if (isReadOnly) {
+            this.isReadOnly = false;
             this.backupRows.clear();
             tableRowList.forEach(tableRow -> {
                 this.backupRows.add(tableRow.clone());
                 tableRow.setEnabled();
             });
 
-            this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
-            this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
+            if(canEditResiduals){
+                this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
+                this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
 
-            this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
-            this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
+                this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
+                this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
 
-            this.isReadOnly = false;
-            this.unspecifiedResidualTitle.setEnabled(true);
-            this.otherSpecifiedResidualTitle.setEnabled(true);
+                this.unspecifiedResidualTitle.setEnabled(true);
+                this.otherSpecifiedResidualTitle.setEnabled(true);
 
-            this.suppressOthersSpecifiedResidual.setReadOnly(false);
-            this.suppressOthersSpecifiedResidual.setEnabled(true);
+                this.suppressOthersSpecifiedResidual.setReadOnly(false);
+                this.suppressOthersSpecifiedResidual.setEnabled(true);
 
-            this.suppressUnspecifiedResidual.setReadOnly(false);
-            this.suppressUnspecifiedResidual.setEnabled(true);
+                this.suppressUnspecifiedResidual.setReadOnly(false);
+                this.suppressUnspecifiedResidual.setEnabled(true);
+            }
         }
 
     }
@@ -232,7 +236,6 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
             isReadOnly = true;
             this.backupRows.clear();
         }
-
     }
 
     @Override
@@ -355,5 +358,8 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                 specifications);
     }
 
-
+    @Override
+    public void setCanEditResiduals(boolean canEditResiduals) {
+        this.canEditResiduals = canEditResiduals;
+    }
 }

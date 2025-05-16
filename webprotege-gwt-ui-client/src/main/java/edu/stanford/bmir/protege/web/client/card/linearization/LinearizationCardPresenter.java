@@ -76,6 +76,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
                 view.setLinearizationDefinitonMap(this.definitionMap);
+                view.setCanEditResiduals(linearizationDefResult.getCanEditResiduals());
 
                 dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
 
