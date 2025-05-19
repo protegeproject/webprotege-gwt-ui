@@ -3,21 +3,19 @@ package edu.stanford.bmir.protege.web.client.role;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.access.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Objects;
+import java.util.*;
 
 /**
- * Implementation of {@link LinearizationResidualsCapabilityView} that provides UI for managing
+ * Implementation of {@link ContextAwareCapabilityView} that provides UI for managing
  * linearization residuals capabilities in WebProtege.
  */
-public class LinearizationResidualsCapabilityViewImpl extends Composite implements LinearizationResidualsCapabilityView {
+public class ContextAwareCapabilityViewImpl extends Composite implements ContextAwareCapabilityView {
 
-    private static final String VIEW_LINEARIZATION_RESIDUALS = "ViewLinearizationResiduals";
-    private static final String EDIT_LINEARIZATION_RESIDUALS = "EditLinearizationResiduals";
-
-    interface LinearizationResidualsCapabilityViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationResidualsCapabilityViewImpl> {
+    interface ContextAwareCapabilityViewImplUiBinder extends UiBinder<HTMLPanel, ContextAwareCapabilityViewImpl> {
     }
 
     @UiField
@@ -26,14 +24,18 @@ public class LinearizationResidualsCapabilityViewImpl extends Composite implemen
     @UiField
     ListBox capabilityIdField;
 
-    private static final LinearizationResidualsCapabilityViewImpl.LinearizationResidualsCapabilityViewImplUiBinder ourUiBinder =
-            GWT.create(LinearizationResidualsCapabilityViewImpl.LinearizationResidualsCapabilityViewImplUiBinder.class);
+    private static final ContextAwareCapabilityViewImplUiBinder ourUiBinder =
+            GWT.create(ContextAwareCapabilityViewImplUiBinder.class);
 
     @Inject
-    public LinearizationResidualsCapabilityViewImpl() {
+    public ContextAwareCapabilityViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        capabilityIdField.addItem(VIEW_LINEARIZATION_RESIDUALS);
-        capabilityIdField.addItem(EDIT_LINEARIZATION_RESIDUALS);
+        Arrays.stream(ContextAwareBuiltInCapability.values())
+                .map(ContextAwareBuiltInCapability::getCapability)
+                .map(Capability::getId)
+                .sorted()
+                .map(CapabilityId::getId)
+                .forEach(cap -> capabilityIdField.addItem(cap));
     }
 
     @Override
