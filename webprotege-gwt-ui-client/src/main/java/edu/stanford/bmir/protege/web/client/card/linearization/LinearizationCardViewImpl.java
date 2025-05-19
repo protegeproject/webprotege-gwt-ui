@@ -226,11 +226,14 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
             initializeTableHeader();
 
             orderAndPopulateViewWithRows();
-            this.suppressOthersSpecifiedResidual.setValue(this.backupSuppressOtherResidualValue);
-            this.suppressUnspecifiedResidual.setValue(this.backupSuppressUnspecifiedResidualValue);
 
-            this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
-            this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
+            if(canEditResiduals){
+                this.suppressOthersSpecifiedResidual.setValue(this.backupSuppressOtherResidualValue);
+                this.suppressUnspecifiedResidual.setValue(this.backupSuppressUnspecifiedResidualValue);
+
+                this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
+                this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
+            }
 
             disableResiduals();
             isReadOnly = true;
