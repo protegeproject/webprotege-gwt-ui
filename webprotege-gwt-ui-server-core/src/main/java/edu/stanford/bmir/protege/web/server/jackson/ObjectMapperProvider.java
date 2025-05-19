@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.events.PackagedProjectChangeEvent;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinitionAccessibility;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
@@ -85,6 +86,11 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
         module.addSerializer(AxiomType.class, new AxiomTypeSerializer());
         module.addDeserializer(AxiomType.class, new AxiomTypeDeserializer());
+
+        module.addSerializer(LinearizationDefinitionAccessibility.class,
+                new LinearizationDefinitionAccessibilitySerializer());
+        module.addDeserializer(LinearizationDefinitionAccessibility.class,
+                new LinearizationDefinitionAccessibilityDeserializer());
 
         mapper.addMixIn(Path.class, PathMixin.class);
         module.registerSubtypes(

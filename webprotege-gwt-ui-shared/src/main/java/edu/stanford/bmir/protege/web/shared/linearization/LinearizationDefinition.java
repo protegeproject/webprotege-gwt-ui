@@ -25,6 +25,8 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
 
     private String displayLabel;
 
+    private LinearizationDefinitionAccessibility accessibility;
+
     @GwtSerializationConstructor
     private LinearizationDefinition() {
     }
@@ -36,7 +38,8 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
                                    @JsonProperty("rootId") String rootId,
                                    @JsonProperty("displayLabel") String displayLabel,
                                    @JsonProperty("coreLinId") String coreLinId,
-                                   @JsonProperty("sortingCode") String sortingCode) {
+                                   @JsonProperty("sortingCode") String sortingCode,
+                                   @JsonProperty("definitionAccessibility") LinearizationDefinitionAccessibility accessibility) {
         this.linearizationId = linearizationId;
         this.linearizationUri = linearizationUri;
         this.linearizationMode = linearizationMode;
@@ -44,6 +47,7 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         this.coreLinId = coreLinId;
         this.sortingCode = sortingCode;
         this.displayLabel = displayLabel;
+        this.accessibility = accessibility;
     }
 
     public String getLinearizationId() {
@@ -74,6 +78,10 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         return displayLabel;
     }
 
+    public LinearizationDefinitionAccessibility getDefinitionAccessibility(){
+        return accessibility;
+    }
+
 
     @Override
     public String toString() {
@@ -84,6 +92,7 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
                 ", rootId='" + rootId + '\'' +
                 ", coreLinId='" + coreLinId + '\'' +
                 ", sortingCode='" + sortingCode + '\'' +
+                ", access='" + accessibility + '\'' +
                 '}';
     }
 }

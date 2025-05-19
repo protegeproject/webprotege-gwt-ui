@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
-import elemental.html.Console;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -12,7 +10,6 @@ import java.util.logging.Logger;
 public class CapabilityPresenterSelector {
 
     private static Logger logger = Logger.getLogger(CapabilityPresenterSelector.class.getName());
-
 
 
     private final List<CapabilityPresenterFactory> capabilityPresenterFactories = new ArrayList<>();
@@ -28,14 +25,14 @@ public class CapabilityPresenterSelector {
     public CapabilityPresenterSelector(BasicCapabilityPresenterFactory f0,
                                        FormRegionCapabilityPresenterFactory f1,
                                        LinearizationRowsCapabilityPresenterFactory f2,
+                                       LinearizationResidualsCapabilityPresenterFactory f3,
                                        CapabilityPresenterSelectorView view) {
         this.view = view;
         capabilityPresenterFactories.add(f0);
         capabilityPresenterFactories.add(f1);
         capabilityPresenterFactories.add(f2);
-        capabilityPresenterFactories.forEach(pf -> {
-            view.addTypeId(pf.getTypeId(), pf.getLabel());
-        });
+        capabilityPresenterFactories.add(f3);
+        capabilityPresenterFactories.forEach(pf -> view.addTypeId(pf.getTypeId(), pf.getLabel()));
         view.setSelectedTypeIdChangedHandler(this::handleSelectedTypeIdChanged);
     }
 
@@ -53,7 +50,7 @@ public class CapabilityPresenterSelector {
         logger.info("Updating selected presenter");
         view.setSelectedTypeId(selectedTypeId);
         view.clearPresenter();
-        if(selectedTypeId.isEmpty()) {
+        if (selectedTypeId.isEmpty()) {
             return;
         }
         CapabilityPresenter presenter = getPresenter();
@@ -62,7 +59,7 @@ public class CapabilityPresenterSelector {
 
     private CapabilityPresenter getPresenter() {
         CapabilityPresenter presenter = presenters.get(selectedTypeId);
-        if(presenter == null) {
+        if (presenter == null) {
             for (CapabilityPresenterFactory pf : capabilityPresenterFactories) {
                 if (pf.getTypeId().equals(selectedTypeId)) {
                     presenter = pf.createPresenter();

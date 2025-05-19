@@ -119,12 +119,15 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
         });
-        dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, specification.get()),
-                (result) -> {
-                    loadEntity();
-                    fireEvent(new DirtyChangedEvent());
-                }
-        );
+        specification.ifPresent(spec ->{
+            dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, spec),
+                    (result) -> {
+                        loadEntity();
+                        fireEvent(new DirtyChangedEvent());
+                    }
+            );
+        });
+
     }
 
     @Override

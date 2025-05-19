@@ -626,6 +626,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     MoveHierarchyNodeIcdResult _MoveHierarchyNodeIcdResult;
     GetClassHierarchyParentsByAxiomTypeAction _GetClassHierarchyParentsByAxiomTypeAction;
     GetClassHierarchyParentsByAxiomTypeResult _GetClassHierarchyParentsByAxiomTypeResult;
+    GetContextAwareLinearizationDefinitionAction _GetContextAwareLinearizationDefinitionAction;
+    GetContextAwareLinearizationDefinitionResult _GetContextAwareLinearizationDefinitionResult;
 
     public RpcWhiteList() {
     }

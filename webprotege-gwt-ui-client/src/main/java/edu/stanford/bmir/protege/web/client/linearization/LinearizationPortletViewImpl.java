@@ -98,6 +98,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
 
         orderAndPopulateViewWithRows();
     };
+    private boolean canEditResiduals;
 
 
     @Inject
@@ -211,14 +212,20 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
             this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
 
             this.isReadOnly = false;
-            this.unspecifiedResidualTitle.setEnabled(true);
-            this.otherSpecifiedResidualTitle.setEnabled(true);
 
-            this.suppressOthersSpecifiedResidual.setReadOnly(false);
-            this.suppressOthersSpecifiedResidual.setEnabled(true);
+            if(canEditResiduals){
 
-            this.suppressUnspecifiedResidual.setReadOnly(false);
-            this.suppressUnspecifiedResidual.setEnabled(true);
+                this.unspecifiedResidualTitle.setEnabled(true);
+                this.otherSpecifiedResidualTitle.setEnabled(true);
+
+                this.suppressOthersSpecifiedResidual.setReadOnly(false);
+                this.suppressOthersSpecifiedResidual.setEnabled(true);
+
+                this.suppressUnspecifiedResidual.setReadOnly(false);
+                this.suppressUnspecifiedResidual.setEnabled(true);
+            }
+
+
             toggleSaveButtons();
         }
 
@@ -368,5 +375,8 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
         this.linearizationChangeEventHandler = eventHandler;
     }
 
-
+    @Override
+    public void setCanEditResiduals(boolean canEditResiduals) {
+        this.canEditResiduals = canEditResiduals;
+    }
 }

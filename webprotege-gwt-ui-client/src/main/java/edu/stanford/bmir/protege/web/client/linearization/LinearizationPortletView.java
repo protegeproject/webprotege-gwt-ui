@@ -22,4 +22,6 @@ public interface LinearizationPortletView extends AcceptsOneWidget, IsWidget, Ha
     boolean isReadOnly();
 
     void saveValues();
+
+    void setCanEditResiduals(boolean canEditResiduals);
 }

@@ -7,14 +7,12 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
-import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -106,24 +104,29 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
-            dispatch.execute(GetEntityRenderingAction.create(getProjectId(), entityData.get()),
-                    (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
-            this.entityParentsMap.clear();
-            dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), this.getProjectId()), response -> {
-
-                this.view.dispose();
-                if (response.getWhoficEntityLinearizationSpecification() != null &&
-                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
-
-                    dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), ClassHierarchyDescriptor.get()), result -> {
-                        if (result.getParents() != null) {
-                            result.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
-                        }
-                        view.dispose();
-                        view.setEntityParentsMap(this.entityParentsMap);
-                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-                    });
+            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entityData.get().getIRI(), this.getProjectId()), linearizationDefResult -> {
+                for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
+                    this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
+                view.setLinearizationDefinitonMap(this.definitionMap);
+                view.setCanEditResiduals(linearizationDefResult.getCanEditResiduals());
+
+                dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), getProjectId()), response -> {
+
+                    this.view.dispose();
+                    if (response.getWhoficEntityLinearizationSpecification() != null &&
+                            response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
+
+                        dispatch.execute(GetHierarchyParentsAction.create(getProjectId(), entityData.get(), ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
+                            if (hierarchyParentsResult.getParents() != null) {
+                                hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
+                            }
+                            view.dispose();
+                            view.setEntityParentsMap(this.entityParentsMap);
+                            view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                        });
+                    }
+                });
             });
         } else {
             setDisplayedEntity(Optional.empty());
