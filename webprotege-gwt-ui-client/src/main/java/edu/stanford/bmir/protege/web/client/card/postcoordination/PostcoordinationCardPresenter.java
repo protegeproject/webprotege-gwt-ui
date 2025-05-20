@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySe
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -48,7 +50,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private final HierarchySelectionModalManager hierarchySelectionManager;
 
 
-    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
+    });
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @Inject
     @AutoFactory
@@ -101,6 +106,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
 
     @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
+    }
+
+    @Override
     public void beginEditing() {
         this.setEditMode(true);
     }
@@ -119,7 +129,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
         });
-        specification.ifPresent(spec ->{
+        specification.ifPresent(spec -> {
             dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, spec),
                     (result) -> {
                         loadEntity();

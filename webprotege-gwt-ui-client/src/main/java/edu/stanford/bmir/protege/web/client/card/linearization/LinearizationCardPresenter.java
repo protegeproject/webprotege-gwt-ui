@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.card.linearization;
 
 import com.google.auto.factory.*;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
@@ -39,6 +41,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private final HandlerManager handlerManager = new HandlerManager(this);
 
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @Inject
     @AutoFactory
@@ -76,7 +80,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
                 view.setLinearizationDefinitonMap(this.definitionMap);
-                view.setCanEditResiduals(linearizationDefResult.getCanEditResiduals());
+                boolean canEditResiduals = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_LINEARIZATION_RESIDUALS.getCapability(), capabilities);
+                view.setCanEditResiduals(canEditResiduals);
 
                 dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
 
@@ -167,5 +172,10 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
     }
 }
