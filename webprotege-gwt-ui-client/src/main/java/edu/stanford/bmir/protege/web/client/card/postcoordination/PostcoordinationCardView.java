@@ -31,8 +31,9 @@ public interface PostcoordinationCardView  extends AcceptsOneWidget, IsWidget, H
     void setTableCellChangedHandler(TableCellChangedHandler handler);
 
     void setTableData(WhoficEntityPostCoordinationSpecification specification);
+    void setEditableState();
 
-    void setEditMode(boolean editMode);
+    void setReadOnlyState();
 
     Optional<WhoficEntityPostCoordinationSpecification> getTableData();
 }
