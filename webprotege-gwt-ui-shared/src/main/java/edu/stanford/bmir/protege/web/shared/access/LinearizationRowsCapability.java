@@ -14,7 +14,6 @@ import java.util.List;
 @JsonTypeName("LinearizationRowsCapability")
 public abstract class LinearizationRowsCapability implements ContextSensitiveCapability {
 
-
     @JsonProperty("linearizationIds")
     public abstract List<String> getLinearizationIds();
 

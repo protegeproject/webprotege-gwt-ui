@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.shared.access.LinearizationRowsCapability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
@@ -104,7 +105,8 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
 
     private void navigateToEntity(Optional<OWLEntity> entityData) {
         if (entityData.isPresent()) {
-            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entityData.get().getIRI(), this.getProjectId()), linearizationDefResult -> {
+            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entityData.get().getIRI(),Arrays.asList(LinearizationCapabilities.VIEW_LINEARIZATION_ROW,
+                    LinearizationCapabilities.EDIT_LINEARIZATION_ROW), this.getProjectId()),linearizationDefResult -> {
                 for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }

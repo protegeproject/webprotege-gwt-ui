@@ -6,6 +6,7 @@ import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
+import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.*;
@@ -75,7 +76,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
         if (entity != null && projectId != null) {
             this.entityParentsMap.clear();
-            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(),projectId), linearizationDefResult -> {
+            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
+                    LinearizationCapabilities.VIEW_LINEARIZATION_ROW),projectId), linearizationDefResult -> {
                 for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }

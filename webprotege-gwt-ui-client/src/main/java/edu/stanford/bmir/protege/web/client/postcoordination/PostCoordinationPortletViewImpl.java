@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinitionAccessibility;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -101,8 +102,10 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     private void setTableState(boolean readOnly) {
         for (PostCoordinationTableRow row : tableRows) {
-            for (PostCoordinationTableCell cell : row.getCellList()) {
-                cell.setState(readOnly);
+            if(readOnly || row.getLinearizationDefinition().getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)){
+                for (PostCoordinationTableCell cell : row.getCellList()) {
+                    cell.setState(readOnly);
+                }
             }
         }
     }
@@ -168,7 +171,10 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
     @Override
     public void resetTable() {
-        flexTable.clear();
+        flexTable.clear(true);
+        while (flexTable.getRowCount() > 0) {
+            flexTable.removeRow(0);
+        }
         labels.clear();
         tableRows.clear();
     }

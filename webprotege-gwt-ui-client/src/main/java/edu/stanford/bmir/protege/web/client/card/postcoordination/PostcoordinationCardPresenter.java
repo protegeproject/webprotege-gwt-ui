@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
+import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
@@ -41,6 +42,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
     private Map<String, PostcoordinationAxisToGenericScale> genericScale = new HashMap<>();
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
+
+    private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
     private Optional<OWLEntity> selectedEntity;
     private HandlerManager handlerManager = new HandlerManager(this);
@@ -76,7 +79,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
             clearEverything();
             selectedEntity = Optional.empty();
             view.setTableCellChangedHandler(handleTableCellChanged());
-            this.setEditMode(false);
+            this.setReadOnlyMode();
             ui.setWidget(view);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error ", e);
@@ -96,7 +99,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void setEntity(OWLEntity entity) {
-        this.setEditMode(false);
+        this.setReadOnlyMode();
         this.selectedEntity = Optional.of(entity);
         loadEntity();
     }
@@ -115,18 +118,18 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void beginEditing() {
-        this.setEditMode(true);
+        this.setEditableMode();
     }
 
     @Override
     public void cancelEditing() {
-        setEditMode(false);
+        setReadOnlyMode();
         loadEntity();
     }
 
     @Override
     public void finishEditing(String commitMessage) {
-        this.setEditMode(false);
+        this.setReadOnlyMode();
 
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
@@ -263,9 +266,18 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                                 result.getTableConfiguration().getCompositePostCoordinationAxes());
 
                         scaleCardsOrder.addAll(orderedAxisListWithSubAxis);
-                        if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder)) {
-                            populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis);
-                        }
+                        dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(selectedEntity.get().getIRI(),
+                                        Arrays.asList(LinearizationCapabilities.EDIT_POSTCOORDINATION_LINEARIZATION_ROW, LinearizationCapabilities.VIEW_POSTCOORDINATION_LINEARIZATION_ROW),
+                                        projectId)
+                                , definitionsResult -> {
+                                    Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
+                                    for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
+                                        definitionMap.put(definition.getLinearizationUri(), definition);
+                                    }
+                                    if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder, definitionMap)) {
+                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis,definitionMap);
+                                    }
+                                });
 
                         navigateToEntity(this.selectedEntity.get());
                     } catch (Exception e) {
@@ -280,11 +292,16 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     }
 
-    private void populateAndResetTable(Map<String, PostCoordinationTableAxisLabel> tableLabels, List<String> scaleCardsOrder, Map<String, PostCoordinationTableAxisLabel> scaleLabels, List<PostCoordinationCompositeAxis> compositeAxis) {
+    private void populateAndResetTable(Map<String, PostCoordinationTableAxisLabel> tableLabels,
+                                       List<String> scaleCardsOrder,
+                                       Map<String, PostCoordinationTableAxisLabel> scaleLabels,
+                                       List<PostCoordinationCompositeAxis> compositeAxis,
+                                       Map<String, LinearizationDefinition> definitionMap) {
         view.resetTable();
         tableLabelsForAxes = tableLabels;
         scaleLabelsForAxes = scaleLabels;
         compositeAxisList = compositeAxis;
+        this.definitionMap = definitionMap;
         scaleCardsOrderByAxis = scaleCardsOrder;
         view.setLabels(tableLabelsForAxes);
         dispatch.execute(GetPostcoordinationAxisToGenericScaleAction.create(), axisToGenericScaleResult -> {
@@ -292,14 +309,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                             .forEach(axisToGenericScale ->
                                     genericScale.put(axisToGenericScale.getPostcoordinationAxis(), axisToGenericScale)
                             );
-                    dispatch.execute(GetLinearizationDefinitionsAction.create(), definitionsResult -> {
-                        Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
-                        for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
-                            definitionMap.put(definition.getLinearizationUri(), definition);
-                        }
-                        view.setLinearizationDefinitonMap(definitionMap);
-                        view.initializeTable();
-                    });
+                    view.setLinearizationDefinitonMap(definitionMap);
+                    view.initializeTable();
                 }
         );
     }
@@ -307,7 +318,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private boolean tableNeedsToBeReset(Map<String, PostCoordinationTableAxisLabel> tableLabels,
                                         Map<String, PostCoordinationTableAxisLabel> scaleLabels,
                                         List<PostCoordinationCompositeAxis> compositeAxis,
-                                        List<String> scaleCardsOrder) {
+                                        List<String> scaleCardsOrder,
+                                        Map<String, LinearizationDefinition> definitionMap) {
         boolean scaleCardsAreTheSame = scaleCardsOrder.stream().sorted().collect(Collectors.toList())
                 .equals(this.scaleCardsOrderByAxis.stream().sorted().collect(Collectors.toList()));
 
@@ -316,7 +328,12 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
         boolean scaleLabelsAreTheSame = scaleLabels.equals(this.scaleLabelsForAxes);
         boolean tableLabelsAreTheSame = tableLabels.equals(this.tableLabelsForAxes);
-        return !scaleCardsAreTheSame || !compositeAxisAreTheSame || !scaleLabelsAreTheSame || !tableLabelsAreTheSame;
+
+        boolean definitionMapKeysAreTheSame = this.definitionMap.keySet().equals(definitionMap.keySet());
+
+        boolean definitionsAreTheSame = this.definitionMap.values().equals(definitionMap.values());
+
+        return !scaleCardsAreTheSame || !compositeAxisAreTheSame || !scaleLabelsAreTheSame || !tableLabelsAreTheSame || !definitionMapKeysAreTheSame || !definitionsAreTheSame;
     }
 
     private void navigateToEntity(OWLEntity entityData) {
@@ -329,7 +346,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
                 (result) -> {
                     view.setTableData(result.getPostCoordinationSpecification());
-                    setEditMode(false);
+                    setReadOnlyMode();
                 });
     }
 
@@ -458,12 +475,18 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 .orElseGet(() -> scaleValueCardPresenters.get(axisIri) != null);
     }
 
-    public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
+    public void setEditableMode() {
+        this.editMode = true;
         if (canEditScaleValues) {
-            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(editMode));
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
         }
-        view.setEditMode(editMode);
+        view.setEditableState();
+    }
+
+    public void setReadOnlyMode() {
+        this.editMode = false;
+        scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
+        view.setReadOnlyState();
     }
 
     @Override
