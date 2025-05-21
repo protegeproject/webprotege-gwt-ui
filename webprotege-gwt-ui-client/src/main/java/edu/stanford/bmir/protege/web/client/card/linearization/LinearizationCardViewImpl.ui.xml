@@ -129,7 +129,7 @@
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:HTMLPanel width="100%">
             <g:FlexTable width="97%" height="100%" ui:field="flexTable"/>
-            <g:HTMLPanel addStyleNames="{style.residualsCard}">
+            <g:HTMLPanel addStyleNames="{style.residualsCard} " ui:field="residualsCard">
                 <g:HTMLPanel addStyleNames="{style.residualsCardHeader}">
                     Linearizations residuals
                 </g:HTMLPanel>

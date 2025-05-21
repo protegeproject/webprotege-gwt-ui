@@ -36,6 +36,9 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     HTMLPanel paneContainer;
 
     @UiField
+    HTMLPanel residualsCard;
+
+    @UiField
     protected FlexTable flexTable;
 
     @UiField(provided = true)
@@ -80,6 +83,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     boolean isReadOnly = true;
 
     boolean canEditResiduals = false;
+    boolean canViewResiduals = false;
 
     private final TableRefresh tableRefresh = (linearizationTableRow) -> {
         flexTable.removeAllRows();
@@ -364,5 +368,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     @Override
     public void setCanEditResiduals(boolean canEditResiduals) {
         this.canEditResiduals = canEditResiduals;
+    }
+
+    @Override
+    public void setCanViewResiduals(boolean canViewResiduals) {
+        this.canViewResiduals = canViewResiduals;
+        this.residualsCard.setVisible(canViewResiduals);
     }
 }

@@ -59,6 +59,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     private boolean canEditScaleValues;
+    private boolean canViewScaleValues;
 
     @Inject
     @AutoFactory
@@ -114,6 +115,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void setCapabilities(ImmutableSet<Capability> capabilities) {
         this.capabilities = capabilities;
         canEditScaleValues = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_POSTCOORDINATION_SCALE_VALUES.getCapability(), capabilities);
+        canViewScaleValues = canEditScaleValues || CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.VIEW_POSTCOORDINATION_SCALE_VALUES.getCapability(), capabilities);
     }
 
     @Override
@@ -421,6 +423,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private TableCellChangedHandler handleTableCellChanged() {
         return (isAxisEnabledOnAnyRow, checkboxValue, tableAxisIri) -> {
+            if(!canViewScaleValues){
+                return;
+            }
             boolean presenterExists = isScaleValuePresenterCreated(tableAxisIri);
             if ((checkboxValue.getValue().equals("ALLOWED") ||
                     checkboxValue.getValue().equals("REQUIRED")) &&
