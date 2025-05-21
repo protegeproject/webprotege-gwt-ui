@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinitionAccessibility;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
 import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
 import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficEntityPostCoordinationSpecification;
@@ -49,31 +50,37 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         style.ensureInjected();
     }
 
-
-
-    public void setEditMode(boolean editMode) {
-        boolean readOnly = !editMode;
-        setTableState(readOnly);
-    }
-
     @Override
     public Optional<WhoficEntityPostCoordinationSpecification> getTableData() {
         return createEditedSpec();
     }
 
-    private void setTableState(boolean readOnly) {
+    public void setReadOnlyState(){
         for (PostCoordinationTableRow row : tableRows) {
             for (PostCoordinationTableCell cell : row.getCellList()) {
-                cell.setState(readOnly);
+                cell.setState(true);
+            }
+        }
+    }
+    public void setEditableState() {
+        for (PostCoordinationTableRow row : tableRows) {
+            if(row.getLinearizationDefinition().getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)) {
+                for (PostCoordinationTableCell cell : row.getCellList()) {
+                    cell.setState(false);
+                }
             }
         }
     }
 
     @Override
     public void resetTable() {
-        flexTable.clear();
+        flexTable.clear(true);
+        while (flexTable.getRowCount() > 0) {
+            flexTable.removeRow(0);
+        }
         labels.clear();
         tableRows.clear();
+        definitionMap.clear();
     }
 
     private Optional<WhoficEntityPostCoordinationSpecification> createEditedSpec() {
@@ -327,7 +334,7 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
             }
         }
 
-        setTableState(true);
+        setReadOnlyState();
     }
 
     private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +

@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities.*;
+
+
 /**
  * Implementation of {@link LinearizationRowsCapabilityView} that provides UI for managing
  * linearization row capabilities in WebProtege.
  */
 public class LinearizationRowsCapabilityViewImpl extends Composite implements LinearizationRowsCapabilityView {
     
-    private static final String VIEW_LINEARIZATION_ROW = "ViewLinearizationRow";
-    private static final String EDIT_LINEARIZATION_ROW = "EditLinearizationRow";
-    
+
     interface LinearizationRowsCapabilityViewImplUiBinder extends UiBinder<HTMLPanel, LinearizationRowsCapabilityViewImpl> {
     }
 
@@ -54,6 +55,8 @@ public class LinearizationRowsCapabilityViewImpl extends Composite implements Li
         initWidget(ourUiBinder.createAndBindUi(this));
         capabilityIdField.addItem(VIEW_LINEARIZATION_ROW);
         capabilityIdField.addItem(EDIT_LINEARIZATION_ROW);
+        capabilityIdField.addItem(EDIT_POSTCOORDINATION_LINEARIZATION_ROW);
+        capabilityIdField.addItem(VIEW_POSTCOORDINATION_LINEARIZATION_ROW);
     }
 
     @UiHandler("addLinearizationButton")

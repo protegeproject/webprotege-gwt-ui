@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 
+import java.util.List;
+
 import static edu.stanford.bmir.protege.web.shared.linearization.GetContextAwareLinearizationDefinitionAction.CHANNEL;
 
 @AutoValue
@@ -18,16 +20,22 @@ public abstract class GetContextAwareLinearizationDefinitionAction implements Ac
     @JsonCreator
     public static GetContextAwareLinearizationDefinitionAction create(
             @JsonProperty("entityIRI") IRI entityIRI,
+            @JsonProperty("allowedIds") List<String> allowedIds,
             @JsonProperty("projectId") ProjectId projectId
     ) {
-        return new AutoValue_GetContextAwareLinearizationDefinitionAction(entityIRI, projectId);
+        return new AutoValue_GetContextAwareLinearizationDefinitionAction(entityIRI,allowedIds, projectId);
     }
 
     @JsonProperty("entityIRI")
     public abstract IRI getEntityIri();
 
+    @JsonProperty("allowedIds")
+    public abstract List<String> getAllowedIds();
+
     @JsonProperty("projectId")
     public abstract ProjectId getProjectId();
+
+
 }
 
 

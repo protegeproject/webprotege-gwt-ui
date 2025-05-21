@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @GwtCompatible(serializable = true)
 public class LinearizationDefinition implements IsSerializable, Serializable {
@@ -82,6 +83,26 @@ public class LinearizationDefinition implements IsSerializable, Serializable {
         return accessibility;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinearizationDefinition that = (LinearizationDefinition) o;
+        return Objects.equals(linearizationId, that.linearizationId) &&
+                Objects.equals(linearizationUri, that.linearizationUri) &&
+                Objects.equals(linearizationMode, that.linearizationMode) &&
+                Objects.equals(rootId, that.rootId) &&
+                Objects.equals(coreLinId, that.coreLinId) &&
+                Objects.equals(sortingCode, that.sortingCode) &&
+                Objects.equals(displayLabel, that.displayLabel)
+                && accessibility == that.accessibility;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(linearizationId, linearizationUri, linearizationMode, rootId, coreLinId, sortingCode, displayLabel, accessibility);
+    }
 
     @Override
     public String toString() {
