@@ -120,10 +120,12 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                     GetAuthorizedCapabilitiesForEntityAction.create(getProjectId(), loggedInUserProvider.getCurrentUserId(), sel.getIRI()),
                     result -> {
                         this.currentCapabilities = result.getCapabilities();
-                        transmitCapabilitiesToCards();
+                        retrieveAndSetDisplayedCardsForEntity(sel, () -> {
+                            this.transmitEntitySelectionToDisplayedCards();
+                            this.transmitCapabilitiesToCards();
+                        });
                     }
             );
-            retrieveAndSetDisplayedCardsForEntity(sel, this::transmitEntitySelectionToDisplayedCards);
             dispatch.execute(GetEntityRenderingAction.create(getProjectId(), sel),
                     (result) -> setDisplayedEntity(Optional.of(result.getEntityData())));
         });

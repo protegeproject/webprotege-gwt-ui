@@ -14,6 +14,11 @@ import static edu.stanford.bmir.protege.web.shared.permissions.GetAuthorizedCapa
 @GwtCompatible(serializable = true)
 public abstract class GetAuthorizedCapabilitiesForEntityResult implements Result {
 
+    @JsonCreator
+    public static GetAuthorizedCapabilitiesForEntityResult create(@JsonProperty("capabilities") ImmutableSet<Capability> capabilities) {
+        return new AutoValue_GetAuthorizedCapabilitiesForEntityResult(capabilities);
+    }
+
     @JsonProperty("capabilities")
     public abstract ImmutableSet<Capability> getCapabilities();
 }

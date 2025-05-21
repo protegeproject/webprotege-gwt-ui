@@ -242,6 +242,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(MoveHierarchyNodeIcdResult.class),
         @JsonSubTypes.Type(GetClassHierarchyParentsByAxiomTypeResult.class),
         @JsonSubTypes.Type(GetContextAwareLinearizationDefinitionResult.class),
+        @JsonSubTypes.Type(GetAuthorizedCapabilitiesForEntityResult.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

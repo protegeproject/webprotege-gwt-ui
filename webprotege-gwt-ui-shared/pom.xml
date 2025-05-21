@@ -20,12 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>edu.stanford.protege</groupId>
-            <artifactId>webprotege-authorization</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>

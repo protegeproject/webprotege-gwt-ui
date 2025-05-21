@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySe
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
-import edu.stanford.bmir.protege.web.shared.access.Capability;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -54,6 +54,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     });
 
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
+
+    private boolean canEditScaleValues;
 
     @Inject
     @AutoFactory
@@ -108,6 +110,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void setCapabilities(ImmutableSet<Capability> capabilities) {
         this.capabilities = capabilities;
+        canEditScaleValues = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_POSTCOORDINATION_SCALE_VALUES.getCapability(), capabilities);
     }
 
     @Override
@@ -129,14 +132,14 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
         });
-        specification.ifPresent(spec -> {
-            dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, spec),
-                    (result) -> {
-                        loadEntity();
-                        fireEvent(new DirtyChangedEvent());
-                    }
-            );
-        });
+        specification.ifPresent(spec -> dispatch.execute(
+                        SaveEntityPostCoordinationAction.create(projectId, spec),
+                        (result) -> {
+                            loadEntity();
+                            fireEvent(new DirtyChangedEvent());
+                        }
+                )
+        );
 
     }
 
@@ -371,7 +374,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 PostcoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(eventBus, editMode);
+
+        newPresenter.start(eventBus, canEditScaleValues && editMode);
         updateScaleValueCards();
     }
 
@@ -456,7 +460,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
-        scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(editMode));
+        if (canEditScaleValues) {
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(editMode));
+        }
         view.setEditMode(editMode);
     }
 
