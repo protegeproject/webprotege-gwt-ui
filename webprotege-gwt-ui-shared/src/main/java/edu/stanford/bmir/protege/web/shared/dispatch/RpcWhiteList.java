@@ -628,6 +628,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetClassHierarchyParentsByAxiomTypeResult _GetClassHierarchyParentsByAxiomTypeResult;
     GetContextAwareLinearizationDefinitionAction _GetContextAwareLinearizationDefinitionAction;
     GetContextAwareLinearizationDefinitionResult _GetContextAwareLinearizationDefinitionResult;
+    GetAuthorizedCapabilitiesForEntityAction _GetAuthorizedCapabilitiesForEntityAction;
+    GetAuthorizedCapabilitiesForEntityResult _GetAuthorizedCapabilitiesForEntityResult;
 
     public RpcWhiteList() {
     }

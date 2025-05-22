@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
         @JsonSubTypes.Type(GenericParameterizedCapability.class),
         @JsonSubTypes.Type(FormRegionCapability.class),
         @JsonSubTypes.Type(LinearizationRowsCapability.class),
-        @JsonSubTypes.Type(LinearizationResidualsCapability.class)
+        @JsonSubTypes.Type(ContextAwareCapability.class)
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public interface Capability {

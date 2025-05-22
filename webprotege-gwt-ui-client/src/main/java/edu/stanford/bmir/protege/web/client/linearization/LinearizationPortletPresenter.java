@@ -111,7 +111,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
                 view.setLinearizationDefinitonMap(this.definitionMap);
-                view.setCanEditResiduals(linearizationDefResult.getCanEditResiduals());
+                view.setCanEditResiduals(true);
 
                 dispatch.execute(GetEntityLinearizationAction.create(entityData.get().getIRI().toString(), getProjectId()), response -> {
 

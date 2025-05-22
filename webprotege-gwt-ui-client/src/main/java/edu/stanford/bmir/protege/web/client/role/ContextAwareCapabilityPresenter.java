@@ -9,18 +9,18 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class LinearizationResidualsCapabilityPresenter implements CapabilityPresenter {
-    private Optional<LinearizationResidualsCapability> capability = Optional.empty();
-    private final LinearizationResidualsCapabilityView view;
+public class ContextAwareCapabilityPresenter implements CapabilityPresenter {
+    private Optional<ContextAwareCapability> capability = Optional.empty();
+    private final ContextAwareCapabilityView view;
     private final CapabilityContextPresenter capabilityContextPresenter;
 
     private final DispatchServiceManager dispatch;
 
 
     @Inject
-    public LinearizationResidualsCapabilityPresenter(LinearizationResidualsCapabilityView view,
-                                                     CapabilityContextPresenter capabilityContextPresenter,
-                                                     DispatchServiceManager dispatch) {
+    public ContextAwareCapabilityPresenter(ContextAwareCapabilityView view,
+                                           CapabilityContextPresenter capabilityContextPresenter,
+                                           DispatchServiceManager dispatch) {
         this.view = view;
         this.capabilityContextPresenter = capabilityContextPresenter;
         this.dispatch = dispatch;
@@ -30,16 +30,16 @@ public class LinearizationResidualsCapabilityPresenter implements CapabilityPres
     @Nonnull
     @Override
     public String getTypeId() {
-        return "LinearizationResidualsCapability";
+        return "ContextAwareCapability";
     }
 
     @Override
     public void setCapability(Capability capability) {
-        if (capability instanceof LinearizationResidualsCapability) {
-            LinearizationResidualsCapability linearizationCapability = (LinearizationResidualsCapability) capability;
-            this.capability = Optional.of(linearizationCapability);
+        if (capability instanceof ContextAwareCapability) {
+            ContextAwareCapability contextAwareCapability = (ContextAwareCapability) capability;
+            this.capability = Optional.of(contextAwareCapability);
             view.setCapabilityId(capability.getId().getId());
-            capabilityContextPresenter.setCriteria(linearizationCapability.getContextCriteria());
+            capabilityContextPresenter.setCriteria(contextAwareCapability.getContextCriteria());
         }
     }
 
@@ -47,7 +47,7 @@ public class LinearizationResidualsCapabilityPresenter implements CapabilityPres
     public Optional<Capability> getCapability() {
         CompositeRootCriteria rootCriteria = capabilityContextPresenter.getCriteria().isPresent() ?
                 capabilityContextPresenter.getCriteria().get() : CompositeRootCriteria.any();
-        return Optional.of(LinearizationResidualsCapability.get(CapabilityId.valueOf(view.getCapabilityId()), rootCriteria));
+        return Optional.of(ContextAwareCapability.get(CapabilityId.valueOf(view.getCapabilityId()), rootCriteria));
     }
 
     @Override

@@ -1096,7 +1096,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    LinearizationResidualsCapabilityView providerLinearizationResidualsCapabilityView(LinearizationResidualsCapabilityViewImpl impl) {
+    ContextAwareCapabilityView providerLinearizationResidualsCapabilityView(ContextAwareCapabilityViewImpl impl) {
         return impl;
     }
 

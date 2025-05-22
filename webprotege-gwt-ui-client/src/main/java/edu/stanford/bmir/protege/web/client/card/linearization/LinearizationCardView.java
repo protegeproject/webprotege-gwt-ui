@@ -33,4 +33,6 @@ public interface LinearizationCardView extends AcceptsOneWidget, IsWidget, HasDi
     WhoficEntityLinearizationSpecification getLinSpec();
 
     void setCanEditResiduals(boolean canEditResiduals);
+
+    void setCanViewResiduals(boolean canViewResiduals);
 }

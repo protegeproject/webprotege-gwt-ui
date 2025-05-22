@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.card;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -22,6 +24,8 @@ import javax.inject.Inject;
 public class ExampleEntityCardPresenter implements CustomContentEntityCardPresenter {
 
     private final ExampleEntityCardView view;
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @Inject
     public ExampleEntityCardPresenter(ExampleEntityCardView view) {
@@ -51,6 +55,11 @@ public class ExampleEntityCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void clearEntity() {
         view.setIri("");
+    }
+
+    @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
     }
 
     @Override

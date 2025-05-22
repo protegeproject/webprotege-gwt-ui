@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.user.client.ui.*;
 
-public interface LinearizationResidualsCapabilityView extends IsWidget {
+public interface ContextAwareCapabilityView extends IsWidget {
 
     void setCapabilityId(String capabilityId);
 
