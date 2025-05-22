@@ -7,13 +7,15 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("LinearizationResidualsCapability")
-public abstract class LinearizationResidualsCapability implements ContextSensitiveCapability {
+@JsonTypeName("ContextAwareCapability")
+public abstract class ContextAwareCapability implements ContextSensitiveCapability {
 
     @JsonCreator
-    public static LinearizationResidualsCapability get(@JsonProperty("id") CapabilityId id,
-                                                       @JsonProperty("contextCriteria") CompositeRootCriteria contextCriteria) {
-        return new AutoValue_LinearizationResidualsCapability(id,
+    public static ContextAwareCapability get(
+            @JsonProperty("id") CapabilityId id,
+            @JsonProperty("contextCriteria") CompositeRootCriteria contextCriteria
+    ) {
+        return new AutoValue_ContextAwareCapability(id,
                 (contextCriteria != null ? contextCriteria : CompositeRootCriteria.any()));
     }
 }

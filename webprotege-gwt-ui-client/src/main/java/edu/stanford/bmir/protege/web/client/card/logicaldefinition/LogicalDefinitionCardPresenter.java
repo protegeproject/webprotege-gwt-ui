@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.client.card.logicaldefinition;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.card.CustomContentEntityCardPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardEditorPresenter;
-import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
+import com.google.auto.factory.*;
+import com.google.common.collect.ImmutableSet;
+import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,8 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 @Card(id = "logicaldefinition.card")
 public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPresenter, EntityCardEditorPresenter {
@@ -36,7 +32,10 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
-    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
+    });
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @Inject
     @AutoFactory
@@ -51,7 +50,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         ui.setWidget(view);
-        view.setLogicalDefinitionChangeHandler(()->this.handlerManager.fireEvent(new DirtyChangedEvent()));
+        view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -99,7 +98,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public boolean isDirty() {
-        if(this.view.isReadOnly()){
+        if (this.view.isReadOnly()) {
             return false;
         }
         Optional<LogicalConditions> currLogicalDefinition = Optional.ofNullable(view.getEditedData());
@@ -132,5 +131,10 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
     }
 }

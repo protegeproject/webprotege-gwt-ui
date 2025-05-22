@@ -5,26 +5,26 @@ import edu.stanford.bmir.protege.web.shared.access.*;
 import javax.annotation.Nonnull;
 import javax.inject.*;
 
-public class LinearizationResidualsCapabilityPresenterFactory implements CapabilityPresenterFactory {
-    private final Provider<LinearizationResidualsCapabilityPresenter> provider;
+public class ContextAwareCapabilityPresenterFactory implements CapabilityPresenterFactory {
+    private final Provider<ContextAwareCapabilityPresenter> provider;
     @Inject
-    public LinearizationResidualsCapabilityPresenterFactory(Provider<LinearizationResidualsCapabilityPresenter> provider) {
+    public ContextAwareCapabilityPresenterFactory(Provider<ContextAwareCapabilityPresenter> provider) {
         this.provider = provider;
     }
     @Nonnull
     @Override
     public String getTypeId() {
-        return "LinearizationResidualsCapability";
+        return "ContextAwareCapability";
     }
 
     @Override
     public boolean isPresenterFor(@Nonnull Capability capability) {
-        return capability instanceof LinearizationResidualsCapability;
+        return capability instanceof ContextAwareCapability;
     }
 
     @Override
     public String getLabel() {
-        return "Linearization Residuals Capability";
+        return "Context Aware Capability";
     }
 
     @Override

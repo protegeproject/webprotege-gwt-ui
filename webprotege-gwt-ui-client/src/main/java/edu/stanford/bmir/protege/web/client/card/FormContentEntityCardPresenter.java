@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -53,6 +54,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     private final SelectedPathsModel selectedPathsModel;
 
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @AutoFactory
     @Inject
@@ -98,6 +101,11 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     @Override
     public void clearEntity() {
         setDisplayedEntity(Optional.empty());
+    }
+
+    @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
     }
 
     private void setDisplayedEntity(Optional<OWLEntity> entity) {

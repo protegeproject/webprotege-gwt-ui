@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class CapabilityPresenterSelector {
 
-    private static Logger logger = Logger.getLogger(CapabilityPresenterSelector.class.getName());
+    private final static Logger logger = Logger.getLogger(CapabilityPresenterSelector.class.getName());
 
 
     private final List<CapabilityPresenterFactory> capabilityPresenterFactories = new ArrayList<>();
@@ -25,7 +25,7 @@ public class CapabilityPresenterSelector {
     public CapabilityPresenterSelector(BasicCapabilityPresenterFactory f0,
                                        FormRegionCapabilityPresenterFactory f1,
                                        LinearizationRowsCapabilityPresenterFactory f2,
-                                       LinearizationResidualsCapabilityPresenterFactory f3,
+                                       ContextAwareCapabilityPresenterFactory f3,
                                        CapabilityPresenterSelectorView view) {
         this.view = view;
         capabilityPresenterFactories.add(f0);

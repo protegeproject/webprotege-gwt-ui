@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.card.linearization;
 
 import com.google.auto.factory.*;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -8,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
-import edu.stanford.bmir.protege.web.shared.access.LinearizationRowsCapability;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
@@ -40,7 +41,13 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
-    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
+    });
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
+
+    private boolean canViewResiduals;
+    private boolean canEditResiduals;
 
     @Inject
     @AutoFactory
@@ -74,12 +81,13 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
         if (entity != null && projectId != null) {
             this.entityParentsMap.clear();
             dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
-                    LinearizationCapabilities.VIEW_LINEARIZATION_ROW),projectId), linearizationDefResult -> {
+                    LinearizationCapabilities.VIEW_LINEARIZATION_ROW), projectId), linearizationDefResult -> {
                 for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
                     this.definitionMap.put(definition.getLinearizationUri(), definition);
                 }
                 view.setLinearizationDefinitonMap(this.definitionMap);
-                view.setCanEditResiduals(linearizationDefResult.getCanEditResiduals());
+                view.setCanEditResiduals(canEditResiduals);
+                view.setCanViewResiduals(canViewResiduals);
 
                 dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
 
@@ -135,11 +143,11 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
         Optional<WhoficEntityLinearizationSpecification> currSpec = Optional.ofNullable(view.getLinSpec());
         logger.log(Level.FINE, "Pristine linSpec data: " + pristineLinearizationData);
         logger.log(Level.FINE, "Edited linSpec data: " + currSpec);
-        if(this.view.isReadOnly()){
+        if (this.view.isReadOnly()) {
             return false;
         }
         //todo this is because sometimes view is not loaded on quick entity changes
-        if(currSpec.isPresent() && pristineLinearizationData.isPresent() && !currSpec.get().getEntityIRI().equals(pristineLinearizationData.get().getEntityIRI())) {
+        if (currSpec.isPresent() && pristineLinearizationData.isPresent() && !currSpec.get().getEntityIRI().equals(pristineLinearizationData.get().getEntityIRI())) {
             logger.warning("Pristine entity is different from changed entity. Pristine " + pristineLinearizationData.get().getEntityIRI() + " changed : " + currSpec.get().getEntityIRI());
             return false;
         }
@@ -170,5 +178,12 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
         displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
+        canEditResiduals = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_LINEARIZATION_RESIDUALS.getCapability(), capabilities);
+        canViewResiduals = canEditResiduals || CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.VIEW_LINEARIZATION_RESIDUALS.getCapability(), capabilities);
     }
 }

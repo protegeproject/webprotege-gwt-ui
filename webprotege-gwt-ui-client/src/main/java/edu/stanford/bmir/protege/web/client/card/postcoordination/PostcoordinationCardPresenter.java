@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
@@ -10,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilit
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
-import edu.stanford.bmir.protege.web.shared.access.LinearizationRowsCapability;
+import edu.stanford.bmir.protege.web.shared.access.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -54,6 +55,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
+
+    private ImmutableSet<Capability> capabilities = ImmutableSet.of();
+
+    private boolean canEditScaleValues;
+    private boolean canViewScaleValues;
 
     @Inject
     @AutoFactory
@@ -106,6 +112,13 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
 
     @Override
+    public void setCapabilities(ImmutableSet<Capability> capabilities) {
+        this.capabilities = capabilities;
+        canEditScaleValues = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_POSTCOORDINATION_SCALE_VALUES.getCapability(), capabilities);
+        canViewScaleValues = canEditScaleValues || CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.VIEW_POSTCOORDINATION_SCALE_VALUES.getCapability(), capabilities);
+    }
+
+    @Override
     public void beginEditing() {
         this.setEditableMode();
     }
@@ -124,13 +137,14 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
         dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
         });
-        specification.ifPresent(whoficEntityPostCoordinationSpecification ->
-                dispatch.execute(SaveEntityPostCoordinationAction.create(projectId, whoficEntityPostCoordinationSpecification),
+        specification.ifPresent(spec -> dispatch.execute(
+                        SaveEntityPostCoordinationAction.create(projectId, spec),
                         (result) -> {
                             loadEntity();
                             fireEvent(new DirtyChangedEvent());
                         }
-                ));
+                )
+        );
 
     }
 
@@ -263,11 +277,13 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                                         definitionMap.put(definition.getLinearizationUri(), definition);
                                     }
                                     if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder, definitionMap)) {
-                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis,definitionMap);
+                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis, definitionMap);
                                     }
+
+                                    navigateToEntity(this.selectedEntity.get());
+
                                 });
 
-                        navigateToEntity(this.selectedEntity.get());
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
                     }
@@ -379,7 +395,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 PostcoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
-        newPresenter.start(eventBus, editMode);
+
+        newPresenter.start(eventBus, canEditScaleValues && editMode);
         updateScaleValueCards();
     }
 
@@ -408,6 +425,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private TableCellChangedHandler handleTableCellChanged() {
         return (isAxisEnabledOnAnyRow, checkboxValue, tableAxisIri) -> {
+            if (!canViewScaleValues) {
+                return;
+            }
             boolean presenterExists = isScaleValuePresenterCreated(tableAxisIri);
             if ((checkboxValue.getValue().equals("ALLOWED") ||
                     checkboxValue.getValue().equals("REQUIRED")) &&
@@ -464,7 +484,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     public void setEditableMode() {
         this.editMode = true;
-        scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
+        if (canEditScaleValues) {
+            scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
+        }
         view.setEditableState();
     }
 
