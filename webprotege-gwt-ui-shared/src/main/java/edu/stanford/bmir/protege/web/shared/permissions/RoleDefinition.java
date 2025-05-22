@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public abstract class RoleDefinition {
     @JsonCreator
     public static RoleDefinition get(@JsonProperty("roleId") RoleId roleId,
                                      @Nonnull @JsonProperty("roleType") RoleType roleType,
-                                     @JsonProperty("label") String label,
+                                     @Nullable @JsonProperty("label") String label,
                                      @JsonProperty("description") String description,
                                      @JsonProperty("parentRoles") List<RoleId> parentRoles,
                                      @JsonProperty("roleCapabilities") List<Capability> roleCapabilities) {
@@ -32,6 +33,7 @@ public abstract class RoleDefinition {
     public abstract RoleType getRoleType();
 
     @JsonProperty("label")
+    @Nullable
     public abstract String getLabel();
 
     @JsonProperty("description")

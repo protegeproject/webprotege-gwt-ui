@@ -351,6 +351,9 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
     @Override
     public WhoficEntityLinearizationSpecification getLinSpec() {
+        if(specification == null) {
+            return null;
+        }
         List<LinearizationSpecification> specifications = this.tableRowList.stream()
                 .map(LinearizationTableRow::asLinearizationSpecification)
                 .collect(Collectors.toList());

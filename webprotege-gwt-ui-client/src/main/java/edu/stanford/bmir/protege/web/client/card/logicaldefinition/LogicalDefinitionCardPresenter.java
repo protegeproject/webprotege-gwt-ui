@@ -28,6 +28,10 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     private final LogicalDefinitionCardView view;
 
     private final DispatchServiceManager dispatch;
+
+    private Optional<OWLEntity> selectedEntity = Optional.empty();
+
+    private OWLEntity renderedEntity = null;
     private final ProjectId projectId;
 
     private final HandlerManager handlerManager = new HandlerManager(this);
@@ -55,7 +59,12 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void requestFocus() {
-
+        if(this.selectedEntity.isPresent() && !this.selectedEntity.get().equals(this.renderedEntity)){
+            this.renderedEntity = selectedEntity.get();
+            dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
+                    (result) -> view.setEntityData(result.getEntityData()));
+            view.setEntity(renderedEntity);
+        }
     }
 
     @Override
@@ -66,10 +75,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void setEntity(OWLEntity entity) {
         logger.log(Level.INFO, "Set logical definitions card entity: " + entity.toStringID());
-
-        dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
-                (result) -> view.setEntityData(result.getEntityData()));
-        view.setEntity(entity);
+        this.selectedEntity = Optional.of(entity);
     }
 
     @Override
@@ -77,6 +83,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
         logger.log(Level.INFO, "logical definitions card clear entity !");
         view.dispose();
         fireEvent(new DirtyChangedEvent());
+        this.renderedEntity = null;
     }
 
     @Override

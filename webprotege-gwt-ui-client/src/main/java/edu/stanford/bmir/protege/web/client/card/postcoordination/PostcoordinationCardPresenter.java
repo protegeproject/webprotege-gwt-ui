@@ -45,7 +45,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
-    private Optional<OWLEntity> selectedEntity;
+    private Optional<OWLEntity> selectedEntity = Optional.empty();
+
+    private OWLEntity renderedEntity;
     private HandlerManager handlerManager = new HandlerManager(this);
 
     private boolean editMode = false;
@@ -90,6 +92,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void requestFocus() {
         logger.info("In request focus");
+        if(this.selectedEntity.isPresent() && !this.selectedEntity.get().equals(this.renderedEntity)){
+            this.renderedEntity = selectedEntity.get();
+            loadEntity(renderedEntity);
+        }
     }
 
     @Override
@@ -102,13 +108,13 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void setEntity(OWLEntity entity) {
         this.setReadOnlyMode();
         this.selectedEntity = Optional.of(entity);
-        loadEntity();
     }
 
     @Override
     public void clearEntity() {
         this.selectedEntity = Optional.empty();
         handlerManager.fireEvent(new DirtyChangedEvent());
+        this.renderedEntity = null;
     }
 
     @Override
@@ -126,7 +132,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void cancelEditing() {
         setReadOnlyMode();
-        loadEntity();
+        loadEntity(this.renderedEntity);
     }
 
     @Override
@@ -140,7 +146,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         specification.ifPresent(spec -> dispatch.execute(
                         SaveEntityPostCoordinationAction.create(projectId, spec),
                         (result) -> {
-                            loadEntity();
+                            loadEntity(this.renderedEntity);
                             fireEvent(new DirtyChangedEvent());
                         }
                 )
@@ -224,11 +230,9 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
 
 
-    protected void loadEntity() {
-        if (!this.selectedEntity.isPresent()) {
-            logger.log(Level.INFO, "No entity to display");
-        } else {
-            dispatch.execute(GetPostCoordinationTableConfigurationAction.create(this.selectedEntity.get().getIRI(), projectId), result -> {
+    protected void loadEntity(OWLEntity entity) {
+
+            dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entity.getIRI(), projectId), result -> {
                 if (result.getTableConfiguration().getPostCoordinationAxes() != null && !result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     try {
                         Map<String, PostCoordinationTableAxisLabel> tableLabels = new HashMap<>();
@@ -277,13 +281,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                                         definitionMap.put(definition.getLinearizationUri(), definition);
                                     }
                                     if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder, definitionMap)) {
-                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis, definitionMap);
+                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis,definitionMap);
                                     }
-
-                                    navigateToEntity(this.selectedEntity.get());
-
                                 });
 
+                        navigateToEntity(entity);
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
                     }
@@ -292,7 +294,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 }
 
             });
-        }
 
     }
 

@@ -55,8 +55,8 @@ public class LinearizationRowsCapabilityViewImpl extends Composite implements Li
         initWidget(ourUiBinder.createAndBindUi(this));
         capabilityIdField.addItem(VIEW_LINEARIZATION_ROW);
         capabilityIdField.addItem(EDIT_LINEARIZATION_ROW);
-        capabilityIdField.addItem(EDIT_POSTCOORDINATION_LINEARIZATION_ROW);
         capabilityIdField.addItem(VIEW_POSTCOORDINATION_LINEARIZATION_ROW);
+        capabilityIdField.addItem(EDIT_POSTCOORDINATION_LINEARIZATION_ROW);
     }
 
     @UiHandler("addLinearizationButton")
