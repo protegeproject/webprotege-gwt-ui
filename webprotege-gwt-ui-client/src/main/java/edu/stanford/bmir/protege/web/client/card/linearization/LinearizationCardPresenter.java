@@ -133,7 +133,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void finishEditing(String commitMessage) {
-        view.saveValues();
+        view.saveValues(commitMessage);
         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
         fireEvent(new DirtyChangedEvent());
     }
