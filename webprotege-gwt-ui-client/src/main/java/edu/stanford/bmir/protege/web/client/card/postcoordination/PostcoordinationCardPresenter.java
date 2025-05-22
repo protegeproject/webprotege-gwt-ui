@@ -277,11 +277,13 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                                         definitionMap.put(definition.getLinearizationUri(), definition);
                                     }
                                     if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder, definitionMap)) {
-                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis,definitionMap);
+                                        populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis, definitionMap);
                                     }
+
+                                    navigateToEntity(this.selectedEntity.get());
+
                                 });
 
-                        navigateToEntity(this.selectedEntity.get());
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
                     }
@@ -423,7 +425,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private TableCellChangedHandler handleTableCellChanged() {
         return (isAxisEnabledOnAnyRow, checkboxValue, tableAxisIri) -> {
-            if(!canViewScaleValues){
+            if (!canViewScaleValues) {
                 return;
             }
             boolean presenterExists = isScaleValuePresenterCreated(tableAxisIri);
