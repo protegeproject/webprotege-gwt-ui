@@ -22,7 +22,7 @@ public abstract class SaveEntityPostCoordinationAction extends AbstractHasProjec
                                                           ProjectId projectId,
                                                           @JsonProperty("entitySpecification")
                                                           WhoficEntityPostCoordinationSpecification entitySpecification,
-                                                          @JsonProperty("commitsMessage") @Nullable
+                                                          @JsonProperty("commitMessage") @Nullable
                                                           String commitMessage) {
         return new AutoValue_SaveEntityPostCoordinationAction(projectId, entitySpecification, commitMessage);
     }

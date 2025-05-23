@@ -20,7 +20,7 @@ public abstract class SaveEntityCustomScaleAction extends AbstractHasProjectActi
                                                      ProjectId projectId,
                                                      @JsonProperty("entityCustomScaleValues")
                                                      WhoficCustomScalesValues entityCustomScaleValues,
-                                                     @JsonProperty("commitsMessage") @Nullable
+                                                     @JsonProperty("commitMessage") @Nullable
                                                      String commitMessage) {
         return new AutoValue_SaveEntityCustomScaleAction(projectId, entityCustomScaleValues, commitMessage);
     }

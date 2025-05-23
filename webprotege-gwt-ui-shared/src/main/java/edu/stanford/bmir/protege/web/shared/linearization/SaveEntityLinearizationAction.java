@@ -20,7 +20,7 @@ public abstract class SaveEntityLinearizationAction implements Action<SaveEntity
     @JsonCreator
     public static SaveEntityLinearizationAction create(@JsonProperty("projectId") ProjectId projectId,
                                                        @JsonProperty("entityLinearization") WhoficEntityLinearizationSpecification entityLinearization,
-                                                       @JsonProperty("commitsMessage") @Nullable String commitMessage) {
+                                                       @JsonProperty("commitMessage") @Nullable String commitMessage) {
         return new AutoValue_SaveEntityLinearizationAction(projectId, entityLinearization, commitMessage);
     }
 
@@ -30,7 +30,7 @@ public abstract class SaveEntityLinearizationAction implements Action<SaveEntity
     @JsonProperty("entityLinearization")
     public abstract WhoficEntityLinearizationSpecification getEntityLinearization();
 
-    @JsonProperty("commitsMessage")
+    @JsonProperty("commitMessage")
     public abstract String getCommitsMessage();
 
 }
