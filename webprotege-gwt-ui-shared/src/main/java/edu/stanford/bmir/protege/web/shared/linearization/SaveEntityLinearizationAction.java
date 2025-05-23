@@ -31,6 +31,6 @@ public abstract class SaveEntityLinearizationAction implements Action<SaveEntity
     public abstract WhoficEntityLinearizationSpecification getEntityLinearization();
 
     @JsonProperty("commitMessage")
-    public abstract String getCommitsMessage();
+    public abstract String getCommitMessage();
 
 }
