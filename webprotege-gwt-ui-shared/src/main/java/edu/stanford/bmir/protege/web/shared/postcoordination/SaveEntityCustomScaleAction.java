@@ -6,7 +6,7 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 @AutoValue
 @GwtCompatible(serializable = true)
@@ -19,8 +19,10 @@ public abstract class SaveEntityCustomScaleAction extends AbstractHasProjectActi
     public static SaveEntityCustomScaleAction create(@JsonProperty("projectId")
                                                      ProjectId projectId,
                                                      @JsonProperty("entityCustomScaleValues")
-                                                     WhoficCustomScalesValues entityCustomScaleValues) {
-        return new AutoValue_SaveEntityCustomScaleAction(projectId, entityCustomScaleValues);
+                                                     WhoficCustomScalesValues entityCustomScaleValues,
+                                                     @JsonProperty("commitMessage") @Nullable
+                                                     String commitMessage) {
+        return new AutoValue_SaveEntityCustomScaleAction(projectId, entityCustomScaleValues, commitMessage);
     }
 
 
@@ -30,4 +32,7 @@ public abstract class SaveEntityCustomScaleAction extends AbstractHasProjectActi
 
     @JsonProperty("entityCustomScaleValues")
     public abstract WhoficCustomScalesValues getEntityCustomScaleValues();
+
+    @JsonProperty("commitMessage")
+    public abstract String getCommitMessage();
 }

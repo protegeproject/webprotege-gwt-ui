@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.portlet.*;
@@ -86,8 +85,6 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         );
 
 
-
-
         view.setEditButtonHandler(() -> this.setEditMode(true));
 
         view.setCancelButtonHandler(() -> {
@@ -124,12 +121,12 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
 
         if (!newCustomScales.equals(postCoordinationCustomScalesList)) {
-            dispatch.execute(SaveEntityCustomScaleAction.create(getProjectId(), WhoficCustomScalesValues.create(getSelectedEntity().get().toStringID(), newCustomScales)), (result) -> {
+            dispatch.execute(SaveEntityCustomScaleAction.create(getProjectId(), WhoficCustomScalesValues.create(getSelectedEntity().get().toStringID(), newCustomScales), ""), (result) -> {
             });
         }
 
         specification.ifPresent(whoficEntityPostCoordinationSpecification ->
-                dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification),
+                dispatch.execute(SaveEntityPostCoordinationAction.create(getProjectId(), whoficEntityPostCoordinationSpecification, ""),
                         (result) -> {
                         }
                 )
@@ -172,7 +169,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
         } else {
             dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entityData.get().getIRI(),
                     Arrays.asList(LinearizationCapabilities.EDIT_POSTCOORDINATION_LINEARIZATION_ROW,
-                    LinearizationCapabilities.VIEW_POSTCOORDINATION_LINEARIZATION_ROW), getProjectId()), definitionsResult -> {
+                            LinearizationCapabilities.VIEW_POSTCOORDINATION_LINEARIZATION_ROW), getProjectId()), definitionsResult -> {
                 Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
                 for (LinearizationDefinition definition : definitionsResult.getDefinitionList()) {
                     definitionMap.put(definition.getLinearizationUri(), definition);
@@ -182,7 +179,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                     view.resetTable();
                     view.setLinearizationDefinitonMap(definitionMap);
 
-                    if(result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
+                    if (result.getTableConfiguration().getPostCoordinationAxes() == null || result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                         setNothingSelectedVisible(true);
                         setDisplayedEntity(Optional.empty());
                     } else {

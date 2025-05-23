@@ -286,7 +286,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     }
 
     @Override
-    public void saveValues() {
+    public void saveValues(String commitMessage) {
         if (!isReadOnly) {
             setBusy(true);
             WhoficEntityLinearizationSpecification linearizationSpecification = getLinSpec();
@@ -296,7 +296,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                 row.setReadOnly();
             }
             dispatch.execute(
-                    SaveEntityLinearizationAction.create(projectId, linearizationSpecification),
+                    SaveEntityLinearizationAction.create(projectId, linearizationSpecification, commitMessage),
                     this,
                     (result) -> {
                         this.backupRows.clear();
