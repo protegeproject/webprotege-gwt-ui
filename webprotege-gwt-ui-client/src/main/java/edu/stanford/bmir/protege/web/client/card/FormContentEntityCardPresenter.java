@@ -1,14 +1,8 @@
 package edu.stanford.bmir.protege.web.client.card;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.auto.factory.*;
+import com.google.common.collect.*;
+import com.google.gwt.event.shared.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -18,16 +12,14 @@ import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.lang.*;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 /**
@@ -54,7 +46,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private final SelectedPathsModel selectedPathsModel;
 
-    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
+    private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
+    });
 
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
@@ -137,12 +130,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
                 editedFormData.put(formId, fd);
                 FormDataByFormId formDataByFormId = new FormDataByFormId(editedFormData);
                 FormData pristine = pristineFormData.orElse(FormData.empty(owlEntity, formId));
-                LanguageMap labelWithLang = formData.get().getFormDescriptor().getLabel();
-                LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
-                String lang = currentLocale.getLocaleName();
-                String label = labelWithLang.get(lang);
                 dispatch.execute(new SetEntityFormsDataAction(projectId, owlEntity,
-                        "Edited "+label+": "+commitMessage,
+                        commitMessage,
                         ImmutableMap.of(formId, pristine),
                         formDataByFormId), result -> updateDisplayedForm());
             });
@@ -180,7 +169,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
         logger.fine("Retrieved form data: " + result.getFormData());
 
         nextFormData.ifPresent(formPresenter::displayForm);
-        if(!nextFormData.isPresent()) {
+        if (!nextFormData.isPresent()) {
             formPresenter.clear();
         }
         pristineFormData = formPresenter.getFormData();
@@ -222,7 +211,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
-        logger.info("FormContentEntityCardPresenter: set parent displaycontextbuilder"+displayContextManager.fillDisplayContextBuilder());
+        logger.info("FormContentEntityCardPresenter: set parent displaycontextbuilder" + displayContextManager.fillDisplayContextBuilder());
         displayContextManager.setParentDisplayContextBuilder(parent);
         formPresenter.setParentDisplayContextBuilder(this);
     }
