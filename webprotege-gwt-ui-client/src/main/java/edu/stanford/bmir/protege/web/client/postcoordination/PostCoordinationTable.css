@@ -94,14 +94,21 @@
     border-radius: literal("var(--grid-header--border-radius)");
     color: literal("var(--grid-header--color)");
     min-height: 1rem;
+    display: flex;
+    align-items: center;
     font-weight: bold;
     font-size: 14px;
     line-height: 1.4;
     padding: 4px;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     border-top-left-radius: 5px;
-    border-top-right-radius: 5px
+    border-top-right-radius: 5px;
 }
+
+.editableIconBackground {
+    background-color: white;
+}
+
 
 .scaleValueRow {
     margin-left: 15px;

@@ -29,8 +29,7 @@ import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.app.NothingSelectedViewImpl;
 import edu.stanford.bmir.protege.web.client.app.SystemDetailsView;
 import edu.stanford.bmir.protege.web.client.app.SystemDetailsViewImpl;
-import edu.stanford.bmir.protege.web.client.card.EntityCardUi;
-import edu.stanford.bmir.protege.web.client.card.EntityCardUiImpl;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
@@ -470,6 +469,11 @@ public class ClientApplicationModule {
 
     @Provides
     BusyView provideBusyView(BusyViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EditableIcon provideEditableIcon(EditableIconImpl impl) {
         return impl;
     }
 

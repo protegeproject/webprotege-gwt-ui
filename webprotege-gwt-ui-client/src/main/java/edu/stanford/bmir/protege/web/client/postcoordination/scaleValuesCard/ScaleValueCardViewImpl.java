@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -35,7 +36,13 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private boolean isReadOnly = true;
 
+    private final EditableIcon editableIconHeader;
+
     public ScaleValueCardViewImpl() {
+        editableIconHeader = new EditableIconImpl();
+        editableIconHeader.setVisible(false);
+        editableIconHeader.addStyleName(postCoordinationStyle.editableIconBackground());
+
         rootPanel = uiBinder.createAndBindUi(this);
         createAddButton();
         setReadOnly(isReadOnly);
@@ -59,19 +66,17 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     @Override
     public void addHeader(String headerText, ScaleAllowMultiValue scaleAllowMultiValue) {
-        GWT.log("Adding header. Current row count: " + valueTable.getRowCount());
-        String imageUri = "";
-        if (scaleAllowMultiValue.getImage().isPresent()) {
-            imageUri = scaleAllowMultiValue.getImage().get().getSafeUri().asString();
-        }
+        String imageUri = scaleAllowMultiValue.getImage()
+                .map(i -> i.getSafeUri().asString())
+                .orElse("");
         StringBuilder sb = new StringBuilder();
         sb.append("<span class=\"")
                 .append(postCoordinationStyle.toggleIcon())
                 .append("\">")
-                .append(collapseIcon)
+                .append(isCollapsed ? expandIcon : collapseIcon)
                 .append("</span> ")
                 .append(headerText)
-                .append(spaceSymbol)
+                .append("&nbsp;")
                 .append("<img src='")
                 .append(imageUri)
                 .append("' class='")
@@ -80,15 +85,19 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
                 .append(scaleAllowMultiValue.getTooltip())
                 .append("'/>");
 
-        headerHtml = new HTML(sb.toString());
+        HTML headerHtml = new HTML(sb.toString());
 
-        valueTable.setWidget(0, 0, headerHtml);
+        FlowPanel inner = new FlowPanel();
+        inner.setStyleName(postCoordinationStyle.scaleValueHeader());
+        inner.add(headerHtml);
+        inner.add(editableIconHeader);
+
+        FocusPanel headerWrapper = new FocusPanel(inner);
+        headerWrapper.setStyleName(postCoordinationStyle.scaleValueHeader());
+        headerWrapper.addClickHandler(evt -> toggleTable());
+
+        valueTable.setWidget(0, 0, headerWrapper);
         valueTable.getFlexCellFormatter().setColSpan(0, 0, 2);
-        valueTable.getCellFormatter().setStyleName(0, 0, postCoordinationStyle.scaleValueHeader());
-
-        headerHtml.addClickHandler(event -> toggleTable());
-
-        GWT.log("Header added. Current row count: " + valueTable.getRowCount());
     }
 
     @Override
@@ -169,6 +178,9 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
 
     private void setReadOnly(boolean readOnly) {
         isReadOnly = readOnly;
+        addButton.setVisible(!readOnly);
+        addButton.setEnabled(!readOnly);
+        editableIconHeader.setVisible(!readOnly);
 
         for (int i = 1; i < valueTable.getRowCount(); i++) {
             int cellsInRow = valueTable.getCellCount(i);
