@@ -111,6 +111,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private void setDisplayedEntity(Optional<OWLEntity> entity) {
         this.entity = entity;
+        updateDisplayedForm();
     }
 
     public boolean isDirty() {
@@ -211,7 +212,6 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void requestFocus() {
-        updateDisplayedForm();
         formPresenter.requestFocus();
     }
 
