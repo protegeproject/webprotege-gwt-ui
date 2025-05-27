@@ -58,7 +58,6 @@
     background-color: literal("var(--grid-header--background-color)");
     border-radius: literal("var(--grid-header--border-radius)");
     color: literal("var(--grid-header--color)");
-    min-height: 1rem;
     font-weight: bold;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
@@ -94,14 +93,21 @@
     border-radius: literal("var(--grid-header--border-radius)");
     color: literal("var(--grid-header--color)");
     min-height: 1rem;
+    display: flex;
+    align-items: center;
     font-weight: bold;
     font-size: 14px;
     line-height: 1.4;
     padding: 4px;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     border-top-left-radius: 5px;
-    border-top-right-radius: 5px
+    border-top-right-radius: 5px;
 }
+
+.editableIconBackground {
+    background-color: white;
+}
+
 
 .scaleValueRow {
     margin-left: 15px;
@@ -132,6 +138,7 @@
 .scaleValue-table-value-cell {
     padding-left: 10px;
     text-align: left;
+    height: 25px;
 }
 
 .scaleValueHeaderDescription {

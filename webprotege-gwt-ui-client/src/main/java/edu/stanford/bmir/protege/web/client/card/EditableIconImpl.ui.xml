@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="tn" type="edu.stanford.protege.gwt.graphtree.client.TreeNodeViewResources"/>
+    <ui:style>
+        .editableIndicator {
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+    </ui:style>
+    <g:HTML addStyleNames="{style.editableIndicator} {wp.style.editableIcon}" ui:field="editableIcon">
+    </g:HTML>
+</ui:UiBinder>

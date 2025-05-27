@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
@@ -52,6 +53,18 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
     @UiField
     PlaceholderTextBox otherSpecifiedResidualTitle;
+
+    @UiField
+    EditableIcon editableIconSuppOtherSpecRes;
+
+    @UiField
+    EditableIcon editableIconSuppUnspecifiedRes;
+
+    @UiField
+    EditableIcon editableIconOtherSpecRes;
+
+    @UiField
+    EditableIcon editableIconUnspecifiedRes;
 
     String backupUnspecifiedTitle;
 
@@ -216,6 +229,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
                 this.suppressUnspecifiedResidual.setReadOnly(false);
                 this.suppressUnspecifiedResidual.setEnabled(true);
+
+                this.editableIconOtherSpecRes.setVisible(true);
+                this.editableIconUnspecifiedRes.setVisible(true);
+                this.editableIconSuppUnspecifiedRes.setVisible(true);
+                this.editableIconSuppOtherSpecRes.setVisible(true);
             }
         }
 
@@ -237,6 +255,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
                 this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
                 this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
+
+                this.editableIconOtherSpecRes.setVisible(false);
+                this.editableIconUnspecifiedRes.setVisible(false);
+                this.editableIconSuppUnspecifiedRes.setVisible(false);
+                this.editableIconSuppOtherSpecRes.setVisible(false);
             }
 
             disableResiduals();
