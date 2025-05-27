@@ -286,9 +286,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                                     if (tableNeedsToBeReset(tableLabels, scaleLabels, compositeAxis, scaleCardsOrder, definitionMap)) {
                                         populateAndResetTable(tableLabels, scaleCardsOrder, scaleLabels, compositeAxis,definitionMap);
                                     }
+
+                                    navigateToEntity(this.selectedEntity.get());
+
                                 });
 
-                        navigateToEntity(entity);
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Error ", e);
                     }
