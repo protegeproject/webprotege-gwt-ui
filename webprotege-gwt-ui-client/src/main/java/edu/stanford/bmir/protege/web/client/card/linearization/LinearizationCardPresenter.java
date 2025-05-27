@@ -37,6 +37,10 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     private final ProjectId projectId;
 
+    private Optional<OWLEntity> selectedEntity = Optional.empty();
+
+    private OWLEntity renderedEntity;
+
     private Optional<WhoficEntityLinearizationSpecification> pristineLinearizationData = Optional.empty();
 
     private final HandlerManager handlerManager = new HandlerManager(this);
@@ -67,7 +71,10 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void requestFocus() {
-
+        if(selectedEntity.isPresent() && !selectedEntity.get().equals(this.renderedEntity)){
+            this.renderedEntity = selectedEntity.get();
+            displayEntity(renderedEntity);
+        }
     }
 
     @Override
@@ -77,46 +84,49 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void setEntity(OWLEntity entity) {
-
         if (entity != null && projectId != null) {
-            this.entityParentsMap.clear();
-            dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
-                    LinearizationCapabilities.VIEW_LINEARIZATION_ROW), projectId), linearizationDefResult -> {
-                for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
-                    this.definitionMap.put(definition.getLinearizationUri(), definition);
-                }
-                view.setLinearizationDefinitonMap(this.definitionMap);
-                view.setCanEditResiduals(canEditResiduals);
-                view.setCanViewResiduals(canViewResiduals);
-
-                dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
-
-                    this.view.dispose();
-                    if (response.getWhoficEntityLinearizationSpecification() != null &&
-                            response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
-
-                        dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
-                            if (hierarchyParentsResult.getParents() != null) {
-                                hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
-                            }
-                            view.dispose();
-                            view.setEntityParentsMap(this.entityParentsMap);
-                            view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-                            view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
-                            pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
-                            fireEvent(new DirtyChangedEvent());
-                        });
-                    }
-                });
-            });
-
+            this.selectedEntity = Optional.of(entity);
         }
+    }
+
+    private void displayEntity(OWLEntity entity) {
+        this.entityParentsMap.clear();
+        dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
+                LinearizationCapabilities.VIEW_LINEARIZATION_ROW),projectId), linearizationDefResult -> {
+            for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
+                this.definitionMap.put(definition.getLinearizationUri(), definition);
+            }
+            view.setLinearizationDefinitonMap(this.definitionMap);
+            view.setCanEditResiduals(canEditResiduals);
+            view.setCanViewResiduals(canViewResiduals);
+
+            dispatch.execute(GetEntityLinearizationAction.create(entity.getIRI().toString(), projectId), response -> {
+
+                this.view.dispose();
+                if (response.getWhoficEntityLinearizationSpecification() != null &&
+                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
+
+                    dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
+                        if (hierarchyParentsResult.getParents() != null) {
+                            hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
+                        }
+                        view.dispose();
+                        view.setEntityParentsMap(this.entityParentsMap);
+                        view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
+                        view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
+                        pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
+                        fireEvent(new DirtyChangedEvent());
+                    });
+                }
+            });
+        });
     }
 
     @Override
     public void clearEntity() {
         view.dispose();
         fireEvent(new DirtyChangedEvent());
+        renderedEntity = null;
     }
 
     @Override
