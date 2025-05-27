@@ -24,7 +24,7 @@ public interface LinearizationCardView extends AcceptsOneWidget, IsWidget, HasDi
 
     boolean isReadOnly();
 
-    void saveValues();
+    void saveValues(String commitMessage);
 
     void setEditable();
 

@@ -323,7 +323,7 @@ public class LinearizationPortletViewImpl extends Composite implements Lineariza
                 row.setReadOnly();
             }
             dispatch.execute(
-                    SaveEntityLinearizationAction.create(projectId, linearizationSpecification),
+                    SaveEntityLinearizationAction.create(projectId, linearizationSpecification, null),
                     this,
                     (result) -> {
                         this.backupRows.clear();

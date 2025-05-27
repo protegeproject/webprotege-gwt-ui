@@ -5,7 +5,7 @@
 
     <groupId>edu.stanford.protege</groupId>
     <artifactId>webprotege-gwt-ui</artifactId>
-    <version>8.0.7-WHO</version>
+    <version>8.0.8-WHO</version>
     <packaging>pom</packaging>
 
     <properties>
