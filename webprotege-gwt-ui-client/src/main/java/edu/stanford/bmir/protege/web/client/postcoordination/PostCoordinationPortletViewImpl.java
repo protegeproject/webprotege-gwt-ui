@@ -3,10 +3,10 @@ package edu.stanford.bmir.protege.web.client.postcoordination;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinitionAccessibility;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -106,6 +106,8 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                 for (PostCoordinationTableCell cell : row.getCellList()) {
                     cell.setState(readOnly);
                 }
+                row.getEditableIconFront().setVisible(!readOnly);
+                row.getEditableIconBack().setVisible(!readOnly);
             }
         }
     }
@@ -212,6 +214,8 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
     private void initializeTableContent() {
         List<LinearizationDefinition> definitions = new ArrayList<>(this.definitionMap.values());
         for (LinearizationDefinition definition : definitions) {
+            EditableIcon editableIcon = new EditableIconImpl();
+            editableIcon.setVisible(false);
             PostCoordinationTableRow tableRow = new PostCoordinationTableRow(definition);
             List<PostCoordinationTableAxisLabel> labelList = new ArrayList<>(this.labels.values());
             for (PostCoordinationTableAxisLabel postCoordinationTableAxisLabel : labelList) {
@@ -240,7 +244,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
 
         for (int i = 0; i < orderedRows.size(); i++) {
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0);
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0, orderedRows.get(i).getEditableIconFront());
 
             for(int j = 0; j < orderedRows.get(i).getCellList().size(); j ++) {
                 flexTable.setWidget(i + 1, j + 1, orderedRows.get(i).getCellList().get(j).asWidget());
@@ -250,7 +254,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
                 flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1);
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1, orderedRows.get(i).getEditableIconBack());
         }
     }
 
@@ -288,7 +292,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         }
     }
 
-    private void addRowLabel(boolean isDerived, String label, int row, int column) {
+    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon) {
         String rowLabelString;
         if (isDerived) {
             rowLabelString = SVG + label;
@@ -297,8 +301,12 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         }
         Widget rowLabel = new Label();
         rowLabel.getElement().setInnerHTML(rowLabelString);
-        rowLabel.addStyleName(style.getRowLabel());
-        flexTable.setWidget(row, column, rowLabel);
+        FlowPanel labelPanel = new FlowPanel();
+        labelPanel.setStyleName(style.getRowLabel());
+        labelPanel.add(rowLabel);
+        labelPanel.add(editableIcon);
+
+        flexTable.setWidget(row, column, labelPanel);
     }
 
     private void addHeaderCell(String label, int position) {
