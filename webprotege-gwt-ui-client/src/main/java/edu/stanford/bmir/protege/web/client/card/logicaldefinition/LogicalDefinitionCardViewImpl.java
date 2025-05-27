@@ -332,9 +332,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                             this.currentEntity.asOWLClass(),
                             this.pristineData,
                             logCond,
-                            commitMessage +
-                                    ": Edited the Logical Definitons and/or Necessary Conditions for " +
-                                    this.entityData.getBrowserText()
+
+                            "Edited the Logical Definitons and/or Necessary Conditions for " +
+                                    this.entityData.getBrowserText() + " : " + commitMessage
                     ),
                     response -> this.pristineData = LogicalConditions.create(
                             new ArrayList<>(logCond.getLogicalDefinitions()),
@@ -468,7 +468,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     .collect(Collectors.joining(","));
 
             messageBox.showAlert(
-                    "Logical definition with superclass "+superClassesWithNoValues+" has no value. Please add values if you wish to save.",
+                    "Logical definition with superclass " + superClassesWithNoValues + " has no value. Please add values if you wish to save.",
                     "");
         }
         return !axisWithNoValueFound && !duplicateFound;

@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -19,7 +20,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -135,8 +136,12 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
                 editedFormData.put(formId, fd);
                 FormDataByFormId formDataByFormId = new FormDataByFormId(editedFormData);
                 FormData pristine = pristineFormData.orElse(FormData.empty(owlEntity, formId));
+                LanguageMap labelWithLang = formData.get().getFormDescriptor().getLabel();
+                LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
+                String lang = currentLocale.getLocaleName();
+                String label = labelWithLang.get(lang);
                 dispatch.execute(new SetEntityFormsDataAction(projectId, owlEntity,
-                        commitMessage,
+                        "Edited "+label+": "+commitMessage,
                         ImmutableMap.of(formId, pristine),
                         formDataByFormId), result -> updateDisplayedForm());
             });

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 
@@ -44,7 +45,10 @@ public class LinearizationTableRow {
 
     LinearizationTableResourceBundle.LinearizationCss linearizationCss = LinearizationTableResourceBundle.INSTANCE.style();
 
-    LinearizationChangeEventHandler handler = () -> {};
+    LinearizationChangeEventHandler handler = () -> {
+    };
+
+    private EditableIcon editableIconDefinition;
 
     private LinearizationTableRow() {
 
@@ -67,7 +71,17 @@ public class LinearizationTableRow {
                 throw new RuntimeException("ERROR finding definition for " + linearizationSpecification.getLinearizationView());
             }
 
-            this.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
+            editableIconDefinition = new EditableIconImpl();
+            editableIconDefinition.setVisible(false);
+
+            FlowPanel defPanel = new FlowPanel();
+            defPanel.setStyleName(linearizationCss.getLinearizationDefinition());
+            InlineLabel defLabel = new InlineLabel(linearizationDefinition.getDisplayLabel());
+            defPanel.add(defLabel);
+            defPanel.add(editableIconDefinition);
+
+            this.linearizationDefinitionWidget = defPanel;
+
             this.linearizationSpecification = linearizationSpecification;
 
 
@@ -83,11 +97,11 @@ public class LinearizationTableRow {
             this.parentSelectionPanel.setVisible(true);
 
             this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
-            this.isPartOfCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+            this.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
             this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-            this.isGroupingCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+            this.isGroupingCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
             this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
-            this.isAuxAxChildCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+            this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
 
             initCodingNotes(linearizationSpecification.getCodingNote());
             this.codingNotes = this.commentsWidget.asWidget();
@@ -161,7 +175,7 @@ public class LinearizationTableRow {
     }
 
     public void setEnabled() {
-        if(linearizationDefinition.getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)){
+        if (linearizationDefinition.getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)) {
             this.isPartOfCheckbox.setEnabled(true);
             this.isPartOfCheckbox.setReadOnly(false);
 
@@ -178,6 +192,8 @@ public class LinearizationTableRow {
                 linearizationParentSelector.setVisible(true);
                 linearizationParentLabel.setVisible(false);
             }
+
+            this.editableIconDefinition.setVisible(true);
         }
     }
 
@@ -197,6 +213,8 @@ public class LinearizationTableRow {
         linearizationParentSelector.setEnabled(false);
         linearizationParentSelector.setVisible(false);
         linearizationParentLabel.setVisible(true);
+
+        editableIconDefinition.setVisible(false);
     }
 
 
@@ -252,13 +270,22 @@ public class LinearizationTableRow {
         clone.handler = this.handler;
         clone.parentIri = this.parentIri;
         clone.linearizationDefinition = this.linearizationDefinition;
-        clone.linearizationDefinitionWidget = new Label(linearizationDefinition.getDisplayLabel());
+        clone.editableIconDefinition = new EditableIconImpl();
+        clone.editableIconDefinition.setVisible(this.editableIconDefinition.isVisible());
+
+        FlowPanel defPanel = new FlowPanel();
+        defPanel.setStyleName(linearizationCss.getLinearizationDefinition());
+        InlineLabel defLabel = new InlineLabel(linearizationDefinition.getDisplayLabel());
+        defPanel.add(defLabel);
+        defPanel.add(clone.editableIconDefinition);
+
+        clone.linearizationDefinitionWidget = defPanel;
         clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsIncludedInLinearization());
-        clone.isPartOfCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+        clone.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
         clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsGrouping());
-        clone.isGroupingCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+        clone.isGroupingCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
         clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsAuxiliaryAxisChild());
-        clone.isAuxAxChildCheckbox.addValueChangeHandler((e)->handler.handleLinearizationChangeEvent());
+        clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
 
         LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal, handler);
 

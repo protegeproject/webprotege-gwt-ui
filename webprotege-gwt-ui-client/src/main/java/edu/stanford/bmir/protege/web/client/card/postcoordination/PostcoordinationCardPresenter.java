@@ -126,32 +126,35 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void beginEditing() {
-        this.setEditableMode();
+        selectedEntity.ifPresent((sel) -> this.setEditableMode());
     }
 
     @Override
     public void cancelEditing() {
-        setReadOnlyMode();
-        loadEntity(this.renderedEntity);
+        selectedEntity.ifPresent(sel->{
+            setReadOnlyMode();
+            loadEntity(this.renderedEntity);
+        });
     }
 
     @Override
     public void finishEditing(String commitMessage) {
-        this.setReadOnlyMode();
+        selectedEntity.ifPresent(sel -> {
+            this.setReadOnlyMode();
 
-        List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
-        Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-        dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales)), (result) -> {
+            List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
+            Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
+            dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales), commitMessage), (result) -> {
+            });
+            specification.ifPresent(spec -> dispatch.execute(
+                            SaveEntityPostCoordinationAction.create(projectId, spec, commitMessage),
+                            (result) -> {
+                                loadEntity(this.renderedEntity);
+                                fireEvent(new DirtyChangedEvent());
+                            }
+                    )
+            );
         });
-        specification.ifPresent(spec -> dispatch.execute(
-                        SaveEntityPostCoordinationAction.create(projectId, spec),
-                        (result) -> {
-                            loadEntity(this.renderedEntity);
-                            fireEvent(new DirtyChangedEvent());
-                        }
-                )
-        );
-
     }
 
     @Override

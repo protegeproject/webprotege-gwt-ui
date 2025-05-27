@@ -9,6 +9,8 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nullable;
+
 
 @AutoValue
 @GwtCompatible(serializable = true)
@@ -17,8 +19,9 @@ public abstract class SaveEntityLinearizationAction implements Action<SaveEntity
 
     @JsonCreator
     public static SaveEntityLinearizationAction create(@JsonProperty("projectId") ProjectId projectId,
-                                                       @JsonProperty("entityLinearization") WhoficEntityLinearizationSpecification entityLinearization) {
-        return new AutoValue_SaveEntityLinearizationAction(projectId, entityLinearization);
+                                                       @JsonProperty("entityLinearization") WhoficEntityLinearizationSpecification entityLinearization,
+                                                       @JsonProperty("commitMessage") @Nullable String commitMessage) {
+        return new AutoValue_SaveEntityLinearizationAction(projectId, entityLinearization, commitMessage);
     }
 
     @JsonProperty("projectId")
@@ -26,5 +29,8 @@ public abstract class SaveEntityLinearizationAction implements Action<SaveEntity
 
     @JsonProperty("entityLinearization")
     public abstract WhoficEntityLinearizationSpecification getEntityLinearization();
+
+    @JsonProperty("commitMessage")
+    public abstract String getCommitMessage();
 
 }

@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.card.EditableIcon;
 import edu.stanford.bmir.protege.web.client.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinitionAccessibility;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationSpecification;
-import edu.stanford.bmir.protege.web.shared.postcoordination.PostCoordinationTableAxisLabel;
-import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficEntityPostCoordinationSpecification;
+import edu.stanford.bmir.protege.web.shared.linearization.*;
+import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -55,19 +52,24 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         return createEditedSpec();
     }
 
-    public void setReadOnlyState(){
+    public void setReadOnlyState() {
         for (PostCoordinationTableRow row : tableRows) {
             for (PostCoordinationTableCell cell : row.getCellList()) {
                 cell.setState(true);
             }
+            row.getEditableIconFront().setVisible(false);
+            row.getEditableIconBack().setVisible(false);
         }
     }
+
     public void setEditableState() {
         for (PostCoordinationTableRow row : tableRows) {
-            if(row.getLinearizationDefinition().getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)) {
+            if (row.getLinearizationDefinition().getDefinitionAccessibility().equals(LinearizationDefinitionAccessibility.EDITABLE)) {
                 for (PostCoordinationTableCell cell : row.getCellList()) {
                     cell.setState(false);
                 }
+                row.getEditableIconFront().setVisible(true);
+                row.getEditableIconBack().setVisible(true);
             }
         }
     }
@@ -188,9 +190,9 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
 
         for (int i = 0; i < orderedRows.size(); i++) {
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0);
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0, orderedRows.get(i).getEditableIconFront());
 
-            for(int j = 0; j < orderedRows.get(i).getCellList().size(); j ++) {
+            for (int j = 0; j < orderedRows.get(i).getCellList().size(); j++) {
                 flexTable.setWidget(i + 1, j + 1, orderedRows.get(i).getCellList().get(j).asWidget());
             }
             flexTable.getRowFormatter().addStyleName(i + 1, style.getCustomRowStyle());
@@ -198,7 +200,7 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
                 flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1);
+            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1, orderedRows.get(i).getEditableIconBack());
         }
     }
 
@@ -236,7 +238,8 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
     }
 
-    private void addRowLabel(boolean isDerived, String label, int row, int column) {
+    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon) {
+
         String rowLabelString;
         if (isDerived) {
             rowLabelString = SVG + label;
@@ -245,8 +248,13 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
         Widget rowLabel = new Label();
         rowLabel.getElement().setInnerHTML(rowLabelString);
-        rowLabel.addStyleName(style.getRowLabel());
-        flexTable.setWidget(row, column, rowLabel);
+
+        FlowPanel labelPanel = new FlowPanel();
+        labelPanel.setStyleName(style.getRowLabel());
+        labelPanel.add(rowLabel);
+        labelPanel.add(editableIcon);
+
+        flexTable.setWidget(row, column, labelPanel);
     }
 
     private void addHeaderCell(String label, int position) {

@@ -65,6 +65,9 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("header-icon")
         String headerIcon();
+
+        @ClassName("editableIconBackground")
+        String editableIconBackground();
     }
 
 }
