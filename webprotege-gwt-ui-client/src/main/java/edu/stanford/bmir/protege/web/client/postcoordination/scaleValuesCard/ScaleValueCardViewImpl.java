@@ -85,7 +85,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
                 .append(scaleAllowMultiValue.getTooltip())
                 .append("'/>");
 
-        HTML headerHtml = new HTML(sb.toString());
+        headerHtml = new HTML(sb.toString());
 
         FlowPanel inner = new FlowPanel();
         inner.setStyleName(postCoordinationStyle.scaleValueHeader());
@@ -182,11 +182,18 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
         addButton.setEnabled(!readOnly);
         editableIconHeader.setVisible(!readOnly);
 
+        int lastRow = valueTable.getRowCount() - 1;
+        if (lastRow >= 0 && valueTable.getWidget(lastRow, 0) == addButton) {
+            valueTable.getRowFormatter().setVisible(lastRow, !readOnly);
+        }
+
         for (int i = 1; i < valueTable.getRowCount(); i++) {
             int cellsInRow = valueTable.getCellCount(i);
             if (readOnly) {
+                valueTable.getWidget(i, cellsInRow - 1).setVisible(false);
                 valueTable.getCellFormatter().addStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
             } else {
+                valueTable.getWidget(i, cellsInRow - 1).setVisible(true);
                 valueTable.getCellFormatter().removeStyleName(i, cellsInRow - 1, postCoordinationStyle.disabled());
             }
         }

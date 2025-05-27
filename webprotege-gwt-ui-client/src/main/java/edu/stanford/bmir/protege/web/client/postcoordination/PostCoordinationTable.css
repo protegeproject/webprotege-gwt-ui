@@ -58,7 +58,6 @@
     background-color: literal("var(--grid-header--background-color)");
     border-radius: literal("var(--grid-header--border-radius)");
     color: literal("var(--grid-header--color)");
-    min-height: 1rem;
     font-weight: bold;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
@@ -139,6 +138,7 @@
 .scaleValue-table-value-cell {
     padding-left: 10px;
     text-align: left;
+    height: 25px;
 }
 
 .scaleValueHeaderDescription {
