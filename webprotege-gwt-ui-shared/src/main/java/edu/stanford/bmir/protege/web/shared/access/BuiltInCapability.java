@@ -119,7 +119,9 @@ public enum BuiltInCapability {
 
     UPLOAD_AND_MERGE_ADDITIONS,
 
-    EDIT_FORMS;
+    EDIT_FORMS,
+
+    APPLY_MIGRATION_JSON_FILES;
 
 
 
