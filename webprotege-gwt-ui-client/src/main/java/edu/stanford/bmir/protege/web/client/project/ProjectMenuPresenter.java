@@ -185,10 +185,10 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
-        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
-        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadLinearizationChanges::setEnabled);
-        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadPostCoordinationChanges::setEnabled);
-        capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadPostCoordinationCustomScales::setEnabled);
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadSiblingsOrdering::setEnabled);
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadLinearizationChanges::setEnabled);
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadPostCoordinationChanges::setEnabled);
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadPostCoordinationCustomScales::setEnabled);
 
     }
 

@@ -89,7 +89,8 @@ public enum BuiltInRole {
             DELETE_INDIVIDUAL,
             CREATE_DATATYPE,
             DELETE_DATATYPE,
-            REVERT_CHANGES),
+            REVERT_CHANGES,
+            APPLY_MIGRATION_JSON_FILES),
 
     LAYOUT_EDITOR("" , ADD_OR_REMOVE_PERSPECTIVE,
             ADD_OR_REMOVE_VIEW),
