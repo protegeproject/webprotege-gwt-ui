@@ -239,14 +239,18 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     }
 
     private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon) {
-
         String rowLabelString;
         if (isDerived) {
             rowLabelString = SVG + label;
         } else {
             rowLabelString = label;
         }
-        Widget rowLabel = new Label();
+
+        editableIcon.addStyleName(style.size75());
+        editableIcon.addStyleName(style.marginLeftAuto());
+        editableIcon.setVisible(false);
+
+        InlineLabel rowLabel = new InlineLabel();
         rowLabel.getElement().setInnerHTML(rowLabelString);
 
         FlowPanel labelPanel = new FlowPanel();

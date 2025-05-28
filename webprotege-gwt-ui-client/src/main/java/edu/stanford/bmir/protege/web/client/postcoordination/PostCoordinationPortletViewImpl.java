@@ -299,8 +299,14 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
         } else {
             rowLabelString = label;
         }
-        Widget rowLabel = new Label();
+
+        editableIcon.addStyleName(style.size75());
+        editableIcon.addStyleName(style.marginLeftAuto());
+        editableIcon.setVisible(false);
+
+        InlineLabel rowLabel = new InlineLabel();
         rowLabel.getElement().setInnerHTML(rowLabelString);
+
         FlowPanel labelPanel = new FlowPanel();
         labelPanel.setStyleName(style.getRowLabel());
         labelPanel.add(rowLabel);

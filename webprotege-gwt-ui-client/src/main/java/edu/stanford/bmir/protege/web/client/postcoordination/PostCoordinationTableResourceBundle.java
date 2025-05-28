@@ -66,8 +66,14 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
         @ClassName("header-icon")
         String headerIcon();
 
-        @ClassName("editableIconBackground")
-        String editableIconBackground();
+        @ClassName("whiteBackground")
+        String whiteBackground();
+
+        @ClassName("size75")
+        String size75();
+
+        @ClassName("marginLeftAuto")
+        String marginLeftAuto();
     }
 
 }

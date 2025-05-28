@@ -4,6 +4,7 @@
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
              xmlns:card="urn:import:edu.stanford.bmir.protege.web.client.card"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <ui:with field="lin" type="edu.stanford.bmir.protege.web.client.linearization.LinearizationTableResourceBundle"/>
     <ui:style>
         .residualsCard {
             display: flex;
@@ -91,7 +92,7 @@
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:HTMLPanel addStyleNames="{style.residualLabelHeader}">
                             <g:Label text="Suppress 'Other Specified' Residuals" addStyleNames="{style.label}"/>
-                            <card:EditableIconImpl ui:field="editableIconSuppOtherSpecRes"
+                            <card:EditableIconImpl ui:field="editableIconSuppOtherSpecRes" addStyleNames="{lin.style.marginLeftAuto} {lin.style.size75}"
                                                    visible="false"/>
                         </g:HTMLPanel>
                         <custom:ConfigurableCheckbox
@@ -100,7 +101,7 @@
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:HTMLPanel addStyleNames="{style.residualLabelHeader}">
                             <g:Label text="Suppress 'Unspecified' Residuals" addStyleNames="{style.label}"/>
-                            <card:EditableIconImpl ui:field="editableIconSuppUnspecifiedRes"
+                            <card:EditableIconImpl ui:field="editableIconSuppUnspecifiedRes" addStyleNames="{lin.style.marginLeftAuto} {lin.style.size75}"
                                                    visible="false"/>
                         </g:HTMLPanel>
                         <custom:ConfigurableCheckbox
@@ -109,7 +110,7 @@
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:HTMLPanel addStyleNames="{style.residualLabelHeader}">
                             <g:Label text="'Other Specified' Residual title" addStyleNames="{style.label}"/>
-                            <card:EditableIconImpl ui:field="editableIconOtherSpecRes"
+                            <card:EditableIconImpl ui:field="editableIconOtherSpecRes" addStyleNames="{lin.style.marginLeftAuto} {lin.style.size75}"
                                                    visible="false"/>
                         </g:HTMLPanel>
                         <text:PlaceholderTextBox addStyleNames="{style.residualValue}"
@@ -119,7 +120,7 @@
                     <g:HTMLPanel addStyleNames="{style.residualsRow}">
                         <g:HTMLPanel addStyleNames="{style.residualLabelHeader}">
                             <g:Label text="'Unspecified' Residual title" addStyleNames="{style.label}"/>
-                            <card:EditableIconImpl ui:field="editableIconUnspecifiedRes"
+                            <card:EditableIconImpl ui:field="editableIconUnspecifiedRes" addStyleNames="{lin.style.marginLeftAuto} {lin.style.size75}"
                                                    visible="false"/>
                         </g:HTMLPanel>
                         <text:PlaceholderTextBox addStyleNames="{style.residualValue}"

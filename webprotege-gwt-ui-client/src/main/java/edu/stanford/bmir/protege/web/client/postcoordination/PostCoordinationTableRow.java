@@ -18,9 +18,6 @@ public class PostCoordinationTableRow {
         this.linearizationDefinition = linearizationDefinition;
         this.editableIconFront = new EditableIconImpl();
         this.editableIconBack = new EditableIconImpl();
-
-        this.editableIconBack.setVisible(false);
-        this.editableIconFront.setVisible(false);
     }
 
     public void addCell(PostCoordinationTableCell cell) {
