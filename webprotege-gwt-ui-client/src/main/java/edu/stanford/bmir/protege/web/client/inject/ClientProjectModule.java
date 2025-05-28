@@ -1042,6 +1042,26 @@ public class ClientProjectModule {
     FormRegionRoleCriteriaView provideFormRegionAccessRestrictionView(FormRegionRoleCriteriaViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    HierarchyDescriptorView provideHierarchyDescriptorView(HierarchyDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    HierarchyDescriptorRuleView provideHierarchyDescriptorRuleView(HierarchyDescriptorRuleViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPresenter<HierarchyDescriptorRule> provideHierarchyDescriptorRuleObjectPresenter(HierarchyDescriptorRuleObjectPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    PerspectiveChooserView providePerspectiveChooserView(PerspectiveChooserViewImpl impl) {
+        return impl;
+    }
 }
 
 
