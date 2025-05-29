@@ -104,8 +104,16 @@
     border-top-right-radius: 5px;
 }
 
-.editableIconBackground {
+.whiteBackground {
     background-color: white;
+}
+
+.size75 {
+    transform: scale(0.75);
+}
+
+.marginLeftAuto {
+    margin-left: auto;
 }
 
 

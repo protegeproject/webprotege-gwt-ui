@@ -73,6 +73,8 @@ public class LinearizationTableRow {
 
             editableIconDefinition = new EditableIconImpl();
             editableIconDefinition.setVisible(false);
+            editableIconDefinition.addStyleName(linearizationCss.size75());
+            editableIconDefinition.addStyleName(linearizationCss.marginLeftAuto());
 
             FlowPanel defPanel = new FlowPanel();
             defPanel.setStyleName(linearizationCss.getLinearizationDefinition());
@@ -272,6 +274,7 @@ public class LinearizationTableRow {
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.editableIconDefinition = new EditableIconImpl();
         clone.editableIconDefinition.setVisible(this.editableIconDefinition.isVisible());
+        clone.editableIconDefinition.addStyleName(this.editableIconDefinition.asWidget().getStyleName());
 
         FlowPanel defPanel = new FlowPanel();
         defPanel.setStyleName(linearizationCss.getLinearizationDefinition());

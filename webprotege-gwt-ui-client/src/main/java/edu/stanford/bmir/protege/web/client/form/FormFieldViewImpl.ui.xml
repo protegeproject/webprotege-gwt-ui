@@ -15,21 +15,23 @@
             flex-direction: row;
             justify-content: flex-start;
             width: 100%;
-            align-items: center;
+            align-items: baseline;
         }
 
         .label {
-            flex-grow: 0;
-            flex-shrink: 0;
-            justify-self: flex-start;
-            margin-right: 0.3em;
+            flex: 0 0 auto;
+            margin-right: .3em;
             cursor: pointer;
         }
+
         .editableIndicator {
-            flex-grow: 0;
-            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             width: 20px;
             height: 20px;
+            margin-bottom: -2px;
+            cursor: pointer;
         }
 
         .handle {

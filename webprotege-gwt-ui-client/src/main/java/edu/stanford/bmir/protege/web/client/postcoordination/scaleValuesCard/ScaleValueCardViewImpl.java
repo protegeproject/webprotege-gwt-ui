@@ -41,7 +41,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
     public ScaleValueCardViewImpl() {
         editableIconHeader = new EditableIconImpl();
         editableIconHeader.setVisible(false);
-        editableIconHeader.addStyleName(postCoordinationStyle.editableIconBackground());
+        editableIconHeader.addStyleName(postCoordinationStyle.whiteBackground());
 
         rootPanel = uiBinder.createAndBindUi(this);
         createAddButton();
@@ -76,7 +76,7 @@ public class ScaleValueCardViewImpl implements ScaleValueCardView {
                 .append(isCollapsed ? expandIcon : collapseIcon)
                 .append("</span> ")
                 .append(headerText)
-                .append("&nbsp;")
+                .append(spaceSymbol)
                 .append("<img src='")
                 .append(imageUri)
                 .append("' class='")

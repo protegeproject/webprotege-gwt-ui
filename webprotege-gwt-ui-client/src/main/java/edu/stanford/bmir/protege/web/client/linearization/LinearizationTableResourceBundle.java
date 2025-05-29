@@ -57,6 +57,12 @@ public interface LinearizationTableResourceBundle extends ClientBundle {
 
         @ClassName("center")
         String center();
+
+        @ClassName("size75")
+        String size75();
+
+        @ClassName("marginLeftAuto")
+        String marginLeftAuto();
     }
 
 }
