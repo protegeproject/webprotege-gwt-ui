@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptorRule;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
@@ -592,6 +593,11 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectRoleAssignmentsAction _SetProjectRoleAssignmentsAction;
     SetProjectRoleAssignmentsResult _SetProjectRoleAssignmentsResult;
     CapabilityId _CapabilityId;
+    HierarchyDescriptorRule _HierarchyDescriptorRule;
+    GetProjectHierarchyDescriptorRulesAction _GetProjectHierarchyDescriptorRulesAction;
+    GetProjectHierarchyDescriptorRulesResult _GetProjectHierarchyDescriptorRulesResult;
+    SetProjectHierarchyDescriptorRulesAction _SetProjectHierarchyDescriptorRulesAction;
+    SetProjectHierarchyDescriptorRulesResult _SetProjectHierarchyDescriptorRulesResult;
 
 
     public RpcWhiteList() {

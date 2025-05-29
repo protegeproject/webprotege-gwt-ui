@@ -219,7 +219,9 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(SetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(ResetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),
-        @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class)
+        @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class),
+        @JsonSubTypes.Type(GetProjectHierarchyDescriptorRulesResult.class),
+        @JsonSubTypes.Type(SetProjectHierarchyDescriptorRulesResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {
