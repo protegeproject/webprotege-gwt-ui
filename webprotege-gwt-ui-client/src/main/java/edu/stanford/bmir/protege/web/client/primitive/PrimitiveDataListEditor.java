@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
@@ -34,5 +35,13 @@ public class PrimitiveDataListEditor extends ValueListFlexEditorImpl<OWLPrimitiv
         editor.setAllowedTypes(Arrays.asList(allowedTypes));
         editor.setFreshEntitiesSuggestStrategy(freshEntitySuggestStrategy);
         return editor;
+    }
+
+    public PrimitiveDataListEditor(ValueEditorFactory<OWLPrimitiveData> valueEditorFactory) {
+        super(valueEditorFactory);
+    }
+
+    public void setAllowedTypes(PrimitiveType... allowedTypes) {
+        forEachEditor(e -> ((PrimitiveDataEditor) e).setAllowedTypes(Arrays.asList(allowedTypes)));
     }
 }

@@ -9,6 +9,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.form.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.ProjectHierarchiesActivity;
+import edu.stanford.bmir.protege.web.client.hierarchy.ProjectHierarchiesPlace;
+import edu.stanford.bmir.protege.web.client.hierarchy.ProjectHierarchiesPresenter;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -236,6 +239,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                     perspectivesManagerPresenter);
         }
 
+        if(place instanceof ProjectHierarchiesPlace) {
+            ProjectHierarchiesPlace projectHierarchiesPlace = (ProjectHierarchiesPlace) place;
+            ProjectHierarchiesPresenter presenter = getProjectHierarchiesPresenter(projectHierarchiesPlace);
+            return new ProjectHierarchiesActivity(presenter);
+        }
+
         return null;
     }
 
@@ -268,6 +277,11 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private PerspectivesManagerPresenter getPerspectivesManagerPresenter(PerspectivesManagerPlace place) {
         ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(place.getProjectId());
         return projectComponent.getPerspectivesManagerPresenter();
+    }
+
+    private ProjectHierarchiesPresenter getProjectHierarchiesPresenter(ProjectHierarchiesPlace place) {
+        ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(place.getProjectId());
+        return projectComponent.getProjectHierarchiesPresenter();
     }
 
 }
