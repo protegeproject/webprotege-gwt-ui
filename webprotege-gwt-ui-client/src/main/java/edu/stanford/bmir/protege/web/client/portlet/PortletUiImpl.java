@@ -1,35 +1,25 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
-import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
-import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
-import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.app.*;
+import edu.stanford.bmir.protege.web.client.filter.*;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
-import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
-import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
+import edu.stanford.bmir.protege.web.shared.filter.*;
+import edu.stanford.protege.widgetmap.client.view.*;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -83,9 +73,15 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     private NodeProperties nodeProperties = NodeProperties.emptyNodeProperties();
 
-    private BiConsumer<PortletUi, NodeProperties> nodePropertiesChangedHandler = (ui, np) -> {};
+    private BiConsumer<PortletUi, NodeProperties> nodePropertiesChangedHandler = (ui, np) -> {
+    };
 
     private Optional<ViewNodeId> viewNodeId = Optional.empty();
+
+    @Nonnull
+    private final Map<UIAction, SimplePanel> actionPanels = new HashMap<>();
+    @Nonnull
+    private final Map<UIAction, Tooltip> actionTooltips = new HashMap<>();
 
     @Inject
     public PortletUiImpl(@Nonnull ForbiddenView forbiddenView,
@@ -151,7 +147,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @UiHandler("filterButton")
     protected void handleFilterButtonClicked(ClickEvent event) {
         GWT.log("[PortletUi] Filter button clicked");
-        if(!filterView.isPresent()) {
+        if (!filterView.isPresent()) {
             return;
         }
         PopupPanel popup = new PopupPanel();
@@ -183,14 +179,15 @@ public class PortletUiImpl extends Composite implements PortletUi {
         simplePanel.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyphContainer());
         Tooltip tooltip = Tooltip.createOnBottom(simplePanel, action.getLabel());
         tooltips.add(tooltip);
+        actionPanels.put(action, simplePanel);
+        actionTooltips.put(action, tooltip);
         final Button button = new Button();
-        if(action.hasIcon()) {
+        if (action.hasIcon()) {
             button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyph());
             button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarGlyphButton());
             button.addStyleName(action.getStyle());
             button.setText("");
-        }
-        else {
+        } else {
             button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
             button.setText(action.getLabel());
         }
@@ -203,8 +200,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
             button.setVisible(value.isVisible());
             if (!action.hasIcon()) {
                 button.setText(value.getLabel());
-            }
-            else {
+            } else {
                 button.setText("");
             }
         });
@@ -215,8 +211,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void setForbiddenMessage(String message) {
         if (message.isEmpty()) {
             forbiddenView.clearSubMessage();
-        }
-        else {
+        } else {
             forbiddenView.setSubMessage(message);
         }
     }
@@ -226,8 +221,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
         if (forbiddenVisible) {
             toolbar.setVisible(false);
             contentHolder.setWidget(forbiddenView);
-        }
-        else {
+        } else {
             toolbar.setVisible(toolbarVisible);
             content.ifPresent(widget -> contentHolder.setWidget(widget));
         }
@@ -236,11 +230,10 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setNothingSelectedVisible(boolean nothingSelectedVisible) {
         GWT.log("Set nothing selected: " + nothingSelectedVisible);
-        if(nothingSelectedVisible) {
+        if (nothingSelectedVisible) {
             toolbar.setVisible(false);
             contentHolder.setWidget(nothingSelectedView);
-        }
-        else {
+        } else {
             toolbar.setVisible(toolbarVisible);
             content.ifPresent(widget -> contentHolder.setWidget(widget));
         }
@@ -265,7 +258,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
         String currentValue = nodeProperties.getPropertyValue(propertyName, "");
-        if(!Objects.equals(currentValue, propertyValue)) {
+        if (!Objects.equals(currentValue, propertyValue)) {
             nodeProperties = nodeProperties.toBuilder().setValue(propertyName, propertyValue).build();
             nodePropertiesChangedHandler.accept(this, nodeProperties);
         }
@@ -291,8 +284,25 @@ public class PortletUiImpl extends Composite implements PortletUi {
         this.viewNodeId = Optional.of(viewNodeId);
     }
 
+    @Nonnull
     @Override
     public Optional<ViewNodeId> getViewNodeId() {
         return viewNodeId;
+    }
+
+    @Override
+    public void removeAction(UIAction action) {
+        SimplePanel p = actionPanels.remove(action);
+        if (p != null) {
+            toolbarButtonRun.remove(p);
+        }
+        Tooltip tt = actionTooltips.remove(action);
+        if (tt != null) {
+            tt.dispose();
+            tooltips.remove(tt);
+        }
+        if (toolbarButtonRun.getWidgetCount() == 0) {
+            setToolbarVisible(false);
+        }
     }
 }

@@ -28,11 +28,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 
-/**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 26/02/15
- */
+
 public class CombinedChangeDetailsViewImpl extends Composite implements CombinedChangeDetailsView {
 
     private static Messages messages = GWT.create(Messages.class);
