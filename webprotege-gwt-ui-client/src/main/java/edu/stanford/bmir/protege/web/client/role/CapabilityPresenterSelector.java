@@ -33,21 +33,21 @@ public class CapabilityPresenterSelector {
         capabilityPresenterFactories.add(f2);
         capabilityPresenterFactories.add(f3);
         capabilityPresenterFactories.forEach(pf -> view.addTypeId(pf.getTypeId(), pf.getLabel()));
+        selectedTypeId = f0.getTypeId();
         view.setSelectedTypeIdChangedHandler(this::handleSelectedTypeIdChanged);
     }
 
     public void start(AcceptsOneWidget container) {
         container.setWidget(view);
+        updateSelectedPresenter();
     }
 
     private void handleSelectedTypeIdChanged(String nextSelectedTypeId) {
-        logger.info("Selected type id changed: " + nextSelectedTypeId);
         this.selectedTypeId = nextSelectedTypeId;
         updateSelectedPresenter();
     }
 
     private void updateSelectedPresenter() {
-        logger.info("Updating selected presenter");
         view.setSelectedTypeId(selectedTypeId);
         view.clearPresenter();
         if (selectedTypeId.isEmpty()) {

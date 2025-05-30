@@ -18,6 +18,8 @@ public class CapabilityContextPresenter {
 
     private final CapabilityContextView view;
 
+    private Optional<CompositeRootCriteria> initialCriteria = Optional.empty();
+
     @Inject
     public CapabilityContextPresenter(EntityCriteriaPresenter criteriaPresenter, CapabilityContextView view) {
         this.criteriaPresenter = criteriaPresenter;
@@ -29,7 +31,12 @@ public class CapabilityContextPresenter {
         criteriaPresenter.setDisplayAtLeastOneCriteria(true);
         criteriaPresenter.setMatchTextPrefix("matches");
         criteriaPresenter.start(view.getCriteriaContainer());
-        criteriaPresenter.setCriteria(createBlankCriteria());
+        if(initialCriteria.isPresent()) {
+            criteriaPresenter.setCriteria(initialCriteria.get());
+        }
+        else {
+            criteriaPresenter.setCriteria(createBlankCriteria());
+        }
     }
 
     private static CompositeRootCriteria createBlankCriteria() {
@@ -42,6 +49,7 @@ public class CapabilityContextPresenter {
     }
 
     public void setCriteria(CompositeRootCriteria criteria) {
+        this.initialCriteria = Optional.of(criteria);
         if(criteria.equals(CompositeRootCriteria.any())) {
             view.setForAnyEntity(true);
         }
@@ -62,6 +70,7 @@ public class CapabilityContextPresenter {
     }
 
     public void clearCriteria() {
+        initialCriteria = Optional.empty();
         criteriaPresenter.clear();
     }
 }
