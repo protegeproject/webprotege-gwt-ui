@@ -8,14 +8,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
+import edu.stanford.bmir.protege.web.shared.search.DeprecatedEntitiesTreatment;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -53,6 +51,9 @@ public class SearchViewImpl extends Composite implements SearchView {
     @UiField
     HTMLPanel langTagsFilterPanel;
 
+    @UiField
+    CheckBox includeDeprecatedEntitiesCheckBox;
+
     @Nonnull
     private IncrementSelectionHandler incrementSelectionHandler = () -> {};
 
@@ -75,6 +76,10 @@ public class SearchViewImpl extends Composite implements SearchView {
         element.setPropertyString("autocorrect", "off");
         element.setPropertyString("autocapitalize", "off");
         element.setPropertyString("spellcheck", "off");
+        includeDeprecatedEntitiesCheckBox.addValueChangeHandler(evt -> {
+            previousSearchString = "";
+            performSearchIfChanged();
+        });
     }
 
     @Nonnull
@@ -87,6 +92,16 @@ public class SearchViewImpl extends Composite implements SearchView {
     @Override
     public AcceptsOneWidget getSearchResultsContainer() {
         return searchResultsContainer;
+    }
+
+    @Override
+    public void setDeprecatedEntitiesTreatment(DeprecatedEntitiesTreatment deprecatedEntitiesTreatment) {
+        includeDeprecatedEntitiesCheckBox.setValue(deprecatedEntitiesTreatment.equals(DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES));
+    }
+
+    @Override
+    public DeprecatedEntitiesTreatment getDeprecatedEntitiesTreatment() {
+        return includeDeprecatedEntitiesCheckBox.getValue() ? DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES : DeprecatedEntitiesTreatment.EXCLUDE_DEPRECATED_ENTITIES;
     }
 
     @Override

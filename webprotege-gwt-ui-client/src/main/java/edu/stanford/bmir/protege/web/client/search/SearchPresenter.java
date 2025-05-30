@@ -178,7 +178,8 @@ public class SearchPresenter implements HasInitialFocusable {
                                                                         entityTypes,
                                                                         langTagFilter,
                                                                         searchFilters,
-                                                                        PageRequest.requestPage(pageNumber)),
+                                                                        PageRequest.requestPage(pageNumber),
+                        view.getDeprecatedEntitiesTreatment()),
                                        view,
                                        this::displaySearchResult);
     }
