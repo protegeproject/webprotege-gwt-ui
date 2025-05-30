@@ -218,6 +218,7 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                     DialogButton.YES);
         }
         else {
+            handleCancelEditing();
             displayCardsForSelectedEntity();
             getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
         }
