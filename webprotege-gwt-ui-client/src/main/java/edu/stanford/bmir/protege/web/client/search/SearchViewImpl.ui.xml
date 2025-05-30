@@ -39,6 +39,10 @@
             display: flex;
             flex-direction: row;
         }
+        .deprecatedEntitiesToggle {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
@@ -54,6 +58,9 @@
         </g:HTMLPanel>
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
+        <g:HTMLPanel addStyleNames="{style.deprecatedEntitiesToggle}">
+            <g:CheckBox ui:field="includeDeprecatedEntitiesCheckBox" text="Include deprecated entities"/>
+        </g:HTMLPanel>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:SimplePanel ui:field="searchResultsContainer"/>
     </g:HTMLPanel>

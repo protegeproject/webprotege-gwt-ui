@@ -35,13 +35,15 @@ public abstract class PerformEntitySearchAction implements ProjectAction<Perform
                                                    @JsonProperty("entityTypes") @Nonnull Set<EntityType<?>> entityTypes,
                                                    @JsonProperty("langTagFilter") @Nonnull LangTagFilter langTagFilter,
                                                    @JsonProperty("searchFilters") @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
-                                                   @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest) {
+                                                   @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest,
+                                                   @JsonProperty("deprecatedEntitiesTreatment") @Nonnull DeprecatedEntitiesTreatment deprecatedEntitiesTreatment) {
         return new AutoValue_PerformEntitySearchAction(projectId,
                                              entityTypes,
                                                        searchString,
                                                        langTagFilter,
                                              searchFilters,
-                                             pageRequest);
+                                             pageRequest,
+                deprecatedEntitiesTreatment);
     }
 
     @Nonnull
@@ -62,4 +64,7 @@ public abstract class PerformEntitySearchAction implements ProjectAction<Perform
 
     @Nonnull
     public abstract PageRequest getPageRequest();
+
+    @Nonnull
+    public abstract DeprecatedEntitiesTreatment getDeprecatedEntitiesTreatment();
 }

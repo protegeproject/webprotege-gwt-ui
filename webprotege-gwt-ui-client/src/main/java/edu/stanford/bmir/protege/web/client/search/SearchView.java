@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.shared.search.DeprecatedEntitiesTreatment;
 
 import javax.annotation.Nonnull;
 
@@ -34,6 +35,10 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 
     void setLangTagFilterVisible(boolean visible);
+
+    void setDeprecatedEntitiesTreatment(DeprecatedEntitiesTreatment deprecatedEntitiesTreatment);
+
+    DeprecatedEntitiesTreatment getDeprecatedEntitiesTreatment();
 
     @Nonnull
     AcceptsOneWidget getLangTagFilterContainer();
