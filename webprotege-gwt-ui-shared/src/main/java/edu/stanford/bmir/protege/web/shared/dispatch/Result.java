@@ -236,6 +236,8 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(SetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(ResetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),
+        @JsonSubTypes.Type(GetProjectHierarchyDescriptorRulesResult.class),
+        @JsonSubTypes.Type(SetProjectHierarchyDescriptorRulesResult.class),
         @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class),
         @JsonSubTypes.Type(CreateNewProjectFromProjectBackupResult.class),
         @JsonSubTypes.Type(MoveEntitiesToParentIcdResult.class),

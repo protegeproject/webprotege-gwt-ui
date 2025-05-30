@@ -256,6 +256,8 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = ResetProjectRoleDefinitionsAction.class),
         @Type(value = GetProjectRoleAssignmentsAction.class),
         @Type(value = SetProjectRoleAssignmentsAction.class),
+        @Type(value = GetProjectHierarchyDescriptorRulesAction.class),
+        @Type(value = SetProjectHierarchyDescriptorRulesAction.class),
         @Type(value = GetContextAwareLinearizationDefinitionAction.class),
         @Type(value = GetAuthorizedCapabilitiesForEntityAction.class),
 })

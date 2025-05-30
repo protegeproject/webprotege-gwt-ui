@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.inject;
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.client.form.FormEditorPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormsManagerPresenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.ProjectHierarchiesPresenter;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
@@ -67,4 +68,6 @@ public interface ClientProjectComponent extends HasDispose {
     ProjectRolesPresenter getProjectRolesPresenter();
 
     ProjectRoleAssignmentsPresenter getProjectRoleAssignmentsPresenter();
+
+    ProjectHierarchiesPresenter getProjectHierarchiesPresenter();
 }
