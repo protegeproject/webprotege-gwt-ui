@@ -1,30 +1,19 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.gwt.core.client.GWT;
+import com.google.common.collect.*;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.search.EntitySearchFilterTokenFieldPresenter;
-import edu.stanford.bmir.protege.web.client.search.HierarchyPopupElementSelectionHandler;
-import edu.stanford.bmir.protege.web.client.search.SearchResultChosenHandler;
-import edu.stanford.bmir.protege.web.client.search.SearchResultsListPresenter;
+import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.lang.LangTag;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,7 +37,8 @@ public class DuplicateEntityPresenter {
 
     private String langTag = "";
 
-    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {};
+    private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {
+    };
 
     private final static Logger logger = Logger.getLogger(DuplicateEntityPresenter.class.getName());
 
@@ -93,7 +83,8 @@ public class DuplicateEntityPresenter {
                         entityTypes,
                         getLangTagFilter(),
                         searchFilters,
-                        PageRequest.requestPage(pageNumber)),
+                        PageRequest.requestPage(pageNumber),
+                        DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES),
                 view,
                 this::processSearchActionResult);
 
@@ -113,7 +104,7 @@ public class DuplicateEntityPresenter {
     }
 
     private void processSearchActionResult(PerformEntitySearchResult result) {
-        if(result.getResults() == null || result.getResults().getTotalElements() == 0){
+        if (result.getResults() == null || result.getResults().getTotalElements() == 0) {
             hideSearchDuplicatesPanel();
             return;
         }
@@ -123,7 +114,7 @@ public class DuplicateEntityPresenter {
         this.searchResultsPresenter.displaySearchResult(result.getResults());
     }
 
-    private void hideSearchDuplicatesPanel(){
+    private void hideSearchDuplicatesPanel() {
         this.view.asWidget().setVisible(false);
     }
 
@@ -131,7 +122,7 @@ public class DuplicateEntityPresenter {
         return searchResultsPresenter.getSelectedSearchResult();
     }
 
-    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
+    public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler) {
         this.hierarchySelectionHandler = handler;
     }
 
