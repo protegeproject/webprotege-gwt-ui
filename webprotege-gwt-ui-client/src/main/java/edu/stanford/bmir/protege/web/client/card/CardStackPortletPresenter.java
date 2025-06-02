@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import java.util.stream.*;
 
 @Portlet(id = "webprotege.card",
-        title = "Card view",
+        title = "Entity card view",
         tooltip = "Presents a stack of cards that display information about the selected entity.")
 public class CardStackPortletPresenter extends AbstractWebProtegePortletPresenter {
 
@@ -242,14 +242,20 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                     DialogButton.YES,
                     this::commitChangesAndUpdateSelection,
                     DialogButton.YES);
-        } else {
+        }
+        else {
+            handleCancelEditing();
             displayCardsForSelectedEntity();
+            getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
         }
     }
 
     private void commitChangesAndUpdateSelection() {
-        // Proceed as normal
-        commitChanges(this::displayCardsForSelectedEntity);
+        commitChanges(() -> {
+            // Proceed as normal
+            displayCardsForSelectedEntity();
+            getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
+        });
     }
 
 
