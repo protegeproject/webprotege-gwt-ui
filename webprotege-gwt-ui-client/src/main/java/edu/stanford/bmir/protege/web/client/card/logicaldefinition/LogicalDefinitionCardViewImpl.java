@@ -214,6 +214,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     }
 
     private void populateWithExistingDefinition(OWLEntity owlEntity, ProjectId projectId) {
+
         dispatchServiceManager.execute(
                 GetEntityLogicalDefinitionAction.create(projectId, owlEntity.asOWLClass()),
                 (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
@@ -347,6 +348,9 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
     public void resetPristineState() {
         clearTables();
+        if(getEntity() == null) {
+            return;
+        }
         populateWithExistingDefinition(getEntity(), projectId);
         populateAvailableAxisValues(getEntity());
     }

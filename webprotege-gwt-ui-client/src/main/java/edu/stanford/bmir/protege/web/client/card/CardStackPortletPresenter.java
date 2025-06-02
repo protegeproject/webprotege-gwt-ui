@@ -106,6 +106,9 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         view.setFinishEditingHandler(this::handleFinishEditing);
         view.setCancelEditingHandler(this::handleCancelEditing);
         initializeSelection();
+        tabBarPresenter.setSelectedTabChangedHandler(() -> {
+            getSelectedCardPresenter().ifPresent(EntityCardPresenter::requestFocus);
+        });
     }
 
     private void initializeSelection() {
@@ -263,6 +266,10 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         getCurrentPresenters()
                 .forEach(this::transmitSelectionToCard);
 
+        if(getSelectedCardPresenter().isPresent()) {
+            getSelectedCardPresenter().get().requestFocus();
+        }
+
     }
 
     private void transmitSelectionToCard(EntityCardPresenter p) {
@@ -299,6 +306,7 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
         });
         getSelectedCardPresenter().ifPresent(EntityCardPresenter::requestFocus);
     }
+
 
     private void handleCancelEditing() {
         view.setEditModeActive(false);

@@ -34,7 +34,6 @@ public class FormControlStackPresenterFactory {
     public FormControlStackPresenter create(@Nonnull FormControlDescriptorDto descriptor,
                                             @Nonnull Repeatability repeatability,
                                             @Nonnull FormRegionPosition position) {
-        logger.info("geo descriptor: "+descriptor);
         FormControlDataEditorFactory factory = formControlFactory.getDataEditorFactory(descriptor);
         if(checkNotNull(repeatability).equals(Repeatability.NON_REPEATABLE)) {
             FormControl formControl = factory.createFormControl();
