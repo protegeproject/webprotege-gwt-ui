@@ -28,7 +28,8 @@ public class PerformEntitySearch_Serialization_TestCase {
         var action = PerformEntitySearchAction.create(mockProjectId(),
                                                       "Test", Collections.emptySet(),
                                                       LangTagFilter.get(ImmutableSet.of()), ImmutableList.of(),
-                                                      PageRequest.requestFirstPage());
+                                                      PageRequest.requestFirstPage(),
+                DeprecatedEntitiesTreatment.EXCLUDE_DEPRECATED_ENTITIES);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 
