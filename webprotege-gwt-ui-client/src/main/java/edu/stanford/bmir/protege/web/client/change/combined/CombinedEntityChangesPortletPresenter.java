@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
@@ -40,6 +41,8 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private PortletUi portletUi;
 
+    private final Messages messages;
+
     @Inject
     public CombinedEntityChangesPortletPresenter(SelectionModel selectionModel,
                                                  LoggedInUserProjectCapabilityChecker capabilityChecker,
@@ -47,11 +50,13 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  CombinedChangeListPresenter presenter,
                                                  DisplayNameRenderer displayNameRenderer,
                                                  DispatchServiceManager dispatch,
-                                                 SelectedPathsModel selectedPathsModel) {
+                                                 SelectedPathsModel selectedPathsModel,
+                                                 Messages messages) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.capabilityChecker = capabilityChecker;
         this.dispatch = dispatch;
+        this.messages = messages;
     }
 
     @Override
@@ -125,14 +130,14 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                 GetEntityEarliestChangeTimestampAction.create(getProjectId(), entity.getIRI()),
                 result -> {
                     StringBuilder sb = new StringBuilder();
-                    sb.append("Click here to see prior changes");
                     if (result.getEarliestTimestamp() != null) {
                         long ts = result.getEarliestTimestamp();
                         String dateStr = com.google.gwt.i18n.client.DateTimeFormat
                                 .getFormat("dd/MM/yyyy HH:mm")
                                 .format(new java.util.Date(ts));
-                        sb.append(" to ");
-                        sb.append(dateStr);
+                        sb.append(messages.change_priorChanges(dateStr));
+                    }else {
+                        sb.append(messages.change_priorChanges());
                     }
 
                     String url = "https://icat-history.azurewebsites.net/changes/"
@@ -141,7 +146,7 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
                     oldHistoryLink = new PortletAction(
                              sb.toString(),
-                            "wp-btn-g--history",
+                            "wp-btn-g--olderHistory",
                             () -> com.google.gwt.user.client.Window.open(url, "_blank", "")
                     );
                     portletUi.addAction(oldHistoryLink);

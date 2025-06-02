@@ -1505,4 +1505,14 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Siblings ordering processed successfully ")
     @Key("siblingsOrdering.processing.success")
     String siblingsOrderingSuccessfullyProcessed();
+
+    @DefaultMessage("Click here to see prior changes")
+    @Key("change.priorChanges")
+    String change_priorChanges();
+
+
+    @DefaultMessage("Click here to see changes prior to {0}")
+    @Key("change.priorChangesWithDate")
+    String change_priorChanges(String priorDate);
+
 }

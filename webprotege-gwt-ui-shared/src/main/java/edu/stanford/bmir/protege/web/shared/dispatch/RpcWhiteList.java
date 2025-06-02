@@ -637,6 +637,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetContextAwareLinearizationDefinitionResult _GetContextAwareLinearizationDefinitionResult;
     GetAuthorizedCapabilitiesForEntityAction _GetAuthorizedCapabilitiesForEntityAction;
     GetAuthorizedCapabilitiesForEntityResult _GetAuthorizedCapabilitiesForEntityResult;
+    GetEntityEarliestChangeTimestampResult _GetEntityEarliestChangeTimestampResult;
+    GetEntityEarliestChangeTimestampAction _GetEntityEarliestChangeTimestampAction;
 
     public RpcWhiteList() {
     }

@@ -184,6 +184,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource searchIcdIcon();
 
+    @Source("history-3-svgrepo-com.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource olderHistoryIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();

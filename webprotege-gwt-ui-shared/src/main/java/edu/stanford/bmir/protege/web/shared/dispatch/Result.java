@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 import com.fasterxml.jackson.annotation.*;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.*;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordResult;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsResult;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -29,10 +29,6 @@ import edu.stanford.bmir.protege.web.shared.merge.*;
 import edu.stanford.bmir.protege.web.shared.merge_add.*;
 import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.permissions.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -44,7 +40,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
-import edu.stanford.bmir.protege.web.shared.user.*;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.watches.*;
@@ -245,6 +240,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(GetClassHierarchyParentsByAxiomTypeResult.class),
         @JsonSubTypes.Type(GetContextAwareLinearizationDefinitionResult.class),
         @JsonSubTypes.Type(GetAuthorizedCapabilitiesForEntityResult.class),
+        @JsonSubTypes.Type(GetEntityEarliestChangeTimestampResult.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

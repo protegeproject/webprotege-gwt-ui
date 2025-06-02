@@ -260,6 +260,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SetProjectHierarchyDescriptorRulesAction.class),
         @Type(value = GetContextAwareLinearizationDefinitionAction.class),
         @Type(value = GetAuthorizedCapabilitiesForEntityAction.class),
+        @Type(value = GetEntityEarliestChangeTimestampAction.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

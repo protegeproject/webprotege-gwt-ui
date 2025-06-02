@@ -11,6 +11,7 @@
 @url hierarchyIconUrl hierarchyIcon;
 @url searchIconUrl searchIcon;
 @url searchIcdIconUrl searchIcdIcon;
+@url olderHistoryIconUrl olderHistoryIcon;
 @url createIconUrl svgCreateIcon;
 @url deleteIconUrl svgDeleteIcon;
 @url createIndividualIconUrl svgCreateIndividualIcon;
@@ -433,6 +434,20 @@
 .wp-btn-g--searchIcd {
     mask-image:  searchIcdIconUrl;
     -webkit-mask-image:  searchIcdIconUrl;
+}
+
+.wp-btn-g--olderHistory {
+    mask-image:  olderHistoryIconUrl;
+    -webkit-mask-image:  olderHistoryIconUrl;
+
+    mask-repeat:       no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position:     center;
+    -webkit-mask-position: center;
+
+    mask-size:         contain;
+    -webkit-mask-size: contain;
 }
 
 .wp-btn-g--create-class {
