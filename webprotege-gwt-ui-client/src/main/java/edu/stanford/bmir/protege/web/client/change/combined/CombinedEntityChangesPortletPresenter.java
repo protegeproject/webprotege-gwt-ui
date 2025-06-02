@@ -124,16 +124,23 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
         dispatch.execute(
                 GetEntityEarliestChangeTimestampAction.create(getProjectId(), entity.getIRI()),
                 result -> {
-                    long ts = result.getEarliestTimestamp();
-                    String dateStr = com.google.gwt.i18n.client.DateTimeFormat
-                            .getFormat("dd/MM/yyyy HH:mm")
-                            .format(new java.util.Date(ts));
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Click here to see prior changes");
+                    if (result.getEarliestTimestamp() != null) {
+                        long ts = result.getEarliestTimestamp();
+                        String dateStr = com.google.gwt.i18n.client.DateTimeFormat
+                                .getFormat("dd/MM/yyyy HH:mm")
+                                .format(new java.util.Date(ts));
+                        sb.append(" to ");
+                        sb.append(dateStr);
+                    }
+
                     String url = "https://icat-history.azurewebsites.net/changes/"
                             + com.google.gwt.http.client.URL.encodeQueryString(entity.getIRI().toString())
                             + ".html";
 
                     oldHistoryLink = new PortletAction(
-                            "Click here to see changes prior to " + dateStr,
+                             sb.toString(),
                             "wp-btn-g--history",
                             () -> com.google.gwt.user.client.Window.open(url, "_blank", "")
                     );

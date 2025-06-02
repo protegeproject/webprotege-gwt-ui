@@ -11,9 +11,9 @@ public abstract class GetEntityEarliestChangeTimestampResult
 
     @JsonCreator
     public static GetEntityEarliestChangeTimestampResult create(
-            @JsonProperty("earliestTimestamp") long earliestTimestamp) {
+            @JsonProperty("earliestTimestamp") Long earliestTimestamp) {
         return new AutoValue_GetEntityEarliestChangeTimestampResult(earliestTimestamp);
     }
 
-    public abstract long getEarliestTimestamp();
+    public abstract Long getEarliestTimestamp();
 }
