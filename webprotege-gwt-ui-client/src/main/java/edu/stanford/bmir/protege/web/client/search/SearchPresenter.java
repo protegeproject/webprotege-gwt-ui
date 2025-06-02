@@ -16,11 +16,7 @@ import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
-import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsAction;
-import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsResult;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -189,13 +185,14 @@ public class SearchPresenter implements HasInitialFocusable {
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
         dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
-                        view.getSearchString(),
-                        entityTypes,
-                        langTagFilter,
-                        searchFilters,
-                        PageRequest.requestPage(pageNumber)),
-                view,
-                this::displaySearchResult);
+                                                                        view.getSearchString(),
+                                                                        entityTypes,
+                                                                        langTagFilter,
+                                                                        searchFilters,
+                                                                        PageRequest.requestPage(pageNumber),
+                        view.getDeprecatedEntitiesTreatment()),
+                                       view,
+                                       this::displaySearchResult);
     }
 
     private void displaySearchResult(PerformEntitySearchResult result) {
