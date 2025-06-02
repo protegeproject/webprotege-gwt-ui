@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Portlet(id = "webprotege.card",
-        title = "Card view",
+        title = "Entity card view",
         tooltip = "Presents a stack of cards that display information about the selected entity.")
 public class CardStackPortletPresenter extends AbstractWebProtegePortletPresenter {
 
@@ -218,6 +218,7 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
                     DialogButton.YES);
         }
         else {
+            handleCancelEditing();
             displayCardsForSelectedEntity();
             getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
         }
