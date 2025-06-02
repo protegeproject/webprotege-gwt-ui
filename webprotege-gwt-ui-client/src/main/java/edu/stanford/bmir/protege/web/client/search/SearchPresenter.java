@@ -189,13 +189,14 @@ public class SearchPresenter implements HasInitialFocusable {
         int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
         dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
-                        view.getSearchString(),
-                        entityTypes,
-                        langTagFilter,
-                        searchFilters,
-                        PageRequest.requestPage(pageNumber)),
-                view,
-                this::displaySearchResult);
+                                                                        view.getSearchString(),
+                                                                        entityTypes,
+                                                                        langTagFilter,
+                                                                        searchFilters,
+                                                                        PageRequest.requestPage(pageNumber),
+                        view.getDeprecatedEntitiesTreatment()),
+                                       view,
+                                       this::displaySearchResult);
     }
 
     private void displaySearchResult(PerformEntitySearchResult result) {
