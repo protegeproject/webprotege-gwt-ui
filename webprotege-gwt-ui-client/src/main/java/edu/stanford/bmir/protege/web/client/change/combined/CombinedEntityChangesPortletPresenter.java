@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
@@ -39,9 +43,11 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private final DispatchServiceManager dispatch;
 
-    private PortletUi portletUi;
+    private Optional<PortletUi> portletUi;
 
     private final Messages messages;
+
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
 
     @Inject
     public CombinedEntityChangesPortletPresenter(SelectionModel selectionModel,
@@ -51,17 +57,19 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  DisplayNameRenderer displayNameRenderer,
                                                  DispatchServiceManager dispatch,
                                                  SelectedPathsModel selectedPathsModel,
-                                                 Messages messages) {
+                                                 Messages messages,
+                                                 ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.capabilityChecker = capabilityChecker;
         this.dispatch = dispatch;
         this.messages = messages;
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        this.portletUi = portletUi;
+        this.portletUi = Optional.of(portletUi);
         portletUi.setToolbarVisible(true);
         eventBus.addProjectEventHandler(getProjectId(),
                 ProjectChangedEvent.TYPE, this::handleProjectChanged);
@@ -75,10 +83,12 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private void handleHistoryChanged(UiHistoryChangedEvent uiHistoryChangedEvent) {
         for (String entityIri : uiHistoryChangedEvent.getAfectedEntityIris()) {
-            if (getSelectionModel().getSelection().get().toStringID().equals(entityIri)) {
+            if (getSelectionModel().getSelection().isPresent() &&
+                    getSelectionModel().getSelection().get().toStringID().equals(entityIri)) {
                 updateDisplayForSelectedEntity();
                 return;
             }
+
         }
     }
 
@@ -123,7 +133,7 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private void loadAndShowOldHistoryLink(OWLEntity entity) {
         if (oldHistoryLink != null) {
-            portletUi.removeAction(oldHistoryLink);
+            portletUi.ifPresent(portlet -> portlet.removeAction(oldHistoryLink));
         }
 
         dispatch.execute(
@@ -132,24 +142,24 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                     StringBuilder sb = new StringBuilder();
                     if (result.getEarliestTimestamp() != null) {
                         long ts = result.getEarliestTimestamp();
-                        String dateStr = com.google.gwt.i18n.client.DateTimeFormat
+                        String dateStr = DateTimeFormat
                                 .getFormat("dd/MM/yyyy HH:mm")
                                 .format(new java.util.Date(ts));
                         sb.append(messages.change_priorChanges(dateStr));
-                    }else {
+                    } else {
                         sb.append(messages.change_priorChanges());
                     }
 
-                    String url = "https://icat-history.azurewebsites.net/changes/"
-                            + com.google.gwt.http.client.URL.encodeQueryString(entity.getIRI().toString())
-                            + ".html";
+                    String url = applicationEnvironmentManager.getAppEnvVariables()
+                            .getEntityHistoryUrlFormat()
+                            .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
 
                     oldHistoryLink = new PortletAction(
-                             sb.toString(),
+                            sb.toString(),
                             "wp-btn-g--olderHistory",
-                            () -> com.google.gwt.user.client.Window.open(url, "_blank", "")
+                            () -> Window.open(url, "_blank", "")
                     );
-                    portletUi.addAction(oldHistoryLink);
+                    portletUi.ifPresent(portlet -> portlet.addAction(oldHistoryLink));
                 }
         );
     }

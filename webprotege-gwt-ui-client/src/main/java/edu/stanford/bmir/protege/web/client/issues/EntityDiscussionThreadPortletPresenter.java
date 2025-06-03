@@ -1,16 +1,18 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.selection.*;
+import edu.stanford.bmir.protege.web.shared.change.GetEntityEarliestCommentTimestampAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
@@ -23,8 +25,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_OBJECT_COMMENT;
-import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.OFF;
-import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
+import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.*;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
@@ -55,6 +56,11 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     private Optional<PortletUi> portletUi = Optional.empty();
 
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
+
+    private UIAction oldNotesLink;
+
+    private final DispatchServiceManager dispatch;
 
 
     @Inject
@@ -66,29 +72,34 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull ProjectId projectId,
                                                   @Nonnull DiscussionThreadListPresenter presenter,
                                                   DisplayNameRenderer displayNameRenderer,
-                                                  DispatchServiceManager dispatch) {
+                                                  DispatchServiceManager dispatch,
+                                                  @Nonnull ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.filterView = filterView;
         this.messages = messages;
         this.displayResolvedThreadsFilter = new FilterId(messages.discussionThread_DisplayResolvedThreads());
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
+        this.dispatch = dispatch;
         filterView.addFilter(displayResolvedThreadsFilter, OFF);
         filterView.addValueChangeHandler(event -> handleFilterSettingChanged());
         this.presenter = presenter;
         this.capabilityChecker = capabilityChecker;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
-                                                  "wp-btn-g--create-thread",
-                                                  presenter::createThread);
+                "wp-btn-g--create-thread",
+                presenter::createThread);
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
                 ON_CAPABILITIES_CHANGED,
-                                        this::handlePemissionsChange);
+                this::handlePemissionsChange);
         this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView());
         portletUi.addAction(addCommentAction);
         addCommentAction.setEnabled(false);
+        portletUi.addAction(oldNotesLink);
+        oldNotesLink.setEnabled(false);
         portletUi.setFilterView(filterView);
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
         presenter.setHasBusy(portletUi);
@@ -100,7 +111,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     private void handleFilterSettingChanged() {
         boolean displayResolvedThreads = filterView.getFilterSet()
-                  .getFilterSetting(displayResolvedThreadsFilter, OFF) == ON;
+                .getFilterSetting(displayResolvedThreadsFilter, OFF) == ON;
         presenter.setDisplayResolvedThreads(displayResolvedThreads);
     }
 
@@ -120,20 +131,58 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     private void handleSetEntity(Optional<OWLEntity> entity) {
         addCommentAction.setEnabled(entity.isPresent());
-        portletUi.ifPresent(portletUi -> {
-            capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT, canViewComments -> {
-                portletUi.setForbiddenVisible(!canViewComments);
-                if(canViewComments) {
-                    if(entity.isPresent()) {
-                        presenter.setEntity(entity.get());
-                    }
-                    else {
-                        presenter.clear();
-                        setDisplayedEntity(Optional.empty());
-                    }
-                }
-            });
-        });
+        portletUi.ifPresent(portletUi -> capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT, canViewComments -> {
+                            portletUi.setForbiddenVisible(!canViewComments);
+                            if (canViewComments) {
+                                if (entity.isPresent()) {
+                                    presenter.setEntity(entity.get());
+                                    loadAndShowOldHistoryLink(entity.get());
+                                } else {
+                                    presenter.clear();
+                                    setDisplayedEntity(Optional.empty());
+                                    removeOldNotesLinkIfPresent();
+                                }
+                            }
+                        }
+                )
+        );
 
+    }
+
+    private void loadAndShowOldHistoryLink(OWLEntity entity) {
+        removeOldNotesLinkIfPresent();
+
+        dispatch.execute(
+                GetEntityEarliestCommentTimestampAction.create(getProjectId(), entity.getIRI()),
+                result -> {
+                    StringBuilder sb = new StringBuilder();
+                    if (result.getEarliestTimestamp() != null) {
+                        long ts = result.getEarliestTimestamp();
+                        String dateStr = DateTimeFormat
+                                .getFormat("dd/MM/yyyy HH:mm")
+                                .format(new java.util.Date(ts));
+                        sb.append(messages.change_priorChanges(dateStr));
+                    } else {
+                        sb.append(messages.change_priorChanges());
+                    }
+
+                    String url = applicationEnvironmentManager.getAppEnvVariables()
+                            .getEntityNotesUrlFormat()
+                            .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
+
+                    oldNotesLink = new PortletAction(
+                            sb.toString(),
+                            "wp-btn-g--older-notes",
+                            () -> Window.open(url, "_blank", "")
+                    );
+                    portletUi.ifPresent(portlet -> portlet.addAction(oldNotesLink));
+                }
+        );
+    }
+
+    private void removeOldNotesLinkIfPresent() {
+        if (oldNotesLink != null) {
+            portletUi.ifPresent(portlet -> portlet.removeAction(oldNotesLink));
+        }
     }
 }

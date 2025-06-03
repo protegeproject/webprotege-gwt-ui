@@ -1515,4 +1515,13 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("change.priorChangesWithDate")
     String change_priorChanges(String priorDate);
 
+    @DefaultMessage("Click here to see prior notes")
+    @Key("comments.priorComments")
+    String comments_priorComments();
+
+
+    @DefaultMessage("Click here to see notes prior to {0}")
+    @Key("comments.priorCommentsWithDate")
+    String comments_priorComments(String priorDate);
+
 }
