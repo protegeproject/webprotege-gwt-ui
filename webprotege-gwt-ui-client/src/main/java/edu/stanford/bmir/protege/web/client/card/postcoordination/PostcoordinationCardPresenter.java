@@ -133,7 +133,10 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void cancelEditing() {
         selectedEntity.ifPresent(sel->{
             setReadOnlyMode();
-            loadEntity(this.renderedEntity);
+            if(renderedEntity != null && !this.renderedEntity.equals(selectedEntity.get())) {
+                this.renderedEntity = selectedEntity.get();
+                loadEntity(this.renderedEntity);
+            }
         });
     }
 
@@ -341,9 +344,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
         boolean definitionMapKeysAreTheSame = this.definitionMap.keySet().equals(definitionMap.keySet());
 
-        boolean definitionsAreTheSame = this.definitionMap.values().equals(definitionMap.values());
 
-        return !scaleCardsAreTheSame || !compositeAxisAreTheSame || !scaleLabelsAreTheSame || !tableLabelsAreTheSame || !definitionMapKeysAreTheSame || !definitionsAreTheSame;
+        return !scaleCardsAreTheSame || !compositeAxisAreTheSame || !scaleLabelsAreTheSame || !tableLabelsAreTheSame || !definitionMapKeysAreTheSame;
     }
 
     private void navigateToEntity(OWLEntity entityData) {
