@@ -42,6 +42,10 @@ public class JsonRpcHttpResponseHandler {
             if(httpResponse.statusCode() == HttpStatus.SC_UNAUTHORIZED) {
                 throw new PermissionDeniedException(userId);
             }
+            if(httpResponse.statusCode() >= 400) {
+                logger.error("Error response code returned: (" + httpResponse.statusCode() + ") " + httpResponse.body());
+                throw new ActionExecutionException("An error occurred on the server");
+            }
             var responseBody = httpResponse.body();
             var jsonRpcResponse = objectMapper.readValue(responseBody, JsonRpcResponse.class);
             if(jsonRpcResponse.getError().isPresent()) {
