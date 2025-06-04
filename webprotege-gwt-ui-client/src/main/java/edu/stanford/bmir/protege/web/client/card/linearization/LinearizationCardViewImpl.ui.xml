@@ -25,9 +25,10 @@
 
         .residualsCardHeader {
             font-size: 14px;
-            color: #fff;
+            color: literal("var(--grid-header--color)");
             line-height: 1.4;
-            background-color: #186cd4;
+            background-color: literal("var(--grid-header--background-color)");
+            border-radius: literal("var(--grid-header--border-radius)");
             padding: 10px;
             font-weight: bold;
             font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
