@@ -98,16 +98,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
             var userId = executionContext.getUserId();
             logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
-            if(httpResponse.statusCode() == 400) {
-                logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                if(action instanceof BatchAction) {
-                    ((BatchAction) action).getActions()
-                                          .stream()
-                                          .map(a -> a.getClass().getSimpleName())
-                                          .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
-                }
-            }
-            else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+
+            if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
                 var headers = httpResponse.headers()
                         .map()
                         .entrySet()
@@ -128,6 +120,12 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             }
             else if(httpResponse.statusCode() >= 400) {
                 logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
+                if(action instanceof BatchAction) {
+                    ((BatchAction) action).getActions()
+                            .stream()
+                            .map(a -> a.getClass().getSimpleName())
+                            .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
+                }
                 throw new ActionExecutionException("An error occurred.  This error has been logged by the UI server.");
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
