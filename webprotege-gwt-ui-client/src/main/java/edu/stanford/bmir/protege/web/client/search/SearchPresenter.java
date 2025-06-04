@@ -16,11 +16,7 @@ import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
-import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsAction;
-import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsResult;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;

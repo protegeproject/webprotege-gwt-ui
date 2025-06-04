@@ -127,6 +127,10 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 throw new ActionExecutionException("Gateway Timeout (504)");
             }
+            else if(httpResponse.statusCode() >= 400) {
+                logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
+                throw new ActionExecutionException("An error occurred.  This error has been logged by the UI server.");
+            }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
             logger.error("Could not connect to API Gateway at {}", requestBuilder.getJsonRpcEndPoint().getUri(), e);
