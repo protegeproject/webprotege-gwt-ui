@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
+import edu.stanford.bmir.protege.web.server.rpc.JsonRpcRequest;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
@@ -124,6 +125,10 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             else if(httpResponse.statusCode() == 504) {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 throw new ActionExecutionException("Gateway Timeout (504)");
+            }
+            else if(httpResponse.statusCode() >= 400) {
+                logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
+                throw new ActionExecutionException("An error occurred.  This error has been logged by the UI server.");
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
