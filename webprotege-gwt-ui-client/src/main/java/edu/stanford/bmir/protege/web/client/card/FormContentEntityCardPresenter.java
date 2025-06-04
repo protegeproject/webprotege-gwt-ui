@@ -195,8 +195,10 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void cancelEditing() {
-        formPresenter.setEnabled(false);
-        updateDisplayedForm();
+        if(formPresenter.isEnabled()) {
+            formPresenter.setEnabled(false);
+            updateDisplayedForm();
+        }
     }
 
     @Override
