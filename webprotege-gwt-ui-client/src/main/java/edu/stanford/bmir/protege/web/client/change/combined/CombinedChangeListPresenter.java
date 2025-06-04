@@ -29,9 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
 
-/**
- * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
- */
+
 public class CombinedChangeListPresenter {
 
     @Nonnull

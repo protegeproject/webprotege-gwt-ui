@@ -2,30 +2,19 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
-import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
-import edu.stanford.bmir.protege.web.server.rpc.JsonRpcRequest;
+import edu.stanford.bmir.protege.web.server.rpc.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
-import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationResult;
-import edu.stanford.bmir.protege.web.shared.linearization.WhoficEntityLinearizationSpecification;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import org.semanticweb.owlapi.model.IRI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.http.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,7 +71,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var logoutUrl = getEnvVariable("webprotege.logoutUrl").orElse("http://webprotege-local.edu/webprotege/logout");
                 var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
                 var fileUploadUrl = getEnvVariable("webprotege.fileUploadurl").orElse("http://webprotege-local.edu");
-                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl);
+                var historyFormat = getEnvVariable("webprotege.entityHistoryUrlFormat").orElse("https://icat-history.azurewebsites.net/changes/{0}.html");
+                var notesFormat   = getEnvVariable("webprotege.entityNotesUrlFormat").orElse("https://icat-history.azurewebsites.net/notes/{0}.html");
+                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl, historyFormat, notesFormat);
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);

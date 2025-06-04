@@ -173,9 +173,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
         uploadSiblingsOrdering.setEnabled(false);
+        uploadSiblingsOrdering.setVisible(false);
         uploadLinearizationChanges.setEnabled(false);
+        uploadLinearizationChanges.setVisible(false);
         uploadPostCoordinationChanges.setEnabled(false);
+        uploadPostCoordinationChanges.setVisible(false);
         uploadPostCoordinationCustomScales.setEnabled(false);
+        uploadPostCoordinationCustomScales.setVisible(false);
         displayButton(container);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
@@ -185,10 +189,22 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, exportSettings::setEnabled);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
-        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadSiblingsOrdering::setEnabled);
-        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadLinearizationChanges::setEnabled);
-        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadPostCoordinationChanges::setEnabled);
-        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, uploadPostCoordinationCustomScales::setEnabled);
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, (canUpload) -> {
+            uploadSiblingsOrdering.setVisible(canUpload);
+            uploadSiblingsOrdering.setEnabled(canUpload);
+        });
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, (canUpload) -> {
+            uploadLinearizationChanges.setVisible(canUpload);
+            uploadLinearizationChanges.setEnabled(canUpload);
+        });
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES, (canUpload) -> {
+            uploadPostCoordinationChanges.setVisible(canUpload);
+            uploadPostCoordinationChanges.setEnabled(canUpload);
+        });
+        capabilityChecker.hasCapability(APPLY_MIGRATION_JSON_FILES,  (canUpload) -> {
+            uploadPostCoordinationCustomScales.setVisible(canUpload);
+            uploadPostCoordinationCustomScales.setEnabled(canUpload);
+        });
 
     }
 

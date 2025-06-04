@@ -21,6 +21,10 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     private String fileUploadUrl;
 
+    private String entityHistoryUrlFormat;
+
+    private String entityNotesUrlFormat;
+
 
     @GwtSerializationConstructor
     public AppEnvVariables(){
@@ -30,14 +34,20 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     @JsonCreator
     @NotNull
-    public static AppEnvVariables create(@JsonProperty("logoutUrl") String logoutUrl, @JsonProperty("websocketUrl") String websocketUrl,
+    public static AppEnvVariables create(@JsonProperty("logoutUrl") String logoutUrl,
+                                         @JsonProperty("websocketUrl") String websocketUrl,
                                          @JsonProperty("redirectUrl") String redirectUrl,
-                                         @JsonProperty("fileUploadUrl") String fileUploadUrl) {
+                                         @JsonProperty("fileUploadUrl") String fileUploadUrl,
+                                         @JsonProperty("entityHistoryUrlFormat") String entityHistoryUrlFormat,
+                                         @JsonProperty("entityNotesUrlFormat")   String entityNotesUrlFormat
+                                         ) {
         AppEnvVariables response = new AppEnvVariables();
         response.redirectAfterLogoutUrl = redirectUrl;
         response.logoutUrl = logoutUrl;
         response.websocketUrl = websocketUrl;
         response.fileUploadUrl = fileUploadUrl;
+        response.entityHistoryUrlFormat  = entityHistoryUrlFormat;
+        response.entityNotesUrlFormat    = entityNotesUrlFormat;
         return response;
     }
 
@@ -56,4 +66,8 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
     public String getFileUploadUrl() {
         return fileUploadUrl;
     }
+
+    public String getEntityHistoryUrlFormat() { return entityHistoryUrlFormat; }
+
+    public String getEntityNotesUrlFormat()   { return entityNotesUrlFormat; }
 }

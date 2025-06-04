@@ -1,11 +1,17 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
-import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.*;
+import edu.stanford.bmir.protege.web.shared.change.GetEntityEarliestChangeTimestampAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,6 +39,16 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
+    private UIAction oldHistoryLink;
+
+    private final DispatchServiceManager dispatch;
+
+    private Optional<PortletUi> portletUi;
+
+    private final Messages messages;
+
+    private final ApplicationEnvironmentManager applicationEnvironmentManager;
+
     @Inject
     public CombinedEntityChangesPortletPresenter(SelectionModel selectionModel,
                                                  LoggedInUserProjectCapabilityChecker capabilityChecker,
@@ -40,14 +56,21 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  CombinedChangeListPresenter presenter,
                                                  DisplayNameRenderer displayNameRenderer,
                                                  DispatchServiceManager dispatch,
-                                                 SelectedPathsModel selectedPathsModel) {
+                                                 SelectedPathsModel selectedPathsModel,
+                                                 Messages messages,
+                                                 ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
         this.capabilityChecker = capabilityChecker;
+        this.dispatch = dispatch;
+        this.messages = messages;
+        this.applicationEnvironmentManager = applicationEnvironmentManager;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = Optional.of(portletUi);
+        portletUi.setToolbarVisible(true);
         eventBus.addProjectEventHandler(getProjectId(),
                 ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addProjectEventHandler(getProjectId(), UI_HISTORY_CHANGED, this::handleHistoryChanged);
@@ -60,10 +83,12 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private void handleHistoryChanged(UiHistoryChangedEvent uiHistoryChangedEvent) {
         for (String entityIri : uiHistoryChangedEvent.getAfectedEntityIris()) {
-            if (getSelectionModel().getSelection().get().toStringID().equals(entityIri)) {
+            if (getSelectionModel().getSelection().isPresent() &&
+                    getSelectionModel().getSelection().get().toStringID().equals(entityIri)) {
                 updateDisplayForSelectedEntity();
                 return;
             }
+
         }
     }
 
@@ -94,13 +119,49 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
         capabilityChecker.hasCapability(VIEW_CHANGES, canViewChanges -> {
             if (canViewChanges) {
                 setForbiddenVisible(false);
-                ProjectId projectId = getProjectId();
-                getSelectedEntity().ifPresent(presenter::displayChangesForEntity);
+                getSelectedEntity().ifPresent(entity -> {
+                            presenter.displayChangesForEntity(entity);
+                            loadAndShowOldHistoryLink(entity);
+                        }
+                );
             } else {
                 setForbiddenVisible(true);
                 presenter.clear();
             }
         });
+    }
+
+    private void loadAndShowOldHistoryLink(OWLEntity entity) {
+        if (oldHistoryLink != null) {
+            portletUi.ifPresent(portlet -> portlet.removeAction(oldHistoryLink));
+        }
+
+        dispatch.execute(
+                GetEntityEarliestChangeTimestampAction.create(getProjectId(), entity.getIRI()),
+                result -> {
+                    StringBuilder sb = new StringBuilder();
+                    if (result.getEarliestTimestamp() != null) {
+                        long ts = result.getEarliestTimestamp();
+                        String dateStr = DateTimeFormat
+                                .getFormat("dd/MM/yyyy HH:mm")
+                                .format(new java.util.Date(ts));
+                        sb.append(messages.change_priorChanges(dateStr));
+                    } else {
+                        sb.append(messages.change_priorChanges());
+                    }
+
+                    String url = applicationEnvironmentManager.getAppEnvVariables()
+                            .getEntityHistoryUrlFormat()
+                            .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
+
+                    oldHistoryLink = new PortletAction(
+                            sb.toString(),
+                            "wp-btn-g--olderHistory",
+                            () -> Window.open(url, "_blank", "")
+                    );
+                    portletUi.ifPresent(portlet -> portlet.addAction(oldHistoryLink));
+                }
+        );
     }
 
 }

@@ -58,4 +58,6 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
 
     @Nonnull
     Optional<ViewNodeId> getViewNodeId();
+
+    void removeAction(UIAction action);
 }
