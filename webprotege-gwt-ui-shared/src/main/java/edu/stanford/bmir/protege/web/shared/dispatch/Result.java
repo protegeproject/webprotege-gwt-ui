@@ -241,6 +241,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(GetContextAwareLinearizationDefinitionResult.class),
         @JsonSubTypes.Type(GetAuthorizedCapabilitiesForEntityResult.class),
         @JsonSubTypes.Type(GetEntityEarliestChangeTimestampResult.class),
+        @JsonSubTypes.Type(GetEntityEarliestCommentTimestampResult.class),
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

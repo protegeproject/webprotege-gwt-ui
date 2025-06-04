@@ -5,7 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 
@@ -19,8 +19,8 @@ public abstract class GetEntityEarliestCommentTimestampAction
     @JsonCreator
     public static GetEntityEarliestCommentTimestampAction create(
             @JsonProperty("projectId") ProjectId projectId,
-            @JsonProperty("entityIri") IRI entityIri) {
-        return new AutoValue_GetEntityEarliestCommentTimestampAction(projectId, entityIri);
+            @JsonProperty("entity") OWLEntity entity) {
+        return new AutoValue_GetEntityEarliestCommentTimestampAction(projectId, entity);
     }
 
     @Nonnull
@@ -28,5 +28,5 @@ public abstract class GetEntityEarliestCommentTimestampAction
     public abstract ProjectId getProjectId();
 
     @JsonProperty("entityIri")
-    public abstract IRI getEntity();
+    public abstract OWLEntity getEntity();
 }

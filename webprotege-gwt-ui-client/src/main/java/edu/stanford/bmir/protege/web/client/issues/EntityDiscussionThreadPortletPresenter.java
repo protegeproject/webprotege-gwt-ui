@@ -36,6 +36,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.Comments", title = "Comments", tooltip = "Displays comments for the selected entity")
 public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePortletPresenter {
 
+
     @Nonnull
     private final FilterId displayResolvedThreadsFilter;
 
@@ -98,8 +99,6 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         portletUi.setWidget(presenter.getView());
         portletUi.addAction(addCommentAction);
         addCommentAction.setEnabled(false);
-        portletUi.addAction(oldNotesLink);
-        oldNotesLink.setEnabled(false);
         portletUi.setFilterView(filterView);
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
         presenter.setHasBusy(portletUi);
@@ -153,7 +152,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         removeOldNotesLinkIfPresent();
 
         dispatch.execute(
-                GetEntityEarliestCommentTimestampAction.create(getProjectId(), entity.getIRI()),
+                GetEntityEarliestCommentTimestampAction.create(getProjectId(), entity),
                 result -> {
                     StringBuilder sb = new StringBuilder();
                     if (result.getEarliestTimestamp() != null) {
@@ -161,9 +160,9 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                         String dateStr = DateTimeFormat
                                 .getFormat("dd/MM/yyyy HH:mm")
                                 .format(new java.util.Date(ts));
-                        sb.append(messages.change_priorChanges(dateStr));
+                        sb.append(messages.comments_priorComments(dateStr));
                     } else {
-                        sb.append(messages.change_priorChanges());
+                        sb.append(messages.comments_priorComments());
                     }
 
                     String url = applicationEnvironmentManager.getAppEnvVariables()
@@ -172,7 +171,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
                     oldNotesLink = new PortletAction(
                             sb.toString(),
-                            "wp-btn-g--older-notes",
+                            "wp-btn-g--olderHistory",
                             () -> Window.open(url, "_blank", "")
                     );
                     portletUi.ifPresent(portlet -> portlet.addAction(oldNotesLink));
