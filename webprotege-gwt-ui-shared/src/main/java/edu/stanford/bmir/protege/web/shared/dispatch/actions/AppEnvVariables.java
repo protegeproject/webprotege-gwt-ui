@@ -25,6 +25,8 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
 
     private String entityNotesUrlFormat;
 
+    private String entityOldHistoryAndNotesDate;
+
 
     @GwtSerializationConstructor
     public AppEnvVariables(){
@@ -39,7 +41,8 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
                                          @JsonProperty("redirectUrl") String redirectUrl,
                                          @JsonProperty("fileUploadUrl") String fileUploadUrl,
                                          @JsonProperty("entityHistoryUrlFormat") String entityHistoryUrlFormat,
-                                         @JsonProperty("entityNotesUrlFormat")   String entityNotesUrlFormat
+                                         @JsonProperty("entityNotesUrlFormat")   String entityNotesUrlFormat,
+                                         @JsonProperty("entityOldHistoryAndNotesDate") String entityOldHistoryAndNotesDate
                                          ) {
         AppEnvVariables response = new AppEnvVariables();
         response.redirectAfterLogoutUrl = redirectUrl;
@@ -48,6 +51,7 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
         response.fileUploadUrl = fileUploadUrl;
         response.entityHistoryUrlFormat  = entityHistoryUrlFormat;
         response.entityNotesUrlFormat    = entityNotesUrlFormat;
+        response.entityOldHistoryAndNotesDate = entityOldHistoryAndNotesDate;
         return response;
     }
 
@@ -70,4 +74,8 @@ public class AppEnvVariables implements Result, Serializable, IsSerializable {
     public String getEntityHistoryUrlFormat() { return entityHistoryUrlFormat; }
 
     public String getEntityNotesUrlFormat()   { return entityNotesUrlFormat; }
+
+    public String getEntityOldHistoryAndNotesDate() {
+        return entityOldHistoryAndNotesDate;
+    }
 }

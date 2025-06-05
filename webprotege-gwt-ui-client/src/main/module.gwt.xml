@@ -26,6 +26,7 @@
     <set-property name="gwt.logging.enabled" value="FALSE"/>
     <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
     <set-property name="gwt.logging.systemHandler" value="DISABLED"/>
+    <set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
     

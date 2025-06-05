@@ -80,14 +80,6 @@
 	</error-page>
 
 	<servlet>
-		<servlet-name>remoteLogging</servlet-name>
-		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>remoteLogging</servlet-name>
-		<url-pattern>/webprotege/remote_logging</url-pattern>
-	</servlet-mapping>
-	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.auth.LogoutServlet</servlet-class>
 	</servlet>

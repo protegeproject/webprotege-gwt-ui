@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.http.client.URL;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -12,7 +11,6 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.*;
-import edu.stanford.bmir.protege.web.shared.change.GetEntityEarliestCommentTimestampAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
@@ -59,7 +57,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     private final ApplicationEnvironmentManager applicationEnvironmentManager;
 
-    private UIAction oldNotesLink;
+    private PortletAction oldNotesLink;
 
     private final DispatchServiceManager dispatch;
 
@@ -88,6 +86,14 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
                 "wp-btn-g--create-thread",
                 presenter::createThread);
+
+        String dateStrFromEnv = applicationEnvironmentManager.getAppEnvVariables()
+                .getEntityOldHistoryAndNotesDate();
+        oldNotesLink = new PortletAction(
+                messages.comments_priorComments(dateStrFromEnv),
+                "wp-btn-g--olderHistory",
+                this::handleOldNotesClickAction
+        );
     }
 
     @Override
@@ -99,6 +105,8 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         portletUi.setWidget(presenter.getView());
         portletUi.addAction(addCommentAction);
         addCommentAction.setEnabled(false);
+        portletUi.addAction(oldNotesLink);
+        oldNotesLink.setEnabled(false);
         portletUi.setFilterView(filterView);
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
         presenter.setHasBusy(portletUi);
@@ -130,16 +138,15 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     private void handleSetEntity(Optional<OWLEntity> entity) {
         addCommentAction.setEnabled(entity.isPresent());
+        oldNotesLink.setEnabled(entity.isPresent());
         portletUi.ifPresent(portletUi -> capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT, canViewComments -> {
                             portletUi.setForbiddenVisible(!canViewComments);
                             if (canViewComments) {
                                 if (entity.isPresent()) {
                                     presenter.setEntity(entity.get());
-                                    loadAndShowOldHistoryLink(entity.get());
                                 } else {
                                     presenter.clear();
                                     setDisplayedEntity(Optional.empty());
-                                    removeOldNotesLinkIfPresent();
                                 }
                             }
                         }
@@ -148,40 +155,15 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
 
     }
 
-    private void loadAndShowOldHistoryLink(OWLEntity entity) {
-        removeOldNotesLinkIfPresent();
-
-        dispatch.execute(
-                GetEntityEarliestCommentTimestampAction.create(getProjectId(), entity),
-                result -> {
-                    StringBuilder sb = new StringBuilder();
-                    if (result.getEarliestTimestamp() != null) {
-                        long ts = result.getEarliestTimestamp();
-                        String dateStr = DateTimeFormat
-                                .getFormat("dd/MM/yyyy HH:mm")
-                                .format(new java.util.Date(ts));
-                        sb.append(messages.comments_priorComments(dateStr));
-                    } else {
-                        sb.append(messages.comments_priorComments());
-                    }
-
-                    String url = applicationEnvironmentManager.getAppEnvVariables()
-                            .getEntityNotesUrlFormat()
-                            .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
-
-                    oldNotesLink = new PortletAction(
-                            sb.toString(),
-                            "wp-btn-g--olderHistory",
-                            () -> Window.open(url, "_blank", "")
-                    );
-                    portletUi.ifPresent(portlet -> portlet.addAction(oldNotesLink));
-                }
-        );
-    }
-
-    private void removeOldNotesLinkIfPresent() {
-        if (oldNotesLink != null) {
-            portletUi.ifPresent(portlet -> portlet.removeAction(oldNotesLink));
+    private void handleOldNotesClickAction() {
+        boolean entitySelected = getSelectedEntity().isPresent();
+        if (entitySelected) {
+            OWLEntity entity = getSelectedEntity().get();
+            String url = applicationEnvironmentManager.getAppEnvVariables()
+                    .getEntityNotesUrlFormat()
+                    .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
+            Window.open(url, "_blank", "");
         }
     }
+
 }
