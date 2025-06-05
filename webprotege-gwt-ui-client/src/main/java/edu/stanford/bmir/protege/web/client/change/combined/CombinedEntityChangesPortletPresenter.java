@@ -132,13 +132,13 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
     }
 
     private void loadAndShowOldHistoryLink(OWLEntity entity) {
-        if (oldHistoryLink != null) {
-            portletUi.ifPresent(portlet -> portlet.removeAction(oldHistoryLink));
-        }
 
         dispatch.execute(
                 GetEntityEarliestChangeTimestampAction.create(getProjectId(), entity.getIRI()),
                 result -> {
+                    if (oldHistoryLink != null) {
+                        portletUi.ifPresent(portlet -> portlet.removeAction(oldHistoryLink));
+                    }
                     StringBuilder sb = new StringBuilder();
                     if (result.getEarliestTimestamp() != null) {
                         long ts = result.getEarliestTimestamp();

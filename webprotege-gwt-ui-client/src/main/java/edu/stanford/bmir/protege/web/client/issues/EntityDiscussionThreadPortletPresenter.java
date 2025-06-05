@@ -149,11 +149,11 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     }
 
     private void loadAndShowOldHistoryLink(OWLEntity entity) {
-        removeOldNotesLinkIfPresent();
-
         dispatch.execute(
                 GetEntityEarliestCommentTimestampAction.create(getProjectId(), entity),
                 result -> {
+                    removeOldNotesLinkIfPresent();
+
                     StringBuilder sb = new StringBuilder();
                     if (result.getEarliestTimestamp() != null) {
                         long ts = result.getEarliestTimestamp();
