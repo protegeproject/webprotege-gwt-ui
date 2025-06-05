@@ -137,12 +137,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
                 editedFormData.put(formId, fd);
                 FormDataByFormId formDataByFormId = new FormDataByFormId(editedFormData);
                 FormData pristine = pristineFormData.orElse(FormData.empty(owlEntity, formId));
-                LanguageMap labelWithLang = formData.get().getFormDescriptor().getLabel();
-                LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
-                String lang = currentLocale.getLocaleName();
-                String label = labelWithLang.get(lang);
                 dispatch.execute(new SetEntityFormsDataAction(projectId, owlEntity,
-                        "Edited "+label+": "+commitMessage,
+                        commitMessage,
                         ImmutableMap.of(formId, pristine),
                         formDataByFormId), result -> updateDisplayedForm());
             });
