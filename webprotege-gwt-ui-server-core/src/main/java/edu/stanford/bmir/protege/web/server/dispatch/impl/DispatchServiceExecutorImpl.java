@@ -73,7 +73,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var fileUploadUrl = getEnvVariable("webprotege.fileUploadurl").orElse("http://webprotege-local.edu");
                 var historyFormat = getEnvVariable("webprotege.entityHistoryUrlFormat").orElse("https://icat-history.azurewebsites.net/changes/{0}.html");
                 var notesFormat   = getEnvVariable("webprotege.entityNotesUrlFormat").orElse("https://icat-history.azurewebsites.net/notes/{0}.html");
-                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl, historyFormat, notesFormat);
+                var oldHistoryAndNotesDate = getEnvVariable("webprotege.entityOldHistoryAndNotesDate").orElse("May 1st, 2025");
+                AppEnvVariables result = AppEnvVariables.create(logoutUrl, websocketUrl, redirectUrl, fileUploadUrl, historyFormat, notesFormat, oldHistoryAndNotesDate);
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);

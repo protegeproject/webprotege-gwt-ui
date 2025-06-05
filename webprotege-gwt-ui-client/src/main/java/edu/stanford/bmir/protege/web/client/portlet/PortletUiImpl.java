@@ -204,6 +204,13 @@ public class PortletUiImpl extends Composite implements PortletUi {
                 button.setText("");
             }
         });
+
+        action.setLabelChangedHandler(value -> {
+            if (!action.hasIcon()) {
+                button.setText(value.getLabel());
+            }
+            tooltip.updateTitleContent(value.getLabel());
+        });
         setToolbarVisible(true);
     }
 
