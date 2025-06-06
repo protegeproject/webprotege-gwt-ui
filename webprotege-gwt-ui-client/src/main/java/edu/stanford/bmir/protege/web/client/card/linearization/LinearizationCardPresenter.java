@@ -53,6 +53,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private boolean canViewResiduals;
     private boolean canEditResiduals;
 
+    private boolean isReadOnly = true;
+
     @Inject
     @AutoFactory
     public LinearizationCardPresenter(LinearizationCardView view,
@@ -71,7 +73,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void requestFocus() {
-        if(selectedEntity.isPresent() && !selectedEntity.get().equals(this.renderedEntity)){
+        if (selectedEntity.isPresent() && !selectedEntity.get().equals(this.renderedEntity)) {
             this.renderedEntity = selectedEntity.get();
             displayEntity(renderedEntity);
         }
@@ -92,7 +94,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private void displayEntity(OWLEntity entity) {
         this.entityParentsMap.clear();
         dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
-                LinearizationCapabilities.VIEW_LINEARIZATION_ROW),projectId), linearizationDefResult -> {
+                LinearizationCapabilities.VIEW_LINEARIZATION_ROW), projectId), linearizationDefResult -> {
             for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
                 this.definitionMap.put(definition.getLinearizationUri(), definition);
             }
@@ -110,10 +112,12 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         if (hierarchyParentsResult.getParents() != null) {
                             hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
                         }
-                        view.dispose();
                         view.setEntityParentsMap(this.entityParentsMap);
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
                         view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
+                        if (!isReadOnly) {
+                            view.setEditable();
+                        }
                         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
                         fireEvent(new DirtyChangedEvent());
                     });
@@ -124,6 +128,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     @Override
     public void clearEntity() {
+        this.isReadOnly = true;
         view.dispose();
         fireEvent(new DirtyChangedEvent());
         renderedEntity = null;
@@ -132,17 +137,20 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void beginEditing() {
         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
+        this.isReadOnly = false;
         view.setEditable();
     }
 
     @Override
     public void cancelEditing() {
+        this.isReadOnly = true;
         view.setReadOnly();
         fireEvent(new DirtyChangedEvent());
     }
 
     @Override
     public void finishEditing(String commitMessage) {
+        this.isReadOnly = true;
         view.saveValues(commitMessage);
         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
         fireEvent(new DirtyChangedEvent());

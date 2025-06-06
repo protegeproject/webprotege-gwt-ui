@@ -50,8 +50,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private OWLEntity renderedEntity;
     private HandlerManager handlerManager = new HandlerManager(this);
 
-    private boolean editMode = false;
-
     private final HierarchySelectionModalManager hierarchySelectionManager;
 
 
@@ -62,6 +60,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private boolean canEditScaleValues;
     private boolean canViewScaleValues;
+
+    private boolean isReadOnly = true;
 
     @Inject
     @AutoFactory
@@ -112,6 +112,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void clearEntity() {
+        this.isReadOnly = true;
         this.selectedEntity = Optional.empty();
         handlerManager.fireEvent(new DirtyChangedEvent());
         this.renderedEntity = null;
@@ -126,12 +127,16 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public void beginEditing() {
-        selectedEntity.ifPresent((sel) -> this.setEditableMode());
+        selectedEntity.ifPresent((sel) -> {
+            this.isReadOnly = false;
+            this.setEditableMode();
+        });
     }
 
     @Override
     public void cancelEditing() {
         selectedEntity.ifPresent(sel->{
+            this.isReadOnly = true;
             setReadOnlyMode();
             if(renderedEntity != null && !this.renderedEntity.equals(selectedEntity.get())) {
                 this.renderedEntity = selectedEntity.get();
@@ -143,6 +148,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void finishEditing(String commitMessage) {
         selectedEntity.ifPresent(sel -> {
+            this.isReadOnly = true;
             this.setReadOnlyMode();
 
             List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
@@ -162,7 +168,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     @Override
     public boolean isDirty() {
-        if (!this.editMode) {
+        if (isReadOnly) {
             return false;
         }
         List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
@@ -358,7 +364,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
                 (result) -> {
                     view.setTableData(result.getPostCoordinationSpecification());
-                    setReadOnlyMode();
+                    if(isReadOnly){
+                        setReadOnlyMode();
+                    }else {
+                        setEditableMode();
+                    }
                 });
     }
 
@@ -404,7 +414,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         );
         scaleValueCardPresenters.put(axisIri, newPresenter);
 
-        newPresenter.start(eventBus, canEditScaleValues && editMode);
+        newPresenter.start(eventBus, canEditScaleValues && !isReadOnly);
         updateScaleValueCards();
     }
 
@@ -491,7 +501,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
 
     public void setEditableMode() {
-        this.editMode = true;
         if (canEditScaleValues) {
             scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(true));
         }
@@ -499,7 +508,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     }
 
     public void setReadOnlyMode() {
-        this.editMode = false;
         scaleValueCardPresenters.values().forEach(presenter -> presenter.setEditMode(false));
         view.setReadOnlyState();
     }
