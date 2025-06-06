@@ -138,31 +138,7 @@ public class DispatchServiceCallback<T> {
             errorMessageDisplay.displayInvocationExceptionErrorMessage(e);
         }
     }
-
-    private static void handleExpiredSession() {
-
-        storeCurrentWindowLocationFragment();
-        String host = Window.Location.getHost();
-        String protocol = Window.Location.getProtocol();
-
-        // We don't include the fragment in the redirect URI because this has been placed in local storage to
-        // be used later on.
-        String unescapedRedirectUri = protocol + "//" + host + Window.Location.getPath();
-        String escapedRedirectUri = URL.encodeQueryString(unescapedRedirectUri);
-        String loginUrl = protocol + "//" + host + "/keycloak-admin/realms/webprotege/protocol/openid-connect/auth?response_type=code&client_id=webprotege&redirect_uri=" + escapedRedirectUri + "&login=true&scope=openid";
-        logger.info("Session expired or not authenticated.  Computed redirect_uri as " + unescapedRedirectUri + ". Redirecting to the login page at " + loginUrl);
-
-        Window.Location.assign(loginUrl);
-    }
-
-    private static void storeCurrentWindowLocationFragment() {
-        String hash = Window.Location.getHash();
-        Storage localStorage = Storage.getLocalStorageIfSupported();
-        if (localStorage != null && hash != null && !hash.isEmpty()) {
-            localStorage.setItem("post-login-hash", hash);
-        }
-    }
-
+    
     /**
      * Checks to see if it is *likely* that the message (of an invocation exception) contains
      * the keycloak login page.
@@ -170,6 +146,25 @@ public class DispatchServiceCallback<T> {
      */
     private static boolean isKeycloakLoginPage(String message) {
         return message != null && message.contains("<html" ) && message.contains("login" );
+    }
+
+    private static void handleExpiredSession() {
+        storeCurrentWindowLocationFragment();
+        // Go to a protected page.  This will cause the authorization flow to be triggered by the
+        // Tomcat keycloak valve
+        String protocol = Window.Location.getProtocol();
+        String host = Window.Location.getHost();
+        Window.Location.assign(protocol + "//" + host);
+    }
+
+    private static void storeCurrentWindowLocationFragment() {
+        // Stores the route in local storage for later use by onModuleLoad() to restore
+        // the location.
+        String hash = Window.Location.getHash();
+        Storage localStorage = Storage.getLocalStorageIfSupported();
+        if (localStorage != null && hash != null && !hash.isEmpty()) {
+            localStorage.setItem("post-login-hash", hash);
+        }
     }
 
     private void _handleUmbrellaException(UmbrellaException e) {
