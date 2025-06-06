@@ -1478,6 +1478,14 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("perspective.resetConfirmation.message")
     String perspective_resetConfirmation_message();
 
+    @DefaultMessage("Default tabs configuration saved successfully")
+    @Key("perspective.projectDefault.save.message")
+    String perspective_projectDefault_save_message();
+
+    @DefaultMessage("Default project tabs")
+    @Key("perspective.projectDefault.save.title")
+    String perspective_projectDefault_save_title();
+
     @DefaultMessage("Entity Deprecation Settings")
     @Key("entityDeprecationSettings.title")
     String entityDeprecationSettings_title();

@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
@@ -46,6 +47,8 @@ public class PerspectivesManagerPresenter {
     @Nonnull
     private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
+    private final MessageBox messageBox;
+
     @Inject
     public PerspectivesManagerPresenter(@Nonnull PerspectivesManagerView perspectivesListView,
                                         @Nonnull PerspectivesManagerAdminSettingsView adminSettingsView,
@@ -53,7 +56,7 @@ public class PerspectivesManagerPresenter {
                                         @Nonnull SettingsPresenter settingsPresenter,
                                         @Nonnull PerspectivesManagerService perspectivesManagerService,
                                         @Nonnull Messages messages,
-                                        @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker) {
+                                        @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker, MessageBox messageBox) {
         this.perspectivesListView = checkNotNull(perspectivesListView);
         this.adminSettingsView = checkNotNull(adminSettingsView);
         this.detailsListPresenter = checkNotNull(detailsListPresenter);
@@ -61,6 +64,7 @@ public class PerspectivesManagerPresenter {
         this.perspectivesManagerService = checkNotNull(perspectivesManagerService);
         this.messages = checkNotNull(messages);
         this.capabilityChecker = checkNotNull(capabilityChecker);
+        this.messageBox = messageBox;
     }
 
     public void setNextPlace(@Nonnull Place nextPlace) {
@@ -110,6 +114,7 @@ public class PerspectivesManagerPresenter {
                                                                                .collect(toImmutableList());
         perspectivesManagerService.savePerspectivesAsProjectDefaults(descriptors, () -> {
             settingsPresenter.setBusy(false);
+            messageBox.showMessage(messages.perspective_projectDefault_save_message());
         });
     }
 
