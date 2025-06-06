@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
@@ -99,24 +100,21 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             var userId = executionContext.getUserId();
             logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
 
-            if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+            // Special handling for FORBIDDEN 403.  This is handled by a PermissionDeniedException.
+            // We should consider whether we want to change this
+            if(httpResponse.statusCode() == HTTP_403_FORBIDDEN) {
                 var headers = httpResponse.headers()
                         .map()
                         .entrySet()
                         .stream()
                         .map(e -> e.getKey() + ": " +  e.getValue())
                         .collect(Collectors.joining("  &&  "));
-                var reason = httpResponse.headers().firstValue("www-authenticate");
                 logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
                             action.getClass().getSimpleName(),
                             executionContext.getUserId(),
                             headers,
                             executionContext.getToken());
                 throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
-            }
-            else if(httpResponse.statusCode() == 504) {
-                logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                throw new ActionExecutionException("Gateway Timeout (504)");
             }
             else if(httpResponse.statusCode() >= 400) {
                 logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
@@ -126,7 +124,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                             .map(a -> a.getClass().getSimpleName())
                             .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
                 }
-                throw new ActionExecutionException("An error occurred.  This error has been logged by the UI server.");
+                throw new StatusCodeException(httpResponse.statusCode(), httpResponse.body());
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
