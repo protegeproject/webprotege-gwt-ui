@@ -45,20 +45,6 @@
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 
-<!--	<filter>-->
-<!--		<filter-name>Keycloak Filter</filter-name>-->
-<!--		<filter-class>org.keycloak.adapters.servlet.KeycloakOIDCFilter</filter-class>-->
-<!--	</filter>-->
-<!--	<filter-mapping>-->
-<!--		<filter-name>Keycloak Filter</filter-name>-->
-<!--		<url-pattern>/*</url-pattern>-->
-<!--	</filter-mapping>-->
-
-<!--	<login-config>-->
-<!--		<auth-method>KEYCLOAK</auth-method>-->
-<!--		<realm-name>this is ignored currently</realm-name>-->
-<!--	</login-config>-->
-
 	<!-- Listener for initializing and disposing WebProtege -->
 	
 	<listener>
@@ -80,15 +66,6 @@
 	</error-page>
 
 	<servlet>
-		<servlet-name>remoteLogging</servlet-name>
-		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>remoteLogging</servlet-name>
-		<url-pattern>/webprotege/remote_logging</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.app.LogoutServlet</servlet-class>
 	</servlet>
@@ -97,5 +74,4 @@
 		<servlet-name>LogoutServlet</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
-
 </web-app>
