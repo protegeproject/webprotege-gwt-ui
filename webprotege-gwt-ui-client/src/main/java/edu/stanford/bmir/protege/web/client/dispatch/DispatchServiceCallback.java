@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -36,6 +39,8 @@ public class DispatchServiceCallback<T> {
     public final void onFailure(Throwable throwable) {
         if (throwable instanceof ActionExecutionException) {
             handleExecutionException(throwable);
+        } else if(throwable instanceof StatusCodeException) {
+            _handleStatusCodeException((StatusCodeException) throwable);
         } else if (throwable instanceof PermissionDeniedException) {
             handlePermissionDeniedException((PermissionDeniedException) throwable);
         } else if (throwable instanceof IncompatibleRemoteServiceException) {
@@ -50,6 +55,15 @@ public class DispatchServiceCallback<T> {
         }
         handleErrorFinally(throwable);
         handleFinally();
+    }
+
+    private void _handleStatusCodeException(StatusCodeException exception) {
+        if(exception.getStatusCode() == 504) {
+            errorMessageDisplay.displayGeneralErrorMessage("Timeout", "Something took too long to respond. A service might be busy or temporarily unavailable. Please try again in a moment.");
+        }
+        else {
+            errorMessageDisplay.displayGeneralErrorMessage("Error", "An error occurred: " + exception.getStatusText() + " (Error code: " + exception.getStatusCode() + ")");
+        }
     }
 
     public final void onSuccess(T t) {
@@ -115,7 +129,42 @@ public class DispatchServiceCallback<T> {
     }
 
     private void _handleInvocationException(InvocationException e) {
-        errorMessageDisplay.displayInvocationExceptionErrorMessage(e);
+        String message = e.getMessage();
+        if (isKeycloakLoginPage(message)) {
+            // Likely the Keycloak login page was returned instead of a proper RPC response
+            handleExpiredSession();
+        }
+        else {
+            errorMessageDisplay.displayInvocationExceptionErrorMessage(e);
+        }
+    }
+    
+    /**
+     * Checks to see if it is *likely* that the message (of an invocation exception) contains
+     * the keycloak login page.
+     * @param message The message
+     */
+    private static boolean isKeycloakLoginPage(String message) {
+        return message != null && message.contains("<html" ) && message.contains("login" );
+    }
+
+    private static void handleExpiredSession() {
+        storeCurrentWindowLocationFragment();
+        // Go to a protected page.  This will cause the authorization flow to be triggered by the
+        // Tomcat keycloak valve
+        String protocol = Window.Location.getProtocol();
+        String host = Window.Location.getHost();
+        Window.Location.assign(protocol + "//" + host);
+    }
+
+    private static void storeCurrentWindowLocationFragment() {
+        // Stores the route in local storage for later use by onModuleLoad() to restore
+        // the location.
+        String hash = Window.Location.getHash();
+        Storage localStorage = Storage.getLocalStorageIfSupported();
+        if (localStorage != null && hash != null && !hash.isEmpty()) {
+            localStorage.setItem("post-login-hash", hash);
+        }
     }
 
     private void _handleUmbrellaException(UmbrellaException e) {

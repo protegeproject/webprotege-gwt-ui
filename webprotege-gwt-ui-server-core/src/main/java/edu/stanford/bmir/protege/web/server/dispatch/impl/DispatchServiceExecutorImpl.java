@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.*;
@@ -100,16 +101,11 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                     HttpResponse.BodyHandlers.ofString());
 
             var userId = executionContext.getUserId();
-            logger.debug("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
-            if (httpResponse.statusCode() == 400) {
-                logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                if (action instanceof BatchAction) {
-                    ((BatchAction) action).getActions()
-                            .stream()
-                            .map(a -> a.getClass().getSimpleName())
-                            .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
-                }
-            } else if (httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+            logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
+
+            // Special handling for FORBIDDEN 403.  This is handled by a PermissionDeniedException.
+            // We should consider whether we want to change this
+            if(httpResponse.statusCode() == HTTP_403_FORBIDDEN) {
                 var headers = httpResponse.headers()
                         .map()
                         .entrySet()
@@ -130,7 +126,13 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             }
             else if(httpResponse.statusCode() >= 400) {
                 logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                throw new ActionExecutionException("An error occurred.  This error has been logged by the UI server.");
+                if(action instanceof BatchAction) {
+                    ((BatchAction) action).getActions()
+                            .stream()
+                            .map(a -> a.getClass().getSimpleName())
+                            .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
+                }
+                throw new StatusCodeException(httpResponse.statusCode(), httpResponse.body());
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {
