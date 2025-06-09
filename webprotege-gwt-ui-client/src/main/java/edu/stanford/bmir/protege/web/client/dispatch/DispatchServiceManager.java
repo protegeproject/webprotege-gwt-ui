@@ -6,20 +6,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
-import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
@@ -249,49 +245,61 @@ public class DispatchServiceManager {
             stopwatch.stop();
             long ellapsedTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
             if(ellapsedTime > 200) {
-                GWT.log("[Dispatch] Elapsed time for " + action.getClass().getSimpleName() + " is " + ellapsedTime + "ms");
+                logger.info("[Dispatch] Elapsed time for " + action.getClass().getSimpleName() + " is " + ellapsedTime + "ms");
             }
             if(action instanceof HasProjectId) {
                 ResultCache resultCache = getResultCache(((HasProjectId) action).getProjectId(), eventBus);
                 resultCache.cacheResult((Action<R>) action, (R) result.getResult());
             }
-            dispatchEvents(result.getResult());
+//            dispatchEvents(result.getResult());
             delegate.onSuccess(result.getResult());
         }
     }
 
-    private void dispatchEvents(Object result) {
-        if(result instanceof HasEventList<?>) {
-            EventList<? extends WebProtegeEvent<?>> eventList = ((HasEventList<? extends WebProtegeEvent<?>>) result).getEventList();
+    // EVENTS ARE CURRENTLY REIMPLEMENTED WITH WEBSOCKETS
 
-            List<WebProtegeEvent> events = eventList.getEvents();
-            // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
-            // TODO: more than once!
-            GWT.log("[Dispatch] Dispatching " + events.size() + " events");
-            long t0 = TimeUtil.getCurrentTime();
-            for(WebProtegeEvent<?> event : events) {
-                GWT.log("[Dispatch] Dispatching event (" + event + ")");
-                if(event.getSource() != null) {
-                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
-                }
-                else {
-                    eventBus.fireEvent(event.asGWTEvent());
-                }
-            }
-            long t1 = TimeUtil.getCurrentTime();
-            GWT.log("[Dispatch] Dispatched events in " + (t1 - t0) + " ms");
-        }
-    }
+//    private void dispatchEvents(Object result) {
+//        if(result instanceof HasEventList<?>) {
+//            EventList<? extends WebProtegeEvent<?>> eventList = ((HasEventList<? extends WebProtegeEvent<?>>) result).getEventList();
+//
+//            List<WebProtegeEvent> events = eventList.getEvents();
+//            // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
+//            // TODO: more than once!
+//            GWT.log("[Dispatch] Dispatching " + events.size() + " events");
+//            long t0 = TimeUtil.getCurrentTime();
+//            for(WebProtegeEvent<?> event : events) {
+//                GWT.log("[Dispatch] Dispatching event (" + event + ")");
+//                if(event.getSource() != null) {
+//                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
+//                }
+//                else {
+//                    eventBus.fireEvent(event.asGWTEvent());
+//                }
+//            }
+//            long t1 = TimeUtil.getCurrentTime();
+//            GWT.log("[Dispatch] Dispatched events in " + (t1 - t0) + " ms");
+//        }
+//    }
 
     private void handleError(final Throwable throwable, final Action<?> action, final DispatchServiceCallback<?> callback) {
-        if (throwable instanceof PermissionDeniedException) {
+        if(throwable instanceof StatusCodeException) {
+            StatusCodeException statusCodeException = (StatusCodeException) throwable;
+            if(statusCodeException.getStatusCode() == 401) {
+                Place continueTo = placeController.getWhere();
+                signInRequiredHandler.handleSignInRequired(continueTo);
+                return;
+            }
+            // Other status code exceptions could be handled here but for now
+            // everything is passed to the callback
+        }
+        else if (throwable instanceof PermissionDeniedException) {
             // Try to determine if the user is logged in.  The session might have expired.
             UserId userId = ((PermissionDeniedException) throwable).getUserId();
             if(userId.isGuest()) {
                 // Set up next place
                 Place continueTo = placeController.getWhere();
                 loggedInUser.setLoggedInUser(new UserInSession(UserDetails.getGuestUserDetails(), Collections.emptySet()));
-                GWT.log("[Dispatch] Permission denied.  User is the guest user so redirecting to login.");
+                logger.info("[Dispatch] Permission denied.  User is the guest user so redirecting to login.");
                 signInRequiredHandler.handleSignInRequired(continueTo);
             }
         }

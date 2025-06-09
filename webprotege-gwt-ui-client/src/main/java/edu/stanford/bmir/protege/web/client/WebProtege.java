@@ -4,6 +4,8 @@ package edu.stanford.bmir.protege.web.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
@@ -13,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
 
+import java.util.logging.Logger;
+
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 
@@ -21,7 +25,10 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class WebProtege implements EntryPoint {
 
+    private static final Logger logger = Logger.getLogger(WebProtege.class.getName());
+
     public void onModuleLoad() {
+        handlePostLoginHashIfNecessary();
 
         WebProtegeInitializer initializer = WebProtegeClientInjector.get().getWebProtegeInitializer();
         initializer.init(new AsyncCallback<Void>() {
@@ -36,6 +43,19 @@ public class WebProtege implements EntryPoint {
                 handleUIInitialization();
             }
         });
+    }
+
+    private static void handlePostLoginHashIfNecessary() {
+        Storage localStorage = Storage.getLocalStorageIfSupported();
+        if (localStorage != null) {
+            String savedHash = localStorage.getItem("post-login-hash");
+            if (savedHash != null && !savedHash.isEmpty()) {
+                logger.info("Applying post-login hash and redirecting: " + savedHash);
+                localStorage.removeItem("post-login-hash");
+                // Reapply the hash to the URL
+                Window.Location.assign(Window.Location.getPath() + "#" + savedHash.replace("#", ""));
+            }
+        }
     }
 
     private void handleUIInitialization() {

@@ -45,20 +45,6 @@
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 
-<!--	<filter>-->
-<!--		<filter-name>Keycloak Filter</filter-name>-->
-<!--		<filter-class>org.keycloak.adapters.servlet.KeycloakOIDCFilter</filter-class>-->
-<!--	</filter>-->
-<!--	<filter-mapping>-->
-<!--		<filter-name>Keycloak Filter</filter-name>-->
-<!--		<url-pattern>/*</url-pattern>-->
-<!--	</filter-mapping>-->
-
-<!--	<login-config>-->
-<!--		<auth-method>KEYCLOAK</auth-method>-->
-<!--		<realm-name>this is ignored currently</realm-name>-->
-<!--	</login-config>-->
-
 	<!-- Listener for initializing and disposing WebProtege -->
 	
 	<listener>
@@ -79,4 +65,13 @@
 		<location>/forbidden.jsp</location>
 	</error-page>
 
+	<servlet>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.app.LogoutServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
 </web-app>

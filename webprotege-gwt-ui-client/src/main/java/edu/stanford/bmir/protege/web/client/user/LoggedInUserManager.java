@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.user;
 
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
@@ -67,9 +68,7 @@ public class LoggedInUserManager {
         if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
-        dispatchServiceManager.execute(new LogOutUserAction(), result -> {
-            loggedInUser.setLoggedInUser(result.getUserInSession());
-        });
+        Window.Location.assign("/logout");
     }
 
     public boolean isAllowedApplicationAction(BasicCapability basicCapability) {
