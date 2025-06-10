@@ -1,38 +1,29 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
+import com.google.auto.factory.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
-import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
-import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
+import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.entity.ChangeChildrenOrderingUIAction;
-import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
+import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import javax.annotation.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -279,7 +270,8 @@ public class EntityHierarchyContextMenuPresenter {
         String fragment = location.substring(fragmentIndex + 1);
         String encodedFragment = URL.encodeQueryString(fragment);
         String rewritten = location.substring(0, fragmentIndex) + "?fragment=" + encodedFragment;
-        inputBox.showOkDialog(messages.directLink(), true, rewritten, input -> {});
+        inputBox.showOkDialog(messages.directLink(), true, rewritten, input -> {
+        }, true);
     }
 
     private void handleRefresh() {
