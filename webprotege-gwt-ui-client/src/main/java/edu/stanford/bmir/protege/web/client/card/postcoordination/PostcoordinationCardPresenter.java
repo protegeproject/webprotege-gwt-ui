@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.card.postcoordination;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -19,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.*;
@@ -42,7 +44,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private List<PostCoordinationCompositeAxis> compositeAxisList = new ArrayList<>();
     private Map<String, PostcoordinationAxisToGenericScale> genericScale = new HashMap<>();
     private final List<PostCoordinationCustomScales> postCoordinationCustomScalesList = new ArrayList<>();
-
+    @Nonnull
+    private final NothingSelectedView nothingSelectedView;
     private Map<String, LinearizationDefinition> definitionMap = new HashMap<>();
     private List<String> scaleCardsOrderByAxis = new LinkedList<>();
     private Optional<OWLEntity> selectedEntity = Optional.empty();
@@ -56,6 +59,8 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
 
+    private EntityCardUi entityCardUi;
+
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     private boolean canEditScaleValues;
@@ -68,10 +73,11 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public PostcoordinationCardPresenter(PostcoordinationCardView view,
                                          DispatchServiceManager dispatch,
                                          ProjectId projectid,
-                                         HierarchySelectionModalManager hierarchySelectionManager) {
+                                         @Nonnull NothingSelectedView nothingSelectedView, HierarchySelectionModalManager hierarchySelectionManager) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectid;
+        this.nothingSelectedView = nothingSelectedView;
         this.hierarchySelectionManager = hierarchySelectionManager;
     }
 
@@ -79,6 +85,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         try {
             this.eventBus = eventBus;
+            this.entityCardUi = ui;
             clearEverything();
             selectedEntity = Optional.empty();
             view.setTableCellChangedHandler(handleTableCellChanged());
@@ -305,6 +312,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                     }
                 } else {
                     logger.log(Level.INFO, "No postcoordination axes to display for the entity type");
+                    this.entityCardUi.setWidget(nothingSelectedView);
                 }
 
             });
@@ -330,6 +338,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                             );
                     view.setLinearizationDefinitonMap(definitionMap);
                     view.initializeTable();
+
                 }
         );
     }
@@ -363,12 +372,17 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
         dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
                 (result) -> {
-                    view.setTableData(result.getPostCoordinationSpecification());
-                    if(isReadOnly){
-                        setReadOnlyMode();
-                    }else {
-                        setEditableMode();
+                    if(result.getPostCoordinationSpecification().getPostCoordinationSpecifications() != null
+                            && !result.getPostCoordinationSpecification().getPostCoordinationSpecifications().isEmpty()) {
+                        view.setTableData(result.getPostCoordinationSpecification());
+                        this.entityCardUi.setWidget(view);
+                        if(isReadOnly){
+                            setReadOnlyMode();
+                        }else {
+                            setEditableMode();
+                        }
                     }
+
                 });
     }
 

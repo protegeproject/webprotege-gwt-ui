@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.card.linearization;
 import com.google.auto.factory.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
@@ -48,26 +49,34 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
 
+    private final NothingSelectedView nothingSelectedView;
+
+    private EntityCardUi entityCardUi;
+
+
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
+
+
 
     private boolean canViewResiduals;
     private boolean canEditResiduals;
-
     private boolean isReadOnly = true;
 
     @Inject
     @AutoFactory
     public LinearizationCardPresenter(LinearizationCardView view,
                                       @Provided DispatchServiceManager dispatch,
-                                      @Provided ProjectId projectId) {
+                                      @Provided ProjectId projectId, NothingSelectedView nothingSelectedView) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectId;
+        this.nothingSelectedView = nothingSelectedView;
         this.view.setProjectId(projectId);
     }
 
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
+        this.entityCardUi = ui;
         ui.setWidget(view);
     }
 
@@ -106,8 +115,9 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
                 this.view.dispose();
                 if (response.getWhoficEntityLinearizationSpecification() != null &&
-                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null) {
-
+                        response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications() != null &&
+                        !response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications().isEmpty()) {
+                    this.entityCardUi.setWidget(view);
                     dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
                         if (hierarchyParentsResult.getParents() != null) {
                             hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
@@ -121,6 +131,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
                         fireEvent(new DirtyChangedEvent());
                     });
+                } else {
+                    this.entityCardUi.setWidget(nothingSelectedView);
                 }
             });
         });
