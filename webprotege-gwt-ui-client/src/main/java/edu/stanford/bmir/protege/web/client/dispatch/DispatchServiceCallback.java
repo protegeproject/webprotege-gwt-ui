@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.UmbrellaException;
+import edu.stanford.bmir.protege.web.client.app.FragmentManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
@@ -149,22 +150,12 @@ public class DispatchServiceCallback<T> {
     }
 
     private static void handleExpiredSession() {
-        storeCurrentWindowLocationFragment();
+        FragmentManager.storeCurrentWindowLocationFragment();
         // Go to a protected page.  This will cause the authorization flow to be triggered by the
         // Tomcat keycloak valve
         String protocol = Window.Location.getProtocol();
         String host = Window.Location.getHost();
         Window.Location.assign(protocol + "//" + host);
-    }
-
-    private static void storeCurrentWindowLocationFragment() {
-        // Stores the route in local storage for later use by onModuleLoad() to restore
-        // the location.
-        String hash = Window.Location.getHash();
-        Storage localStorage = Storage.getLocalStorageIfSupported();
-        if (localStorage != null && hash != null && !hash.isEmpty()) {
-            localStorage.setItem("post-login-hash", hash);
-        }
     }
 
     private void _handleUmbrellaException(UmbrellaException e) {
