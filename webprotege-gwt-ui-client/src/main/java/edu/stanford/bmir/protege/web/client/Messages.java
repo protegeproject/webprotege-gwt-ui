@@ -93,7 +93,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String changeEmailAddress();
 
     
-    @DefaultMessage("Change Password")
+    @DefaultMessage("Reset password ...")
     @Key("changePassword")
     String changePassword();
 

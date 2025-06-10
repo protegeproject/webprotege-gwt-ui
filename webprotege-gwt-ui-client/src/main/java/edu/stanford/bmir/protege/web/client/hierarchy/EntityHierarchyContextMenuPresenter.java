@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -30,6 +31,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -272,8 +275,11 @@ public class EntityHierarchyContextMenuPresenter {
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
-        inputBox.showOkDialog(messages.directLink(), true, location, input -> {
-        }, true);
+        int fragmentIndex = location.indexOf("#");
+        String fragment = location.substring(fragmentIndex + 1);
+        String encodedFragment = URL.encodeQueryString(fragment);
+        String rewritten = location.substring(0, fragmentIndex) + "?fragment=" + encodedFragment;
+        inputBox.showOkDialog(messages.directLink(), true, rewritten, input -> {});
     }
 
     private void handleRefresh() {
