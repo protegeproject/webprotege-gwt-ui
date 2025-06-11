@@ -69,4 +69,19 @@
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.app.LogoutServlet</servlet-class>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>remoteLogging</servlet-name>
+		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>remoteLogging</servlet-name>
+		<url-pattern>/webprotege/remote_logging</url-pattern>
+	</servlet-mapping>
+
 </web-app>

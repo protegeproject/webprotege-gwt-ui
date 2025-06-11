@@ -23,10 +23,10 @@
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
     <inherits name="com.google.gwt.logging.Logging"/>
-    <set-property name="gwt.logging.enabled" value="FALSE"/>
-    <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
-    <set-property name="gwt.logging.systemHandler" value="DISABLED"/>
-    <set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
+    <!-- Don't use remote logging -->
+    <replace-with class="com.google.gwt.logging.client.NullLogHandler">
+        <when-type-is class="com.google.gwt.logging.client.SimpleRemoteLogHandler"/>
+    </replace-with>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
     
