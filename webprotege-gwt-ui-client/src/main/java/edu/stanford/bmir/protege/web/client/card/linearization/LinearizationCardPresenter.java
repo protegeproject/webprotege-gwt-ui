@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.*;
@@ -49,6 +50,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
 
+    private final BusyView busyView;
+
     private final NothingSelectedView nothingSelectedView;
 
     private EntityCardUi entityCardUi;
@@ -66,10 +69,11 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @AutoFactory
     public LinearizationCardPresenter(LinearizationCardView view,
                                       @Provided DispatchServiceManager dispatch,
-                                      @Provided ProjectId projectId, NothingSelectedView nothingSelectedView) {
+                                      @Provided ProjectId projectId, BusyView busyView, NothingSelectedView nothingSelectedView) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectId;
+        this.busyView = busyView;
         this.nothingSelectedView = nothingSelectedView;
         this.view.setProjectId(projectId);
     }
@@ -101,6 +105,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     }
 
     private void displayEntity(OWLEntity entity) {
+        this.entityCardUi.setWidget(busyView);
         this.entityParentsMap.clear();
         dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
                 LinearizationCapabilities.VIEW_LINEARIZATION_ROW), projectId), linearizationDefResult -> {

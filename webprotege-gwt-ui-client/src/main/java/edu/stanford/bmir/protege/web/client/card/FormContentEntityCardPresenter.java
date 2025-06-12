@@ -45,6 +45,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private final DispatchServiceManager dispatch;
 
+    private Optional<OWLEntity> renderedEntity = Optional.empty();
 
     private Optional<OWLEntity> entity;
 
@@ -96,12 +97,13 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void setEntity(OWLEntity entity) {
-        setDisplayedEntity(Optional.of(entity));
+        this.entity = Optional.of(entity);
     }
 
     @Override
     public void clearEntity() {
-        setDisplayedEntity(Optional.empty());
+        entity = Optional.empty();
+        renderedEntity = Optional.empty();
     }
 
     @Override
@@ -110,7 +112,6 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     }
 
     private void setDisplayedEntity(Optional<OWLEntity> entity) {
-        this.entity = entity;
         updateDisplayedForm();
     }
 
@@ -210,7 +211,11 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     @Override
     public void requestFocus() {
-        formPresenter.requestFocus();
+        if(!renderedEntity.isPresent()  || !renderedEntity.get().equals(entity.get())) {
+            renderedEntity = entity;
+            updateDisplayedForm();
+            formPresenter.requestFocus();
+        }
     }
 
     @Override
