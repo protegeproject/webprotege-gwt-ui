@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.*;
@@ -55,6 +56,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private final HierarchySelectionModalManager hierarchySelectionManager;
 
+    private final BusyView busyView;
 
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
@@ -72,6 +74,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @AutoFactory
     public PostcoordinationCardPresenter(PostcoordinationCardView view,
                                          DispatchServiceManager dispatch,
+                                         BusyView busyView,
                                          ProjectId projectid,
                                          @Nonnull NothingSelectedView nothingSelectedView, HierarchySelectionModalManager hierarchySelectionManager) {
         this.view = view;
@@ -79,6 +82,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
         this.projectId = projectid;
         this.nothingSelectedView = nothingSelectedView;
         this.hierarchySelectionManager = hierarchySelectionManager;
+        this.busyView = busyView;
     }
 
     @Override
@@ -250,7 +254,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
 
     protected void loadEntity(OWLEntity entity) {
-
+            entityCardUi.setWidget(busyView);
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entity.getIRI(), projectId), result -> {
                 if (result.getTableConfiguration().getPostCoordinationAxes() != null && !result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     try {
