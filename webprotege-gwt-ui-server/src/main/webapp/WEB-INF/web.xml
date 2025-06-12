@@ -70,11 +70,6 @@
 		<servlet-class>edu.stanford.bmir.protege.web.server.auth.LogoutServlet</servlet-class>
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>LogoutServlet</servlet-name>
-		<url-pattern>/logout</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>remoteLogging</servlet-name>
 		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
