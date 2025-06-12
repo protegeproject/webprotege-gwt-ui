@@ -67,7 +67,7 @@
 
 	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.app.LogoutServlet</servlet-class>
+		<servlet-class>edu.stanford.bmir.protege.web.server.auth.LogoutServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
