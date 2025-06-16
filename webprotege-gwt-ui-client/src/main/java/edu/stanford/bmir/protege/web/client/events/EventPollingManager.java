@@ -83,11 +83,7 @@ public class EventPollingManager {
 
 
     public void dispatchEvents(EventList<?> eventList) {
-        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
-
-        if(eventList.isEmpty()) {
-            return;
-        }
+       logger.info("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
 
         if (!eventList.isEmpty()) {
             try {
