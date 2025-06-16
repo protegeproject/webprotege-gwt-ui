@@ -83,15 +83,8 @@ public class EventPollingManager {
 
 
     public void dispatchEvents(EventList<?> eventList) {
-        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
+       logger.info("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
 
-        if(eventList.isEmpty()) {
-            return;
-        }
-        EventTag eventListStartTag = eventList.getStartTag();
-        if(nextTag.isGreaterOrEqualTo(eventListStartTag)) {
-            // We haven't missed any events - our next retrieval will be from where we got the event to.
-        }
         if (!eventList.isEmpty()) {
             try {
                 for (WebProtegeEvent<?> event : eventList.getEvents()) {
@@ -103,8 +96,6 @@ public class EventPollingManager {
                 }
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
-            } finally {
-                nextTag = eventList.getEndTag();
             }
         }
     }
