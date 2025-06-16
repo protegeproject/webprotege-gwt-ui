@@ -166,7 +166,11 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     }
 
     public void dispatchEventsFromWebsocket(String data) {
-        dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
+        logger.info("");
+        dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) ->  {
+            logger.info("Received a number of events "  + result.getEvents().size());
+            eventPollingManager.dispatchEvents(result.getEvents());
+        });
     }
 
     public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{

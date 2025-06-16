@@ -88,10 +88,7 @@ public class EventPollingManager {
         if(eventList.isEmpty()) {
             return;
         }
-        EventTag eventListStartTag = eventList.getStartTag();
-        if(nextTag.isGreaterOrEqualTo(eventListStartTag)) {
-            // We haven't missed any events - our next retrieval will be from where we got the event to.
-        }
+
         if (!eventList.isEmpty()) {
             try {
                 for (WebProtegeEvent<?> event : eventList.getEvents()) {
@@ -103,8 +100,6 @@ public class EventPollingManager {
                 }
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
-            } finally {
-                nextTag = eventList.getEndTag();
             }
         }
     }
