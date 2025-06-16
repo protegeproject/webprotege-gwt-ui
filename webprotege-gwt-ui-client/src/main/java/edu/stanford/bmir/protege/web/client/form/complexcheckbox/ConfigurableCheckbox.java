@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form.complexcheckbox;
 
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.HasReadOnly;
 
@@ -86,6 +85,10 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
     @Override
     public void setText(String text) {
         presenter.setText(text);
+    }
+
+    public void setTitle(String title) {
+        presenter.setTitle(title);
     }
 
     @Override

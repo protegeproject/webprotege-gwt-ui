@@ -219,7 +219,7 @@ public class PostCoordinationPortletViewImpl extends Composite implements PostCo
             PostCoordinationTableRow tableRow = new PostCoordinationTableRow(definition);
             List<PostCoordinationTableAxisLabel> labelList = new ArrayList<>(this.labels.values());
             for (PostCoordinationTableAxisLabel postCoordinationTableAxisLabel : labelList) {
-                PostCoordinationTableCell cell = new PostCoordinationTableCell(definition, postCoordinationTableAxisLabel, tableRow);
+                PostCoordinationTableCell cell = new PostCoordinationTableCell(definition, postCoordinationTableAxisLabel);
                 cell.addValueChangeHandler(valueChanged -> {
                     tableCellChanged.handleTableCellChanged(
                             isAxisEnabledOnAnyRow(postCoordinationTableAxisLabel),
