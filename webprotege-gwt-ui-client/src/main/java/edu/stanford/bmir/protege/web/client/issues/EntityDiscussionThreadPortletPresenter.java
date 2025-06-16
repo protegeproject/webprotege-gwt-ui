@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -13,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.icd.OldHistoryEncoding;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -161,7 +161,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
             OWLEntity entity = getSelectedEntity().get();
             String url = applicationEnvironmentManager.getAppEnvVariables()
                     .getEntityNotesUrlFormat()
-                    .replace("{0}", URL.encodeQueryString(entity.getIRI().toString()));
+                    .replace("{0}", OldHistoryEncoding.encodeIriToHostedLink(entity.getIRI()));
             Window.open(url, "_blank", "");
         }
     }
