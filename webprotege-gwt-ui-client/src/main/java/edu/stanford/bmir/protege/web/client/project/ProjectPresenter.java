@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
@@ -184,8 +182,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                     console.log(str);
                 },
                 reconnectDelay: 30000,
-                heartbeatIncoming: 4000,
-                heartbeatOutgoing: 4000,
+                heartbeatIncoming: 10000,
+                heartbeatOutgoing: 10000,
                 connectHeaders: {
                    'token': token,
                     'userId': userId,
