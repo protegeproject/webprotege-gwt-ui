@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -83,12 +84,14 @@ public class EventPollingManager {
 
 
     public void dispatchEvents(EventList<?> eventList) {
-       logger.info("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
+       logger.info("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. Events : " +
+               eventList.getEvents().stream().map(Object::toString).collect(Collectors.joining(",")));
 
         if (!eventList.isEmpty()) {
             try {
                 for (WebProtegeEvent<?> event : eventList.getEvents()) {
                     if (event.getSource() != null) {
+                        logger.info("Handle event " + event.getClass().toString());
                         eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
                     } else {
                         eventBus.fireEvent(event.asGWTEvent());
