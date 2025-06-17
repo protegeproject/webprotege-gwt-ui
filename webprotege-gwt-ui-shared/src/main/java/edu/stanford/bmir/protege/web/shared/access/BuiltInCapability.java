@@ -133,6 +133,8 @@ public enum BuiltInCapability {
 
     DEVICES_HIERARCHY_ROOT,
 
+    DERMATOLOGY_HIERARCHY_ROOT,
+
     FULL_HIERARCHY_ROOT;
 
 
