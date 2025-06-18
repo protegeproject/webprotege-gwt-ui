@@ -318,4 +318,28 @@ public class DispatchServiceManager {
     private void displayAlert(String alert) {
         messageBox.showAlert(alert);
     }
+
+    public <A extends Action<R>, R extends Result> void execute(A action,
+                                                                HasBusy hasBusy,
+                                                                Consumer<R> onSuccess,
+                                                                Runnable onFinally) {
+        execute(action, new DispatchServiceCallback<R>(errorDisplay) {
+            @Override
+            public void handleSubmittedForExecution() {
+                hasBusy.setBusy(true);
+            }
+
+            @Override
+            public void handleSuccess(R result) {
+                onSuccess.accept(result);
+            }
+
+            @Override
+            public void handleFinally() {
+                hasBusy.setBusy(false);
+                onFinally.run();
+            }
+        });
+    }
+
 }
