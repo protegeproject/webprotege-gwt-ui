@@ -10,12 +10,12 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.entities.GetClassAncestors")
-public abstract class GetClassAncestorsResult implements Result {
+@JsonTypeName("webprotege.entities.GetLogicalDefinitionsClassAncestors")
+public abstract class GetLogicalDefinitionsClassAncestorsResult implements Result {
     public abstract AncestorClassHierarchy getAncestorsTree();
 
     @JsonCreator
-    public static GetClassAncestorsResult create(@JsonProperty("ancestorTree")  AncestorClassHierarchy ancestorTree ) {
-        return new AutoValue_GetClassAncestorsResult(ancestorTree);
+    public static GetLogicalDefinitionsClassAncestorsResult create(@JsonProperty("ancestorTree")  AncestorClassHierarchy ancestorTree ) {
+        return new AutoValue_GetLogicalDefinitionsClassAncestorsResult(ancestorTree);
     }
 }

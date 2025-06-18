@@ -189,7 +189,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.necessaryConditionsTable.setSuperclassScalesValue(superclassScalesValue);
         });
 
-        dispatchServiceManager.execute(GetClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
+        dispatchServiceManager.execute(GetLogicalDefinitionsClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
             Set<OWLEntityData> result = new HashSet<>();
             populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
             ancestorsList = result.stream()

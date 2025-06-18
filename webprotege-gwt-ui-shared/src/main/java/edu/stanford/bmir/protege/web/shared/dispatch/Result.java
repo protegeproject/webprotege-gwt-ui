@@ -205,7 +205,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(GetLinearizationDefinitionsResult.class),
         @JsonSubTypes.Type(GetEntityLinearizationResult.class),
         @JsonSubTypes.Type(SaveEntityLinearizationResult.class),
-        @JsonSubTypes.Type(GetClassAncestorsResult.class),
+        @JsonSubTypes.Type(GetLogicalDefinitionsClassAncestorsResult.class),
         @JsonSubTypes.Type(GetRenderedOwlEntitiesResult.class),
         @JsonSubTypes.Type(GetEntityPostCoordinationResult.class),
         @JsonSubTypes.Type(ProcessUploadedCustomScalesResult.class),

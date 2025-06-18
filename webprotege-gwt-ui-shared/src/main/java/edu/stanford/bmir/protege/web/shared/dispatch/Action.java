@@ -234,7 +234,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetEntityDirectParentsAction.class),
         @Type(value = GetLinearizationDefinitionsAction.class),
         @Type(value = GetEntityLinearizationAction.class),
-        @Type(value = GetClassAncestorsAction.class),
+        @Type(value = GetLogicalDefinitionsClassAncestorsAction.class),
         @Type(value = SaveEntityLinearizationAction.class),
         @Type(value = SaveEntityPostCoordinationAction.class),
         @Type(value = GetRenderedOwlEntitiesAction.class),
