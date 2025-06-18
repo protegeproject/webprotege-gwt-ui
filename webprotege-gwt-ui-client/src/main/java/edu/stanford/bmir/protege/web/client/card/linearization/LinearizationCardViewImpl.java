@@ -1,27 +1,20 @@
 package edu.stanford.bmir.protege.web.client.card.linearization;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.card.*;
+import edu.stanford.bmir.protege.web.client.card.EditableIcon;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.CheckboxValue;
-import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
+import edu.stanford.bmir.protege.web.client.form.complexcheckbox.*;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.linearization.*;
-import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.progress.*;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class LinearizationCardViewImpl extends Composite implements LinearizationCardView, HasBusy {
@@ -167,11 +160,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                 initializeTableRows();
                 if (specification.getLinearizationResiduals() != null) {
                     this.suppressOthersSpecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressedOtherSpecifiedResiduals());
-                    this.suppressOthersSpecifiedResidual.addValueChangeHandler((e)-> linearizationChangeEventHandler.handleLinearizationChangeEvent());
+                    this.suppressOthersSpecifiedResidual.addValueChangeHandler((e) -> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.suppressUnspecifiedResidual.setValue(specification.getLinearizationResiduals().getSuppressUnspecifiedResiduals());
-                    this.suppressUnspecifiedResidual.addValueChangeHandler((e)-> linearizationChangeEventHandler.handleLinearizationChangeEvent());
+                    this.suppressUnspecifiedResidual.addValueChangeHandler((e) -> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.unspecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getUnspecifiedResidualTitle());
-                    this.unspecifiedResidualTitle.addValueChangeHandler((e)->linearizationChangeEventHandler.handleLinearizationChangeEvent());
+                    this.unspecifiedResidualTitle.addValueChangeHandler((e) -> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                     this.otherSpecifiedResidualTitle.setValue(specification.getLinearizationResiduals().getOtherSpecifiedResidualTitle());
                     this.otherSpecifiedResidualTitle.addValueChangeHandler(event -> linearizationChangeEventHandler.handleLinearizationChangeEvent());
                 }
@@ -214,7 +207,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                 tableRow.setEnabled();
             });
 
-            if(canEditResiduals){
+            if (canEditResiduals) {
                 this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
                 this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
 
@@ -249,7 +242,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
             orderAndPopulateViewWithRows();
 
-            if(canEditResiduals){
+            if (canEditResiduals) {
                 this.suppressOthersSpecifiedResidual.setValue(this.backupSuppressOtherResidualValue);
                 this.suppressUnspecifiedResidual.setValue(this.backupSuppressUnspecifiedResidualValue);
 
@@ -313,15 +306,10 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
         if (!isReadOnly) {
             setBusy(true);
             WhoficEntityLinearizationSpecification linearizationSpecification = getLinSpec();
-
-            this.isReadOnly = true;
-            for (LinearizationTableRow row : this.tableRowList) {
-                row.setReadOnly();
-            }
             dispatch.execute(
                     SaveEntityLinearizationAction.create(projectId, linearizationSpecification, commitMessage),
                     this,
-                    (result) -> {
+                    (onSuccess) -> {
                         this.backupRows.clear();
                         for (LinearizationTableRow row : this.tableRowList) {
                             this.backupRows.add(row.clone());
@@ -331,8 +319,8 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
                         this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
                         this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
-                        this.setBusy(false);
-                    }
+                    },
+                    this::setReadOnly
             );
         }
     }
@@ -374,7 +362,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
     @Override
     public WhoficEntityLinearizationSpecification getLinSpec() {
-        if(specification == null) {
+        if (specification == null) {
             return null;
         }
         List<LinearizationSpecification> specifications = this.tableRowList.stream()
