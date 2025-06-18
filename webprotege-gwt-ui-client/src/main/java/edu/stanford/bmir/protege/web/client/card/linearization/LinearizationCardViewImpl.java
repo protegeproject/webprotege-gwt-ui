@@ -313,11 +313,6 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
         if (!isReadOnly) {
             setBusy(true);
             WhoficEntityLinearizationSpecification linearizationSpecification = getLinSpec();
-
-            this.isReadOnly = true;
-            for (LinearizationTableRow row : this.tableRowList) {
-                row.setReadOnly();
-            }
             dispatch.execute(
                     SaveEntityLinearizationAction.create(projectId, linearizationSpecification, commitMessage),
                     this,
@@ -331,7 +326,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
 
                         this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
                         this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
-                        this.setBusy(false);
+                        this.setReadOnly();
                     }
             );
         }
