@@ -10,15 +10,15 @@ import org.semanticweb.owlapi.model.IRI;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.entities.GetClassAncestors")
-public abstract class GetClassAncestorsAction implements Action<GetClassAncestorsResult> {
+@JsonTypeName("webprotege.entities.GetLogicalDefinitionsClassAncestors")
+public abstract class GetLogicalDefinitionsClassAncestorsAction implements Action<GetLogicalDefinitionsClassAncestorsResult> {
 
     private IRI classIri;
 
     private ProjectId projectId;
     @JsonCreator
-    public static GetClassAncestorsAction create(IRI classIri, ProjectId projectId) {
-        return new AutoValue_GetClassAncestorsAction(classIri, projectId);
+    public static GetLogicalDefinitionsClassAncestorsAction create(IRI classIri, ProjectId projectId) {
+        return new AutoValue_GetLogicalDefinitionsClassAncestorsAction(classIri, projectId);
     }
 
     public abstract IRI getClassIri();
