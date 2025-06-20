@@ -4,14 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.change.DownloadRevisionHandler;
-import edu.stanford.bmir.protege.web.client.change.RevertRevisionHandler;
+import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
@@ -21,9 +18,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
@@ -63,7 +58,7 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
     protected Label revisionField;
 
     @UiField
-    protected HasText highLevelDescriptionField;
+    protected InlineHTML highLevelDescriptionField;
 
     @UiField
     protected HasText authorField;
@@ -178,6 +173,7 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
     @Override
     public void setHighLevelDescription(String description) {
         highLevelDescriptionField.setText(checkNotNull(description));
+        highLevelDescriptionField.setHTML(description);
     }
 
     @Override

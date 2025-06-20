@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.client.change.combined;
 
 import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.safehtml.shared.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.change.ChangeDetailsView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.markdown.Marked;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -78,6 +80,12 @@ public class CombinedChangeListPresenter {
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
+
+        Marked.Options opts = new Marked.Options();
+        opts.gfm     = true;
+        opts.breaks  = false;
+        opts.sanitize= true;
+        Marked.setOptions(opts);
     }
 
     public void setRevertChangesVisible(boolean revertChangesVisible) {
@@ -151,7 +159,10 @@ public class CombinedChangeListPresenter {
             ChangeDetailsView view = new CombinedChangeDetailsViewImpl();
             view.setRevision(null);
             view.setAuthor(projectChange.getAuthor());
-            view.setHighLevelDescription(projectChange.getSummary());
+            String rawMarkdown = projectChange.getSummary();
+            String html = Marked.parse(rawMarkdown);
+            SafeHtml safe = SafeHtmlUtils.fromTrustedString(html);
+            view.setHighLevelDescription(safe.asString());
             view.setRevertRevisionVisible(false);
             view.setDownloadRevisionVisible(false);
             Page<DiffElement<String, String>> page = projectChange.getDiff();
