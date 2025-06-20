@@ -115,7 +115,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.container}">
             <div class="{style.header}">
-                <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+                <g:InlineHTML ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
                 <g:HTMLPanel addStyleNames="{style.rightContainer}">
                     <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
                 </g:HTMLPanel>
