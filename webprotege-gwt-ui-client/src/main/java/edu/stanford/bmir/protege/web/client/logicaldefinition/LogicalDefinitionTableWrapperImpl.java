@@ -36,6 +36,9 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     @UiField
     HTMLPanel tableWrapper;
 
+    @UiField
+    Label ancestorSelectedSuperclass;
+
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LogicalDefinitionResourceBundle.LogicalDefinitionCss style;
@@ -168,32 +171,40 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void enableReadOnly() {
-        this.ancestorDropdown.setEnabled(false);
-        this.deleteTableWrapper.setEnabled(false);
-        this.deleteTableWrapper.setVisible(false);
-        this.superClassTable.setReadOnly(true);
+        ancestorDropdown.setEnabled(false);
+        ancestorDropdown.setVisible(false);
+        ancestorSelectedSuperclass.setText(ancestorDropdown.getSelectedItemText());
+        ancestorSelectedSuperclass.setVisible(true);
+        deleteTableWrapper.setEnabled(false);
+        deleteTableWrapper.setVisible(false);
+        superClassTable.setReadOnly(true);
     }
 
     @Override
     public void enableEditable() {
-        this.ancestorDropdown.setEnabled(true);
-        this.deleteTableWrapper.setEnabled(true);
-        this.deleteTableWrapper.setVisible(true);
-        this.superClassTable.setReadOnly(false);
+        ancestorSelectedSuperclass.setVisible(true);
+        ancestorDropdown.setVisible(false);
+        ancestorDropdown.setEnabled(false);
+        deleteTableWrapper.setEnabled(true);
+        deleteTableWrapper.setVisible(true);
+        superClassTable.setReadOnly(false);
     }
 
     @Override
     public void asExistingTable() {
-        ancestorWrapper.clear();
+        Optional<OWLEntityData> ancestorOptional = ancestorsList.stream()
+                .filter(a -> a.getIri().toString().equalsIgnoreCase(parentIri))
+                .findFirst();
 
-        for (OWLEntityData ancestor : ancestorsList) {
-            if (ancestor.getIri().toString().equalsIgnoreCase(this.parentIri)) {
-                Label label = new Label();
-                label.setText(ancestor.getBrowserText());
-                this.ancestorWrapper.add(label);
-                fetchDropdownData(ancestor.getIri().toString());
-                return;
-            }
+        if (ancestorOptional.isPresent()) {
+            OWLEntityData ancestor = ancestorOptional.get();
+            ancestorSelectedSuperclass.setText(ancestor.getBrowserText());
+            ancestorSelectedSuperclass.setVisible(true);
+
+            ancestorDropdown.setVisible(false);
+            ancestorDropdown.setEnabled(false);
+
+            fetchDropdownData(ancestor.getIri().toString());
         }
     }
 
@@ -204,6 +215,10 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void asNewTable() {
+        ancestorSelectedSuperclass.setVisible(false);
+        ancestorDropdown.setVisible(true);
+        ancestorDropdown.setEnabled(true);
+
         if (ancestorDropdown.getItemCount() > 1) {
             ancestorDropdown.setItemSelected(1, true);
             fetchDropdownData(ancestorDropdown.getSelectedValue());
