@@ -61,36 +61,37 @@
     </ui:style>
 
     <g:HTMLPanel ui:field="paneContainer">
-            <g:HTMLPanel addStyleNames="{wp.style.form}">
-                <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroupSingleCol}">
-                        <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
-                            <g:Label ui:field="superClassLabel"
-                                     addStyleNames="{wp.style.formLabel} {style.label}"/>
-                            <g:HTMLPanel addStyleNames="{style.deleteButtonHolder}">
-                                <g:Button ui:field="deleteTableWrapper"
-                                          addStyleNames="{wp.buttons.deleteButton} {style.deleteButton}"/>
-                            </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.form}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+                <g:HTMLPanel addStyleNames="{wp.style.formGroupSingleCol}">
+                    <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
+                        <g:Label ui:field="superClassLabel"
+                                 addStyleNames="{wp.style.formLabel} {style.label}"/>
+                        <g:HTMLPanel addStyleNames="{style.deleteButtonHolder}">
+                            <g:Button ui:field="deleteTableWrapper"
+                                      addStyleNames="{wp.buttons.deleteButton} {style.deleteButton}"/>
                         </g:HTMLPanel>
-                        <g:HTMLPanel addStyleNames="{wp.style.form}">
-                            <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                                <g:HTMLPanel addStyleNames="{wp.style.formGroupSingleCol}">
-                                        <g:HTMLPanel addStyleNames="{wp.style.formControl}">
-                                            <g:HTMLPanel ui:field="ancestorWrapper"
-                                                         addStyleNames="{style.ancestorFlex}
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.form}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+                            <g:HTMLPanel addStyleNames="{wp.style.formGroupSingleCol}">
+                                <g:HTMLPanel addStyleNames="{wp.style.formControl}">
+                                    <g:HTMLPanel ui:field="ancestorWrapper"
+                                                 addStyleNames="{style.ancestorFlex}
                                 {wp.style.formControlEditor}
                                 {wp.style.formControlEditorEntity}
                                 {style.gwt-SuggestBox}">
-                                                <g:ListBox ui:field="ancestorDropdown"/>
-                                            </g:HTMLPanel>
-                                        </g:HTMLPanel>
+                                        <g:ListBox ui:field="ancestorDropdown"/>
+                                        <g:Label ui:field="ancestorSelectedSuperclass"/>
+                                    </g:HTMLPanel>
                                 </g:HTMLPanel>
                             </g:HTMLPanel>
                         </g:HTMLPanel>
                     </g:HTMLPanel>
                 </g:HTMLPanel>
-                <g:HTMLPanel ui:field="tableWrapper" addStyleNames="{wp.style.formGroupRow}">
-                </g:HTMLPanel>
             </g:HTMLPanel>
+            <g:HTMLPanel ui:field="tableWrapper" addStyleNames="{wp.style.formGroupRow}">
+            </g:HTMLPanel>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
