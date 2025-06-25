@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.card.EditableIcon;
 import edu.stanford.bmir.protege.web.client.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
@@ -42,6 +43,8 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     private static final WebProtegeClientBundle wpStyle = WebProtegeClientBundle.BUNDLE;
 
     private static final PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder ourUiBinder = GWT.create(PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder.class);
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     @Inject
     public PostcoordinationCardViewImpl() {
@@ -192,7 +195,14 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
 
         for (int i = 0; i < orderedRows.size(); i++) {
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0, orderedRows.get(i).getEditableIconFront());
+            addRowLabel(
+                    orderedRows.get(i).isDerived(),
+                    orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(),
+                    i + 1,
+                    0,
+                    orderedRows.get(i).getEditableIconFront(),
+                    orderedRows.get(i).getLinearizationDefinition().getCoreLinId()
+            );
 
             for (int j = 0; j < orderedRows.get(i).getCellList().size(); j++) {
                 flexTable.setWidget(i + 1, j + 1, orderedRows.get(i).getCellList().get(j).asWidget());
@@ -202,7 +212,14 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
                 flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1, orderedRows.get(i).getEditableIconBack());
+            addRowLabel(
+                    orderedRows.get(i).isDerived(),
+                    orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(),
+                    i + 1,
+                    orderedRows.get(i).getCellList().size() + 1,
+                    orderedRows.get(i).getEditableIconBack(),
+                    orderedRows.get(i).getLinearizationDefinition().getCoreLinId()
+            );
         }
     }
 
@@ -240,7 +257,7 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
     }
 
-    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon) {
+    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon, String coreLinId) {
         editableIcon.addStyleName(style.size75());
         editableIcon.addStyleName(style.marginLeftAuto());
         editableIcon.setVisible(false);
@@ -252,8 +269,9 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         labelPanel.setStyleName(style.getRowLabel());
         if (isDerived) {
             Image telescopic = new Image(wpStyle.svgTelescopicIcon().getSafeUri());
-            telescopic.setPixelSize(24, 24);
+            telescopic.setPixelSize(16, 16);
             telescopic.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
+            telescopic.setTitle(MESSAGES.linearization_telescopic(coreLinId));
             labelPanel.add(telescopic);
         }
         labelPanel.add(rowLabel);

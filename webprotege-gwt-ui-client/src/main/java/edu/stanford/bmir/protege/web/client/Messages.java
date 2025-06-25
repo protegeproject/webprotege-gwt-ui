@@ -1532,4 +1532,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("comments.priorCommentsWithDate")
     String comments_priorComments(String priorDate);
 
+
+    @DefaultMessage("Telescopic linearization for {0}")
+    @Key("linearization.telescopic")
+    String linearization_telescopic(String coreLinId);
+
 }
