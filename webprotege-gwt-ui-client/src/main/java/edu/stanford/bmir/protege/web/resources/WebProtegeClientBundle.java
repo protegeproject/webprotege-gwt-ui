@@ -346,6 +346,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource allowScaleValueIfNotFromSameBlock();
 
+    @Source("telescope_icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgTelescopicIcon();
+
     interface WebProtegePrimitiveDataCss extends CssResource {
 
         @ClassName("wp-pd")
@@ -1024,6 +1028,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-entity-node__display-name__secondary-language")
         String wpEntityNode__secondaryLanguage();
+
+        @ClassName("wp-entity-node__display-name__no-display-name")
+        String wpEntityNode__displayName__noDisplayName();
+
+        @ClassName("wp-entity-node__display-name--deprecated-entity")
+        String wpEntityNode__displayNameDeprecatedEntity();
     }
 
     interface Glyphs extends CssResource {

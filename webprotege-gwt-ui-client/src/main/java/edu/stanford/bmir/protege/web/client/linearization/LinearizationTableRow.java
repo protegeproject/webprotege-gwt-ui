@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.client.linearization;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.form.complexcheckbox.ConfigurableCheckbox;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 
 import java.util.*;
@@ -50,6 +54,10 @@ public class LinearizationTableRow {
 
     private EditableIcon editableIconDefinition;
 
+    private static final WebProtegeClientBundle wpStyle = WebProtegeClientBundle.BUNDLE;
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private LinearizationTableRow() {
 
     }
@@ -78,7 +86,15 @@ public class LinearizationTableRow {
 
             FlowPanel defPanel = new FlowPanel();
             defPanel.setStyleName(linearizationCss.getLinearizationDefinition());
+            if (isDerived()) {
+                Image telescopic = new Image(wpStyle.svgTelescopicIcon().getSafeUri());
+                telescopic.setPixelSize(16, 16);
+                telescopic.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
+                telescopic.setTitle(MESSAGES.linearization_telescopic(linearizationDefinition.getCoreLinId()));
+                defPanel.add(telescopic);
+            }
             InlineLabel defLabel = new InlineLabel(linearizationDefinition.getDisplayLabel());
+            defLabel.getElement().getStyle().setProperty("flex", "1");
             defPanel.add(defLabel);
             defPanel.add(editableIconDefinition);
 
@@ -277,6 +293,13 @@ public class LinearizationTableRow {
         clone.editableIconDefinition.addStyleName(this.editableIconDefinition.asWidget().getStyleName());
 
         FlowPanel defPanel = new FlowPanel();
+        if (isDerived()) {
+            Image telescopic = new Image(wpStyle.svgTelescopicIcon().getSafeUri());
+            telescopic.setPixelSize(16, 16);
+            telescopic.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
+            telescopic.setTitle(MESSAGES.linearization_telescopic(linearizationDefinition.getCoreLinId()));
+            defPanel.add(telescopic);
+        }
         defPanel.setStyleName(linearizationCss.getLinearizationDefinition());
         InlineLabel defLabel = new InlineLabel(linearizationDefinition.getDisplayLabel());
         defPanel.add(defLabel);

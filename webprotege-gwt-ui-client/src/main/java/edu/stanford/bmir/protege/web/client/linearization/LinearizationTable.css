@@ -113,6 +113,10 @@
     flex: 1;
 }
 
+.linearizationDefinition > .marginLeftAuto {
+    margin-left: auto;
+}
+
 .marginLeftAuto {
     margin-left: auto;
 }

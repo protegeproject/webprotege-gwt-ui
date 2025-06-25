@@ -22,6 +22,7 @@
 @url helpIconUrl svgHelpIcon;
 @url editorIconUrl svgEditorIcon;
 @url dirtyIconUrl svgDirtyIcon;
+@url telescopicIconUrl svgTelescopicIcon;
 
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
@@ -677,4 +678,18 @@
     mask-image: editorIconUrl;
     mask-repeat: no-repeat;
     background-color: literal("var(--create--color)");
+}
+
+.wp-telescopic-icon {
+    mask-image:  telescopicIconUrl;
+    -webkit-mask-image:  telescopicIconUrl;
+
+    mask-repeat:       no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position:     center;
+    -webkit-mask-position: center;
+
+    mask-size:         contain;
+    -webkit-mask-size: contain;
 }

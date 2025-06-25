@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.client.card.postcoordination;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.card.EditableIcon;
 import edu.stanford.bmir.protege.web.client.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.TableCellChangedHandler;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 
@@ -37,8 +40,11 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     };
 
     private static final PostCoordinationTableResourceBundle.PostCoordinationTableCss style = PostCoordinationTableResourceBundle.INSTANCE.style();
+    private static final WebProtegeClientBundle wpStyle = WebProtegeClientBundle.BUNDLE;
 
     private static final PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder ourUiBinder = GWT.create(PostcoordinationCardViewImpl.PostcoordinationCardViewImplUiBinder.class);
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     @Inject
     public PostcoordinationCardViewImpl() {
@@ -166,13 +172,12 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
             List<PostCoordinationTableAxisLabel> labelList = new ArrayList<>(this.labels.values());
             for (PostCoordinationTableAxisLabel postCoordinationTableAxisLabel : labelList) {
                 PostCoordinationTableCell cell = new PostCoordinationTableCell(definition, postCoordinationTableAxisLabel);
-                cell.addValueChangeHandler(valueChanged -> {
-                    tableCellChanged.handleTableCellChanged(
-                            isAxisEnabledOnAnyRow(postCoordinationTableAxisLabel),
-                            valueChanged.getValue(),
-                            cell.getAxisLabel().getPostCoordinationAxis()
-                    );
-                });
+                cell.addValueChangeHandler(valueChanged -> tableCellChanged.handleTableCellChanged(
+                                isAxisEnabledOnAnyRow(postCoordinationTableAxisLabel),
+                                valueChanged.getValue(),
+                                cell.getAxisLabel().getPostCoordinationAxis()
+                        )
+                );
                 tableRow.addCell(cell);
             }
             this.tableRows.add(tableRow);
@@ -190,7 +195,14 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
 
         for (int i = 0; i < orderedRows.size(); i++) {
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, 0, orderedRows.get(i).getEditableIconFront());
+            addRowLabel(
+                    orderedRows.get(i).isDerived(),
+                    orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(),
+                    i + 1,
+                    0,
+                    orderedRows.get(i).getEditableIconFront(),
+                    orderedRows.get(i).getLinearizationDefinition().getCoreLinId()
+            );
 
             for (int j = 0; j < orderedRows.get(i).getCellList().size(); j++) {
                 flexTable.setWidget(i + 1, j + 1, orderedRows.get(i).getCellList().get(j).asWidget());
@@ -200,7 +212,14 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
                 flexTable.getRowFormatter().addStyleName(i + 1, style.getEvenRowStyle());
             }
 
-            addRowLabel(orderedRows.get(i).isDerived(), orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(), i + 1, orderedRows.get(i).getCellList().size() + 1, orderedRows.get(i).getEditableIconBack());
+            addRowLabel(
+                    orderedRows.get(i).isDerived(),
+                    orderedRows.get(i).getLinearizationDefinition().getDisplayLabel(),
+                    i + 1,
+                    orderedRows.get(i).getCellList().size() + 1,
+                    orderedRows.get(i).getEditableIconBack(),
+                    orderedRows.get(i).getLinearizationDefinition().getCoreLinId()
+            );
         }
     }
 
@@ -219,14 +238,14 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     }
 
 
-    private void bindCellsToParentCells(){
-        for(PostCoordinationTableRow row : this.tableRows) {
-            if(!row.isDerived()) {
-                for(PostCoordinationTableRow childRow : this.tableRows) {
-                    if(childRow.isDerived() && childRow.getLinearizationDefinition().getCoreLinId().equalsIgnoreCase(row.getLinearizationDefinition().getLinearizationId())) {
-                        for(PostCoordinationTableCell parentCell: row.getCellList()) {
-                            for(PostCoordinationTableCell childCell: childRow.getCellList()) {
-                                if(parentCell.getAxisLabel().getPostCoordinationAxis().equalsIgnoreCase(childCell.getAxisLabel().getPostCoordinationAxis())) {
+    private void bindCellsToParentCells() {
+        for (PostCoordinationTableRow row : this.tableRows) {
+            if (!row.isDerived()) {
+                for (PostCoordinationTableRow childRow : this.tableRows) {
+                    if (childRow.isDerived() && childRow.getLinearizationDefinition().getCoreLinId().equalsIgnoreCase(row.getLinearizationDefinition().getLinearizationId())) {
+                        for (PostCoordinationTableCell parentCell : row.getCellList()) {
+                            for (PostCoordinationTableCell childCell : childRow.getCellList()) {
+                                if (parentCell.getAxisLabel().getPostCoordinationAxis().equalsIgnoreCase(childCell.getAxisLabel().getPostCoordinationAxis())) {
                                     parentCell.addToChildCells(childCell);
                                     childCell.setIsDerived();
                                 }
@@ -238,23 +257,23 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
     }
 
-    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon) {
-        String rowLabelString;
-        if (isDerived) {
-            rowLabelString = SVG + label;
-        } else {
-            rowLabelString = label;
-        }
-
+    private void addRowLabel(boolean isDerived, String label, int row, int column, EditableIcon editableIcon, String coreLinId) {
         editableIcon.addStyleName(style.size75());
         editableIcon.addStyleName(style.marginLeftAuto());
         editableIcon.setVisible(false);
 
         InlineLabel rowLabel = new InlineLabel();
-        rowLabel.getElement().setInnerHTML(rowLabelString);
+        rowLabel.setText(label);
 
         FlowPanel labelPanel = new FlowPanel();
         labelPanel.setStyleName(style.getRowLabel());
+        if (isDerived) {
+            Image telescopic = new Image(wpStyle.svgTelescopicIcon().getSafeUri());
+            telescopic.setPixelSize(16, 16);
+            telescopic.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
+            telescopic.setTitle(MESSAGES.linearization_telescopic(coreLinId));
+            labelPanel.add(telescopic);
+        }
         labelPanel.add(rowLabel);
         labelPanel.add(editableIcon);
 
@@ -264,7 +283,6 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     private void addHeaderCell(String label, int position) {
         Widget headerCell = new Label();
         headerCell.getElement().setInnerHTML(getHeaderLabelPadded(25, label));
-        //headerCell.getElement().setInnerHTML(label);
         flexTable.setWidget(0, position, headerCell);
         flexTable.getCellFormatter().addStyleName(0, position, style.getPostCoordinationHeader());
         flexTable.getCellFormatter().addStyleName(0, position, style.getRotatedHeader());
@@ -302,13 +320,13 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         logger.info("Set table data");
         this.entityIri = whoficSpecification.getWhoficEntityIri();
 
-        for(PostCoordinationTableRow row: this.tableRows) {
-            for(PostCoordinationTableCell cell : row.getCellList()) {
+        for (PostCoordinationTableRow row : this.tableRows) {
+            for (PostCoordinationTableCell cell : row.getCellList()) {
                 cell.reset();
             }
         }
 
-        if(!whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
+        if (!whoficSpecification.getPostCoordinationSpecifications().isEmpty()) {
             for (PostCoordinationTableRow row : this.tableRows) {
                 for (PostCoordinationTableCell cell : row.getCellList()) {
                     PostCoordinationSpecification specification = whoficSpecification.getPostCoordinationSpecifications().stream()
@@ -339,8 +357,8 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         }
         bindCellsToParentCells();
 
-        for(PostCoordinationTableRow row: this.tableRows) {
-            for(PostCoordinationTableCell cell: row.getCellList()) {
+        for (PostCoordinationTableRow row : this.tableRows) {
+            for (PostCoordinationTableCell cell : row.getCellList()) {
                 cell.updateChildren();
                 cell.initializeCallback();
             }
@@ -348,11 +366,6 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
 
         setReadOnlyState();
     }
-
-    private static final String SVG = "<div style='width: 12px; height: 12px; margin-right:2px;' >" +
-
-            "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <path d=\"M3 7V8.2C3 9.88016 3 10.7202 3.32698 11.362C3.6146 11.9265 4.07354 12.3854 4.63803 12.673C5.27976 13 6.11984 13 7.8 13H21M21 13L17 9M21 13L17 17\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> </g></svg>" +
-            "</div>";
 
     @Override
     public void setWidget(IsWidget w) {
