@@ -7,9 +7,13 @@ public interface DirectParentView extends IsWidget {
 
     IsWidget getView();
 
-    void setEntity(String entityHtml);
+    void setEntity(String entityHtml, String entityIri);
 
     void clear();
 
     void setSelectionHandler(ClickHandler clickHandler);
+
+    void markParentAsMain();
+
+    String getEntityIri();
 }

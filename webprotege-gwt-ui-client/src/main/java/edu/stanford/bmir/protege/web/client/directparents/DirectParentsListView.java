@@ -10,4 +10,6 @@ public interface DirectParentsListView extends IsWidget {
     void clearViews();
 
     void setDirectParentView(@Nonnull List<DirectParentView> directParentViews);
+
+    void setMainParent(String parentIri);
 }
