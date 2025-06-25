@@ -82,7 +82,6 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     }
 
     private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
-        logger.info("ALEX existing " + hierarchyDescriptor + " event " + event.getHierarchyDescriptor());
         if (!event.getHierarchyDescriptor().equals(hierarchyDescriptor)) {
             return;
         }
