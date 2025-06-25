@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
+import edu.stanford.bmir.protege.web.shared.linearization.LinearizationSpecification;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -95,6 +97,15 @@ public class DirectParentsListPresenter implements HasDispose {
                         displayParents(directParents);
                     }
             );
+            logger.info("Marking direct parent");
+            dispatch.execute(GetEntityLinearizationAction.create(displayedEntity.get().getIRI().toString(), projectId), (result) -> {
+                Optional<String> mmsParent = result.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications().stream()
+                        .filter(linearizationSpecification -> linearizationSpecification.getLinearizationView().equals("http://id.who.int/icd/release/11/mms"))
+                        .findFirst()
+                        .map(LinearizationSpecification::getLinearizationParent);
+
+                mmsParent.ifPresent(view::setMainParent);
+            });
         });
     }
 

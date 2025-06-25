@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +18,10 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     }
 
     private final static DirectParentsListViewImplUiBinder ourUiBinder = GWT.create(DirectParentsListViewImplUiBinder.class);
+
+    private String mainParentIri;
+
+    private List<DirectParentView> directParentViews = new ArrayList<>();
 
     @UiField
     FlowPanel directParentsContainer;
@@ -36,6 +41,7 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     @Override
     public void setDirectParentView(@Nonnull List<DirectParentView> directParentViews) {
         logger.info("called setDirectParentView");
+        this.directParentViews = directParentViews;
         directParentViews.forEach(parentView -> {
             try {
                 logger.info("Adding widget to UI: " + parentView.asWidget());
@@ -45,7 +51,24 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
                 logger.severe("Error while adding widget: " + e.getMessage());
             }
         });
+        markMainParent();
     }
 
+    @Override
+    public void setMainParent(String parentIri) {
+        this.mainParentIri = parentIri;
+        markMainParent();
+    }
+
+    private void markMainParent() {
+        if (this.mainParentIri != null && !this.mainParentIri.isEmpty()) {
+            for(DirectParentView parentView : this.directParentViews) {
+                if(mainParentIri.equals(parentView.getEntityIri())) {
+                    parentView.markParentAsMain();
+                    return;
+                }
+            }
+        }
+    }
 
 }

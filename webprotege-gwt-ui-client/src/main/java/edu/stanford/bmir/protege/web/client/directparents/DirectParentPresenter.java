@@ -39,7 +39,7 @@ public class DirectParentPresenter implements HasDispose {
     public void start() {
         logger.info("Rendering entity: " + nodeRenderer.getHtmlRendering(entityNode));
         this.view.setSelectionHandler((event) -> selectionHandler.handleSelection(entityNode.getEntity()));
-        this.view.setEntity(nodeRenderer.getHtmlRendering(entityNode));
+        this.view.setEntity(nodeRenderer.getHtmlRendering(entityNode), entityNode.getEntity().getIRI().toString());
     }
 
     @Override
