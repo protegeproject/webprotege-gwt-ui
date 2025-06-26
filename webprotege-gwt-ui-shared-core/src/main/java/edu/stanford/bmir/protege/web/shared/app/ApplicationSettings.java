@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class ApplicationSettings implements IsSerializable {
+public class ApplicationSettings implements Serializable, IsSerializable {
 
     private String applicationName;
 
@@ -47,16 +48,16 @@ public class ApplicationSettings implements IsSerializable {
     private ApplicationSettings() {
     }
 
-    public ApplicationSettings(@Nonnull String applicationName,
-                               @Nonnull EmailAddress systemNotificationEmailAddress,
-                               @Nonnull ApplicationLocation applicationLocation,
-                               @Nonnull AccountCreationSetting accountCreationSetting,
-                               @Nonnull List<UserId> accountCreators,
-                               @Nonnull ProjectCreationSetting projectCreationSetting,
-                               @Nonnull List<UserId> projectCreators,
-                               @Nonnull ProjectUploadSetting projectUploadSetting,
-                               @Nonnull List<UserId> projectUploaders,
-                               @Nonnull NotificationEmailsSetting notificationEmailsSetting,
+    public ApplicationSettings( String applicationName,
+                                EmailAddress systemNotificationEmailAddress,
+                                ApplicationLocation applicationLocation,
+                                AccountCreationSetting accountCreationSetting,
+                                List<UserId> accountCreators,
+                                ProjectCreationSetting projectCreationSetting,
+                                List<UserId> projectCreators,
+                                ProjectUploadSetting projectUploadSetting,
+                                List<UserId> projectUploaders,
+                                NotificationEmailsSetting notificationEmailsSetting,
                                long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
         this.systemNotificationEmailAddress = checkNotNull(systemNotificationEmailAddress);
@@ -71,52 +72,52 @@ public class ApplicationSettings implements IsSerializable {
         this.maxUploadSize = maxUploadSize;
     }
 
-    @Nonnull
+
     public String getApplicationName() {
         return applicationName;
     }
 
-    @Nonnull
+
     public EmailAddress getSystemNotificationEmailAddress() {
         return systemNotificationEmailAddress;
     }
 
-    @Nonnull
+
     public AccountCreationSetting getAccountCreationSetting() {
         return accountCreationSetting;
     }
 
-    @Nonnull
+
     public List<UserId> getAccountCreators() {
         return accountCreators;
     }
 
-    @Nonnull
+
     public ProjectCreationSetting getProjectCreationSetting() {
         return projectCreationSetting;
     }
 
-    @Nonnull
+
     public List<UserId> getProjectCreators() {
         return projectCreators;
     }
 
-    @Nonnull
+
     public ProjectUploadSetting getProjectUploadSetting() {
         return projectUploadSetting;
     }
 
-    @Nonnull
+
     public List<UserId> getProjectUploaders() {
         return projectUploaders;
     }
 
-    @Nonnull
+
     public NotificationEmailsSetting getNotificationEmailsSetting() {
         return notificationEmailsSetting;
     }
 
-    @Nonnull
+
     public ApplicationLocation getApplicationLocation() {
         return applicationLocation;
     }
