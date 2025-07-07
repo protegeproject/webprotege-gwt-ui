@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
-             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
+             xmlns:markdown="urn:import:edu.stanford.bmir.protege.web.client.markdown">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
@@ -12,15 +13,18 @@
             align-items: start;
             flex-wrap: nowrap;
         }
+
         .textBox {
             margin-right: 1px;
         }
+
         .iconContainer {
             flex-grow: 0;
             flex-shrink: 0;
             width: 22px;
             height: 22px;
         }
+
         .contentContainer {
             display: flex;
             flex-direction: column;
@@ -29,10 +33,17 @@
             flex-shrink: 1;
             min-width: 5px;
         }
+
         .focusPanel {
             vertical-align: top;
         }
+
         .imageViewContainer {
+        }
+
+        .markdownPreview {
+            border: 1px solid transparent;
+            padding: 2px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveData.primitiveData}">
@@ -45,6 +56,11 @@
                          addStyleNames="{style.imageViewContainer}">
                 <g:FocusPanel ui:field="imageViewFocusPanel" addStyleNames="{style.focusPanel}">
                     <primitive:PrimitiveDataEditorImageViewImpl ui:field="imageView"/>
+                </g:FocusPanel>
+            </g:LazyPanel>
+            <g:LazyPanel ui:field="markdownPreviewContainer">
+                <g:FocusPanel ui:field="markdownPreviewFocusPanel" addStyleNames="{style.focusPanel}">
+                    <markdown:MarkdownPreviewImpl ui:field="markdownPreview" addStyleNames="{style.markdownPreview}"/>
                 </g:FocusPanel>
             </g:LazyPanel>
         </g:HTMLPanel>

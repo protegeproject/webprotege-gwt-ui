@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.client.markdown.Markdown;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreviewImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -35,6 +37,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveDataEditorView {
 
     private boolean firstDisplayOfImage = true;
+
+    private boolean firstDisplayOfMarkdown = true;
 
     interface PrimitiveDataEditorViewImplUiBinder extends UiBinder<HTMLPanel, PrimitiveDataEditorViewImpl> {
 
@@ -61,9 +65,19 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @UiField
     protected LazyPanel imageViewContainer;
 
-
     @UiField
     protected FocusPanel imageViewFocusPanel;
+
+
+
+    @UiField
+    MarkdownPreviewImpl markdownPreview;
+
+    @UiField
+    LazyPanel markdownPreviewContainer;
+
+    @UiField
+    FocusPanel markdownPreviewFocusPanel;
 
     private static PrimitiveDataEditorViewImplUiBinder uiBinder = GWT.create(PrimitiveDataEditorViewImplUiBinder.class);
 
@@ -71,8 +85,8 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     public PrimitiveDataEditorViewImpl(@Nonnull ExpandingTextBox textBox) {
         this.textBox = checkNotNull(textBox);
 
-        this.textBox.addValueChangeHandler(event -> updateImageDisplay());
-        this.textBox.addBlurHandler(event -> updateImageDisplay());
+        this.textBox.addValueChangeHandler(event -> updatePreview());
+        this.textBox.addBlurHandler(event -> updatePreview());
 
         initWidget(uiBinder.createAndBindUi(this));
     }
@@ -189,13 +203,21 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setText(String text) {
         textBox.setText(text);
-        updateImageDisplay();
+        updatePreview();
     }
 
-    private void updateImageDisplay() {
+    private void updatePreview() {
         if (isPossibleImageLink()) {
             displayImageView();
         }
+        else if(isPossibleMarkdown()) {
+            displayMarkdownPreview();
+        }
+    }
+
+    private boolean isPossibleMarkdown() {
+        String text = getText().trim();
+        return Markdown.isMarkdown(text);
     }
 
     private boolean isPossibleImageLink() {
@@ -218,11 +240,37 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
             firstDisplayOfImage = false;
             textBox.addBlurHandler(event -> {
                 imageViewHasFocus = false;
-                updateImageDisplay();
+                updatePreview();
             });
             imageViewFocusPanel.addFocusHandler(event -> {
                 imageViewHasFocus = true;
                 hideImageView();
+            });
+        }
+    }
+
+    private boolean markdownPreviewHasFocus = false;
+
+    private void displayMarkdownPreview() {
+        markdownPreviewContainer.setVisible(true);
+        markdownPreviewFocusPanel.setVisible(true);
+        String md = getText().trim();
+        String markdown = Markdown.stripMarkdownPrefix(md);
+        markdownPreview.setMarkdown(markdown);
+
+        textBox.setVisible(false);
+
+        if (firstDisplayOfMarkdown) {
+            firstDisplayOfMarkdown = false;
+            textBox.addBlurHandler(event -> {
+                markdownPreviewHasFocus = false;
+                updatePreview();
+            });
+            markdownPreviewFocusPanel.addFocusHandler(event -> {
+                if(isEnabled()) {
+                    markdownPreviewHasFocus = true;
+                    hideMarkdownPreview();
+                }
             });
         }
     }
@@ -238,7 +286,19 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         textBox.setMinHeight(height + "px");
         textBox.setVisible(true);
         imageViewFocusPanel.setVisible(false);
+    }
 
+    private void hideMarkdownPreview() {
+        int height = markdownPreviewFocusPanel.getOffsetHeight();
+        if (markdownPreviewHasFocus) {
+            // Transfer the focus to the text box
+            Scheduler.get().scheduleDeferred(() -> textBox.setFocus(true));
+        }
+        // Transfer the height of the markdown preview to the height of the
+        // expanding text box in order to avoid unnecessary jumping about in the UI
+        textBox.setMinHeight(height + "px");
+        textBox.setVisible(true);
+        markdownPreviewFocusPanel.setVisible(false);
     }
 
     @Override

@@ -34,6 +34,8 @@ import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreview;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreviewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
@@ -1060,6 +1062,11 @@ public class ClientProjectModule {
 
     @Provides
     PerspectiveChooserView providePerspectiveChooserView(PerspectiveChooserViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MarkdownPreview provideMarkdownPreview(MarkdownPreviewImpl impl) {
         return impl;
     }
 }
