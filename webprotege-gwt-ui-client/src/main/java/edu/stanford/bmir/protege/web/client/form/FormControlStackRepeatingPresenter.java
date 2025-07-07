@@ -124,6 +124,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         FormControlContainer container = view.addFormControlContainer();
         container.setWidget(formControl);
         container.setEnabled(enabled);
+        formControl.setRegionPageChangedHandler(regionPageChangedHandler);
         formControls.add(formControl);
         container.setRemoveHandler(() -> {
             formControls.remove(formControl);
