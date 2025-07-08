@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.shared.ViewId;
 import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.card.*;
@@ -600,7 +597,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectHierarchyDescriptorRulesResult _SetProjectHierarchyDescriptorRulesResult;
     DeprecatedEntitiesTreatment _DeprecatedEntitiesTreatment;
 
-
+    ApplicationSettings _ApplicationSettings;
     public RpcWhiteList() {
     }
 }
