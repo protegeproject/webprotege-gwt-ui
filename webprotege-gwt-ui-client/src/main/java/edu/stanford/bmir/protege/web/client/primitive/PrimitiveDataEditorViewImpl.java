@@ -92,6 +92,16 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     @Override
+    protected void onAttach() {
+        super.onAttach();
+        textBox.addBlurHandler(event -> {
+            imageViewHasFocus = false;
+            markdownPreviewHasFocus = false;
+            updatePreview();
+        });
+    }
+
+    @Override
     public void setDeprecated(boolean deprecated) {
         if (deprecated) {
             this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
@@ -240,10 +250,6 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
         if (firstDisplayOfImage) {
             firstDisplayOfImage = false;
-            textBox.addBlurHandler(event -> {
-                imageViewHasFocus = false;
-                updatePreview();
-            });
             imageViewFocusPanel.addFocusHandler(event -> {
                 imageViewHasFocus = true;
                 hideImageView();
@@ -264,10 +270,6 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
         if (firstDisplayOfMarkdown) {
             firstDisplayOfMarkdown = false;
-            textBox.addBlurHandler(event -> {
-                markdownPreviewHasFocus = false;
-                updatePreview();
-            });
             markdownPreviewFocusPanel.addFocusHandler(event -> {
                 if(isEnabled()) {
                     markdownPreviewHasFocus = true;
