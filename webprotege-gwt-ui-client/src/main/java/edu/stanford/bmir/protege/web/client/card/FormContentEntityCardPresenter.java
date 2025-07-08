@@ -11,6 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
+import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.ui.*;
@@ -24,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Level;
@@ -87,7 +89,15 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         formPresenter.start(ui);
         formPresenter.setEnabled(false);
-        formPresenter.setFormDataChangedHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
+        formPresenter.setFormDataChangedHandler(() -> {
+            handlerManager.fireEvent(new DirtyChangedEvent());
+        });
+        formPresenter.setFormRegionPageChangedHandler(event -> {
+            updateDisplayedForm();
+        });
+        formPresenter.setFormRegionFilterChangedHandler(event -> {
+            updateDisplayedForm();
+        });
     }
 
     @Override
