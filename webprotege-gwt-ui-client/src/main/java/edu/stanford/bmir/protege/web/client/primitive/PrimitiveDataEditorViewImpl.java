@@ -127,11 +127,13 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
         lastStyleName = styleName;
         styleName.ifPresent(s -> textBox.getSuggestBox().addStyleName(s));
+        styleName.ifPresent(s -> markdownPreviewContainer.addStyleName(s));
     }
 
     @Override
     public void clearPrimitiveDataStyleName() {
         lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
+        lastStyleName.ifPresent(s -> markdownPreviewContainer.removeStyleName(s));
         lastStyleName = Optional.empty();
     }
 
