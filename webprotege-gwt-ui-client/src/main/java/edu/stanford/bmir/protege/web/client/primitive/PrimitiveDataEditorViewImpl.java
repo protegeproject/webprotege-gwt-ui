@@ -60,13 +60,13 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     protected LazyPanel errorViewContainer;
 
     @UiField
-    protected PrimitiveDataEditorImageViewImpl imageView;
+    protected PrimitiveDataEditorImageViewImpl imagePreview;
 
     @UiField
-    protected LazyPanel imageViewContainer;
+    protected LazyPanel imagePreviewContainer;
 
     @UiField
-    protected FocusPanel imageViewFocusPanel;
+    protected FocusPanel imagePreviewFocusPanel;
 
 
 
@@ -95,7 +95,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     protected void onAttach() {
         super.onAttach();
         textBox.addBlurHandler(event -> {
-            imageViewHasFocus = false;
+            imagePreviewHasFocus = false;
             markdownPreviewHasFocus = false;
             updatePreview();
         });
@@ -220,10 +220,14 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     private void updatePreview() {
         if (isPossibleImageLink()) {
-            displayImageView();
+            showImagePreview();
         }
         else if(isPossibleMarkdown()) {
-            displayMarkdownPreview();
+            showMarkdownPreview();
+        }
+        else {
+            imagePreviewContainer.setVisible(false);
+            markdownPreviewContainer.setVisible(false);
         }
     }
 
@@ -238,20 +242,20 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
                 ".png") || text.endsWith(".svg") || text.endsWith(".jpeg"));
     }
 
-    private boolean imageViewHasFocus = false;
+    private boolean imagePreviewHasFocus = false;
 
-    private void displayImageView() {
-        imageViewContainer.setVisible(true);
-        imageViewFocusPanel.setVisible(true);
+    private void showImagePreview() {
+        imagePreviewContainer.setVisible(true);
+        imagePreviewFocusPanel.setVisible(true);
         String url = getText().trim();
-        imageView.setImageUrl(url);
+        imagePreview.setImageUrl(url);
 
         textBox.setVisible(false);
 
         if (firstDisplayOfImage) {
             firstDisplayOfImage = false;
-            imageViewFocusPanel.addFocusHandler(event -> {
-                imageViewHasFocus = true;
+            imagePreviewFocusPanel.addFocusHandler(event -> {
+                imagePreviewHasFocus = true;
                 hideImageView();
             });
         }
@@ -259,7 +263,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     private boolean markdownPreviewHasFocus = false;
 
-    private void displayMarkdownPreview() {
+    private void showMarkdownPreview() {
         markdownPreviewContainer.setVisible(true);
         markdownPreviewFocusPanel.setVisible(true);
         String md = getText().trim();
@@ -280,8 +284,8 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     private void hideImageView() {
-        int height = imageViewFocusPanel.getOffsetHeight();
-        if (imageViewHasFocus) {
+        int height = imagePreviewFocusPanel.getOffsetHeight();
+        if (imagePreviewHasFocus) {
             // Transfer the focus to the text box
             Scheduler.get().scheduleDeferred(() -> textBox.setFocus(true));
         }
@@ -289,7 +293,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         // expanding text box in order to avoid unnecessary jumping about in the UI
         textBox.setMinHeight(height + "px");
         textBox.setVisible(true);
-        imageViewFocusPanel.setVisible(false);
+        imagePreviewFocusPanel.setVisible(false);
     }
 
     private void hideMarkdownPreview() {
