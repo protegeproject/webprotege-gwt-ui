@@ -52,17 +52,17 @@
             <g:LazyPanel ui:field="errorViewContainer" debugId="ErrorViewCont">
                 <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView" addStyleNames="{wp.primitiveData.primitiveData__errorMessage}"/>
             </g:LazyPanel>
-            <g:LazyPanel ui:field="imagePreviewContainer" debugId="ImageViewCont"
+            <g:HTMLPanel ui:field="imagePreviewContainer" debugId="ImageViewCont"
                          addStyleNames="{style.imageViewContainer}">
                 <g:FocusPanel ui:field="imagePreviewFocusPanel" addStyleNames="{style.focusPanel}">
                     <primitive:PrimitiveDataEditorImageViewImpl ui:field="imagePreview"/>
                 </g:FocusPanel>
-            </g:LazyPanel>
-            <g:LazyPanel ui:field="markdownPreviewContainer">
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="markdownPreviewContainer">
                 <g:FocusPanel ui:field="markdownPreviewFocusPanel" addStyleNames="{style.focusPanel}">
                     <markdown:MarkdownPreviewImpl ui:field="markdownPreview" addStyleNames="{style.markdownPreview}"/>
                 </g:FocusPanel>
-            </g:LazyPanel>
+            </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
