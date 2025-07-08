@@ -60,7 +60,7 @@
             </g:HTMLPanel>
             <g:HTMLPanel ui:field="markdownPreviewContainer">
                 <g:FocusPanel ui:field="markdownPreviewFocusPanel" addStyleNames="{style.focusPanel}">
-                    <markdown:MarkdownPreviewImpl ui:field="markdownPreview" addStyleNames="{style.markdownPreview}"/>
+                    <markdown:MarkdownPreviewImpl ui:field="markdownPreview" addStyleNames="{style.markdownPreview} {wp.style.markdownPreview}"/>
                 </g:FocusPanel>
             </g:HTMLPanel>
         </g:HTMLPanel>
