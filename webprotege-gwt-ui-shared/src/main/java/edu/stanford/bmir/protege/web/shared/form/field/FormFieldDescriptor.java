@@ -35,6 +35,7 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                           @Nullable FormFieldDeprecationStrategy deprecationStrategy,
                                           @Nonnull FormControlDescriptor fieldDescriptor,
                                           Repeatability repeatability,
+                                          long repeatabilityPageSize,
                                           Optionality optionality,
                                           boolean readOnly,
                                           @Nullable ExpansionState expansionState,
@@ -46,6 +47,7 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
+                                                 repeatabilityPageSize,
                                                  deprecationStrategy == null ? FormFieldDeprecationStrategy.DELETE_VALUES : deprecationStrategy,
                                                  readOnly,
                                                  expansionState == null ? ExpansionState.EXPANDED : expansionState,
@@ -61,12 +63,13 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                                   @JsonProperty(PropertyNames.DEPRECATION_STRATEGY) @Nullable FormFieldDeprecationStrategy deprecationStrategy,
                                                   @JsonProperty(PropertyNames.CONTROL) @Nonnull FormControlDescriptor fieldDescriptor,
                                                   @JsonProperty(PropertyNames.REPEATABILITY) @Nullable Repeatability repeatability,
+                                                  @JsonProperty(REPEATABILITY_PAGE_SIZE) long repeatabilityPageSize,
                                                   @JsonProperty(PropertyNames.OPTIONALITY) @Nullable Optionality optionality,
                                                   @JsonProperty(PropertyNames.READ_ONLY) boolean readOnly,
                                                   @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) @Nullable ExpansionState expansionState,
                                                   @JsonProperty(PropertyNames.HELP) @Nullable LanguageMap help) {
         final FormRegionId formFieldId = FormRegionId.get(checkNotNull(id));
-        return get(formFieldId, owlBinding, formLabel, fieldRun, deprecationStrategy, fieldDescriptor, repeatability, optionality, readOnly, expansionState, help);
+        return get(formFieldId, owlBinding, formLabel, fieldRun, deprecationStrategy, fieldDescriptor, repeatability, repeatabilityPageSize, optionality, readOnly, expansionState, help);
     }
 
     @Nonnull
@@ -106,6 +109,9 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
 
     @Nonnull
     public abstract Repeatability getRepeatability();
+
+    @JsonProperty(REPEATABILITY_PAGE_SIZE)
+    public abstract long getRepeatabilityPageSize();
 
     @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)
     @Nonnull

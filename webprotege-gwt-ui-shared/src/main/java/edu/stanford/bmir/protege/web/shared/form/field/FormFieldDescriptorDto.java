@@ -28,6 +28,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                                              @JsonProperty(PropertyNames.CONTROL) FormControlDescriptorDto descriptorDto,
                                              @JsonProperty(PropertyNames.OPTIONALITY) Optionality optionality,
                                              @JsonProperty(PropertyNames.REPEATABILITY) Repeatability repeatability,
+                                             @JsonProperty(PropertyNames.REPEATABILITY_PAGE_SIZE) long repeatabilityPageSize,
                                              @JsonProperty(PropertyNames.DEPRECATION_STRATEGY) FormFieldDeprecationStrategy deprecationStrategy,
                                              @JsonProperty(PropertyNames.READ_ONLY) boolean newReadOnly,
                                              @JsonProperty(PropertyNames.ACCESS_MODE) FormFieldAccessMode accessMode,
@@ -40,6 +41,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                 descriptorDto,
                 optionality,
                 repeatability,
+                repeatabilityPageSize,
                 deprecationStrategy,
                 newReadOnly,
                 accessMode,
@@ -83,6 +85,9 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
     @JsonProperty(PropertyNames.REPEATABILITY)
     public abstract Repeatability getRepeatability();
 
+    @JsonProperty(PropertyNames.REPEATABILITY_PAGE_SIZE)
+    public abstract long getRepeatabilityPageSize();
+
     @Nonnull
     @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)
     public abstract FormFieldDeprecationStrategy getDeprecationStrategy();
@@ -115,6 +120,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                 getDeprecationStrategy(),
                 getFormControlDescriptor().toFormControlDescriptor(),
                 getRepeatability(),
+                getRepeatabilityPageSize(),
                 getOptionality(),
                 isReadOnly(),
                 getInitialExpansionState(),

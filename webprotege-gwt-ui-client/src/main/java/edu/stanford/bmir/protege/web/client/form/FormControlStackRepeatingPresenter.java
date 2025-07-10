@@ -63,16 +63,20 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
+    private long pageSize;
+
     @AutoFactory
     @Inject
     public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
                                               @Provided @Nonnull PaginatorPresenter paginatorPresenter,
                                               @Nonnull FormRegionPosition position,
-                                              @Nonnull FormControlDataEditorFactory formControlFactory) {
+                                              @Nonnull FormControlDataEditorFactory formControlFactory,
+                                              long pageSize) {
         this.view = checkNotNull(view);
         this.position = checkNotNull(position);
         this.paginatorPresenter = checkNotNull(paginatorPresenter);
         this.formControlFactory = checkNotNull(formControlFactory);
+        this.pageSize = pageSize;
     }
 
     @Override
@@ -82,6 +86,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         view.getPaginatorContainer().setWidget(paginatorView);
         view.setAddFormControlHandler(this::handleAddControl);
         view.setEnabled(enabled);
+        paginatorPresenter.setElementCount(pageSize);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class FormControlStackPresenterFactory {
             return nonRepeatingPresenterFactory.create(formControl, position);
         }
         else {
-            return repeatingPresenterFactory.create(position, factory);
+            return repeatingPresenterFactory.create(position, factory, 12);
         }
     }
 }

@@ -202,6 +202,16 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     }
 
     @Override
+    public void setRepeatabilityPageSize(long repeatabilityPageSize) {
+        repeatabilityView.setPageSize(repeatabilityPageSize);
+    }
+
+    @Override
+    public long getRepeatabilityPageSize() {
+        return repeatabilityView.getPageSize();
+    }
+
+    @Override
     public void setLabelChangedHandler(@Nonnull Consumer<LanguageMap> runnable) {
         this.labelChangedHander = checkNotNull(runnable);
     }
