@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
+import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -22,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,6 +82,12 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
         formPresenter.setEnabled(false);
         formPresenter.setFormDataChangedHandler(() -> {
             handlerManager.fireEvent(new DirtyChangedEvent());
+        });
+        formPresenter.setFormRegionPageChangedHandler(event -> {
+            updateDisplayedForm();
+        });
+        formPresenter.setFormRegionFilterChangedHandler(event -> {
+            updateDisplayedForm();
         });
     }
 

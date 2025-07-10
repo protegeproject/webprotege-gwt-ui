@@ -21,9 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class GetApplicationSettingsResult implements Result {
 
     @JsonCreator
-    public static GetApplicationSettingsResult create(@JsonProperty("applicationSettings") ApplicationSettings applicationSettings) {
+    public static GetApplicationSettingsResult create(@JsonProperty("settings") ApplicationSettings applicationSettings) {
         return new AutoValue_GetApplicationSettingsResult(applicationSettings);
     }
 
+
+    @JsonProperty("settings")
     public abstract ApplicationSettings getApplicationSettings();
 }
