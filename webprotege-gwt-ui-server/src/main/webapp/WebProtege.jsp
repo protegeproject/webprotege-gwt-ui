@@ -42,6 +42,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.min.js"></script>
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     ${application.analytics}
 </head>
 
