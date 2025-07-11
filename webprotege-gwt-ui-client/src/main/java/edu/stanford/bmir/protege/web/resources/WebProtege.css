@@ -668,3 +668,6 @@
     mask-repeat: no-repeat;
     background-color: literal("var(--create--color)");
 }
+
+.wp-markdown-preview {
+}

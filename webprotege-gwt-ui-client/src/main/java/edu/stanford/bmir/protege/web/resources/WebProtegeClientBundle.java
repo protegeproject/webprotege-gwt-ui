@@ -558,6 +558,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-editable-icon")
         String editableIcon();
+
+        @ClassName("wp-markdown-preview")
+        String markdownPreview();
     }
 
     interface DateTimePicker extends CssResource {
