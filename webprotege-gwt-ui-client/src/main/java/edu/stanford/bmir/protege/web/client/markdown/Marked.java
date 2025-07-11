@@ -6,16 +6,16 @@ import jsinterop.annotations.JsMethod;
 /**
  * JSInterop facade for the global `marked` parser.
  */
-@JsType(isNative = true, namespace = "<global>", name = "marked")
+@JsType(isNative = true, namespace = "marked", name = "marked")
 public class Marked {
 
     /** 
      * Parses a Markdown string into HTML.
-     * @param markdown the raw Markdown text
+     * @param markdownText the raw Markdown text
      * @return the rendered HTML
      */
     @JsMethod
-    public static native String parse(String markdown);
+    public static native String parse(String markdownText);
 
     /** 
      * (Optional) Configure marked before parsing.
