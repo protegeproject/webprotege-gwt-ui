@@ -88,6 +88,9 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
             if(ps <= 0) {
                 return lastPageSize;
             }
+            if(ps > RepeatabilityView.MAX_PAGE_SIZE) {
+                return MAX_PAGE_SIZE;
+            }
             return ps;
         } catch (NumberFormatException e) {
             return lastPageSize;
@@ -96,6 +99,9 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
 
     @Override
     public void setPageSize(int pageSize) {
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than zero");
+        }
         lastPageSize = pageSize;
         this.pageSize.setText(Long.toString(pageSize));
     }

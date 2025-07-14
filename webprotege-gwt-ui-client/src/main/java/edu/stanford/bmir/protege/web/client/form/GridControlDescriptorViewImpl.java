@@ -15,6 +15,8 @@ import javax.inject.Inject;
  */
 public class GridControlDescriptorViewImpl extends Composite implements GridControlDescriptorView {
 
+    public static final int MAX_PAGE_SIZE = 2000;
+
     public static final int DEFAULT_PAGE_SIZE = 20;
 
     @UiField
@@ -55,6 +57,9 @@ public class GridControlDescriptorViewImpl extends Composite implements GridCont
             int pageSize = Integer.parseInt(maxRowsPerPage.getValue());
             if(pageSize <= 0) {
                 return DEFAULT_PAGE_SIZE;
+            }
+            if(pageSize > MAX_PAGE_SIZE) {
+                return MAX_PAGE_SIZE;
             }
             return pageSize;
         } catch (NumberFormatException e) {
