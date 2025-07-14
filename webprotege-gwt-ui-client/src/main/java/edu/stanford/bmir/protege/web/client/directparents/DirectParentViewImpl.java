@@ -70,10 +70,14 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
         }
     }
 
-    @Override
-    public void resetDisplayOnChange() {
+    public void resetAsMain(){
         this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
+
+    }
+
+    public void resetAsEquivalentClassParent(){
         this.entityRenderingField.getElement().getStyle().setColor("#505050");
+
     }
 
     @Override
