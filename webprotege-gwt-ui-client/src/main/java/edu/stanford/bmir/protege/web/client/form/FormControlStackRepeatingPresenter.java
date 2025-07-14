@@ -63,20 +63,16 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
-    private long pageSize;
-
     @AutoFactory
     @Inject
     public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
                                               @Provided @Nonnull PaginatorPresenter paginatorPresenter,
                                               @Nonnull FormRegionPosition position,
-                                              @Nonnull FormControlDataEditorFactory formControlFactory,
-                                              long pageSize) {
+                                              @Nonnull FormControlDataEditorFactory formControlFactory) {
         this.view = checkNotNull(view);
         this.position = checkNotNull(position);
         this.paginatorPresenter = checkNotNull(paginatorPresenter);
         this.formControlFactory = checkNotNull(formControlFactory);
-        this.pageSize = pageSize;
     }
 
     @Override
@@ -86,7 +82,6 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         view.getPaginatorContainer().setWidget(paginatorView);
         view.setAddFormControlHandler(this::handleAddControl);
         view.setEnabled(enabled);
-        paginatorPresenter.setElementCount(pageSize);
     }
 
     @Override
@@ -229,13 +224,23 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         paginatorPresenter.setPageNumberChangedHandler(handler);
     }
 
+    @Override
+    public int getPageSize() {
+        return paginatorPresenter.getPageSize();
+    }
+
+    @Override
+    public void setPageSize(int pageSize) {
+        paginatorPresenter.setPageSize(pageSize);
+    }
+
     @Nonnull
     @Override
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject, @Nonnull FormRegionId formRegionId) {
         Stream<FormRegionPageRequest> controlPages = formControls.stream()
                 .map(formControl -> formControl.getPageRequests(formSubject, formRegionId))
                 .flatMap(ImmutableList::stream);
-        PageRequest stackPageRequest = PageRequest.requestPageWithSize(paginatorPresenter.getPageNumber(), FormPageRequest.DEFAULT_PAGE_SIZE);
+        PageRequest stackPageRequest = PageRequest.requestPageWithSize(paginatorPresenter.getPageNumber(), paginatorPresenter.getPageSize());
         Stream<FormRegionPageRequest> stackPage = Stream.of(FormRegionPageRequest.get(formSubject, formRegionId, FormPageRequest.SourceType.CONTROL_STACK, stackPageRequest));
         return Stream.concat(stackPage, controlPages).collect(toImmutableList());
     }

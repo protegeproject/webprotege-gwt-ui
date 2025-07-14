@@ -125,6 +125,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     double weight = span / totalSpan;
                     FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(columnDescriptor.getFormControlDescriptor(),
                                                                                                           columnDescriptor.getRepeatability(),
+                                                                                                          gridControlDescriptor.getPageSize(),
                                                                                                           FormRegionPosition.NESTED);
 
                     GridCellPresenter cellPresenter = cellPresenterFactory.create(columnDescriptor,
