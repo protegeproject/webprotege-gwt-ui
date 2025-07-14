@@ -202,12 +202,12 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     }
 
     @Override
-    public void setRepeatabilityPageSize(long repeatabilityPageSize) {
-        repeatabilityView.setPageSize(repeatabilityPageSize);
+    public void setPageSize(int pageSize) {
+        repeatabilityView.setPageSize(pageSize);
     }
 
     @Override
-    public long getRepeatabilityPageSize() {
+    public int getPageSize() {
         return repeatabilityView.getPageSize();
     }
 

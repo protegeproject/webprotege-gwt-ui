@@ -41,8 +41,17 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
     @JsonCreator
     @Nonnull
     public static GridControlDescriptor get(@Nonnull @JsonProperty(PropertyNames.COLUMNS) ImmutableList<GridColumnDescriptor> columnDescriptors,
+                                            @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
                                             @Nullable @JsonProperty(PropertyNames.SUBJECT_FACTORY) FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        if(pageSize < 0) {
+            throw new IllegalArgumentException("pageSize must be greater than 0");
+        }
+        // Support legacy serializations that do not have the pageSize field
+        if(pageSize == 0) {
+            pageSize = FormPageRequest.DEFAULT_PAGE_SIZE;
+        }
         return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors,
+                                                    pageSize,
                                                    subjectFactoryDescriptor == null ? FormSubjectFactoryDescriptor.get(
                                                            EntityType.CLASS, null, Optional.empty()) : subjectFactoryDescriptor);
     }
@@ -50,6 +59,9 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
     @JsonProperty(PropertyNames.COLUMNS)
     @Nonnull
     public abstract ImmutableList<GridColumnDescriptor> getColumns();
+
+    @JsonProperty(PropertyNames.PAGE_SIZE)
+    public abstract int getPageSize();
 
     @Override
     public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
@@ -117,5 +129,4 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
         }
         return -1;
     }
-
 }

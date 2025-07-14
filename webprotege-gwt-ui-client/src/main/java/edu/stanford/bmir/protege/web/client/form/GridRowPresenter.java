@@ -43,7 +43,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private final Map<FormRegionId, GridCellPresenter> cellPresentersById = new HashMap<>();
 
-    private GridControlDescriptorDto gridControlDescriptor = GridControlDescriptorDto.get(ImmutableList.of(), null);
+    private GridControlDescriptorDto gridControlDescriptor = GridControlDescriptorDto.get(ImmutableList.of(), 20, null);
 
     private Map<FormRegionId, GridCellContainer> cellContainersById = new HashMap<>();
 

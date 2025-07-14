@@ -17,4 +17,8 @@ public interface GridControlDescriptorView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget getViewContainer();
+
+    int getPageSize();
+
+    void setPageSize(int maxRowsPerPage);
 }

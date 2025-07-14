@@ -44,7 +44,7 @@ public class FormDataDto_Serialization_TestCase {
                                                                       ),
                                                                       Optionality.OPTIONAL,
                                                                       Repeatability.NON_REPEATABLE,
-                                                                      0,
+                                                                      20,
                                                                       FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                       true,
                                                                       FormFieldAccessMode.READ_WRITE,

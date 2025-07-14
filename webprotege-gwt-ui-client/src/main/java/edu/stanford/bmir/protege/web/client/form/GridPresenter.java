@@ -48,7 +48,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
 
     @Nonnull
     private GridControlDescriptorDto descriptor = GridControlDescriptorDto.get(ImmutableList.of(),
-                                                                         null);
+                                                                         20,null);
 
     @Nonnull
     private RegionPageChangedHandler regionPageChangedHandler = () -> {

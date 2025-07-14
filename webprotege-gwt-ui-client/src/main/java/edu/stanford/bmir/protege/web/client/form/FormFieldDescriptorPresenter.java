@@ -99,7 +99,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  view.getDeprecationStrategy(),
                                                                  formControlDescriptor.get(),
                                                                  view.getRepeatability(),
-                                                                 view.getRepeatabilityPageSize(),
+                                                                 view.getPageSize(),
                                                                  view.getOptionality(),
                                                                  view.isReadOnly(),
                                                                  view.getInitialExpansionState(),
@@ -128,7 +128,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
 
         view.setRepeatability(descriptor.getRepeatability());
 
-        view.setRepeatabilityPageSize(descriptor.getRepeatabilityPageSize());
+        view.setPageSize(descriptor.getPageSize());
 
         view.setOptionality(descriptor.getOptionality());
 

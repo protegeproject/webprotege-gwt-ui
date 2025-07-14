@@ -41,7 +41,7 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
     @UiField
     TextBox pageSize;
 
-    private long lastPageSize = 10;
+    private int lastPageSize = 10;
 
     @Inject
     public RepeatabilityViewImpl() {
@@ -82,16 +82,20 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
     }
 
     @Override
-    public long getPageSize() {
+    public int getPageSize() {
         try {
-            return Long.parseLong(pageSize.getText().trim());
+            int ps = Integer.parseInt(pageSize.getText().trim());
+            if(ps <= 0) {
+                return lastPageSize;
+            }
+            return ps;
         } catch (NumberFormatException e) {
             return lastPageSize;
         }
     }
 
     @Override
-    public void setPageSize(long pageSize) {
+    public void setPageSize(int pageSize) {
         lastPageSize = pageSize;
         this.pageSize.setText(Long.toString(pageSize));
     }

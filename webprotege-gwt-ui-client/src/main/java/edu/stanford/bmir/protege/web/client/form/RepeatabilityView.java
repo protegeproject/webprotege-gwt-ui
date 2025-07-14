@@ -17,7 +17,7 @@ public interface RepeatabilityView extends IsWidget {
     @Nonnull
     Repeatability getRepeatability();
 
-    long getPageSize();
+    int getPageSize();
 
-    void setPageSize(long pageSize);
+    void setPageSize(int pageSize);
 }
