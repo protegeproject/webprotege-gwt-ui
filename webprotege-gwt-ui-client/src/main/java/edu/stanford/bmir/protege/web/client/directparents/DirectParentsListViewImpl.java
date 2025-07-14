@@ -71,6 +71,9 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     }
 
     private void markMainParent() {
+        for(DirectParentView view : this.directParentViews){
+            view.resetDisplayOnChange();
+        }
         if (this.mainParentIri != null && !this.mainParentIri.isEmpty()) {
             for(DirectParentView parentView : this.directParentViews) {
                 if(mainParentIri.equals(parentView.getEntityIri())) {
@@ -82,6 +85,9 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     }
 
     private void markEquivalentOnlyParents() {
+        for(DirectParentView view : this.directParentViews){
+            view.resetDisplayOnChange();
+        }
         if(this.equivalentOnlyParents != null && !this.equivalentOnlyParents.isEmpty()) {
             for(OWLEntityData equivalentOnlyParent: equivalentOnlyParents) {
                 Optional<DirectParentView> parentViewOptional = this.directParentViews.stream()

@@ -17,5 +17,7 @@ public interface DirectParentView extends IsWidget {
 
     void markAsEquivalentOnly();
 
+    void resetDisplayOnChange();
+
     String getEntityIri();
 }
