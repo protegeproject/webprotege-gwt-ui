@@ -21,14 +21,14 @@ public abstract class GetClassHierarchyParentsByAxiomTypeResult implements Resul
     }
 
     @JsonCreator
-    public static GetClassHierarchyParentsByAxiomTypeResult create(@JsonProperty("owlClass") @Nullable OWLClass owlClass,
+    public static GetClassHierarchyParentsByAxiomTypeResult create(@JsonProperty("owlClass") @Nullable OWLEntityData owlClass,
                                                                    @JsonProperty("parentsBySubclassOf") @Nonnull Set<OWLEntityData> parentsBySubclassOf,
                                                                    @JsonProperty("parentsByEquivalentClass") @Nonnull Set<OWLEntityData> parentsByEquivalentClass) {
         return new AutoValue_GetClassHierarchyParentsByAxiomTypeResult(owlClass, parentsBySubclassOf, parentsByEquivalentClass);
     }
 
     @Nonnull
-    public abstract OWLEntity getEntity();
+    public abstract OWLEntityData getEntity();
 
     @Nullable
     public abstract Set<OWLEntityData> getParentsBySubclassOf();
