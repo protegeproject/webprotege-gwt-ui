@@ -26,13 +26,20 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
     @JsonCreator
     @Nonnull
     public static GridControlDescriptorDto get(@JsonProperty(PropertyNames.COLUMNS) @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
+                                               @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
                                                @JsonProperty(PropertyNames.SUBJECT_FACTORY) @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
-        return new AutoValue_GridControlDescriptorDto(columns, formSubjectFactoryDescriptor);
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("pageSize must be greater than 0");
+        }
+        return new AutoValue_GridControlDescriptorDto(columns, pageSize, formSubjectFactoryDescriptor);
     }
 
     @Nonnull
     @JsonProperty(PropertyNames.COLUMNS)
     public abstract ImmutableList<GridColumnDescriptorDto> getColumns();
+
+    @JsonProperty(PropertyNames.PAGE_SIZE)
+    public abstract int getPageSize();
 
     @Nullable
     @JsonProperty(PropertyNames.SUBJECT_FACTORY)
@@ -53,6 +60,7 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
     public GridControlDescriptor toFormControlDescriptor() {
         return GridControlDescriptor.get(
                 getColumns().stream().map(GridColumnDescriptorDto::toGridColumnDescriptor).collect(toImmutableList()),
+                getPageSize(),
                 getSubjectFactoryDescriptorInternal()
         );
     }

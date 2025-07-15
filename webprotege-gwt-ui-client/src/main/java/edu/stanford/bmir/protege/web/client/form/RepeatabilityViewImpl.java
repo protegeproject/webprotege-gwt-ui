@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 
@@ -37,12 +38,19 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
     @UiField
     RadioButton repeatableHorizontallyRadio;
 
+    @UiField
+    TextBox pageSize;
 
+    private int lastPageSize = 10;
 
     @Inject
     public RepeatabilityViewImpl() {
         counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
+        nonRepeatableRadio.addValueChangeHandler(event -> updateState());
+        repeatableHorizontallyRadio.addValueChangeHandler(event -> updateState());
+        repeatableVerticallyRadio.addValueChangeHandler(event -> updateState());
+        pageSize.setValue(Long.toString(lastPageSize));
     }
 
     @Override
@@ -56,6 +64,7 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
         else {
             nonRepeatableRadio.setValue(true);
         }
+        updateState();
     }
 
     @Nonnull
@@ -70,5 +79,34 @@ public class RepeatabilityViewImpl extends Composite implements RepeatabilityVie
         else {
             return Repeatability.NON_REPEATABLE;
         }
+    }
+
+    @Override
+    public int getPageSize() {
+        try {
+            int ps = Integer.parseInt(pageSize.getText().trim());
+            if(ps <= 0) {
+                return lastPageSize;
+            }
+            if(ps > RepeatabilityView.MAX_PAGE_SIZE) {
+                return MAX_PAGE_SIZE;
+            }
+            return ps;
+        } catch (NumberFormatException e) {
+            return lastPageSize;
+        }
+    }
+
+    @Override
+    public void setPageSize(int pageSize) {
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than zero");
+        }
+        lastPageSize = pageSize;
+        this.pageSize.setText(Long.toString(pageSize));
+    }
+
+    private void updateState() {
+        pageSize.setEnabled(repeatableVerticallyRadio.getValue() || repeatableHorizontallyRadio.getValue());
     }
 }
