@@ -7,16 +7,17 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
+import edu.stanford.bmir.protege.web.shared.card.GetEntityCardDescriptorsAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
@@ -42,8 +43,7 @@ import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAc
 import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.obo.*;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.*;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
@@ -59,7 +59,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAct
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetUserProjectEntityGraphCriteriaAction;
@@ -75,7 +74,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  * <p>
- *     The basic interface for actions that are sent to the dispatch service
+ * The basic interface for actions that are sent to the dispatch service
  * </p>
  */
 @JsonSubTypes(value = {
@@ -98,7 +97,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = LoadProjectAction.class),
         @Type(value = LogOutUserAction.class),
         @Type(value = RebuildPermissionsAction.class),
-        @Type(value = CreateUserAccountAction.class),
         @Type(value = DeleteEntitiesAction.class),
         @Type(value = DeleteEntityCommentAction.class),
         @Type(value = DeleteFormAction.class),
@@ -129,6 +127,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetHierarchyPathsToRootAction.class),
         @Type(value = GetHierarchyRootsAction.class),
         @Type(value = GetHierarchySiblingsAction.class),
+        @Type(value = GetEntityCardDescriptorsAction.class),
         @Type(value = GetEntityHtmlRenderingAction.class),
         @Type(value = GetIndividualsAction.class),
         @Type(value = GetIndividualsPageContainingIndividualAction.class),
@@ -181,7 +180,6 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = MoveProjectsToTrashAction.class),
         @Type(value = NewOntologyMergeAddAction.class),
         @Type(value = PerformEntitySearchAction.class),
-        @Type(value = PerformLoginAction.class),
         @Type(value = RebuildPermissionsAction.class),
         @Type(value = RemoveProjectFromTrashAction.class),
         @Type(value = ResetPasswordAction.class),
@@ -209,6 +207,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = SetOntologyAnnotationsAction.class),
         @Type(value = SetPerspectiveLayoutAction.class),
         @Type(value = SetProjectFormDescriptorsAction.class),
+        @Type(value = SetProjectFormsAction.class),
         @Type(value = SetProjectPrefixDeclarationsAction.class),
         @Type(value = SetProjectSettingsAction.class),
         @Type(value = SetProjectSharingSettingsAction.class),
@@ -223,7 +222,21 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = UpdateFrameAction.class),
         @Type(value = UpdateNamedIndividualFrameAction.class),
         @Type(value = UpdateObjectPropertyFrameAction.class),
-        @Type(value = TranslateEventListAction.class)
+        @Type(value = TranslateEventListAction.class),
+        @Type(value = SetNamedHierarchiesAction.class),
+        @Type(value = GetHierarchyDescriptorAction.class),
+        @Type(value = ProcessUploadedSiblingsOrderingAction.class),
+        @Type(value = GetProjectRoleDefinitionsAction.class),
+        @Type(value = GetFormRegionAccessRestrictionsAction.class),
+        @Type(value = SetFormRegionAccessRestrictionsAction.class),
+        @Type(value = SaveEntityChildReorderingAction.class),
+        @Type(value = GetEntityDirectParentsAction.class),
+        @Type(value = SetProjectRoleDefinitionsAction.class),
+        @Type(value = ResetProjectRoleDefinitionsAction.class),
+        @Type(value = GetProjectRoleAssignmentsAction.class),
+        @Type(value = SetProjectRoleAssignmentsAction.class),
+        @Type(value = GetProjectHierarchyDescriptorRulesAction.class),
+        @Type(value = SetProjectHierarchyDescriptorRulesAction.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

@@ -17,9 +17,9 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
 
     private ProjectId projectId;
 
-    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> fromSettings;
+    private EntityCrudKitSettings fromSettings;
 
-    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> toSettings;
+    private EntityCrudKitSettings toSettings;
 
     private IRIPrefixUpdateStrategy prefixUpdateStrategy;
 
@@ -29,7 +29,7 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
     private SetEntityCrudKitSettingsAction() {
     }
 
-    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings<?> fromSettings, EntityCrudKitSettings<?> toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
+    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings fromSettings, EntityCrudKitSettings toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
         this.projectId = projectId;
         this.toSettings = toSettings;
         this.fromSettings = fromSettings;
@@ -46,11 +46,11 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
         return prefixUpdateStrategy;
     }
 
-    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getToSettings() {
+    public EntityCrudKitSettings getToSettings() {
         return toSettings;
     }
 
-    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getFromSettings() {
+    public EntityCrudKitSettings getFromSettings() {
         return fromSettings;
     }
 }

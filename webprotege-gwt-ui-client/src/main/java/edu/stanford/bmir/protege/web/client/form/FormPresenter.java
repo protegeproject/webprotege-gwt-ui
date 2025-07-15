@@ -9,11 +9,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,13 +32,15 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter implements HasFormRegionFilterChangedHandler {
+public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     @Nonnull
     private final FormView formView;
 
     @Nonnull
     private final NoFormView noFormView;
+
+    private boolean displayNoFormViewIfEmpty = true;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -54,7 +57,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     private FormFieldPresenterFactory formFieldPresenterFactory;
 
-    private Set<FormFieldId> collapsedFields = new HashSet<>();
+    private Set<FormRegionId> collapsedFields = new HashSet<>();
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {
     };
@@ -77,6 +80,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     private boolean fieldsCollapsible = true;
 
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
     @AutoFactory
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
@@ -94,6 +99,10 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         fieldPresenters.forEach(FormFieldPresenter::clearValue);
     }
 
+    public void clearStyle() {
+        formView.clearStyle();
+    }
+
     public void collapseAll() {
         fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.COLLAPSED));
     }
@@ -108,19 +117,27 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         saveExpansionState();
         currentSubject = formData.getSubject();
         this.formId = Optional.of(formData.getFormDescriptor().getFormId());
-        if (currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
+        if (isCurrentForm(formData)) {
             updateFormData(formData);
         }
         else {
             createFormAndSetFormData(formData);
         }
         if (formData.getFormDescriptor().getFields().isEmpty()) {
-            container.ifPresent(c -> c.setWidget(noFormView));
+            container.ifPresent(c -> {
+                if (displayNoFormViewIfEmpty) {
+                    c.setWidget(noFormView);
+                }
+            });
         }
         else {
             container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
+    }
+
+    private boolean isCurrentForm(FormDataDto formData) {
+        return currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()));
     }
 
     public boolean isEnabled() {
@@ -131,7 +148,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {
             if (p.getExpansionState() == ExpansionState.COLLAPSED) {
-                FormFieldId id = p.getValue().getFormFieldDescriptor().getId();
+                FormRegionId id = p.getValue().getFormFieldDescriptor().getId();
                 collapsedFields.add(id);
             }
         });
@@ -186,7 +203,11 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         fieldPresenters.clear();
         formView.clear();
         currentFormDescriptor = Optional.empty();
-        container.ifPresent(c -> c.setWidget(noFormView));
+        container.ifPresent(c -> {
+            if (displayNoFormViewIfEmpty) {
+                c.setWidget(noFormView);
+            }
+        });
     }
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
@@ -202,7 +223,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.setCollapsible(fieldsCollapsible);
         presenter.start();
-
+        presenter.setParentDisplayContextBuilder(this);
         fieldPresenters.add(presenter);
         if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
@@ -298,7 +319,9 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
      */
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
-        container.setWidget(noFormView);
+        if (displayNoFormViewIfEmpty) {
+            container.setWidget(noFormView);
+        }
     }
 
     public Stream<FormRegionOrdering> getOrderings() {
@@ -326,5 +349,23 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
                               .filter(ValidationStatus::isInvalid)
                               .findFirst()
                               .orElse(ValidationStatus.VALID);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        currentFormDescriptor.ifPresent(fd -> context.addFormId(fd.getFormId()));
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    public void setDisplayNoFormViewIfEmpty(boolean b) {
+        displayNoFormViewIfEmpty = b;
     }
 }

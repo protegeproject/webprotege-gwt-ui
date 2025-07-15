@@ -19,14 +19,15 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public abstract class FormDescriptorDto {
 
     @JsonCreator
-    public static FormDescriptorDto get(@JsonProperty("formId") @Nonnull FormId formId,
-                                        @JsonProperty("label") @Nonnull LanguageMap label,
-                                        @JsonProperty("fields") @Nonnull ImmutableList<FormFieldDescriptorDto> fields,
-                                        @JsonProperty("formSubjectFactoryDescriptor") @Nullable FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+    public static FormDescriptorDto get(@JsonProperty(PropertyNames.FORM_ID) @Nonnull FormId formId,
+                                        @JsonProperty(PropertyNames.LABEL) @Nonnull LanguageMap label,
+                                        @JsonProperty(PropertyNames.FIELDS) @Nonnull ImmutableList<FormFieldDescriptorDto> fields,
+                                        @JsonProperty(PropertyNames.SUBJECT_FACTORY) @Nullable FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
         return new AutoValue_FormDescriptorDto(formId, label, fields, subjectFactoryDescriptor);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.FORM_ID)
     public abstract FormId getFormId();
 
     @Nonnull
@@ -36,6 +37,7 @@ public abstract class FormDescriptorDto {
     public abstract ImmutableList<FormFieldDescriptorDto> getFields();
 
     @Nullable
+    @JsonProperty(PropertyNames.SUBJECT_FACTORY)
     protected abstract FormSubjectFactoryDescriptor getFormSubjectFactoryDescriptorInternal();
 
     public Optional<FormSubjectFactoryDescriptor> getFormSubjectFactoryDescriptor() {

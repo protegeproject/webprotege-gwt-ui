@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -48,6 +49,10 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
     @Nonnull
     Repeatability getRepeatability();
 
+    void setPageSize(int pageSize);
+
+    int getPageSize();
+
     void setReadOnly(boolean readOnly);
 
     boolean isReadOnly();
@@ -68,4 +73,12 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
 
     @Nonnull
     FormFieldDeprecationStrategy getDeprecationStrategy();
+
+    void setViewAccessRoles(List<RoleCriteriaBinding> restrictions);
+
+    List<RoleCriteriaBinding> getViewAccessRoles();
+
+    void setEditAccessRoles(List<RoleCriteriaBinding> restrictions);
+
+    List<RoleCriteriaBinding> getEditAccessRoles();
 }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>5.0.6-SNAPSHOT</version>
+        <version>8.3.11</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-client</artifactId>
@@ -140,7 +140,6 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>webprotege-annotations</artifactId>
-            <version>1.1.0</version>
         </dependency>
 
         <dependency>
@@ -239,11 +238,10 @@
                             <classpathScope>compile+runtime</classpathScope>
                             <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
                             <extra>target/gwt-extra</extra>
+                            <optimize>0</optimize>
                             <draftCompile>true</draftCompile>
-                            <compilerArgs>
-                                <arg>-incremental</arg>
-                            </compilerArgs>
-                            <logLevel>${gwt.compiler.log-level}</logLevel>
+                            <style>DETAILED</style>
+                            <logLevel>INFO</logLevel>
                         </configuration>
                     </plugin>
                             <plugin>

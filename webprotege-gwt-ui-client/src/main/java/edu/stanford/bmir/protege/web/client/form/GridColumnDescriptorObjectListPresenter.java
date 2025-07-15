@@ -7,8 +7,11 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter<GridColumnDescriptor> {
+public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter<GridColumnDescriptor> implements FormDescriptorComponentPresenter{
 
     @Inject
     public GridColumnDescriptorObjectListPresenter(@Nonnull ObjectListView view,
@@ -20,12 +23,23 @@ public class GridColumnDescriptorObjectListPresenter extends ObjectListPresenter
 
     private static GridColumnDescriptor getDefaultColumnDescriptor(UuidV4Provider uuidV4Provider) {
         return GridColumnDescriptor.get(
-                GridColumnId.get(uuidV4Provider.get()),
+                FormRegionId.get(uuidV4Provider.get()),
                 Optionality.REQUIRED,
                 Repeatability.NON_REPEATABLE,
                 null,
                 LanguageMap.empty(),
                 TextControlDescriptor.getDefault()
         );
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        getObjectPresenters()
+                .stream()
+                .map(presenter -> (GridColumnDescriptorPresenter) presenter)
+                .forEach(presenter -> {
+                    FormDescriptorComponentPresenterHierarchyNode presenterNode = thisNode.addChildForPresenter(presenter);
+                    presenter.addChildren(presenterNode);
+                });
     }
 }

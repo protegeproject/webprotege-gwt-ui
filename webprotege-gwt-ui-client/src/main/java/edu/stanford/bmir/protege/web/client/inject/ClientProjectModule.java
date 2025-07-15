@@ -5,6 +5,7 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.*;
@@ -16,8 +17,10 @@ import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSett
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.directparents.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
@@ -32,11 +35,12 @@ import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreview;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreviewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
+import edu.stanford.bmir.protege.web.client.permissions.*;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
@@ -47,19 +51,26 @@ import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRender
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.role.*;
 import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
+import edu.stanford.bmir.protege.web.client.tab.TabBarView;
+import edu.stanford.bmir.protege.web.client.tab.TabBarViewImpl;
+import edu.stanford.bmir.protege.web.client.tab.TabView;
+import edu.stanford.bmir.protege.web.client.tab.TabViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.RoleDefinition;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -112,12 +123,17 @@ public class ClientProjectModule {
     }
 
     @Provides
+    UploadAndProcessSiblingsOrderingHandler provideUploadAndProcessSiblingsOrderingHandler(UploadAndProcessSiblingsOrderingHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
     UploadAndMergeAdditionsHandler provideUploadAndMergeAdditionsHandler(UploadAndMergeAdditionsHandlerImpl handler) {
         return handler;
     }
 
     @Provides
-    LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
+    LoggedInUserProjectCapabilityChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectCapabilityCheckerImpl checker) {
         return checker;
     }
 
@@ -182,6 +198,11 @@ public class ClientProjectModule {
 
     @Provides
     CreateEntityDialogView providesCreateEntityDialogView(CreateEntitiesDialogViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChangeChildrenOrderingDialogView providesChildrenOrderingDialogView(ChangeChildrenOrderingDialogViewImpl impl) {
         return impl;
     }
 
@@ -652,7 +673,7 @@ public class ClientProjectModule {
     GridHeaderCellView provideGridColumnHeaderView(GridHeaderCellViewImpl view) {
         return view;
     }
-    
+
     @Provides
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
@@ -790,12 +811,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormTabBarView provideFormSelectorView(FormTabBarViewImpl impl) {
+    TabBarView provideFormSelectorView(TabBarViewImpl impl) {
         return impl;
     }
 
     @Provides
-    FormTabView provideFormSelectorItemView(FormTabViewImpl impl) {
+    TabView provideFormSelectorItemView(TabViewImpl impl) {
         return impl;
     }
 
@@ -956,7 +977,111 @@ public class ClientProjectModule {
     }
 
     @Provides
+    ProjectRoleSelectorView provideProjectRoleSelectorPresenter(ProjectRoleSelectorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    CardStackPortletView provideCardPortletView(CardStackPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CustomContentEntityCardPresenterFactory provideCustomContentPresenterFactory(CustomContentEntityCardPresenterFactoryGenerated impl) {
+        return impl;
+    }
+
+    @Provides
     GitHubLabelView provideGitHubLabelView(GitHubLabelViewImpl impl) {
+        return impl;
+    }
+    @Provides
+    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    DirectParentView provideDirectParentView(DirectParentViewImpl impl){
+        return impl;
+    }
+
+    @Provides
+    ProjectRolesView provideProjectRolesView(ProjectRolesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CapabilityPresenterSelectorView provideCapabilityPresenterSelectorView(CapabilityPresenterSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    BasicCapabilityView provideBasicCapabilityView(BasicCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RoleDefinitionView provideProjectRoleView(RoleDefinitionViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPresenter<RoleDefinition>  providesRoleDefinitionPresenter(RoleDefinitionPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ValueListFlexEditorImpl<Capability> provideCapabilitiesEditor(CapabilityValueEditorFactory factory) {
+        return new ValueListFlexEditorImpl<>(factory);
+    }
+
+    @Provides
+    FormRegionCapabilityView providerFormRegionCapabilityView(FormRegionCapabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ParentRoleSelectorView parentRoleSelectorView(ParentRoleSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectRoleAssignmentsView provideRoleAssignmentsView(ProjectRoleAssignmentsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CapabilityContextView provideCapabilityContextView(CapabilityContextViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormRegionRoleCriteriaView provideFormRegionAccessRestrictionView(FormRegionRoleCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    HierarchyDescriptorView provideHierarchyDescriptorView(HierarchyDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    HierarchyDescriptorRuleView provideHierarchyDescriptorRuleView(HierarchyDescriptorRuleViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPresenter<HierarchyDescriptorRule> provideHierarchyDescriptorRuleObjectPresenter(HierarchyDescriptorRuleObjectPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    PerspectiveChooserView providePerspectiveChooserView(PerspectiveChooserViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MarkdownPreview provideMarkdownPreview(MarkdownPreviewImpl impl) {
         return impl;
     }
 }

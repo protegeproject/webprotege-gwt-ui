@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -27,7 +29,7 @@ public class FormFieldPresenter_TestCase {
     private FormFieldView view;
 
     @Mock
-    private FormFieldId fieldId;
+    private FormRegionId fieldId;
 
     @Mock
     private OwlBinding owlBinding;
@@ -56,8 +58,10 @@ public class FormFieldPresenter_TestCase {
                                                                             formControlDescriptor,
                                                                             Optionality.OPTIONAL,
                                                                             Repeatability.NON_REPEATABLE,
+                                                                            10,
                                                                             FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                             true,
+                                                                            FormFieldAccessMode.READ_WRITE,
                                                                             ExpansionState.COLLAPSED,
                                                                             helpMap);
 

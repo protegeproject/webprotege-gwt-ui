@@ -8,7 +8,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,18 +25,28 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
 
     @JsonCreator
     @Nonnull
-    public static GridControlDescriptorDto get(@JsonProperty("columns") @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
-                                               @JsonProperty("formSubjectFactoryDescriptor") @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
-        return new AutoValue_GridControlDescriptorDto(columns, formSubjectFactoryDescriptor);
+    public static GridControlDescriptorDto get(@JsonProperty(PropertyNames.COLUMNS) @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
+                                               @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
+                                               @JsonProperty(PropertyNames.SUBJECT_FACTORY) @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("pageSize must be greater than 0");
+        }
+        return new AutoValue_GridControlDescriptorDto(columns, pageSize, formSubjectFactoryDescriptor);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.COLUMNS)
     public abstract ImmutableList<GridColumnDescriptorDto> getColumns();
 
+    @JsonProperty(PropertyNames.PAGE_SIZE)
+    public abstract int getPageSize();
+
     @Nullable
+    @JsonProperty(PropertyNames.SUBJECT_FACTORY)
     protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
 
     @Nonnull
+    @JsonIgnore
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
     }
@@ -50,10 +60,12 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
     public GridControlDescriptor toFormControlDescriptor() {
         return GridControlDescriptor.get(
                 getColumns().stream().map(GridColumnDescriptorDto::toGridColumnDescriptor).collect(toImmutableList()),
+                getPageSize(),
                 getSubjectFactoryDescriptorInternal()
         );
     }
 
+    @JsonIgnore
     public int getNestedColumnCount() {
         int count = 0;
         for(GridColumnDescriptorDto columnDescriptor : getColumns()) {
@@ -77,8 +89,8 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
      * have nested columns then the column will map to itself.
      */
     @JsonIgnore
-    public ImmutableMap<GridColumnId, GridColumnId> getLeafColumnToTopLevelColumnMap() {
-        ImmutableMap.Builder<GridColumnId, GridColumnId> builder = ImmutableMap.builder();
+    public ImmutableMap<FormRegionId, FormRegionId> getLeafColumnToTopLevelColumnMap() {
+        ImmutableMap.Builder<FormRegionId, FormRegionId> builder = ImmutableMap.builder();
         getColumns()
                 .forEach(topLevelColumn -> {
                     topLevelColumn.getLeafColumnDescriptors()
@@ -92,12 +104,12 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
 
     /**
      * Gets the index of the specified columnId.
-     * @param columnId The {@link GridColumnId}
+     * @param columnId The {@link FormRegionId}
      * @return The column index of the specified column Id.  A value of -1 is returned if the
-     * {@link GridColumnId} does not identify a column in this grid.
+     * {@link FormRegionId} does not identify a column in this grid.
      */
     @JsonIgnore
-    public int getColumnIndex(GridColumnId columnId) {
+    public int getColumnIndex(FormRegionId columnId) {
         ImmutableList<GridColumnDescriptorDto> columns = getColumns();
         for(int i = 0; i < columns.size(); i++) {
             if(columns.get(i).getId().equals(columnId)) {

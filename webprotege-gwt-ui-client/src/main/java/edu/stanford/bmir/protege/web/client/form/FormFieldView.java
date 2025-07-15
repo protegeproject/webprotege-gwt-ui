@@ -3,8 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -22,6 +21,8 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
 
     boolean isExpanded();
 
+    void setEditableIconVisible(boolean enabled);
+
     interface HeaderClickedHandler {
         void handleHeaderClicked();
     }
@@ -34,9 +35,9 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
 
     void addStylePropertyValue(String cssProperty, String cssValue);
 
-    void setId(FormFieldId elementId);
+    void setId(FormRegionId elementId);
 
-    Optional<FormFieldId> getId();
+    Optional<FormRegionId> getId();
 
     void setFormLabel(String formLabel);
 

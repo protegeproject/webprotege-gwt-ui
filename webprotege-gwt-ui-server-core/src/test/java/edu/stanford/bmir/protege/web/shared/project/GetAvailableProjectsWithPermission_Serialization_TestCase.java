@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class GetAvailableProjectsWithPermission_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = GetAvailableProjectsWithPermissionAction.create(new ActionId("Something"));
+        var action = GetAvailableProjectsWithPermissionAction.create(new BasicCapability(CapabilityId.valueOf("Something")));
         testSerialization(action, Action.class);
     }
 

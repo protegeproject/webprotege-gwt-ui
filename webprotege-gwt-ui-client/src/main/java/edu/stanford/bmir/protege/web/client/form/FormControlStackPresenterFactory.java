@@ -29,6 +29,7 @@ public class FormControlStackPresenterFactory {
     @Nonnull
     public FormControlStackPresenter create(@Nonnull FormControlDescriptorDto descriptor,
                                             @Nonnull Repeatability repeatability,
+                                            int pageSize,
                                             @Nonnull FormRegionPosition position) {
         FormControlDataEditorFactory factory = formControlFactory.getDataEditorFactory(descriptor);
         if(checkNotNull(repeatability).equals(Repeatability.NON_REPEATABLE)) {

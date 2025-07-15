@@ -17,31 +17,25 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class FormGroup {
 
-    public static final String ID = "id";
-
-    public static final String DESCRIPTION = "description";
-
-    public static final String FORM_IDS = "formIds";
-
     @JsonCreator
     @Nonnull
-    public static FormGroup get(@Nonnull @JsonProperty(ID) FormGroupId formGroupId,
-                                @Nonnull @JsonProperty(DESCRIPTION) String description,
-                                @Nonnull @JsonProperty(FORM_IDS) ImmutableList<FormId> formIds) {
+    public static FormGroup get(@Nonnull @JsonProperty(PropertyNames.ID) FormGroupId formGroupId,
+                                @Nonnull @JsonProperty(PropertyNames.DESCRIPTION) String description,
+                                @Nonnull @JsonProperty(PropertyNames.FORMS) ImmutableList<FormId> formIds) {
         return new AutoValue_FormGroup(formGroupId,
                                        description,
                                        formIds);
     }
 
-    @JsonProperty(ID)
+    @JsonProperty(PropertyNames.ID)
     @Nonnull
     public abstract FormGroupId getId();
 
-    @JsonProperty(DESCRIPTION)
+    @JsonProperty(PropertyNames.DESCRIPTION)
     @Nonnull
     public abstract String getDescription();
 
-    @JsonProperty(FORM_IDS)
+    @JsonProperty(PropertyNames.FORMS)
     @Nonnull
     public abstract ImmutableList<FormId> getFormIds();
 }

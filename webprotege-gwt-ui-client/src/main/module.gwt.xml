@@ -23,6 +23,10 @@
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
     <inherits name="com.google.gwt.logging.Logging"/>
+    <!-- Don't use remote logging -->
+    <replace-with class="com.google.gwt.logging.client.NullLogHandler">
+        <when-type-is class="com.google.gwt.logging.client.SimpleRemoteLogHandler"/>
+    </replace-with>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
     
@@ -57,6 +61,8 @@
     <set-property name="webprotege.heartbeatOutgoing" value="4000"/>-->
 
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
+
+    <set-configuration-property name="devModeUrlWhitelistRegexp" value="http://(webprotege-local\.edu|localhost|127\.0\.0\.1)(:\d+)?/.*" />
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 

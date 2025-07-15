@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class FormPageRequest_Serialization_TestCase {
         JsonSerializationTestUtil.testSerialization(
                 FormPageRequest.get(FormId.generate(),
                                     FormSubject.get(mockOWLClass()),
-                                    FormFieldId.get(UUID.randomUUID().toString()),
+                                    FormRegionId.get(UUID.randomUUID().toString()),
                                     FormPageRequest.SourceType.CONTROL_STACK,
                                     PageRequest.requestFirstPage()),
                 FormPageRequest.class

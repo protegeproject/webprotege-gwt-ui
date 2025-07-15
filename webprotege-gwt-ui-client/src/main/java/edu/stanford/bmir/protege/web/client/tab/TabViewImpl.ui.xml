@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .label {
+            padding-right: 20px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{wp.style.formTabBar__tab}">
+        <g:HTMLPanel ui:field="icon" addStyleNames="{wp.style.formTabBar__icon}"/>
+        <g:Label ui:field="label" addStyleNames="{style.label} {wp.style.formTabBar__label}"/>
+        <g:HTMLPanel ui:field="dirtyIndicator" addStyleNames="{wp.style.formTabBar__tab__dirtyIndicator}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

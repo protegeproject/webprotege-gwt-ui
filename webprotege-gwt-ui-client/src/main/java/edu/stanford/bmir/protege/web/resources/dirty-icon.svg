@@ -1,0 +1,37 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" stroke="currentColor">
+    <path d="M2,2
+             l6,6"
+          fill="none"
+          stroke="rgb(231,83,63)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+    />
+    <path d="M2,8
+             l6,-6"
+          fill="none"
+          stroke="rgb(231,83,63)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+    />
+    <path d="M1,5
+             l8,0"
+          fill="none"
+          stroke="rgb(231,83,63)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+    />
+    <path d="M5,1
+             l0,8"
+          fill="none"
+          stroke="rgb(231,83,63)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+    />
+</svg>

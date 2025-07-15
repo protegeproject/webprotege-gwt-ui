@@ -7,9 +7,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
@@ -50,7 +51,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final ImmutableList<EditorPanePresenter> panePresenters;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final DispatchServiceManager dispatch;
@@ -61,19 +62,20 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     public EditorPortletPresenter(
             @Nonnull ProjectId projectId,
             @Nonnull SelectionModel selectionModel,
+            @Nonnull SelectedPathsModel selectedPathsModel,
             @Nonnull EditorPortletView view,
             @Nonnull TagListPresenter tagListPresenter,
             @Nonnull EditorPaneSimpleEditorPresenter editorPresenter,
             @Nonnull DisplayNameRenderer displayNameRenderer,
             @Nonnull EditorPaneEntityChangesPresenter changesPresenter,
-            @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+            @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
             @Nonnull VizPanePresenter vizPresenter,
             @Nonnull Provider<ForbiddenView> forbiddenViewProvider,
             @Nonnull DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.dispatch = checkNotNull(dispatch);
         panePresenters = ImmutableList.of(
                 checkNotNull(editorPresenter),
@@ -143,7 +145,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void startPanePresenter(PortletUi portletUi, WebProtegeEventBus eventBus, EditorPanePresenter panePresenter) {
-        permissionChecker.hasPermission(panePresenter.getRequiredAction(), permission -> {
+        capabilityChecker.hasCapability(panePresenter.getRequiredAction(), permission -> {
             if(permission) {
                 panePresenter.setHasBusy(portletUi);
                 panePresenter.setEntityDisplay(this);

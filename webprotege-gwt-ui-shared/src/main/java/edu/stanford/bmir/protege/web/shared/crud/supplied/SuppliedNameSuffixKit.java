@@ -2,14 +2,17 @@ package edu.stanford.bmir.protege.web.shared.crud.supplied;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -20,7 +23,7 @@ import java.util.Optional;
  */
 @ApplicationSingleton
 @JsonTypeName("SuppliedName")
-public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSettings> {
+public class SuppliedNameSuffixKit extends EntityCrudKit implements Serializable, IsSerializable {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("SuppliedNameSuffix");
 
@@ -54,7 +57,7 @@ public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSetti
     }
 
     @Override
-    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings suffixSettings) {
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, EntityCrudKitSuffixSettings suffixSettings) {
         return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), "Person");
     }
 

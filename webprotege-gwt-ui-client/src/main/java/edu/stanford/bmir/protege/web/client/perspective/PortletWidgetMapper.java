@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.PortletId;
+import edu.stanford.bmir.protege.web.shared.ViewNodeId;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
@@ -17,10 +21,9 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,7 +32,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public class PortletWidgetMapper implements WidgetMapper {
+public class PortletWidgetMapper implements WidgetMapper, HasDispose, HasDisplayContextBuilder {
+
+    private final Logger logger = Logger.getLogger("PortletWidgetMapper");
 
     private static final String DROP_ZONE = "drop-zone";
 
@@ -44,6 +49,10 @@ public class PortletWidgetMapper implements WidgetMapper {
     private final Provider<WebProtegeEventBus> eventBusProvider;
 
     private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
+
+    private List<HasDispose> disposables = new ArrayList<>();
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContextBuilder);
 
     @Inject
     public PortletWidgetMapper(@Nonnull PortletFactory portletFactory,
@@ -69,21 +78,22 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     @Override
     public IsWidget getWidget(TerminalNode terminalNode) {
-        GWT.log("[PortletWidgetMapper] Getting widget for TerminalNode: " + terminalNode);
+        logger.info("logger.infoGetting widget for TerminalNode: " + terminalNode);
         ViewHolder cachedViewHolder = nodeId2ViewHolderMap.get(terminalNode.getNodeId());
         if (cachedViewHolder != null) {
-            GWT.log("[PortletWidgetMapper] Using cached view: " + terminalNode);
+            logger.info("logger.infoUsing cached view: " + terminalNode);
             return cachedViewHolder;
         }
         String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", "");
-        GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
+        logger.info("logger.infoInstantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if (!portletClass.isEmpty()) {
             Optional<WebProtegePortletComponents> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
-                GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
+                logger.info("logger.infoCreated portlet from auto-generated factory");
                 WebProtegePortletComponents portletComponents = thePortlet.get();
                 WebProtegePortletPresenter portletPresenter = portletComponents.getPresenter();
+                portletPresenter.setParentDisplayContextBuilder(this);
                 viewHolder = createViewHolder(terminalNode,
                                               portletComponents,
                                               terminalNode.getNodeProperties());
@@ -114,9 +124,14 @@ public class PortletWidgetMapper implements WidgetMapper {
             node.setNodeProperties(np);
             nodePropertiesChangedHandler.accept(node);
         });
+        ViewNodeId viewNodeId = ViewNodeId.get(node.getNodeId().getId());
+        portletUi.setViewNodeId(viewNodeId);
         WebProtegeEventBus eventBus = eventBusProvider.get();
+        disposables.add(eventBus);
         portletUi.setTitle(portlet.getPortletDescriptor().getTitle());
         WebProtegePortletPresenter portletPresenter = portlet.getPresenter();
+        portletPresenter.setParentDisplayContextBuilder(this);
+        disposables.add(portletPresenter);
         portletPresenter.start(portletUi, eventBus);
         ViewHolder viewHolder;
         if (portletPresenter instanceof HasFixedPrimaryAxisSize) {
@@ -127,10 +142,31 @@ public class PortletWidgetMapper implements WidgetMapper {
         }
         viewHolder.addStyleName(DROP_ZONE);
         viewHolder.addCloseHandler(event -> {
+            disposables.remove(eventBus);
             eventBus.dispose();
+            disposables.remove(portletPresenter);
             portletPresenter.dispose();
             nodeId2ViewHolderMap.remove(node.getNodeId());
         });
         return viewHolder;
+    }
+
+    @Override
+    public void dispose() {
+        disposables.forEach(HasDispose::dispose);
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    private void fillDisplayContextBuilder(DisplayContextBuilder displayContextBuilder) {
+
     }
 }

@@ -13,7 +13,8 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
@@ -25,6 +26,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Manages the permissions for projects and users.
@@ -32,6 +35,8 @@ import java.util.Optional;
  */
 @ApplicationSingleton
 public class PermissionManager implements HasDispose {
+
+    private static final Logger logger = Logger.getLogger(PermissionManager.class.getName());
 
     private final EventBus eventBus;
 
@@ -45,7 +50,7 @@ public class PermissionManager implements HasDispose {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private final Multimap<UserIdProjectIdKey, ActionId> permittedActionCache = HashMultimap.create();
+    private final Multimap<UserIdProjectIdKey, Capability> capabilitiesCache = HashMultimap.create();
 
     private final DispatchErrorMessageDisplay errorDisplay;
 
@@ -66,7 +71,7 @@ public class PermissionManager implements HasDispose {
      */
     public void firePermissionsChanged() {
         GWT.log("[PermissionManager] Firing permissions changed");
-        permittedActionCache.clear();
+        capabilitiesCache.clear();
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         final Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if (!projectId.isPresent()) {
@@ -75,7 +80,7 @@ public class PermissionManager implements HasDispose {
         final ProjectId theProjectId = projectId.get();
         dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId.get(), userId), result -> {
             UserIdProjectIdKey key = new UserIdProjectIdKey(userId, theProjectId);
-            permittedActionCache.putAll(key, result.getAllowedActions());
+            capabilitiesCache.putAll(key, result.getAllowedActions());
             GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
             eventBus.fireEventFromSource(new PermissionsChangedEvent(theProjectId).asGWTEvent(), theProjectId);
         });
@@ -86,25 +91,33 @@ public class PermissionManager implements HasDispose {
      * Determines if the specified user has permission to execute the specified action on the
      * specified project.
      * @param userId The {@link UserId} to test for.
-     * @param actionId The {@link ActionId} to test for.
+     * @param basicCapability The {@link BasicCapability} to test for.
      * @param projectId The {@link ProjectId} to test for.
      * @param callback A callback for receiving the result.
      */
     public void hasPermissionForProject(@Nonnull UserId userId,
-                                        @Nonnull ActionId actionId,
+                                        @Nonnull BasicCapability basicCapability,
                                         @Nonnull ProjectId projectId,
                                         @Nonnull DispatchServiceCallback<Boolean> callback) {
         final UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId);
-        if(permittedActionCache.containsKey(key)) {
-            callback.onSuccess(permittedActionCache.get(key).contains(actionId));
+        logger.info("Checking permissions for " + basicCapability);
+        if(capabilitiesCache.containsKey(key)) {
+            logger.info("Capabilities cache contains capability: " + basicCapability);
+            callback.onSuccess(capabilitiesCache.get(key).contains(basicCapability));
             return;
         }
         dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId, userId),
                                        new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(GetProjectPermissionsResult result) {
-                                               permittedActionCache.putAll(key, result.getAllowedActions());
-                                               callback.onSuccess(result.getAllowedActions().contains(actionId));
+                                               String caps = result.getAllowedActions()
+                                                               .stream()
+                                                       .map(Capability::toString)
+                                                       .collect(Collectors.joining(", "));
+                                               logger.info("User has capabilities: " + caps);
+
+                                               capabilitiesCache.putAll(key, result.getAllowedActions());
+                                               callback.onSuccess(result.getAllowedActions().contains(basicCapability));
                                            }
 
                                            @Override

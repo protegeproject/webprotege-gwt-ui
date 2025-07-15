@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege-gwt-ui</artifactId>
-        <version>5.0.6-SNAPSHOT</version>
+        <version>8.3.11</version>
     </parent>
 
     <artifactId>webprotege-gwt-ui-server</artifactId>
@@ -227,23 +227,47 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>default</id>
+                        <id>docker-build</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>build</goal>
-                            <goal>push</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-f</argument>
+                                <argument>Dockerfile</argument>
+                                <argument>--build-arg</argument>
+                                <argument>JAR_FILE=${project.artifactId}-${project.version}.jar</argument>
+                                <argument>-t</argument>
+                                <argument>protegeproject/${project.artifactId}:${project.version}</argument>
+                                <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>docker-push</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>push</argument>
+                                <argument>protegeproject/${project.artifactId}:${project.version}</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <repository>protegeproject/${project.artifactId}</repository>
-                    <tag>${project.version}</tag>
-                    <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
-                </configuration>
             </plugin>
         </plugins>
     </build>

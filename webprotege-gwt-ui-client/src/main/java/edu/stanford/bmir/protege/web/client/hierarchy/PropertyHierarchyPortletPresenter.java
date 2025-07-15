@@ -13,11 +13,11 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
@@ -35,8 +35,8 @@ import javax.inject.Provider;
 import java.util.Optional;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.*;
@@ -59,6 +59,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final SelectedPathsModel selectedPathsModel;
     @Nonnull
     private final PropertyHierarchyPortletView view;
 
@@ -116,6 +118,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     @Inject
     public PropertyHierarchyPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                             @Nonnull SelectedPathsModel selectedPathsModel,
                                              @Nonnull ProjectId projectId,
                                              @Nonnull Messages messages,
                                              @Nonnull PropertyHierarchyPortletView view,
@@ -137,7 +140,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull SearchModal searchModal,
                                              @Nonnull TreeWidgetUpdaterFactory updaterFactory,
                                              DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
+        this.selectedPathsModel = selectedPathsModel;
         this.view = view;
         this.messages = messages;
         this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property wp-btn-g--create", this::handleCreate);
@@ -173,22 +177,22 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         deleteAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
 
-        startTree(OBJECT_PROPERTY_HIERARCHY,
+        startTree(ObjectPropertyHierarchyDescriptor.get(),
                   messages.hierarchy_objectproperties(),
                   eventBus,
                   objectPropertyHierarchyModel, objectPropertyTree);
 
-        startTree(DATA_PROPERTY_HIERARCHY,
+        startTree(DataPropertyHierarchyDescriptor.get(),
                   messages.hierarchy_dataproperties(),
                   eventBus,
                   dataPropertyHierarchyModel, dataPropertyTree);
 
-        startTree(ANNOTATION_PROPERTY_HIERARCHY,
+        startTree(AnnotationPropertyHierarchyDescriptor.get(),
                   messages.hierarchy_annotationproperties(),
                   eventBus,
                   annotationPropertyHierarchyModel, annotationPropertyTree);
-        view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
-        view.setHierarchyIdSelectedHandler(this::handleHierarchySwitched);
+        view.setSelectedHierarchy(ObjectPropertyHierarchyDescriptor.get());
+        view.setHierarchyIdSelectedHandler(hierarchyDescriptor -> handleHierarchySwitched(hierarchyDescriptor));
         tagVisibilityPresenter.start(filterView, view);
         actionStatePresenter.start(eventBus);
         portletUi.setWidget(view);
@@ -199,18 +203,18 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
      * Starts and setups the specified model and tree using the specified event bus.  The renderer will be set and a
      * context menu will be installed.
      *
-     * @param hierarchyId The hierarchy Id
+     * @param hierarchyDescriptor The hierarchy descriptor
      * @param label       The label for the tree
      * @param eventBus    The event bus
      * @param model       The model
      * @param treeWidget  The tree
      */
-    private void startTree(@Nonnull HierarchyId hierarchyId,
+    private void startTree(@Nonnull HierarchyDescriptor hierarchyDescriptor,
                            @Nonnull String label,
                            @Nonnull WebProtegeEventBus eventBus,
                            @Nonnull EntityHierarchyModel model,
                            @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
-        model.start(eventBus, hierarchyId);
+        model.start(eventBus, hierarchyDescriptor);
         eventBus.addProjectEventHandler(getProjectId(),
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> {
@@ -223,12 +227,13 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         contextMenuPresenterFactory.create(model,
                                            treeWidget,
                                            createAction,
-                                           deleteAction)
+                                           deleteAction,
+                        getProjectId())
                 .install();
         EntityHierarchyDropHandler entityHierarchyDropHandler = entityHierarchyDropHandlerProvider.get();
         treeWidget.setDropHandler(entityHierarchyDropHandler);
-        entityHierarchyDropHandler.start(hierarchyId);
-        view.addHierarchy(hierarchyId,
+        entityHierarchyDropHandler.start(hierarchyDescriptor);
+        view.addHierarchy(hierarchyDescriptor,
                           label,
                           treeWidget);
         TreeWidgetUpdater updater = updaterFactory.create(treeWidget, model);
@@ -243,7 +248,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         transmitSelectionFromTree();
     }
 
-    private void handleHierarchySwitched(@Nonnull HierarchyId hierarchyId) {
+    private void handleHierarchySwitched(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
         GWT.log("[PropertyHierarchyPortletPresenter] handling hierarchy switched");
         transmitSelectionFromTree();
     }
@@ -257,6 +262,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         try {
             transmittingSelectionFromHierarchy = true;
             view.getSelectedHierarchy().ifPresent(tree -> {
+                selectedPathsModel.setSelectedPaths(tree.getSelectedKeyPaths());
                 Optional<OWLEntity> sel = tree.getFirstSelectedKey();
                 if (!sel.equals(getSelectedEntity())) {
                     sel.ifPresent(entity -> {
@@ -266,6 +272,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                     });
                 }
                 if (!sel.isPresent()) {
+                    selectedPathsModel.clearSelectedPaths();
                     GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection from tree");
                     getSelectionModel().clearSelection();
                 }
@@ -302,19 +309,22 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void setSelectionInTree(@Nonnull OWLEntity sel) {
         if (sel.isOWLObjectProperty()) {
-            view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
+            view.setSelectedHierarchy(ObjectPropertyHierarchyDescriptor.get());
+            selectedPathsModel.setSelectedPaths(objectPropertyTree.getSelectedKeyPaths());
             if (!objectPropertyTree.getSelectedKeys().contains(sel)) {
                 objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
         }
         else if (sel.isOWLDataProperty()) {
-            view.setSelectedHierarchy(DATA_PROPERTY_HIERARCHY);
+            view.setSelectedHierarchy(DataPropertyHierarchyDescriptor.get());
+            selectedPathsModel.setSelectedPaths(dataPropertyTree.getSelectedKeyPaths());
             if (!dataPropertyTree.getSelectedKeys().contains(sel)) {
                 dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
         }
         else if (sel.isOWLAnnotationProperty()) {
-            view.setSelectedHierarchy(ANNOTATION_PROPERTY_HIERARCHY);
+            view.setSelectedHierarchy(AnnotationPropertyHierarchyDescriptor.get());
+            selectedPathsModel.setSelectedPaths(annotationPropertyTree.getSelectedKeyPaths());
             if (!annotationPropertyTree.getSelectedKeys().contains(sel)) {
                 annotationPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
@@ -322,7 +332,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleCreate() {
-        view.getSelectedHierarchyId().ifPresent(hierarchyId -> {
+        view.getSelectedHierarchyDescriptor().ifPresent(hierarchyId -> {
             if (hierarchyId.equals(OBJECT_PROPERTY_HIERARCHY)) {
                 handleCreateObjectProperty();
             }

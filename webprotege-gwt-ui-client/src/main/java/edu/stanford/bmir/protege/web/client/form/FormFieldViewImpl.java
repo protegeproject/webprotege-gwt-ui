@@ -11,8 +11,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeViewResources;
 
 import javax.annotation.Nonnull;
@@ -42,7 +41,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
 
     private static FormFieldViewImplUiBinder ourUiBinder = GWT.create(FormFieldViewImplUiBinder.class);
 
-    private FormFieldId formFieldId = null;
+    private FormRegionId formFieldId = null;
 
     private Optionality required = Optionality.OPTIONAL;
 
@@ -64,6 +63,9 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel content;
 
+    @UiField
+    HTML editableIcon;
+
     @Inject
     public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -79,7 +81,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public void setId(FormFieldId elementId) {
+    public void setId(FormRegionId elementId) {
         formFieldId = elementId;
     }
 
@@ -127,7 +129,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public Optional<FormFieldId> getId() {
+    public Optional<FormRegionId> getId() {
         return Optional.ofNullable(formFieldId);
     }
 
@@ -135,6 +137,8 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     public void setFormLabel(String formLabel) {
         label.setText(formLabel);
         label.setVisible(!formLabel.isEmpty());
+        helpIcon.setVisible(!formLabel.isEmpty());
+        expansionHandle.setVisible(!formLabel.isEmpty());
     }
 
     @Nonnull
@@ -175,6 +179,11 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public boolean isExpanded() {
         return content.isVisible();
+    }
+
+    @Override
+    public void setEditableIconVisible(boolean visible) {
+        editableIcon.setVisible(visible);
     }
 
     @Override

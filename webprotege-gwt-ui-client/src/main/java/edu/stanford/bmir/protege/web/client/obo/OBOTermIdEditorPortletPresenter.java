@@ -3,8 +3,9 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction;
@@ -18,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.obo.GetOboNamespacesAction.getOboNamespaces;
 
 /**
@@ -37,19 +38,20 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
     public OBOTermIdEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                           @Nonnull SelectedPathsModel selectedPathsModel,
                                            @Nonnull ProjectId projectId,
                                            @Nonnull OBOTermIdEditor editor,
                                            @Nonnull DispatchServiceManager dispatchServiceManager,
-                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                           @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                            DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager);
+        super(selectionModel, selectedPathsModel, projectId, displayNameRenderer, dispatchServiceManager);
         this.editor = editor;
         this.dispatch = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
                              editor.setAvailableNamespaces(result.getNamespaces());
                              portletUi.setWidget(editor);
                              editor.setEnabled(false);
-                             permissionChecker.hasPermission(EDIT_ONTOLOGY, editor::setEnabled);
+                             capabilityChecker.hasCapability(EDIT_ONTOLOGY, editor::setEnabled);
                          });
     }
 

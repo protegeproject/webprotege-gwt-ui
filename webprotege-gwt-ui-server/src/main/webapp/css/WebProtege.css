@@ -57,6 +57,7 @@
     --inlay-panel--border:                          1px solid var(--alternate--separator--color);
 
     --inlay-panel--border-radius:                   3px;
+    --inlay-panel--border-radius--large:            0.7em;
 
     --inlay-panel--alternate-background-color:      #f0f0f0;
 
@@ -1138,3 +1139,55 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     margin-right:        0;
 }
 
+.wp-markdown-preview {
+}
+.wp-markdown-preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+/* Table header */
+.wp-markdown-preview thead {
+    background-color: #d7d7d7;
+}
+
+.wp-markdown-preview thead th {
+    text-align: left;
+    padding: 4px 8px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table body */
+.wp-markdown-preview tbody tr {
+}
+
+.wp-markdown-preview tbody tr:hover {
+}
+
+.wp-markdown-preview tbody td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+/* Zebra striping */
+.wp-markdown-preview tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Responsive container */
+.wp-markdown-preview .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.wp-markdown-preview em {
+    font-style: italic;
+}

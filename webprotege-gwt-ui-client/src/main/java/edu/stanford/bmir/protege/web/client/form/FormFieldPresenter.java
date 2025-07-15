@@ -3,15 +3,16 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionPresenter;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -28,13 +29,19 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
 
     private boolean enabled = true;
 
     private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
 
     private boolean collapsibile = true;
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
+
+    private void fillDisplayContext(DisplayContextBuilder context) {
+        context.setFormFieldId(getFormRegionId());
+    }
 
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
@@ -82,23 +89,34 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
+        LanguageMap label = formFieldDescriptor.getLabel();
+        boolean hasLabel = !label.asMap().isEmpty();
+        view.setEditableIconVisible(hasLabel && enabled && formFieldDescriptor.isReadWrite());
+        propagateEnabled();
     }
 
     protected FormFieldView start() {
-        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
         view.setId(formFieldDescriptor.getId());
         view.setFormLabel(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getLabel()));
         view.setRequired(formFieldDescriptor.getOptionality());
         view.setHelpText(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getHelp()));
         stackPresenter.start(view.getFormStackContainer());
+        propagateEnabled();
         view.setHeaderClickedHandler(this::toggleExpansionState);
-
         // Update the required value missing display when the value changes
         stackPresenter.addValueChangeHandler(this::handleFormControlValueChanged);
 
         updateRequiredValuePresent();
         return view;
+    }
+
+    private void propagateEnabled() {
+        if(formFieldDescriptor.isReadOnly() || formFieldDescriptor.getAccessMode().isReadOnly()) {
+            stackPresenter.setEnabled(false);
+        }
+        else {
+            stackPresenter.setEnabled(enabled);
+        }
     }
 
     @Nonnull
@@ -132,6 +150,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     @Nonnull
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject) {
+        int pageSize = formFieldDescriptor.getPageSize();
         return stackPresenter.getPageRequests(formSubject, formFieldDescriptor.getId());
     }
 
@@ -272,5 +291,23 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public boolean isNonEmpty() {
         return stackPresenter.isNonEmpty();
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        this.displayContextManager.setParentDisplayContextBuilder(parent);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
+
+    @Override
+    public String toString() {
+        return "FormFieldPresenter{" +
+               "formRegionId=" + formFieldDescriptor.getId() +
+               ", controlType=" + formFieldDescriptor.getFormControlDescriptor().toFormControlDescriptor().getAssociatedType() +
+               '}';
     }
 }

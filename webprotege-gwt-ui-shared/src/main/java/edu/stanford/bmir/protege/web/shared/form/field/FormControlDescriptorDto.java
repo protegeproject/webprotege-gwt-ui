@@ -16,7 +16,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
         @Type(SubFormControlDescriptorDto.class)
 
 })
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface FormControlDescriptorDto extends IsSerializable {
 
     <R> R accept(FormControlDescriptorDtoVisitor<R> visitor);

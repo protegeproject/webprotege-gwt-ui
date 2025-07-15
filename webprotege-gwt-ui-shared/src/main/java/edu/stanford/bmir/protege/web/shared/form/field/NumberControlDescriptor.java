@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -39,11 +40,12 @@ public class NumberControlDescriptor implements FormControlDescriptor {
     private NumberControlDescriptor() {
     }
 
-    public NumberControlDescriptor(@Nonnull String format,
-                                   @Nonnull NumberControlRange range,
-                                   @Nonnull NumberControlType widgetType,
-                                   int length,
-                                   @Nonnull LanguageMap placeholder) {
+    @JsonCreator
+    public NumberControlDescriptor(@JsonProperty(PropertyNames.FORMAT) @Nonnull String format,
+                                   @JsonProperty(PropertyNames.RANGE) @Nonnull NumberControlRange range,
+                                   @JsonProperty(PropertyNames.WIDGET_TYPE) @Nonnull NumberControlType widgetType,
+                                   @JsonProperty(PropertyNames.LENGTH) int length,
+                                   @JsonProperty(PropertyNames.PLACEHOLDER) @Nonnull LanguageMap placeholder) {
         this.format = checkNotNull(format);
         this.range = checkNotNull(range);
         this.widgetType = checkNotNull(widgetType);
@@ -78,29 +80,37 @@ public class NumberControlDescriptor implements FormControlDescriptor {
 
     @Nonnull
     @Override
+    @JsonIgnore
     public String getAssociatedType() {
         return TYPE;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.FORMAT)
     public String getFormat() {
         return format;
     }
 
+
+    @JsonProperty(PropertyNames.LENGTH)
     public int getLength() {
         return length;
     }
 
+
+    @JsonProperty(PropertyNames.PLACEHOLDER)
     public LanguageMap getPlaceholder() {
         return placeholder;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.RANGE)
     public NumberControlRange getRange() {
         return range;
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.WIDGET_TYPE)
     public NumberControlType getWidgetType() {
         return widgetType;
     }

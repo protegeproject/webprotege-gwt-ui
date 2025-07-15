@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Root entity type" addStyleNames="{wp.style.formLabel}"/>
+            <g:ListBox ui:field="entityTypeList"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Root entities" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataListEditor ui:field="entityList"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

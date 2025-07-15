@@ -1,0 +1,11 @@
+{
+  "@type": "EntityNameControlDescriptorDto",
+  "placeholder": {
+    "en": "Hello"
+  },
+  "criteria": {
+    "match": "CompositeCriteria",
+    "criteria": [],
+    "matchType": "ALL"
+  }
+}

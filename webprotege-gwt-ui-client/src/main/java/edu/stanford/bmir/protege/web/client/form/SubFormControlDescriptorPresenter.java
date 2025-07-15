@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
@@ -9,6 +10,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -75,5 +79,12 @@ public class SubFormControlDescriptorPresenter implements FormControlDescriptorP
         container.setWidget(view);
         subFormPresenter.start(view.getSubFormContainer(), new SimpleEventBus());
         formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectDescriptorViewContainr());
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode subFormPresenterNode = new FormDescriptorComponentPresenterHierarchyNode(subFormPresenter);
+        thisNode.addChild(subFormPresenterNode);
+        subFormPresenter.addChildren(subFormPresenterNode);
     }
 }

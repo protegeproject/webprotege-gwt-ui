@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -58,8 +58,8 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
 
     @Nonnull
     @Override
-    public BuiltInAction getRequiredAction() {
-        return BuiltInAction.VIEW_PROJECT;
+    public BuiltInCapability getRequiredAction() {
+        return BuiltInCapability.VIEW_PROJECT;
     }
 
     @Override

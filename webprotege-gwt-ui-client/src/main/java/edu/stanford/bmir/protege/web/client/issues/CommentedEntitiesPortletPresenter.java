@@ -3,9 +3,10 @@ package edu.stanford.bmir.protege.web.client.issues;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,8 +16,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_OBJECT_COMMENT;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
  * Matthew Horridge
@@ -32,7 +33,7 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
     private final CommentedEntitiesPresenter presenter;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final Messages messages;
@@ -41,22 +42,23 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
 
     @Inject
     public CommentedEntitiesPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                             @Nonnull SelectedPathsModel selectedPathsModel,
                                              @Nonnull ProjectId projectId,
                                              @Nonnull CommentedEntitiesPresenter presenter,
-                                             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                             @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                              @Nonnull Messages messages,
                                              DisplayNameRenderer displayNameRenderer,
                                              DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.messages = messages;
     }
 
     @Override
     public void startPortlet(final PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
-        permissionChecker.hasPermission(VIEW_OBJECT_COMMENT,
+        capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT,
                                         canView -> {
                                             if (canView) {
                                                 presenter.start(portletUi, eventBus);
@@ -67,8 +69,8 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
                                             }
                                         });
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
-                                        event -> permissionChecker.hasPermission(VIEW_OBJECT_COMMENT,
+                ON_CAPABILITIES_CHANGED,
+                                        event -> capabilityChecker.hasCapability(VIEW_OBJECT_COMMENT,
                                                                                  canView -> portletUi.setForbiddenVisible(!canView)));
         presenter.setHasBusy(portletUi);
     }

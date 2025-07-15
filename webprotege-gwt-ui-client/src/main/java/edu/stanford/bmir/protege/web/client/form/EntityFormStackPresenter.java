@@ -4,13 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityModal;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -36,7 +41,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-23
  */
-public class EntityFormStackPresenter {
+public class EntityFormStackPresenter implements HasDisplayContextBuilder {
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
@@ -62,7 +67,7 @@ public class EntityFormStackPresenter {
     private final FormStackPresenter formStackPresenter;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nonnull
     private final LangTagFilterPresenter langTagFilterPresenter;
@@ -74,21 +79,24 @@ public class EntityFormStackPresenter {
     private EntityDisplay entityDisplay = entityData -> {
     };
 
+    private DisplayContextManager displayContextManager;
+
     @Inject
     public EntityFormStackPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull EntityFormStackView view,
                                     @Nonnull DispatchServiceManager dispatch,
                                     @Nonnull FormStackPresenter formStackPresenter,
-                                    @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                    @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                     @Nonnull LangTagFilterPresenter langTagFilterPresenter,
                                     @Nonnull DeprecateEntityModal deprecateEntityModal) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatch);
         this.formStackPresenter = checkNotNull(formStackPresenter);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
         this.deprecateEntityModal = deprecateEntityModal;
+        this.displayContextManager = new DisplayContextManager(this::fillDisplayContext);
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
@@ -109,7 +117,7 @@ public class EntityFormStackPresenter {
         view.setDeprecateEntityHandler(this::handleDeprecateEntity);
         view.setCancelEditsHandler(this::handleCancelEdits);
 
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, view::setEditButtonVisible);
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, view::setEditButtonVisible);
         setMode(FormMode.READ_ONLY_MODE);
     }
 
@@ -223,7 +231,7 @@ public class EntityFormStackPresenter {
     }
 
     private void handleEnterEditMode() {
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> setMode(FormMode.EDIT_MODE));
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, canEdit -> setMode(FormMode.EDIT_MODE));
     }
 
     private void handleApplyEdits() {
@@ -234,7 +242,7 @@ public class EntityFormStackPresenter {
     private void applyEdits(@Nonnull OWLEntity entity) {
         // TODO: Offer a commit message
         setMode(FormMode.READ_ONLY_MODE);
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> {
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_ONTOLOGY, canEdit -> {
             if (canEdit) {
                 commitEdits(entity);
             }
@@ -272,7 +280,7 @@ public class EntityFormStackPresenter {
         FormDataByFormId editedFormData = formStackPresenter.getFormData();
         Collection<FormId> editedFormIds = editedFormData.getFormIds();
         ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
-        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, "", pristineFormData, editedFormData),
                          // Refresh the pristine data to what was committed
                          result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
     }
@@ -283,7 +291,7 @@ public class EntityFormStackPresenter {
         updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
-    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
+    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash<FormId> formIdStash) {
         formStackPresenter.setSelectedFormIdStash(formIdStash);
     }
 
@@ -299,5 +307,20 @@ public class EntityFormStackPresenter {
         ImmutableSet<LangTag> stashedLangTags = ImmutableSet.copyOf(formLanguageFilterStash.getStashedLangTags());
         LangTagFilter langTagFilter = LangTagFilter.get(stashedLangTags);
         langTagFilterPresenter.setFilter(langTagFilter);
+    }
+
+    public void fillDisplayContext(DisplayContextBuilder displayContextBuilder) {
+        // Nothing to do.  Handled by the FormStackPresenter
+    }
+
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
+        formStackPresenter.setParentDisplayContextBuilder(this);
+    }
+
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
     }
 }

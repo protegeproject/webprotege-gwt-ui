@@ -7,20 +7,20 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent;
-import edu.stanford.bmir.protege.web.client.upload.FileUploadFileReader;
+import edu.stanford.bmir.protege.web.client.upload.FileUploader;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.*;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileAction;
-import edu.stanford.bmir.protege.web.shared.upload.SubmitFileResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.UPLOAD_PROJECT;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 16 Nov 2017
@@ -118,32 +118,35 @@ public class CreateNewProjectPresenter {
 
     private void uploadSourcesAndCreateProject(@Nonnull ProjectCreatedHandler projectCreatedHandler) {
         checkNotNull(projectCreatedHandler);
-        String fileUploadElementId = view.getFileUploadElementId();
-        FileUploadFileReader fileUploadFileReader = new FileUploadFileReader();
         progressDisplay.displayProgress("Uploading file", "Uploading file.  Please wait.");
-        fileUploadFileReader.readFiles(fileUploadElementId, fileContent -> {
-            progressDisplay.hideProgress();
-            handleFileReadComplete(fileContent, projectCreatedHandler);
-        }, readError -> {
-            progressDisplay.hideProgress();
-            messageBox.showAlert("Upload Failed", "Your file could not be uploaded.");
-        });
+        dispatchServiceManager.execute(new GetUserInfoAction(),
+                                       info -> createProjectForUser(info, projectCreatedHandler));
     }
 
-    private void handleFileReadComplete(@Nonnull String base64EncodedContent,
-                                        ProjectCreatedHandler projectCreatedHandler) {
+    private void createProjectForUser(GetUserInfoResult userInfo,
+                                      ProjectCreatedHandler projectCreatedHandler) {
 
-            dispatchServiceManager.execute(SubmitFileAction.create(base64EncodedContent),
-                                           busy -> {},
-                                           result -> {
-                                               handleCreateNewProjectFromUploadedSources(projectCreatedHandler, result);
-                                           });
-
-
+        String fileUploadElementId = view.getFileUploadElementId();
+        FileUploader fileUploader = new FileUploader();
+        fileUploader.uploadFile(fileUploadElementId,
+                                userInfo.getToken(),
+                                fileSubmissionId -> handleFileSubmissionSuccess(projectCreatedHandler, fileSubmissionId),
+                                this::handleFileSubmissionError);
     }
 
-    private void handleCreateNewProjectFromUploadedSources(ProjectCreatedHandler projectCreatedHandler, SubmitFileResult result) {
-        DocumentId documentId = result.getFileSubmissionId();
+    private void handleFileSubmissionError(int errorCode) {
+        messageBox.showMessage("Could not upload file", "Error code: " + errorCode);
+        progressDisplay.hideProgress();
+    }
+
+    private void handleFileSubmissionSuccess(CreateNewProjectPresenter.ProjectCreatedHandler projectCreatedHandler,
+                                             String fileSubmissionId) {
+        progressDisplay.hideProgress();
+        handleCreateNewProjectFromUploadedSources(projectCreatedHandler,
+                                                  new DocumentId(fileSubmissionId));
+    }
+
+    private void handleCreateNewProjectFromUploadedSources(ProjectCreatedHandler projectCreatedHandler, DocumentId documentId) {
         NewProjectSettings newProjectSettings = NewProjectSettings.get(loggedInUserManager.getLoggedInUserId(),
                                                                        view.getProjectName(),
                                                                        view.getProjectLanguage(),
@@ -198,9 +201,5 @@ public class CreateNewProjectPresenter {
                                                }
                                            }
                                        });
-    }
-
-    public NewProjectInfo getNewProjectInfo() {
-        return new NewProjectInfo(view.getProjectName(), view.getProjectDescription());
     }
 }

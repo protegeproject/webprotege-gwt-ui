@@ -24,7 +24,7 @@ public class GridControlDescriptor_Serialization_TestCase {
         descriptor = GridControlDescriptor.get(
                 ImmutableList.of(
                         GridColumnDescriptor.get(
-                                GridColumnId.get(UUID.randomUUID().toString()),
+                                FormRegionId.get(UUID.randomUUID().toString()),
                                 Optionality.OPTIONAL,
                                 Repeatability.NON_REPEATABLE,
                                 null,
@@ -32,6 +32,7 @@ public class GridControlDescriptor_Serialization_TestCase {
                                 TextControlDescriptor.getDefault()
                         )
                 ),
+                22,
                 null
         );
     }

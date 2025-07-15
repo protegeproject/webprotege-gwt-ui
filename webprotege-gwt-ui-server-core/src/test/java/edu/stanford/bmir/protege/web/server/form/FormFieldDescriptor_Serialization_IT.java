@@ -33,13 +33,14 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithoutOwlBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 null,
                 LanguageMap.empty(),
                 FieldRun.START,
                 FormFieldDeprecationStrategy.DELETE_VALUES,
-                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, "en", LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
+                33,
                 Optionality.REQUIRED,
                 true,
                 ExpansionState.COLLAPSED,
@@ -53,13 +54,14 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithOwlPropertyBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop")), null),
                 LanguageMap.empty(),
                 FieldRun.START,
                 FormFieldDeprecationStrategy.DELETE_VALUES,
-                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, "en", LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
+                33,
                 Optionality.REQUIRED,
                 true,
                 ExpansionState.COLLAPSED,
@@ -74,13 +76,14 @@ public class FormFieldDescriptor_Serialization_IT {
     @Test
     public void shouldSerializeElementWithOwlClassBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
-                FormFieldId.get(UUID.randomUUID().toString()),
+                FormRegionId.get(UUID.randomUUID().toString()),
                 OwlClassBinding.get(),
                 LanguageMap.empty(),
                 FieldRun.START,
                 FormFieldDeprecationStrategy.DELETE_VALUES,
-                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, "en", LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
+                33,
                 Optionality.REQUIRED,
                 true,
                 ExpansionState.COLLAPSED,

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
@@ -16,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent.ON_HIERARCHY_CHANGED;
@@ -26,6 +28,8 @@ import static java.util.Collections.singletonList;
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
 public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, EntityNodeIndex {
+
+    private final Logger logger = Logger.getLogger("EntityHierarchyModel");
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -45,7 +49,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     private final Set<OWLEntity> rootNodes = new HashSet<>();
 
     @Nonnull
-    private HierarchyId hierarchyId = CLASS_HIERARCHY;
+    private HierarchyDescriptor hierarchyDescriptor = ClassHierarchyDescriptor.get();
 
     @Inject
     public EntityHierarchyModel(@Nonnull DispatchServiceManager dispatchServiceManager,
@@ -57,18 +61,28 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     }
 
     @Nonnull
-    public HierarchyId getHierarchyId() {
-        return hierarchyId;
+    public HierarchyDescriptor getHierarchyDescriptor() {
+        return hierarchyDescriptor;
     }
 
-    public void start(@Nonnull WebProtegeEventBus eventBus, @Nonnull HierarchyId hierarchyId) {
-        this.hierarchyId = checkNotNull(hierarchyId);
+    public void setHierarchyDescriptor(@Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        if(this.hierarchyDescriptor.equals(hierarchyDescriptor)) {
+            return;
+        }
+        this.hierarchyDescriptor = hierarchyDescriptor;
+        parent2ChildMap.clear();
+        rootNodes.clear();
+        nodeCache.clear();
+    }
+
+    public void start(@Nonnull WebProtegeEventBus eventBus, @Nonnull HierarchyDescriptor hierarchyDescriptor) {
+        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         hierarchyNodeUpdater.start(eventBus, this);
         eventBus.addProjectEventHandler(projectId, ON_HIERARCHY_CHANGED, this::handleEntityHierarchyChanged);
     }
 
     private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
-        if (!event.getHierarchyId().equals(hierarchyId)) {
+        if (!event.getHierarchyDescriptor().equals(hierarchyDescriptor)) {
             return;
         }
         GraphModelChangeProcessor changeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
@@ -100,7 +114,8 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
 
     @Override
     public void getRootNodes(GetRootNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(GetHierarchyRootsAction.create(projectId, hierarchyId), result -> {
+        logger.info("Getting root nodes for descriptor " + hierarchyDescriptor);
+        dispatchServiceManager.execute(GetHierarchyRootsAction.create(projectId, hierarchyDescriptor), result -> {
             cacheRootNodes(result);
             try {
                 dispatchServiceManager.beginBatch();
@@ -124,7 +139,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     @Override
     public void getSuccessorNodes(@Nonnull OWLEntity parent,
                                   @Nonnull GetSuccessorNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(GetHierarchyChildrenAction.create(projectId, parent, hierarchyId),
+        dispatchServiceManager.execute(GetHierarchyChildrenAction.create(projectId, parent, hierarchyDescriptor),
                                        result -> {
                                            cacheEdges(parent, result);
                                            callback.handleSuccessorNodes(result.getSuccessorMap());
@@ -143,7 +158,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     @Override
     public void getPathsFromRootNodes(@Nonnull OWLEntity node,
                                       @Nonnull GetPathsBetweenNodesCallback<EntityNode> callback) {
-        dispatchServiceManager.execute(GetHierarchyPathsToRootAction.create(projectId, node, hierarchyId),
+        dispatchServiceManager.execute(GetHierarchyPathsToRootAction.create(projectId, node, hierarchyDescriptor),
                                        result -> {
                                            try {
                                                dispatchServiceManager.beginBatch();

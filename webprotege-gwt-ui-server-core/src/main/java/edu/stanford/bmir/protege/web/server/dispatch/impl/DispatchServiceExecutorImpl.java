@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpRequestBuilder;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcHttpResponseHandler;
+import edu.stanford.bmir.protege.web.server.rpc.JsonRpcRequest;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoResult;
@@ -57,12 +60,18 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         try {
             if(action instanceof TranslateEventListAction){
                 var translateEventsAction = (TranslateEventListAction) action;
-
-                GetProjectEventsResult result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
-                return DispatchServiceResultContainer.create(result);
+                try {
+                    GetProjectEventsResult<?> result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
+                    return DispatchServiceResultContainer.create(result);
+                } catch (JsonProcessingException e) {
+                    logger.error("Error when translating event list", e);
+                    logger.error(translateEventsAction.getEventList());
+                    throw new ActionExecutionException("An error occurred when translating the given event list.  See logs for more information.");
+                }
             }
             if(action instanceof GetUserInfoAction) {
-                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
+                var websocketUrl = System.getenv("webprotege.websocketUrl");
+                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
                 return DispatchServiceResultContainer.create(result);
             }
             var result = sendRequest(action, executionContext);
@@ -85,28 +94,21 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                                                                   ExecutionContext executionContext) throws IOException, InterruptedException {
         try {
             var httpRequest = requestBuilder.getHttpRequestForAction(action, executionContext);
-
             var httpResponse = httpClient.send(httpRequest,
                                                HttpResponse.BodyHandlers.ofString());
 
             var userId = executionContext.getUserId();
-            if(httpResponse.statusCode() == 400) {
-                logger.error("Bad request when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                if(action instanceof BatchAction) {
-                    ((BatchAction) action).getActions()
-                                          .stream()
-                                          .map(a -> a.getClass().getSimpleName())
-                                          .forEach(a -> logger.error("    Nested action: {}", a));
-                }
-            }
-            else if(httpResponse.statusCode() == 401 || httpResponse.statusCode() == 403) {
+            logger.info("DispatchServiceExecutorImpl: Action: {} Response.StatusCode: {} Response: {}", action, httpResponse.statusCode(), httpResponse.body());
+
+            // Special handling for FORBIDDEN 403.  This is handled by a PermissionDeniedException.
+            // We should consider whether we want to change this
+            if(httpResponse.statusCode() == HTTP_403_FORBIDDEN) {
                 var headers = httpResponse.headers()
                         .map()
                         .entrySet()
                         .stream()
                         .map(e -> e.getKey() + ": " +  e.getValue())
                         .collect(Collectors.joining("  &&  "));
-                var reason = httpResponse.headers().firstValue("www-authenticate");
                 logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
                             action.getClass().getSimpleName(),
                             executionContext.getUserId(),
@@ -114,9 +116,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                             executionContext.getToken());
                 throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
             }
-            else if(httpResponse.statusCode() == 504) {
-                logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
-                throw new ActionExecutionException("Gateway Timeout (504)");
+            else if(httpResponse.statusCode() >= 400) {
+                logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());
+                if(action instanceof BatchAction) {
+                    ((BatchAction) action).getActions()
+                            .stream()
+                            .map(a -> a.getClass().getSimpleName())
+                            .forEach(a -> logger.error("    Nested action: {}", a.getClass().getSimpleName()));
+                }
+                throw new StatusCodeException(httpResponse.statusCode(), httpResponse.body());
             }
             return responseHandler.getResultForResponse(action, httpResponse, userId);
         } catch (ConnectException e) {

@@ -5,7 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
@@ -33,7 +33,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.EDIT_PROJECT_SETTINGS;
 
 /**
  * Matthew Horridge
@@ -44,7 +44,7 @@ public class ProjectSettingsPresenter {
 
     private final ProjectId projectId;
 
-    private final PermissionScreener permissionScreener;
+    private final CapabilityScreener capabilityScreener;
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -91,7 +91,7 @@ public class ProjectSettingsPresenter {
 
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
-                                    @Nonnull PermissionScreener permissionScreener,
+                                    @Nonnull CapabilityScreener capabilityScreener,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
                                     @Nonnull EventBus eventBus,
                                     @Nonnull SettingsPresenter settingsPresenter,
@@ -107,7 +107,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull ProjectSettingsService projectSettingsService,
                                     @Nonnull EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter) {
         this.projectId = checkNotNull(projectId);
-        this.permissionScreener = checkNotNull(permissionScreener);
+        this.capabilityScreener = checkNotNull(capabilityScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.eventBus = checkNotNull(eventBus);
         this.settingsPresenter = checkNotNull(settingsPresenter);
@@ -129,7 +129,7 @@ public class ProjectSettingsPresenter {
 
 
     public void start(AcceptsOneWidget container) {
-        permissionScreener.checkPermission(EDIT_PROJECT_SETTINGS.getActionId(),
+        capabilityScreener.checkCapability(EDIT_PROJECT_SETTINGS.getCapability(),
                                            container,
                                            () -> displaySettings(container));
 
@@ -261,7 +261,7 @@ public class ProjectSettingsPresenter {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
             settingsPresenter.goToNextPlace();
         });
-        EntityCrudKitSettings<?> settings = entityCrudKitSettingsPresenter.getSettings();
+        EntityCrudKitSettings settings = entityCrudKitSettingsPresenter.getSettings();
             dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,
                                                                               settings, settings,
                                                                               IRIPrefixUpdateStrategy.LEAVE_INTACT),

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ public class GridColumnVisibilityManager_TestCase {
     private GridColumnVisibilityManager visibilityManager;
 
     @Mock
-    private GridColumnId columnA, columnB;
+    private FormRegionId columnA, columnB;
 
     @Mock
     private GridColumnVisibilityManager.VisibleColumnsChangedHandler visibilityChangedHandler;

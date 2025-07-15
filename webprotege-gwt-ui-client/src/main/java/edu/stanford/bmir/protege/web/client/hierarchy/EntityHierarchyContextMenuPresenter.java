@@ -4,20 +4,24 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.ChangeChildrenOrderingUIAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -25,12 +29,14 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
@@ -64,6 +70,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final MoveToParentUiAction moveToParentUiAction;
 
     @Nonnull
+    private final ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction;
+
+    @Nonnull
     private final MergeEntitiesUiAction mergeEntitiesAction;
 
     @Nonnull
@@ -73,7 +82,7 @@ public class EntityHierarchyContextMenuPresenter {
     private final WatchUiAction watchUiAction;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Nullable
     private PopupMenu contextMenu;
@@ -90,18 +99,27 @@ public class EntityHierarchyContextMenuPresenter {
 
     private final InputBox inputBox;
 
+    private DispatchServiceManager dispatch;
+    private ProjectId projectId;
+
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
+                                               @Nonnull ProjectId projectId,
+                                               @Provided @Nonnull DispatchServiceManager dispatch,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
-                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction,
+                                               @Provided @Nonnull ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction,
+                                               @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
-                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                               @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                @Provided @Nonnull InputBox inputBox) {
+        this.projectId = projectId;
+        this.dispatch = dispatch;
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
         this.moveToParentUiAction = checkNotNull(moveToParentUiAction);
         this.editAnnotationsUiAction = checkNotNull(editAnnotationsUiAction);
@@ -112,8 +130,9 @@ public class EntityHierarchyContextMenuPresenter {
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
+        this.changeChildrenOrderingUIAction = changeChildrenOrderingUIAction;
         this.watchUiAction = checkNotNull(watchUiAction);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
         this.inputBox = checkNotNull(inputBox);
     }
 
@@ -142,6 +161,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(editEntityTagsAction);
         contextMenu.addSeparator();
         contextMenu.addItem(moveToParentUiAction);
+        contextMenu.addItem(changeChildrenOrderingUIAction);
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(editAnnotationsUiAction);
@@ -158,8 +178,8 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
 
         // This needs tidying somehow.  We don't do this for other actions.
-        moveToParentUiAction.setHierarchyId(model.getHierarchyId());
-        mergeEntitiesAction.setHierarchyId(model.getHierarchyId());
+        moveToParentUiAction.setHierarchyDescriptor(model.getHierarchyDescriptor());
+        mergeEntitiesAction.setHierarchyDescriptor(model.getHierarchyDescriptor());
         Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = () ->
                 treeWidget.getSelectedNodes().stream()
                         .map(TreeNode::getUserObject)
@@ -167,8 +187,11 @@ public class EntityHierarchyContextMenuPresenter {
                         .collect(toImmutableSet());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setSelectionSupplier(selectionSupplier);
+        changeChildrenOrderingUIAction.setHandleAfterSave(v -> this.handleRefresh());
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
+
         updateActionStates();
     }
 
@@ -179,7 +202,7 @@ public class EntityHierarchyContextMenuPresenter {
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
         watchUiAction.setEnabled(false);
-
+        changeChildrenOrderingUIAction.setEnabled(true);
         int selSize = treeWidget.getSelectedKeys().size();
         boolean selIsNonEmpty = selSize > 0;
         boolean selIsSingleton = selSize == 1;
@@ -191,15 +214,14 @@ public class EntityHierarchyContextMenuPresenter {
 
 
         if (selIsNonEmpty) {
-            permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
-            permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
+            capabilityChecker.hasCapability(WATCH_CHANGES, watchUiAction::setEnabled);
+            capabilityChecker.hasCapability(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
     }
-
 
     private void pruneSelectedNodesToRoot() {
         treeWidget.pruneToSelectedNodes();
@@ -224,7 +246,11 @@ public class EntityHierarchyContextMenuPresenter {
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
-        inputBox.showOkDialog(messages.directLink(), true, location, input -> {});
+        int fragmentIndex = location.indexOf("#");
+        String fragment = location.substring(fragmentIndex + 1);
+        String encodedFragment = URL.encodeQueryString(fragment);
+        String rewritten = location.substring(0, fragmentIndex) + "?fragment=" + encodedFragment;
+        inputBox.showOkDialog(messages.directLink(), true, rewritten, input -> {});
     }
 
     private void handleRefresh() {

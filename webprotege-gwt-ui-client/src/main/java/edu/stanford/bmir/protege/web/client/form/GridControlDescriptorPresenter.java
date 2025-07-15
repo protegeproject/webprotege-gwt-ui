@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -40,6 +42,7 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
     @Override
     public FormControlDescriptor getFormFieldDescriptor() {
         return GridControlDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()),
+                                         view.getPageSize(),
                                          formSubjectFactoryDescriptorPresenter.getDescriptor().orElse(null));
     }
 
@@ -51,6 +54,8 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         GridControlDescriptor gridFieldDescriptor = (GridControlDescriptor) formControlDescriptor;
         columnListPresenter.setValues(gridFieldDescriptor.getColumns());
         gridFieldDescriptor.getSubjectFactoryDescriptor().ifPresent(formSubjectFactoryDescriptorPresenter::setDescriptor);
+        int pageSize = gridFieldDescriptor.getPageSize();
+        view.setPageSize(pageSize);
     }
 
     @Override
@@ -65,5 +70,13 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         columnListPresenter.setAddObjectText("Add column");
         formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectFactoryDescriptorContainer());
         columnListPresenter.setDefaultStateCollapsed();
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        List<ObjectPresenter<GridColumnDescriptor>> objectPresenters = columnListPresenter.getObjectPresenters();
+        objectPresenters.stream()
+                .map(op -> (GridColumnDescriptorPresenter) op)
+                .forEach(pr -> pr.addChildren(thisNode));
     }
 }

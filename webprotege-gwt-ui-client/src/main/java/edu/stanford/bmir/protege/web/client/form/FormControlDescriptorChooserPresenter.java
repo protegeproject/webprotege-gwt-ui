@@ -7,16 +7,14 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-26
  */
-public class FormControlDescriptorChooserPresenter {
+public class FormControlDescriptorChooserPresenter implements FormDescriptorComponentPresenter {
 
     @Nonnull
     private final FormControlDescriptorChooserView view;
@@ -124,5 +122,22 @@ public class FormControlDescriptorChooserPresenter {
                                                                 .equals(type))
                                       .map(FormControlDescriptorPresenterFactory::create)
                                       .findFirst();
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        currentFieldPresenter.ifPresent(p -> {
+            FormDescriptorComponentPresenterHierarchyNode presenterNode = new FormDescriptorComponentPresenterHierarchyNode(p);
+            thisNode.addChild(presenterNode);
+            p.addChildren(presenterNode);
+        });
+    }
+
+    @Override
+    public String toString() {
+        return "FormControlDescriptorChooserPresenter{" +
+               "selectedType=" + view.getFieldType() +
+               ", presenter" + currentFieldPresenter +
+               '}';
     }
 }

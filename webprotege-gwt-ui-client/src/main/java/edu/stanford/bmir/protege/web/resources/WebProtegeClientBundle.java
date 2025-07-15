@@ -126,6 +126,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIcon();
 
+    @Source("draggable.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource draggableIcon();
+
     @Source("eye-down.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIconDown();
@@ -229,6 +233,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("discussion.css")
     DiscussionCss discussion();
 
+    @Source("drag-and-drop.css")
+    DragAndDropCss dragAndDrop();
+
     @Source("WebProtegeSettingsPage.css")
     SettingsPageCss settings();
 
@@ -269,6 +276,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("editor-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEditorIcon();
+
+    @Source("dirty-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDirtyIcon();
 
     @Source("changes-icon.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -475,8 +486,17 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form__form-tab-bar__tab")
         String formTabBar__tab();
 
+        @ClassName("wp-form__form-tab-bar__icon")
+        String formTabBar__icon();
+
+        @ClassName("wp-form__form-tab-bar__label")
+        String formTabBar__label();
+
         @ClassName("wp-form__form-tab-bar__tab--selected")
         String formTabBar__tab__selected();
+
+        @ClassName("wp-form__form-tab-bar__tab__dirty-indicator")
+        String formTabBar__tab__dirtyIndicator();
 
         @ClassName("wp-form__text-block")
         String formTextBlock();
@@ -508,6 +528,39 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__filtered-indication")
         String formFilteredIndication();
+
+        @ClassName("wp-entity-card-stack--edit-mode-active")
+        String entityCardStackEditModeActive();
+
+        @ClassName("wp-entity-card-stack")
+        String entityCardStack();
+
+        @ClassName("wp-entity-card")
+        String entityCard();
+
+        @ClassName("wp-entity-card--writable")
+        String entityCard__writable();
+
+        @ClassName("wp-entity-card-stack__tab-bar")
+        String entityCardStack__tabBar();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab")
+        String entityCardStack__tabBar__tab();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab--writable")
+        String entityCardStack__tabBar__tabWritable();
+
+        @ClassName("wp-entity-card-stack__tab-bar__tab--read-only")
+        String entityCardStack__tabBar__tabReadOnly();
+
+        @ClassName("wp-entity-card-stack__card-container")
+        String entityCardStack__cardContainer();
+
+        @ClassName("wp-editable-icon")
+        String editableIcon();
+
+        @ClassName("wp-markdown-preview")
+        String markdownPreview();
     }
 
     interface DateTimePicker extends CssResource {
@@ -610,6 +663,17 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-comment__user-mention")
         String userMention();
 
+    }
+
+    interface DragAndDropCss extends CssResource {
+        @ClassName("wp-draggable-item")
+        String draggableItem();
+
+        @ClassName("wp-draggable-list")
+        String draggableList();
+
+        @ClassName("wp-title")
+        String title();
     }
 
     interface ToolbarCss extends CssResource {

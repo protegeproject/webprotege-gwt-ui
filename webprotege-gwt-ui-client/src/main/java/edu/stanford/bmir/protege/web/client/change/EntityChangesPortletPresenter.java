@@ -2,9 +2,10 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -14,11 +15,12 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 @Portlet(id = "portlets.ChangesByEntity",
         title = "Entity Changes",
@@ -31,25 +33,26 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 
     private final ChangeListPresenter presenter;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
-                                         LoggedInUserProjectPermissionChecker permissionChecker,
+                                         @Nonnull SelectedPathsModel selectedPathsModel,
+                                         LoggedInUserProjectCapabilityChecker capabilityChecker,
                                          ProjectId projectId,
                                          ChangeListPresenter presenter,
                                          DisplayNameRenderer displayNameRenderer,
                                          DispatchServiceManager dispatch) {
-		super(selectionModel, projectId, displayNameRenderer, dispatch);
+		super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
 	}
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
                                         ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
-        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
+        eventBus.addApplicationEventHandler(ON_CAPABILITIES_CHANGED, event -> updateDisplayForSelectedEntity());
         portletUi.setWidget(presenter.getView().asWidget());
         portletUi.setForbiddenMessage(FORBIDDEN_MESSAGE);
         setDisplaySelectedEntityNameAsSubtitle(true);
@@ -80,7 +83,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
     }
 
     private void updateDisplayForSelectedEntity() {
-        permissionChecker.hasPermission(VIEW_CHANGES, canViewChanges -> {
+        capabilityChecker.hasCapability(VIEW_CHANGES, canViewChanges -> {
             if (canViewChanges) {
                 setForbiddenVisible(false);
                 ProjectId projectId = getProjectId();

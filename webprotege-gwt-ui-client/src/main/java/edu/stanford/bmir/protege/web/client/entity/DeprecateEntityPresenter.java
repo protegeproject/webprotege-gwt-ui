@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubjectDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubjectDto;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldAccessMode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -90,7 +91,7 @@ public class DeprecateEntityPresenter {
         formPresenter.setFieldsCollapsible(false);
         FormEntitySubjectDto subjectDto = FormSubjectDto.get(DataFactory.getOWLEntityData(entity,
                                                                                           ImmutableMap.of()));
-        FormDataDto formDataDto = FormDataDto.get(subjectDto, firstFormDescriptor, 0);
+        FormDataDto formDataDto = FormDataDto.get(subjectDto, FormFieldAccessMode.READ_WRITE, firstFormDescriptor, 0);
         formPresenter.displayForm(formDataDto);
     }
 

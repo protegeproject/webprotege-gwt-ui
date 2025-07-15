@@ -10,9 +10,10 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
+import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -20,7 +21,6 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualAction;
 import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContainingIndividualResult;
@@ -40,8 +40,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_INDIVIDUAL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
@@ -68,7 +68,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private final SelectionModel selectionModel;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private final UIAction createAction;
 
@@ -97,13 +97,13 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     @Nonnull ProjectId projectId,
                                     final SelectionModel selectionModel,
                                     DispatchServiceManager dispatchServiceManager,
-                                    LoggedInUserProjectPermissionChecker permissionChecker,
+                                    LoggedInUserProjectCapabilityChecker capabilityChecker,
                                     HierarchyFieldPresenter hierarchyFieldPresenter,
                                     Messages messages,
                                     @Nonnull CreateEntityPresenter createEntityPresenter, EntityNodeUpdater entityNodeUpdater, MessageBox messageBox) {
         this.projectId = projectId;
         this.selectionModel = selectionModel;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.dsm = dispatchServiceManager;
         this.hierarchyFieldPresenter = hierarchyFieldPresenter;
@@ -128,7 +128,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         entityNodeUpdater.start(eventBus, this);
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
-        hierarchyFieldPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
+        hierarchyFieldPresenter.setHierarchyDescriptor(ClassHierarchyDescriptor.get());
         hierarchyFieldPresenter.start(view.getTypeFieldContainer(), eventBus);
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
         if(selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {
@@ -297,8 +297,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     private void updateButtonStates() {
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
-        permissionChecker.hasPermission(CREATE_INDIVIDUAL, createAction::setEnabled);
-        permissionChecker.hasPermission(DELETE_INDIVIDUAL, deleteAction::setEnabled);
+        capabilityChecker.hasCapability(CREATE_INDIVIDUAL, createAction::setEnabled);
+        capabilityChecker.hasCapability(DELETE_INDIVIDUAL, deleteAction::setEnabled);
     }
 
     @Override

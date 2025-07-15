@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class FormRegionOrdering_TestCase {
 
     @Mock
-    private GridColumnId columnId;
+    private FormRegionId columnId;
 
     private FormRegionOrderingDirection direction = FormRegionOrderingDirection.ASC;
 

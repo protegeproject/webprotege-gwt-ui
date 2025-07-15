@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
@@ -11,10 +12,13 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPrese
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
@@ -25,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_PROJECT;
 
 /**
  * Matthew Horridge
@@ -49,7 +53,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final PerspectivePresenter perspectivePresenter;
 
-    private final PermissionScreener permissionScreener;
+    private final CapabilityScreener capabilityScreener;
 
     private final EventPollingManager eventPollingManager;
 
@@ -58,6 +62,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     private final ProjectTagsStyleManager projectTagsStyleManager;
 
     private final LargeNumberOfChangesManager largeNumberOfChangesHandler;
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
 
     @Inject
@@ -69,22 +75,23 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
                             PerspectivePresenter perspectivePresenter,
-                            PermissionScreener permissionScreener,
+                            CapabilityScreener capabilityScreener,
                             WebProtegeEventBus eventBus,
                             ProjectTagsStyleManager projectTagsStyleManager,
-                            LargeNumberOfChangesManager largeNumberOfChangesHandler) {
+                            LargeNumberOfChangesManager largeNumberOfChangesHandler, LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.eventPollingManager = eventPollingManager;
-        this.permissionScreener = permissionScreener;
+        this.capabilityScreener = capabilityScreener;
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
         this.eventBus = eventBus;
         this.projectTagsStyleManager = projectTagsStyleManager;
         this.largeNumberOfChangesHandler = largeNumberOfChangesHandler;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Nonnull
@@ -99,7 +106,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         GWT.log("[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
         busyView.setMessage("Loading project.  Please wait.");
         container.setWidget(busyView);
-        permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
+        capabilityScreener.checkCapability(VIEW_PROJECT.getCapability(),
                                            container,
                                            () -> displayProject(container, eventBus, place));
     }
@@ -109,7 +116,11 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
-        subscribeToWebsocket(projectId.getId());
+        dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
+            String userName = this.loggedInUserProvider.getCurrentUserId().getUserName();
+            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), userName);
+        });
+
     }
 
     private void handleProjectLoaded(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus, @Nonnull ProjectViewPlace place) {
@@ -122,6 +133,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                     projectId,
                                     largeNumberOfChangesHandler);
         container.setWidget(view);
+
         dispatchServiceManager.execute(GetProjectTagsAction.create(projectId),
                                        r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
         dispatchServiceManager.executeCurrentBatch();
@@ -133,6 +145,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
         eventPollingManager.stop();
+        eventBus.dispose();
     }
 
     @Override
@@ -146,27 +159,38 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
 
     }
-    /*TODO change the hardcoded broker URL and get it from a config class */
-    public native void subscribeToWebsocket(String projectId)/*-{
+    public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
 
             var stompClient = new $wnd.StompJs.Client({
-                brokerURL: 'ws://webprotege-local.edu/wsapps',
+                brokerURL: websocketUrl,
                 debug: function(str) {
+                    $wnd.console.log(str);
                     console.log(str);
                 },
-                reconnectDelay: 5000,
+                reconnectDelay: 30000,
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
+                connectHeaders: {
+                   'token': token,
+                    'userId': userId,
+                    'Authorization' : 'Bearer ' + token,
+                    'login': 'Bearer ' + token
+                }
             });
 
 
             stompClient.onConnect = function(frame) {
+                 var headers = {
+                    'token': token,
+                    'userId': userId,
+                    'Authorization' : 'Bearer ' + token
+                  };
                 stompClient.subscribe('/topic/project-events/' + projectId, function(message) {
                     that.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::dispatchEventsFromWebsocket(Ljava/lang/String;)(message.body);
 
-                });
+                }, headers);
             };
             stompClient.onWebSocketError = function(error) {
                 console.error('Error with websocket', error);

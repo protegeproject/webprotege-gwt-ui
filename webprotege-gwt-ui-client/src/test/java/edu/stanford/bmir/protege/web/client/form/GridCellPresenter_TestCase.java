@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class GridCellPresenter_TestCase {
     private AcceptsOneWidget container;
 
     @Mock
-    private GridColumnId columnId;
+    private FormRegionId columnId;
 
     @Mock
     private FormControlData formControlValue;
@@ -92,8 +92,8 @@ public class GridCellPresenter_TestCase {
     }
 
     @Test
-    public void shouldReturnGridColumnId() {
-        GridColumnId id = presenter.getId();
+    public void shouldReturnFormRegionId() {
+        FormRegionId id = presenter.getId();
         assertThat(id, is(columnId));
     }
 

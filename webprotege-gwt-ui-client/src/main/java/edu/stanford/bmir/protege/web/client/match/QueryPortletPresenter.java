@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -42,13 +43,14 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Inject
     public QueryPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                 @Nonnull SelectedPathsModel selectedPathsModel,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull QueryPortletView view,
                                  DisplayNameRenderer displayNameRenderer,
                                  DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);

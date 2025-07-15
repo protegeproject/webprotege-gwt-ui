@@ -4,6 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.client.tab.TabBarPresenter;
+import edu.stanford.bmir.protege.web.client.tab.TabContentContainer;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabChangedHandler;
+import edu.stanford.bmir.protege.web.client.tab.SelectedTabIdStash;
+import edu.stanford.bmir.protege.web.client.ui.DisplayContextManager;
+import edu.stanford.bmir.protege.web.client.ui.HasDisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
@@ -25,11 +32,14 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-20
  */
-public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+public class FormStackPresenter implements HasFormRegionFilterChangedHandler, HasDisplayContextBuilder {
+
+    private DisplayContextManager displayContextManager = new DisplayContextManager(context -> {});
 
     @Nonnull
     public ImmutableList<FormId> getSelectedForms() {
-        return formTabBarPresenter.getSelectedForm()
+        return tabBarPresenter.getSelectedTab()
                                   .map(ImmutableList::of)
                                   .orElse(ImmutableList.of());
     }
@@ -40,7 +50,7 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     @Nonnull
-    private final FormTabBarPresenter formTabBarPresenter;
+    private final TabBarPresenter<FormId> tabBarPresenter;
 
     @Nonnull
     private final FormStackView view;
@@ -68,23 +78,23 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
 
     @Inject
-    public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
+    public FormStackPresenter(@Nonnull TabBarPresenter<FormId> tabBarPresenter,
                               @Nonnull FormStackView view,
                               @Nonnull NoFormView noFormView,
                               @Nonnull Provider<FormPresenter> formPresenterProvider) {
-        this.formTabBarPresenter = checkNotNull(formTabBarPresenter);
+        this.tabBarPresenter = checkNotNull(tabBarPresenter);
         this.view = checkNotNull(view);
         this.noFormView = checkNotNull(noFormView);
         this.formPresenterProvider = checkNotNull(formPresenterProvider);
     }
 
     public Optional<FormId> getSelectedForm() {
-        return formTabBarPresenter.getSelectedForm();
+        return tabBarPresenter.getSelectedTab();
     }
 
     public void clearForms() {
         formPresenters.clear();
-        formTabBarPresenter.clear();
+        tabBarPresenter.clear();
         updateView();
     }
 
@@ -93,8 +103,8 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         getFormPresenters().forEach(formPresenter -> formPresenter.setEnabled(enabled));
     }
 
-    public void setSelectedFormChangedHandler(@Nonnull SelectedFormChangedHandler selectedFormChangedHandler) {
-        this.formTabBarPresenter.setSelectedFormChangedHandler(selectedFormChangedHandler);
+    public void setSelectedFormChangedHandler(@Nonnull SelectedTabChangedHandler selectedTabChangedHandler) {
+        this.tabBarPresenter.setSelectedTabChangedHandler(selectedTabChangedHandler);
     }
 
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
@@ -162,24 +172,26 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
     private void replaceForms(@Nonnull ImmutableList<FormDataDto> forms) {
         formPresenters.clear();
-        formTabBarPresenter.clear();
+        tabBarPresenter.clear();
         view.clear();
         forms.forEach(formData -> {
             FormPresenter formPresenter = formPresenterProvider.get();
             FormDescriptorDto formDescriptor = formData.getFormDescriptor();
-            FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
-            formPresenter.start(formContainer);
+            TabContentContainer tabContentContainer = view.addContainer(formDescriptor.getLabel());
+            formPresenter.start(tabContentContainer);
             formPresenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
             formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
             formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
+            formPresenter.setParentDisplayContextBuilder(this);
             formPresenters.put(formData.getFormId(), formPresenter);
-            formTabBarPresenter.addForm(formDescriptor.getFormId(),
+            tabBarPresenter.addTab(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),
-                                        formContainer);
+                    tabContentContainer);
+            formPresenter.setParentDisplayContextBuilder(this);
         });
-        formTabBarPresenter.restoreSelection();
+        tabBarPresenter.restoreSelection();
     }
 
     private void updateForms(@Nonnull ImmutableList<FormDataDto> forms) {
@@ -205,12 +217,12 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
         container.setWidget(view);
-        formTabBarPresenter.start(view.getSelectorContainer());
+        tabBarPresenter.start(view.getSelectorContainer());
         updateView();
     }
 
-    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
-        formTabBarPresenter.setSelectedFormIdStash(formIdStash);
+    public void setSelectedFormIdStash(@Nonnull SelectedTabIdStash<FormId> formIdStash) {
+        tabBarPresenter.setSelectedKeyStash(formIdStash);
     }
 
     @Nonnull
@@ -239,5 +251,13 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler));
     }
 
+    @Override
+    public void setParentDisplayContextBuilder(HasDisplayContextBuilder parent) {
+        displayContextManager.setParentDisplayContextBuilder(parent);
+    }
 
+    @Override
+    public DisplayContextBuilder fillDisplayContextBuilder() {
+        return displayContextManager.fillDisplayContextBuilder();
+    }
 }

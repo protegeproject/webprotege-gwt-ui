@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <g:SuggestBox ui:field="personIdBox"/>
+        <g:ListBox ui:field="roleIdListBox"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class FormDataDto_Serialization_TestCase {
                                                       LanguageMap.empty(),
                                                       ImmutableList.of(
                                                               FormFieldDescriptorDto.get(
-                                                                      FormFieldId.get(UUID.randomUUID().toString()),
+                                                                      FormRegionId.get(UUID.randomUUID().toString()),
                                                                       OwlPropertyBinding.get(mockOWLObjectProperty()),
                                                                       LanguageMap.empty(),
                                                                       FieldRun.START,
@@ -43,8 +44,10 @@ public class FormDataDto_Serialization_TestCase {
                                                                       ),
                                                                       Optionality.OPTIONAL,
                                                                       Repeatability.NON_REPEATABLE,
+                                                                      20,
                                                                       FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                       true,
+                                                                      FormFieldAccessMode.READ_WRITE,
                                                                       ExpansionState.EXPANDED,
                                                                       LanguageMap.empty()
                                                               )
@@ -57,18 +60,21 @@ public class FormDataDto_Serialization_TestCase {
                                 ImmutableList.of(
                                         FormFieldDataDto.get(
                                             FormFieldDescriptorDto.get(
-                                                    FormFieldId.get(UUID.randomUUID().toString()),
+                                                    FormRegionId.get(UUID.randomUUID().toString()),
                                                     OwlSubClassBinding.get(),
                                                     LanguageMap.empty(),
                                                     FieldRun.START,
                                                     ImageControlDescriptorDto.get(),
                                                     Optionality.OPTIONAL,
                                                     Repeatability.NON_REPEATABLE,
+                                                    10,
                                                     FormFieldDeprecationStrategy.DELETE_VALUES,
                                                     true,
+                                                    FormFieldAccessMode.READ_WRITE,
                                                     ExpansionState.EXPANDED,
                                                     LanguageMap.empty()
-                                            ), Page.of(
+                                            ),
+                                                Page.of(
                                                     ImageControlDataDto.get(
                                                             new ImageControlDescriptor(), IRI.create("http://example.org"),
                                                             3

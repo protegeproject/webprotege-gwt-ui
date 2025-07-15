@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -18,19 +17,21 @@ public abstract class SingleChoiceControlDataDto implements FormControlDataDto {
 
     @JsonCreator
     @Nonnull
-    public static SingleChoiceControlDataDto get(@JsonProperty("descriptor") @Nonnull SingleChoiceControlDescriptor descriptor,
-                                                 @JsonProperty("choice") @Nullable PrimitiveFormControlDataDto choice,
-                                                 @JsonProperty("depth") int depth) {
+    public static SingleChoiceControlDataDto get(@JsonProperty(PropertyNames.CONTROL) @Nonnull SingleChoiceControlDescriptor descriptor,
+                                                 @JsonProperty(PropertyNames.CHOICE) @Nullable PrimitiveFormControlDataDto choice,
+                                                 @JsonProperty(PropertyNames.DEPTH) int depth) {
         return new AutoValue_SingleChoiceControlDataDto(depth, descriptor, choice);
     }
 
     @Nonnull
+    @JsonProperty(PropertyNames.CONTROL)
     public abstract SingleChoiceControlDescriptor getDescriptor();
 
-    @JsonProperty("choice")
+    @JsonProperty(PropertyNames.VALUE)
     @Nullable
     protected abstract PrimitiveFormControlDataDto getChoiceInternal();
 
+    @JsonIgnore
     @Nonnull
     public Optional<PrimitiveFormControlDataDto> getChoice() {
         return Optional.ofNullable(getChoiceInternal());

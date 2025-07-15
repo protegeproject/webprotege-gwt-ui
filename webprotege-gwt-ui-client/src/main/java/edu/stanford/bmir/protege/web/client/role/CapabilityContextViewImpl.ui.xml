@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.7em;
+            align-items: start;
+        }
+        .criteriaContainer {
+            padding: 0.5em;
+            border: literal("var(--inlay-panel--border)");
+            border-radius: literal("var(--inlay-panel--border-radius--large)");
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:ListBox ui:field="contextSelectionBox"/>
+        <g:SimplePanel ui:field="criteriaContainer" addStyleNames="{style.criteriaContainer}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -3,10 +3,13 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -17,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-26
  */
-public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumnDescriptor> {
+public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumnDescriptor>, FormDescriptorComponentPresenter {
 
     @Nonnull
     private final GridColumnDescriptorView view;
@@ -30,7 +33,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     private final LanguageMapCurrentLocaleMapper localeMapper;
 
     @Nonnull
-    private Optional<GridColumnId> currentColumnId = Optional.empty();
+    private Optional<FormRegionId> currentColumnId = Optional.empty();
 
     @Nonnull
     private final UuidV4Provider uuidV4Provider;
@@ -58,7 +61,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     @Nonnull
     @Override
     public Optional<GridColumnDescriptor> getValue() {
-        GridColumnId columnId = currentColumnId.orElseGet(() -> GridColumnId.get(uuidV4Provider.get()));
+        FormRegionId columnId = currentColumnId.orElseGet(() -> FormRegionId.get(uuidV4Provider.get()));
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
                                               .map(fieldDescriptor -> GridColumnDescriptor.get(columnId,
                                                                                                view.getOptionality(),
@@ -90,5 +93,12 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
         bindingPresenter.start(view.getBindingViewContainer());
         view.setLabelChangedHandler(() -> headerLabelChangedHandler.accept(getHeaderLabel()));
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode chooserPresenterNode =  new FormDescriptorComponentPresenterHierarchyNode(fieldDescriptorChooserPresenter);
+        thisNode.addChild(chooserPresenterNode);
+        fieldDescriptorChooserPresenter.addChildren(thisNode);
     }
 }

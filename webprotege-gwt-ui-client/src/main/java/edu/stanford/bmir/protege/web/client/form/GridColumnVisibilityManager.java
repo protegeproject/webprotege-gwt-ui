@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -24,12 +24,12 @@ public class GridColumnVisibilityManager {
     }
 
 
-    private Set<GridColumnId> visibleColumns = new HashSet<>();
+    private Set<FormRegionId> visibleColumns = new HashSet<>();
 
     private Set<VisibleColumnsChangedHandler> handlers = new LinkedHashSet<>();
 
 
-    public void setVisibleColumns(@Nonnull ImmutableSet<GridColumnId> visibleColumns) {
+    public void setVisibleColumns(@Nonnull ImmutableSet<FormRegionId> visibleColumns) {
         checkNotNull(visibleColumns);
         if(this.visibleColumns.containsAll(visibleColumns) && visibleColumns.containsAll(this.visibleColumns)) {
             return;
@@ -51,11 +51,11 @@ public class GridColumnVisibilityManager {
     }
 
     @Nonnull
-    public ImmutableSet<GridColumnId> getVisibleColumns() {
+    public ImmutableSet<FormRegionId> getVisibleColumns() {
         return ImmutableSet.copyOf(visibleColumns);
     }
 
-    public boolean isVisible(@Nonnull GridColumnId columnId) {
+    public boolean isVisible(@Nonnull FormRegionId columnId) {
         return visibleColumns.contains(columnId);
     }
 }

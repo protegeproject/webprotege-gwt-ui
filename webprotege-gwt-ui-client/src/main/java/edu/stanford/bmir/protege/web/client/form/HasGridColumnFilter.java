@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 
@@ -20,11 +20,11 @@ public interface HasGridColumnFilter {
     HandlerRegistration addFilteredColumnsChangedHandler(@Nonnull FilteredColumnsChangedHandler handler);
 
     void addColumnToFilterList(@Nonnull String columnName,
-                               @Nonnull GridColumnId columnId);
+                               @Nonnull FormRegionId columnId);
 
     /**
      * Get the columns that are checked in the filter list
      * @return The set of checked columns in the filter list
      */
-    ImmutableSet<GridColumnId> getFilteredColumns();
+    ImmutableSet<FormRegionId> getFilteredColumns();
 }

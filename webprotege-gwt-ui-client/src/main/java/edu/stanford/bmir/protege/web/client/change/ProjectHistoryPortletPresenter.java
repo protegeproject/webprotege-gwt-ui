@@ -5,10 +5,11 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -18,10 +19,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.VIEW_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 @Portlet(id = "portlets.ProjectHistory",
          title = "Project History",
@@ -34,7 +36,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     private final UIAction refreshAction;
 
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
@@ -46,16 +48,17 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     @Inject
     public ProjectHistoryPortletPresenter(ChangeListPresenter presenter,
-                                          LoggedInUserProjectPermissionChecker permissionChecker,
+                                          LoggedInUserProjectCapabilityChecker capabilityChecker,
                                           FilterView filterView,
                                           SelectionModel selectionModel,
+                                          @Nonnull SelectedPathsModel selectedPathsModel,
                                           ProjectId projectId,
                                           Messages messages,
                                           DisplayNameRenderer displayNameRenderer,
                                           DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
-        this.permissionChecker = permissionChecker;
+        this.capabilityChecker = capabilityChecker;
         this.filterView = filterView;
         this.messages = messages;
         presenter.setDownloadVisible(true);
@@ -78,7 +81,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setFilterView(filterView);
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
-        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
+        eventBus.addApplicationEventHandler(ON_CAPABILITIES_CHANGED, event -> reload());
         reload();
     }
 
@@ -97,7 +100,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     private void reload() {
         refreshAction.setEnabled(false);
-        permissionChecker.hasPermission(VIEW_CHANGES,
+        capabilityChecker.hasCapability(VIEW_CHANGES,
                                         canViewChanges -> {
                                             if (canViewChanges) {
                                                 ProjectId projectId = getProjectId();

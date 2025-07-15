@@ -19,32 +19,32 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class EntityFormSelector {
 
-    public static EntityFormSelector get(@Nonnull @JsonProperty("projectId") ProjectId projectId,
-                                         @Nonnull @JsonProperty("criteria") CompositeRootCriteria criteria,
-                                         @Nonnull @JsonProperty("purpose") FormPurpose purpose,
-                                         @Nonnull @JsonProperty("formId") FormId formId) {
+    public static EntityFormSelector get(@Nonnull @JsonProperty(PropertyNames.PROJECT_ID) ProjectId projectId,
+                                         @Nonnull @JsonProperty(PropertyNames.CRITERIA) CompositeRootCriteria criteria,
+                                         @Nonnull @JsonProperty(PropertyNames.PURPOSE) FormPurpose purpose,
+                                         @Nonnull @JsonProperty(PropertyNames.FORM_ID) FormId formId) {
         return new AutoValue_EntityFormSelector(projectId, purpose, criteria, formId);
     }
 
     @JsonCreator
-    protected static EntityFormSelector create(@Nonnull @JsonProperty("projectId") ProjectId projectId,
-                                         @Nonnull @JsonProperty("criteria") CompositeRootCriteria criteria,
-                                         @Nullable @JsonProperty("purpose") FormPurpose purpose,
-                                         @Nonnull @JsonProperty("formId") FormId formId) {
+    protected static EntityFormSelector create(@Nonnull @JsonProperty(PropertyNames.PROJECT_ID) ProjectId projectId,
+                                         @Nonnull @JsonProperty(PropertyNames.CRITERIA) CompositeRootCriteria criteria,
+                                         @Nullable @JsonProperty(PropertyNames.PURPOSE) FormPurpose purpose,
+                                         @Nonnull @JsonProperty(PropertyNames.FORM_ID) FormId formId) {
         FormPurpose normFormPurpose = purpose == null ? FormPurpose.ENTITY_EDITING : purpose;
         return get(projectId, criteria, normFormPurpose, formId);
     }
 
-    @JsonProperty("projectId")
+    @JsonProperty(PropertyNames.PROJECT_ID)
     public abstract ProjectId getProjectId();
 
-    @JsonProperty("purpose")
+    @JsonProperty(PropertyNames.PURPOSE)
     public abstract FormPurpose getPurpose();
 
-    @JsonProperty("criteria")
+    @JsonProperty(PropertyNames.CRITERIA)
     public abstract CompositeRootCriteria getCriteria();
 
-    @JsonProperty("formId")
+    @JsonProperty(PropertyNames.FORM_ID)
     public abstract FormId getFormId();
 
 }

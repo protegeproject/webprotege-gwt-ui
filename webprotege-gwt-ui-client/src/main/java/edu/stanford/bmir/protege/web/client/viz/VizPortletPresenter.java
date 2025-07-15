@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -28,10 +29,11 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter impl
 
     @Inject
     public VizPortletPresenter(@Nonnull SelectionModel selectionModel,
+                               @Nonnull SelectedPathsModel selectedPathsModel,
                                @Nonnull ProjectId projectId,
                                @Nonnull DisplayNameRenderer displayNameRenderer,
                                @Nonnull VizPresenter vizPresenter, DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch);
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.vizPresenter = vizPresenter;
     }
 
@@ -41,6 +43,8 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter impl
         vizPresenter.setEntityDisplay(this);
         vizPresenter.start(portletUi);
         vizPresenter.setHasBusy(portletUi);
+        getSelectedEntity().ifPresent(vizPresenter::displayEntity);
+        vizPresenter.reload();
     }
 
     @Override

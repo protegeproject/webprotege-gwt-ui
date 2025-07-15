@@ -1,0 +1,13 @@
+{
+  "@type": "TextControlDataDto",
+  "depth": 3,
+  "control": {
+    "@type": "TEXT",
+    "stringType": "SIMPLE_STRING",
+    "lineMode": "SINGLE_LINE"
+  },
+  "value": {
+    "lang": "en",
+    "value": "Hello"
+  }
+}

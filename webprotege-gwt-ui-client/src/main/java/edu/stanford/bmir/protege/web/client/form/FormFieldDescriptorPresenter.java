@@ -3,15 +3,16 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
+import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionAccessRestriction;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor> {
+public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor>, FormDescriptorComponentPresenter {
 
     @Nonnull
     private ProjectId projectId;
@@ -35,7 +36,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     @Nonnull
-    private Optional<FormFieldId> formFieldId = Optional.empty();
+    private Optional<FormRegionId> formFieldId = Optional.empty();
 
     @Nonnull
     private LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
@@ -81,13 +82,13 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
 
     @Nonnull
     public Optional<FormFieldDescriptor> getValue() {
-        Optional<FormControlDescriptor> formFieldDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
-        if(!formFieldDescriptor.isPresent()) {
+        Optional<FormControlDescriptor> formControlDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
+        if(!formControlDescriptor.isPresent()) {
             return Optional.empty();
         }
-        FormFieldId formFieldIdToSave = formFieldId.orElseGet(() -> {
+        FormRegionId formFieldIdToSave = formFieldId.orElseGet(() -> {
             String id = uuidV4Provider.get();
-            FormFieldId formFieldId = FormFieldId.get(id);
+            FormRegionId formFieldId = FormRegionId.get(id);
             this.formFieldId = Optional.of(formFieldId);
             return formFieldId;
         });
@@ -96,8 +97,9 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  view.getLabel(),
                                                                  view.getFieldRun(),
                                                                  view.getDeprecationStrategy(),
-                                                                 formFieldDescriptor.get(),
+                                                                 formControlDescriptor.get(),
                                                                  view.getRepeatability(),
+                                                                 view.getPageSize(),
                                                                  view.getOptionality(),
                                                                  view.isReadOnly(),
                                                                  view.getInitialExpansionState(),
@@ -110,7 +112,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
 
         if(descriptor.getId().getId().equals("")) {
-            this.formFieldId = Optional.of(FormFieldId.get(uuidV4Provider.get()));
+            this.formFieldId = Optional.of(FormRegionId.get(uuidV4Provider.get()));
         }
         else {
             this.formFieldId = Optional.of(descriptor.getId());
@@ -125,6 +127,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         view.setDeprecationStrategy(descriptor.getDeprecationStrategy());
 
         view.setRepeatability(descriptor.getRepeatability());
+
+        view.setPageSize(descriptor.getPageSize());
 
         view.setOptionality(descriptor.getOptionality());
 
@@ -141,5 +145,54 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         container.setWidget(view);
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorViewContainer());
         bindingPresenter.start(view.getOwlBindingViewContainer());
+    }
+
+    @Override
+    public List<FormRegionAccessRestriction> getFormRegionAccessRestrictions() {
+        List<FormRegionAccessRestriction> result = new ArrayList<>();
+        formFieldId.ifPresent(id -> {
+            view.getViewAccessRoles().forEach(r -> {
+                FormRegionAccessRestriction accessRestriction = FormRegionAccessRestriction.get(id, r.getRoleId(), CapabilityId.valueOf("ViewFormRegion"), r.getCriteria());
+                result.add(accessRestriction);
+            });
+            view.getEditAccessRoles().forEach(r -> {
+                FormRegionAccessRestriction accessRestriction = FormRegionAccessRestriction.get(id, r.getRoleId(), CapabilityId.valueOf("EditFormRegion"), r.getCriteria());
+                result.add(accessRestriction);
+            });
+        });
+        return result;
+    }
+
+    @Override
+    public void setFormRegionAccessRestrictions(List<FormRegionAccessRestriction> formRegionAccessRestrictions) {
+        formFieldId.ifPresent(id -> {
+            List<RoleCriteriaBinding> viewRoles = formRegionAccessRestrictions.stream()
+                    .filter(r -> r.getFormRegionId().equals(id))
+                    .filter(r -> r.getCapabilityId().equals(CapabilityId.valueOf("ViewFormRegion")))
+                    .map(r -> RoleCriteriaBinding.get(r.getRoleId(), r.getContextCriteria()))
+                    .collect(Collectors.toList());
+            view.setViewAccessRoles(viewRoles);
+
+            List<RoleCriteriaBinding> editRoles = formRegionAccessRestrictions.stream()
+                    .filter(r -> r.getFormRegionId().equals(id))
+                    .filter(r -> r.getCapabilityId().equals(CapabilityId.valueOf("EditFormRegion")))
+                    .map(r -> RoleCriteriaBinding.get(r.getRoleId(), r.getContextCriteria()))
+                    .collect(Collectors.toList());
+            view.setEditAccessRoles(editRoles);
+        });
+    }
+
+    @Override
+    public void addChildren(FormDescriptorComponentPresenterHierarchyNode thisNode) {
+        FormDescriptorComponentPresenterHierarchyNode chooserNode = thisNode.addChildForPresenter(fieldDescriptorChooserPresenter);
+        fieldDescriptorChooserPresenter.addChildren(chooserNode);
+    }
+
+    @Override
+    public String toString() {
+        return "FormFieldDescriptorPresenter{" +
+               "formFieldId=" + formFieldId +
+               ", label=" + view.getLabel().asMap() +
+               '}';
     }
 }

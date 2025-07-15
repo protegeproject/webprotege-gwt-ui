@@ -3,15 +3,21 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.app.ApplicationView;
+import edu.stanford.bmir.protege.web.client.app.FragmentManager;
 import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
+
+import java.util.logging.Logger;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -21,7 +27,10 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class WebProtege implements EntryPoint {
 
+    private static final Logger logger = Logger.getLogger(WebProtege.class.getName());
+
     public void onModuleLoad() {
+        FragmentManager.handlePostLoginFragment();
 
         WebProtegeInitializer initializer = WebProtegeClientInjector.get().getWebProtegeInitializer();
         initializer.init(new AsyncCallback<Void>() {
@@ -50,6 +59,7 @@ public class WebProtege implements EntryPoint {
         BUNDLE.style().ensureInjected();
         BUNDLE.buttons().ensureInjected();
         BUNDLE.discussion().ensureInjected();
+        BUNDLE.dragAndDrop().ensureInjected();
         BUNDLE.menu().ensureInjected();
         BUNDLE.settings().ensureInjected();
         BUNDLE.valueList().ensureInjected();

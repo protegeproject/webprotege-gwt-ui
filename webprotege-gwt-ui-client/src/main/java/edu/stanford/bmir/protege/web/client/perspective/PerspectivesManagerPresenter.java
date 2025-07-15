@@ -5,9 +5,9 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
 
@@ -44,7 +44,7 @@ public class PerspectivesManagerPresenter {
     private final Messages messages;
 
     @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
+    private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
     @Inject
     public PerspectivesManagerPresenter(@Nonnull PerspectivesManagerView perspectivesListView,
@@ -53,14 +53,14 @@ public class PerspectivesManagerPresenter {
                                         @Nonnull SettingsPresenter settingsPresenter,
                                         @Nonnull PerspectivesManagerService perspectivesManagerService,
                                         @Nonnull Messages messages,
-                                        @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                        @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker) {
         this.perspectivesListView = checkNotNull(perspectivesListView);
         this.adminSettingsView = checkNotNull(adminSettingsView);
         this.detailsListPresenter = checkNotNull(detailsListPresenter);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.perspectivesManagerService = checkNotNull(perspectivesManagerService);
         this.messages = checkNotNull(messages);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.capabilityChecker = checkNotNull(capabilityChecker);
     }
 
     public void setNextPlace(@Nonnull Place nextPlace) {
@@ -82,7 +82,7 @@ public class PerspectivesManagerPresenter {
 
         perspectivesListView.setResetPerspectivesHandler(this::handleResetPerspectives);
 
-        permissionChecker.hasPermission(BuiltInAction.EDIT_PROJECT_SETTINGS,
+        capabilityChecker.hasCapability(BuiltInCapability.EDIT_PROJECT_SETTINGS,
                                         canEditProjectSettings -> {
                                             if (canEditProjectSettings) {
                                                 AcceptsOneWidget adminSettingsContainer = settingsPresenter.addSection("Tabs Admin");
