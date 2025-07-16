@@ -35,10 +35,14 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                           @Nullable FormFieldDeprecationStrategy deprecationStrategy,
                                           @Nonnull FormControlDescriptor fieldDescriptor,
                                           Repeatability repeatability,
+                                          int pageSize,
                                           Optionality optionality,
                                           boolean readOnly,
                                           @Nullable ExpansionState expansionState,
                                           @Nullable LanguageMap help) {
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("pageSize must be greater than 0");
+        }
         return new AutoValue_FormFieldDescriptor(id,
                                                  owlBinding,
                                                  formLabel == null ? LanguageMap.empty() : formLabel,
@@ -46,6 +50,7 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
+                                                 pageSize,
                                                  deprecationStrategy == null ? FormFieldDeprecationStrategy.DELETE_VALUES : deprecationStrategy,
                                                  readOnly,
                                                  expansionState == null ? ExpansionState.EXPANDED : expansionState,
@@ -61,12 +66,20 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
                                                   @JsonProperty(PropertyNames.DEPRECATION_STRATEGY) @Nullable FormFieldDeprecationStrategy deprecationStrategy,
                                                   @JsonProperty(PropertyNames.CONTROL) @Nonnull FormControlDescriptor fieldDescriptor,
                                                   @JsonProperty(PropertyNames.REPEATABILITY) @Nullable Repeatability repeatability,
+                                                  @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
                                                   @JsonProperty(PropertyNames.OPTIONALITY) @Nullable Optionality optionality,
                                                   @JsonProperty(PropertyNames.READ_ONLY) boolean readOnly,
                                                   @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) @Nullable ExpansionState expansionState,
                                                   @JsonProperty(PropertyNames.HELP) @Nullable LanguageMap help) {
+       if(pageSize < 0) {
+           throw new IllegalArgumentException("Page size must be greater than zero");
+       }
+       // Support legacy serialization that does not specify the page size
+       if(pageSize == 0) {
+           pageSize = FormPageRequest.DEFAULT_PAGE_SIZE;
+       }
         final FormRegionId formFieldId = FormRegionId.get(checkNotNull(id));
-        return get(formFieldId, owlBinding, formLabel, fieldRun, deprecationStrategy, fieldDescriptor, repeatability, optionality, readOnly, expansionState, help);
+        return get(formFieldId, owlBinding, formLabel, fieldRun, deprecationStrategy, fieldDescriptor, repeatability, pageSize, optionality, readOnly, expansionState, help);
     }
 
     @Nonnull
@@ -106,6 +119,9 @@ public abstract class FormFieldDescriptor implements HasFormRegionId, HasRepeata
 
     @Nonnull
     public abstract Repeatability getRepeatability();
+
+    @JsonProperty(PAGE_SIZE)
+    public abstract int getPageSize();
 
     @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)
     @Nonnull

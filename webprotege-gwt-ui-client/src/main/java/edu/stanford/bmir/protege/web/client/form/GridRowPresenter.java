@@ -43,7 +43,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private final Map<FormRegionId, GridCellPresenter> cellPresentersById = new HashMap<>();
 
-    private GridControlDescriptorDto gridControlDescriptor = GridControlDescriptorDto.get(ImmutableList.of(), null);
+    private GridControlDescriptorDto gridControlDescriptor = GridControlDescriptorDto.get(ImmutableList.of(), 20, null);
 
     private Map<FormRegionId, GridCellContainer> cellContainersById = new HashMap<>();
 
@@ -125,6 +125,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     double weight = span / totalSpan;
                     FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(columnDescriptor.getFormControlDescriptor(),
                                                                                                           columnDescriptor.getRepeatability(),
+                                                                                                          gridControlDescriptor.getPageSize(),
                                                                                                           FormRegionPosition.NESTED);
 
                     GridCellPresenter cellPresenter = cellPresenterFactory.create(columnDescriptor,

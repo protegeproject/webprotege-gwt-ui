@@ -28,11 +28,15 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                                              @JsonProperty(PropertyNames.CONTROL) FormControlDescriptorDto descriptorDto,
                                              @JsonProperty(PropertyNames.OPTIONALITY) Optionality optionality,
                                              @JsonProperty(PropertyNames.REPEATABILITY) Repeatability repeatability,
+                                             @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
                                              @JsonProperty(PropertyNames.DEPRECATION_STRATEGY) FormFieldDeprecationStrategy deprecationStrategy,
                                              @JsonProperty(PropertyNames.READ_ONLY) boolean newReadOnly,
                                              @JsonProperty(PropertyNames.ACCESS_MODE) FormFieldAccessMode accessMode,
                                              @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) ExpansionState initialExpansionState,
                                              @JsonProperty(PropertyNames.HELP) LanguageMap help) {
+        if(pageSize <= 0) {
+            throw new IllegalArgumentException("pageSize must be greater than zero");
+        }
         return new AutoValue_FormFieldDescriptorDto(formFieldId,
                 owlBinding,
                 newlabel,
@@ -40,6 +44,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                 descriptorDto,
                 optionality,
                 repeatability,
+                pageSize,
                 deprecationStrategy,
                 newReadOnly,
                 accessMode,
@@ -83,6 +88,9 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
     @JsonProperty(PropertyNames.REPEATABILITY)
     public abstract Repeatability getRepeatability();
 
+    @JsonProperty(PropertyNames.PAGE_SIZE)
+    public abstract int getPageSize();
+
     @Nonnull
     @JsonProperty(PropertyNames.DEPRECATION_STRATEGY)
     public abstract FormFieldDeprecationStrategy getDeprecationStrategy();
@@ -115,6 +123,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                 getDeprecationStrategy(),
                 getFormControlDescriptor().toFormControlDescriptor(),
                 getRepeatability(),
+                getPageSize(),
                 getOptionality(),
                 isReadOnly(),
                 getInitialExpansionState(),

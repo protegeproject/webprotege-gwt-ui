@@ -82,8 +82,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
 
     @Nonnull
     public Optional<FormFieldDescriptor> getValue() {
-        Optional<FormControlDescriptor> formFieldDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
-        if(!formFieldDescriptor.isPresent()) {
+        Optional<FormControlDescriptor> formControlDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
+        if(!formControlDescriptor.isPresent()) {
             return Optional.empty();
         }
         FormRegionId formFieldIdToSave = formFieldId.orElseGet(() -> {
@@ -97,8 +97,9 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  view.getLabel(),
                                                                  view.getFieldRun(),
                                                                  view.getDeprecationStrategy(),
-                                                                 formFieldDescriptor.get(),
+                                                                 formControlDescriptor.get(),
                                                                  view.getRepeatability(),
+                                                                 view.getPageSize(),
                                                                  view.getOptionality(),
                                                                  view.isReadOnly(),
                                                                  view.getInitialExpansionState(),
@@ -126,6 +127,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         view.setDeprecationStrategy(descriptor.getDeprecationStrategy());
 
         view.setRepeatability(descriptor.getRepeatability());
+
+        view.setPageSize(descriptor.getPageSize());
 
         view.setOptionality(descriptor.getOptionality());
 

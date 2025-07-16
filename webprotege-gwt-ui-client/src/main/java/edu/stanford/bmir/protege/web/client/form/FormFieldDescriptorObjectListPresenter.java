@@ -36,6 +36,7 @@ public class FormFieldDescriptorObjectListPresenter extends ObjectListPresenter<
                                           "",
                                           LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
+                20,
                 Optionality.REQUIRED,
                 false,
                 ExpansionState.EXPANDED,

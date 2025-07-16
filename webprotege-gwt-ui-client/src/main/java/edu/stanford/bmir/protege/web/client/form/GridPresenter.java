@@ -48,7 +48,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
 
     @Nonnull
     private GridControlDescriptorDto descriptor = GridControlDescriptorDto.get(ImmutableList.of(),
-                                                                         null);
+                                                                         20,null);
 
     @Nonnull
     private RegionPageChangedHandler regionPageChangedHandler = () -> {
@@ -87,7 +87,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject,
                                                                 @Nonnull FormRegionId formRegionId) {
         int pageNumber = view.getPageNumber();
-        PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, FormPageRequest.DEFAULT_PAGE_SIZE);
+        PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, descriptor.getPageSize());
         FormRegionPageRequest gridPageRequest = FormRegionPageRequest.get(formSubject,
                                                                           formRegionId,
                                                                           FormPageRequest.SourceType.GRID_CONTROL,
@@ -151,6 +151,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
                 .forEach(this::addRow);
         view.setPageCount(rowsPage.getPageCount());
         view.setPageNumber(rowsPage.getPageNumber());
+        view.setPageSize(descriptor.getPageSize());
         view.setElementCount(rowsPage.getTotalElements());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);

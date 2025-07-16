@@ -19,6 +19,10 @@ public interface HasPagination {
         return FormPageRequest.DEFAULT_PAGE_SIZE;
     }
 
+    default void setPageSize(int pageSize) {
+
+    }
+
     void setPageNumberChangedHandler(PageNumberChangedHandler handler);
 
     interface PageNumberChangedHandler {

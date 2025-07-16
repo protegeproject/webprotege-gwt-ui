@@ -73,6 +73,8 @@ public interface PropertyNames {
 
     String COLUMNS = "columns";
 
+    String PAGE_SIZE = "pageSize";
+
     String SUBJECT_FACTORY = "subjectFactory";
 
     String CHOICES_SOURCE = "choicesSource";

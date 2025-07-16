@@ -12,9 +12,15 @@ import javax.annotation.Nonnull;
  */
 public interface GridControlDescriptorView extends IsWidget {
 
+    int DEFAULT_PAGE_SIZE = 20;
+
     @Nonnull
     AcceptsOneWidget getFormSubjectFactoryDescriptorContainer();
 
     @Nonnull
     AcceptsOneWidget getViewContainer();
+
+    int getPageSize();
+
+    void setPageSize(int maxRowsPerPage);
 }
