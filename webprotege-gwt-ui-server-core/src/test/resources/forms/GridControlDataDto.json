@@ -4,6 +4,7 @@
   "control": {
     "@type": "GRID",
     "columns": [],
+    "pageSize" : 56,
     "subjectFactory": null
   },
   "rows": {

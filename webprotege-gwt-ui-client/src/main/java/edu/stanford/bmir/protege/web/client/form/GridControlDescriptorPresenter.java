@@ -9,10 +9,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Matthew Horridge
@@ -45,6 +42,7 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
     @Override
     public FormControlDescriptor getFormFieldDescriptor() {
         return GridControlDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()),
+                                         view.getPageSize(),
                                          formSubjectFactoryDescriptorPresenter.getDescriptor().orElse(null));
     }
 
@@ -56,6 +54,8 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         GridControlDescriptor gridFieldDescriptor = (GridControlDescriptor) formControlDescriptor;
         columnListPresenter.setValues(gridFieldDescriptor.getColumns());
         gridFieldDescriptor.getSubjectFactoryDescriptor().ifPresent(formSubjectFactoryDescriptorPresenter::setDescriptor);
+        int pageSize = gridFieldDescriptor.getPageSize();
+        view.setPageSize(pageSize);
     }
 
     @Override

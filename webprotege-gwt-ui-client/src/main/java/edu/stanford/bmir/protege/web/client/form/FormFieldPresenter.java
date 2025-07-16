@@ -135,6 +135,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     @Nonnull
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject) {
+        int pageSize = formFieldDescriptor.getPageSize();
         return stackPresenter.getPageRequests(formSubject, formFieldDescriptor.getId());
     }
 

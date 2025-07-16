@@ -47,7 +47,9 @@ public class FormFieldPresenterFactory {
 
         FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
                                                                                               fieldDescriptor.getRepeatability(),
+                                                                                              fieldDescriptor.getPageSize(),
                                                                                               FormRegionPosition.TOP_LEVEL);
+        controlStackPresenter.setPageSize(fieldDescriptor.getPageSize());
         return new FormFieldPresenter(
                 viewProvider.get(),
                 fieldDescriptor,

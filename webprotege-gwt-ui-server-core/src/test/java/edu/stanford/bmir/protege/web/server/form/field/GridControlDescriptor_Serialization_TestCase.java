@@ -32,6 +32,7 @@ public class GridControlDescriptor_Serialization_TestCase {
                                 TextControlDescriptor.getDefault()
                         )
                 ),
+                22,
                 null
         );
     }
