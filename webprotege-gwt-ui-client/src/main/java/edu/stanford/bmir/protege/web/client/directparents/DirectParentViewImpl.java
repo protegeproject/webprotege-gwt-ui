@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 
 import javax.inject.Inject;
 
@@ -60,6 +61,23 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
         if (this.entityRenderingField != null) {
             this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
         }
+    }
+
+    @Override
+    public void markAsEquivalentOnly() {
+        if (this.entityRenderingField != null) {
+            this.entityRenderingField.getElement().getStyle().setColor("#8C8B8B");
+        }
+    }
+
+    public void resetAsMain(){
+        this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
+
+    }
+
+    public void resetAsEquivalentClassParent(){
+        this.entityRenderingField.getElement().getStyle().setColor("#505050");
+
     }
 
     @Override

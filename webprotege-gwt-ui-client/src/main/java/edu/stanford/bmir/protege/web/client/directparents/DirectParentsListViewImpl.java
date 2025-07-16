@@ -3,11 +3,12 @@ package edu.stanford.bmir.protege.web.client.directparents;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DirectParentsListViewImpl extends Composite implements DirectParentsListView {
@@ -22,6 +23,8 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     private String mainParentIri;
 
     private List<DirectParentView> directParentViews = new ArrayList<>();
+
+    private Set<OWLEntityData> equivalentOnlyParents = new HashSet<>();
 
     @UiField
     FlowPanel directParentsContainer;
@@ -52,6 +55,7 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
             }
         });
         markMainParent();
+        markEquivalentOnlyParents();
     }
 
     @Override
@@ -60,12 +64,39 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
         markMainParent();
     }
 
+    @Override
+    public void setEquivalentOnlyParents(Set<OWLEntityData> equivalentOnlyParents) {
+        this.equivalentOnlyParents = equivalentOnlyParents;
+        markEquivalentOnlyParents();
+    }
+
     private void markMainParent() {
+        for(DirectParentView view : this.directParentViews){
+            view.resetAsMain();
+        }
         if (this.mainParentIri != null && !this.mainParentIri.isEmpty()) {
             for(DirectParentView parentView : this.directParentViews) {
                 if(mainParentIri.equals(parentView.getEntityIri())) {
                     parentView.markParentAsMain();
                     return;
+                }
+            }
+        }
+    }
+
+    private void markEquivalentOnlyParents() {
+        for(DirectParentView view : this.directParentViews){
+            view.resetAsEquivalentClassParent();
+        }
+        if(this.equivalentOnlyParents != null && !this.equivalentOnlyParents.isEmpty()) {
+            for(OWLEntityData equivalentOnlyParent: equivalentOnlyParents) {
+                Optional<DirectParentView> parentViewOptional = this.directParentViews.stream()
+                        .filter(directParentView -> directParentView.getEntityIri().equals(equivalentOnlyParent.getIri().toString()))
+                        .findFirst();
+                if(parentViewOptional.isPresent()) {
+                    parentViewOptional.get().markAsEquivalentOnly();
+                } else {
+                    logger.log(Level.SEVERE, "Couldn't find equivalent parent for " + equivalentOnlyParent.getBrowserText());
                 }
             }
         }
