@@ -173,7 +173,9 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     public void enableReadOnly() {
         ancestorDropdown.setEnabled(false);
         ancestorDropdown.setVisible(false);
-        ancestorSelectedSuperclass.setText(ancestorDropdown.getSelectedItemText());
+        if(ancestorSelectedSuperclass.getText() == null || ancestorSelectedSuperclass.getText().isEmpty()) {
+            ancestorSelectedSuperclass.setText(ancestorDropdown.getSelectedItemText());
+        }
         ancestorSelectedSuperclass.setVisible(true);
         deleteTableWrapper.setEnabled(false);
         deleteTableWrapper.setVisible(false);
@@ -197,14 +199,12 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
                 .findFirst();
 
         if (ancestorOptional.isPresent()) {
-            OWLEntityData ancestor = ancestorOptional.get();
-            ancestorSelectedSuperclass.setText(ancestor.getBrowserText());
+            ancestorSelectedSuperclass.setText(ancestorOptional.get().getBrowserText());
             ancestorSelectedSuperclass.setVisible(true);
-
             ancestorDropdown.setVisible(false);
             ancestorDropdown.setEnabled(false);
 
-            fetchDropdownData(ancestor.getIri().toString());
+            fetchDropdownData(ancestorOptional.get().getIri().toString());
         }
     }
 
