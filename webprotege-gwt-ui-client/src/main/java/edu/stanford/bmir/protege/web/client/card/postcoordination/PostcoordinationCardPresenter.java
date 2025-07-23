@@ -147,12 +147,13 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void cancelEditing() {
         selectedEntity.ifPresent(sel->{
+            if(renderedEntity != null && renderedEntity.getIRI().equals(selectedEntity.get().getIRI())) {
+                if(isDirty()) {
+                    loadEntity(this.renderedEntity);
+                }
+            }
             this.isReadOnly = true;
             setReadOnlyMode();
-            if(renderedEntity != null && !this.renderedEntity.equals(selectedEntity.get())) {
-                this.renderedEntity = selectedEntity.get();
-                loadEntity(this.renderedEntity);
-            }
         });
     }
 

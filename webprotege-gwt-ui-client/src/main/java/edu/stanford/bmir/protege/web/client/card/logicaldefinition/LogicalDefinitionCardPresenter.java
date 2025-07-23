@@ -63,6 +63,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             this.renderedEntity = selectedEntity.get();
             dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
                     (result) -> view.setEntityData(result.getEntityData()));
+            view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
             view.setEntity(renderedEntity);
         }
     }
@@ -94,7 +95,6 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void cancelEditing() {
         view.resetPristineState();
-        fireEvent(new DirtyChangedEvent());
     }
 
     @Override

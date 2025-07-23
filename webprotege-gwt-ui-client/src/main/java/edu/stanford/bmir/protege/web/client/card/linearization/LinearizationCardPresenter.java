@@ -128,8 +128,11 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                             hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
                         }
                         view.setEntityParentsMap(this.entityParentsMap);
+                        view.setLinearizationChangeEventHandler(() -> {
+                            logger.info("ALEX send event");
+                            handlerManager.fireEvent(new DirtyChangedEvent());
+                        });
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
-                        view.setLinearizationChangeEventHandler(() -> handlerManager.fireEvent(new DirtyChangedEvent()));
                         if (!isReadOnly) {
                             view.setEditable();
                         }

@@ -35,5 +35,7 @@ public interface LogicalDefinitionTableWrapper extends AcceptsOneWidget, IsWidge
 
     void setRemoveTableHandleWrapper(LogicalDefinitionTableWrapperImpl.RemoveTableHandler removeTableHandler);
 
+    void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler logicalDefinitionChangeHandler);
+
     LogicalDefinition getLogicalDefinition();
 }
