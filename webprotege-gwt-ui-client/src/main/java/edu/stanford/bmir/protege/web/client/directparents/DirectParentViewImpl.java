@@ -60,6 +60,7 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
     public void markParentAsMain() {
         if (this.entityRenderingField != null) {
             this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+            entityRenderingField.getElement().setTitle("The bolded font highlights the MMS linearization parent");
         }
     }
 
@@ -70,14 +71,20 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
         }
     }
 
-    public void resetAsMain(){
+    public void resetStyle(){
         this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
+        this.entityRenderingField.getElement().getStyle().setColor("#505050");
+        this.entityRenderingField.setTitle(null);
 
+    }
+
+    public void setTitle(String title){
+        entityRenderingField.getElement().setTitle(title);
     }
 
     public void resetAsEquivalentClassParent(){
         this.entityRenderingField.getElement().getStyle().setColor("#505050");
-
+        this.entityRenderingField.setTitle(null);
     }
 
     @Override

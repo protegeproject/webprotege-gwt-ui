@@ -108,17 +108,16 @@ public class DirectParentsListPresenter implements HasDispose {
 
                         entityDisplay.setDisplayedEntity(Optional.of(result.getEntity()));
                         displayParents(allParents, equivalentOnlyParents);
+                        dispatch.execute(GetEntityLinearizationAction.create(displayedEntity.get().getIRI().toString(), projectId), (linearizationResult) -> {
+                            Optional<String> mmsParent = linearizationResult.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications().stream()
+                                    .filter(linearizationSpecification -> linearizationSpecification.getLinearizationView().equals("http://id.who.int/icd/release/11/mms"))
+                                    .findFirst()
+                                    .map(LinearizationSpecification::getLinearizationParent);
+
+                            mmsParent.ifPresent(view::setMainParent);
+                        });
                     }
             );
-            logger.info("Marking direct parent");
-            dispatch.execute(GetEntityLinearizationAction.create(displayedEntity.get().getIRI().toString(), projectId), (result) -> {
-                Optional<String> mmsParent = result.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications().stream()
-                        .filter(linearizationSpecification -> linearizationSpecification.getLinearizationView().equals("http://id.who.int/icd/release/11/mms"))
-                        .findFirst()
-                        .map(LinearizationSpecification::getLinearizationParent);
-
-                mmsParent.ifPresent(view::setMainParent);
-            });
         });
     }
 
@@ -140,8 +139,7 @@ public class DirectParentsListPresenter implements HasDispose {
                 .map(DirectParentPresenter::getView)
                 .collect(Collectors.toList());
 
-        view.setDirectParentView(directParents);
-        view.setEquivalentOnlyParents(equivalentOnlyParents);
+        view.markParents(directParents,equivalentOnlyParents);
     }
 
     private void stopDirectParentPresenters() {
