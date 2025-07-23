@@ -61,6 +61,10 @@ public class ScaleValueCardPresenter {
         view.clearTable();
         view.addHeader(postCoordinationAxis.getScaleLabel(), ScaleAllowMultiValue.fromString(scaleValue.getGenericScale().getAllowMultiValue()));
         view.addSelectValueButton();
+        view.setDeleteValueButtonHandler((value) -> {
+            scaleValue.getValueIris().remove(value);
+            handleChange.run();
+        });
 
         Set<String> scaleValueIris = scaleValue.getValueIris()
                 .stream()
@@ -75,7 +79,6 @@ public class ScaleValueCardPresenter {
                 }
         );
 
-        view.setDeleteValueButtonHandler((value) -> scaleValue.getValueIris().remove(value));
 
     }
 

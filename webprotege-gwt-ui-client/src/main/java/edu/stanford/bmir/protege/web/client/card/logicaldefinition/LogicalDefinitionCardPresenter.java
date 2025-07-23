@@ -53,8 +53,8 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
-        ui.setWidget(view);
         view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
+        ui.setWidget(view);
     }
 
     @Override
@@ -63,6 +63,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             this.renderedEntity = selectedEntity.get();
             dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
                     (result) -> view.setEntityData(result.getEntityData()));
+            view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
             view.setEntity(renderedEntity);
         }
     }

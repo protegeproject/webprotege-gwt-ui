@@ -54,6 +54,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     private List<OWLEntityData> ancestorsList;
 
+    private LogicalDefinitionChangeHandler logicalDefinitionChangeHandler;
 
     private final LogicalDefinitionTable superClassTable;
     private String parentIri;
@@ -173,7 +174,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
     public void enableReadOnly() {
         ancestorDropdown.setEnabled(false);
         ancestorDropdown.setVisible(false);
-        if(ancestorSelectedSuperclass.getText() == null || ancestorSelectedSuperclass.getText().isEmpty()) {
+        if (ancestorSelectedSuperclass.getText() == null || ancestorSelectedSuperclass.getText().isEmpty()) {
             ancestorSelectedSuperclass.setText(ancestorDropdown.getSelectedItemText());
         }
         ancestorSelectedSuperclass.setVisible(true);
@@ -227,7 +228,14 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void setRemoveTableHandleWrapper(RemoveTableHandler removeTableHandler) {
-        this.deleteTableWrapper.addClickHandler(event -> removeTableHandler.removeTable(this));
+        this.deleteTableWrapper.addClickHandler(event ->
+                removeTableHandler.removeTable(this)
+        );
+    }
+
+    @Override
+    public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler logicalDefinitionChangeHandler) {
+        this.logicalDefinitionChangeHandler = logicalDefinitionChangeHandler;
     }
 
     @Override

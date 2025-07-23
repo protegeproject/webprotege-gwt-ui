@@ -466,7 +466,6 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 return;
             }
             boolean presenterExists = isScaleValuePresenterCreated(tableAxisIri);
-            logger.info("ALEX value " + checkboxValue.getValue() + " presenter exists " + presenterExists);
             if ((checkboxValue.getValue().equals("ALLOWED") ||
                     checkboxValue.getValue().equals("REQUIRED")) &&
                     !presenterExists
