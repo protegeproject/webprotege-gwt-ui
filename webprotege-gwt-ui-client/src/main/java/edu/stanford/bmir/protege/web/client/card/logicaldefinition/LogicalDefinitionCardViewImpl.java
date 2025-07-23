@@ -256,7 +256,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
                     }
                     this.pristineData = getEditedData();
-                    switchToReadOnly();
                     this.changeHandler.handleLogicalDefinitionCHange();
                 });
     }
@@ -346,7 +345,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         } else {
             resetPristineState();
         }
-        switchToReadOnly();
     }
 
     public void resetPristineState() {

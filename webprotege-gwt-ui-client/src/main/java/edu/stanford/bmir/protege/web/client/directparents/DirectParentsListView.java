@@ -10,10 +10,7 @@ import java.util.Set;
 public interface DirectParentsListView extends IsWidget {
 
     void clearViews();
-
-    void setDirectParentView(@Nonnull List<DirectParentView> directParentViews);
-
+    void markParents(@Nonnull List<DirectParentView> directParentViews, Set<OWLEntityData> equivalentOnlyParents);
     void setMainParent(String parentIri);
 
-    void setEquivalentOnlyParents(Set<OWLEntityData> equivalentOnlyParents);
 }

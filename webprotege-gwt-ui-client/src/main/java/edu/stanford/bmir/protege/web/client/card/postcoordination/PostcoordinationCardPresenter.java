@@ -160,21 +160,23 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void finishEditing(String commitMessage) {
         selectedEntity.ifPresent(sel -> {
-            this.isReadOnly = true;
-            this.setReadOnlyMode();
+            if(isDirty()) {
+                this.isReadOnly = true;
+                this.setReadOnlyMode();
 
-            List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
-            Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-            dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales), commitMessage), (result) -> {
-            });
-            specification.ifPresent(spec -> dispatch.execute(
-                            SaveEntityPostCoordinationAction.create(projectId, spec, commitMessage),
-                            (result) -> {
-                                loadEntity(this.renderedEntity);
-                                fireEvent(new DirtyChangedEvent());
-                            }
-                    )
-            );
+                List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
+                Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
+                dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales), commitMessage), (result) -> {
+                });
+                specification.ifPresent(spec -> dispatch.execute(
+                                SaveEntityPostCoordinationAction.create(projectId, spec, commitMessage),
+                                (result) -> {
+                                    loadEntity(this.renderedEntity);
+                                    fireEvent(new DirtyChangedEvent());
+                                }
+                        )
+                );
+            }
         });
     }
 

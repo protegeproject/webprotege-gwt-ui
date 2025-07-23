@@ -42,9 +42,9 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     }
 
     @Override
-    public void setDirectParentView(@Nonnull List<DirectParentView> directParentViews) {
-        logger.info("called setDirectParentView");
+    public void markParents(@Nonnull List<DirectParentView> directParentViews, Set<OWLEntityData> equivalentOnlyParents) {
         this.directParentViews = directParentViews;
+        this.equivalentOnlyParents = equivalentOnlyParents;
         directParentViews.forEach(parentView -> {
             try {
                 logger.info("Adding widget to UI: " + parentView.asWidget());
@@ -54,30 +54,25 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
                 logger.severe("Error while adding widget: " + e.getMessage());
             }
         });
-        markMainParent();
-        markEquivalentOnlyParents();
+
     }
 
     @Override
     public void setMainParent(String parentIri) {
         this.mainParentIri = parentIri;
+        for(DirectParentView view : this.directParentViews){
+            view.resetStyle();
+        }
         markMainParent();
-    }
-
-    @Override
-    public void setEquivalentOnlyParents(Set<OWLEntityData> equivalentOnlyParents) {
-        this.equivalentOnlyParents = equivalentOnlyParents;
         markEquivalentOnlyParents();
     }
 
     private void markMainParent() {
-        for(DirectParentView view : this.directParentViews){
-            view.resetAsMain();
-        }
         if (this.mainParentIri != null && !this.mainParentIri.isEmpty()) {
             for(DirectParentView parentView : this.directParentViews) {
                 if(mainParentIri.equals(parentView.getEntityIri())) {
                     parentView.markParentAsMain();
+                    parentView.setTitle("The bolded font highlights the MMS linearization parent");
                     return;
                 }
             }
@@ -85,9 +80,6 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
     }
 
     private void markEquivalentOnlyParents() {
-        for(DirectParentView view : this.directParentViews){
-            view.resetAsEquivalentClassParent();
-        }
         if(this.equivalentOnlyParents != null && !this.equivalentOnlyParents.isEmpty()) {
             for(OWLEntityData equivalentOnlyParent: equivalentOnlyParents) {
                 Optional<DirectParentView> parentViewOptional = this.directParentViews.stream()
@@ -95,6 +87,7 @@ public class DirectParentsListViewImpl extends Composite implements DirectParent
                         .findFirst();
                 if(parentViewOptional.isPresent()) {
                     parentViewOptional.get().markAsEquivalentOnly();
+                    parentViewOptional.get().setTitle("Parents displayed in gray font are coming from logical definitions only");
                 } else {
                     logger.log(Level.SEVERE, "Couldn't find equivalent parent for " + equivalentOnlyParent.getBrowserText());
                 }
