@@ -53,8 +53,8 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
-        view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
         ui.setWidget(view);
+        view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
@@ -95,7 +95,6 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void cancelEditing() {
         view.resetPristineState();
-        fireEvent(new DirtyChangedEvent());
     }
 
     @Override

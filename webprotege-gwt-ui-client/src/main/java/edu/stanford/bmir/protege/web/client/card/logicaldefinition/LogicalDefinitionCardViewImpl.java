@@ -133,6 +133,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             newTable.setLogicalDefinitionChangeHandler(this.changeHandler);
             this.tableWrappers.add(newTable);
             this.definitions.add(newTable.asWidget());
+            this.changeHandler.handleLogicalDefinitionCHange();
 
         }));
 
@@ -206,6 +207,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.changeHandler.handleLogicalDefinitionCHange();
         });
         dispatchServiceManager.executeCurrentBatch();
+        this.necessaryConditionsTable.setLogicalDefinitionChangeHandler(changeHandler);
     }
 
     @Override
@@ -255,6 +257,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     }
                     this.pristineData = getEditedData();
                     switchToReadOnly();
+                    this.changeHandler.handleLogicalDefinitionCHange();
                 });
     }
 
@@ -449,7 +452,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @Override
     public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler handler) {
         this.changeHandler = handler;
-        this.necessaryConditionsTable.setLogicalDefinitionChangeHandler(handler);
     }
 
     public boolean isValid() {

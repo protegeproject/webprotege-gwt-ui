@@ -228,14 +228,17 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void setRemoveTableHandleWrapper(RemoveTableHandler removeTableHandler) {
-        this.deleteTableWrapper.addClickHandler(event ->
-                removeTableHandler.removeTable(this)
+        this.deleteTableWrapper.addClickHandler(event -> {
+                    removeTableHandler.removeTable(this);
+                    this.logicalDefinitionChangeHandler.handleLogicalDefinitionCHange();
+                }
         );
     }
 
     @Override
     public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler logicalDefinitionChangeHandler) {
         this.logicalDefinitionChangeHandler = logicalDefinitionChangeHandler;
+        this.superClassTable.setLogicalDefinitionChangeHandler(logicalDefinitionChangeHandler);
     }
 
     @Override
