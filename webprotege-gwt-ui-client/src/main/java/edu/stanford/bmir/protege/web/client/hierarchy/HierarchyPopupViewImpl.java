@@ -104,4 +104,9 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     public void addCssClassToMain(String css) {
         main.addStyleName(css);
     }
+
+    @Override
+    public void clear() {
+        treeWidget.clearSelection();
+    }
 }
