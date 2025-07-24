@@ -42,4 +42,9 @@ public class SearchClassUnderHierarchyPresenter {
     public void setSelectionChangedHandler(SearchSelectionChangedHandler searchSelection) {
         this.view.setSelectionChangedHandler(searchSelection);
     }
+
+    public void clear(){
+        this.view.clearCriteria();
+        this.view.clearValue();
+    }
 }

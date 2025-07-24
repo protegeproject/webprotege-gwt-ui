@@ -63,5 +63,7 @@ public class HierarchySelectionModalPresenter {
 
     public void clean() {
         this.selectedEntity = Optional.empty();
+        hierarchyView.clear();
+        this.searchClassUnderHierarchyPresenter.clear();
     }
 }
