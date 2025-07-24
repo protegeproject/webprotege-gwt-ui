@@ -257,7 +257,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
 
     protected void loadEntity(OWLEntity entity) {
-            entityCardUi.setWidget(busyView);
+            //entityCardUi.setWidget(busyView);
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entity.getIRI(), projectId), result -> {
                 if (result.getTableConfiguration().getPostCoordinationAxes() != null && !result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     try {
@@ -375,22 +375,22 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 (result) -> {
                     clearScaleValueCards();
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
+                    dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
+                            (postCoordinationResult) -> {
+                                if(postCoordinationResult.getPostCoordinationSpecification().getPostCoordinationSpecifications() != null
+                                        && !postCoordinationResult.getPostCoordinationSpecification().getPostCoordinationSpecifications().isEmpty()) {
+                                    view.setTableData(postCoordinationResult.getPostCoordinationSpecification());
+                                    this.entityCardUi.setWidget(view);
+                                    if(isReadOnly){
+                                        setReadOnlyMode();
+                                    }else {
+                                        setEditableMode();
+                                    }
+                                }
+                            });
                 });
 
-        dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
-                (result) -> {
-                    if(result.getPostCoordinationSpecification().getPostCoordinationSpecifications() != null
-                            && !result.getPostCoordinationSpecification().getPostCoordinationSpecifications().isEmpty()) {
-                        view.setTableData(result.getPostCoordinationSpecification());
-                        this.entityCardUi.setWidget(view);
-                        if(isReadOnly){
-                            setReadOnlyMode();
-                        }else {
-                            setEditableMode();
-                        }
-                    }
 
-                });
     }
 
     private void clearScaleValueCards() {
