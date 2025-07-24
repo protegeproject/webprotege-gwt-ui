@@ -257,7 +257,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
 
     protected void loadEntity(OWLEntity entity) {
-            //entityCardUi.setWidget(busyView);
+            entityCardUi.setWidget(busyView);
             dispatch.execute(GetPostCoordinationTableConfigurationAction.create(entity.getIRI(), projectId), result -> {
                 if (result.getTableConfiguration().getPostCoordinationAxes() != null && !result.getTableConfiguration().getPostCoordinationAxes().isEmpty()) {
                     try {
