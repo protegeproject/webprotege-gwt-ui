@@ -22,6 +22,8 @@ public class PaginatorPresenter implements HasPages {
 
     private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = (pageNumber) -> {};
 
+    private int pageSize = 20;
+
     @Inject
     public PaginatorPresenter(@Nonnull PaginatorView view) {
         this.view = view;
@@ -69,10 +71,12 @@ public class PaginatorPresenter implements HasPages {
         updateState();
     }
 
-
-
     public int getPageSize() {
-        return PageRequest.DEFAULT_PAGE_SIZE;
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override

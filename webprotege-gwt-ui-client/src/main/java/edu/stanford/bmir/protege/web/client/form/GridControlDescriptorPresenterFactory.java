@@ -40,7 +40,7 @@ public class GridControlDescriptorPresenterFactory implements FormControlDescrip
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return GridControlDescriptor.get(ImmutableList.of(), null);
+        return GridControlDescriptor.get(ImmutableList.of(),  20, null);
     }
 
     @Nonnull

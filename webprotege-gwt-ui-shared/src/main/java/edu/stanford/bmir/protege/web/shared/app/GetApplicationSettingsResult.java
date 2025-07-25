@@ -25,5 +25,7 @@ public abstract class GetApplicationSettingsResult implements Result {
         return new AutoValue_GetApplicationSettingsResult(applicationSettings);
     }
 
+
+    @JsonProperty("settings")
     public abstract ApplicationSettings getApplicationSettings();
 }

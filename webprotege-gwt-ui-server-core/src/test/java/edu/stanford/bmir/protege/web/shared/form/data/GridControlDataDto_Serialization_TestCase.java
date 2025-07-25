@@ -28,7 +28,7 @@ public class GridControlDataDto_Serialization_TestCase {
 
     @Test
     public void shouldSerialize() throws IOException {
-        var data = GridControlDataDto.get(GridControlDescriptor.get(ImmutableList.of(), null), Page.emptyPage(),
+        var data = GridControlDataDto.get(GridControlDescriptor.get(ImmutableList.of(), 35, null), Page.emptyPage(),
                                           ImmutableSet.of(),
                                           3,
                                           FilterState.FILTERED);

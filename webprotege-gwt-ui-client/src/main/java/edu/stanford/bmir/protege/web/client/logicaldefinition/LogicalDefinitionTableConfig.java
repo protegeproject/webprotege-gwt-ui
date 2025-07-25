@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.logicaldefinition;
 
-import com.google.gwt.user.client.ui.UIObject;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.postcoordination.WhoficCustomScalesValues;
 
 public class LogicalDefinitionTableConfig {
@@ -46,7 +42,4 @@ public class LogicalDefinitionTableConfig {
         void handleAddAxisValue(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue);
     }
 
-    public interface SelectedAxisValueHandler {
-        void handleSelectAxisValue(EntityNode selectedEntity);
-    }
 }

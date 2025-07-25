@@ -39,6 +39,10 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
 
+    private boolean inFocus = false;
+
+    private boolean readOnly = true;
+
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
     @Inject
@@ -63,7 +67,12 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             this.renderedEntity = selectedEntity.get();
             dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
                     (result) -> view.setEntityData(result.getEntityData()));
+            view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
             view.setEntity(renderedEntity);
+            this.inFocus = true;
+            if(!readOnly) {
+                view.switchToEditable();
+            }
         }
     }
 
@@ -88,19 +97,24 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void beginEditing() {
-        view.switchToEditable();
+        if(inFocus) {
+            view.switchToEditable();
+        }
+        this.readOnly = false;
     }
 
     @Override
     public void cancelEditing() {
         view.resetPristineState();
-        fireEvent(new DirtyChangedEvent());
     }
 
     @Override
     public void finishEditing(String commitMessage) {
-        view.saveValues(commitMessage);
-        fireEvent(new DirtyChangedEvent());
+        if(isDirty()) {
+            view.saveValues(commitMessage);
+            view.switchToReadOnly();
+            fireEvent(new DirtyChangedEvent());
+        }
     }
 
     @Override

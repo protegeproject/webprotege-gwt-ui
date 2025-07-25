@@ -46,6 +46,7 @@ public class HierarchySelectionModalPresenter {
         model.start(eventBus,
                 hierarchyDescriptor);
         hierarchyView.setModel(model);
+        hierarchyView.clear();
         hierarchyView.setSelectionChangedHandler(
                 entityNode -> selectedEntity = Optional.of(entityNode)
         );
@@ -60,7 +61,9 @@ public class HierarchySelectionModalPresenter {
         return selectedEntity;
     }
 
-    private void clean() {
+    public void clean() {
         this.selectedEntity = Optional.empty();
+        hierarchyView.clear();
+        this.searchClassUnderHierarchyPresenter.clear();
     }
 }

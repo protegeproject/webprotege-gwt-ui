@@ -49,6 +49,10 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
     @Nonnull
     Repeatability getRepeatability();
 
+    void setPageSize(int pageSize);
+
+    int getPageSize();
+
     void setReadOnly(boolean readOnly);
 
     boolean isReadOnly();

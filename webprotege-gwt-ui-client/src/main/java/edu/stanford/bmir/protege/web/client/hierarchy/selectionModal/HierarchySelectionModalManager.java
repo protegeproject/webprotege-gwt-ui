@@ -27,6 +27,7 @@ public class HierarchySelectionModalManager {
 
     public void showModal(String title, Set<OWLClass> roots, HierarchySelectionHandler handler) {
         ModalPresenter modalPresenter = modalManager.createPresenter();
+        modelPresenter.clean();
         modalPresenter.setTitle(title);
         modalPresenter.setView(modelPresenter.getView());
         modalPresenter.setEscapeButton(DialogButton.CANCEL);

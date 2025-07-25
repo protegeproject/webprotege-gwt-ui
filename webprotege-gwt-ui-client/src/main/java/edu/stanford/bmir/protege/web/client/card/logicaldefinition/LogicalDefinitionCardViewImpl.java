@@ -130,9 +130,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     .withPostCoordinationTableConfiguration(postCoordinationTableConfiguration)
                     .withRemoveHandler((this::removeWrapper))
                     .asNewTable();
-
+            newTable.setLogicalDefinitionChangeHandler(this.changeHandler);
             this.tableWrappers.add(newTable);
             this.definitions.add(newTable.asWidget());
+            this.changeHandler.handleLogicalDefinitionCHange();
 
         }));
 
@@ -206,6 +207,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.changeHandler.handleLogicalDefinitionCHange();
         });
         dispatchServiceManager.executeCurrentBatch();
+        this.necessaryConditionsTable.setLogicalDefinitionChangeHandler(changeHandler);
     }
 
     @Override
@@ -235,7 +237,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                                     .withParentIri(logicalDefinition.getLogicalDefinitionParent().getIri().toString())
                                     .withRemoveHandler((this::removeWrapper))
                                     .asExistingTable();
-
+                            newTable.setLogicalDefinitionChangeHandler(this.changeHandler);
                             this.tableWrappers.add(newTable);
                             this.definitions.add(newTable.asWidget());
 
@@ -254,7 +256,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
                     }
                     this.pristineData = getEditedData();
-                    switchToReadOnly();
+                    this.changeHandler.handleLogicalDefinitionCHange();
                 });
     }
 
@@ -343,7 +345,6 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         } else {
             resetPristineState();
         }
-        switchToReadOnly();
     }
 
     public void resetPristineState() {

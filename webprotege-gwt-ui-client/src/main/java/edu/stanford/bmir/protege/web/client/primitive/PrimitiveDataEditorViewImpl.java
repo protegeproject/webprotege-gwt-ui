@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.client.markdown.Markdown;
+import edu.stanford.bmir.protege.web.client.markdown.MarkdownPreviewImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -34,55 +36,78 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveDataEditorView {
 
-    private boolean firstDisplayOfImage = true;
-
-    interface PrimitiveDataEditorViewImplUiBinder extends UiBinder<HTMLPanel, PrimitiveDataEditorViewImpl> {
-
-    }
-
+    private static PrimitiveDataEditorViewImplUiBinder uiBinder = GWT.create(PrimitiveDataEditorViewImplUiBinder.class);
 
     @Nonnull
     @UiField(provided = true)
     protected ExpandingTextBox textBox;
 
-    @Nonnull
-    private Optional<String> lastStyleName = Optional.empty();
-
     @UiField
     protected PrimitiveDataEditorFreshEntityViewImpl errorView;
-
 
     @UiField
     protected LazyPanel errorViewContainer;
 
     @UiField
-    protected PrimitiveDataEditorImageViewImpl imageView;
+    protected PrimitiveDataEditorImageViewImpl imagePreview;
 
     @UiField
-    protected LazyPanel imageViewContainer;
-
+    protected HTMLPanel imagePreviewContainer;
 
     @UiField
-    protected FocusPanel imageViewFocusPanel;
+    protected FocusPanel imagePreviewFocusPanel;
 
-    private static PrimitiveDataEditorViewImplUiBinder uiBinder = GWT.create(PrimitiveDataEditorViewImplUiBinder.class);
+    @UiField
+    MarkdownPreviewImpl markdownPreview;
+
+    @UiField
+    HTMLPanel markdownPreviewContainer;
+
+    @UiField
+    FocusPanel markdownPreviewFocusPanel;
+
+    private boolean firstDisplayOfImage = true;
+
+    private boolean firstDisplayOfMarkdown = true;
+
+    private boolean imagePreviewHasFocus = false;
+
+    private boolean markdownPreviewHasFocus = false;
+
+    @Nonnull
+    private Optional<String> lastStyleName = Optional.empty();
 
     @Inject
     public PrimitiveDataEditorViewImpl(@Nonnull ExpandingTextBox textBox) {
         this.textBox = checkNotNull(textBox);
 
-        this.textBox.addValueChangeHandler(event -> updateImageDisplay());
-        this.textBox.addBlurHandler(event -> updateImageDisplay());
+        this.textBox.addValueChangeHandler(event -> updatePreview());
+        this.textBox.addBlurHandler(event -> updatePreview());
 
         initWidget(uiBinder.createAndBindUi(this));
+    }
+
+    private static boolean isImageLink(String text) {
+        return (text.startsWith("http://" ) || text.startsWith("https://" )) &&
+               (text.endsWith(".jpg" ) || text.endsWith(".jpeg" ) ||
+                text.endsWith(".png" ) || text.endsWith(".svg" ));
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        textBox.addBlurHandler(event -> {
+            imagePreviewHasFocus = false;
+            markdownPreviewHasFocus = false;
+            updatePreview();
+        });
     }
 
     @Override
     public void setDeprecated(boolean deprecated) {
         if (deprecated) {
             this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
-        }
-        else {
+        } else {
             this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
         }
     }
@@ -91,8 +116,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     public void setMode(Mode mode) {
         if (mode == Mode.SINGLE_LINE) {
             textBox.setMode(ExpandingTextBoxMode.SINGLE_LINE);
-        }
-        else {
+        } else {
             textBox.setMode(ExpandingTextBoxMode.MULTI_LINE);
         }
     }
@@ -113,11 +137,13 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
         lastStyleName = styleName;
         styleName.ifPresent(s -> textBox.getSuggestBox().addStyleName(s));
+        styleName.ifPresent(s -> markdownPreviewContainer.addStyleName(s));
     }
 
     @Override
     public void clearPrimitiveDataStyleName() {
         lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
+        lastStyleName.ifPresent(s -> markdownPreviewContainer.removeStyleName(s));
         lastStyleName = Optional.empty();
     }
 
@@ -189,56 +215,73 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setText(String text) {
         textBox.setText(text);
-        updateImageDisplay();
+        updatePreview();
     }
 
-    private void updateImageDisplay() {
-        if (isPossibleImageLink()) {
-            displayImageView();
+    private void updatePreview() {
+        String text = getText().trim();
+        boolean isImage = isImageLink(text);
+        boolean isMarkdown = Markdown.isMarkdown(text);
+
+        imagePreviewContainer.setVisible(isImage);
+        imagePreviewFocusPanel.setVisible(isImage);
+        markdownPreviewContainer.setVisible(isMarkdown);
+        markdownPreviewFocusPanel.setVisible(isMarkdown);
+
+        if (isImage) {
+            showImagePreview(text);
+        } else if (isMarkdown) {
+            showMarkdownPreview(text);
+        } else {
+            textBox.setVisible(true);
         }
     }
 
-    private boolean isPossibleImageLink() {
-        String text = getText().trim();
-        return (text.startsWith("http://") || text.startsWith("https://")) && (text.endsWith(".jpg") || text.endsWith(
-                ".png") || text.endsWith(".svg") || text.endsWith(".jpeg"));
-    }
-
-    private boolean imageViewHasFocus = false;
-
-    private void displayImageView() {
-        imageViewContainer.setVisible(true);
-        imageViewFocusPanel.setVisible(true);
-        String url = getText().trim();
-        imageView.setImageUrl(url);
-
+    private void showImagePreview(String url) {
+        imagePreview.setImageUrl(url);
         textBox.setVisible(false);
 
         if (firstDisplayOfImage) {
             firstDisplayOfImage = false;
-            textBox.addBlurHandler(event -> {
-                imageViewHasFocus = false;
-                updateImageDisplay();
-            });
-            imageViewFocusPanel.addFocusHandler(event -> {
-                imageViewHasFocus = true;
+            imagePreviewFocusPanel.addFocusHandler(event -> {
+                imagePreviewHasFocus = true;
                 hideImageView();
             });
         }
     }
 
-    private void hideImageView() {
-        int height = imageViewFocusPanel.getOffsetHeight();
-        if (imageViewHasFocus) {
-            // Transfer the focus to the text box
-            Scheduler.get().scheduleDeferred(() -> textBox.setFocus(true));
-        }
-        // Transfer the height of the image view to the height of the
-        // expanding text box in order to avoid unnecessary jumping about in the UI
-        textBox.setMinHeight(height + "px");
-        textBox.setVisible(true);
-        imageViewFocusPanel.setVisible(false);
+    private void showMarkdownPreview(String rawMarkdown) {
+        String markdown = Markdown.stripMarkdownPrefix(rawMarkdown);
+        markdownPreview.setMarkdown(markdown);
+        textBox.setVisible(false);
 
+        if (firstDisplayOfMarkdown) {
+            firstDisplayOfMarkdown = false;
+            markdownPreviewFocusPanel.addFocusHandler(event -> {
+                if (isEnabled()) {
+                    markdownPreviewHasFocus = true;
+                    hideMarkdownPreview();
+                }
+            });
+        }
+    }
+
+    private void hideImageView() {
+        transferFocusAndResize(imagePreviewFocusPanel.getOffsetHeight());
+        imagePreviewFocusPanel.setVisible(false);
+        imagePreviewContainer.setVisible(false);
+    }
+
+    private void hideMarkdownPreview() {
+        transferFocusAndResize(markdownPreviewFocusPanel.getOffsetHeight());
+        markdownPreviewFocusPanel.setVisible(false);
+        markdownPreviewContainer.setVisible(false);
+    }
+
+    private void transferFocusAndResize(int height) {
+        Scheduler.get().scheduleDeferred(() -> textBox.setFocus(true));
+        textBox.setMinHeight(height + "px" );
+        textBox.setVisible(true);
     }
 
     @Override
@@ -267,5 +310,9 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void requestFocus() {
         textBox.setFocus(true);
+    }
+
+    interface PrimitiveDataEditorViewImplUiBinder extends UiBinder<HTMLPanel, PrimitiveDataEditorViewImpl> {
+
     }
 }

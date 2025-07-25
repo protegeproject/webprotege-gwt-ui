@@ -427,6 +427,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     public void clearValue() {
         view.setText("");
         view.setPrimitiveDataStyleName(Optional.empty());
+        hideErrorLabel();
         languageEditor.setValue("");
         dirty = false;
         setCurrentData(Optional.empty(), EventStrategy.DO_NOT_FIRE_EVENTS);

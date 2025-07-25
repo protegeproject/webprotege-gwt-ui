@@ -22,14 +22,14 @@ public class PostCoordinationCheckboxConfig extends CheckBoxConfig {
     private CheckboxValue parentValue;
     private boolean isDerived = false;
 
-    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED", "This axis cannot be used as a postcoordination axis for this linearization."),
-            new CheckboxValue(CHECK_SVG, "ALLOWED", "This axis can be used as a postcoordination axis for this linearization."),
+    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(NOT_ALLOWED, "NOT_ALLOWED", null),
+            new CheckboxValue(CHECK_SVG, "ALLOWED", "This axis is a suggested postcoordination axis for this linearization."),
             new CheckboxValue(REQUIRED_SVG, "REQUIRED", "This axis is required to be used as a postcoordination axis for this linearization.")
             );
 
     public static List<CheckboxValue> AVAILABLE_DEFAULT_VALUE_LIST = Arrays.asList(
-            new CheckboxValue(DEFAULT_NOT_ALLOWED, "DEFAULT_NOT_ALLOWED", "This axis inherits its behavior from its root linearization: This axis cannot be used as a postcoordination axis for this linearization."),
-            new CheckboxValue(DEFAULT_CHECK_SVG, "DEFAULT_ALLOWED", "This axis inherits its behavior from its root linearization: This axis can be used as a postcoordination axis for this linearization."),
+            new CheckboxValue(DEFAULT_NOT_ALLOWED, "DEFAULT_NOT_ALLOWED", null),
+            new CheckboxValue(DEFAULT_CHECK_SVG, "DEFAULT_ALLOWED", "This axis inherits its behavior from its root linearization: This axis is a suggested postcoordination axis for this linearization."),
             new CheckboxValue(DEFAULT_REQUIRED_SVG, "DEFAULT_REQUIRED", "This axis inherits its behavior from its root linearization: This axis is required to be used as a postcoordination axis for this linearization.")
     );
 

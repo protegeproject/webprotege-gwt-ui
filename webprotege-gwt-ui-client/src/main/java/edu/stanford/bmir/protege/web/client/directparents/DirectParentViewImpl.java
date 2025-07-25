@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 
 import javax.inject.Inject;
 
@@ -59,7 +60,31 @@ public class DirectParentViewImpl extends Composite implements DirectParentView 
     public void markParentAsMain() {
         if (this.entityRenderingField != null) {
             this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+            entityRenderingField.getElement().setTitle("The bolded font highlights the MMS linearization parent");
         }
+    }
+
+    @Override
+    public void markAsEquivalentOnly() {
+        if (this.entityRenderingField != null) {
+            this.entityRenderingField.getElement().getStyle().setColor("#8C8B8B");
+        }
+    }
+
+    public void resetStyle(){
+        this.entityRenderingField.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
+        this.entityRenderingField.getElement().getStyle().setColor("#505050");
+        this.entityRenderingField.setTitle(null);
+
+    }
+
+    public void setTitle(String title){
+        entityRenderingField.getElement().setTitle(title);
+    }
+
+    public void resetAsEquivalentClassParent(){
+        this.entityRenderingField.getElement().getStyle().setColor("#505050");
+        this.entityRenderingField.setTitle(null);
     }
 
     @Override

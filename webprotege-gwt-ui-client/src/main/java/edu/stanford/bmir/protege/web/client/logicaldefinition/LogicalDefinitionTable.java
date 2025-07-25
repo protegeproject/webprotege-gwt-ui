@@ -38,6 +38,9 @@ public class LogicalDefinitionTable implements IsWidget {
     private WhoficCustomScalesValues superclassScalesValue;
 
     private boolean readOnly = true;
+
+    private LogicalDefinitionChangeHandler logicalDefinitionChangeHandler;
+
     private List<LogicalDefinitionTableRow> tableRows = new ArrayList<>();
 
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
@@ -243,6 +246,10 @@ public class LogicalDefinitionTable implements IsWidget {
         this.superclassScalesValue = superclassScalesValue;
     }
 
+    public void setLogicalDefinitionChangeHandler(LogicalDefinitionChangeHandler logicalDefinitionChangeHandler) {
+        this.logicalDefinitionChangeHandler = logicalDefinitionChangeHandler;
+    }
+
     private void injectTableControls() {
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);
         this.flexTable.setWidget(this.tableRows.size()+1, 1, valuesButton);
@@ -275,6 +282,7 @@ public class LogicalDefinitionTable implements IsWidget {
                 row.setPostCoordinationValueLabel(entityNode.getBrowserText());
                 this.tableRows.add(row);
                 addNewRowToTable(row);
+                logicalDefinitionChangeHandler.handleLogicalDefinitionCHange();
             }
         }
     }
@@ -327,6 +335,8 @@ public class LogicalDefinitionTable implements IsWidget {
                     .filter((LogicalDefinitionTableRow r) -> !r.getPostCoordinationAxis().equalsIgnoreCase(row.getPostCoordinationAxis()) ||
                             !r.getPostCoordinationValue().equalsIgnoreCase(row.getPostCoordinationValue()))
                     .collect(Collectors.toList());
+
+            logicalDefinitionChangeHandler.handleLogicalDefinitionCHange();
         }
     }
 
@@ -352,10 +362,6 @@ public class LogicalDefinitionTable implements IsWidget {
         public void setFinalElement(boolean finalElement) {
             isFinalElement = finalElement;
         }
-    }
-
-    public interface SelectAvailableValueHandler {
-        void handleAxisValueClick(String axis);
     }
 
 }

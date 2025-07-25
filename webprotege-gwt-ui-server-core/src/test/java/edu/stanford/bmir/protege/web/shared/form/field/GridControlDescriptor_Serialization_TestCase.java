@@ -55,10 +55,11 @@ public class GridControlDescriptor_Serialization_TestCase {
                         LanguageMap.empty(),
                         EntityNameControlDescriptor.getDefault()
                 )
-        ), FormSubjectFactoryDescriptor.get(EntityType.CLASS,
+        ), 33, FormSubjectFactoryDescriptor.get(EntityType.CLASS,
                                             null, Optional.empty())));
         System.out.println(written.getJson());
         assertThat(written).hasJsonPathArrayValue("columns");
         assertThat(written).hasJsonPath("subjectFactory");
+        assertThat(written).hasJsonPath("pageSize");
     }
 }

@@ -147,33 +147,36 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
     @Override
     public void cancelEditing() {
         selectedEntity.ifPresent(sel->{
+            if(renderedEntity != null && renderedEntity.getIRI().equals(selectedEntity.get().getIRI())) {
+                if(isDirty()) {
+                    loadEntity(this.renderedEntity);
+                }
+            }
             this.isReadOnly = true;
             setReadOnlyMode();
-            if(renderedEntity != null && !this.renderedEntity.equals(selectedEntity.get())) {
-                this.renderedEntity = selectedEntity.get();
-                loadEntity(this.renderedEntity);
-            }
         });
     }
 
     @Override
     public void finishEditing(String commitMessage) {
         selectedEntity.ifPresent(sel -> {
-            this.isReadOnly = true;
-            this.setReadOnlyMode();
+            if(isDirty()) {
+                this.isReadOnly = true;
+                this.setReadOnlyMode();
 
-            List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
-            Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
-            dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales), commitMessage), (result) -> {
-            });
-            specification.ifPresent(spec -> dispatch.execute(
-                            SaveEntityPostCoordinationAction.create(projectId, spec, commitMessage),
-                            (result) -> {
-                                loadEntity(this.renderedEntity);
-                                fireEvent(new DirtyChangedEvent());
-                            }
-                    )
-            );
+                List<PostCoordinationCustomScales> newCustomScales = getUpdateCustomScaleValues();
+                Optional<WhoficEntityPostCoordinationSpecification> specification = view.getTableData();
+                dispatch.execute(SaveEntityCustomScaleAction.create(projectId, WhoficCustomScalesValues.create(selectedEntity.get().toStringID(), newCustomScales), commitMessage), (result) -> {
+                });
+                specification.ifPresent(spec -> dispatch.execute(
+                                SaveEntityPostCoordinationAction.create(projectId, spec, commitMessage),
+                                (result) -> {
+                                    loadEntity(this.renderedEntity);
+                                    fireEvent(new DirtyChangedEvent());
+                                }
+                        )
+                );
+            }
         });
     }
 
@@ -372,22 +375,22 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 (result) -> {
                     clearScaleValueCards();
                     postCoordinationCustomScalesList.addAll(result.getWhoficCustomScaleValues().getScaleCustomizations());
+                    dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
+                            (postCoordinationResult) -> {
+                                if(postCoordinationResult.getPostCoordinationSpecification().getPostCoordinationSpecifications() != null
+                                        && !postCoordinationResult.getPostCoordinationSpecification().getPostCoordinationSpecifications().isEmpty()) {
+                                    view.setTableData(postCoordinationResult.getPostCoordinationSpecification());
+                                    this.entityCardUi.setWidget(view);
+                                    if(isReadOnly){
+                                        setReadOnlyMode();
+                                    }else {
+                                        setEditableMode();
+                                    }
+                                }
+                            });
                 });
 
-        dispatch.execute(GetEntityPostCoordinationAction.create(entityData.getIRI().toString(), projectId),
-                (result) -> {
-                    if(result.getPostCoordinationSpecification().getPostCoordinationSpecifications() != null
-                            && !result.getPostCoordinationSpecification().getPostCoordinationSpecifications().isEmpty()) {
-                        view.setTableData(result.getPostCoordinationSpecification());
-                        this.entityCardUi.setWidget(view);
-                        if(isReadOnly){
-                            setReadOnlyMode();
-                        }else {
-                            setEditableMode();
-                        }
-                    }
 
-                });
     }
 
     private void clearScaleValueCards() {
