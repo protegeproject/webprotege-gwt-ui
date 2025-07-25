@@ -303,7 +303,9 @@ public class LogicalDefinitionTable implements IsWidget {
         Button removeButton = new Button();
         removeButton.addClickHandler((click) -> this.removeSuperClassAxis(row));
         removeButton.setStyleName(buttonCss.deleteButton());
-
+        if(readOnly) {
+            removeButton.setVisible(false);
+        }
         this.flexTable.setWidget(this.tableRows.size(), 2, removeButton);
 
         this.flexTable.setWidget(this.tableRows.size()+1, 0, axisDropdown);

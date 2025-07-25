@@ -72,6 +72,8 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             this.inFocus = true;
             if(!readOnly) {
                 view.switchToEditable();
+            } else {
+                view.switchToReadOnly();
             }
         }
     }
@@ -105,7 +107,10 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void cancelEditing() {
-        view.resetPristineState();
+        if(isDirty()) {
+            view.resetPristineState();
+        }
+        view.switchToReadOnly();
     }
 
     @Override
