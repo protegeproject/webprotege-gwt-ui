@@ -463,14 +463,30 @@ select:disabled {
 
 .wp-modal .gwt-TextBox {
     border: var(--inlay-panel--border);
+    border-radius: var(--inlay-panel--border-radius);
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .wp-modal .gwt-PasswordTextBox {
     border: var(--inlay-panel--border);
+    border-radius: var(--inlay-panel--border-radius);
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .wp-modal .gwt-TextArea {
     border: var(--inlay-panel--border);
+    border-radius: var(--inlay-panel--border-radius);
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.wp-modal select {
+    border: var(--inlay-panel--border);
+    border-radius: var(--inlay-panel--border-radius);
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .wp-modal .gwt-SuggestBox {
