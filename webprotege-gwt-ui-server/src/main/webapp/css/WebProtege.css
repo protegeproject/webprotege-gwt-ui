@@ -1041,6 +1041,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     text-align: center;
     max-width: 500px;
     min-width: 20px;
+    z-index: 3;
 }
 .tooltip .tooltip-arrow {
     width: 0;
