@@ -31,6 +31,7 @@ public class GitHubLabelPresenter {
     public void displayLabel(GitHubLabel label) {
         view.setName(label.name());
         view.setColor("#" + label.color());
+        view.setTextColor(label.getTextColor().getHex());
         view.setDescription(label.description());
     }
 }

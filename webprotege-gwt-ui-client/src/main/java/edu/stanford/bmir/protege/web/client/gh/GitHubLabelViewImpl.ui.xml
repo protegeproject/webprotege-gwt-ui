@@ -2,10 +2,15 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .gitHubLabel {
-            padding: 5px;
-            border-radius: 12px;
+            white-space: nowrap;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            padding: 0 8px;
+            border-radius: 999px;
             display: inline-block;
             margin: 2px;
+            font-weight: 600;
         }
     </ui:style>
     <g:HTMLPanel>

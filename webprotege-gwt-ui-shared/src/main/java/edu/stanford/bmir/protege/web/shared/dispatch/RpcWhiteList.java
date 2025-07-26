@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.client.gh.*;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptorRule;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
@@ -627,6 +628,16 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     DeprecatedEntitiesTreatment _DeprecatedEntitiesTreatment;
 
     ApplicationSettings _ApplicationSettings;
+
+    GetGitHubAppInstallationStatusAction _GetGitHubAppInstallationStatusAction;
+    GetGitHubAppInstallationStatusResult _GetGitHubAppInstallationStatusResult;
+    GitHubAppInstallationStatus _GitHubAppInstallationStatus;
+    GitHubRepositoryCoordinates _GitHubRepositoryCoordinates;
+    GetLinkedGitHubRepositoryAction _GetLinkedGitHubRepositoryAction;
+    GetLinkedGitHubRepositoryResult _GetLinkedGitHubRepositoryResult;
+    SetLinkedGitHubRepositoryAction _SetLinkedGitHubRepositoryAction;
+    SetLinkedGitHubRepositoryResult _SetLinkedGitHubRepositoryResult;
+
     public RpcWhiteList() {
     }
 }

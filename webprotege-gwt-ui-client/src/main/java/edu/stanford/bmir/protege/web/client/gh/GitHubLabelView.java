@@ -14,5 +14,7 @@ public interface GitHubLabelView extends IsWidget {
 
     void setColor(String color);
 
+    void setTextColor(String color);
+
     void setDescription(String description);
 }

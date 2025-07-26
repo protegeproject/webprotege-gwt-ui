@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.client.gh.GetGitHubAppInstallationStatusAction;
+import edu.stanford.bmir.protege.web.client.gh.GetLinkedGitHubRepositoryAction;
+import edu.stanford.bmir.protege.web.client.gh.GetLinkedGitHubRepositoryResult;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.auth.ChangePasswordAction;
@@ -236,7 +239,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = GetProjectRoleAssignmentsAction.class),
         @Type(value = SetProjectRoleAssignmentsAction.class),
         @Type(value = GetProjectHierarchyDescriptorRulesAction.class),
-        @Type(value = SetProjectHierarchyDescriptorRulesAction.class)
+        @Type(value = SetProjectHierarchyDescriptorRulesAction.class),
+        @Type(value = GetGitHubAppInstallationStatusAction.class),
+        @Type(value = GetLinkedGitHubRepositoryAction.class),
+        @Type(value = GetLinkedGitHubRepositoryResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Action<R extends Result> extends IsSerializable {

@@ -38,6 +38,11 @@ public class GitHubLabelViewImpl extends Composite implements GitHubLabelView {
     }
 
     @Override
+    public void setTextColor(String color) {
+        name.getElement().getStyle().setColor(color);
+    }
+
+    @Override
     public void setDescription(String description) {
         name.getElement().setTitle(description);
     }

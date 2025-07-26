@@ -7,7 +7,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.shared.gh.GitHubRepositoryCoordinates;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 public class GitHubIssuesViewImpl extends Composite implements GitHubIssuesView {
@@ -24,11 +26,6 @@ public class GitHubIssuesViewImpl extends Composite implements GitHubIssuesView 
     @Inject
     public GitHubIssuesViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-    }
-
-    @Override
-    public void setContent(String html) {
-        container.getElement().setInnerHTML(html);
     }
 
     @Override

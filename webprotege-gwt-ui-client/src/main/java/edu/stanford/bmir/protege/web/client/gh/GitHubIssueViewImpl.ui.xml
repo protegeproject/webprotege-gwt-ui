@@ -1,18 +1,102 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:markdown="urn:import:edu.stanford.bmir.protege.web.client.markdown">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .outer {
-            padding: 10px;
+            padding: 5px 10px 10px;
+            border-radius: 5px;
+            border: 2px solid silver;
+            margin: 10px;
+            background-color: literal("var(--primary--background-color)");
+            display: flex;
+            flex-direction: column;
+            align-items: start;
         }
+
+        .header {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            column-gap: 0.7em;
+        }
+
         .title {
             font-weight: bolder;
+            font-size: large;
+            margin-bottom: 0.5em;
+            flex-grow: 100;
+            flex-shrink: 100;
+        }
+
+        .number {
+            font-weight: bolder;
+            font-size: large;
+            color: lightgray;
+        }
+
+        .labelContainer {
+            margin-top: 0.7em;
+            margin-bottom: 0.7em;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .issueBadge {
+            display: flex;
+            flex-direction: row;
+            column-gap: 5px;
+            align-items: center;
+            border-radius: 100px;
+            font-weight: bold;
+            line-height: 16px;
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+
+        .issueOpenBadge {
+            background-color: #1f883d;
+            color: white;
+        }
+
+        .issueClosedBadge {
+            background-color: #8250df;
+            color: white;
+        }
+        .issueBody {
+            margin-top: 1em;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.outer}">
-        <g:Label ui:field="issueTitle" addStyleNames="{style.title}"/>
-        <g:Label ui:field="issueBody" addStyleNames="{wp.discussion.commentBody}"/>
-        <g:HTMLPanel ui:field="labelContainer"/>
-        <g:Anchor target="_blank" ui:field="htmlUrl">View on GitHub</g:Anchor>
+        <g:HTMLPanel addStyleNames="{style.header}">
+            <g:Label ui:field="issueNumber" addStyleNames="{style.number}"/>
+            <g:Label ui:field="issueTitle" addStyleNames="{style.title}"/>
+            <g:HTMLPanel>[<g:Anchor target="_blank" ui:field="htmlUrl">View on GitHub</g:Anchor>]
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:HTMLPanel ui:field="issueOpenBadge" addStyleNames="{style.issueBadge} {style.issueOpenBadge}">
+                <svg focusable="false" aria-label="Issue" class="" role="img" viewBox="0 0 16 16" width="16" height="16"
+                     fill="currentColor" overflow="visible" style="vertical-align: text-bottom;">
+                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke-width="2"/>
+                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"
+                          stroke-width="2"/>
+                </svg>
+                Open
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="issueClosedBadge" addStyleNames="{style.issueBadge} {style.issueClosedBadge}">
+                <svg focusable="false" aria-label="Issue" role="img" viewBox="0 0 16 16"
+                     width="16" height="16" fill="currentColor" overflow="visible"
+                     style="vertical-align: text-bottom;">
+                    <path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/>
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/>
+                </svg>
+                Closed
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.issueBody} {wp.style.markdownPreview}">
+            <markdown:MarkdownPreviewImpl ui:field="issueBody" addStyleNames="{wp.discussion.commentBody}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel ui:field="labelContainer" addStyleNames="{style.labelContainer}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

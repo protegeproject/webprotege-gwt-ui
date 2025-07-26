@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.gh;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 
 import javax.annotation.Nullable;
 
@@ -55,5 +57,43 @@ public abstract class GitHubLabel implements IsSerializable {
                 Helper.requireNonNullElse(color, ""),
                 isDefault,
                 Helper.requireNonNullElse(description, ""));
+    }
+
+    @JsonIgnore
+    public Color getTextColor() {
+        String labelColor = color();
+        Color bgColor = Color.getHex("#" + labelColor);
+        return getRecommendedTextColor(bgColor);
+    }
+
+    /**
+     * Calculates the perceived lightness of a given color.
+     * @param color The background color.
+     * @return The perceived lightness, in range [0, 1].
+     */
+    private static double calculatePerceivedLightness(Color color) {
+        double r = color.getRed();
+        double g = color.getGreen();
+        double b = color.getBlue();
+
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
+    }
+
+    /**
+     * Gets the recommended text color for a GitHub label background.
+     * @param bgColor The label background color.
+     * @return "white", "black", or "gray" if close to threshold.
+     */
+    public static Color getRecommendedTextColor(Color bgColor) {
+        double lightness = calculatePerceivedLightness(bgColor);
+        double threshold = 0.453;
+
+        if (Math.abs(lightness - threshold) < 0.002) {
+            return Color.getRGB(70, 70, 70); // Approximate behavior near threshold
+        } else if (lightness < threshold) {
+            return Color.getWhite();
+        } else {
+            return Color.get(0, 0, 0);
+        }
     }
 }

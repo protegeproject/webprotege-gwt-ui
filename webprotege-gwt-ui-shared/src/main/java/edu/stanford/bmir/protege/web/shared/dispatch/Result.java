@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.client.gh.GetGitHubAppInstallationStatusResult;
+import edu.stanford.bmir.protege.web.client.gh.GetLinkedGitHubRepositoryAction;
+import edu.stanford.bmir.protege.web.client.gh.GetLinkedGitHubRepositoryResult;
+import edu.stanford.bmir.protege.web.client.gh.SetLinkedGitHubRepositoryResult;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.auth.*;
@@ -223,7 +227,10 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
         @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),
         @JsonSubTypes.Type(SetProjectRoleAssignmentsResult.class),
         @JsonSubTypes.Type(GetProjectHierarchyDescriptorRulesResult.class),
-        @JsonSubTypes.Type(SetProjectHierarchyDescriptorRulesResult.class)
+        @JsonSubTypes.Type(SetProjectHierarchyDescriptorRulesResult.class),
+        @JsonSubTypes.Type(GetGitHubAppInstallationStatusResult.class),
+        @JsonSubTypes.Type(GetLinkedGitHubRepositoryResult.class),
+        @JsonSubTypes.Type(SetLinkedGitHubRepositoryResult.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface Result extends IsSerializable {

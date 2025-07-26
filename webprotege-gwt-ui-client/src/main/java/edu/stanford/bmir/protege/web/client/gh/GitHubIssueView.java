@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.gh;
 import com.google.auto.factory.AutoFactory;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.gh.GitHubState;
 
 import javax.annotation.Nonnull;
 
@@ -14,6 +15,10 @@ import javax.annotation.Nonnull;
 public interface GitHubIssueView extends IsWidget {
 
     void setIssueTitle(@Nonnull String title);
+
+    void setIssueNumber(int number);
+
+    void setState(GitHubState state);
 
     void setBody(@Nonnull String body);
 

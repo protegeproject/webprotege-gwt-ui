@@ -604,7 +604,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-        TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+    TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
         return impl;
     }
 
@@ -635,13 +635,13 @@ public class ClientProjectModule {
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
             GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
-                                numberFieldDescriptorPresenterFactory,
-                                choiceFieldDescriptorPresenterFactory,
-                                multiChoiceControlDescriptorPresenterFactory,
-                                imageDescriptorPresenterFactory,
-                                entityNameFieldDescriptorPresenterFactory,
-                                subFormControlDescriptorPresenterFactory,
-                                gridControlDescriptorPresenterFactory);
+                numberFieldDescriptorPresenterFactory,
+                choiceFieldDescriptorPresenterFactory,
+                multiChoiceControlDescriptorPresenterFactory,
+                imageDescriptorPresenterFactory,
+                entityNameFieldDescriptorPresenterFactory,
+                subFormControlDescriptorPresenterFactory,
+                gridControlDescriptorPresenterFactory);
     }
 
     @Provides
@@ -770,9 +770,9 @@ public class ClientProjectModule {
                                                                                      Provider<ObjectListViewHolder> objectViewHolderProvider,
                                                                                      Provider<ConditionalIriPrefix> defaultObjectProvider) {
         return new ObjectListPresenter<>(objectListView,
-                                         objectListPresenterProvider,
-                                         objectViewHolderProvider,
-                                         defaultObjectProvider);
+                objectListPresenterProvider,
+                objectViewHolderProvider,
+                defaultObjectProvider);
     }
 
     @Provides
@@ -995,13 +995,14 @@ public class ClientProjectModule {
     GitHubLabelView provideGitHubLabelView(GitHubLabelViewImpl impl) {
         return impl;
     }
+
     @Provides
-    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl){
+    DirectParentsListView provideDirectParentsListView(DirectParentsListViewImpl impl) {
         return impl;
     }
 
     @Provides
-    DirectParentView provideDirectParentView(DirectParentViewImpl impl){
+    DirectParentView provideDirectParentView(DirectParentViewImpl impl) {
         return impl;
     }
 
@@ -1026,7 +1027,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ObjectPresenter<RoleDefinition>  providesRoleDefinitionPresenter(RoleDefinitionPresenter presenter) {
+    ObjectPresenter<RoleDefinition> providesRoleDefinitionPresenter(RoleDefinitionPresenter presenter) {
         return presenter;
     }
 
@@ -1082,6 +1083,11 @@ public class ClientProjectModule {
 
     @Provides
     MarkdownPreview provideMarkdownPreview(MarkdownPreviewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LinkWithGitHubRepoView linkWithGitHubRepoView(LinkWithGitHubRepoViewImpl impl) {
         return impl;
     }
 }

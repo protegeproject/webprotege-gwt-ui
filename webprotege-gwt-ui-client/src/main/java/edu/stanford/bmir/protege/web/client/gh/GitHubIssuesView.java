@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.gh;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.gh.GitHubRepositoryCoordinates;
 
 /**
  * Matthew Horridge
@@ -9,8 +10,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * 2024-05-18
  */
 public interface GitHubIssuesView extends IsWidget {
-
-    void setContent(String html);
 
     AcceptsOneWidget addIssueContainer();
 

@@ -6,6 +6,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.gh.ConnectToGitHubHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
@@ -47,6 +48,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final ProjectSettingsDownloader projectSettingsDownloader;
 
     private final ProjectSettingsImporter projectSettingsImporter;
+
+    private final ConnectToGitHubHandler connectToGitHubHandler;
 
 
     private final AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
@@ -112,6 +115,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private final AbstractUiAction connectToGitHub = new AbstractUiAction("Connect to GitHub...") {
+        @Override
+        public void execute() {
+            connectToGitHub();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 ProjectMenuView view,
@@ -123,7 +133,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
                                 ProjectSettingsDownloader projectSettingsDownloader,
-                                ProjectSettingsImporter projectSettingsImporter) {
+                                ProjectSettingsImporter projectSettingsImporter,
+                                ConnectToGitHubHandler connectToGitHubHandler) {
         this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
@@ -135,6 +146,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.editProjectFormsUiHandler = editProjectFormsUiHandler;
         this.projectSettingsDownloader = projectSettingsDownloader;
         this.projectSettingsImporter = projectSettingsImporter;
+        this.connectToGitHubHandler = connectToGitHubHandler;
         setupActions();
     }
 
@@ -179,7 +191,12 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(importSettings);
 
         view.addMenuAction(uploadAndMergeAdditions);
+        view.addSeparator();
+        view.addMenuAction(connectToGitHub);
+    }
 
+    private void connectToGitHub() {
+        connectToGitHubHandler.handleConnectToGitHub();
     }
 
 

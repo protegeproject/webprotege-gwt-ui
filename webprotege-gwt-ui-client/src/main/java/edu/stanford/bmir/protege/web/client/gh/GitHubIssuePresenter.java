@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.showdown.Showdown;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.gh.GitHubIssue;
@@ -34,13 +35,16 @@ public class GitHubIssuePresenter {
     public void start(WebProtegeEventBus eventBus, AcceptsOneWidget container) {
         this.eventBus = eventBus;
         container.setWidget(view);
+
     }
 
     public void displayIssue(GitHubIssue issue) {
         String bodyInMarkdown = Showdown.renderMarkdown(issue.body());
         view.setIssueTitle(issue.title());
+        view.setIssueNumber(issue.number());
         view.setBody(bodyInMarkdown);
         view.setHtmlUrl(issue.htmlUrl());
+        view.setState(issue.state());
         issue.labels()
                 .forEach(label -> {
                     AcceptsOneWidget labelContainer = view.addLabelContainer();

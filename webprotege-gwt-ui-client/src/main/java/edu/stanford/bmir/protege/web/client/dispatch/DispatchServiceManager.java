@@ -87,7 +87,7 @@ public class DispatchServiceManager {
     private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<>();
 
     public void beginBatch() {
-        batch++;
+//        batch++;
     }
 
     public void executeCurrentBatch() {
