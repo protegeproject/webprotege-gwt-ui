@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.PropertyNames;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -34,8 +35,11 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormR
                                              @JsonProperty(PropertyNames.ACCESS_MODE) FormFieldAccessMode accessMode,
                                              @JsonProperty(PropertyNames.INITIAL_EXPANSIONS_STATE) ExpansionState initialExpansionState,
                                              @JsonProperty(PropertyNames.HELP) LanguageMap help) {
-        if(pageSize <= 0) {
+        if(pageSize < 0) {
             throw new IllegalArgumentException("pageSize must be greater than zero");
+        }
+        if(pageSize == 0) {
+            pageSize = FormPageRequest.DEFAULT_PAGE_SIZE;
         }
         return new AutoValue_FormFieldDescriptorDto(formFieldId,
                 owlBinding,

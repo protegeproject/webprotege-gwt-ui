@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
@@ -18,21 +19,25 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
+import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -44,6 +49,8 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
  */
 @AutoFactory
 public class EntityHierarchyContextMenuPresenter {
+
+    private final static Logger logger = Logger.getLogger(EntityHierarchyContextMenuPresenter.class.getName());
 
     @Nonnull
     private final EditAnnotationsUiAction editAnnotationsUiAction;
@@ -84,8 +91,8 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
-    @Nullable
-    private PopupMenu contextMenu;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType" )
+    private Optional<PopupMenu> contextMenu = Optional.empty();
 
     private UIAction pruneBranchToRootAction;
 
@@ -99,8 +106,11 @@ public class EntityHierarchyContextMenuPresenter {
 
     private final InputBox inputBox;
 
-    private DispatchServiceManager dispatch;
-    private ProjectId projectId;
+    private final DispatchServiceManager dispatch;
+
+    private final ProjectId projectId;
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
@@ -117,7 +127,8 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
-                                               @Provided @Nonnull InputBox inputBox) {
+                                               @Provided @Nonnull InputBox inputBox,
+                                               @Provided @Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.dispatch = dispatch;
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
@@ -134,6 +145,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.watchUiAction = checkNotNull(watchUiAction);
         this.capabilityChecker = checkNotNull(capabilityChecker);
         this.inputBox = checkNotNull(inputBox);
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     /**
@@ -144,38 +156,73 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     private void showContextMenu(ContextMenuEvent event) {
-        if (contextMenu == null) {
-            createContextMenu();
+        // Extract native event details here because the ContextMenuEvent#getNativeEvent
+        // can return null when handling in an async response.
+        NativeEvent nativeEvent = event.getNativeEvent();
+        int x = nativeEvent.getClientX();
+        int y = nativeEvent.getClientY();
+        Runnable runnable = () -> {
+            updateActionStates();
+            contextMenu.ifPresent(menu -> menu.show(x, y));
+        };
+        if (!contextMenu.isPresent()) {
+            createContextMenu(runnable);
         }
-        updateActionStates();
-        int x = event.getNativeEvent().getClientX();
-        int y = event.getNativeEvent().getClientY();
-        contextMenu.show(x, y);
+        else {
+            runnable.run();
+        }
+
     }
 
-    private void createContextMenu() {
-        contextMenu = new PopupMenu();
-        contextMenu.addItem(createEntityAction);
-        contextMenu.addItem(deleteEntityAction);
-        contextMenu.addSeparator();
-        contextMenu.addItem(editEntityTagsAction);
-        contextMenu.addSeparator();
-        contextMenu.addItem(moveToParentUiAction);
-        contextMenu.addItem(changeChildrenOrderingUIAction);
-        contextMenu.addItem(mergeEntitiesAction);
-        contextMenu.addItem(setAnnotationValueUiAction);
-        contextMenu.addItem(editAnnotationsUiAction);
-        contextMenu.addSeparator();
-        contextMenu.addItem(watchUiAction);
-        contextMenu.addSeparator();
-        pruneBranchToRootAction = contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
-        pruneAllBranchesToRootAction = contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
-        clearPruningAction = contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
-        contextMenu.addSeparator();
-        showIriAction = contextMenu.addItem(messages.showIri(), this::showIriForSelection);
-        showDirectLinkAction = contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
+    private void createContextMenu(Runnable callback) {
+        UserId loggedInUser = loggedInUserProvider.getCurrentUserId();
+        dispatch.execute(GetProjectPermissionsAction.create(projectId, loggedInUser),
+                result -> {
+                    Set<Capability> capabilitySet = result.getAllowedActions();
+                    createContextMenu(capabilitySet);
+                    callback.run();
+                });
+    }
+
+    private void createContextMenu(Set<Capability> capabilitySet) {
+        PopupMenu menu = new PopupMenu();
+        contextMenu = Optional.of(menu);
+        menu.addItem(createEntityAction);
+        menu.addItem(deleteEntityAction);
+        menu.addSeparator();
+        menu.addItem(editEntityTagsAction);
+        menu.addSeparator();
+        if (capabilitySet.contains(BuiltInCapability.MOVE_ENTITY.getCapability())) {
+            menu.addItem(moveToParentUiAction);
+        }
+        else {
+            logger.info("User does not have MoveEntity capability.  Not adding menu item.");
+        }
+        menu.addItem(changeChildrenOrderingUIAction);
+        if (capabilitySet.contains(MERGE_ENTITIES.getCapability())) {
+            menu.addItem(mergeEntitiesAction);
+        }
+        else {
+            logger.info("User does not have MergeEntities capability.  Not adding menu item.");
+        }
+        if (capabilitySet.contains(BULK_EDIT_ANNOTATIONS.getCapability())) {
+            menu.addItem(setAnnotationValueUiAction);
+            menu.addItem(editAnnotationsUiAction);
+        }
+        else {
+            logger.info("User does not have BulkEditAnnotations capability.  Not adding menu items.");
+        }
+        menu.addSeparator();
+        menu.addItem(watchUiAction);
+        menu.addSeparator();
+        pruneBranchToRootAction = menu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
+        pruneAllBranchesToRootAction = menu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
+        clearPruningAction = menu.addItem(messages.tree_clearPruning(), this::clearPruning);
+        menu.addSeparator();
+        showIriAction = menu.addItem(messages.showIri(), this::showIriForSelection);
+        showDirectLinkAction = menu.addItem(messages.showDirectLink(), this::showUrlForSelection);
+        menu.addSeparator();
+        menu.addItem(messages.refreshTree(), this::handleRefresh);
 
         // This needs tidying somehow.  We don't do this for other actions.
         moveToParentUiAction.setHierarchyDescriptor(model.getHierarchyDescriptor());
@@ -216,10 +263,13 @@ public class EntityHierarchyContextMenuPresenter {
         if (selIsNonEmpty) {
             capabilityChecker.hasCapability(WATCH_CHANGES, watchUiAction::setEnabled);
             capabilityChecker.hasCapability(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+            capabilityChecker.hasCapability(MOVE_ENTITY, moveToParentUiAction::setEnabled);
             capabilityChecker.hasCapability(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
-            capabilityChecker.hasCapability(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
-            capabilityChecker.hasCapability(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
-            capabilityChecker.hasCapability(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
+            capabilityChecker.hasCapability(EDIT_ONTOLOGY, enabled -> {
+                setAnnotationValueUiAction.setEnabled(enabled);
+                editAnnotationsUiAction.setEnabled(enabled);
+                moveToParentUiAction.setEnabled(enabled);
+            });
         }
     }
 
@@ -257,6 +307,8 @@ public class EntityHierarchyContextMenuPresenter {
         Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
         firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
+        // Also force the context menu to refresh
+        contextMenu = Optional.empty();
     }
 
 }
