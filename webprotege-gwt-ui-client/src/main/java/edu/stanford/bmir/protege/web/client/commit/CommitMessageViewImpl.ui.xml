@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Commit message" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextArea ui:field="messageArea" visibleLines="5" width="30"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Recent messages" addStyleNames="{wp.style.formLabel}"/>
+            <g:ListBox ui:field="recentMessages" visibleItemCount="5"/>
+            <g:Label addStyleNames="{wp.style.formHelpText}" text="Click on a message to copy it into the commit message field above—then edit or reuse as needed."/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>
