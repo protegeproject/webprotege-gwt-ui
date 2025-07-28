@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
 
@@ -36,7 +37,7 @@ public class EntityNode_Serialization_TestCase {
                                                "The Tag Label",
                                                "The tag description",
                                                Color.getWhite(),
-                                               Color.getWhite(), ImmutableList.of())));
+                                               Color.getWhite(), ImmutableList.of())), ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(entityNode, EntityNode.class);
     }
 }
