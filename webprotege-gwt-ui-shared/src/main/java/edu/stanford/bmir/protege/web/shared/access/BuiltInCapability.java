@@ -66,6 +66,9 @@ public enum BuiltInCapability {
 
     EDIT_ENTITY_TAGS,
 
+    MOVE_ENTITY,
+
+    BULK_EDIT_ANNOTATIONS,
 
     CREATE_ISSUE,
 
