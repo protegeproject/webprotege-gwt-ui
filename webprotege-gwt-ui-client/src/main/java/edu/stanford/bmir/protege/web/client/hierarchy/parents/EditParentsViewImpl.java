@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.*;
@@ -53,6 +54,8 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @UiField
     HTMLPanel equivalentParentClassContainer;
 
+    private Set<IRI> linearizationPathParents = new HashSet<>();
+
     private static final Logger logger = Logger.getLogger(EditParentsViewImpl.class.getName());
 
     interface EditParentsViewImplUiBinder extends UiBinder<HTMLPanel, EditParentsViewImpl> {
@@ -95,7 +98,15 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Override
     public void setEntityParents(Set<OWLEntityData> entityParents) {
-        this.parents.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()));
+        this.parents.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()),
+                (entityParent) -> {
+                    boolean response = this.linearizationPathParents.contains(entityParent.asEntity().get().getIRI());
+                    String parentsString = this.linearizationPathParents.stream().map(p -> p.asIRI().get().toString()).collect(Collectors.joining());
+                    logger.info("ALEX verific parinte " + entityParent.asEntity().get().getIRI() + " si raspund cu " + response + " si am " + parentsString);
+                    return response;
+                },
+                "The delete button is disabled due to being a linearization parent"
+        );
     }
 
     @Override
@@ -211,6 +222,11 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public boolean isValid() {
         boolean isReasonSet = this.isReasonForChangeSet();
         boolean isParentSet = this.isAtLestOneParentSet();
-        return isReasonSet&&isParentSet;
+        return isReasonSet && isParentSet;
+    }
+
+    @Override
+    public void setLinearizationPathParents(Set<IRI> linearizationPathParents) {
+        this.linearizationPathParents = linearizationPathParents;
     }
 }

@@ -11,7 +11,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsViewImpl;
 import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
+
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,11 +26,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ValueListFlexEditorContainer<O> extends Composite implements HasEnabled {
 
     public static final String FLEX_GROW = "flexGrow";
+    private static final Logger logger = Logger.getLogger(ValueListFlexEditorContainer.class.getName());
 
     private boolean deleteButtonEnabled;
 
     public void setDeleteButtonEnabled(boolean deleteButtonEnabled) {
         this.deleteButtonEnabled = deleteButtonEnabled;
+        this.deleteButton.setEnabled(deleteButtonEnabled);
+        this.deleteButton.addClickHandler((event) -> {});
+        this.deleteButtonClickHandler = event -> {};
     }
 
     interface ValueListFlexEditorContainerUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorContainer> {
@@ -63,6 +70,10 @@ public class ValueListFlexEditorContainer<O> extends Composite implements HasEna
         }
     }
 
+    public void setDeleteButtonTooltip(String tooltip) {
+        deleteButton.getElement().setTitle(tooltip);
+    }
+
     public boolean isDeleteButtonVisible() {
         return deleteButton.isVisible();
     }
@@ -72,14 +83,18 @@ public class ValueListFlexEditorContainer<O> extends Composite implements HasEna
         return enabled;
     }
 
+
+
     @Override
     public void setEnabled(boolean b) {
         enabled = b;
-        deleteButton.setEnabled(enabled);
+        logger.info("ALEX setting enabled " + b);
         if(editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);
         }
     }
+
+
 
 
     public void setDirection(ValueListFlexEditorDirection direction) {
