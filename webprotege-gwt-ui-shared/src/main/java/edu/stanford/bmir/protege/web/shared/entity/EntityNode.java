@@ -151,9 +151,6 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                 .collect(ImmutableList.toImmutableList());
     }
 
-    @JsonProperty("statuses")
-    public abstract ImmutableSet<EntityStatus> getStatuses();
-
     @Override
     public int compareTo(EntityNode o) {
         return this.getBrowserText().compareToIgnoreCase(o.getBrowserText());
