@@ -129,7 +129,6 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         }
                         view.setEntityParentsMap(this.entityParentsMap);
                         view.setLinearizationChangeEventHandler(() -> {
-                            logger.info("ALEX send event");
                             handlerManager.fireEvent(new DirtyChangedEvent());
                         });
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
