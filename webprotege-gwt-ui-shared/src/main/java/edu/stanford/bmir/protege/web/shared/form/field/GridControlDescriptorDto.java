@@ -28,8 +28,11 @@ public abstract class GridControlDescriptorDto implements FormControlDescriptorD
     public static GridControlDescriptorDto get(@JsonProperty(PropertyNames.COLUMNS) @Nonnull ImmutableList<GridColumnDescriptorDto> columns,
                                                @JsonProperty(PropertyNames.PAGE_SIZE) int pageSize,
                                                @JsonProperty(PropertyNames.SUBJECT_FACTORY) @Nullable FormSubjectFactoryDescriptor formSubjectFactoryDescriptor) {
-        if(pageSize <= 0) {
+        if(pageSize < 0) {
             throw new IllegalArgumentException("pageSize must be greater than 0");
+        }
+        if(pageSize == 0) {
+            pageSize = FormPageRequest.DEFAULT_PAGE_SIZE;
         }
         return new AutoValue_GridControlDescriptorDto(columns, pageSize, formSubjectFactoryDescriptor);
     }
