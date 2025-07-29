@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.card;
 
-import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageDialogPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -16,32 +14,21 @@ public class CommitChangesWorkflow {
 
     private final DispatchServiceManager dispatch;
 
-    private final InputBox inputBox;
-
-    private final Messages messages;
+    private final CommitMessageDialogPresenter commitMessageDialogPresenter;
 
     @Inject
-    public CommitChangesWorkflow(DispatchServiceManager dispatch, InputBox inputBox, Messages messages) {
+    public CommitChangesWorkflow(DispatchServiceManager dispatch,
+                                 CommitMessageDialogPresenter commitMessageDialogPresenter) {
         this.dispatch = dispatch;
-        this.inputBox = inputBox;
-        this.messages = messages;
+        this.commitMessageDialogPresenter = commitMessageDialogPresenter;
     }
 
     public void run(List<EntityCardPresenter> cardPresenters,
                     Runnable finishedHandler) {
-        inputBox.showDialog(messages.editing_commitMessage_title(),
-                true, "", new InputBoxHandler() {
-                    @Override
-                    public void handleAcceptInput(String commitMessage) {
-                        saveChangesWithCommitMessage(cardPresenters, commitMessage);
-                        finishedHandler.run();
-                    }
-
-                    @Override
-                    public void handleCancelInput() {
-                        finishedHandler.run();
-                    }
-                });
+        commitMessageDialogPresenter.showCommitMessageDialog(commitMessage -> {
+            saveChangesWithCommitMessage(cardPresenters, commitMessage);
+            finishedHandler.run();
+        }, finishedHandler::run);
     }
 
     private void saveChangesWithCommitMessage(List<EntityCardPresenter> cardPresenters,

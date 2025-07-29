@@ -161,11 +161,12 @@ public class EventsSerializationTestCase {
     public void shouldSerializeEntityHierarchyChangedEvent() throws IOException {
         var changes = ImmutableList.of(
                 new AddEdge<>(new GraphEdge<>(new GraphNode<>(EntityNode.get(
-                        mockOWLClass(), "A", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), ImmutableSet.of())
+                        mockOWLClass(), "A", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), Collections.emptySet())
                 ),
-                        new GraphNode<>(EntityNode.get(
-                                mockOWLClass(), "B", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), ImmutableSet.of())))
-                ));
+                                              new GraphNode<>(EntityNode.get(
+                                                      mockOWLClass(), "B", ImmutableList.of(), true, ImmutableSet.of(), 3, ImmutableSet.of(), Collections.emptySet()
+                                              )))
+        ));
         JsonSerializationTestUtil.testSerialization(
                 new EntityHierarchyChangedEvent(mockProjectId(),
                         ClassHierarchyDescriptor.get(),

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
