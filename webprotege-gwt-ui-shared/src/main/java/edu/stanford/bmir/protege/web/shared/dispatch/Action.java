@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsAction;
+import edu.stanford.bmir.protege.web.shared.directparents.GetLinearizationPathParentsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -252,6 +253,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
         @Type(value = MoveHierarchyNodeIcdAction.class),
         @Type(value = GetClassHierarchyParentsByAxiomTypeAction.class),
         @Type(value = GetEntityDirectParentsAction.class),
+        @Type(value = GetLinearizationPathParentsAction.class),
         @Type(value = SetProjectRoleDefinitionsAction.class),
         @Type(value = ResetProjectRoleDefinitionsAction.class),
         @Type(value = GetProjectRoleAssignmentsAction.class),

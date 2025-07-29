@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.directparents.GetEntityDirectParentsResult;
+import edu.stanford.bmir.protege.web.shared.directparents.GetLinearizationPathParentsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
@@ -228,6 +229,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
         @JsonSubTypes.Type(SetFormRegionAccessRestrictionsResult.class),
         @JsonSubTypes.Type(SaveEntityChildReorderingResult.class),
         @JsonSubTypes.Type(GetEntityDirectParentsResult.class),
+        @JsonSubTypes.Type(GetLinearizationPathParentsResult.class),
         @JsonSubTypes.Type(SetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(ResetProjectRoleDefinitionsResult.class),
         @JsonSubTypes.Type(GetProjectRoleAssignmentsResult.class),

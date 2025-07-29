@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.shared.directparents.GetLinearizationPathParentsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
@@ -79,8 +80,12 @@ public class EditParentsPresenter {
 
         classHierarchyDescriptor.ifPresent(id -> dispatch.execute(GetClassHierarchyParentsByAxiomTypeAction.create(projectId, entity.asOWLClass(), classHierarchyDescriptor.get()),
                 result -> {
-                    view.setEntityParents(result.getParentsBySubclassOf());
-                    view.setParentsFromEquivalentClasses(result.getParentsByEquivalentClass());
+                    dispatch.execute(GetLinearizationPathParentsAction.create(entity.getIRI(), new HashSet<>(), projectId), (parentsResult -> {
+                        view.setLinearizationPathParents(parentsResult.getExistingLinearizationParents());
+                        view.setEntityParents(result.getParentsBySubclassOf());
+                        view.setParentsFromEquivalentClasses(result.getParentsByEquivalentClass());
+                    }));
+
                 }));
         this.setHelpText(view.getHelpTooltip(), messages.hierarchy_editParents_equivalentClassParent());
     }
@@ -95,7 +100,7 @@ public class EditParentsPresenter {
     }
 
     private void handleHierarchyChange(ModalCloser closer) {
-        if(!view.isValid()){
+        if (!view.isValid()) {
             return;
         }
 
