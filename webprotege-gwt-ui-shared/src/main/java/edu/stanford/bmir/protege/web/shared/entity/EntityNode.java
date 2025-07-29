@@ -48,14 +48,15 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                  boolean deprecated,
                                  @Nonnull Set<Watch> watches,
                                  int openCommentCount,
-                                 Collection<Tag> tags) {
+                                 Collection<Tag> tags,
+                                 ImmutableSet<EntityStatus> statuses) {
         return new AutoValue_EntityNode(entity,
                                         browserText,
                                         ImmutableSet.copyOf(tags),
                                         deprecated,
                                         ImmutableSet.copyOf(watches),
                                         openCommentCount,
-                                        shortForms);
+                                        shortForms, statuses);
     }
 
     @JsonCreator
@@ -66,7 +67,8 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                  @JsonProperty("deprecated") boolean deprecated,
                                  @JsonProperty("watches") @Nonnull Set<Watch> watches,
                                  @JsonProperty("openCommentCount") int openCommentCount,
-                                 @JsonProperty("tags") Collection<Tag> tags) {
+                                 @JsonProperty("tags") Collection<Tag> tags,
+                                 @JsonProperty("statuses") Set<EntityStatus> statuses) {
         ImmutableMap<DictionaryLanguage, String> map = shortForms.stream()
                                                         .collect(toImmutableMap(ShortForm::getDictionaryLanguage,
                                                                                 ShortForm::getShortForm));
@@ -77,7 +79,8 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                    deprecated,
                    ImmutableSet.copyOf(watches),
                    openCommentCount,
-                   ImmutableSet.copyOf(tags));
+                   ImmutableSet.copyOf(tags),
+                ImmutableSet.copyOf(statuses));
     }
 
     /**
@@ -96,7 +99,8 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                    NOT_DEPRECATED,
                    NO_WATCHES,
                    NO_OPEN_COMMENTS,
-                   NO_ENTITY_TAGS);
+                   NO_ENTITY_TAGS,
+                   Collections.emptySet());
     }
 
     @Nonnull
@@ -147,6 +151,9 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                        .map(entry -> ShortForm.get(entry.getKey(), entry.getValue()))
                        .collect(ImmutableList.toImmutableList());
     }
+
+    @JsonProperty("statuses")
+    public abstract ImmutableSet<EntityStatus> getStatuses();
 
     @Override
     public int compareTo(EntityNode o) {

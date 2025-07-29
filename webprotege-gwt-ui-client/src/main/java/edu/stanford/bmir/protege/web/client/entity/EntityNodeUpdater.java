@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
@@ -76,7 +77,8 @@ public class EntityNodeUpdater {
                     node.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),
-                    node.getTags());
+                    node.getTags(),
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }
@@ -114,7 +116,8 @@ public class EntityNodeUpdater {
                 node.isDeprecated(),
                 updatedWatches,
                 node.getOpenCommentCount(),
-                node.getTags());
+                node.getTags(),
+                node.getStatuses());
         nodeIndex.updateNode(updatedNode);
     }
 
@@ -131,7 +134,8 @@ public class EntityNodeUpdater {
                         node.isDeprecated(),
                         node.getWatches(),
                         event.getOpenCommentCountForEntity(),
-                        node.getTags());
+                        node.getTags(),
+                        node.getStatuses());
                 nodeIndex.updateNode(updatedNode);
             });
         });
@@ -150,7 +154,8 @@ public class EntityNodeUpdater {
                         node.isDeprecated(),
                         node.getWatches(),
                         event.getOpenCommentsCountForEntity(),
-                        node.getTags());
+                        node.getTags(),
+                        node.getStatuses());
                 nodeIndex.updateNode(updatedNode);
             });
         });
@@ -168,7 +173,8 @@ public class EntityNodeUpdater {
                     event.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),
-                    node.getTags());
+                    node.getTags(),
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }
@@ -185,7 +191,8 @@ public class EntityNodeUpdater {
                     node.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),
-                    event.getTags());
+                    event.getTags(),
+                    node.getStatuses());
             nodeIndex.updateNode(updatedNode);
         });
     }
