@@ -179,24 +179,22 @@ public class LinearizationTableRow {
 
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentSelector.setVisible(false);
-            String existingLinearizationParentLabel = null;
-            if(linearizationSpecification.getLinearizationParent() != null && !linearizationSpecification.getLinearizationParent().isEmpty()){
-                existingLinearizationParentLabel = this.baseEntityParentsMap.get(linearizationSpecification.getLinearizationParent());
+
+            LinearizationTableRow mainRow = rows.stream()
+                    .filter(linearizationRow -> linearizationRow.linearizationDefinition.getLinearizationId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
+                    .findFirst()
+                    .orElseThrow(() -> {
+                        logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
+                        return new RuntimeException();
+                    });
+
+            this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());
+            this.linearizationParentLabel.addStyleName(mainRow.linearizationParentLabel.getStyleName());
+
+            if (mainRow.parentIri == null || mainRow.parentIri.isEmpty()) {
+                this.parentIri = mainRow.parentIri;
             }
-            if(existingLinearizationParentLabel != null) {
-                this.linearizationParentLabel.setText(existingLinearizationParentLabel);
-                this.linearizationParentLabel.addStyleName(this.linearizationParentLabel.getStyleName());
-            } else {
-                LinearizationTableRow mainRow = rows.stream()
-                        .filter(linearizationRow -> linearizationRow.linearizationDefinition.getLinearizationId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
-                        .findFirst()
-                        .orElseThrow(() -> {
-                            logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
-                            return new RuntimeException();
-                        });
-                this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());
-                this.linearizationParentLabel.addStyleName(mainRow.linearizationParentLabel.getStyleName());
-            }
+
             this.linearizationParentLabel.addStyleName(linearizationCss.getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
 
