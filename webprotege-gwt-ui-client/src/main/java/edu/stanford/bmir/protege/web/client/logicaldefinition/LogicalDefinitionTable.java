@@ -197,7 +197,6 @@ public class LogicalDefinitionTable implements IsWidget {
     public void setReadOnly(boolean readOnly){
         this.axisDropdown.setEnabled(!readOnly);
         this.axisDropdown.setVisible(!readOnly);
-        this.valuesButton.setEnabled(!readOnly);
         this.valuesButton.setVisible(!readOnly);
         this.setDeleteRowButtonVisible(!readOnly);
         this.readOnly = readOnly;

@@ -111,6 +111,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             view.resetPristineState();
         }
         view.switchToReadOnly();
+        this.readOnly = true;
     }
 
     @Override
