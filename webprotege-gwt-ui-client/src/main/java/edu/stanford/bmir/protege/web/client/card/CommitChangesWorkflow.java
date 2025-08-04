@@ -24,11 +24,11 @@ public class CommitChangesWorkflow {
     }
 
     public void run(List<EntityCardPresenter> cardPresenters,
-                    Runnable finishedHandler) {
+                    Runnable finishedHandler, Runnable cancelHandler) {
         commitMessageDialogPresenter.showCommitMessageDialog(commitMessage -> {
             saveChangesWithCommitMessage(cardPresenters, commitMessage);
             finishedHandler.run();
-        }, finishedHandler::run);
+        }, cancelHandler);
     }
 
     private void saveChangesWithCommitMessage(List<EntityCardPresenter> cardPresenters,

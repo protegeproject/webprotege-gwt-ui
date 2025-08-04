@@ -257,6 +257,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     }
                     this.pristineData = getEditedData();
                     this.changeHandler.handleLogicalDefinitionCHange();
+                    if(!isReadOnly) {
+                        switchToEditable();
+                    } else {
+                        switchToReadOnly();
+                    }
                 });
     }
 
@@ -347,6 +352,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         }
     }
 
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.isReadOnly = readOnly;
+    }
+
     public void resetPristineState() {
         clearTables();
         if(getEntity() == null) {
@@ -413,6 +423,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             wrapper.enableEditable();
         }
     }
+
 
     private void setHelpText(HTMLPanel tooltipWrapper, String text) {
         Tooltip helpTooltip = Tooltip.createOnBottom(tooltipWrapper, text);

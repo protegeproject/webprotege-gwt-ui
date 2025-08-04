@@ -256,9 +256,10 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
     private void commitChangesAndUpdateSelection() {
         commitChanges(() -> {
             // Proceed as normal
+            view.setEditModeActive(false);
             displayCardsForSelectedEntity();
             getSelectedCardPresenter().ifPresent(this::transmitSelectionToCard);
-        });
+        }, ()->{});
     }
 
 
@@ -323,13 +324,15 @@ public class CardStackPortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void handleFinishEditing() {
-        commitChanges(this::updateButtonVisibility);
+        commitChanges( () -> {
+            view.setEditModeActive(false);
+            updateButtonVisibility();
+        }, ()->{});
     }
 
-    private void commitChanges(Runnable commitFinished) {
-        view.setEditModeActive(false);
+    private void commitChanges(Runnable commitFinished, Runnable cancelFinished) {
         commitChangesWorkflow.run(getCurrentPresenters().collect(Collectors.toList()),
-                commitFinished);
+                commitFinished, cancelFinished);
     }
 
     private Stream<EntityCardPresenter> getCurrentPresenters() {
