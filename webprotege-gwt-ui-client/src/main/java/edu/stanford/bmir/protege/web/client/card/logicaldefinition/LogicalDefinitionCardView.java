@@ -19,6 +19,8 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
 
     void saveValues(String commitMessage);
 
+    void setReadOnly(boolean readOnly);
+
     LogicalConditions getPristineData();
 
     LogicalConditions getEditedData();

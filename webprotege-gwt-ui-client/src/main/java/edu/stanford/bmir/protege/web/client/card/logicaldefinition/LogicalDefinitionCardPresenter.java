@@ -67,14 +67,9 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
             this.renderedEntity = selectedEntity.get();
             dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
                     (result) -> view.setEntityData(result.getEntityData()));
-            view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
+            view.setReadOnly(this.readOnly);
             view.setEntity(renderedEntity);
             this.inFocus = true;
-            if(!readOnly) {
-                view.switchToEditable();
-            } else {
-                view.switchToReadOnly();
-            }
         }
     }
 
