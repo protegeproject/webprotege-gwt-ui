@@ -176,6 +176,10 @@ public class LinearizationTableRow {
 
     public void populateDerivedLinearizationParents(List<LinearizationTableRow> rows) {
         if (isDerived()) {
+
+            this.linearizationParentSelector.setEnabled(false);
+            this.linearizationParentSelector.setVisible(false);
+
             LinearizationTableRow mainRow = rows.stream()
                     .filter(linearizationRow -> linearizationRow.linearizationDefinition.getLinearizationId().equalsIgnoreCase(this.linearizationDefinition.getCoreLinId()))
                     .findFirst()
@@ -183,12 +187,17 @@ public class LinearizationTableRow {
                         logger.info("Couldn't find parent with id " + linearizationDefinition.getCoreLinId());
                         return new RuntimeException();
                     });
-            this.linearizationParentSelector.setEnabled(false);
-            this.linearizationParentSelector.setVisible(false);
+
             this.linearizationParentLabel.setText(mainRow.linearizationParentLabel.getText());
             this.linearizationParentLabel.addStyleName(mainRow.linearizationParentLabel.getStyleName());
+
+            if (mainRow.parentIri == null || mainRow.parentIri.isEmpty()) {
+                this.parentIri = mainRow.parentIri;
+            }
+
             this.linearizationParentLabel.addStyleName(linearizationCss.getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
+
         }
     }
 

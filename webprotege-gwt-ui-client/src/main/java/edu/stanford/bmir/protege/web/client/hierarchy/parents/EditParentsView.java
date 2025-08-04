@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -39,4 +40,6 @@ public interface EditParentsView extends IsWidget, HasBusy {
     IsWidget getHelpTooltip();
 
     boolean isValid();
+
+    void setLinearizationPathParents(Set<IRI> linearizationPathParents);
 }

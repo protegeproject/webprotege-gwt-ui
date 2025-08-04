@@ -6,6 +6,10 @@ import dagger.Module;
 import dagger.*;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.card.*;
+import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageView;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageViewImpl;
 import edu.stanford.bmir.protege.web.client.card.postcoordination.*;
 import edu.stanford.bmir.protege.web.client.change.*;
 import edu.stanford.bmir.protege.web.client.crud.*;
@@ -1146,6 +1150,11 @@ public class ClientProjectModule {
 
     @Provides
     MarkdownPreview provideMarkdownPreview(MarkdownPreviewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CommitMessageView commitMessageView(CommitMessageViewImpl impl) {
         return impl;
     }
 }

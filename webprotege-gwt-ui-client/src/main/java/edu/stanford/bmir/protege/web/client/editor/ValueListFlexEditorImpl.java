@@ -24,7 +24,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -120,7 +122,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
-    private ValueEditor<O> addValueEditor(boolean deleteVisible) {
+    private ValueEditor<O> addValueEditor(boolean deleteVisible, boolean disableEnabled, String tooltip) {
         final ValueEditor<O> editor = getFreshValueEditor();
         currentEditors.add(editor);
         ValueListFlexEditorContainer<O> editorContainer = new ValueListFlexEditorContainer<>(editor);
@@ -141,7 +143,21 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         if(editor instanceof HasPlaceholder) {
             ((HasPlaceholder) editor).setPlaceholder(placeholder);
         }
+
+        if(disableEnabled) {
+            if(editor instanceof HasEnabled) {
+                ((HasEnabled) editor).setEnabled(false);
+            }
+            editorContainer.setDeleteButtonEnabled(false);
+            editorContainer.setDeleteButtonTooltip(tooltip);
+        }
+
+
         return editor;
+    }
+
+    private ValueEditor<O> addValueEditor(boolean deleteVisible) {
+       return addValueEditor(deleteVisible, false, null);
     }
 
     private void clearInternal() {
@@ -427,6 +443,18 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         for(O value : object) {
             ValueEditor<O> editor = addValueEditor(true);
             editor.setValue(value);
+        }
+        ensureBlank();
+        updateEnabled();
+        dirty = false;
+    }
+
+    public void setValue(List<O> object,  Predicate<O> consumer, String tooltip){
+        clearInternal();
+        for(O value : object) {
+            ValueEditor<O> editor = addValueEditor(true, consumer.test(value), tooltip);
+            editor.setValue(value);
+
         }
         ensureBlank();
         updateEnabled();

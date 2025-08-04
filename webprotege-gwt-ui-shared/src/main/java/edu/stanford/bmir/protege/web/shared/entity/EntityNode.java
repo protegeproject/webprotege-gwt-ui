@@ -44,15 +44,14 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                  @Nonnull Set<Watch> watches,
                                  int openCommentCount,
                                  Collection<Tag> tags,
-                                 Set<EntityStatus> statuses) {
+                                 ImmutableSet<EntityStatus> statuses) {
         return new AutoValue_EntityNode(entity,
-                browserText,
-                ImmutableSet.copyOf(tags),
-                deprecated,
-                ImmutableSet.copyOf(watches),
-                openCommentCount,
-                shortForms,
-                ImmutableSet.copyOf(statuses));
+                                        browserText,
+                                        ImmutableSet.copyOf(tags),
+                                        deprecated,
+                                        ImmutableSet.copyOf(watches),
+                                        openCommentCount,
+                                        shortForms, statuses);
     }
 
     @JsonCreator
@@ -70,12 +69,12 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                         ShortForm::getShortForm));
 
         return get(entity,
-                browserText,
-                map,
-                deprecated,
-                ImmutableSet.copyOf(watches),
-                openCommentCount,
-                ImmutableSet.copyOf(tags),
+                   browserText,
+                   map,
+                   deprecated,
+                   ImmutableSet.copyOf(watches),
+                   openCommentCount,
+                   ImmutableSet.copyOf(tags),
                 ImmutableSet.copyOf(statuses));
     }
 
@@ -90,13 +89,13 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     @Nonnull
     public static EntityNode getFromEntityData(@Nonnull OWLEntityData entityData) {
         return get(entityData.getEntity(),
-                entityData.getBrowserText(),
-                entityData.getShortForms(),
-                NOT_DEPRECATED,
-                NO_WATCHES,
-                NO_OPEN_COMMENTS,
-                NO_ENTITY_TAGS,
-                NO_STATUSES);
+                   entityData.getBrowserText(),
+                   entityData.getShortForms(),
+                   NOT_DEPRECATED,
+                   NO_WATCHES,
+                   NO_OPEN_COMMENTS,
+                   NO_ENTITY_TAGS,
+                   Collections.emptySet());
     }
 
     @Nonnull
