@@ -7,8 +7,8 @@ import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.event.ParentsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetClassHierarchyParentsByAxiomTypeAction;
 import edu.stanford.bmir.protege.web.shared.linearization.GetEntityLinearizationAction;
 import edu.stanford.bmir.protege.web.shared.linearization.LinearizationSpecification;
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent.ON_HIERARCHY_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.event.ParentsChangedEvent.ON_PARENTS_UPDATED;
 
 public class DirectParentsListPresenter implements HasDispose {
 
@@ -78,24 +78,14 @@ public class DirectParentsListPresenter implements HasDispose {
 
     public void start(WebProtegeEventBus eventBus) {
         this.eventBus = eventBus;
-        this.eventBus.addProjectEventHandler(projectId, ON_HIERARCHY_CHANGED, this::handleEntityHierarchyChanged);
+        this.eventBus.addProjectEventHandler(projectId, ON_PARENTS_UPDATED, this::handleParentsChanged);
     }
 
-    private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
-        if (!event.getHierarchyDescriptor().equals(model.getHierarchyDescriptor())) {
+    private void handleParentsChanged(ParentsChangedEvent event) {
+        if (!displayedEntity.isPresent() || !event.getEntityIri().equals(displayedEntity.get().getIRI())) {
             return;
         }
-        for(GraphModelChange<EntityNode> modelChange : event.getChangeEvent().getChanges()){
-            if(modelChange instanceof EdgeChange) {
-                IRI successorIRI = ((EdgeChange<EntityNode>) modelChange).getSuccessor().getUserObject().getEntity().getIRI();
-                IRI predecessorIRI = ((EdgeChange<EntityNode>) modelChange).getPredecessor().getUserObject().getEntity().getIRI();
-
-                if(this.displayedEntity.isPresent() && (successorIRI.equals(this.displayedEntity.get().getIRI()) || predecessorIRI.equals(this.displayedEntity.get().getIRI()))) {
-                    this.reload();
-                    return;
-                }
-            }
-        }
+        this.reload();
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
