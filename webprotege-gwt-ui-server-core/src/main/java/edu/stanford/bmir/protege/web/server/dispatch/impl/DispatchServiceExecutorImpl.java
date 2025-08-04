@@ -56,7 +56,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var translateEventsAction = (TranslateEventListAction) action;
                 try {
                     GetProjectEventsResult<?> result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
-                    logger.info("Returning result " + result.getEvents());
+                    logger.debug("Returning result " + result.getEvents());
                     return DispatchServiceResultContainer.create(result);
                 } catch (JsonProcessingException e) {
                     logger.error("Error when translating event list", e);
