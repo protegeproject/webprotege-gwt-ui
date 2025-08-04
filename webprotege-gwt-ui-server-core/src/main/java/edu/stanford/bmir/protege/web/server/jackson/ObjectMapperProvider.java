@@ -112,6 +112,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
                 EntityHierarchyChangedEvent.class,
                 CommentPostedEvent.class,
                 CommentUpdatedEvent.class,
+                ParentsChangedEvent.class,
                 DiscussionThreadCreatedEvent.class,
                 DiscussionThreadStatusChangedEvent.class,
                 DisplayNameSettingsChangedEvent.class,
