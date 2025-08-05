@@ -74,6 +74,12 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
 
         @ClassName("marginLeftAuto")
         String marginLeftAuto();
+
+        @ClassName("horizontalScrollContainer")
+        String horizontalScrollContainer();
+
+        @ClassName("horizontalScrollPanel")
+        String horizontalScrollPanel();
     }
 
 }
