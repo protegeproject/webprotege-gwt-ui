@@ -65,11 +65,7 @@
                         <g:HTML ui:field="messageLabel"
                                 addStyleNames="{style.sub-message-style} {style.margin-bottom}"/>
                         <div class="{wp.style.formGroup}" addStyleNames="{style.padding-top}">
-                            <g:Label text="{msg.reasonForChangeMessage}" addStyleNames="{wp.style.formLabel}"/>
-                            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
-                                                       mode="MULTI_LINE"
-                                                       anchorVisible="false"
-                                                       addStyleNames="{style.text-box}"/>
+                            <g:HTMLPanel ui:field="commitMessageViewContainer" addStyleNames="{style.text-box}"/>
                             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
                         </div>
                     </g:HTMLPanel>
