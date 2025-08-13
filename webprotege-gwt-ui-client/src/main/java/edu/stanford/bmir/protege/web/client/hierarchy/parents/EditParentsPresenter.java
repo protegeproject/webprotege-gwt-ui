@@ -114,7 +114,13 @@ public class EditParentsPresenter {
                         view.clearClassesWithRetiredParentsErrors();
                         dispatch.execute(
                                 CreateEntityDiscussionThreadAction.create(projectId, entity, view.getReasonForChange()),
-                                threadActionResult -> closer.closeModal());
+                                threadActionResult -> {
+                                    // Update local history with the commit message
+                                    if (view instanceof EditParentsViewImpl) {
+                                        ((EditParentsViewImpl) view).updateLocalHistory();
+                                    }
+                                    closer.closeModal();
+                                });
                         return;
                     }
 

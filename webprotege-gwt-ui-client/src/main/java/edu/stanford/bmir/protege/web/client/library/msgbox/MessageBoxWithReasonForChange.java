@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistoryStorage;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageView;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
@@ -24,15 +26,22 @@ public class MessageBoxWithReasonForChange {
     private final ModalManager modalManager;
 
     private final Messages messages;
+    private final CommitMessageView commitMessageView;
+    private final CommitMessageLocalHistoryStorage historyStorage;
 
     @Inject
-    public MessageBoxWithReasonForChange(@Nonnull ModalManager modalManager, Messages messages) {
+    public MessageBoxWithReasonForChange(@Nonnull ModalManager modalManager, 
+                                        Messages messages,
+                                        CommitMessageView commitMessageView,
+                                        CommitMessageLocalHistoryStorage historyStorage) {
         this.modalManager = checkNotNull(modalManager);
         this.messages = messages;
+        this.commitMessageView = commitMessageView;
+        this.historyStorage = historyStorage;
     }
 
     private MessageBoxWithReasonForChangeView createMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage) {
-        final MessageBoxWithReasonForChangeView messageBoxView = new MessageBoxWithReasonForChangeView(messages);
+        final MessageBoxWithReasonForChangeView messageBoxView = new MessageBoxWithReasonForChangeView(messages, commitMessageView, historyStorage);
         messageBoxView.setMainMessage(mainMessage);
         messageBoxView.setSubMessage(subMessage);
         messageBoxView.setMessageStyle(messageStyle);
@@ -50,6 +59,7 @@ public class MessageBoxWithReasonForChange {
 
         presenter.setButtonHandler(acceptButton, closer -> {
             if (view.isReasonForChangeSet()) {
+                view.updateLocalHistory();
                 closer.closeModal();
                 acceptHandler.handle(view.getReasonForChangeString());
             }
@@ -75,6 +85,7 @@ public class MessageBoxWithReasonForChange {
         });
         presenter.setButtonHandler(acceptButton, closer -> {
             if (view.isReasonForChangeSet()) {
+                view.updateLocalHistory();
                 closer.closeModal();
                 acceptHandler.handle(view.getReasonForChangeString());
             }

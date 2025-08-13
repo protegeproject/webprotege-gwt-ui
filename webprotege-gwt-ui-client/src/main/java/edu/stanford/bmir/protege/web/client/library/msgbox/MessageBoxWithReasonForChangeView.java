@@ -6,9 +6,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistory;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistoryStorage;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageView;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 
@@ -30,17 +34,32 @@ public class MessageBoxWithReasonForChangeView extends Composite implements Mess
     protected Image iconImage;
 
     @UiField
-    ExpandingTextBoxImpl reasonForChangeTextBox;
+    HTMLPanel commitMessageViewContainer;
+
+    private final CommitMessageView commitMessageView;
+    private final CommitMessageLocalHistoryStorage historyStorage;
 
     @UiField
     Label reasonForChangeErrorLabel;
 
     private final Messages messages;
 
-    public MessageBoxWithReasonForChangeView(Messages messages) {
+    @Inject
+    public MessageBoxWithReasonForChangeView(Messages messages, 
+                                            CommitMessageView commitMessageView,
+                                            CommitMessageLocalHistoryStorage historyStorage) {
         this.messages = messages;
+        this.commitMessageView = commitMessageView;
+        this.historyStorage = historyStorage;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+        
+        // Inject the commit message view into the container
+        commitMessageViewContainer.add(commitMessageView);
+        
+        // Initialize commit message view with local history
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        commitMessageView.setLocalHistory(localHistory.getMessages());
     }
 
     public void setMessageStyle(MessageStyle messageStyle) {
@@ -65,7 +84,7 @@ public class MessageBoxWithReasonForChangeView extends Composite implements Mess
     }
 
     public boolean isReasonForChangeSet() {
-        if (reasonForChangeTextBox.getText().trim().isEmpty()) {
+        if (commitMessageView.getCommitMessage().trim().isEmpty()) {
             reasonForChangeErrorLabel.setText(messages.reasonForChangeError());
             reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
             return false;
@@ -80,6 +99,19 @@ public class MessageBoxWithReasonForChangeView extends Composite implements Mess
     }
 
     public String getReasonForChangeString(){
-        return reasonForChangeTextBox.getText().trim();
+        return commitMessageView.getCommitMessage().trim();
+    }
+    
+    /**
+     * Updates the local history with the current commit message
+     */
+    public void updateLocalHistory() {
+        String currentCommitMessage = commitMessageView.getCommitMessage();
+        if(currentCommitMessage.isEmpty()) {
+           return;
+        }
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        localHistory.pushMessage(currentCommitMessage);
+        historyStorage.saveLocalHistory(localHistory);
     }
 }

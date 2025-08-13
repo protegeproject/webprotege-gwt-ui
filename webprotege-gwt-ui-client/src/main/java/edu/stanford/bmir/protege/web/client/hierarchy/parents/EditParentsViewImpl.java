@@ -4,6 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistory;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistoryStorage;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageView;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxImpl;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -31,7 +34,10 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     final PrimitiveDataListEditor equivalentClassParents;
 
     @UiField
-    ExpandingTextBoxImpl reasonForChangeTextBox;
+    HTMLPanel commitMessageViewContainer;
+
+    private final CommitMessageView commitMessageView;
+    private final CommitMessageLocalHistoryStorage historyStorage;
 
     @UiField
     Label reasonForChangeErrorLabel;
@@ -66,8 +72,11 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
     @Inject
     public EditParentsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                               @Nonnull Messages messages) {
+                               @Nonnull Messages messages,
+                               CommitMessageView commitMessageView,
+                               CommitMessageLocalHistoryStorage historyStorage) {
         this.messages = messages;
+        this.historyStorage = historyStorage;
         parents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
         equivalentClassParents = new PrimitiveDataListEditor(primitiveDataEditorProvider, new NullFreshEntitySuggestStrategy(), PrimitiveType.CLASS);
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -82,6 +91,15 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
         reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
         noParentSetErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+        // Initialize commit message view with local history
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        commitMessageView.setLocalHistory(localHistory.getMessages());
+        this.commitMessageView = commitMessageView;
+
+        // Inject the commit message view into the container
+        commitMessageViewContainer.add(commitMessageView);
+        
+
     }
 
     @Override
@@ -100,10 +118,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     public void setEntityParents(Set<OWLEntityData> entityParents) {
         this.parents.setValue(entityParents.stream().map(entityParent -> (OWLPrimitiveData) entityParent).collect(Collectors.toList()),
                 (entityParent) -> {
-                    boolean response = this.linearizationPathParents.contains(entityParent.asEntity().get().getIRI());
-                    String parentsString = this.linearizationPathParents.stream().map(p -> p.asIRI().get().toString()).collect(Collectors.joining());
-                    logger.info("ALEX verific parinte " + entityParent.asEntity().get().getIRI() + " si raspund cu " + response + " si am " + parentsString);
-                    return response;
+                    return this.linearizationPathParents.contains(entityParent.asEntity().get().getIRI());
                 },
                 "The delete button is disabled due to being a linearization parent"
         );
@@ -126,7 +141,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
 
 
     private boolean isReasonForChangeSet() {
-        if (reasonForChangeTextBox.getText().isEmpty()) {
+        if (commitMessageView.getCommitMessage().isEmpty()) {
             reasonForChangeErrorLabel.setText(messages.reasonForChangeError());
             return false;
         }
@@ -157,7 +172,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Override
     public void clear() {
         textBox.setText("");
-        reasonForChangeTextBox.setText("");
+        commitMessageView.setCommitMessage("");
         clearReasonForChangeErrors();
         clearNoParentSetErrors();
         clearClassesWithCycleErrors();
@@ -167,7 +182,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Nonnull
     @Override
     public String getReasonForChange() {
-        return reasonForChangeTextBox.getText().trim();
+        return commitMessageView.getCommitMessage().trim();
     }
 
     @Override
@@ -228,5 +243,18 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     @Override
     public void setLinearizationPathParents(Set<IRI> linearizationPathParents) {
         this.linearizationPathParents = linearizationPathParents;
+    }
+    
+    /**
+     * Updates the local history with the current commit message
+     */
+    public void updateLocalHistory() {
+        String currentCommitMessage = commitMessageView.getCommitMessage();
+        if(currentCommitMessage.isEmpty()) {
+           return;
+        }
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        localHistory.pushMessage(currentCommitMessage);
+        historyStorage.saveLocalHistory(localHistory);
     }
 }

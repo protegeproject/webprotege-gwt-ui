@@ -60,10 +60,7 @@
             <wp:PrimitiveDataListEditor ui:field="equivalentClassParents"/>
         </g:HTMLPanel>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
-                                       mode="MULTI_LINE"
-                                       anchorVisible="false"/>
+            <g:HTMLPanel ui:field="commitMessageViewContainer"/>
             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
             <g:Label ui:field='noParentSetErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
             <g:HTML ui:field="classesWithCyclesWarningField"
