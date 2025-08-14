@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 /**
@@ -71,6 +73,8 @@ public class ElapsedTimeLabel extends Composite {
     private void updateDisplay() {
         String rendering = TimeUtil.getTimeRendering(baseTime);
         elapsedTimeLabel.setText(rendering);
+        String fullDateTime = TimeUtil.formatTimestamp(baseTime);
+        elapsedTimeLabel.setTitle(fullDateTime);
     }
 
 }
