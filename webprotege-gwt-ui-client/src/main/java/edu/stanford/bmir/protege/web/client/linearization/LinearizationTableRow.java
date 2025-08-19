@@ -215,9 +215,9 @@ public class LinearizationTableRow {
             logger.info("ALEX " + this.isGroupingCheckbox.getValue().getValue() );
 
             if(this.isGroupingCheckbox.getValue().getValue().startsWith("FOLLOW_BASE_LINEARIZATION")) {
-                this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION" + mainRow.isGroupingCheckbox.getValue().getValue());
+                this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isGroupingCheckbox.getValue().getValue());
             }
-            this.isAuxAxChildCheckbox.setValue("FOLLOW_BASE_LINEARIZATION" + mainRow.isAuxAxChildCheckbox.getValue().getValue());
+            this.isAuxAxChildCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isAuxAxChildCheckbox.getValue().getValue());
 
         }
     }
