@@ -596,6 +596,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-markdown-preview")
         String markdownPreview();
+
+        @ClassName("wp-comments-list-box")
+        String recentMessagesListBox();
     }
 
     interface DateTimePicker extends CssResource {

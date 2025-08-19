@@ -325,6 +325,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
         }
     }
 
+    private void refreshChildrenValues(){
+        for (LinearizationTableRow row : tableRowList) {
+            row.populateDerivedLinearizationParents(this.tableRowList);
+        }
+    }
 
     private void orderAndPopulateViewWithRows() {
         List<LinearizationTableRow> orderedRows = tableRowList.stream()

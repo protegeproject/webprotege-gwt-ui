@@ -116,10 +116,25 @@ public class LinearizationTableRow {
 
             this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
             this.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-            this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-            this.isGroupingCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-            this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
-            this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
+
+            this.isGroupingCheckbox = new ConfigurableCheckbox(new NewLinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
+            this.isGroupingCheckbox.addValueChangeHandler((e) -> {
+                handler.handleLinearizationChangeEvent();
+                tableRefresh.refreshTable(this);
+            });
+
+            if (isDerived()) {
+                this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new UneditableLinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+                this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+                });
+            } else {
+                this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+                this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+                    handler.handleLinearizationChangeEvent();
+                    tableRefresh.refreshTable(this);
+                });
+            }
+
 
             initCodingNotes(linearizationSpecification.getCodingNote());
             this.codingNotes = this.commentsWidget.asWidget();
@@ -131,6 +146,7 @@ public class LinearizationTableRow {
             logger.info("Error while initializing table row " + e);
         }
     }
+
 
 
     private void populateEditableLinearizationParent() {
@@ -152,12 +168,10 @@ public class LinearizationTableRow {
             }
 
             setLinearizationParentLabel();
-
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentLabel.setVisible(true);
-
         }
     }
 
@@ -197,6 +211,13 @@ public class LinearizationTableRow {
 
             this.linearizationParentLabel.addStyleName(linearizationCss.getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
+
+            logger.info("ALEX " + this.isGroupingCheckbox.getValue().getValue() );
+
+            if(this.isGroupingCheckbox.getValue().getValue().startsWith("FOLLOW_BASE_LINEARIZATION")) {
+                this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION" + mainRow.isGroupingCheckbox.getValue().getValue());
+            }
+            this.isAuxAxChildCheckbox.setValue("FOLLOW_BASE_LINEARIZATION" + mainRow.isAuxAxChildCheckbox.getValue().getValue());
 
         }
     }

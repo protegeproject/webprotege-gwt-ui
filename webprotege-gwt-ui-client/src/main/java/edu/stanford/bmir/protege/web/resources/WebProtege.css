@@ -696,3 +696,7 @@
 
 .wp-markdown-preview {
 }
+
+.wp-comments-list-box {
+    min-height: 100px;
+}
