@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -289,5 +291,22 @@ public class TimeUtil {
     public static String formatMonth(int month) {
         return MONTH_FORMAT[month];
     }
+
+
+    /**
+     * Formats a timestamp (milliseconds since epoch) into a localized, human-readable string.
+     *
+     * @param timestampMillis The timestamp in milliseconds since the epoch.
+     * @return A formatted date/time string, e.g., "Aug 12, 2025, 3:45 PM".
+     */
+    public static String formatTimestamp(long timestampMillis) {
+        // Medium date and time format (localized)
+        Date d = new Date(timestampMillis);
+        return DATE_LOCALE_MEDIUM.format(d) + " " +
+               DateTimeFormat.getFormat("HH:mm:ss").format(d);
+    }
+
+    private static final DateTimeFormat DATE_LOCALE_MEDIUM =
+            DateTimeFormat.getMediumDateFormat();
 
 }
