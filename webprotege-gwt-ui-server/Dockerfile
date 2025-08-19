@@ -15,9 +15,6 @@ COPY startup.sh /usr/local/bin/startup.sh
 # Make startup script executable
 RUN chmod +x /usr/local/bin/startup.sh
 
-# Create the Catalina/localhost directory for dynamic context configuration
-RUN mkdir -p $CATALINA_HOME/conf/Catalina/localhost
-
 EXPOSE 8080
 
 # Use the startup script as entrypoint
