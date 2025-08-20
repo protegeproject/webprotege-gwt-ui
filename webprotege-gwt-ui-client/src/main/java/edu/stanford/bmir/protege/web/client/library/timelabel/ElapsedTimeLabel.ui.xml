@@ -1,8 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        .elapsedTimeLabel {
+            cursor: default;
+            border-bottom: 1px dotted;
+        }
     </ui:style>
     <g:HTMLPanel>
-        <g:InlineLabel ui:field="elapsedTimeLabel"/>
+        <g:InlineLabel ui:field="elapsedTimeLabel" addStyleNames="{style.elapsedTimeLabel}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

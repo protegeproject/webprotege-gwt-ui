@@ -15,10 +15,6 @@ COPY startup.sh /usr/local/bin/startup.sh
 # Make startup script executable
 RUN chmod +x /usr/local/bin/startup.sh
 
-# Create a context.xml template for Keycloak valve
-RUN mkdir -p $CATALINA_HOME/conf/Catalina/localhost
-COPY context-template.xml $CATALINA_HOME/conf/Catalina/localhost/
-
 EXPOSE 8080
 
 # Use the startup script as entrypoint
