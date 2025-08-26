@@ -59,20 +59,11 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     @UiField
     EditableIcon editableIconUnspecifiedRes;
 
-    String backupUnspecifiedTitle;
-
-    String backupOtherSpecifiedTitle;
-
-    CheckboxValue backupSuppressOtherResidualValue;
-
-    CheckboxValue backupSuppressUnspecifiedResidualValue;
-
     LinearizationChangeEventHandler linearizationChangeEventHandler = () -> {
     };
 
 
     private List<LinearizationTableRow> tableRowList = new ArrayList<>();
-    private List<LinearizationTableRow> backupRows = new ArrayList<>();
 
     private Map<String, LinearizationDefinition> linearizationDefinitonMap = new HashMap<>();
     private Map<String, String> entityParentsMap = new HashMap<>();
@@ -143,7 +134,6 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     public void dispose() {
         flexTable.removeAllRows();
         tableRowList = new ArrayList<>();
-        backupRows = new ArrayList<>();
         isReadOnly = true;
         entityParentsMap = new HashMap<>();
     }
@@ -201,18 +191,9 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     public void setEditable() {
         if (isReadOnly) {
             this.isReadOnly = false;
-            this.backupRows.clear();
-            tableRowList.forEach(tableRow -> {
-                this.backupRows.add(tableRow.clone());
-                tableRow.setEnabled();
-            });
+            tableRowList.forEach(LinearizationTableRow::setEnabled);
 
             if (canEditResiduals) {
-                this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
-                this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
-
-                this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
-                this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
 
                 this.unspecifiedResidualTitle.setEnabled(true);
                 this.otherSpecifiedResidualTitle.setEnabled(true);
@@ -233,32 +214,19 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     }
 
     public void setReadOnly() {
-        if (!isReadOnly) {
-            this.tableRowList.clear();
-            flexTable.removeAllRows();
-            this.backupRows.forEach(backupRow -> this.tableRowList.add(backupRow.clone()));
-            this.tableRowList.forEach(LinearizationTableRow::setReadOnly);
-            initializeTableHeader();
 
-            orderAndPopulateViewWithRows();
+        this.tableRowList.forEach(LinearizationTableRow::setReadOnly);
+        if (canEditResiduals) {
 
-            if (canEditResiduals) {
-                this.suppressOthersSpecifiedResidual.setValue(this.backupSuppressOtherResidualValue);
-                this.suppressUnspecifiedResidual.setValue(this.backupSuppressUnspecifiedResidualValue);
-
-                this.unspecifiedResidualTitle.setValue(this.backupUnspecifiedTitle);
-                this.otherSpecifiedResidualTitle.setValue(this.backupOtherSpecifiedTitle);
-
-                this.editableIconOtherSpecRes.setVisible(false);
-                this.editableIconUnspecifiedRes.setVisible(false);
-                this.editableIconSuppUnspecifiedRes.setVisible(false);
-                this.editableIconSuppOtherSpecRes.setVisible(false);
-            }
-
-            disableResiduals();
-            isReadOnly = true;
-            this.backupRows.clear();
+            this.editableIconOtherSpecRes.setVisible(false);
+            this.editableIconUnspecifiedRes.setVisible(false);
+            this.editableIconSuppUnspecifiedRes.setVisible(false);
+            this.editableIconSuppOtherSpecRes.setVisible(false);
         }
+
+        disableResiduals();
+        isReadOnly = true;
+
     }
 
     @Override
@@ -310,22 +278,13 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
                     SaveEntityLinearizationAction.create(projectId, linearizationSpecification, commitMessage),
                     this,
                     (onSuccess) -> {
-                        this.backupRows.clear();
-                        for (LinearizationTableRow row : this.tableRowList) {
-                            this.backupRows.add(row.clone());
-                        }
-                        this.backupUnspecifiedTitle = this.unspecifiedResidualTitle.getValue();
-                        this.backupOtherSpecifiedTitle = this.otherSpecifiedResidualTitle.getValue();
-
-                        this.backupSuppressOtherResidualValue = suppressOthersSpecifiedResidual.getValue();
-                        this.backupSuppressUnspecifiedResidualValue = suppressUnspecifiedResidual.getValue();
                     },
                     this::setReadOnly
             );
         }
     }
 
-    private void refreshChildrenValues(){
+    private void refreshChildrenValues() {
         for (LinearizationTableRow row : tableRowList) {
             row.populateDerivedLinearizationParents(this.tableRowList);
         }
