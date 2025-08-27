@@ -38,6 +38,7 @@ public class LinearizationTableRow {
 
     private LinearizationCommentsModal linearizationCommentsModal;
 
+    private DerivedAwareLinearizationCheckboxConfig isGroupingConfig;
 
     private String parentIri;
     TableRefresh tableRefresh;
@@ -116,10 +117,27 @@ public class LinearizationTableRow {
 
             this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
             this.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-            this.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsGrouping());
-            this.isGroupingCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-            this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
-            this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
+
+            isGroupingConfig = new DerivedAwareLinearizationCheckboxConfig();
+            this.isGroupingCheckbox = new ConfigurableCheckbox(isGroupingConfig, linearizationSpecification.getIsGrouping());
+            this.isGroupingCheckbox.addValueChangeHandler((e) -> {
+                handler.handleLinearizationChangeEvent();
+                tableRefresh.refreshTable(this);
+            });
+
+            if (isDerived()) {
+                this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new UneditableLinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+                this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+                });
+                isGroupingConfig.setIsDerived(true);
+            } else {
+                this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
+                this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+                    handler.handleLinearizationChangeEvent();
+                    tableRefresh.refreshTable(this);
+                });
+            }
+
 
             initCodingNotes(linearizationSpecification.getCodingNote());
             this.codingNotes = this.commentsWidget.asWidget();
@@ -152,12 +170,10 @@ public class LinearizationTableRow {
             }
 
             setLinearizationParentLabel();
-
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentLabel.setVisible(true);
-
         }
     }
 
@@ -198,6 +214,13 @@ public class LinearizationTableRow {
             this.linearizationParentLabel.addStyleName(linearizationCss.getSecondaryParent());
             this.linearizationParentLabel.setVisible(true);
 
+            this.isGroupingConfig.setParentValue(mainRow.isGroupingCheckbox.getValue());
+
+            if(this.isGroupingCheckbox.getValue().getValue().toUpperCase().startsWith("FOLLOW_BASE_LINEARIZATION")) {
+                this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isGroupingCheckbox.getValue().getValue());
+            }
+            this.isAuxAxChildCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isAuxAxChildCheckbox.getValue().getValue());
+
         }
     }
 
@@ -209,9 +232,10 @@ public class LinearizationTableRow {
 
             this.isGroupingCheckbox.setEnabled(true);
             this.isGroupingCheckbox.setReadOnly(false);
-
-            this.isAuxAxChildCheckbox.setEnabled(true);
-            this.isAuxAxChildCheckbox.setReadOnly(false);
+            if(!isDerived()) {
+                this.isAuxAxChildCheckbox.setEnabled(true);
+                this.isAuxAxChildCheckbox.setReadOnly(false);
+            }
 
             this.commentsWidget.enable();
             if (!isDerived()) {
@@ -246,14 +270,21 @@ public class LinearizationTableRow {
 
 
     public LinearizationSpecification asLinearizationSpecification() {
-        return new LinearizationSpecification(this.isAuxAxChildCheckbox.getValue().getValue(),
-                this.isGroupingCheckbox.getValue().getValue(),
+        return new LinearizationSpecification(getValueFromDerivableCheckbox(this.isAuxAxChildCheckbox.getValue().getValue()),
+                getValueFromDerivableCheckbox(this.isGroupingCheckbox.getValue().getValue()),
                 this.isPartOfCheckbox.getValue().getValue(),
                 this.parentIri,
                 this.linearizationDefinition.getSortingCode(),
                 this.linearizationDefinition.getLinearizationUri(),
                 this.commentsWidget.getText()
         );
+    }
+
+    private String getValueFromDerivableCheckbox(String initialValue) {
+        if(initialValue.startsWith("FOLLOW_BASE_LINEARIZATION_")) {
+            return "FOLLOW_BASE_LINEARIZATION";
+        }
+        return initialValue;
     }
 
 
@@ -293,9 +324,11 @@ public class LinearizationTableRow {
         clone.parentSelectionPanel = new HorizontalPanel();
         clone.parentSelectionPanel.add(clone.linearizationParentSelector);
         clone.parentSelectionPanel.add(clone.linearizationParentLabel);
+
         clone.tableRefresh = this.tableRefresh;
         clone.handler = this.handler;
         clone.parentIri = this.parentIri;
+
         clone.linearizationDefinition = this.linearizationDefinition;
         clone.editableIconDefinition = new EditableIconImpl();
         clone.editableIconDefinition.setVisible(this.editableIconDefinition.isVisible());
@@ -315,12 +348,29 @@ public class LinearizationTableRow {
         defPanel.add(clone.editableIconDefinition);
 
         clone.linearizationDefinitionWidget = defPanel;
+
         clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsIncludedInLinearization());
         clone.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-        clone.isGroupingCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsGrouping());
-        clone.isGroupingCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-        clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsAuxiliaryAxisChild());
-        clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
+
+        clone.isGroupingConfig = new DerivedAwareLinearizationCheckboxConfig();
+        clone.isGroupingCheckbox = new ConfigurableCheckbox(clone.isGroupingConfig, this.isGroupingCheckbox.getValue().getValue());
+        clone.isGroupingCheckbox.addValueChangeHandler((e) -> {
+            handler.handleLinearizationChangeEvent();
+            tableRefresh.refreshTable(this);
+        });
+
+        if (isDerived()) {
+            clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new UneditableLinearizationCheckboxConfig(), this.isAuxAxChildCheckbox.getValue().getValue());
+            clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+            });
+            clone.isGroupingConfig.setIsDerived(true);
+        } else {
+            clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), this.isAuxAxChildCheckbox.getValue().getValue());
+            clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
+                handler.handleLinearizationChangeEvent();
+                tableRefresh.refreshTable(this);
+            });
+        }
 
         LinearizationComments commentsClone = new LinearizationComments(this.commentsWidget.getText(), linearizationCommentsModal, handler);
 

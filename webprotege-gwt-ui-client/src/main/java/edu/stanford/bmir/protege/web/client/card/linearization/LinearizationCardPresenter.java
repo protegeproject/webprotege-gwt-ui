@@ -134,6 +134,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         view.setWhoFicEntity(response.getWhoficEntityLinearizationSpecification());
                         if (!isReadOnly) {
                             view.setEditable();
+                        }else {
+                            view.setReadOnly();
                         }
                         pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
                         fireEvent(new DirtyChangedEvent());
@@ -163,7 +165,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void cancelEditing() {
         this.isReadOnly = true;
-        view.setReadOnly();
+
+        displayEntity(renderedEntity);
         fireEvent(new DirtyChangedEvent());
     }
 
