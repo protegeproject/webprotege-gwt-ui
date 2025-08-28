@@ -165,8 +165,9 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     @Override
     public void cancelEditing() {
         this.isReadOnly = true;
-
-        displayEntity(renderedEntity);
+        if(renderedEntity != null) {
+            displayEntity(renderedEntity);
+        }
         fireEvent(new DirtyChangedEvent());
     }
 
