@@ -24,8 +24,9 @@ public abstract class MoveHierarchyNodeIcdAction implements ProjectAction<MoveHi
                                                     @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
                                                     @JsonProperty("fromNodePath") @Nonnull Path<EntityNode> fromNodePath,
                                                     @JsonProperty("toNodeParentPath") @Nonnull Path<EntityNode> toNodeParentPath,
-                                                    @JsonProperty("dropType") @Nonnull DropType dropType) {
-        return new AutoValue_MoveHierarchyNodeIcdAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType);
+                                                    @JsonProperty("dropType") @Nonnull DropType dropType,
+                                                    @JsonProperty("commitMessage") String commitMessage) {
+        return new AutoValue_MoveHierarchyNodeIcdAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType, commitMessage);
     }
 
     @Nonnull
@@ -43,4 +44,6 @@ public abstract class MoveHierarchyNodeIcdAction implements ProjectAction<MoveHi
 
     @Nonnull
     public abstract DropType getDropType();
+
+    public abstract String getCommitMessage();
 }
