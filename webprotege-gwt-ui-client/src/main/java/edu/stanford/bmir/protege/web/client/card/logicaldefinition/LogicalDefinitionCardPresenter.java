@@ -111,11 +111,13 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void finishEditing(String commitMessage) {
+        this.readOnly = true;
         if(isDirty()) {
             view.saveValues(commitMessage);
             view.switchToReadOnly();
             fireEvent(new DirtyChangedEvent());
         }
+        view.switchToReadOnly();
     }
 
     @Override
