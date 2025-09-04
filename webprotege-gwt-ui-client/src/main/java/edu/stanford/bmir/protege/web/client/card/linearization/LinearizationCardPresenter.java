@@ -179,6 +179,7 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
             pristineLinearizationData = Optional.ofNullable(view.getLinSpec());
             fireEvent(new DirtyChangedEvent());
         }
+        view.setReadOnly();
     }
 
     @Override

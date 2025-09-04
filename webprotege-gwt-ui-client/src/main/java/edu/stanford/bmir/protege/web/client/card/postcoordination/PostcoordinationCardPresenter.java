@@ -178,6 +178,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
                 );
             }
         });
+        setReadOnlyMode();
     }
 
     @Override
