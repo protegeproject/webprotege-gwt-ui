@@ -27,12 +27,12 @@ public class DerivedAwareLinearizationCheckboxConfig extends CheckBoxConfig {
     public static List<CheckboxValue> AVAILABLE_VALUES_LIST_FOR_DERIVED = Arrays.asList(new CheckboxValue(CHECK_SVG, "TRUE", "Allowed"),
             new CheckboxValue(NOT_ALLOWED, "FALSE", "Not allowed"));
 
-    public static List<CheckboxValue> AVAILABLE_DEFAULT_VALUE_LIST = Arrays.asList(new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Default primary value"),
-            new CheckboxValue(DEFAULT_CHECK_SVG, "FOLLOW_BASE_LINEARIZATION_TRUE", "Default primary value"),
-            new CheckboxValue(DEFAULT_NOT_ALLOWED, "FOLLOW_BASE_LINEARIZATION_FALSE", "Default primary value"));
+    public static List<CheckboxValue> AVAILABLE_DEFAULT_VALUE_LIST = Arrays.asList(new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Inherited (Value no set)"),
+            new CheckboxValue(DEFAULT_CHECK_SVG, "FOLLOW_BASE_LINEARIZATION_TRUE", "Inherited (True)"),
+            new CheckboxValue(DEFAULT_NOT_ALLOWED, "FOLLOW_BASE_LINEARIZATION_FALSE", "Inherited (False)"));
 
     protected DerivedAwareLinearizationCheckboxConfig() {
-        super(new CheckboxValue(DEFAULT_UNKNOWN_SVG, "UNKNOWN", "Not set value"), AVAILABLE_VALUES_LIST);
+        super(new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Inherited (Value no set)"), AVAILABLE_VALUES_LIST);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DerivedAwareLinearizationCheckboxConfig extends CheckBoxConfig {
     }
 
     private CheckboxValue getNextValueForDerivedClasses(CheckboxValue checkboxValue) {
-        if(checkboxValue.getValue().startsWith("FOLLOW_BASE_LINEARIZATION_")) {
+        if(checkboxValue.getValue().startsWith("FOLLOW_BASE_LINEARIZATION")) {
             return AVAILABLE_VALUES_LIST_FOR_DERIVED.get(0);
         }
 
@@ -81,7 +81,7 @@ public class DerivedAwareLinearizationCheckboxConfig extends CheckBoxConfig {
 
             }
         }else {
-            throw new RuntimeException("Given value " + checkboxValue + " is not in scrollable values ");
+            throw new RuntimeException("Given value " + checkboxValue.getValue() + " is not in scrollable values ");
         }
     }
 
