@@ -39,6 +39,7 @@ public class LinearizationTableRow {
     private LinearizationCommentsModal linearizationCommentsModal;
 
     private DerivedAwareLinearizationCheckboxConfig isGroupingConfig;
+    private DerivedAwareLinearizationCheckboxConfig isPartOfCheckboxConfig;
 
     private String parentIri;
     TableRefresh tableRefresh;
@@ -115,12 +116,18 @@ public class LinearizationTableRow {
             this.parentSelectionPanel.add(linearizationParentLabel);
             this.parentSelectionPanel.setVisible(true);
 
-            this.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsIncludedInLinearization());
-            this.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
 
             isGroupingConfig = new DerivedAwareLinearizationCheckboxConfig();
+            isPartOfCheckboxConfig = new DerivedAwareLinearizationCheckboxConfig();
+
             this.isGroupingCheckbox = new ConfigurableCheckbox(isGroupingConfig, linearizationSpecification.getIsGrouping());
             this.isGroupingCheckbox.addValueChangeHandler((e) -> {
+                handler.handleLinearizationChangeEvent();
+                tableRefresh.refreshTable(this);
+            });
+
+            this.isPartOfCheckbox = new ConfigurableCheckbox(isPartOfCheckboxConfig, linearizationSpecification.getIsIncludedInLinearization());
+            this.isPartOfCheckbox.addValueChangeHandler((e) -> {
                 handler.handleLinearizationChangeEvent();
                 tableRefresh.refreshTable(this);
             });
@@ -130,6 +137,7 @@ public class LinearizationTableRow {
                 this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
                 });
                 isGroupingConfig.setIsDerived(true);
+                isPartOfCheckboxConfig.setIsDerived(true);
             } else {
                 this.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), linearizationSpecification.getIsAuxiliaryAxisChild());
                 this.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
@@ -215,9 +223,13 @@ public class LinearizationTableRow {
             this.linearizationParentLabel.setVisible(true);
 
             this.isGroupingConfig.setParentValue(mainRow.isGroupingCheckbox.getValue());
+            this.isPartOfCheckboxConfig.setParentValue(mainRow.isPartOfCheckbox.getValue());
 
             if(this.isGroupingCheckbox.getValue().getValue().toUpperCase().startsWith("FOLLOW_BASE_LINEARIZATION")) {
                 this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isGroupingCheckbox.getValue().getValue());
+            }
+            if(this.isPartOfCheckbox.getValue().getValue().toUpperCase().startsWith("FOLLOW_BASE_LINEARIZATION")) {
+                this.isPartOfCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isPartOfCheckbox.getValue().getValue());
             }
             this.isAuxAxChildCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isAuxAxChildCheckbox.getValue().getValue());
 
@@ -272,7 +284,7 @@ public class LinearizationTableRow {
     public LinearizationSpecification asLinearizationSpecification() {
         return new LinearizationSpecification(getValueFromDerivableCheckbox(this.isAuxAxChildCheckbox.getValue().getValue()),
                 getValueFromDerivableCheckbox(this.isGroupingCheckbox.getValue().getValue()),
-                this.isPartOfCheckbox.getValue().getValue(),
+                getValueFromDerivableCheckbox(this.isPartOfCheckbox.getValue().getValue()),
                 this.parentIri,
                 this.linearizationDefinition.getSortingCode(),
                 this.linearizationDefinition.getLinearizationUri(),
@@ -349,9 +361,6 @@ public class LinearizationTableRow {
 
         clone.linearizationDefinitionWidget = defPanel;
 
-        clone.isPartOfCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), clone.linearizationSpecification.getIsIncludedInLinearization());
-        clone.isPartOfCheckbox.addValueChangeHandler((e) -> handler.handleLinearizationChangeEvent());
-
         clone.isGroupingConfig = new DerivedAwareLinearizationCheckboxConfig();
         clone.isGroupingCheckbox = new ConfigurableCheckbox(clone.isGroupingConfig, this.isGroupingCheckbox.getValue().getValue());
         clone.isGroupingCheckbox.addValueChangeHandler((e) -> {
@@ -359,11 +368,20 @@ public class LinearizationTableRow {
             tableRefresh.refreshTable(this);
         });
 
+        clone.isPartOfCheckboxConfig = new DerivedAwareLinearizationCheckboxConfig();
+        clone.isPartOfCheckbox = new ConfigurableCheckbox(clone.isPartOfCheckboxConfig, this.isPartOfCheckbox.getValue().getValue());
+        clone.isPartOfCheckbox.addValueChangeHandler((e) -> {
+            handler.handleLinearizationChangeEvent();
+            tableRefresh.refreshTable(this);
+        });
+
+
         if (isDerived()) {
             clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new UneditableLinearizationCheckboxConfig(), this.isAuxAxChildCheckbox.getValue().getValue());
             clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {
             });
             clone.isGroupingConfig.setIsDerived(true);
+            clone.isPartOfCheckboxConfig.setIsDerived(true);
         } else {
             clone.isAuxAxChildCheckbox = new ConfigurableCheckbox(new LinearizationCheckboxConfig(), this.isAuxAxChildCheckbox.getValue().getValue());
             clone.isAuxAxChildCheckbox.addValueChangeHandler((e) -> {

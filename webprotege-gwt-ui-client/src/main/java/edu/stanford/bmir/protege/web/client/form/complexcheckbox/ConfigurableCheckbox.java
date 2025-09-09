@@ -55,6 +55,7 @@ public class ConfigurableCheckbox implements IsWidget, HasValue<CheckboxValue>, 
     @Override
     public void setValue(CheckboxValue value) {
         presenter.setValue(value);
+        presenter.setTitle(value.getTooltip());
     }
 
     public void setValue(String value) {
