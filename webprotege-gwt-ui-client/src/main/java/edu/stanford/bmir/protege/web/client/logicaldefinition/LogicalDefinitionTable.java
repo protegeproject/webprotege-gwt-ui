@@ -260,6 +260,7 @@ public class LogicalDefinitionTable implements IsWidget {
             String selectedPostCoordinationIri = axisDropdown.getSelectedValue();
             if(selectedPostCoordinationIri.isEmpty()) {
                 axisDropdown.addStyleName(style.axisDropdownPlaceholder());
+                this.valuesButton.setEnabled(false);
             } else {
                 axisDropdown.removeStyleName(style.axisDropdownPlaceholder());
                 this.valuesButton.setEnabled(true);
