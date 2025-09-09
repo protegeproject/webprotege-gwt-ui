@@ -225,8 +225,6 @@ public class LinearizationTableRow {
             this.isGroupingConfig.setParentValue(mainRow.isGroupingCheckbox.getValue());
             this.isPartOfCheckboxConfig.setParentValue(mainRow.isPartOfCheckbox.getValue());
 
-            logger.info("ALEX AVEM " + this.isGroupingCheckbox.getValue().getValue() + " si " + this.isPartOfCheckbox.getValue().getValue());
-
             if(this.isGroupingCheckbox.getValue().getValue().toUpperCase().startsWith("FOLLOW_BASE_LINEARIZATION")) {
                 this.isGroupingCheckbox.setValue("FOLLOW_BASE_LINEARIZATION_" + mainRow.isGroupingCheckbox.getValue().getValue());
             }
@@ -362,13 +360,6 @@ public class LinearizationTableRow {
         defPanel.add(clone.editableIconDefinition);
 
         clone.linearizationDefinitionWidget = defPanel;
-
-        clone.isPartOfCheckboxConfig = new DerivedAwareLinearizationCheckboxConfig();
-        clone.isPartOfCheckbox = new ConfigurableCheckbox(clone.isPartOfCheckboxConfig, this.isPartOfCheckbox.getValue().getValue());
-        clone.isPartOfCheckbox.addValueChangeHandler((e) -> {
-            handler.handleLinearizationChangeEvent();
-            tableRefresh.refreshTable(this);
-        });
 
         clone.isGroupingConfig = new DerivedAwareLinearizationCheckboxConfig();
         clone.isGroupingCheckbox = new ConfigurableCheckbox(clone.isGroupingConfig, this.isGroupingCheckbox.getValue().getValue());
