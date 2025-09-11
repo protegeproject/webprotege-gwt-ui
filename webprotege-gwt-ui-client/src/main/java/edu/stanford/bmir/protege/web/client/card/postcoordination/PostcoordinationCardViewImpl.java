@@ -163,6 +163,7 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         flexTable.getCellFormatter().addStyleName(0, labelList.size() + 1, style.getPostCoordinationHeader());
         flexTable.addStyleName(style.getPostCoordinationTable());
         flexTable.getRowFormatter().addStyleName(0, style.getHeaderLabelRow());
+        flexTable.getRowFormatter().addStyleName(0, style.stickyTableHeader());
     }
 
     private void initializeTableContent() {
