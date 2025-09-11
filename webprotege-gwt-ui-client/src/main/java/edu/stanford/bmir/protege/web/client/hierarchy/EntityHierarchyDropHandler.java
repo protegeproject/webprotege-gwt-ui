@@ -116,7 +116,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                                 hierarchyDescriptor.get(),
                                 nodePath,
                                 targetPath,
-                                dropType),
+                                dropType,
+                                reasonForChangeText),
                         moveResult -> {
                             if (moveResult.isMoved()) {
                                 dropEndHandler.handleDropComplete();
