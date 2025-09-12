@@ -25,6 +25,9 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
     HTMLPanel paneContainer;
 
     @UiField
+    ScrollPanel scrollPanel;
+
+    @UiField
     protected FlexTable flexTable;
     @UiField
     public VerticalPanel scaleValueCardList;
@@ -51,6 +54,21 @@ public class PostcoordinationCardViewImpl extends Composite implements Postcoord
         initWidget(ourUiBinder.createAndBindUi(this));
 
         style.ensureInjected();
+        
+        // Detect browser and apply appropriate height class
+        detectBrowserAndApplyHeight();
+    }
+    
+    private void detectBrowserAndApplyHeight() {
+        String userAgent = com.google.gwt.user.client.Window.Navigator.getUserAgent().toLowerCase();
+        
+        if (userAgent.contains("firefox")) {
+            // Apply Firefox height (90%)
+            scrollPanel.addStyleName(style.stickyTableContainerFirefox());
+        } else {
+            // Apply Chrome/Webkit height (100%)
+            scrollPanel.addStyleName(style.stickyTableContainerChrome());
+        }
     }
 
     @Override

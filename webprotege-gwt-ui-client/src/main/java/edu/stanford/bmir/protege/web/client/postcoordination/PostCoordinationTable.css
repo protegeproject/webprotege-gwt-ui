@@ -13,9 +13,6 @@
     overflow: hidden;
 }
 
-.rotatedHeader {
-}
-
 .rotatedHeader div {
     transform-origin: left;
     transform: rotate(-80deg) translate(-70px, 100%);
@@ -80,12 +77,13 @@
 
 .postCoordinationTable {
     border-radius: 5px;
-    overflow: hidden;
     -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
     box-shadow: 0 0 40px 0 rgba(0, 0, 0, .15);
     margin: 15px;
     border-collapse: separate;
     border-spacing: 0;
+    position: relative;
+    width: 100%;
 }
 
 .scaleValueHeader {
@@ -177,14 +175,95 @@
     height: 100%;
 }
 
+/* Custom scrollbar styling for horizontal scroll panel */
+.horizontalScrollPanel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.horizontalScrollPanel::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.horizontalScrollPanel::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.horizontalScrollPanel::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling for horizontal scroll panel */
+.horizontalScrollPanel {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
 .stickyTableContainer {
+    overflow: auto;
+    position: relative;
+    contain: layout style paint;
+    border-radius: 5px;
+}
+
+.stickyTableContainerChrome {
+    height: 92%;
+}
+
+.stickyTableContainerFirefox {
     height: 90%;
-    overflow-y: auto;
-    overflow-x: auto;
+}
+
+/* Custom scrollbar styling - only applies to webkit browsers */
+.stickyTableContainer::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.stickyTableContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.stickyTableContainer::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.stickyTableContainer::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling */
+.stickyTableContainer {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
 .stickyTableHeader {
+    position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
     z-index: 10;
+    background-color: literal("var(--grid-header--background-color)");
+    border-radius: literal("var(--grid-header--border-radius)");
+}
+
+.stickyTableHeader td {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: literal("var(--grid-header--background-color)") !important;
+    border-bottom: 1px solid #d0d0d0;
+}
+
+/* Alternative approach for Chrome - apply sticky to individual header cells */
+.postCoordinationHeader {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: literal("var(--grid-header--background-color)") !important;
 }

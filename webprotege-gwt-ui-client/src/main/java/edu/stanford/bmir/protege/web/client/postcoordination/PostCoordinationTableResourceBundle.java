@@ -78,6 +78,12 @@ public interface PostCoordinationTableResourceBundle extends ClientBundle {
         @ClassName("stickyTableContainer")
         String stickyTableContainer();
 
+        @ClassName("stickyTableContainerChrome")
+        String stickyTableContainerChrome();
+
+        @ClassName("stickyTableContainerFirefox")
+        String stickyTableContainerFirefox();
+
         @ClassName("stickyTableHeader")
         String stickyTableHeader();
 

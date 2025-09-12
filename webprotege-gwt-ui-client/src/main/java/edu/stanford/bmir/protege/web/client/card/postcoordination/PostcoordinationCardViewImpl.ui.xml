@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="pc" type="edu.stanford.bmir.protege.web.client.postcoordination.PostCoordinationTableResourceBundle"/>
     <g:HTMLPanel ui:field="paneContainer">
-        <g:ScrollPanel width="100%" addStyleNames="{pc.style.stickyTableContainer}">
+        <g:ScrollPanel ui:field="scrollPanel" width="100%" addStyleNames="{pc.style.stickyTableContainer}">
             <g:FlexTable width="100%" ui:field="flexTable"/>
         </g:ScrollPanel>
         <g:VerticalPanel width="100%" ui:field="scaleValueCardList"/>
