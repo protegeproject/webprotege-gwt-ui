@@ -19,13 +19,13 @@ public class DerivedAwareLinearizationCheckboxConfig extends CheckBoxConfig {
     private CheckboxValue parentValue;
     private boolean isDerived = false;
 
-    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(UNKNOWN_SVG, "UNKNOWN", "Not set value"),
-            new CheckboxValue(CHECK_SVG, "TRUE", "Allowed"),
-            new CheckboxValue(NOT_ALLOWED, "FALSE", "Not allowed"));
+    public static List<CheckboxValue> AVAILABLE_VALUES_LIST = Arrays.asList(new CheckboxValue(UNKNOWN_SVG, "UNKNOWN", "Value no set"),
+            new CheckboxValue(CHECK_SVG, "TRUE", "True"),
+            new CheckboxValue(NOT_ALLOWED, "FALSE", "False"));
 
 
-    public static List<CheckboxValue> AVAILABLE_VALUES_LIST_FOR_DERIVED = Arrays.asList(new CheckboxValue(CHECK_SVG, "TRUE", "Allowed"),
-            new CheckboxValue(NOT_ALLOWED, "FALSE", "Not allowed"));
+    public static List<CheckboxValue> AVAILABLE_VALUES_LIST_FOR_DERIVED = Arrays.asList(new CheckboxValue(CHECK_SVG, "TRUE", "True"),
+            new CheckboxValue(NOT_ALLOWED, "FALSE", "False"));
 
     public static List<CheckboxValue> AVAILABLE_DEFAULT_VALUE_LIST = Arrays.asList(new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Inherited (Value no set)"),
             new CheckboxValue(DEFAULT_CHECK_SVG, "FOLLOW_BASE_LINEARIZATION_TRUE", "Inherited (True)"),
@@ -48,19 +48,19 @@ public class DerivedAwareLinearizationCheckboxConfig extends CheckBoxConfig {
     @Override
     public CheckboxValue findValue(String inputValue) {
         if(inputValue == null || inputValue.isEmpty()) {
-            return new CheckboxValue(NOT_ALLOWED, "FALSE", "Not allowed");
+            return new CheckboxValue(NOT_ALLOWED, "FALSE", "False");
         }
         List<CheckboxValue> allValues = new ArrayList<>();
         allValues.addAll(AVAILABLE_VALUES_LIST);
         allValues.addAll(AVAILABLE_DEFAULT_VALUE_LIST);
 
         if("follow_base_linearization".equalsIgnoreCase(inputValue)) {
-            return new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Not set value");
+            return new CheckboxValue(DEFAULT_UNKNOWN_SVG, "FOLLOW_BASE_LINEARIZATION_UNKNOWN", "Value no set");
         }
 
         return allValues.stream().filter(value -> value.getValue().equalsIgnoreCase(inputValue))
                 .findFirst()
-                .orElse(new CheckboxValue(NOT_ALLOWED, "FALSE", "Not allowed"));
+                .orElse(new CheckboxValue(NOT_ALLOWED, "FALSE", "False"));
     }
 
     private CheckboxValue getNextValueForDerivedClasses(CheckboxValue checkboxValue) {
