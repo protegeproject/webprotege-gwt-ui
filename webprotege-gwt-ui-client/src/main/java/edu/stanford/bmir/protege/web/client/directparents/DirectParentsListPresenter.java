@@ -132,6 +132,7 @@ public class DirectParentsListPresenter implements HasDispose {
                                     .map(LinearizationSpecification::getLinearizationParent);
 
                             mmsParent.ifPresent(view::setMainParent);
+                            view.markEquivalentOnlyParents();
                         });
                     }
             );

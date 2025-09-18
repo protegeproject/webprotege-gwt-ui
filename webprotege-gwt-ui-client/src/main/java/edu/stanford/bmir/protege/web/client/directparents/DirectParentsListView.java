@@ -13,4 +13,6 @@ public interface DirectParentsListView extends IsWidget {
     void markParents(@Nonnull List<DirectParentView> directParentViews, Set<OWLEntityData> equivalentOnlyParents);
     void setMainParent(String parentIri);
 
+    void markEquivalentOnlyParents();
+
 }
