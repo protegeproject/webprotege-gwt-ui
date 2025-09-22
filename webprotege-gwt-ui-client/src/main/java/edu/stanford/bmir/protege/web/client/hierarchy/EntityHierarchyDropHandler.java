@@ -128,7 +128,11 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                                 return;
                             }
                             if (moveResult.isDestinationRetiredClass()) {
-                                messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                                String errorMessage = messages.classHierarchy_cannotMoveReleasedClassToRetiredParent();
+                                if(moveResult.getReleasedChildrenValidationMessage() != null && !moveResult.getReleasedChildrenValidationMessage().isEmpty()) {
+                                    errorMessage = errorMessage + ". " + moveResult.getReleasedChildrenValidationMessage();
+                                }
+                                messageBox.showMessage(errorMessage);
                             } else if (moveResult.isInitialParentLinPathParent()) {
                                 messageBox.showMessage(
                                         messages.classHierarchy_removeParentThatIsLinearizationPathParent(

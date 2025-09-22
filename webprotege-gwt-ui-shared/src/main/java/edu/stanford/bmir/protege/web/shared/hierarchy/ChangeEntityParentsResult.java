@@ -19,8 +19,9 @@ public abstract class ChangeEntityParentsResult implements Result {
     @JsonCreator
     public static ChangeEntityParentsResult create(@JsonProperty("classesWithCycle") @Nonnull Set<OWLEntityData> classesWithCycle,
                                                    @JsonProperty("classesWithRetiredParents") @Nonnull Set<OWLEntityData> classesWithRetiredParents,
+                                                   @Nullable @JsonProperty("releasedChildrenValidationMessage") String releasedChildrenValidationMessage,
                                                    @JsonProperty("oldParentsThatArelinearizationPathParents") @Nullable Set<OWLEntityData> oldParentsThatArelinearizationPathParents) {
-        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, oldParentsThatArelinearizationPathParents);
+        return new AutoValue_ChangeEntityParentsResult(classesWithCycle, classesWithRetiredParents, oldParentsThatArelinearizationPathParents, releasedChildrenValidationMessage);
     }
 
     @JsonProperty("classesWithCycle")
@@ -35,6 +36,10 @@ public abstract class ChangeEntityParentsResult implements Result {
     @Nonnull
     public abstract Set<OWLEntityData> getOldParentsThatAreLinearizationPathParents();
 
+    @JsonProperty("releasedChildrenValidationMessage")
+    @Nullable
+    public abstract String getReleasedChildrenValidationMessage();
+
     public boolean hasClassesWithCycle() {
         return !getClassesWithCycle().isEmpty();
     }
@@ -47,8 +52,12 @@ public abstract class ChangeEntityParentsResult implements Result {
         return !getOldParentsThatAreLinearizationPathParents().isEmpty();
     }
 
+    public boolean hasReleasedChildrenValidationMessage(){
+        return getReleasedChildrenValidationMessage() != null && !getReleasedChildrenValidationMessage().isEmpty();
+    }
+
     public boolean isFailure() {
-        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasOldParentAsLinearizationPathParent();
+        return hasClassesWithRetiredParents() || hasClassesWithCycle() || hasOldParentAsLinearizationPathParent() || hasReleasedChildrenValidationMessage();
     }
 
     public boolean isSuccess() {

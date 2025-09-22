@@ -125,7 +125,13 @@ public class BulkEditOperationWorkflow {
                             return;
                         }
                         if (moveEntitiesResult.isDestinationRetiredClass()) {
-                            messageBox.showMessage(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                            StringBuilder errorMessage = new StringBuilder(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
+                            if(moveEntitiesResult.getReleasedChildrenValidationMessages() != null && !moveEntitiesResult.getReleasedChildrenValidationMessages().isEmpty()) {
+                                for(String parentName : moveEntitiesResult.getReleasedChildrenValidationMessages().keySet()) {
+                                    errorMessage.append(messages.classHierarchy_cannotMoveReleasedClassWithChildrenToRetiredParent(moveEntitiesResult.getReleasedChildrenValidationMessages().get(parentName)));
+                                }
+                            }
+                            messageBox.showMessage(errorMessage.toString());
                         }
                         if (moveEntitiesResult.hasOldParentAsLinearizationPathParent()) {
                             StringBuilder messageBuffer = new StringBuilder();
