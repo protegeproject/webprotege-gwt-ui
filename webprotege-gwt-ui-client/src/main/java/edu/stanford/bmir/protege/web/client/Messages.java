@@ -1291,6 +1291,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("<em>A released class cannot be moved to a retired parent!")
     String classHierarchy_cannotMoveReleasedClassToRetiredParent();
 
+    @DefaultMessage("<em>{0}</br>")
+    String classHierarchy_cannotMoveReleasedClassWithChildrenToRetiredParent(String validationMessage);
 
     @DefaultMessage("<em>Cannot remove parent <i>{0}</i> from entities: <i>{1}</i> because he is linearization path parent")
     String classHierarchy_cannotRemoveParentIfLinearizationPathParent(String parent, String entities);

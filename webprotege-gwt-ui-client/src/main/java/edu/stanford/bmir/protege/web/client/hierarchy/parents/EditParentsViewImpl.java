@@ -55,6 +55,8 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
     HTML linearizationPathParentField;
 
     @UiField
+    HTML releasedChildrenErrorsField;
+    @UiField
     HTMLPanel equivalentParentClassTooltip;
 
     @UiField
@@ -227,6 +229,19 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         linearizationPathParentField.setHTML(messages.classHierarchy_removeParentThatIsLinearizationPathParent(linearizationPathParents));
         linearizationPathParentField.setVisible(true);
     }
+
+    @Override
+    public void displayReleasedChildrenError(String entityName, String validationMessage) {
+        releasedChildrenErrorsField.setVisible(true);
+        releasedChildrenErrorsField.setHTML(messages.classHierarchy_cannotMoveReleasedClassWithChildrenToRetiredParent(validationMessage));
+    }
+
+    @Override
+    public void clearReleasedChildrenError(){
+        releasedChildrenErrorsField.setVisible(false);
+        releasedChildrenErrorsField.setHTML("");
+    }
+
 
     @Override
     public IsWidget getHelpTooltip() {

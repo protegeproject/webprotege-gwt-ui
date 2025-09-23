@@ -39,6 +39,8 @@ public class EditParentsPresenter {
     @Nullable
     private OWLEntity entity;
 
+    private OWLEntityData entityAsEntityData;
+
     private Optional<ClassHierarchyDescriptor> classHierarchyDescriptor = Optional.empty();
 
     @Nonnull
@@ -76,7 +78,10 @@ public class EditParentsPresenter {
         modalPresenter.setButtonHandler(DialogButton.OK, this::handleHierarchyChange);
         modalManager.showModal(modalPresenter);
         dispatch.execute(GetEntityRenderingAction.create(projectId, entity),
-                result -> view.setOwlEntityData(result.getEntityData()));
+                result -> {
+                    this.entityAsEntityData = result.getEntityData();
+                    view.setOwlEntityData(result.getEntityData());
+                });
 
         classHierarchyDescriptor.ifPresent(id -> dispatch.execute(GetClassHierarchyParentsByAxiomTypeAction.create(projectId, entity.asOWLClass(), classHierarchyDescriptor.get()),
                 result -> {
@@ -128,6 +133,11 @@ public class EditParentsPresenter {
                         view.clearClassesWithRetiredParentsErrors();
                         Set<OWLEntityData> classesWithRetiredParents = changeEntityParentsResult.getClassesWithRetiredParents();
                         view.markClassesWithRetiredParents(classesWithRetiredParents);
+                    }
+
+                    if (changeEntityParentsResult.getReleasedChildrenValidationMessage() != null && !changeEntityParentsResult.getReleasedChildrenValidationMessage().isEmpty()) {
+                        view.clearReleasedChildrenError();
+                        view.displayReleasedChildrenError(entityAsEntityData.getBrowserText(), changeEntityParentsResult.getReleasedChildrenValidationMessage());
                     }
 
                     if (changeEntityParentsResult.hasClassesWithCycle()) {

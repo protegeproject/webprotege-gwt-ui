@@ -35,7 +35,11 @@ public interface EditParentsView extends IsWidget, HasBusy {
 
     void clearLinearizationPathParentErrors();
 
+    void clearReleasedChildrenError();
+
     void markLinearizationPathParent(String linearizationPathParents);
+
+    void displayReleasedChildrenError(String entityName, String validationMessage);
 
     IsWidget getHelpTooltip();
 
