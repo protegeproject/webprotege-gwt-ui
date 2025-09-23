@@ -124,7 +124,7 @@ public class BulkEditOperationWorkflow {
                         if (moveEntitiesResult.isSuccess()) {
                             return;
                         }
-                        if (moveEntitiesResult.isDestinationRetiredClass()) {
+                        if (moveEntitiesResult.isDestinationRetiredClass() || (moveEntitiesResult.getReleasedChildrenValidationMessages() != null && !moveEntitiesResult.getReleasedChildrenValidationMessages().isEmpty())) {
                             StringBuilder errorMessage = new StringBuilder(messages.classHierarchy_cannotMoveReleasedClassToRetiredParent());
                             if(moveEntitiesResult.getReleasedChildrenValidationMessages() != null && !moveEntitiesResult.getReleasedChildrenValidationMessages().isEmpty()) {
                                 for(String parentName : moveEntitiesResult.getReleasedChildrenValidationMessages().keySet()) {
