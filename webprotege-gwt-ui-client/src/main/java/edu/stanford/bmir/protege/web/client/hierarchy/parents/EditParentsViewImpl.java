@@ -179,6 +179,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         clearNoParentSetErrors();
         clearClassesWithCycleErrors();
         clearLinearizationPathParentErrors();
+        clearReleasedChildrenError();
     }
 
     @Nonnull
