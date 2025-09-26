@@ -166,6 +166,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("createEntityInstructions")
     String createEntityInstructions();
 
+    @DefaultMessage("An entity with the same name already exists. Please choose a different name")
+    @Key("entityAlreadyExistsWarn")
+    String entityAlreadyExistsWarn();
+
 
     @DefaultMessage("Create New Project")
     @Key("createProject")

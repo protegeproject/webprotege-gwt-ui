@@ -38,12 +38,13 @@
             <!--                                       mode="MULTI_LINE"-->
             <g:Label addStyleNames="{wp.style.formHelpText}"
                      text="{msg.createEntityInstructions}"/>
+
+
+            <g:Label addStyleNames="{wp.style.warningLabel}" ui:field="entityAlreadyExistsWarn"
+                     text="{msg.entityAlreadyExistsWarn}"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Reason for change" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="reasonForChangeTextBox"
-                                       mode="MULTI_LINE"
-                                       anchorVisible="false"/>
+            <g:HTMLPanel ui:field="commitMessageViewContainer"/>
             <g:Label ui:field='reasonForChangeErrorLabel' addStyleNames="{wp.style.formHelpText}"/>
         </div>
 
