@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.entity.EntityAlreadyExistsHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
@@ -19,15 +20,19 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SearchResultsListViewImpl extends Composite implements SearchResultsListView {
+    private final static java.util.logging.Logger logger = Logger.getLogger("SearchResultsListViewImpl");
 
     interface SearchResultsListViewImplUiBinder extends UiBinder<HTMLPanel, SearchResultsListViewImpl> {
     }
 
     private static SearchResultsListViewImplUiBinder ourUiBinder = GWT.create(SearchResultsListViewImplUiBinder.class);
+
+    private EntityAlreadyExistsHandler entityAlreadyExistsHandler = () -> {};
 
     @UiField(provided = true)
     PaginatorView paginator;
@@ -37,6 +42,10 @@ public class SearchResultsListViewImpl extends Composite implements SearchResult
 
     @UiField
     Label searchSummaryField;
+
+    private boolean selectFirstResult = true;
+
+    private String queriedText;
 
     @Nonnull
     private final PaginatorPresenter paginatorPresenter;
@@ -146,10 +155,20 @@ public class SearchResultsListViewImpl extends Composite implements SearchResult
         resultsListContainer.clear();
         updateDisplayMessage();
         results.forEach(view -> resultsListContainer.add(view));
+        logger.info("Display for " + this.queriedText + " " + selectFirstResult + " " + resultsListContainer.getWidgetCount());
         if (resultsListContainer.getWidgetCount() > 0) {
-            setSelectedIndex(0);
-        }
-        else {
+            if(selectFirstResult) {
+                setSelectedIndex(0);
+            } else {
+                EntitySearchResultView firstResult = (EntitySearchResultView) resultsListContainer.getWidget(0);
+                logger.info("FIrst result is " + firstResult.getEntityName());
+                if(!selectFirstResult){
+                    if(firstResult.getEntityName().equals(this.queriedText.trim())) {
+                        entityAlreadyExistsHandler.handleEntityAlreadyExists();
+                    }
+                }
+            }
+        } else {
             setSelectedIndex(-1);
         }
     }
@@ -158,6 +177,19 @@ public class SearchResultsListViewImpl extends Composite implements SearchResult
         clearCurrentSelectionBackground();
         selectedIndex = i;
         highlightSelectedIndex();
+    }
+
+    public void setSelectFirstResult(boolean selectFirstResult) {
+        this.selectFirstResult = selectFirstResult;
+    }
+
+    public void setQueriedText(String queriedText) {
+        this.queriedText = queriedText;
+    }
+
+    @Override
+    public void setEntityAlreadyExistsHandler(EntityAlreadyExistsHandler entityAlreadyExistsHandler) {
+        this.entityAlreadyExistsHandler = entityAlreadyExistsHandler;
     }
 
     private void chooseSearchResult() {

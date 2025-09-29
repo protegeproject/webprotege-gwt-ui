@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.entity.EntityAlreadyExistsHandler;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination.PageNumberChangedHandler;
@@ -125,6 +126,18 @@ public class SearchResultsListPresenter {
 
     public void setHierarchySelectionHandler(HierarchyPopupElementSelectionHandler handler){
         this.hierarchySelectionHandler = handler;
+    }
+
+    public void setSelectFirstResult(boolean selectFirstResult) {
+        view.setSelectFirstResult(selectFirstResult);
+    }
+
+    public void setQueriedText(String queriedText) {
+        view.setQueriedText(queriedText);
+    }
+
+    public void setEntityAlreadyExistsHandler(EntityAlreadyExistsHandler handler) {
+        view.setEntityAlreadyExistsHandler(handler);
     }
 }
 

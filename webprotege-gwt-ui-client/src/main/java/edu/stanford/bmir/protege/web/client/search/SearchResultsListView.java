@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.entity.EntityAlreadyExistsHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 
@@ -25,4 +26,10 @@ public interface SearchResultsListView extends IsWidget, HasPagination, HasAccep
     void clearSearchResults();
 
     int getSelectedSearchResultIndex();
+
+    void setSelectFirstResult(boolean selectFirstResult);
+
+    void setQueriedText(String queriedText);
+
+    void setEntityAlreadyExistsHandler(EntityAlreadyExistsHandler entityAlreadyExistsHandler);
 }

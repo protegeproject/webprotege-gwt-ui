@@ -12,6 +12,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistory;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageLocalHistoryStorage;
+import edu.stanford.bmir.protege.web.client.commit.CommitMessageView;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
@@ -40,15 +43,20 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
     ExpandingTextBoxImpl textBox;
 
     @UiField
-    ExpandingTextBoxImpl reasonForChangeTextBox;
+    HTMLPanel commitMessageViewContainer;
 
     private String previousEntitiesString = "";
 
     @UiField
     Label entityNamesLabel;
 
+    @UiField
+    Label entityAlreadyExistsWarn;
+
     @Nonnull
     private final Messages messages;
+    private final CommitMessageView commitMessageView;
+    private final CommitMessageLocalHistoryStorage historyStorage;
 
     @UiField
     SimplePanel duplicateEntityResultsContainer;
@@ -68,9 +76,20 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
     private final static Logger logger = Logger.getLogger(WhoCreateClassDialogViewImpl.class.getName());
 
     @Inject
-    public WhoCreateClassDialogViewImpl( @Nonnull Messages messages) {
+    public WhoCreateClassDialogViewImpl( @Nonnull Messages messages,
+                                        CommitMessageView commitMessageView,
+                                        CommitMessageLocalHistoryStorage historyStorage) {
         this.messages = checkNotNull(messages);
+        this.historyStorage = historyStorage;
         initWidget(ourUiBinder.createAndBindUi(this));
+        entityAlreadyExistsWarn.setVisible(false);
+        // Initialize commit message view with local history
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        commitMessageView.setLocalHistory(localHistory.getMessages());
+        this.commitMessageView = commitMessageView;
+
+        // Inject the commit message view into the container
+        commitMessageViewContainer.add(commitMessageView);
     }
 
     @Override
@@ -88,14 +107,15 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
     @Nonnull
     @Override
     public String getReasonForChange() {
-        return reasonForChangeTextBox.getText().trim();
+        return commitMessageView.getCommitMessage().trim();
     }
 
     @Override
     public void clear() {
         textBox.setText("");
-        reasonForChangeTextBox.setText("");
+        commitMessageView.setCommitMessage("");
         clearErrors();
+        clearEntityAlreadyExistsMessage();
     }
 
 
@@ -155,7 +175,7 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
 
     @Override
     public boolean isReasonForChangeSet() {
-        if (reasonForChangeTextBox.getText().isEmpty()) {
+        if (commitMessageView.getCommitMessage().isEmpty()) {
             reasonForChangeErrorLabel.setText(reasonForChangeErrorMessage);
             reasonForChangeErrorLabel.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
             textBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
@@ -169,5 +189,25 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
         reasonForChangeErrorLabel.setText("");
         textBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
         reasonForChangeErrorLabel.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorLabel());
+    }
+    
+    /**
+     * Updates the local history with the current commit message
+     */
+    public void saveReasonForChange(String reasonForChange) {
+        CommitMessageLocalHistory localHistory = historyStorage.loadLocalHistory();
+        localHistory.pushMessage(reasonForChange);
+        historyStorage.saveLocalHistory(localHistory);
+    }
+
+
+    @Override
+    public void clearEntityAlreadyExistsMessage() {
+        entityAlreadyExistsWarn.setVisible(false);
+    }
+
+    @Override
+    public void displayEntityAlreadyExistsMessage() {
+        entityAlreadyExistsWarn.setVisible(true);
     }
 }

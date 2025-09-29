@@ -28,4 +28,11 @@ public interface WhoCreateClassDialogView extends IsWidget, HasInitialFocusable 
     void setEntitiesStringChangedHandler(EntitiesStringChangedHandler handler);
 
     boolean isReasonForChangeSet();
+
+    void saveReasonForChange(String reasonForChange);
+
+    void clearEntityAlreadyExistsMessage();
+
+    void displayEntityAlreadyExistsMessage();
+
 }

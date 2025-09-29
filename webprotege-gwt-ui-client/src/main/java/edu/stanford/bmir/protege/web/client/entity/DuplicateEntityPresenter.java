@@ -31,16 +31,12 @@ public class DuplicateEntityPresenter {
     private final EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter;
 
     private final DispatchServiceManager dispatchServiceManager;
-
-    private DuplicateEntitiesView view;
-
+    private final DuplicateEntitiesView view;
 
     private String langTag = "";
 
     private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {
     };
-
-    private final static Logger logger = Logger.getLogger(DuplicateEntityPresenter.class.getName());
 
 
     @Inject
@@ -60,6 +56,7 @@ public class DuplicateEntityPresenter {
         container.setWidget(view);
         hideSearchDuplicatesPanel();
         searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
+        searchResultsPresenter.setSelectFirstResult(false);
         searchResultsPresenter.start(this.view.getDuplicateResultsContainer());
     }
 
@@ -86,7 +83,7 @@ public class DuplicateEntityPresenter {
                         PageRequest.requestPage(pageNumber),
                         DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES),
                 view,
-                this::processSearchActionResult);
+                (result) -> processSearchActionResult(result, entitiesText));
 
     }
 
@@ -103,16 +100,21 @@ public class DuplicateEntityPresenter {
         this.langTag = langTag;
     }
 
-    private void processSearchActionResult(PerformEntitySearchResult result) {
+    private void processSearchActionResult(PerformEntitySearchResult result, String queriedText) {
         if (result.getResults() == null || result.getResults().getTotalElements() == 0) {
             hideSearchDuplicatesPanel();
             return;
         }
 
         this.view.asWidget().setVisible(true);
-
+        this.searchResultsPresenter.setQueriedText(queriedText);
         this.searchResultsPresenter.displaySearchResult(result.getResults());
     }
+
+    public void setEntityAlreadyExistsHandler(EntityAlreadyExistsHandler handler){
+        this.searchResultsPresenter.setEntityAlreadyExistsHandler(handler);
+    }
+
 
     private void hideSearchDuplicatesPanel() {
         this.view.asWidget().setVisible(false);

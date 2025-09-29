@@ -49,6 +49,8 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
+    private EntityNode entityNode;
+
 
     @UiField
     Button showInHierarchyButton;
@@ -66,6 +68,7 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     @Override
     public void setEntity(@Nonnull EntityNode entityNode) {
         renderer.setRenderTags(false);
+        this.entityNode = entityNode;
         DisplayNameSettings displayNameSettings = displayNameSettingsManager.getLocalDisplayNameSettings();
         renderer.setDisplayLanguage(displayNameSettings);
         String htmlRendering = renderer.getHtmlRendering(entityNode);
@@ -100,5 +103,13 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     @Override
     public void setPopUpHierarchyHandler(SearchPopUpHierarchyHandler handler) {
         this.searchPopUpHierarchyHandler = handler;
+    }
+
+    @Override
+    public String getEntityName() {
+        if(entityNode != null) {
+            return entityNode.getBrowserText();
+        }
+        return null;
     }
 }

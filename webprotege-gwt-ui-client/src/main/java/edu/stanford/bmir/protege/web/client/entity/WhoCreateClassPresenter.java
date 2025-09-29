@@ -64,6 +64,7 @@ public class WhoCreateClassPresenter {
     @Nonnull
     private final SelectionModel selectionModel;
 
+    private ModalPresenter modalPresenter;
 
     @Nonnull
     private final Messages messages;
@@ -99,9 +100,13 @@ public class WhoCreateClassPresenter {
         view.setEntityType(entityType);
         setProjectDefaultLangTag();
 
-        view.setEntitiesStringChangedHandler(duplicateEntityPresenter::handleEntitiesStringChanged);
+        view.setEntitiesStringChangedHandler((value) -> {
+            view.clearEntityAlreadyExistsMessage();
+            modalPresenter.setPrimaryButtonEnabled(true);
+            duplicateEntityPresenter.handleEntitiesStringChanged(value);
+        });
 
-        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
         modalPresenter.setView(view);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
@@ -118,6 +123,10 @@ public class WhoCreateClassPresenter {
         });
         duplicateEntityPresenter.setEntityTypes(entityType);
         duplicateEntityPresenter.start(view.getDuplicateEntityResultsContainer());
+        duplicateEntityPresenter.setEntityAlreadyExistsHandler(()-> {
+            this.view.displayEntityAlreadyExistsMessage();
+            this.modalPresenter.setPrimaryButtonEnabled(false);
+        });
         modalManager.showModal(modalPresenter);
     }
 
@@ -140,6 +149,8 @@ public class WhoCreateClassPresenter {
                 enteredText);
         dispatchServiceManager.execute(action,
                 result -> {
+                    view.saveReasonForChange(reasonForChange);
+
                     dispatchServiceManager.execute(
                             CreateEntityDiscussionThreadAction.create(projectId, result.getEntities().stream().findFirst().get().getEntity(), reasonForChange),
                             threadActionResult -> {
