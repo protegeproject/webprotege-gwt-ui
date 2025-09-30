@@ -155,18 +155,20 @@ public class SearchResultsListViewImpl extends Composite implements SearchResult
         resultsListContainer.clear();
         updateDisplayMessage();
         results.forEach(view -> resultsListContainer.add(view));
-        logger.info("Display for " + this.queriedText + " " + selectFirstResult + " " + resultsListContainer.getWidgetCount());
         if (resultsListContainer.getWidgetCount() > 0) {
             if(selectFirstResult) {
                 setSelectedIndex(0);
             } else {
-                EntitySearchResultView firstResult = (EntitySearchResultView) resultsListContainer.getWidget(0);
-                logger.info("FIrst result is " + firstResult.getEntityName());
-                if(!selectFirstResult){
-                    if(firstResult.getEntityName().equals(this.queriedText.trim())) {
-                        entityAlreadyExistsHandler.handleEntityAlreadyExists();
+                for(Widget result: resultsListContainer) {
+                    EntitySearchResultView firstResult = (EntitySearchResultView) result;
+                    if(!selectFirstResult){
+                        if(firstResult.getEntityName().equals(this.queriedText.trim())) {
+                            entityAlreadyExistsHandler.handleEntityAlreadyExists();
+                            return;
+                        }
                     }
                 }
+
             }
         } else {
             setSelectedIndex(-1);
@@ -220,12 +222,15 @@ public class SearchResultsListViewImpl extends Composite implements SearchResult
     }
 
     private void highlightSelectedIndex() {
-        if (-1 < selectedIndex && selectedIndex < resultsListContainer.getWidgetCount()) {
-            Element element = resultsListContainer.getWidget(selectedIndex).getElement();
-            element.getStyle().setBackgroundColor("var(--selected-item--background-color)");
-            element.getStyle().setColor("var(--selected-item--color)");
-            element.scrollIntoView();
+        if(selectFirstResult) {
+            if (-1 < selectedIndex && selectedIndex < resultsListContainer.getWidgetCount()) {
+                Element element = resultsListContainer.getWidget(selectedIndex).getElement();
+                element.getStyle().setBackgroundColor("var(--selected-item--background-color)");
+                element.getStyle().setColor("var(--selected-item--color)");
+                element.scrollIntoView();
+            }
         }
+
     }
 
     @Override
