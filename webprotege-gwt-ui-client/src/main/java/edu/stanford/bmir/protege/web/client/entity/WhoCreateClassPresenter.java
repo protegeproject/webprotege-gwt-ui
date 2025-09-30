@@ -101,9 +101,15 @@ public class WhoCreateClassPresenter {
         setProjectDefaultLangTag();
 
         view.setEntitiesStringChangedHandler((value) -> {
-            view.clearEntityAlreadyExistsMessage();
-            modalPresenter.setPrimaryButtonEnabled(true);
-            duplicateEntityPresenter.handleEntitiesStringChanged(value);
+            if(value != null && !value.isEmpty()) {
+                this.modalPresenter.setPrimaryButtonEnabled(true);
+                view.clearEntityAlreadyExistsMessage();
+                modalPresenter.setPrimaryButtonEnabled(true);
+                duplicateEntityPresenter.handleEntitiesStringChanged(value);
+            } else {
+                this.modalPresenter.setPrimaryButtonEnabled(false);
+            }
+
         });
 
         modalPresenter = modalManager.createPresenter();
@@ -128,6 +134,7 @@ public class WhoCreateClassPresenter {
             this.modalPresenter.setPrimaryButtonEnabled(false);
         });
         modalManager.showModal(modalPresenter);
+        modalPresenter.setPrimaryButtonEnabled(false);
     }
 
     private void setProjectDefaultLangTag() {
