@@ -9,7 +9,7 @@
         .renderingField {
             flex-grow: 1;
             flex-shrink: 1;
-            min-width: 20px;
+            min-width: 33%;
             overflow: hidden;
             margin-right: 1em;
         }
@@ -17,9 +17,9 @@
             /*color: literal("var(--tertiary--color)");*/
             flex-grow: 0;
             flex-shrink: 0;
+            min-width: 50%;
             flex-basis: 90px;
-            text-align: right;
-            white-space: nowrap;
+            text-align: left;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

@@ -33,6 +33,7 @@ public class DuplicateEntityPresenter {
     private final DispatchServiceManager dispatchServiceManager;
     private final DuplicateEntitiesView view;
 
+    private String searchText;
     private String langTag = "";
 
     private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {
@@ -58,6 +59,19 @@ public class DuplicateEntityPresenter {
         searchResultsPresenter.setHierarchySelectionHandler(hierarchySelectionHandler);
         searchResultsPresenter.setSelectFirstResult(false);
         searchResultsPresenter.start(this.view.getDuplicateResultsContainer());
+        this.searchResultsPresenter.setPageNumberChangedHandler((pageNumber) -> {
+            ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
+
+            dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
+                            this.searchText,
+                            entityTypes,
+                            getLangTagFilter(),
+                            searchFilters,
+                            PageRequest.requestPage(pageNumber),
+                            DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES),
+                    view,
+                    (result) -> processSearchActionResult(result, searchText));
+        });
     }
 
     public void setEntityTypes(EntityType<?>... entityTypes) {
@@ -67,12 +81,14 @@ public class DuplicateEntityPresenter {
 
 
     private void performDuplicateSearch(String entitiesText) {
+        this.searchText = entitiesText;
         if (entitiesText.length() < 1) {
             hideSearchDuplicatesPanel();
             searchResultsPresenter.clearSearchResults();
             return;
         }
-        int pageNumber = searchResultsPresenter.getPageNumber();
+        int pageNumber = 1;
+        this.searchResultsPresenter.setPageNumber(pageNumber);
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
 
         dispatchServiceManager.execute(PerformEntitySearchAction.create(projectId,
