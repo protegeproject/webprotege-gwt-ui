@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -37,8 +41,6 @@ public class HierarchyPopupPresenter {
 
     private Optional<OWLEntity> selectedEntity = Optional.empty();
 
-    private final static Logger logger = Logger.getLogger(HierarchyPopupPresenter.class.getName());
-
 
     @Inject
     @AutoFactory
@@ -51,6 +53,7 @@ public class HierarchyPopupPresenter {
         popupPanel = new PopupPanel(true, true);
         popupPanel.setAutoHideEnabled(true);
         popupPanel.setAutoHideOnHistoryEventsEnabled(true);
+        Event.addNativePreviewHandler(this::handleEscapeKey);
     }
 
     public void start(@Nonnull WebProtegeEventBus eventBus) {
@@ -102,5 +105,12 @@ public class HierarchyPopupPresenter {
 
     public void setDisplayNameSettings(@Nonnull DisplayNameSettings settings) {
         view.setDisplayNameSettings(settings);
+    }
+
+    private void handleEscapeKey(Event.NativePreviewEvent event) {
+        if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            popupPanel.hide();
+            selectedEntity = Optional.empty();
+        }
     }
 }
