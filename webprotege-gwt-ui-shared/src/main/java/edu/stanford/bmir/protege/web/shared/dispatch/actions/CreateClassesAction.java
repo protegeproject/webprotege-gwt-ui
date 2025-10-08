@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -26,9 +27,10 @@ public abstract class CreateClassesAction implements CreateEntitiesInHierarchyAc
 
     @JsonCreator
     public static CreateClassesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                               @JsonProperty("sourceText") @Nonnull String sourceText,
-                               @JsonProperty("langTag") @Nonnull String langTag,
-                               @JsonProperty("parents") @Nonnull ImmutableSet<OWLClass> parents) {
-        return new AutoValue_CreateClassesAction(projectId, sourceText, langTag, parents);
+                                             @JsonProperty("sourceText") @Nonnull String sourceText,
+                                             @JsonProperty("langTag") @Nonnull String langTag,
+                                             @JsonProperty("parents") @Nonnull ImmutableSet<OWLClass> parents,
+                                             @JsonProperty("changeRequestId")ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateClassesAction(projectId, sourceText, langTag, changeRequestId, parents);
     }
 }

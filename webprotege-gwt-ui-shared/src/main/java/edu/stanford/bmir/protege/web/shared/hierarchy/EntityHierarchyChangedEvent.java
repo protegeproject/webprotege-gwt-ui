@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
+import edu.stanford.bmir.protege.web.shared.perspective.HasChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphModelChangedEvent;
 
@@ -21,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 1 Dec 2017
  */
 @JsonTypeName("webprotege.events.hierarchies.EntityHierarchyChanged")
-public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyChangedHandler> {
+public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyChangedHandler> implements HasChangeRequestId {
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();
 
@@ -29,13 +31,17 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     private GraphModelChangedEvent<EntityNode> changeEvent;
 
+    private ChangeRequestId changeRequestId;
+
     @JsonCreator
     public EntityHierarchyChangedEvent(@JsonProperty("projectId") @Nonnull ProjectId source,
                                        @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
-                                       @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent) {
+                                       @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
+                                       @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
         super(source);
         this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         this.changeEvent = checkNotNull(changeEvent);
+        this.changeRequestId = changeRequestId;
     }
 
     @JsonProperty("hierarchyDescriptor")
@@ -46,6 +52,12 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     @GwtSerializationConstructor
     private EntityHierarchyChangedEvent() {
+    }
+
+    @Nonnull
+    @Override
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Override

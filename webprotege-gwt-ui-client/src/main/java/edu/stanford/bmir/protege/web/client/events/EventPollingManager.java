@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.EventPollingPeriod;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
+import edu.stanford.bmir.protege.web.shared.perspective.HasChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -25,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ProjectSingleton
 public class EventPollingManager {
+
     Logger logger = Logger.getLogger("EventPollingManager");
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -41,14 +44,17 @@ public class EventPollingManager {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final ChangeRequestEventAwaiter eventAwaiter;
+
     @Inject
     public EventPollingManager(@EventPollingPeriod int pollingPeriodInMS,
                                ProjectId projectId,
                                EventBus eventBus,
                                DispatchServiceManager dispatchServiceManager,
-                               LoggedInUserProvider loggedInUserProvider) {
+                               LoggedInUserProvider loggedInUserProvider, ChangeRequestEventAwaiter eventAwaiter) {
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.eventAwaiter = eventAwaiter;
         if(pollingPeriodInMS < 1) {
             throw new IllegalArgumentException("pollingPeriodInMS must be greater than 0");
         }
@@ -101,6 +107,8 @@ public class EventPollingManager {
                         eventBus.fireEvent(event.asGWTEvent());
                     }
                 }
+                // After dispatching the events handle in the one-shot event awaiter
+                eventAwaiter.handleEvents(eventList.getEvents());
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
             } finally {

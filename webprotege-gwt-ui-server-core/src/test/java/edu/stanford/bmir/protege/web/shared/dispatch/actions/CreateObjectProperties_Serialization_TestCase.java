@@ -7,10 +7,12 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static com.google.common.collect.ImmutableSet.of;
 
@@ -24,14 +26,14 @@ public class CreateObjectProperties_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = CreateObjectPropertiesAction.create(ProjectId.getNil(), "P\nQ", "en", of());
+        var action = CreateObjectPropertiesAction.create(ProjectId.getNil(), "P\nQ", "en", of(), ChangeRequestId.valueOf("3ae6db03-796c-48a8-80dc-ba76fa57f9fc"));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 
     @Test
     public void shouldSerializeResult() throws IOException {
         var result = CreateObjectPropertiesResult.create(ProjectId.getNil(),
-                                                         ImmutableSet.of());
+                                                         ImmutableSet.of(), ChangeRequestId.valueOf(UUID.randomUUID().toString()));
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
