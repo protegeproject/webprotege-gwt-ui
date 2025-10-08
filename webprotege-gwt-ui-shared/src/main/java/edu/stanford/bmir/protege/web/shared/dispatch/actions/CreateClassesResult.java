@@ -6,10 +6,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -26,7 +24,8 @@ public abstract class CreateClassesResult implements CreateEntitiesInHierarchyRe
 
     @JsonCreator
     public static CreateClassesResult create(@JsonProperty("projectId") ProjectId projectId,
-                               @JsonProperty("entities") ImmutableSet<EntityNode> classes) {
-        return new AutoValue_CreateClassesResult(projectId, classes);
+                               @JsonProperty("entities") ImmutableSet<EntityNode> classes,
+                                             @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateClassesResult(projectId, classes, changeRequestId);
     }
 }

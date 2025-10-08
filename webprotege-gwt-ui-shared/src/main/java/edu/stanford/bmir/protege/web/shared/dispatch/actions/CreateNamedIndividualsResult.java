@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -28,7 +29,8 @@ public abstract class CreateNamedIndividualsResult implements AbstractCreateEnti
 
     @JsonCreator
     public static CreateNamedIndividualsResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                      @JsonProperty("entities") ImmutableSet<EntityNode> entities) {
-        return new AutoValue_CreateNamedIndividualsResult(projectId, entities);
+                                                      @JsonProperty("entities") ImmutableSet<EntityNode> entities,
+                                                      @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateNamedIndividualsResult(projectId, entities, changeRequestId);
     }
 }

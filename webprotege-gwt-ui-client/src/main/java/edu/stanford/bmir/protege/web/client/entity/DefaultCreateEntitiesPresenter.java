@@ -5,15 +5,17 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.events.ChangeRequestEventAwaiter;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
@@ -21,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -29,6 +32,7 @@ import java.util.function.Supplier;
  */
 public class DefaultCreateEntitiesPresenter {
 
+    private static Logger logger = Logger.getLogger(DefaultCreateEntitiesPresenter.class.getName());
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -51,6 +55,9 @@ public class DefaultCreateEntitiesPresenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final ChangeRequestEventAwaiter awaiter;
+
     private Optional<String> currentLangTag = Optional.empty();
 
     @Inject
@@ -60,7 +67,8 @@ public class DefaultCreateEntitiesPresenter {
                                           @Nonnull ModalManager modalManager,
                                           @Nonnull ActiveProjectManager activeProjectManager,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                          @Nonnull Messages messages) {
+                                          @Nonnull Messages messages,
+                                          @Nonnull ChangeRequestEventAwaiter awaiter) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.view = view;
@@ -68,6 +76,23 @@ public class DefaultCreateEntitiesPresenter {
         this.activeProjectManager = activeProjectManager;
         this.displayNameSettingsManager = displayNameSettingsManager;
         this.messages = messages;
+        this.awaiter = awaiter;
+    }
+
+    private static <E extends OWLEntity> ImmutableSet<E> getParents(Optional<? extends OWLEntity> parent,
+                                                                    Supplier<E> defaultSupplier) {
+        return getParentsSet(parent, () -> ImmutableSet.of(defaultSupplier.get()));
+    }
+
+    private static <E extends OWLEntity> ImmutableSet<E> getParentsSet(Optional<? extends OWLEntity> parent,
+                                                                       Supplier<ImmutableSet<E>> defaultSupplier) {
+        return parent.map(p -> ImmutableSet.of((E) p)).orElseGet(defaultSupplier);
+    }
+
+    private static ChangeRequestId generateChangeRequestId() {
+        ChangeRequestId changeRequestId = ChangeRequestId.valueOf(UuidV4.uuidv4());
+        logger.info("Generating change request id: " + changeRequestId);
+        return changeRequestId;
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
@@ -130,54 +155,47 @@ public class DefaultCreateEntitiesPresenter {
                                                             @Nonnull Optional<? extends OWLEntity> parent,
                                                             @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler) {
 
-        GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + view.getLangTag());
         currentLangTag = Optional.of(view.getLangTag());
-        ProjectAction<? extends AbstractCreateEntityResult<?>> action = getAction(entityType,
-                                                                                  parent,
-                                                                                  enteredText);
+        AbstractCreateEntitiesAction<? extends AbstractCreateEntityResult<?>, ?> action = getAction(entityType,
+                parent,
+                enteredText);
+
+        ChangeRequestId changeRequestId = action.getChangeRequestId();
         dispatchServiceManager.execute(action,
-                                       result -> entitiesCreatedHandler.handleEntitiesCreated(result.getEntities()));
+                result -> {
+                    // We need to wait for the events associated with change request so
+                    // that we can be sure the hierarchy has updated.  Note the events
+                    // get processed and dispatched before the one-shot wait for events
+                    // handler is called.
+                    awaiter.waitForEvents(changeRequestId, events -> {
+                        entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
+                    });
+                });
 
     }
 
-    private ProjectAction<? extends AbstractCreateEntityResult<?>> getAction(EntityType<?> entityType,
-                                                                             Optional<? extends OWLEntity> parent,
-                                                                             String enteredText) {
-        if(entityType.equals(EntityType.CLASS)) {
+    private AbstractCreateEntitiesAction<? extends AbstractCreateEntityResult<?>, ?> getAction(EntityType<?> entityType,
+                                                                                               Optional<? extends OWLEntity> parent,
+                                                                                               String enteredText) {
+        if (entityType.equals(EntityType.CLASS)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateClassesAction.create(projectId, enteredText, view.getLangTag(), parentClses);
-        }
-        else if(entityType.equals(EntityType.OBJECT_PROPERTY)) {
+            return CreateClassesAction.create(projectId, enteredText, view.getLangTag(), parentClses, generateChangeRequestId());
+        } else if (entityType.equals(EntityType.OBJECT_PROPERTY)) {
             ImmutableSet<OWLObjectProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopObjectProperty());
-            return CreateObjectPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
-        }
-        else if(entityType.equals(EntityType.DATA_PROPERTY)) {
+            return CreateObjectPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties, generateChangeRequestId());
+        } else if (entityType.equals(EntityType.DATA_PROPERTY)) {
             ImmutableSet<OWLDataProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopDataProperty());
-            return CreateDataPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
-        }
-        else if(entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
+            return CreateDataPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties, generateChangeRequestId());
+        } else if (entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
             ImmutableSet<OWLAnnotationProperty> parentProperties = getParentsSet(parent, ImmutableSet::of);
-            return CreateAnnotationPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties);
-        }
-        else if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
+            return CreateAnnotationPropertiesAction.create(projectId, enteredText, view.getLangTag(), parentProperties, generateChangeRequestId());
+        } else if (entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateNamedIndividualsAction.create(projectId, enteredText, view.getLangTag(), parentClses);
-        }
-        else {
+            return CreateNamedIndividualsAction.create(projectId, enteredText, view.getLangTag(), parentClses, generateChangeRequestId());
+        } else {
             throw new RuntimeException("Unsupported entity type: " + entityType);
         }
     }
-
-    private static <E extends OWLEntity> ImmutableSet<E> getParents(Optional<? extends OWLEntity> parent,
-                                                              Supplier<E> defaultSupplier) {
-        return getParentsSet(parent, () -> ImmutableSet.of(defaultSupplier.get()));
-    }
-
-    private static <E extends OWLEntity> ImmutableSet<E> getParentsSet(Optional<? extends OWLEntity> parent,
-                                                                    Supplier<ImmutableSet<E>> defaultSupplier) {
-        return parent.map(p -> ImmutableSet.of((E) p)).orElseGet(defaultSupplier);
-    }
-
 
     public interface EntitiesCreatedHandler {
 

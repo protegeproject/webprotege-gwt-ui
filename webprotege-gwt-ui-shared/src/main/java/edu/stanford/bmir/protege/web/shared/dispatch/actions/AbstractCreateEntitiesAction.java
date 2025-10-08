@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -19,4 +20,7 @@ public interface AbstractCreateEntitiesAction<R extends AbstractCreateEntityResu
 
     @Nonnull
     String getLangTag();
+
+    @Nonnull
+    ChangeRequestId getChangeRequestId();
 }

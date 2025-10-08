@@ -597,6 +597,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetProjectHierarchyDescriptorRulesResult _SetProjectHierarchyDescriptorRulesResult;
     DeprecatedEntitiesTreatment _DeprecatedEntitiesTreatment;
     EntityStatus _EntityStatus;
+    ChangeRequestId _ChangeRequestId;
 
     ApplicationSettings _ApplicationSettings;
     public RpcWhiteList() {
