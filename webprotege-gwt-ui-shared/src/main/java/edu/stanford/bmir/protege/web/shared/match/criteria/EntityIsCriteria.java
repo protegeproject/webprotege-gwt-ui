@@ -25,6 +25,7 @@ public abstract class EntityIsCriteria implements EntityMatchCriteria {
         return new AutoValue_EntityIsCriteria(entity);
     }
 
+    @JsonProperty("entity")
     @Nonnull
     public abstract OWLEntity getEntity();
 

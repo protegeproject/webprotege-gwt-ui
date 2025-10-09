@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -36,14 +37,15 @@ public abstract class PerformEntitySearchAction implements ProjectAction<Perform
                                                    @JsonProperty("langTagFilter") @Nonnull LangTagFilter langTagFilter,
                                                    @JsonProperty("searchFilters") @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
                                                    @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest,
-                                                   @JsonProperty("deprecatedEntitiesTreatment") @Nonnull DeprecatedEntitiesTreatment deprecatedEntitiesTreatment) {
+                                                   @JsonProperty("deprecatedEntitiesTreatment") @Nonnull DeprecatedEntitiesTreatment deprecatedEntitiesTreatment,
+                                                   @JsonProperty("resultsSetFilter") EntityMatchCriteria resultsSetFilter) {
         return new AutoValue_PerformEntitySearchAction(projectId,
                                              entityTypes,
                                                        searchString,
                                                        langTagFilter,
                                              searchFilters,
                                              pageRequest,
-                deprecatedEntitiesTreatment);
+                deprecatedEntitiesTreatment, resultsSetFilter);
     }
 
     @Nonnull
@@ -67,4 +69,7 @@ public abstract class PerformEntitySearchAction implements ProjectAction<Perform
 
     @Nonnull
     public abstract DeprecatedEntitiesTreatment getDeprecatedEntitiesTreatment();
+
+    @Nonnull
+    public abstract EntityMatchCriteria getResultsSetFilter();
 }

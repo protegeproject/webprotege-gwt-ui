@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class PerformEntitySearch_Serialization_TestCase {
                                                       "Test", Collections.emptySet(),
                                                       LangTagFilter.get(ImmutableSet.of()), ImmutableList.of(),
                                                       PageRequest.requestFirstPage(),
-                DeprecatedEntitiesTreatment.EXCLUDE_DEPRECATED_ENTITIES);
+                DeprecatedEntitiesTreatment.EXCLUDE_DEPRECATED_ENTITIES, CompositeRootCriteria.any());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 
