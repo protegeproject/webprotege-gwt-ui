@@ -50,8 +50,11 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
         this.signOutRequestHandler = signOutRequestHandler;
         initWidget(ourUiBinder.createAndBindUi(this));
         popupMenu.addItem(MESSAGES.signOut(), signOutRequestHandler::handleSignOutRequest);
-        popupMenu.addItem(MESSAGES.changeEmailAddress(), () -> changeEmailAddressHandler.handleChangeEmailAddress());
-        popupMenu.addItem(MESSAGES.changePassword(), () -> changePasswordHandler.handleChangePassword());
+        /**
+         * TODO to be added back after we integrate with keycloak api
+         */
+        //popupMenu.addItem(MESSAGES.changeEmailAddress(), () -> changeEmailAddressHandler.handleChangeEmailAddress());
+        //popupMenu.addItem(MESSAGES.changePassword(), () -> changePasswordHandler.handleChangePassword());
     }
 
     @UiHandler("loggedInUserButton")
