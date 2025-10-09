@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -12,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.*;
@@ -71,6 +74,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private AcceptKeyHandler acceptKeyHandler = () -> {};
 
+    private EntityMatchCriteria resultsSetFilter = CompositeRootCriteria.any();
+
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
                            @Nonnull SearchView view,
@@ -109,6 +114,10 @@ public class SearchPresenter implements HasInitialFocusable {
         dispatchServiceManager.executeCurrentBatch();
         entitySearchFilterTokenFieldPresenter.setPlaceholder("");
         langTagFilterPresenter.setPlaceholder("");
+    }
+
+    public void setResultsSetFilter(EntityMatchCriteria resultsSetFilter) {
+        this.resultsSetFilter = checkNotNull(resultsSetFilter);
     }
 
     public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
@@ -179,7 +188,8 @@ public class SearchPresenter implements HasInitialFocusable {
                                                                         langTagFilter,
                                                                         searchFilters,
                                                                         PageRequest.requestPage(pageNumber),
-                        view.getDeprecatedEntitiesTreatment()),
+                        view.getDeprecatedEntitiesTreatment(),
+                        resultsSetFilter),
                                        view,
                                        this::displaySearchResult);
     }
