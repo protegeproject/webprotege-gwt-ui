@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -21,8 +22,8 @@ public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, Cl
     @JsonIgnore
     public transient static final Event.Type<ClassFrameChangedEventHandler> CLASS_FRAME_CHANGED = new Event.Type<ClassFrameChangedEventHandler>();
 
-    public ClassFrameChangedEvent(OWLClass entity, ProjectId projectId, UserId userId) {
-        super(entity, projectId, userId);
+    public ClassFrameChangedEvent(OWLClass entity, ProjectId projectId, UserId userId, ChangeRequestId changeRequestId) {
+        super(entity, projectId, userId, changeRequestId);
     }
 
     private ClassFrameChangedEvent() {

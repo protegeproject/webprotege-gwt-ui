@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -27,8 +28,9 @@ public abstract class CreateEntityFromFormDataResult implements AbstractCreateEn
 
     @JsonCreator
     public static CreateEntityFromFormDataResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                        @JsonProperty("entities") ImmutableCollection<EntityNode> entities) {
+                                                        @JsonProperty("entities") ImmutableCollection<EntityNode> entities,
+                                                        @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
 
-        return new AutoValue_CreateEntityFromFormDataResult(projectId, entities);
+        return new AutoValue_CreateEntityFromFormDataResult(projectId, entities, changeRequestId);
     }
 }

@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
@@ -44,28 +44,28 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeClassFrameChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new ClassFrameChangedEvent(mockOWLClass(), mockProjectId(), mockUserId()),
+                new ClassFrameChangedEvent(mockOWLClass(), mockProjectId(), mockUserId(), ChangeRequestId.valueOf("6681a7df-5c47-459e-9ffe-6742322c2a4f")),
                 WebProtegeEvent.class);
     }
 
     @Test
     public void shouldSerializeObjectPropertyFrameChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new ObjectPropertyFrameChangedEvent(mockOWLObjectProperty(), mockProjectId(), mockUserId()),
+                new ObjectPropertyFrameChangedEvent(mockOWLObjectProperty(), mockProjectId(), mockUserId(), ChangeRequestId.valueOf("6681a7df-5c47-459e-9ffe-6742322c2a4f")),
                 WebProtegeEvent.class);
     }
 
     @Test
     public void shouldSerializeDataPropertyFrameChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new DataPropertyFrameChangedEvent(mockOWLDataProperty(), mockProjectId(), mockUserId()),
+                new DataPropertyFrameChangedEvent(mockOWLDataProperty(), mockProjectId(), mockUserId(), ChangeRequestId.valueOf("6681a7df-5c47-459e-9ffe-6742322c2a4f")),
                 WebProtegeEvent.class);
     }
 
     @Test
     public void shouldSerializeAnnotationPropertyFrameChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new AnnotationPropertyFrameChangedEvent(mockOWLAnnotationProperty(), mockProjectId(), mockUserId()),
+                new AnnotationPropertyFrameChangedEvent(mockOWLAnnotationProperty(), mockProjectId(), mockUserId(), ChangeRequestId.valueOf("6681a7df-5c47-459e-9ffe-6742322c2a4f")),
                 WebProtegeEvent.class);
     }
 
@@ -170,7 +170,8 @@ public class EventsSerializationTestCase {
         JsonSerializationTestUtil.testSerialization(
                 new EntityHierarchyChangedEvent(mockProjectId(),
                         ClassHierarchyDescriptor.get(),
-                                                new GraphModelChangedEvent(changes)),
+                                                new GraphModelChangedEvent(changes),
+                        ChangeRequestId.get("796d7b24-0d2b-4037-8c03-5eb3e55a3fcf")),
                 WebProtegeEvent.class
         );
     }

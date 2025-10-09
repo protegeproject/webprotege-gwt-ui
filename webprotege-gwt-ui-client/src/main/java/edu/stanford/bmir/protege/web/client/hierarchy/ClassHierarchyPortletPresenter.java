@@ -22,6 +22,9 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorResult;
 import edu.stanford.bmir.protege.web.shared.lang.*;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.*;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -296,6 +299,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleSearch() {
         searchModal.setEntityTypes(CLASS);
+        EntityMatchCriteria resultSetFilter = hierarchyModel.getHierarchyDescriptor().getEntityMatchCriteria();
+        searchModal.setResultsSetFilter(resultSetFilter);
         searchModal.showModal();
     }
 

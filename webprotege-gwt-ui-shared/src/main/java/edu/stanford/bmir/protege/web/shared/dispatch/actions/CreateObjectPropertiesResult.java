@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -29,7 +30,8 @@ public abstract class CreateObjectPropertiesResult implements CreateEntitiesInHi
 
     @JsonCreator
     public static CreateObjectPropertiesResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                        @JsonProperty("entities") @Nonnull ImmutableSet<EntityNode> entities) {
-        return new AutoValue_CreateObjectPropertiesResult(projectId, entities);
+                                        @JsonProperty("entities") @Nonnull ImmutableSet<EntityNode> entities,
+                                                      @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateObjectPropertiesResult(projectId, entities, changeRequestId);
     }
 }

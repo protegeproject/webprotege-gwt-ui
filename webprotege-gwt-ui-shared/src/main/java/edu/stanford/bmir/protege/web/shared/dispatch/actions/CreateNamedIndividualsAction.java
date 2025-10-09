@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -37,8 +38,9 @@ public abstract class CreateNamedIndividualsAction implements AbstractCreateEnti
     public static CreateNamedIndividualsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                         @JsonProperty("sourceText") @Nonnull String sourceText,
                                         @JsonProperty("langTag") @Nonnull String langTag,
-                                        @JsonProperty("types") @Nonnull ImmutableSet<OWLClass> types) {
-        return new AutoValue_CreateNamedIndividualsAction(projectId, sourceText, langTag, types);
+                                        @JsonProperty("types") @Nonnull ImmutableSet<OWLClass> types,
+                                                      @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateNamedIndividualsAction(projectId, sourceText, langTag, changeRequestId, types);
     }
 
     /**

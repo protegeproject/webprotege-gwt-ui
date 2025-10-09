@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -50,6 +51,10 @@ public class SearchModal {
         if (entityTypes.length == 1) {
             title = messages.searchFor(entityTypes[0].getPrintName());
         }
+    }
+
+    public void setResultsSetFilter(EntityMatchCriteria resultsSetFilter) {
+        searchPresenter.setResultsSetFilter(resultsSetFilter);
     }
 
     public void showModal() {

@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
@@ -27,7 +28,8 @@ public abstract class CreateDataPropertiesAction implements CreateEntitiesInHier
     public static CreateDataPropertiesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                       @JsonProperty("sourceText") @Nonnull String sourceText,
                                       @JsonProperty("langTag") @Nonnull String langTag,
-                                      @JsonProperty("parents") @Nonnull ImmutableSet<OWLDataProperty> parents) {
-        return new AutoValue_CreateDataPropertiesAction(projectId, sourceText, langTag, parents);
+                                      @JsonProperty("parents") @Nonnull ImmutableSet<OWLDataProperty> parents,
+                                                    @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_CreateDataPropertiesAction(projectId, sourceText, langTag, changeRequestId, parents);
     }
 }
