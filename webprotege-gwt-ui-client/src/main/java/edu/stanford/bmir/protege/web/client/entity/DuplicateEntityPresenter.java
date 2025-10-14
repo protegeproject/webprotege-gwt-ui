@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.common.collect.*;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.client.search.*;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -14,7 +16,6 @@ import org.semanticweb.owlapi.model.EntityType;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,6 +39,7 @@ public class DuplicateEntityPresenter {
 
     private HierarchyPopupElementSelectionHandler hierarchySelectionHandler = selection -> {
     };
+    private final EntityHierarchyModel hierarchyModel;
 
 
     @Inject
@@ -45,12 +47,13 @@ public class DuplicateEntityPresenter {
                                     @Nonnull SearchResultsListPresenter searchResultsPresenter,
                                     @Nonnull DuplicateEntitiesView view,
                                     @Nonnull EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter,
-                                    @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                    @Nonnull DispatchServiceManager dispatchServiceManager, EntityHierarchyModel hierarchyModel) {
         this.projectId = projectId;
         this.searchResultsPresenter = searchResultsPresenter;
         this.view = view;
         this.entitySearchFilterTokenFieldPresenter = checkNotNull(entitySearchFilterTokenFieldPresenter);
         this.dispatchServiceManager = dispatchServiceManager;
+        this.hierarchyModel = hierarchyModel;
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
@@ -68,7 +71,8 @@ public class DuplicateEntityPresenter {
                             getLangTagFilter(),
                             searchFilters,
                             PageRequest.requestPage(pageNumber),
-                            DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES),
+                            DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES,
+                            hierarchyModel.getHierarchyDescriptor().getEntityMatchCriteria()),
                     view,
                     (result) -> processSearchActionResult(result, searchText));
         });
@@ -97,7 +101,8 @@ public class DuplicateEntityPresenter {
                         getLangTagFilter(),
                         searchFilters,
                         PageRequest.requestPage(pageNumber),
-                        DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES),
+                        DeprecatedEntitiesTreatment.INCLUDE_DEPRECATED_ENTITIES,
+                        hierarchyModel.getHierarchyDescriptor().getEntityMatchCriteria()),
                 view,
                 (result) -> processSearchActionResult(result, entitiesText));
 

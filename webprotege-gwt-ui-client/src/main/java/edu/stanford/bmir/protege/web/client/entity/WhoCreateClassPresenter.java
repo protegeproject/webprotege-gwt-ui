@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertie
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -28,6 +30,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -63,6 +66,7 @@ public class WhoCreateClassPresenter {
 
     @Nonnull
     private final SelectionModel selectionModel;
+    private final UuidV4Provider uuidUtil;
 
     private ModalPresenter modalPresenter;
 
@@ -80,10 +84,12 @@ public class WhoCreateClassPresenter {
                                    @Nonnull ModalManager modalManager,
                                    @Nonnull ActiveProjectManager activeProjectManager,
                                    @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
+                                   @NotNull UuidV4Provider uuidUtil,
                                    @Nonnull DuplicateEntityPresenter duplicateEntityPresenter, @Nonnull SelectionModel selectionModel, @Nonnull Messages messages) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.view = view;
+        this.uuidUtil = uuidUtil;
         this.modalManager = modalManager;
         this.activeProjectManager = activeProjectManager;
         this.displayNameSettingsManager = displayNameSettingsManager;
@@ -170,21 +176,22 @@ public class WhoCreateClassPresenter {
     private ProjectAction<? extends AbstractCreateEntityResult<?>> getAction(EntityType<?> entityType,
                                                                              Optional<? extends OWLEntity> parent,
                                                                              String enteredText) {
+        ChangeRequestId changeRequestId = ChangeRequestId.get(uuidUtil.get());
         if (entityType.equals(EntityType.CLASS)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateClassesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses);
+            return CreateClassesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses, changeRequestId);
         } else if (entityType.equals(EntityType.OBJECT_PROPERTY)) {
             ImmutableSet<OWLObjectProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopObjectProperty());
-            return CreateObjectPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
+            return CreateObjectPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties, changeRequestId);
         } else if (entityType.equals(EntityType.DATA_PROPERTY)) {
             ImmutableSet<OWLDataProperty> parentProperties = getParents(parent, () -> DataFactory.get().getOWLTopDataProperty());
-            return CreateDataPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
+            return CreateDataPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties, changeRequestId);
         } else if (entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
             ImmutableSet<OWLAnnotationProperty> parentProperties = getParentsSet(parent, ImmutableSet::of);
-            return CreateAnnotationPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties);
+            return CreateAnnotationPropertiesAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentProperties, changeRequestId);
         } else if (entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
             ImmutableSet<OWLClass> parentClses = getParents(parent, DataFactory::getOWLThing);
-            return CreateNamedIndividualsAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses);
+            return CreateNamedIndividualsAction.create(projectId, enteredText, currentLangTag.orElseGet(() -> ""), parentClses, changeRequestId);
         } else {
             throw new RuntimeException("Unsupported entity type: " + entityType);
         }
