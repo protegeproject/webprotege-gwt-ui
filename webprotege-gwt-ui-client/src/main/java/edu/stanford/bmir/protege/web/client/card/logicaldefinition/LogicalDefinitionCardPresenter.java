@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.client.card.logicaldefinition;
 import com.google.auto.factory.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.*;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
+import edu.stanford.bmir.protege.web.shared.access.ContextAwareBuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.logging.*;
@@ -39,9 +42,16 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     private final DisplayContextManager displayContextManager = new DisplayContextManager(context -> {
     });
 
+    private final NothingSelectedView nothingSelectedView;
+
+    private boolean canViewLogicalDef = false;
+    private boolean canEditLogicalDef = false;
+
     private boolean inFocus = false;
 
     private boolean readOnly = true;
+
+    private EntityCardUi entityCardUi;
 
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
@@ -49,28 +59,35 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @AutoFactory
     public LogicalDefinitionCardPresenter(LogicalDefinitionCardView view,
                                           @Provided DispatchServiceManager dispatch,
+                                          @Nonnull NothingSelectedView nothingSelectedView,
                                           @Provided ProjectId projectId) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectId;
+        this.nothingSelectedView = nothingSelectedView;
     }
 
     @Override
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
-        ui.setWidget(view);
+        entityCardUi = ui;
+        entityCardUi.setWidget(view);
         view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
     }
 
     @Override
     public void requestFocus() {
-        if(this.selectedEntity.isPresent() && !this.selectedEntity.get().equals(this.renderedEntity)){
-            this.renderedEntity = selectedEntity.get();
-            dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
-                    (result) -> view.setEntityData(result.getEntityData()));
-            view.setReadOnly(this.readOnly);
-            view.setEntity(renderedEntity);
-            this.inFocus = true;
+        if(this.selectedEntity.isPresent() && !this.selectedEntity.get().equals(this.renderedEntity) && this.canViewLogicalDef){
+            displaySelectedEntity();
         }
+    }
+
+    private void displaySelectedEntity() {
+        this.renderedEntity = selectedEntity.get();
+        dispatch.execute(GetEntityRenderingAction.create(projectId, renderedEntity),
+                (result) -> view.setEntityData(result.getEntityData()));
+        view.setReadOnly(this.readOnly);
+        view.setEntity(renderedEntity);
+        this.inFocus = true;
     }
 
     @Override
@@ -94,7 +111,7 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     @Override
     public void beginEditing() {
-        if(inFocus) {
+        if(inFocus && canEditLogicalDef) {
             view.switchToEditable();
         }
         this.readOnly = false;
@@ -160,5 +177,13 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     @Override
     public void setCapabilities(ImmutableSet<Capability> capabilities) {
         this.capabilities = capabilities;
+        canEditLogicalDef = CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.EDIT_LOGICAL_DEFINITIONS.getCapability(), capabilities);
+        canViewLogicalDef = canEditLogicalDef || CardCapabilityChecker.hasCapability(ContextAwareBuiltInCapability.VIEW_LOGICAL_DEFINITIONS.getCapability(), capabilities);
+        if(!canViewLogicalDef){
+            this.entityCardUi.setWidget(this.nothingSelectedView);
+        } else {
+            entityCardUi.setWidget(view);
+            displaySelectedEntity();
+        }
     }
 }
