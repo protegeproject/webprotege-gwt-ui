@@ -8,10 +8,12 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.directparents.GetLinearizationPathParentsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.*;
@@ -36,6 +38,9 @@ public class EditParentsPresenter {
     @Nonnull
     private final DispatchServiceManager dispatch;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Nullable
     private OWLEntity entity;
 
@@ -56,12 +61,14 @@ public class EditParentsPresenter {
                                 @Nonnull EditParentsView view,
                                 @Nonnull DispatchServiceManager dispatch,
                                 @Nonnull ModalManager modalManager,
-                                @Nonnull Messages messages) {
+                                @Nonnull Messages messages,
+                                @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatch);
         this.modalManager = checkNotNull(modalManager);
         this.messages = checkNotNull(messages);
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     public void start(@Nonnull OWLEntity entity) {
@@ -112,7 +119,8 @@ public class EditParentsPresenter {
         ImmutableSet<OWLClass> parentsSet = view.getNewParentList().stream()
                 .map(owlPrimitiveData -> owlPrimitiveData.asEntity().get().asOWLClass())
                 .collect(toImmutableSet());
-        dispatch.execute(ChangeEntityParentsAction.create(projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
+        dispatch.execute(ChangeEntityParentsAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                        projectId, parentsSet, entity.asOWLClass(), view.getReasonForChange()),
                 changeEntityParentsResult -> {
                     if (changeEntityParentsResult.isSuccess()) {
                         view.clearClassesWithCycleErrors();

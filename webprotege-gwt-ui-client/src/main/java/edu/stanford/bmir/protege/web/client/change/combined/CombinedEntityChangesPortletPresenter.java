@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.ApplicationEnvironmentManager;
@@ -7,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.portlet.*;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -17,6 +19,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -43,6 +46,8 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
 
     private final DispatchServiceManager dispatch;
 
+    private final ActiveProjectManager activeProjectManager;
+
     private Optional<PortletUi> portletUi;
 
     private final Messages messages;
@@ -57,21 +62,33 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  DisplayNameRenderer displayNameRenderer,
                                                  DispatchServiceManager dispatch,
                                                  SelectedPathsModel selectedPathsModel,
+                                                 ActiveProjectManager activeProjectManager,
                                                  Messages messages,
                                                  ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
+        this.activeProjectManager = activeProjectManager;
         this.presenter = presenter;
         this.capabilityChecker = capabilityChecker;
         this.dispatch = dispatch;
         this.messages = messages;
         this.applicationEnvironmentManager = applicationEnvironmentManager;
-        String dateStrFromEnv = applicationEnvironmentManager.getAppEnvVariables()
-                .getEntityOldHistoryAndNotesDate();
-        oldHistoryLink = new PortletAction(
-                messages.change_priorChanges(dateStrFromEnv),
-                "wp-btn-g--olderHistory",
-                this::handleOldHistoryClickAction
-        );
+        activeProjectManager.getActiveProjectDetails(projectDetails -> {
+            if(projectDetails.isPresent()) {
+                String formatted = formatEpochMillis(projectDetails.get().getCreatedAt());
+                oldHistoryLink = new PortletAction(
+                        messages.change_priorChanges(formatted),
+                        "wp-btn-g--olderHistory",
+                        this::handleOldHistoryClickAction);
+            } else {
+                String dateStrFromEnv = applicationEnvironmentManager.getAppEnvVariables()
+                        .getEntityOldHistoryAndNotesDate();
+                oldHistoryLink = new PortletAction(
+                        messages.change_priorChanges(dateStrFromEnv),
+                        "wp-btn-g--olderHistory",
+                        this::handleOldHistoryClickAction
+                );
+            }
+        });
     }
 
     @Override
@@ -149,6 +166,25 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                     .getEntityHistoryUrlFormat()
                     .replace("{0}", OldHistoryEncoding.encodeIriToHostedLink(entity.getIRI()));
             Window.open(url, "_blank", "");
+        }
+    }
+
+    public static String formatEpochMillis(long epochMillis) {
+        Date date = new Date(epochMillis); // uses browser's local tz
+        String month = DateTimeFormat.getFormat("MMMM").format(date);
+        int day = Integer.parseInt(DateTimeFormat.getFormat("d").format(date));
+        String year = DateTimeFormat.getFormat("yyyy").format(date);
+        return month + " " + day + getSuffix(day) + ", " + year;
+    }
+
+
+    private static String getSuffix(int day) {
+        if (day >= 11 && day <= 13) return "th";
+        switch (day % 10) {
+            case 1: return "st";
+            case 2: return "nd";
+            case 3: return "rd";
+            default: return "th";
         }
     }
 

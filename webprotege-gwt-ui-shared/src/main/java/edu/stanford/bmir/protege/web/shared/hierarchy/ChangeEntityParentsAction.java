@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.bulkop.HasCommitMessage;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -21,11 +22,12 @@ import javax.annotation.Nonnull;
 public abstract class ChangeEntityParentsAction implements ProjectAction<ChangeEntityParentsResult>, HasCommitMessage {
 
     @JsonCreator
-    public static ChangeEntityParentsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static ChangeEntityParentsAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                   @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                    @JsonProperty("parents") @Nonnull ImmutableSet<OWLClass> parents,
                                                    @JsonProperty("entity") @Nonnull OWLClass entity,
-                                                    @JsonProperty("commitMessage") @Nonnull String commitMessage) {
-        return new AutoValue_ChangeEntityParentsAction(projectId, parents, entity, commitMessage);
+                                                   @JsonProperty("commitMessage") @Nonnull String commitMessage) {
+        return new AutoValue_ChangeEntityParentsAction(projectId, parents, entity,changeRequestId, commitMessage);
     }
 
     @Nonnull
@@ -37,6 +39,9 @@ public abstract class ChangeEntityParentsAction implements ProjectAction<ChangeE
 
     @Nonnull
     public abstract OWLEntity getEntity();
+
+    @Nonnull
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
