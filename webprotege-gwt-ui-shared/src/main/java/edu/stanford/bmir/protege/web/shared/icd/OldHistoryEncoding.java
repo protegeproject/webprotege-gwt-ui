@@ -5,6 +5,6 @@ import org.semanticweb.owlapi.model.IRI;
 public class OldHistoryEncoding {
 
     public static String encodeIriToHostedLink(IRI iri){
-       return iri.toString().replace(":", "$").replace("/", "^");
+       return iri.toString().replace(":", "$").replace("/", "^").replace("#","%23");
     }
 }
