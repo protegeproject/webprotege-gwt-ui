@@ -33,7 +33,7 @@ public class ProjectHierarchiesPlaceTokenizer implements WebProtegePlaceTokenize
             }
             MatchResult matchResult = pattern.exec(trimmedToken);
             String projectIdString = matchResult.getGroup(1);
-            return ProjectHierarchiesPlace.get(ProjectId.get(projectIdString));
+            return ProjectHierarchiesPlace.get(ProjectId.get(projectIdString), null);
         }
 
         @Override

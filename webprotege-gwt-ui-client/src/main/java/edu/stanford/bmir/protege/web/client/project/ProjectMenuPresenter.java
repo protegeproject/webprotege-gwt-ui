@@ -6,6 +6,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.ManageHierarchiesHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
@@ -142,8 +143,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
                                 ProjectSettingsDownloader projectSettingsDownloader,
                                 ProjectSettingsImporter projectSettingsImporter,
-                                ManageHierarchiesHandler manageHierarchiesHandler,
-                                EditProjectRolesHandler editProjectRolesHandler) {
+                                EditProjectRolesHandler editProjectRolesHandler,
+                                ManageHierarchiesHandler manageHierarchiesHandler) {
         this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
@@ -156,6 +157,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.projectSettingsDownloader = projectSettingsDownloader;
         this.projectSettingsImporter = projectSettingsImporter;
         this.editProjectRolesHandler = editProjectRolesHandler;
+        this.manageHierarchiesHandler = manageHierarchiesHandler;
         setupActions();
     }
 
@@ -207,6 +209,5 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(uploadAndMergeAdditions);
 
     }
-
 
 }
