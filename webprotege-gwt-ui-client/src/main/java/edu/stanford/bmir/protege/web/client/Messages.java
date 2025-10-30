@@ -1417,4 +1417,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Siblings ordering processed successfully ")
     @Key("siblingsOrdering.processing.success")
     String siblingsOrderingSuccessfullyProcessed();
+
+    @DefaultMessage("Manage hierarchies")
+    @Key("settings.managerHierarchies.title")
+    String setting_manageHierarchies();
 }

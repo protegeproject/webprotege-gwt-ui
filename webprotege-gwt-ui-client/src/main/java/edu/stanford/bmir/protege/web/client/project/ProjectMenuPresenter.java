@@ -6,6 +6,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.ManageHierarchiesHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
@@ -47,6 +48,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final ProjectSettingsDownloader projectSettingsDownloader;
 
     private final ProjectSettingsImporter projectSettingsImporter;
+
+    private final ManageHierarchiesHandler manageHierarchiesHandler;
 
 
     private final AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
@@ -112,6 +115,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private final AbstractUiAction manageHierarchies = new AbstractUiAction(MESSAGES.setting_manageHierarchies()) {
+        @Override
+        public void execute() {
+            manageHierarchiesHandler.handleManageHierarchies();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 ProjectMenuView view,
@@ -123,7 +133,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
                                 EditProjectFormsUiHandler editProjectFormsUiHandler,
                                 ProjectSettingsDownloader projectSettingsDownloader,
-                                ProjectSettingsImporter projectSettingsImporter) {
+                                ProjectSettingsImporter projectSettingsImporter,
+                                ManageHierarchiesHandler manageHierarchiesHandler) {
         this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
@@ -135,6 +146,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.editProjectFormsUiHandler = editProjectFormsUiHandler;
         this.projectSettingsDownloader = projectSettingsDownloader;
         this.projectSettingsImporter = projectSettingsImporter;
+        this.manageHierarchiesHandler = manageHierarchiesHandler;
         setupActions();
     }
 
@@ -143,6 +155,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadAndMerge.setEnabled(false);
         uploadAndMergeAdditions.setEnabled(false);
         uploadSiblingsOrdering.setEnabled(false);
+        manageHierarchies.setEnabled(false);
         displayButton(container);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
@@ -153,7 +166,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, importSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE_ADDITIONS, uploadAndMergeAdditions::setEnabled);
         capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
-
+        capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, manageHierarchies::setEnabled);
     }
 
     public void dispose() {
@@ -169,6 +182,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectTags);
         view.addMenuAction(editProjectForms);
         view.addMenuAction(editProjectPrefixes);
+        view.addMenuAction(manageHierarchies);
         view.addSeparator();
         view.addMenuAction(uploadSiblingsOrdering);
         view.addSeparator();
