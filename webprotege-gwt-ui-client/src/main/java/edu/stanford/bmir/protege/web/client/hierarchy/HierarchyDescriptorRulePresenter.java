@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class HierarchyDescriptorRulePresenter {
 
@@ -52,6 +49,7 @@ public class HierarchyDescriptorRulePresenter {
             perspectiveChooserPresenter.clearPerspectiveId();
         }
         hierarchyDescriptorPresenter.setHierarchyDescriptor(value.getHierarchyDescriptor());
+        view.setCapabilities(new ArrayList<>(value.getRequiredCapabilities()));
     }
 
     public Optional<HierarchyDescriptorRule> getHierarchyDescriptorRule() {
