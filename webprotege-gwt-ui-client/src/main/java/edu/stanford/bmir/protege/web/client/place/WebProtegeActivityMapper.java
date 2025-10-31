@@ -242,7 +242,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         if(place instanceof ProjectHierarchiesPlace) {
             ProjectHierarchiesPlace projectHierarchiesPlace = (ProjectHierarchiesPlace) place;
             ProjectHierarchiesPresenter presenter = getProjectHierarchiesPresenter(projectHierarchiesPlace);
-            return new ProjectHierarchiesActivity(presenter);
+            return new ProjectHierarchiesActivity(presenter, projectHierarchiesPlace.getNextPlace());
         }
 
         return null;

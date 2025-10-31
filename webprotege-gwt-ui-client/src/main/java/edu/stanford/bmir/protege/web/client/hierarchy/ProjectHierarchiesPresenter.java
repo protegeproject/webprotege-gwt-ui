@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -13,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 public class ProjectHierarchiesPresenter {
 
@@ -54,4 +56,7 @@ public class ProjectHierarchiesPresenter {
                 });
     }
 
+    public void setNextPlace(Optional<Place> place) {
+        settingsPresenter.setNextPlace(place);
+    }
 }

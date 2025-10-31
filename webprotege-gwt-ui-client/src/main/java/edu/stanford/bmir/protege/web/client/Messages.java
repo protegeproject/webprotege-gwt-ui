@@ -1543,4 +1543,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("linearization.telescopic")
     String linearization_telescopic(String coreLinId);
 
+
+    @DefaultMessage("Manage hierarchies")
+    @Key("settings.managerHierarchies.title")
+    String setting_manageHierarchies();
+
+    @DefaultMessage("Edit roles")
+    @Key("settings.editProjectRoles.title")
+    String settings_editProjectRoles();
 }
