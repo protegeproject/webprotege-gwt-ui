@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ManageHierarchiesHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsImporter;
+import edu.stanford.bmir.protege.web.client.role.EditProjectRoleAssignmentsHandler;
 import edu.stanford.bmir.protege.web.client.role.EditProjectRolesHandler;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -53,6 +54,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final ManageHierarchiesHandler manageHierarchiesHandler;
 
     private final EditProjectRolesHandler editProjectRolesHandler;
+
+    private final EditProjectRoleAssignmentsHandler editProjectRoleAssignmentsHandler;
 
     private final AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
         @Override
@@ -131,6 +134,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private final AbstractUiAction editProjectRoleAssignments = new AbstractUiAction(MESSAGES.settings_projectRoleAssignments()) {
+        @Override
+        public void execute() {
+            editProjectRoleAssignmentsHandler.handleEditProjectRoleAssignments();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectCapabilityChecker capabilityChecker,
                                 ProjectMenuView view,
@@ -144,7 +154,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 ProjectSettingsDownloader projectSettingsDownloader,
                                 ProjectSettingsImporter projectSettingsImporter,
                                 EditProjectRolesHandler editProjectRolesHandler,
-                                ManageHierarchiesHandler manageHierarchiesHandler) {
+                                ManageHierarchiesHandler manageHierarchiesHandler, EditProjectRoleAssignmentsHandler editProjectRoleAssignmentsHandler) {
         this.capabilityChecker = capabilityChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
@@ -158,6 +168,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.projectSettingsImporter = projectSettingsImporter;
         this.editProjectRolesHandler = editProjectRolesHandler;
         this.manageHierarchiesHandler = manageHierarchiesHandler;
+        this.editProjectRoleAssignmentsHandler = editProjectRoleAssignmentsHandler;
         setupActions();
     }
 
@@ -180,6 +191,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         capabilityChecker.hasCapability(EDIT_ONTOLOGY, uploadSiblingsOrdering::setEnabled);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, manageHierarchies::setEnabled);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, editProjectRoles::setEnabled);
+        capabilityChecker.hasCapability(EDIT_SHARING_SETTINGS, editProjectRoleAssignments::setEnabled);
     }
 
     public void dispose() {
@@ -197,6 +209,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectPrefixes);
         view.addMenuAction(manageHierarchies);
         view.addMenuAction(editProjectRoles);
+        view.addMenuAction(editProjectRoleAssignments);
         view.addSeparator();
         view.addMenuAction(uploadSiblingsOrdering);
         view.addSeparator();

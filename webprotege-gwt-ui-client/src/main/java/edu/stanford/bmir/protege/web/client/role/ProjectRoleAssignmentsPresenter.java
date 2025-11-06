@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
@@ -26,13 +27,16 @@ public class ProjectRoleAssignmentsPresenter {
 
     private final MessageBox messageBox;
 
+    private final Messages messages;
+
     @Inject
-    public ProjectRoleAssignmentsPresenter(ProjectId projectId, ProjectRoleAssignmentsView view, SettingsPresenter settingsPresenter, DispatchServiceManager dispatchServiceManager, MessageBox messageBox) {
+    public ProjectRoleAssignmentsPresenter(ProjectId projectId, ProjectRoleAssignmentsView view, SettingsPresenter settingsPresenter, DispatchServiceManager dispatchServiceManager, MessageBox messageBox, Messages messages) {
         this.projectId = projectId;
         this.view = view;
         this.settingsPresenter = settingsPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
+        this.messages = messages;
     }
 
     public void start(AcceptsOneWidget container) {
@@ -41,7 +45,7 @@ public class ProjectRoleAssignmentsPresenter {
         settingsPresenter.setApplySettingsHandler(this::handleApply);
         dispatchServiceManager.execute(GetProjectRoleAssignmentsAction.create(projectId), result -> {
             settingsPresenter.setBusy(false);
-            AcceptsOneWidget roleAssignments = settingsPresenter.addSection("Role assignments");
+            AcceptsOneWidget roleAssignments = settingsPresenter.addSection(messages.settings_projectRoleAssignments());
             roleAssignments.setWidget(view);
             List<ProjectUserRoleAssignment> userAssignments = result.getAssignments()
                     .getUserAssignments()

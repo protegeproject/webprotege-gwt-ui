@@ -1422,7 +1422,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("settings.managerHierarchies.title")
     String setting_manageHierarchies();
 
-    @DefaultMessage("Edit roles")
+    @DefaultMessage("Roles")
     @Key("settings.editProjectRoles.title")
     String settings_editProjectRoles();
+
+    @DefaultMessage("Role assignments")
+    @Key("settings.projectRoleAssignments.title")
+    String settings_projectRoleAssignments();
 }
