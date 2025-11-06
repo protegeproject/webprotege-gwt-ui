@@ -5,15 +5,22 @@ import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import java.util.EnumSet;
 
 import static edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger.WebProtegeMarker;
 
 public class WebProtegeServletContextListener implements ServletContextListener {
 
     private static final Logger logger = LoggerFactory.getLogger(WebProtegeServletContextListener.class);
+
+    public static final boolean MATCH_AFTER_ANY_DECLARED_MAPPINGS = true;
+
+    public static final String FILTER_ALL_URL_PATTERNS = "/*";
 
     public WebProtegeServletContextListener() {
     }
@@ -32,6 +39,13 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             servletContext.addServlet("ProjectDownloadServlet", serverComponent.getProjectDownloadServlet())
                           .addMapping("/download");
+
+
+            servletContext.addFilter("RpcRedirectFilter", serverComponent.getRpcRedirectFilter())
+                            .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ASYNC), MATCH_AFTER_ANY_DECLARED_MAPPINGS, "/webprotege/dispatchservice");
+
+            servletContext.addFilter("WebProtegeWebAppFilter", serverComponent.getWebProtegeWebAppFilter())
+                    .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), MATCH_AFTER_ANY_DECLARED_MAPPINGS, FILTER_ALL_URL_PATTERNS);
 
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));

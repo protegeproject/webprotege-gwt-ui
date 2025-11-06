@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.filemanager.ConfigInputStreamSupplie
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,9 @@ public class WebProtegeWebAppFilter implements Filter {
     public static void setError(Throwable t) {
     }
 
+    @Inject
+    public WebProtegeWebAppFilter() {
+    }
 
     /**
      * Called by the web container to indicate to a filter that it is being placed into

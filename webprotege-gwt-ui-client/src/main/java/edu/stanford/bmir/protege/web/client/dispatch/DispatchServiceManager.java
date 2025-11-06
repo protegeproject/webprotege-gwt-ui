@@ -8,6 +8,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
@@ -78,6 +79,7 @@ public class DispatchServiceManager {
         this.messageBox = messageBox;
         this.errorDisplay = errorDisplay;
         async = GWT.create(DispatchService.class);
+        ((ServiceDefTarget) async).setRpcRequestBuilder(new RedirectAwareRpcRequestBuilder());
         this.eventBus = checkNotNull(eventBus);
         this.signInRequiredHandler = checkNotNull(signInRequiredHandler);
     }
