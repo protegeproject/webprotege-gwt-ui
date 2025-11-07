@@ -179,6 +179,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         uploadSiblingsOrdering.setEnabled(false);
         manageHierarchies.setEnabled(false);
         editProjectRoles.setEnabled(false);
+        editProjectRoleAssignments.setEnabled(false);
         displayButton(container);
         capabilityChecker.hasCapability(EDIT_PROJECT_SETTINGS, editProjectSettings::setEnabled);
         capabilityChecker.hasCapability(UPLOAD_AND_MERGE, uploadAndMerge::setEnabled);
