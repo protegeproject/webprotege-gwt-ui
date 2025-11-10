@@ -231,6 +231,7 @@ public class TextControl extends Composite implements FormControl {
             return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
+        //TODO remove this if we want to fix the issue with literals.
         String lexicalValue = literalData.getLiteral().getLiteral().trim();
         if(lexicalValue.isEmpty()) {
             return Optional.empty();
