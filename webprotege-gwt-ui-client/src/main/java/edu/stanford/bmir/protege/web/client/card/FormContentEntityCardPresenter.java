@@ -189,6 +189,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
         nextFormData.ifPresent(formPresenter::displayForm);
         if(!nextFormData.isPresent()) {
             formPresenter.clear();
+        } else {
+            pristineFormData = formPresenter.getFormData();
         }
 
         fireEvent(new DirtyChangedEvent());
