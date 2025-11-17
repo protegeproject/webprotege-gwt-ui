@@ -6,9 +6,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBoxWithReasonForChange;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeIcdAction;
 import edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
@@ -39,17 +41,21 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
 
     private final Messages messages;
 
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
                                       @Nonnull DispatchServiceManager dispatchServiceManager,
                                       @Nonnull MessageBoxWithReasonForChange messageBoxWithReasonForChange,
                                       @Nonnull MessageBox messageBox,
+                                      UuidV4Provider uuidV4Provider,
                                       @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.messageBoxWithReasonForChange = messageBoxWithReasonForChange;
         this.messageBox = messageBox;
         this.messages = messages;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     @Nonnull
@@ -117,7 +123,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
                                 nodePath,
                                 targetPath,
                                 dropType,
-                                reasonForChangeText),
+                                reasonForChangeText,
+                                ChangeRequestId.get(uuidV4Provider.get())),
                         moveResult -> {
                             if (moveResult.isMoved()) {
                                 dropEndHandler.handleDropComplete();

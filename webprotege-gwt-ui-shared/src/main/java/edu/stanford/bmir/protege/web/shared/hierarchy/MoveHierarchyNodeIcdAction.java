@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -25,7 +26,8 @@ public abstract class MoveHierarchyNodeIcdAction implements ProjectAction<MoveHi
                                                     @JsonProperty("fromNodePath") @Nonnull Path<EntityNode> fromNodePath,
                                                     @JsonProperty("toNodeParentPath") @Nonnull Path<EntityNode> toNodeParentPath,
                                                     @JsonProperty("dropType") @Nonnull DropType dropType,
-                                                    @JsonProperty("commitMessage") String commitMessage) {
+                                                    @JsonProperty("commitMessage") String commitMessage,
+                                                    @JsonProperty("changeRequestId")ChangeRequestId changeRequestId) {
         return new AutoValue_MoveHierarchyNodeIcdAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType, commitMessage);
     }
 
@@ -46,4 +48,6 @@ public abstract class MoveHierarchyNodeIcdAction implements ProjectAction<MoveHi
     public abstract DropType getDropType();
 
     public abstract String getCommitMessage();
+
+    public abstract ChangeRequestId getChangeRequestId();
 }
