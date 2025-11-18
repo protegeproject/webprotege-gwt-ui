@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.client.app.FragmentManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectUnderMaintenanceException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 import java.util.logging.Level;
@@ -37,17 +38,26 @@ public class DispatchServiceCallback<T> {
 
     }
 
-    public final void onFailure(Throwable throwable) {
-        if (throwable instanceof ActionExecutionException) {
-            handleExecutionException(throwable);
-        } else if(throwable instanceof StatusCodeException) {
+    public final void onFailure(Throwable t) {
+        Throwable throwable;
+        if(t instanceof ActionExecutionException && ((ActionExecutionException) t).getWrappedException() != null) {
+            throwable = ((ActionExecutionException) t).getWrappedException();
+        } else {
+            throwable = t;
+        }
+
+        if(throwable instanceof StatusCodeException) {
             _handleStatusCodeException((StatusCodeException) throwable);
         } else if (throwable instanceof PermissionDeniedException) {
             handlePermissionDeniedException((PermissionDeniedException) throwable);
+        } else if (throwable instanceof ProjectUnderMaintenanceException) {
+            handleProjectUnderMaintenanceException((ProjectUnderMaintenanceException) throwable);
         } else if (throwable instanceof IncompatibleRemoteServiceException) {
             _handleIncompatibleRemoteServiceException((IncompatibleRemoteServiceException) throwable);
         } else if (throwable instanceof InvocationException) {
-            _handleInvocationException((InvocationException) throwable);
+             _handleInvocationException((InvocationException) throwable);
+        } else if (throwable instanceof ActionExecutionException) {
+             handleExecutionException(throwable);
         } else if (throwable instanceof UmbrellaException) {
             _handleUmbrellaException((UmbrellaException) throwable);
         } else {
@@ -57,6 +67,10 @@ public class DispatchServiceCallback<T> {
         handleErrorFinally(throwable);
         handleFinally();
     }
+
+    private void handleProjectUnderMaintenanceException(ProjectUnderMaintenanceException projectUnderMaintenanceException) {
+
+        errorMessageDisplay.displayGeneralErrorMessage("Project under maintenance", "This project is currently unavailable due to being under maintenance. Please try again in 5 minutes");}
 
     private void _handleStatusCodeException(StatusCodeException exception) {
         if(exception.getStatusCode() == 504) {
