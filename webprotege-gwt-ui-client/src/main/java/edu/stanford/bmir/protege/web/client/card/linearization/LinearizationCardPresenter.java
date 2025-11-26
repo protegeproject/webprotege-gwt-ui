@@ -12,10 +12,13 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.*;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.protege.gwt.graphtree.shared.graph.EdgeChange;
 import edu.stanford.webprotege.shared.annotations.Card;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -82,6 +85,24 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         this.entityCardUi = ui;
         ui.setWidget(view);
+        eventBus.addProjectEventHandler(projectId,
+                EntityHierarchyChangedEvent.ON_HIERARCHY_CHANGED, event -> {
+                    Optional<OWLEntity> eventEntity = event.getChangeEvent().getChanges().stream()
+                            .filter(change -> change instanceof EdgeChange)
+                            .map(change -> {
+                                EdgeChange<EntityNode> edgeChange = (EdgeChange<EntityNode>) change;
+                                return edgeChange.getSuccessor().getUserObject().getEntity();
+                            }).findAny();
+                    if(eventEntity.isPresent() && this.selectedEntity.isPresent() && eventEntity.get().getIRI().equals(this.selectedEntity.get().getIRI())) {
+                        this.entityParentsMap.clear();
+                        dispatch.execute(GetHierarchyParentsAction.create(projectId, this.selectedEntity.get(), ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
+                            if (hierarchyParentsResult.getParents() != null) {
+                                hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
+                            }
+                            view.setEntityParentsMap(this.entityParentsMap);
+                        });
+                    }
+                });
     }
 
     @Override
@@ -106,7 +127,6 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
 
     private void displayEntity(OWLEntity entity) {
         this.entityCardUi.setWidget(busyView);
-        this.entityParentsMap.clear();
         dispatch.execute(GetContextAwareLinearizationDefinitionAction.create(entity.getIRI(), Arrays.asList(LinearizationCapabilities.EDIT_LINEARIZATION_ROW,
                 LinearizationCapabilities.VIEW_LINEARIZATION_ROW), projectId), linearizationDefResult -> {
             for (LinearizationDefinition definition : linearizationDefResult.getDefinitionList()) {
@@ -124,6 +144,8 @@ public class LinearizationCardPresenter implements CustomContentEntityCardPresen
                         !response.getWhoficEntityLinearizationSpecification().getLinearizationSpecifications().isEmpty()) {
                     this.entityCardUi.setWidget(view);
                     dispatch.execute(GetHierarchyParentsAction.create(projectId, entity, ClassHierarchyDescriptor.get()), hierarchyParentsResult -> {
+                        this.entityParentsMap.clear();
+                        this.view.setEntityParentsMap(entityParentsMap);
                         if (hierarchyParentsResult.getParents() != null) {
                             hierarchyParentsResult.getParents().forEach(parent -> this.entityParentsMap.put(parent.getEntity().toStringID(), parent.getBrowserText()));
                         }

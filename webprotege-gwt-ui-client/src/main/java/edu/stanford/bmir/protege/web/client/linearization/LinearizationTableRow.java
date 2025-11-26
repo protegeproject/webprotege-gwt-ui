@@ -162,26 +162,30 @@ public class LinearizationTableRow {
     private void populateEditableLinearizationParent() {
         if (!isDerived()) {
             this.parentIri = this.linearizationSpecification.getLinearizationParent() != null ? this.linearizationSpecification.getLinearizationParent() : "";
-            this.baseEntityParentsMap.forEach(
-                    (iri, parentsText) -> {
-                        String browserText = parentsText != null && !parentsText.isEmpty() ? parentsText : iri;
-
-                        this.linearizationParentSelector.addItem(browserText, iri);
-                    }
-            );
-            this.linearizationParentSelector.addItem("<Linearization parent not set>", "");
-            for (int i = 0; i < this.linearizationParentSelector.getItemCount(); i++) {
-                if (this.linearizationParentSelector.getValue(i).equals(this.parentIri)) {
-                    this.linearizationParentSelector.setSelectedIndex(i);
-                    break;
-                }
-            }
+            populateParentsList();
 
             setLinearizationParentLabel();
             this.linearizationParentSelector.addChangeHandler((event) -> this.handleParentSelected());
             this.linearizationParentSelector.setVisible(false);
             this.linearizationParentSelector.setEnabled(false);
             this.linearizationParentLabel.setVisible(true);
+        }
+    }
+
+    private void populateParentsList() {
+        this.baseEntityParentsMap.forEach(
+                (iri, parentsText) -> {
+                    String browserText = parentsText != null && !parentsText.isEmpty() ? parentsText : iri;
+
+                    this.linearizationParentSelector.addItem(browserText, iri);
+                }
+        );
+        this.linearizationParentSelector.addItem("<Linearization parent not set>", "");
+        for (int i = 0; i < this.linearizationParentSelector.getItemCount(); i++) {
+            if (this.linearizationParentSelector.getValue(i).equals(this.parentIri)) {
+                this.linearizationParentSelector.setSelectedIndex(i);
+                break;
+            }
         }
     }
 
@@ -396,6 +400,14 @@ public class LinearizationTableRow {
         clone.commentsWidget = commentsClone;
         clone.baseEntityParentsMap = this.baseEntityParentsMap;
         return clone;
+    }
+
+    public void setBaseEntityParentsMap(Map<String, String> baseEntityParentsMap) {
+        if(!isDerived()) {
+            this.baseEntityParentsMap = baseEntityParentsMap;
+            this.linearizationParentSelector.clear();
+            populateParentsList();
+        }
     }
 
     private void initCodingNotes(String value) {

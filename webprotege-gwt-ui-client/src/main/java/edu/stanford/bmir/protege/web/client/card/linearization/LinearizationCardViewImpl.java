@@ -176,6 +176,7 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     @Override
     public void setEntityParentsMap(Map<String, String> entityParentsMap) {
         this.entityParentsMap = entityParentsMap;
+        refreshParentList();
     }
 
     @Override
@@ -287,6 +288,15 @@ public class LinearizationCardViewImpl extends Composite implements Linearizatio
     private void refreshChildrenValues() {
         for (LinearizationTableRow row : tableRowList) {
             row.populateDerivedLinearizationParents(this.tableRowList);
+        }
+    }
+
+    private void refreshParentList(){
+        if(this.tableRowList.isEmpty()){
+            return;
+        }
+        for(LinearizationTableRow row : this.tableRowList){
+            row.setBaseEntityParentsMap(this.entityParentsMap);
         }
     }
 
