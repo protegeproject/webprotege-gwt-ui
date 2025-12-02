@@ -63,7 +63,11 @@ public class DispatchServiceCallback<T> {
             errorMessageDisplay.displayGeneralErrorMessage("Timeout", "Something took too long to respond. A service might be busy or temporarily unavailable. Please try again in a moment.");
         }
         else {
-            errorMessageDisplay.displayGeneralErrorMessage("Error", "An error occurred: " + exception.getStatusText() + " (Error code: " + exception.getStatusCode() + ")");
+            if(exception.getStatusCode() == 0) {
+                errorMessageDisplay.displayGeneralErrorMessage("Session timeout", "Your session has timed out, please refresh your page.");
+            } else {
+                errorMessageDisplay.displayGeneralErrorMessage("Error", "An error occurred: " + exception.getStatusText() + " (Error code: " + exception.getStatusCode() + ")");
+            }
         }
     }
 
