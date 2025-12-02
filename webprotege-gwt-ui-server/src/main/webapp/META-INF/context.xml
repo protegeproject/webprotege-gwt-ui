@@ -1,3 +1,8 @@
 <Context path="/webprotege">
+    <Valve className="org.apache.catalina.valves.RemoteIpValve"
+           remoteIpHeader="X-Forwarded-For"
+           protocolHeader="X-Forwarded-Proto"
+           httpsServerPort="443"
+           internalProxies=".*"/>
     <Valve className="org.keycloak.adapters.tomcat.KeycloakAuthenticatorValve"/>
 </Context>
