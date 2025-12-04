@@ -18,4 +18,11 @@ public interface ChangeListView extends IsWidget, HasPagination {
 
     void setDetailsVisible(boolean showDetails);
 
+    void setFilterVisible(boolean showFilter);
+
+    boolean isFilterVisible();
+
+    String getFilter();
+
+    void setFilterChangedHandler(FilterChangedHandler filterChangedHandler);
 }

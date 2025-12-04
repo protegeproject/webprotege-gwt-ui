@@ -80,12 +80,13 @@ public class CombinedChangeListPresenter {
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
-
+        this.view.setFilterChangedHandler(filter -> displayChangesForProject());
         Marked.Options opts = new Marked.Options();
         opts.gfm     = true;
         opts.breaks  = false;
         opts.sanitize= true;
         Marked.setOptions(opts);
+        view.setFilterVisible(true);
     }
 
     public void setRevertChangesVisible(boolean revertChangesVisible) {
@@ -110,7 +111,7 @@ public class CombinedChangeListPresenter {
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
 
-        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.empty(), pageRequest);
+        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.empty(), pageRequest, view.getFilter());
         dispatch.execute(projectHistoryAction, hasBusy, this::fillView);
     }
 
@@ -120,7 +121,7 @@ public class CombinedChangeListPresenter {
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
 
-        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.of(entity), pageRequest);
+        GetProjectChangesForHistoryViewAction projectHistoryAction = GetProjectChangesForHistoryViewAction.create(projectId, Optional.of(entity), pageRequest, view.getFilter());
         dispatch.execute(projectHistoryAction, hasBusy, this::fillView);
     }
 
