@@ -28,10 +28,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class EditCommentResult implements Result {
 
     @JsonCreator
-    public static EditCommentResult create(@JsonProperty("editedComment") @Nonnull Optional<Comment> editedComment) {
+    public static EditCommentResult create(@JsonProperty("editedComment") @Nonnull Comment editedComment) {
         return new AutoValue_EditCommentResult(editedComment);
     }
 
     @Nonnull
-    public abstract Optional<Comment> getEditedComment();
+    public abstract Comment getEditedComment();
 }

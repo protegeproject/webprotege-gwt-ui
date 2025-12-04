@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class EditComment_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = EditCommentResult.create(Optional.empty());
+        var result = EditCommentResult.create(new Comment(CommentId.create(), UserId.getUserId("test"),123L, 125L, "test" , "SerializationTest"));
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }

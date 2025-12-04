@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,7 +47,7 @@ public class CommentViewFactory {
         final CommentView commentView = new CommentViewImpl();
         commentView.setCreatedBy(comment.getCreatedBy());
         commentView.setCreatedAt(comment.getCreatedAt());
-        commentView.setUpdatedAt(comment.getUpdatedAt());
+        commentView.setUpdatedAt(Optional.ofNullable(comment.getUpdatedAt()));
         commentView.setBody(comment.getRenderedBody());
         commentView.setReplyToCommentHandler(replyHandler);
         commentView.setEditCommentHandler(editHandler);

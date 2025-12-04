@@ -24,7 +24,7 @@ public class Comment_TestCase {
     @Mock
     private UserId createdBy;
     private long createdAt = 1L;
-    private Optional updatedAt = Optional.of(33L);
+    private Long updatedAt = 33L;
     private String body = "The body";
     private String renderedBody = "The renderedBody";
 
@@ -128,7 +128,7 @@ public class Comment_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_updatedAt() {
-        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, Optional.of(1234L), body, renderedBody))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, 1234L, body, renderedBody))));
     }
 
     @Test

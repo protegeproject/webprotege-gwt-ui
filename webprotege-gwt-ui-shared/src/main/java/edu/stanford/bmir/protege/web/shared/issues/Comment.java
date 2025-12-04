@@ -37,20 +37,6 @@ public class Comment implements IsSerializable {
 
     public Comment(@Nonnull CommentId id,
                     @Nonnull UserId createdBy,
-                   long createdAt,
-                   @Nonnull Optional<Long> updatedAt,
-                   @Nonnull String body,
-                   @Nonnull String renderedBody) {
-        this(id,
-             createdBy,
-             createdAt,
-             checkNotNull(updatedAt).orElse(null),
-             checkNotNull(body),
-             checkNotNull(renderedBody));
-    }
-
-    private Comment(@Nonnull CommentId id,
-                    @Nonnull UserId createdBy,
                     long createdAt,
                     @Nullable Long updatedAt,
                     @Nonnull String body,
@@ -82,8 +68,8 @@ public class Comment implements IsSerializable {
     }
 
     @Nonnull
-    public Optional<Long> getUpdatedAt() {
-        return Optional.ofNullable(updatedAt);
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
     @Nonnull

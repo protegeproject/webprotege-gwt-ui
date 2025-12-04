@@ -85,7 +85,7 @@ public class EventsSerializationTestCase {
                         new Comment(CommentId.create(),
                                 mockUserId(),
                                 1L,
-                                Optional.of(3L),
+                                3L,
                                 "The Body",
                                 "The rendered body"),
                         Optional.of(mockOWLClassData()),
@@ -103,7 +103,7 @@ public class EventsSerializationTestCase {
                         new Comment(CommentId.create(),
                                 mockUserId(),
                                 1L,
-                                Optional.of(3L),
+                                3L,
                                 "The Body",
                                 "The rendered body")),
                 WebProtegeEvent.class

@@ -189,16 +189,17 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private void handleEditComment(ThreadId threadId, Comment comment) {
         Consumer<String> handler = body -> dispatch.execute(editComment(projectId, threadId, comment.getId(), body),
-                                                            result -> result
-                                                                    .getEditedComment()
-                                                                    .ifPresent(this::updateComment));
+                                                            result ->  {
+                                                                     Comment responseComment = result.getEditedComment();
+                                                                     this.updateComment(responseComment);
+                                                                    });
         commentEditorModal.showModal(comment.getBody(), handler);
     }
 
     private void updateComment(Comment comment) {
         CommentView view = commentViewMap.get(comment.getId());
         if (view != null) {
-            view.setUpdatedAt(comment.getUpdatedAt());
+            view.setUpdatedAt(Optional.ofNullable(comment.getUpdatedAt()));
             view.setBody(comment.getRenderedBody());
         }
     }

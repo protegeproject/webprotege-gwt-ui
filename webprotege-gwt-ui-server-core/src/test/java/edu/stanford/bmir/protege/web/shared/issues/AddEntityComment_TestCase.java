@@ -38,7 +38,7 @@ public class AddEntityComment_TestCase {
         var result = AddEntityCommentResult.create(projectId,
                                       threadId,
                                       new Comment(CommentId.create(), UserId.getUserId("TheUser"),
-                                                  1000, Optional.empty(),
+                                                  1000, 25L,
                                                   THE_COMMENT,
                                                   THE_COMMENT),
                                       THE_COMMENT);
