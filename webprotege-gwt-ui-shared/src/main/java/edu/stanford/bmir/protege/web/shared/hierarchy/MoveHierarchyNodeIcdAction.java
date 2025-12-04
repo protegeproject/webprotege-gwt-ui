@@ -28,7 +28,7 @@ public abstract class MoveHierarchyNodeIcdAction implements ProjectAction<MoveHi
                                                     @JsonProperty("dropType") @Nonnull DropType dropType,
                                                     @JsonProperty("commitMessage") String commitMessage,
                                                     @JsonProperty("changeRequestId")ChangeRequestId changeRequestId) {
-        return new AutoValue_MoveHierarchyNodeIcdAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType, commitMessage);
+        return new AutoValue_MoveHierarchyNodeIcdAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType, commitMessage, changeRequestId);
     }
 
     @Nonnull
