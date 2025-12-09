@@ -116,6 +116,7 @@ public class WhoCreateClassDialogViewImpl extends Composite implements WhoCreate
         commitMessageView.setCommitMessage("");
         clearErrors();
         clearEntityAlreadyExistsMessage();
+        commitMessageView.setLocalHistory(historyStorage.loadLocalHistory().getMessages());
     }
 
 

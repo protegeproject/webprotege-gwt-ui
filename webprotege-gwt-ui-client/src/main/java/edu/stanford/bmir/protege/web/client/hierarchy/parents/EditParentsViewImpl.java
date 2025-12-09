@@ -114,6 +114,7 @@ public class EditParentsViewImpl extends Composite implements EditParentsView {
         this.textBox.setText(entity.getBrowserText());
         logger.log(Level.FINE, "[EditParentsViewImpl] setting entityData "
                 + entity);
+        commitMessageView.setLocalHistory(historyStorage.loadLocalHistory().getMessages());
     }
 
     @Override
