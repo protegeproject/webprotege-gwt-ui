@@ -88,6 +88,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             throw e;
         } catch (ActionExecutionException e) {
             throw new ActionExecutionException(e.getMessage());
+        }  catch (ProjectUnderMaintenanceException e) {
+            throw new ActionExecutionException(e);
         } catch (Exception e) {
             logger.error("An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e.getMessage());
@@ -124,6 +126,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             } else if (httpResponse.statusCode() == 504) {
                 logger.error("Gateway timeout when executing action: {} {}", action.getClass().getSimpleName(), httpResponse.body());
                 throw new ActionExecutionException("Gateway Timeout (504)");
+            } else if (httpResponse.statusCode() == 503) {
+                logger.error("Project is under maintenance");
+                throw new ProjectUnderMaintenanceException("Project is under maintenance");
             }
             else if(httpResponse.statusCode() >= 400) {
                 logger.error("Error response code returned when executing action.  Check the API gateway service for potential logs.  Details: {} {}", action.getClass().getSimpleName(), httpResponse.body());

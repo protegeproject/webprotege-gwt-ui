@@ -16,6 +16,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ActionExecutionException extends RuntimeException implements IsSerializable {
 
+    private Exception wrappedException;
+
+
+    public ActionExecutionException(Exception wrappedException) {
+        this.wrappedException = wrappedException;
+    }
+
+    public Exception getWrappedException() {
+        return wrappedException;
+    }
+
     /**
      * For serialization purposes only
      */
