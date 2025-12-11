@@ -11,12 +11,15 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
+import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,21 +47,30 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     private Consumer<EntityNode> selectionChangedHandler = node -> {
     };
 
+    private Consumer<Set<EntityNode>> multipleSelectionChangeHandler = set -> {};
+
     @Inject
     public HierarchyPopupViewImpl(TreeWidget<EntityNode, OWLEntity> treeWidget,
                                   EntityNodeHtmlRenderer renderer) {
         this.treeWidget = checkNotNull(treeWidget);
         this.treeWidget.setRenderer(renderer);
-        treeWidget.addSelectionChangeHandler(event -> treeWidget.getFirstSelectedUserObject()
-                .ifPresent(n -> {
-                    Timer t = new Timer() {
-                        @Override
-                        public void run() {
-                            selectionChangedHandler.accept(n);
-                        }
-                    };
-                    t.schedule(200);
-                }));
+        treeWidget.addSelectionChangeHandler(event -> {
+            if(multipleSelectionChangeHandler != null) {
+                multipleSelectionChangeHandler.accept(treeWidget.getSelectedNodes().stream().map(TreeNode::getUserObject).collect(Collectors.toSet()));
+            } else {
+                treeWidget.getFirstSelectedUserObject()
+                        .ifPresent(n -> {
+                            Timer t = new Timer() {
+                                @Override
+                                public void run() {
+                                    selectionChangedHandler.accept(n);
+                                }
+                            };
+                            t.schedule(200);
+                        });
+            }
+
+        });
         this.renderer = renderer;
         this.renderer.setRenderTags(false);
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -104,6 +116,12 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     public void addCssClassToMain(String css) {
         main.addStyleName(css);
     }
+
+    @Override
+    public void setMultipleSelectionChangeHandler(Consumer<Set<EntityNode>> entityConsumer) {
+        this.multipleSelectionChangeHandler = checkNotNull(entityConsumer);
+    }
+
 
     @Override
     public void clear() {

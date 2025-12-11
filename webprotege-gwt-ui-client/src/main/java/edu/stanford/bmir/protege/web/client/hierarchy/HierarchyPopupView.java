@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -26,6 +27,8 @@ public interface HierarchyPopupView extends IsWidget {
     void setMouseDownHandler(Consumer<EntityNode> entityConsumer);
 
     void addCssClassToMain(String css);
+
+    void setMultipleSelectionChangeHandler(Consumer<Set<EntityNode>> entityConsumer);
 
     void clear();
 }

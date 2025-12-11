@@ -34,7 +34,7 @@ public class HierarchySelectionModalManager {
         modalPresenter.setPrimaryButton(DialogButton.SELECT);
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
-            modelPresenter.getSelection().ifPresent(handler::handleSelection);
+            handler.handleSelection(modelPresenter.getSelection());
         });
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         modelPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));

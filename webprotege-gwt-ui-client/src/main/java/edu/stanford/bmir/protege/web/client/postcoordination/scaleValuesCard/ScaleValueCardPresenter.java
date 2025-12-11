@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
@@ -115,8 +116,10 @@ public class ScaleValueCardPresenter {
     public void showModalForSelection() {
         String title = "Select Scale Value for " + this.scaleValue.getAxisLabel();
         Set<OWLClass> roots = new HashSet<>(Collections.singletonList(DataFactory.getOWLClass(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
-        hierarchySelectionManager.showModal(title, roots, (entityNode) -> {
-            addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+        hierarchySelectionManager.showModal(title, roots, (entityNodes) -> {
+            for(EntityNode entityNode : entityNodes ) {
+                addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+            }
             if (this.handleChange != null) {
                 this.handleChange.run();
             }
