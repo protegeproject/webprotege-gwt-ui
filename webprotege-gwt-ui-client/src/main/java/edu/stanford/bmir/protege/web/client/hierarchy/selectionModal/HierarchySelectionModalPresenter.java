@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.searchClassInHierarchy.SearchClassUn
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -58,6 +59,10 @@ public class HierarchySelectionModalPresenter {
         this.searchClassUnderHierarchyPresenter.setSelectionChangedHandler((entity) ->
                 entity.ifPresent(this.hierarchyView::revealEntity)
         );
+    }
+
+    public void revealEntity(OWLEntity selectedEntity) {
+        this.hierarchyView.revealEntity(selectedEntity);
     }
 
     public Set<EntityNode> getSelection() {
