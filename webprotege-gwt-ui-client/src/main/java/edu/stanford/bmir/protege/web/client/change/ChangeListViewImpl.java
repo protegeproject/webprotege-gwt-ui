@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
@@ -23,6 +26,8 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
 
     private final PaginatorPresenter paginatorPresenter;
 
+    private FilterChangedHandler filterChangedHander = filter -> {};
+
     interface ChangeListViewImplUiBinder extends UiBinder<HTMLPanel, ChangeListViewImpl> {
     }
 
@@ -35,6 +40,9 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
     @UiField(provided = true)
     PaginatorViewImpl paginatorView;
 
+    @UiField
+    TextBox filterField;
+
     private boolean detailsVisible = true;
 
     @Inject
@@ -42,6 +50,7 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
         this.paginatorPresenter = checkNotNull(paginatorPresenter);
         this.paginatorView = (PaginatorViewImpl) paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
+        filterField.getElement().setPropertyString("placeholder", "Enter text to filter by summary message");
     }
 
 
@@ -75,6 +84,21 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
         this.detailsVisible = detailsVisible;
     }
 
+    @Override
+    public void setFilterVisible(boolean showFilter) {
+        filterField.setVisible(showFilter);
+    }
+
+    @Override
+    public boolean isFilterVisible() {
+        return filterField.isVisible();
+    }
+
+    @Override
+    public String getFilter() {
+        return filterField.getValue();
+    }
+
 
     @Override
     public void setPageCount(int pageCount) {
@@ -94,5 +118,15 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
     @Override
     public void setPageNumberChangedHandler(PageNumberChangedHandler handler) {
         paginatorPresenter.setPageNumberChangedHandler(handler);
+    }
+
+    @Override
+    public void setFilterChangedHandler(FilterChangedHandler filterChangedHandler) {
+        this.filterChangedHander = checkNotNull(filterChangedHandler);
+    }
+
+    @UiHandler("filterField" )
+    public void filterFieldKeyUp(KeyUpEvent event) {
+        filterChangedHander.handleFilterChanged(getFilter());
     }
 }

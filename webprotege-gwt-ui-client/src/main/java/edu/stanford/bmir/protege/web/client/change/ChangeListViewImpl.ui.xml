@@ -8,6 +8,12 @@
             flex-direction: column;
             align-items: stretch;
         }
+        .filter {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin: 4px;
+            border-bottom: literal("var(--inlay-panel--border)");
+        }
         .container {
             flex-grow: 1;
             flex-shrink: 1;
@@ -21,6 +27,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TextBox ui:field="filterField" text="" visible="false" addStyleNames="{style.filter}"/>
         <g:HTMLPanel ui:field="container" addStyleNames="{style.container}"/>
         <pagination:PaginatorViewImpl ui:field="paginatorView" addStyleNames="{style.paginator}"/>
     </g:HTMLPanel>

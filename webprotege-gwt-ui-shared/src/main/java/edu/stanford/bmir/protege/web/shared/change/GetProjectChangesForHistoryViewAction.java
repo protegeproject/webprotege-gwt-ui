@@ -24,23 +24,26 @@ public class GetProjectChangesForHistoryViewAction implements ProjectAction<GetP
     private ProjectId projectId;
     private OWLEntity subject;
     private PageRequest pageRequest;
+    private String filter;
 
     @GwtSerializationConstructor
     private GetProjectChangesForHistoryViewAction() {
     }
 
-    public GetProjectChangesForHistoryViewAction(ProjectId projectId, Optional<OWLEntity> subject, PageRequest pageRequest) {
+    public GetProjectChangesForHistoryViewAction(ProjectId projectId, Optional<OWLEntity> subject, PageRequest pageRequest, String filter) {
         this.projectId = projectId;
         this.subject = checkNotNull(subject).orElse(null);
         this.pageRequest = pageRequest;
+        this.filter = filter;
     }
 
     @JsonCreator
     public static GetProjectChangesForHistoryViewAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                                @JsonProperty("subject") @Nonnull Optional<OWLEntity> subject,
-                                                               @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest) {
+                                                               @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest,
+                                                               @JsonProperty("filter") String filter) {
 
-        return new GetProjectChangesForHistoryViewAction(projectId, subject, pageRequest);
+        return new GetProjectChangesForHistoryViewAction(projectId, subject, pageRequest, filter);
     }
 
     @Nonnull
@@ -59,6 +62,10 @@ public class GetProjectChangesForHistoryViewAction implements ProjectAction<GetP
         return pageRequest;
     }
 
+    @JsonProperty("filter")
+    public String getFilter() {
+        return filter;
+    }
 
     @Override
     public boolean equals(Object o) {
