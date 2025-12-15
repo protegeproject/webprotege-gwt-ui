@@ -5,10 +5,12 @@ import edu.stanford.bmir.protege.web.client.searchClassInHierarchy.SearchClassUn
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HierarchySelectionModalPresenter {
 
@@ -20,7 +22,7 @@ public class HierarchySelectionModalPresenter {
     @Nonnull
     private final EntityHierarchyModel model;
 
-    private Optional<EntityNode> selectedEntity = Optional.empty();
+    private Set<EntityNode> selectedEntities = new HashSet<>();
 
     private final SearchClassUnderHierarchyPresenter searchClassUnderHierarchyPresenter;
 
@@ -47,22 +49,28 @@ public class HierarchySelectionModalPresenter {
                 hierarchyDescriptor);
         hierarchyView.setModel(model);
         hierarchyView.clear();
-        hierarchyView.setSelectionChangedHandler(
-                entityNode -> selectedEntity = Optional.of(entityNode)
+        hierarchyView.setMultipleSelectionChangeHandler(
+                entities -> selectedEntities = entities
         );
         hierarchyView.addCssClassToMain(WebProtegeClientBundle.BUNDLE.modal().treeWidth());
         this.view.getHierarchyContainer().setWidget(hierarchyView);
         this.searchClassUnderHierarchyPresenter.start(this.view.getEditorField());
         this.searchClassUnderHierarchyPresenter.setRoots(hierarchyDescriptor);
-        this.searchClassUnderHierarchyPresenter.setSelectionChangedHandler((entity) -> entity.ifPresent(this.hierarchyView::revealEntity));
+        this.searchClassUnderHierarchyPresenter.setSelectionChangedHandler((entity) ->
+                entity.ifPresent(this.hierarchyView::revealEntity)
+        );
     }
 
-    public Optional<EntityNode> getSelection() {
-        return selectedEntity;
+    public void revealEntity(OWLEntity selectedEntity) {
+        this.hierarchyView.revealEntity(selectedEntity);
+    }
+
+    public Set<EntityNode> getSelection() {
+        return selectedEntities;
     }
 
     public void clean() {
-        this.selectedEntity = Optional.empty();
+        this.selectedEntities = new HashSet<>();
         hierarchyView.clear();
         this.searchClassUnderHierarchyPresenter.clear();
     }

@@ -1,13 +1,16 @@
 package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.postcoordination.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.*;
 import java.util.stream.*;
@@ -26,6 +29,7 @@ public class ScaleValueCardPresenter {
     private WebProtegeEventBus eventBus;
 
     private Runnable handleChange;
+    private Optional<OWLEntity> lastSelectedEntity = Optional.empty();
 
     private final HierarchySelectionModalManager hierarchySelectionManager;
 
@@ -54,7 +58,7 @@ public class ScaleValueCardPresenter {
     }
 
     private void bindView() {
-        view.setAddButtonClickHandler(event -> showModalForSelection());
+        view.setAddButtonClickHandler(event -> showModalForSelection(lastSelectedEntity));
     }
 
     private void initTable() {
@@ -73,6 +77,7 @@ public class ScaleValueCardPresenter {
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, scaleValueIris),
                 result -> {
+                    lastSelectedEntity = !result.getRenderedEntities().isEmpty() ? Optional.of(result.getRenderedEntities().get(result.getRenderedEntities().size() - 1).getEntity()) : Optional.empty();
                     result.getRenderedEntities()
                             .forEach(renderedEntity -> addRow(renderedEntity.getEntity().toStringID(), !renderedEntity.getBrowserText().equals("") ? renderedEntity.getBrowserText() : renderedEntity.getEntity().toStringID()));
                     view.setEditMode(!isReadOnly);
@@ -87,9 +92,10 @@ public class ScaleValueCardPresenter {
 
         ScaleValueIriAndName valueIriAndName = ScaleValueIriAndName.create(iri, value);
         scaleValue.getValueIris().add(valueIriAndName);
-
+        lastSelectedEntity = Optional.of(new OWLClassImpl(IRI.create(iri)));
         view.addRow(valueIriAndName);
     }
+
 
     public ScaleValueCardView getView() {
         return view;
@@ -112,14 +118,20 @@ public class ScaleValueCardPresenter {
         setEditMode(isEditMode);
     }
 
-    public void showModalForSelection() {
+    public void showModalForSelection(Optional<OWLEntity> selectedEntity) {
         String title = "Select Scale Value for " + this.scaleValue.getAxisLabel();
         Set<OWLClass> roots = new HashSet<>(Collections.singletonList(DataFactory.getOWLClass(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
-        hierarchySelectionManager.showModal(title, roots, (entityNode) -> {
-            addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+        hierarchySelectionManager.showModalWithSelection(title, roots, selectedEntity, (entityNodes) -> {
+            for(EntityNode entityNode : entityNodes ) {
+                addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+            }
             if (this.handleChange != null) {
                 this.handleChange.run();
             }
         });
+    }
+
+    private void resetLastEntity(){
+
     }
 }

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.icd.*;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.*;
@@ -286,7 +287,10 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         Set<OWLClass> roots = selectedScales.stream().map(scale -> DataFactory.getOWLClass(IRI.create(scale)))
                 .collect(Collectors.toSet());
 
-        hierarchyModal.showModal("Select axis value", roots, table::addNewRow);
+        hierarchyModal.showModal("Select axis value", roots, (entityNodes) -> {
+            Optional<EntityNode> selectedNode = entityNodes.stream().findFirst();
+            selectedNode.ifPresent(table::addNewRow);
+        });
         this.changeHandler.handleLogicalDefinitionCHange();
     }
 

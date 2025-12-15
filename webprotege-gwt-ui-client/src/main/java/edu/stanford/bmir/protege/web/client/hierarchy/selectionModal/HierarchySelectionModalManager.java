@@ -24,7 +24,22 @@ public class HierarchySelectionModalManager {
         this.modelPresenter = modelPresenter;
     }
 
-
+    public void showModalWithSelection(String title, Set<OWLClass> roots, Optional<OWLEntity> selection, HierarchySelectionHandler handler) {
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modelPresenter.clean();
+        modalPresenter.setTitle(title);
+        modalPresenter.setView(modelPresenter.getView());
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(DialogButton.SELECT);
+        modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
+            closer.closeModal();
+            handler.handleSelection(modelPresenter.getSelection());
+        });
+        WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
+        modelPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));
+        selection.ifPresent(modelPresenter::revealEntity);
+        modalManager.showModal(modalPresenter);
+    }
     public void showModal(String title, Set<OWLClass> roots, HierarchySelectionHandler handler) {
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modelPresenter.clean();
@@ -34,7 +49,7 @@ public class HierarchySelectionModalManager {
         modalPresenter.setPrimaryButton(DialogButton.SELECT);
         modalPresenter.setButtonHandler(DialogButton.SELECT, closer -> {
             closer.closeModal();
-            modelPresenter.getSelection().ifPresent(handler::handleSelection);
+            handler.handleSelection(modelPresenter.getSelection());
         });
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         modelPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));

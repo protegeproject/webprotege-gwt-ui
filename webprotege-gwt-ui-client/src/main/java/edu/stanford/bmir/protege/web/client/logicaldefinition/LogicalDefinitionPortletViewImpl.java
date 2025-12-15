@@ -264,7 +264,10 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
         Set<OWLClass> roots = selectedScales.stream().map(scale -> new OWLClassImpl(IRI.create(scale)))
                 .collect(Collectors.toSet());
 
-        this.hierarchySelectionManager.showModal("Select axis value", roots, table::addNewRow);
+        this.hierarchySelectionManager.showModal("Select axis value", roots, (entityNodes) -> {
+            Optional<EntityNode> selectedNode = entityNodes.stream().findFirst();
+            selectedNode.ifPresent(table::addNewRow);
+        });
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
