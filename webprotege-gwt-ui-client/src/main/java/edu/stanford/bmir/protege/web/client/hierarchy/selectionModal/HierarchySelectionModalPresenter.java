@@ -61,6 +61,10 @@ public class HierarchySelectionModalPresenter {
         );
     }
 
+    public void setSelectionHint(String hint) {
+        view.setSelectionHint(hint);
+    }
+
     public void revealEntity(OWLEntity selectedEntity) {
         this.hierarchyView.revealEntity(selectedEntity);
     }
@@ -73,5 +77,6 @@ public class HierarchySelectionModalPresenter {
         this.selectedEntities = new HashSet<>();
         hierarchyView.clear();
         this.searchClassUnderHierarchyPresenter.clear();
+        view.setSelectionHint(null);
     }
 }

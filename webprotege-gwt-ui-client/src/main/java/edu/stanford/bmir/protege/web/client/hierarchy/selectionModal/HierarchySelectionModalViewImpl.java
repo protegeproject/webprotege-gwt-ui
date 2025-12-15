@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 
@@ -18,6 +19,9 @@ public class HierarchySelectionModalViewImpl extends Composite implements Hierar
 
     @UiField
     public SimplePanel editorField;
+
+    @UiField
+    public Label selectionHint;
 
     interface HierarchySelectionModalViewImplUiBinder extends UiBinder<HTMLPanel, HierarchySelectionModalViewImpl> {
     }
@@ -39,6 +43,10 @@ public class HierarchySelectionModalViewImpl extends Composite implements Hierar
     @Override
     protected void onAttach() {
         super.onAttach();
+        com.google.gwt.dom.client.Element parent = getElement().getParentElement();
+        if (parent != null && parent.hasClassName("wp-modal__content")) {
+            parent.getStyle().setOverflow(com.google.gwt.dom.client.Style.Overflow.VISIBLE);
+        }
     }
 
     @Nonnull
@@ -51,5 +59,16 @@ public class HierarchySelectionModalViewImpl extends Composite implements Hierar
     @Override
     public AcceptsOneWidget getEditorField() {
         return editorField;
+    }
+
+    @Override
+    public void setSelectionHint(@Nullable String hint) {
+        if(hint == null) {
+            selectionHint.setVisible(false);
+            selectionHint.setText("");
+            return;
+        }
+        selectionHint.setText(hint);
+        selectionHint.setVisible(true);
     }
 }

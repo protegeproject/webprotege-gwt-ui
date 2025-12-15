@@ -333,10 +333,10 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
                  */
                 PostcoordinationAxisToGenericScale.create(axisIri, "", "NotAllowed")
         );
-        List<ScaleValueIriAndName> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
+        Set<ScaleValueIriAndName> existingScaleValueForAxis = postCoordinationCustomScalesList.stream().filter(customScaleValue -> customScaleValue.getPostcoordinationAxis().equals(axisIri))
                 .flatMap(customScaleValue -> customScaleValue.getPostcoordinationScaleValues().stream())
                 .map(ScaleValueIriAndName::create)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         ScaleValueCardPresenter newPresenter = createScaleValueCardPresenter(
                 currentAxisLabels,
                 PostcoordinationScaleValue.create(axisIri, currentAxisLabels.getScaleLabel(), existingScaleValueForAxis, genericScale1)
