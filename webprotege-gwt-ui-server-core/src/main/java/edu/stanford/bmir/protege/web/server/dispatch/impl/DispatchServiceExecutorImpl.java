@@ -70,7 +70,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 }
             }
             if(action instanceof GetUserInfoAction) {
-                var websocketUrl = System.getenv("webprotege.websocketUrl");
+                var websocketUrl = getWebSocketUrl();
                 GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
                 return DispatchServiceResultContainer.create(result);
             }
@@ -88,6 +88,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             logger.error("An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e.getMessage());
         }
+    }
+
+    private static String getWebSocketUrl() {
+        String env = System.getenv("WEBPROTEGE_WEBSOCKET_URL");
+        if(env != null) {
+            return env;
+        }
+        // Legacy naming
+        return System.getenv("webprotege.websocketUrl" );
     }
 
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
