@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcEndPoint;
-import edu.stanford.bmir.protege.web.server.upload.MinioStorageService;
-import edu.stanford.bmir.protege.web.server.upload.StorageService;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import io.minio.MinioClient;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -89,53 +87,6 @@ public class ApplicationModule {
         }
         // Try the prior used env var name
         return System.getenv("webprotege.gwt-api-gateway.endPoint" );
-    }
-
-    @Provides
-    @ApplicationSingleton
-    StorageService provideStorageService(MinioStorageService storageService) {
-        return storageService;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    MinioClient provideMinioClient() {
-        var accessKey = getMinioAccessKey();
-        var secretKey = getMinioSecretKey();
-        var endPoint = getMinioEndPoint();
-        return MinioClient.builder()
-                          .credentials(accessKey, secretKey)
-                          .endpoint(endPoint)
-                          .build();
-    }
-
-    private static String getMinioEndPoint() {
-        var env = System.getenv("WEBPROTEGE_MINIO_ENDPOINT");
-        if(env != null) {
-            return env;
-        }
-        logger.warning("WEBPROTEGE_MINIO_ENDPOINT environment variable is not set. Checking for minio.endPoint system property or using default. Please specify the environment variable.");
-        return System.getProperty("minio.endPoint" , "http://localhost:9000" );
-    }
-
-    private static String getMinioSecretKey() {
-        var env = System.getenv("WEBPROTEGE_MINIO_SECRET_KEY");
-        if(env != null) {
-            return env;
-        }
-        logger.warning("WEBPROTEGE_MINIO_SECRET_KEY environment variable is not set. Checking for minio.secretKey system property or using default. Please specify the environment variable.");
-        // Legacy support
-        return System.getProperty("minio.secretKey" , "webprotege" );
-    }
-
-    private static String getMinioAccessKey() {
-        var env = System.getenv("WEBPROTEGE_MINIO_ACCESS_KEY");
-        if(env != null) {
-            return env;
-        }
-        logger.warning("WEBPROTEGE_MINIO_ACCESS_KEY environment variable is not set. Checking for minio.secretKey system property or using default. Please specify the environment variable.");
-        // Legacy support
-        return System.getProperty("minio.accessKey" , "webprotege" );
     }
 
 }
