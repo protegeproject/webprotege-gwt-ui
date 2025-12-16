@@ -74,9 +74,18 @@ public class ApplicationModule {
     @Provides
     JsonRpcEndPoint provideJsonRpcEndPoint() {
         // API Gateway
-        var endPoint = System.getenv("webprotege.gwt-api-gateway.endPoint");
+        var endPoint = getEndPoint();
         var address =  (endPoint != null ? endPoint : "http://localhost:7777") + "/api/execute";
         return JsonRpcEndPoint.get(URI.create(address));
+    }
+
+    private static String getEndPoint() {
+        var env = System.getenv("WEBPROTEGE_GWT_API_GATEWAY_END_POINT");
+        if(env != null) {
+            return env;
+        }
+        // Try the prior used env var name
+        return System.getenv("webprotege.gwt-api-gateway.endPoint" );
     }
 
     @Provides
