@@ -10,10 +10,16 @@
         .next-block-padding-top {
             padding-top: 20px;
         }
+        .hint {
+            margin-top: 20px;
+            color: #6b6b6b;
+            font-size: 12px;
+        }
     </ui:style>
     <g:HTMLPanel>
         <g:SimplePanel ui:field="editorField" addStyleNames="{style.message-block}"/>
         <g:SimplePanel ui:field="hierarchyContainer" addStyleNames="{style.message-block} {style.next-block-padding-top}"/>
+        <g:Label ui:field="selectionHint" addStyleNames="{style.message-block} {style.hint}" visible="false"/>
     </g:HTMLPanel>
 
 </ui:UiBinder>

@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.*;
 
@@ -17,11 +18,15 @@ public class HierarchySelectionModalManager {
 
     private final HierarchySelectionModalPresenter modelPresenter;
 
+    private final Messages messages;
+
     @Inject
     public HierarchySelectionModalManager(@Nonnull ModalManager modalManager,
-                                          HierarchySelectionModalPresenter modelPresenter) {
+                                          HierarchySelectionModalPresenter modelPresenter,
+                                          Messages messages) {
         this.modalManager = modalManager;
         this.modelPresenter = modelPresenter;
+        this.messages = messages;
     }
 
     public void showModalWithSelection(String title, Set<OWLClass> roots, Optional<OWLEntity> selection, HierarchySelectionHandler handler) {
@@ -37,6 +42,7 @@ public class HierarchySelectionModalManager {
         });
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         modelPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));
+        modelPresenter.setSelectionHint(messages.hierarchySelectionHint());
         selection.ifPresent(modelPresenter::revealEntity);
         modalManager.showModal(modalPresenter);
     }
@@ -53,6 +59,7 @@ public class HierarchySelectionModalManager {
         });
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         modelPresenter.start(eventBus, ClassHierarchyDescriptor.get(roots));
+        modelPresenter.setSelectionHint(messages.hierarchySelectionHint());
         modalManager.showModal(modalPresenter);
     }
 }

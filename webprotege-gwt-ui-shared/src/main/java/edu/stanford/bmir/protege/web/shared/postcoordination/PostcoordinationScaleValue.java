@@ -6,12 +6,12 @@ public class PostcoordinationScaleValue {
 
     private final String axisIri;
     private final String axisLabel;
-    private final List<ScaleValueIriAndName> scaleValueIriAndNames;
+    private final Set<ScaleValueIriAndName> scaleValueIriAndNames;
     private final PostcoordinationAxisToGenericScale genericScale;
 
     public PostcoordinationScaleValue(String axisIri,
                                       String axisLabel,
-                                      List<ScaleValueIriAndName> scaleValueIriAndNames,
+                                      Set<ScaleValueIriAndName> scaleValueIriAndNames,
                                       PostcoordinationAxisToGenericScale genericScale) {
         this.axisIri = axisIri;
         this.axisLabel = axisLabel;
@@ -22,12 +22,12 @@ public class PostcoordinationScaleValue {
     public static PostcoordinationScaleValue createEmpty(String axisIri,
                                                          String axisLabel,
                                                          PostcoordinationAxisToGenericScale genericScale) {
-        return create(axisIri, axisLabel, new ArrayList<>(), genericScale);
+        return create(axisIri, axisLabel, new HashSet<>(), genericScale);
     }
 
     public static PostcoordinationScaleValue create(String axisIri,
                                                     String axisLabel,
-                                                    List<ScaleValueIriAndName> valueIris,
+                                                    Set<ScaleValueIriAndName> valueIris,
                                                     PostcoordinationAxisToGenericScale genericScale) {
         return new PostcoordinationScaleValue(axisIri, axisLabel, valueIris, genericScale);
     }
@@ -40,7 +40,7 @@ public class PostcoordinationScaleValue {
         return axisLabel;
     }
 
-    public List<ScaleValueIriAndName> getValueIris() {
+    public Set<ScaleValueIriAndName> getValueIris() {
         return scaleValueIriAndNames;
     }
 

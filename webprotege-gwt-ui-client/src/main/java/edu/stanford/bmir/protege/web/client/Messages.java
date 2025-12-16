@@ -1108,6 +1108,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("hierarchy.searchInHierarchy")
     String hierarchy_searchInHierarchy();
 
+    @DefaultMessage("Hint: Use CTRL and/or SHIFT to select multiple entities.")
+    @Key("hierarchySelectionHint")
+    String hierarchySelectionHint();
+
     @DefaultMessage("Merge {0}")
     @Key("merge.mergeEntity")
     String merge_mergeEntity(String typeName);
