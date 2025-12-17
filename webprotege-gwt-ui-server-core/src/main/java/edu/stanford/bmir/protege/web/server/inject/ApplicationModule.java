@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.rpc.JsonRpcEndPoint;
-import edu.stanford.bmir.protege.web.server.upload.MinioStorageService;
-import edu.stanford.bmir.protege.web.server.upload.StorageService;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import io.minio.MinioClient;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -19,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -27,6 +26,8 @@ import java.time.Duration;
  */
 @Module
 public class ApplicationModule {
+
+    private static final Logger logger = Logger.getLogger(ApplicationModule.class.getName());
 
     @ApplicationSingleton
     @Provides
@@ -74,27 +75,18 @@ public class ApplicationModule {
     @Provides
     JsonRpcEndPoint provideJsonRpcEndPoint() {
         // API Gateway
-        var endPoint = System.getenv("webprotege.gwt-api-gateway.endPoint");
+        var endPoint = getEndPoint();
         var address =  (endPoint != null ? endPoint : "http://localhost:7777") + "/api/execute";
         return JsonRpcEndPoint.get(URI.create(address));
     }
 
-    @Provides
-    @ApplicationSingleton
-    StorageService provideStorageService(MinioStorageService storageService) {
-        return storageService;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    MinioClient provideMinioClient() {
-        var accessKey = System.getProperty("minio.accessKey", "webprotege");
-        var secretKey = System.getProperty("minio.secretKey", "webprotege");
-        var endPoint = System.getProperty("minio.endPoint", "http://localhost:9000");
-        return MinioClient.builder()
-                          .credentials(accessKey, secretKey)
-                          .endpoint(endPoint)
-                          .build();
+    private static String getEndPoint() {
+        var env = System.getenv("WEBPROTEGE_GWT_API_GATEWAY_END_POINT");
+        if(env != null) {
+            return env;
+        }
+        // Try the prior used env var name
+        return System.getenv("webprotege.gwt-api-gateway.endPoint" );
     }
 
 }
