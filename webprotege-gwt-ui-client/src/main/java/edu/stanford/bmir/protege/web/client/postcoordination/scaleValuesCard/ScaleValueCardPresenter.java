@@ -69,11 +69,11 @@ public class ScaleValueCardPresenter {
             scaleValue.getValueIris().remove(value);
             handleChange.run();
         });
-
         Set<String> scaleValueIris = scaleValue.getValueIris()
                 .stream()
-                .flatMap(scaleValueIriAndName -> Stream.of(scaleValueIriAndName.getScaleValueIri()))
+                .map(ScaleValueIriAndName::getScaleValueIri)
                 .collect(Collectors.toSet());
+        this.scaleValue.getValueIris().clear();
 
         dispatchServiceManager.execute(GetRenderedOwlEntitiesAction.create(projectId, scaleValueIris),
                 result -> {
