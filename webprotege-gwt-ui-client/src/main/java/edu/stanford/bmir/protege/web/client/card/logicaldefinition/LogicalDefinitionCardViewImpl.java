@@ -344,7 +344,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                             this.pristineData,
                             logCond,
 
-                            "Edited the Logical Definitons and/or Necessary Conditions for " +
+                            "Edited the Logical Definitions and/or Necessary Conditions for " +
                                     this.entityData.getBrowserText() + " : " + commitMessage
                     ),
                     response -> this.pristineData = LogicalConditions.create(

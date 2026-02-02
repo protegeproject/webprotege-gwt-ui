@@ -62,6 +62,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         this.filterView = filterView;
         this.messages = messages;
         presenter.setDownloadVisible(true);
+        presenter.setSelectionModel(selectionModel);
         changeListView = presenter.getView();
 
 

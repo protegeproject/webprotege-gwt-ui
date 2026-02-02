@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.change;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -15,11 +14,15 @@ import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +47,8 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     private Optional<RevisionNumber> revision = Optional.empty();
 
+    private Optional<SelectionModel> selectionModel = Optional.empty();
+
     interface ChangeDetailsViewImplUiBinder extends UiBinder<HTMLPanel, ChangeDetailsViewImpl> {
     }
 
@@ -53,6 +58,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
         initWidget(ourUiBinder.createAndBindUi(this));
         revisionField.setVisible(false);
         tooManyChangesMessage.setVisible(true);
+        setupFocusClickedEntityHandler();
     }
 
     @UiField
@@ -65,7 +71,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     protected Label revisionField;
 
     @UiField
-    protected HasText highLevelDescriptionField;
+    protected InlineHTML highLevelDescriptionField;
 
     @UiField
     protected HasText authorField;
@@ -179,7 +185,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     @Override
     public void setHighLevelDescription(String description) {
-        highLevelDescriptionField.setText(checkNotNull(description));
+        highLevelDescriptionField.setHTML(checkNotNull(description));
     }
 
     @Override
@@ -222,5 +228,26 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
         timestampField.setBaseTime(timestamp);
     }
 
+    public void setSelectionModel(@Nonnull SelectionModel selectionModel) {
+        this.selectionModel = Optional.of(checkNotNull(selectionModel));
+    }
+
+    private native void setupFocusClickedEntityHandler() /*-{
+        var self = this;
+        $wnd.focusClickedEntity = $entry(function(event, entityUrl) {
+            self.@edu.stanford.bmir.protege.web.client.change.ChangeDetailsViewImpl::handleEntityClick(Ljava/lang/String;)(entityUrl);
+        });
+    }-*/;
+
+    private void handleEntityClick(String entityUrl) {
+        GWT.log("Entity clicked: " + entityUrl);
+        if (!selectionModel.isPresent()) {
+            GWT.log("SelectionModel not set. Cannot navigate to entity");
+            return;
+        }
+
+        OWLEntity entity = DataFactory.getOWLClass(entityUrl);
+        selectionModel.get().setSelection(entity);
+    }
 
 }

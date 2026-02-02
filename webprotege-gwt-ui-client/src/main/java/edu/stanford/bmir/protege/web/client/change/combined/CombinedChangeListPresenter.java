@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.change.combined;
 
 import com.google.common.collect.Ordering;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.*;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -13,6 +14,8 @@ import edu.stanford.bmir.protege.web.client.markdown.Marked;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -66,6 +69,8 @@ public class CombinedChangeListPresenter {
 
     private EntityDisplay entityDisplay;
 
+    private Optional<SelectionModel> selectionModel = Optional.empty();
+
     @Inject
     public CombinedChangeListPresenter(@Nonnull ProjectId projectId,
                                        @Nonnull ChangeListView view,
@@ -87,6 +92,7 @@ public class CombinedChangeListPresenter {
         opts.sanitize= true;
         Marked.setOptions(opts);
         view.setFilterVisible(true);
+        setupFocusClickedEntityHandler();
     }
 
     public void setRevertChangesVisible(boolean revertChangesVisible) {
@@ -204,5 +210,27 @@ public class CombinedChangeListPresenter {
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
+    }
+
+    public void setSelectionModel(@Nonnull SelectionModel selectionModel) {
+        this.selectionModel = Optional.of(checkNotNull(selectionModel));
+    }
+
+    private native void setupFocusClickedEntityHandler() /*-{
+        var self = this;
+        $wnd.focusClickedEntity = $entry(function(event, entityUrl) {
+            self.@edu.stanford.bmir.protege.web.client.change.combined.CombinedChangeListPresenter::handleEntityClick(Ljava/lang/String;)(entityUrl);
+        });
+    }-*/;
+
+    private void handleEntityClick(String entityUrl) {
+        GWT.log("Entity clicked: " + entityUrl);
+        if (!selectionModel.isPresent()) {
+            GWT.log("SelectionModel not set. Cannot navigate to entity");
+            return;
+        }
+
+        OWLEntity entity = DataFactory.getOWLClass(entityUrl);
+        selectionModel.get().setSelection(entity);
     }
 }
