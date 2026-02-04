@@ -127,8 +127,8 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     public boolean isDirty() {
         Optional<FormData> formData = formPresenter.getFormData();
-        logger.log(Level.INFO, "Pristine form data: " + pristineFormData);
-        logger.log(Level.INFO, "Edited form data: " + formData + " " + pristineFormData.equals(formData));
+        logger.log(Level.FINE, "Pristine form data: " + pristineFormData);
+        logger.log(Level.FINE, "Edited form data: " + formData + " " + pristineFormData.equals(formData));
         return !pristineFormData.equals(formData);
     }
 
