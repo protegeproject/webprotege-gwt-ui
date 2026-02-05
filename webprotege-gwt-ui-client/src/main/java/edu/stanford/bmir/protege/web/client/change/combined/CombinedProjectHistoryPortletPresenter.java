@@ -55,6 +55,7 @@ public class CombinedProjectHistoryPortletPresenter extends AbstractWebProtegePo
                                                   SelectedPathsModel selectedPathsModel) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
+        this.presenter.setSelectionModel(selectionModel);
         this.capabilityChecker = capabilityChecker;
         this.filterView = filterView;
         this.messages = messages;

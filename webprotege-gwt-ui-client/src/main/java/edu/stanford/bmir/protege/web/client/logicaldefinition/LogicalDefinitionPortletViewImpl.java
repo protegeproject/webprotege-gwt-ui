@@ -317,7 +317,7 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
                     this.currentEntity.asOWLClass(),
                     this.pristineData,
                     LogicalConditions.create(definitions, necessaryConditionsTable.getValues()),
-                    "Edited the Logical Definitons and/or Necessary Conditions for " + this.entityData.getBrowserText()
+                    "Edited the Logical Definitions and/or Necessary Conditions for " + this.entityData.getBrowserText()
             ), response -> {
                 this.pristineData = LogicalConditions.create(new ArrayList<>(definitions), necessaryConditionsTable.getValues());
                 switchToReadOnly();

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -67,6 +68,8 @@ public class ChangeListPresenter {
     private MessageBox messageBox;
 
     private EntityDisplay entityDisplay;
+
+    private Optional<SelectionModel> selectionModel = Optional.empty();
 
     @Inject
     public ChangeListPresenter(@Nonnull ProjectId projectId,
@@ -165,7 +168,8 @@ public class ChangeListPresenter {
                         .format(date));
             }
 
-            ChangeDetailsView view = new ChangeDetailsViewImpl();
+            ChangeDetailsViewImpl view = new ChangeDetailsViewImpl();
+            selectionModel.ifPresent(view::setSelectionModel);
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
@@ -222,5 +226,9 @@ public class ChangeListPresenter {
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
+    }
+
+    public void setSelectionModel(@Nonnull SelectionModel selectionModel) {
+        this.selectionModel = Optional.of(checkNotNull(selectionModel));
     }
 }

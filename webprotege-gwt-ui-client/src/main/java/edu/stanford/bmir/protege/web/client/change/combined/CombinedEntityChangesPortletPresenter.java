@@ -61,6 +61,7 @@ public class CombinedEntityChangesPortletPresenter extends AbstractWebProtegePor
                                                  ApplicationEnvironmentManager applicationEnvironmentManager) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = presenter;
+        this.presenter.setSelectionModel(selectionModel);
         this.capabilityChecker = capabilityChecker;
         this.dispatch = dispatch;
         this.messages = messages;
