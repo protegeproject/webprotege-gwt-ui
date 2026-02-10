@@ -181,6 +181,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
         rowContainer.setDeleteHandler(() -> {
             view.removeRow(rowContainer);
             rowPresenters.remove(presenter);
+            formDataChangedHandler.handleFormDataChanged();
         });
         presenter.start(rowContainer);
         rowPresenters.add(presenter);

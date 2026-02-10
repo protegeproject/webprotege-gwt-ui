@@ -128,7 +128,7 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
     public boolean isDirty() {
         Optional<FormData> formData = formPresenter.getFormData();
         logger.log(Level.FINE, "Pristine form data: " + pristineFormData);
-        logger.log(Level.FINE, "Edited form data: " + formData);
+        logger.log(Level.FINE, "Edited form data: " + formData + " " + pristineFormData.equals(formData));
         return !pristineFormData.equals(formData);
     }
 
@@ -142,17 +142,16 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
             return;
         }
         this.entity.ifPresent(owlEntity -> {
-            Optional<FormData> formData = formPresenter.getFormData();
-            formData.ifPresent(fd -> {
-                Map<FormId, FormData> editedFormData = new HashMap<>();
-                editedFormData.put(formId, fd);
-                FormDataByFormId formDataByFormId = new FormDataByFormId(editedFormData);
-                FormData pristine = pristineFormData.orElse(FormData.empty(owlEntity, formId));
-                dispatch.execute(new SetEntityFormsDataAction(projectId, owlEntity,
-                        commitMessage,
-                        ImmutableMap.of(formId, pristine),
-                        formDataByFormId), result -> updateDisplayedForm());
-            });
+            FormData formData = formPresenter.getFormData().orElse(FormData.empty(owlEntity, formId));
+            Map<FormId, FormData> editedFormData = new HashMap<>();
+            editedFormData.put(formId, formData);
+            FormDataByFormId formDataByFormId = new FormDataByFormId(editedFormData);
+            FormData pristine = pristineFormData.orElse(FormData.empty(owlEntity, formId));
+            dispatch.execute(new SetEntityFormsDataAction(projectId, owlEntity,
+                    commitMessage,
+                    ImmutableMap.of(formId, pristine),
+                    formDataByFormId), result -> updateDisplayedForm());
+
         });
     }
 
