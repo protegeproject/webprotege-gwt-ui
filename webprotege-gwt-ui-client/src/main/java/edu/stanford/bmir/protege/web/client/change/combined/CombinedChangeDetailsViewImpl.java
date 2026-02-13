@@ -47,7 +47,8 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
         revisionField.setVisible(false);
         tooManyChangesMessage.setVisible(true);
         copyIriButton.setVisible(false);
-        copyIriButton.addClickHandler(event -> copyIriToClipboard());
+        copyIriButton.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        copyIriButton.addDomHandler(event -> copyIriToClipboard(), com.google.gwt.event.dom.client.ClickEvent.getType());
     }
 
     @UiField
@@ -81,7 +82,7 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
     protected Label hiddenChangesCount;
 
     @UiField
-    protected Button copyIriButton;
+    protected HTMLPanel copyIriButton;
 
     private String entityIri;
 
@@ -206,6 +207,24 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
             var href = links[0].getAttribute('href');
             if (href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('urn:'))) {
                 return href;
+            }
+        }
+        // Try to find IRI in onclick attribute: window.focusClickedEntity(event, 'IRI')
+        var onclickPattern = /window\.focusClickedEntity\s*\([^,]+,\s*['"]([^'"]+)['"]\)/g;
+        var onclickMatch = onclickPattern.exec(html);
+        if (onclickMatch && onclickMatch[1]) {
+            var iri = onclickMatch[1];
+            if (iri.startsWith('http://') || iri.startsWith('https://') || iri.startsWith('urn:')) {
+                return iri;
+            }
+        }
+        // Try to find IRI in title attribute: Click to select entity IRI
+        var titlePattern = /title\s*=\s*["']Click to select entity\s+([^"']+)["']/gi;
+        var titleMatch = titlePattern.exec(html);
+        if (titleMatch && titleMatch[1]) {
+            var iri = titleMatch[1];
+            if (iri.startsWith('http://') || iri.startsWith('https://') || iri.startsWith('urn:')) {
+                return iri;
             }
         }
         // Try to find IRI in markdown links pattern [text](iri)
