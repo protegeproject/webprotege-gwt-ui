@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.frame.PlainAnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -25,7 +26,8 @@ import javax.annotation.Nonnull;
 public abstract class UpdateClassFrameAction extends UpdateFrameAction<UpdateClassFrameResult> {
 
     @JsonCreator
-    public static UpdateClassFrameAction create(@JsonProperty("projectId") ProjectId projectId,
+    public static UpdateClassFrameAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                @JsonProperty("projectId") ProjectId projectId,
                                                 @JsonProperty("from") PlainClassFrame from,
                                                 @JsonProperty("to") PlainClassFrame to) {
         return new AutoValue_UpdateClassFrameAction(projectId, from, to);

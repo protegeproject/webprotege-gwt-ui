@@ -5,12 +5,14 @@ import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -24,6 +26,7 @@ public class EditAnnotations_Serialization_TestCase {
     public void shouldSerializeAction() throws IOException {
         var action = EditAnnotationsAction.create(
                 ProjectId.getNil(),
+                ChangeRequestId.get(UUID.randomUUID().toString()),
                 ImmutableSet.<OWLEntity>of(),
                 Operation.DELETE, Optional.empty(),
                 Optional.empty(),
