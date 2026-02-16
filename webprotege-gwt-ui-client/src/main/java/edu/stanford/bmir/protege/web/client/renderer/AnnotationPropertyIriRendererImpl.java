@@ -2,12 +2,11 @@ package edu.stanford.bmir.protege.web.client.renderer;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.match.EntityRenderingCache;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
@@ -30,15 +29,15 @@ public class AnnotationPropertyIriRendererImpl implements AnnotationPropertyIriR
     private final ProjectId projectId;
 
     @Nonnull
-    private final DispatchServiceManager dispatchService;
+    private final EntityRenderingCache entityRenderingCache;
 
     private final Multimap<IRI, Consumer<OWLAnnotationPropertyData>> pending = HashMultimap.create();
 
     @Inject
     public AnnotationPropertyIriRendererImpl(@Nonnull ProjectId projectId,
-                                             @Nonnull DispatchServiceManager dispatchService) {
+                                             @Nonnull EntityRenderingCache entityRenderingCache) {
         this.projectId = checkNotNull(projectId);
-        this.dispatchService = checkNotNull(dispatchService);
+        this.entityRenderingCache = checkNotNull(entityRenderingCache);
     }
 
     @Override
@@ -57,11 +56,11 @@ public class AnnotationPropertyIriRendererImpl implements AnnotationPropertyIriR
             propagateToPending(DataFactory.getSkosPrefLabelData());
         }
         else {
-            dispatchService.execute(GetEntityRenderingAction.create(projectId, DataFactory.getOWLAnnotationProperty(iri)),
-                                    result -> {
-                                        OWLAnnotationPropertyData ed = (OWLAnnotationPropertyData) result.getEntityData();
-                                        propagateToPending(ed);
-                                    });
+            entityRenderingCache.load(projectId, DataFactory.getOWLAnnotationProperty(iri),
+                    result -> {
+                        OWLAnnotationPropertyData ed = (OWLAnnotationPropertyData) result.getEntityData();
+                        propagateToPending(ed);
+                    });
         }
 
     }

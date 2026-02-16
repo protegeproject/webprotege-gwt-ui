@@ -39,6 +39,8 @@ import edu.stanford.bmir.protege.web.client.color.ColorSwatchViewImpl;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellView;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
+import edu.stanford.bmir.protege.web.client.linearization.LinearizationDefinitionsCache;
+import edu.stanford.bmir.protege.web.client.match.EntityRenderingCache;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityFormView;
@@ -496,6 +498,20 @@ public class ClientApplicationModule {
     @Provides
     DispatchErrorMessageDisplay provideDispatchErrorMessageDisplay(@Nonnull MessageBoxErrorDisplay display) {
         return display;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    LinearizationDefinitionsCache provideLinearizationDefinitionsCache(@Nonnull DispatchServiceManager dispatch,
+                                                                     @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+        return new LinearizationDefinitionsCache(dispatch, errorDisplay);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    EntityRenderingCache provideEntityRenderingCache(@Nonnull DispatchServiceManager dispatch,
+                                                     @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+        return new EntityRenderingCache(dispatch, errorDisplay);
     }
 
     @Provides

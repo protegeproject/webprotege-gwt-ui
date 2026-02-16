@@ -2,11 +2,10 @@ package edu.stanford.bmir.protege.web.client.renderer;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.match.EntityRenderingCache;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -26,15 +25,15 @@ public class ClassIriRendererImpl implements ClassIriRenderer {
     private final ProjectId projectId;
 
     @Nonnull
-    private final DispatchServiceManager dispatchService;
+    private final EntityRenderingCache entityRenderingCache;
 
     private final Multimap<IRI, Consumer<OWLClassData>> pending = HashMultimap.create();
 
     @Inject
     public ClassIriRendererImpl(@Nonnull ProjectId projectId,
-                                @Nonnull DispatchServiceManager dispatchService) {
+                                @Nonnull EntityRenderingCache entityRenderingCache) {
         this.projectId = checkNotNull(projectId);
-        this.dispatchService = checkNotNull(dispatchService);
+        this.entityRenderingCache = checkNotNull(entityRenderingCache);
     }
 
     @Override
@@ -45,10 +44,10 @@ public class ClassIriRendererImpl implements ClassIriRenderer {
             return;
         }
         pending.put(iri, renderingConsumer);
-        dispatchService.execute(GetEntityRenderingAction.create(projectId, DataFactory.getOWLClass(iri)),
-                                result -> {
-                                    OWLClassData ed = (OWLClassData) result.getEntityData();
-                                    pending.removeAll(iri).forEach(consumer -> consumer.accept(ed));
-                                });
+        entityRenderingCache.load(projectId, DataFactory.getOWLClass(iri),
+                result -> {
+                    OWLClassData ed = (OWLClassData) result.getEntityData();
+                    pending.removeAll(iri).forEach(consumer -> consumer.accept(ed));
+                });
     }
 }

@@ -1,36 +1,29 @@
 package edu.stanford.bmir.protege.web.client.role;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.linearization.LinearizationDefinitionsCache;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.CapabilityId;
 import edu.stanford.bmir.protege.web.shared.access.LinearizationRowsCapability;
-import edu.stanford.bmir.protege.web.shared.linearization.GetLinearizationDefinitionsAction;
-import edu.stanford.bmir.protege.web.shared.linearization.LinearizationDefinition;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class LinearizationRowsCapabilityPresenter implements CapabilityPresenter {
     private Optional<LinearizationRowsCapability> capability = Optional.empty();
     private final LinearizationRowsCapabilityView view;
     private final CapabilityContextPresenter capabilityContextPresenter;
-
-    private final DispatchServiceManager dispatch;
-
-    private List<LinearizationDefinition> definitionList = new ArrayList<>();
-
+    private final LinearizationDefinitionsCache definitionsCache;
 
     @Inject
     public LinearizationRowsCapabilityPresenter(LinearizationRowsCapabilityView view,
-                                                CapabilityContextPresenter capabilityContextPresenter, DispatchServiceManager dispatch) {
+                                                CapabilityContextPresenter capabilityContextPresenter,
+                                                LinearizationDefinitionsCache definitionsCache) {
         this.view = view;
         this.capabilityContextPresenter = capabilityContextPresenter;
-        this.dispatch = dispatch;
+        this.definitionsCache = definitionsCache;
     }
 
 
@@ -60,18 +53,10 @@ public class LinearizationRowsCapabilityPresenter implements CapabilityPresenter
 
     @Override
     public void start(AcceptsOneWidget container) {
-        if(definitionList.isEmpty()) {
-            dispatch.execute(GetLinearizationDefinitionsAction.create(), response -> {
-                this.definitionList = response.getDefinitionList();
-                view.setLinearizationDefinitions(response.getDefinitionList());
-                container.setWidget(view);
-                capabilityContextPresenter.start(view.getContextCriteriaContainer());
-            });
-        } else {
-            view.setLinearizationDefinitions(this.definitionList);
+        definitionsCache.load(definitions -> {
+            view.setLinearizationDefinitions(definitions);
             container.setWidget(view);
             capabilityContextPresenter.start(view.getContextCriteriaContainer());
-        }
-
+        });
     }
 }
