@@ -15,6 +15,6 @@ public class LogoutServlet extends HttpServlet {
         request.getSession().invalidate();
 
         // Redirect to Keycloak's end-session endpoint with redirect URI
-        response.sendRedirect("/keycloak-admin/realms/webprotege/protocol/openid-connect/logout");
+        response.sendRedirect("/keycloak/realms/webprotege/protocol/openid-connect/logout");
     }
 }

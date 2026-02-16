@@ -56,7 +56,6 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                 var translateEventsAction = (TranslateEventListAction) action;
                 try {
                     GetProjectEventsResult<?> result = objectMapper.readValue(translateEventsAction.getEventList(), GetProjectEventsResult.class);
-                    logger.debug("Returning result " + result.getEvents());
                     return DispatchServiceResultContainer.create(result);
                 } catch (JsonProcessingException e) {
                     logger.error("Error when translating event list", e);
@@ -64,12 +63,13 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                     throw new ActionExecutionException("An error occurred when translating the given event list.  See logs for more information.");
                 }
             }
-            if (action instanceof GetUserInfoAction) {
-                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken());
+            if(action instanceof GetUserInfoAction) {
+                var websocketUrl = getWebSocketUrl();
+                GetUserInfoResult result = GetUserInfoResult.create(executionContext.getToken(), websocketUrl != null ? websocketUrl : "ws://webprotege-local.edu/wsapps");
                 return DispatchServiceResultContainer.create(result);
             }
             if (action instanceof FetchAppEnvVariables) {
-                var websocketUrl = getEnvVariable("webprotege.websocketUrl").orElse("ws://webprotege-local.edu/wsapps");
+                var websocketUrl = getWebSocketUrl();
                 var logoutUrl = getEnvVariable("webprotege.logoutUrl").orElse("http://webprotege-local.edu/webprotege/logout");
                 var redirectUrl = getEnvVariable("webprotege.logoutRedirectUrl").orElse("http://webprotege-local.edu/webprotege");
                 var fileUploadUrl = getEnvVariable("webprotege.fileUploadurl").orElse("http://webprotege-local.edu");
@@ -94,6 +94,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             logger.error("An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e.getMessage());
         }
+    }
+
+    private static String getWebSocketUrl() {
+        String env = System.getenv("WEBPROTEGE_WEBSOCKET_URL");
+        if(env != null) {
+            return env;
+        }
+        // Legacy naming
+        return System.getenv("webprotege.websocketUrl" );
     }
 
     private <A extends Action<R>, R extends Result> R sendRequest(A action,
