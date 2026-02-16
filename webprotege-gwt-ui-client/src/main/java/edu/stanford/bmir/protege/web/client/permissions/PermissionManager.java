@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Manages the permissions for projects and users.
@@ -99,28 +98,26 @@ public class PermissionManager implements HasDispose {
      * @param callback A callback for receiving the result.
      */
     public void hasPermissionForProject(@Nonnull UserId userId,
-                                        @Nonnull BasicCapability basicCapability,
+                                        @Nonnull Capability basicCapability,
                                         @Nonnull ProjectId projectId,
                                         @Nonnull DispatchServiceCallback<Boolean> callback) {
         final UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId);
         logger.info("Checking permissions for " + basicCapability);
         if(capabilitiesCache.containsKey(key)) {
-            logger.info("Capabilities cache contains capability: " + basicCapability);
-            callback.onSuccess(capabilitiesCache.get(key).contains(basicCapability));
+            boolean hasPermission = capabilitiesCache.get(key).stream()
+                    .anyMatch(c -> c.getId().equals(basicCapability.getId()));
+            callback.onSuccess(hasPermission);
             return;
         }
         dispatchServiceManager.execute(GetProjectPermissionsAction.create(projectId, userId),
                                        new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(GetProjectPermissionsResult result) {
-                                               String caps = result.getAllowedActions()
-                                                               .stream()
-                                                       .map(Capability::toString)
-                                                       .collect(Collectors.joining(", "));
-                                               logger.info("User has capabilities: " + caps);
-
                                                capabilitiesCache.putAll(key, result.getAllowedActions());
-                                               callback.onSuccess(result.getAllowedActions().contains(basicCapability));
+                                               // Use ID-based comparison for consistency
+                                               boolean hasPermission = result.getAllowedActions().stream()
+                                                       .anyMatch(c -> c.getId().equals(basicCapability.getId()));
+                                               callback.onSuccess(hasPermission);
                                            }
 
                                            @Override

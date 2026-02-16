@@ -10,7 +10,8 @@ public enum ContextAwareBuiltInCapability {
     VIEW_POSTCOORDINATION_SCALE_VALUES,
     EDIT_POSTCOORDINATION_SCALE_VALUES,
     VIEW_LOGICAL_DEFINITIONS,
-    EDIT_LOGICAL_DEFINITIONS;;
+    CREATE_ENTITY,
+    EDIT_LOGICAL_DEFINITIONS;
 
 
     private final Capability capability;
