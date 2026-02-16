@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.NamedIndividualFrameEditor;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -17,10 +19,12 @@ import javax.inject.Inject;
 public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityContext, NamedIndividualFrame, GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private final NamedIndividualFrameEditor editor;
+    private final UuidV4Provider uuidV4Provider;
 
     @Inject
-    public NamedIndividualFrameEditorManager(NamedIndividualFrameEditor editor) {
+    public NamedIndividualFrameEditorManager(NamedIndividualFrameEditor editor, UuidV4Provider uuidV4Provider) {
         this.editor = editor;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     @Override
@@ -40,7 +44,8 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     @Override
     public UpdateNamedIndividualFrameAction createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
-        return UpdateNamedIndividualFrameAction.create(editorContext.getProjectId(),
+        return UpdateNamedIndividualFrameAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                       editorContext.getProjectId(),
                                                        pristineObject.toPlainFrame(),
                                                        editedObject.toPlainFrame());
     }

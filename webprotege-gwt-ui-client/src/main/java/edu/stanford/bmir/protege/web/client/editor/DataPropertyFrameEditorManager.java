@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.DataPropertyFrameEditor;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -14,10 +16,12 @@ import javax.inject.Inject;
 public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityContext, DataPropertyFrame, GetDataPropertyFrameAction, GetDataPropertyFrameResult> {
 
     private final DataPropertyFrameEditor editor;
+    private final UuidV4Provider uuidV4Provider;
 
     @Inject
-    public DataPropertyFrameEditorManager(DataPropertyFrameEditor editor) {
+    public DataPropertyFrameEditorManager(DataPropertyFrameEditor editor, UuidV4Provider uuidV4Provider) {
         this.editor = editor;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     @Override
@@ -37,7 +41,8 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityCo
 
     @Override
     public UpdateFrameAction createUpdateObjectAction(DataPropertyFrame pristineObject, DataPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return UpdateDataPropertyFrameAction.create(editorContext.getProjectId(),
+        return UpdateDataPropertyFrameAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                    editorContext.getProjectId(),
                                                     pristineObject.toPlainFrame(),
                                                     editedObject.toPlainFrame());
     }

@@ -350,6 +350,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgTelescopicIcon();
 
+    @Source("copy-to-clipboard.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCopyToClipboardIcon();
+
     interface WebProtegePrimitiveDataCss extends CssResource {
 
         @ClassName("wp-pd")

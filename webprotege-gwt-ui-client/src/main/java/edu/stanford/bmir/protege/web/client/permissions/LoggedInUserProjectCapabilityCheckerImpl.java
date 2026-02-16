@@ -45,7 +45,7 @@ public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasCapability(@Nonnull BasicCapability basicCapability,
+    public void hasCapability(@Nonnull Capability basicCapability,
                               @Nonnull DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if (!projectId.isPresent()) {
@@ -80,6 +80,21 @@ public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserPro
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);
+            }
+        });
+    }
+
+    @Override
+    public void hasCapability(@Nonnull ContextAwareBuiltInCapability contextAwareCapability, @Nonnull Consumer<Boolean> callback) {
+        hasCapability(contextAwareCapability.getCapability(), new DispatchServiceCallback<Boolean>(errorDisplay) {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                callback.accept(hasPermission);
+            }
+
+            @Override
+            public void handleErrorFinally(Throwable throwable) {
+                logger.info("[LoggedInUserProjectPermissionCheckerImpl] Error when checking permissions: " + throwable.getMessage());
             }
         });
     }

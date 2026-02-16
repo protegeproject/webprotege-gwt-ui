@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.bulkop.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -36,15 +38,19 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
     @Nonnull
     private final HierarchyFieldPresenter hierarchyFieldPresenter;
 
+    private final UuidV4Provider uuidV4Provider;
+
+
     @Nonnull
     private EntityType<?> entityType = EntityType.CLASS;
 
     @Inject
     public MoveEntitiesToParentPresenter(@Nonnull ProjectId projectId, @Nonnull MoveToParentView view,
-                                         @Nonnull HierarchyFieldPresenter presenter) {
+                                         @Nonnull HierarchyFieldPresenter presenter, UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.hierarchyFieldPresenter = checkNotNull(presenter);
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     public void setEntityType(@Nonnull EntityType<?> entityType) {
@@ -101,7 +107,8 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
                 .collect(toImmutableSet());
         return hierarchyFieldPresenter.getEntity()
                 .map(OWLEntityData::getEntity)
-                .map(entity -> MoveEntitiesToParentIcdAction.create(projectId,
+                .map(entity -> MoveEntitiesToParentIcdAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                 projectId,
                                                                  clses,
                                                                  entity.asOWLClass(),
                                                                  commitMessage));

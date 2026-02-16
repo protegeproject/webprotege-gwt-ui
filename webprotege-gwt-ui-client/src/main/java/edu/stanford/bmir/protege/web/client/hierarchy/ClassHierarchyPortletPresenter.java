@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.DisplayContext;
 import edu.stanford.bmir.protege.web.shared.DisplayContextBuilder;
+import edu.stanford.bmir.protege.web.shared.access.ContextAwareBuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyDescriptorAction;
@@ -147,6 +148,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.renderer = checkNotNull(renderer);
         this.createEntityPresenter = checkNotNull(createEntityPresenter);
 
+
         this.createClassAction = new PortletAction(messages.create(),
                 "wp-btn-g--create-class wp-btn-g--create",
                 this::handleCreateSubClasses);
@@ -199,6 +201,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         createClassAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
+        capabilityChecker.hasCapability(ContextAwareBuiltInCapability.CREATE_ENTITY, createClassAction::setVisible);
         /* TODO uncomment this after delete is implemented*/
         deleteClassAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
@@ -240,6 +243,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         });
         tagVisibilityPresenter.start(filterView, treeWidget);
         setSelectionInTree(getSelectedEntity());
+
+
     }
 
     private void handleDisplayLanguageChanged(@Nonnull DisplayNameSettingsChangedEvent event) {

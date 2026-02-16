@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import jsinterop.annotations.JsProperty;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -28,6 +29,7 @@ public abstract class MoveEntitiesToParentAction implements ProjectAction<MoveEn
 
     @JsonCreator
     public static MoveEntitiesToParentAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                    @JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
                                                     @JsonProperty("entities") @Nonnull ImmutableSet<OWLClass> entities,
                                                     @JsonProperty("parentEntity") @Nonnull OWLClass entity,
                                                     @JsonProperty("commitMessage") @Nonnull String commitMessage) {

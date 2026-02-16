@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.ObjectPropertyFrameEditor;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -17,10 +19,12 @@ import javax.inject.Inject;
 public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, ObjectPropertyFrame, GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
 
     private final ObjectPropertyFrameEditor editor;
+    private final UuidV4Provider uuidV4Provider;
 
     @Inject
-    public ObjectPropertyFrameEditorManager(ObjectPropertyFrameEditor editor) {
+    public ObjectPropertyFrameEditorManager(ObjectPropertyFrameEditor editor, UuidV4Provider uuidV4Provider) {
         this.editor = editor;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     @Override
@@ -40,7 +44,8 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     @Override
     public UpdateObjectPropertyFrameAction createUpdateObjectAction(ObjectPropertyFrame pristineObject, ObjectPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return UpdateObjectPropertyFrameAction.create(editorContext.getProjectId(),
+        return UpdateObjectPropertyFrameAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                        editorContext.getProjectId(),
                                                       pristineObject.toPlainFrame(),
                                                       editedObject.toPlainFrame());
     }

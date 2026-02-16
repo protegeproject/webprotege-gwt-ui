@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
+import edu.stanford.bmir.protege.web.shared.access.*;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -22,7 +21,7 @@ public interface LoggedInUserProjectCapabilityChecker {
      * @param basicCapability The {@link BasicCapability} to test for.
      * @param callback A callback for receiving the result of the query.
      */
-    void hasCapability(@Nonnull BasicCapability basicCapability,
+    void hasCapability(@Nonnull Capability basicCapability,
                        @Nonnull DispatchServiceCallback<Boolean> callback);
 
     /**
@@ -45,5 +44,8 @@ public interface LoggedInUserProjectCapabilityChecker {
      * @param callback A callback for receiving the result of the query.
      */
     void hasCapability(@Nonnull BuiltInCapability builtInCapability,
+                       @Nonnull Consumer<Boolean> callback);
+
+    void hasCapability(@Nonnull ContextAwareBuiltInCapability contextAwareCapability,
                        @Nonnull Consumer<Boolean> callback);
 }

@@ -46,6 +46,9 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
         initWidget(ourUiBinder.createAndBindUi(this));
         revisionField.setVisible(false);
         tooManyChangesMessage.setVisible(true);
+        copyIriButton.setVisible(false);
+        copyIriButton.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        copyIriButton.addDomHandler(event -> copyIriToClipboard(), com.google.gwt.event.dom.client.ClickEvent.getType());
     }
 
     @UiField
@@ -77,6 +80,11 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
 
     @UiField
     protected Label hiddenChangesCount;
+
+    @UiField
+    protected HTMLPanel copyIriButton;
+
+    private String entityIri;
 
     private RevertRevisionHandler revertRevisionHandler = revisionNumber -> {
     };
@@ -174,7 +182,93 @@ public class CombinedChangeDetailsViewImpl extends Composite implements Combined
     public void setHighLevelDescription(String description) {
         highLevelDescriptionField.setText(checkNotNull(description));
         highLevelDescriptionField.setHTML(description);
+        // Extract IRI from description HTML (look for entity links)
+        extractIriFromDescription(description);
     }
+
+    private void extractIriFromDescription(String htmlDescription) {
+        // Try to extract IRI from HTML links or markdown links
+        // Pattern: <a href="iri"> or [text](iri)
+        String iri = extractFirstIriFromHtml(htmlDescription);
+        if (iri != null && !iri.isEmpty()) {
+            this.entityIri = iri;
+            copyIriButton.setVisible(true);
+        } else {
+            copyIriButton.setVisible(false);
+        }
+    }
+
+    private native String extractFirstIriFromHtml(String html) /*-{
+        // Try to find IRI in HTML links
+        var tempDiv = $doc.createElement('div');
+        tempDiv.innerHTML = html;
+        var links = tempDiv.getElementsByTagName('a');
+        if (links.length > 0) {
+            var href = links[0].getAttribute('href');
+            if (href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('urn:'))) {
+                return href;
+            }
+        }
+        // Try to find IRI in onclick attribute: window.focusClickedEntity(event, 'IRI')
+        var onclickPattern = /window\.focusClickedEntity\s*\([^,]+,\s*['"]([^'"]+)['"]\)/g;
+        var onclickMatch = onclickPattern.exec(html);
+        if (onclickMatch && onclickMatch[1]) {
+            var iri = onclickMatch[1];
+            if (iri.startsWith('http://') || iri.startsWith('https://') || iri.startsWith('urn:')) {
+                return iri;
+            }
+        }
+        // Try to find IRI in title attribute: Click to select entity IRI
+        var titlePattern = /title\s*=\s*["']Click to select entity\s+([^"']+)["']/gi;
+        var titleMatch = titlePattern.exec(html);
+        if (titleMatch && titleMatch[1]) {
+            var iri = titleMatch[1];
+            if (iri.startsWith('http://') || iri.startsWith('https://') || iri.startsWith('urn:')) {
+                return iri;
+            }
+        }
+        // Try to find IRI in markdown links pattern [text](iri)
+        var markdownLinkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+        var match = markdownLinkPattern.exec(html);
+        if (match && match[2]) {
+            var iri = match[2];
+            if (iri.startsWith('http://') || iri.startsWith('https://') || iri.startsWith('urn:')) {
+                return iri;
+            }
+        }
+        return null;
+    }-*/;
+
+    private native void copyIriToClipboard() /*-{
+        var self = this;
+        var iri = self.@edu.stanford.bmir.protege.web.client.change.combined.CombinedChangeDetailsViewImpl::entityIri;
+        if (!iri) {
+            return;
+        }
+        // Use fallback method which works in all browsers
+        self.@edu.stanford.bmir.protege.web.client.change.combined.CombinedChangeDetailsViewImpl::copyToClipboardFallback(Ljava/lang/String;)(iri);
+    }-*/;
+
+    private native void copyToClipboardFallback(String text) /*-{
+        // Fallback method using temporary textarea
+        var textArea = $doc.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        $doc.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            var successful = $doc.execCommand('copy');
+            if (!successful) {
+                console.log('Fallback: Copy command was unsuccessful');
+            }
+        } catch (err) {
+            console.log('Fallback: Unable to copy', err);
+        }
+        $doc.body.removeChild(textArea);
+    }-*/;
 
     @Override
     public void setAuthor(UserId author) {
