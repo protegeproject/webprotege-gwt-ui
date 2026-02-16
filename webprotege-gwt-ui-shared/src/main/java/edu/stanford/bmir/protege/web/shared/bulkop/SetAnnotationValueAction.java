@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
@@ -29,7 +30,8 @@ public abstract class SetAnnotationValueAction implements ProjectAction<SetAnnot
 
 
     @JsonCreator
-    public static SetAnnotationValueAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetAnnotationValueAction create(ChangeRequestId changeRequestId,
+                                                  @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                   @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntity> entities,
                                                   @JsonProperty("property") @Nonnull OWLAnnotationProperty property,
                                                   @JsonProperty("value") @Nonnull OWLAnnotationValue value,

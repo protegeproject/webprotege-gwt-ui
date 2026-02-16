@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -30,7 +31,8 @@ public abstract class EditAnnotationsAction implements ProjectAction<EditAnnotat
 
     @JsonCreator
     public static EditAnnotationsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                            @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntity> entities,
+                                               @JsonProperty("contentChangeRequest") ChangeRequestId changeRequestId,
+                                               @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntity> entities,
                                             @JsonProperty("operation") Operation operation,
                                             @JsonProperty("property") @Nonnull Optional<OWLAnnotationProperty> property,
                                             @JsonProperty("lexicalValueExpression") @Nonnull Optional<String> lexicalValueExpression,

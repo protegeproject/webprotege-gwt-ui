@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
@@ -22,7 +23,8 @@ import javax.annotation.Nonnull;
 public abstract class MoveEntitiesToParentIcdAction implements ProjectAction<MoveEntitiesToParentIcdResult>, HasCommitMessage {
 
     @JsonCreator
-    public static MoveEntitiesToParentIcdAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static MoveEntitiesToParentIcdAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                       @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                        @JsonProperty("entities") @Nonnull ImmutableSet<OWLClass> entities,
                                                        @JsonProperty("parentEntity") @Nonnull OWLClass entity,
                                                        @JsonProperty("commitMessage") @Nonnull String commitMessage) {
