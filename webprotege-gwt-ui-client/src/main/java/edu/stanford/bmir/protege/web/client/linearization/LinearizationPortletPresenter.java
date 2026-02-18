@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.*;
 import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.client.selection.*;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.access.LinearizationRowsCapability;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyParentsAction;
 import edu.stanford.bmir.protege.web.shared.linearization.*;
@@ -36,6 +35,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
     private final Map<String, String> entityParentsMap = new HashMap<>();
 
     private final DispatchServiceManager dispatch;
+    private final LinearizationDefinitionsCache definitionsCache;
     private final EventBus eventBus;
 
     private final LoggedInUserManager loggedInUserManager;
@@ -48,6 +48,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
                                          @Nonnull ProjectId projectId,
                                          @Nonnull DisplayNameRenderer displayNameRenderer,
                                          @Nonnull DispatchServiceManager dispatch,
+                                         @Nonnull LinearizationDefinitionsCache definitionsCache,
                                          @Nonnull LinearizationPortletView view,
                                          @Nonnull EventBus eventBus,
                                          @Nonnull MessageBox messageBox,
@@ -57,6 +58,7 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
         this.view = view;
         this.messageBox = messageBox;
         this.dispatch = dispatch;
+        this.definitionsCache = definitionsCache;
         this.eventBus = eventBus;
         this.loggedInUserManager = loggedInUserManager;
         this.view.setProjectId(projectId);
@@ -68,8 +70,8 @@ public class LinearizationPortletPresenter extends AbstractWebProtegePortletPres
         portletUi.setWidget(view.asWidget());
         setDisplaySelectedEntityNameAsSubtitle(true);
 
-        dispatch.execute(GetLinearizationDefinitionsAction.create(), result -> {
-            for (LinearizationDefinition definition : result.getDefinitionList()) {
+        definitionsCache.load(definitions -> {
+            for (LinearizationDefinition definition : definitions) {
                 this.definitionMap.put(definition.getLinearizationUri(), definition);
             }
             view.setLinearizationDefinitonMap(this.definitionMap);

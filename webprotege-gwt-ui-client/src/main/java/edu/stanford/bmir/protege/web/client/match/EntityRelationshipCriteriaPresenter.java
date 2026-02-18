@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,7 +32,7 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
     private final RelationshipValueCriteriaPresenter relationshipValueCriteriaPresenter;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final EntityRenderingCache entityRenderingCache;
 
     @Inject
     public EntityRelationshipCriteriaPresenter(@Nonnull ProjectId projectId,
@@ -43,12 +41,12 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
                                                @Nonnull RelationshipValueThatIsEqualToCriteriaPresenter valueThatIsEqualToCriteriaPresenter,
                                                @Nonnull RelationshipValueCriteriaListPresenter relationshipValueCriteriaListPresenter,
                                                @Nonnull RelationshipValueCriteriaPresenter relationshipValueCriteriaPresenter,
-                                               @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                               @Nonnull EntityRenderingCache entityRenderingCache) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.blankCriteriaView = checkNotNull(blankCriteriaView);
         this.relationshipValueCriteriaPresenter = checkNotNull(relationshipValueCriteriaPresenter);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.entityRenderingCache = checkNotNull(entityRenderingCache);
     }
 
     @Override
@@ -92,8 +90,8 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
         relationshipPropertyCriteria.accept(new RelationshipPropertyCriteriaVisitor<Void>() {
             @Override
             public Void visit(RelationshipPropertyEqualsCriteria criteria) {
-                dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, criteria.getProperty()),
-                                               result -> view.setProperty((OWLPropertyData) result.getEntityData()));
+                entityRenderingCache.load(projectId, criteria.getProperty(),
+                        result -> view.setProperty((OWLPropertyData) result.getEntityData()));
                 return null;
             }
 

@@ -30,7 +30,7 @@ public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
     @Override
     public void handleChangePassword() {
         messageBox.showConfirmBox("Reset password?", "Are you sure you want to reset your password?", DialogButton.CANCEL, DialogButton.get("Reset passord"), () -> {
-            String resetPasswordUrl = "/keycloak-admin/realms/webprotege/login-actions/reset-credentials?client_id=webprotege";
+            String resetPasswordUrl = "/keycloak/realms/webprotege/login-actions/reset-credentials?client_id=webprotege";
             Window.Location.assign(resetPasswordUrl);
         }, DialogButton.CANCEL);
 

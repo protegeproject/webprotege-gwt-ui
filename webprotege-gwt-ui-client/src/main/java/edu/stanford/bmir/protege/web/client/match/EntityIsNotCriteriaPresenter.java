@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsNotCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,15 +25,15 @@ public class EntityIsNotCriteriaPresenter implements CriteriaPresenter<EntityIsN
     private final EntityIsCriteriaView view;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final EntityRenderingCache entityRenderingCache;
 
     @Inject
     public EntityIsNotCriteriaPresenter(@Nonnull ProjectId projectId,
                                      @Nonnull EntityIsCriteriaView view,
-                                     @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                     @Nonnull EntityRenderingCache entityRenderingCache) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.entityRenderingCache = checkNotNull(entityRenderingCache);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class EntityIsNotCriteriaPresenter implements CriteriaPresenter<EntityIsN
 
     @Override
     public void setCriteria(@Nonnull EntityIsNotCriteria criteria) {
-        dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, criteria.getEntity()),
-                                       result -> view.setEntity(result.getEntityData()));
+        entityRenderingCache.load(projectId, criteria.getEntity(),
+                result -> view.setEntity(result.getEntityData()));
     }
 }

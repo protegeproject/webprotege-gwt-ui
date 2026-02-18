@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsEntityCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsLiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLPrimitive;
@@ -33,15 +31,15 @@ public class RelationshipValueThatIsEqualToCriteriaPresenter implements Criteria
     private final RelationValueThatIsEqualToView view;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final EntityRenderingCache entityRenderingCache;
 
     @Inject
     public RelationshipValueThatIsEqualToCriteriaPresenter(@Nonnull ProjectId projectId,
                                                            @Nonnull RelationValueThatIsEqualToView view,
-                                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                                           @Nonnull EntityRenderingCache entityRenderingCache) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.entityRenderingCache = checkNotNull(entityRenderingCache);
     }
 
     @Override
@@ -75,8 +73,8 @@ public class RelationshipValueThatIsEqualToCriteriaPresenter implements Criteria
     public void setCriteria(@Nonnull RelationshipValueEqualsCriteria criteria) {
         OWLPrimitive value = criteria.getValue();
         if(value instanceof OWLEntity) {
-            dispatchServiceManager.execute(GetEntityRenderingAction.create(projectId, (OWLEntity) value),
-                                           result -> view.setValue(result.getEntityData()));
+            entityRenderingCache.load(projectId, (OWLEntity) value,
+                    result -> view.setValue(result.getEntityData()));
         }
         else if(value instanceof OWLLiteral) {
             view.setValue(OWLLiteralData.get((OWLLiteral) value));
