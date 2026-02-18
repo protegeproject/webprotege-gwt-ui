@@ -35,7 +35,7 @@ public class ProjectChangeEventView extends Composite implements ProjectFeedItem
     protected FlexTable changedEntitiesTable;
 
     @UiField
-    protected InlineLabel descriptionField;
+    protected InlineHTML descriptionField;
 
 
     private SelectionModel selectionModel;
@@ -69,7 +69,7 @@ public class ProjectChangeEventView extends Composite implements ProjectFeedItem
     }
 
     public void setDescription(String description) {
-        descriptionField.setText(description);
+        descriptionField.setHTML(description);
     }
 
     public void setChangedEntities(final Set<OWLEntityData> entities) {
