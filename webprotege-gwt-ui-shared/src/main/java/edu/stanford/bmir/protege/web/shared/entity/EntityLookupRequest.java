@@ -42,7 +42,6 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
     private int searchLimit = DEFAULT_MATCH_LIMIT;
 
 
-
     /**
      * For serialization purposes only.
      */
