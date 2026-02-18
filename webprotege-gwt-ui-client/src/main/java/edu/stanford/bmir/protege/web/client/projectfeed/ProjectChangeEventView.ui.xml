@@ -28,7 +28,7 @@
                         <div>
                             <div>
                                 <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.discussion.commentAuthor}"/>
-                                <g:InlineLabel ui:field="descriptionField"/>
+                                <g:InlineHTML ui:field="descriptionField"/>
                             </div>
 
                             <g:FlexTable ui:field="changedEntitiesTable"/>
