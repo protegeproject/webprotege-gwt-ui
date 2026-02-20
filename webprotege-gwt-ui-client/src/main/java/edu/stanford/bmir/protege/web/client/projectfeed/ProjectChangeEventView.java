@@ -8,8 +8,10 @@ import edu.stanford.bmir.protege.web.client.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -51,6 +53,24 @@ public class ProjectChangeEventView extends Composite implements ProjectFeedItem
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;
         initWidget(rootElement);
+        setupFocusClickedEntityHandler();
+    }
+
+    private native void setupFocusClickedEntityHandler() /*-{
+        var self = this;
+        $wnd.focusClickedEntity = $entry(function(event, entityUrl) {
+            self.@edu.stanford.bmir.protege.web.client.projectfeed.ProjectChangeEventView::handleEntityClick(Ljava/lang/String;)(entityUrl);
+        });
+    }-*/;
+
+    private void handleEntityClick(String entityUrl) {
+        GWT.log("Entity clicked: " + entityUrl);
+        if (selectionModel == null) {
+            GWT.log("SelectionModel not set. Cannot navigate to entity");
+            return;
+        }
+        OWLEntity entity = DataFactory.getOWLClass(entityUrl);
+        selectionModel.setSelection(entity);
     }
 
     @Override
