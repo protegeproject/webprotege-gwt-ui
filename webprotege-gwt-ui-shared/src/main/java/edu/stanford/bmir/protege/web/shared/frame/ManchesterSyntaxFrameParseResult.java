@@ -7,5 +7,15 @@ public enum ManchesterSyntaxFrameParseResult {
 
     UNCHANGED,
     CHANGED,
-    ERROR
+    ERROR;
+
+
+    public static ManchesterSyntaxFrameParseResult getResult(String result) {
+        for(ManchesterSyntaxFrameParseResult value : ManchesterSyntaxFrameParseResult.values()){
+            if(value.toString().equals(result)){
+                return value;
+            }
+        }
+        return UNCHANGED;
+    }
 }

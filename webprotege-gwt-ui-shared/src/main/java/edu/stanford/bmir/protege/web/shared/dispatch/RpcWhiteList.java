@@ -642,6 +642,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     GetEntityEarliestCommentTimestampAction _GetEntityEarliestCommentTimestampAction;
     GetEntityEarliestCommentTimestampResult _GetEntityEarliestCommentTimestampResult;
     ChangeRequestId _ChangeRequestId;
+    ManchesterSyntaxFrameParseResult _ManchesterSyntaxFrameParseResult;
 
     public RpcWhiteList() {
     }
