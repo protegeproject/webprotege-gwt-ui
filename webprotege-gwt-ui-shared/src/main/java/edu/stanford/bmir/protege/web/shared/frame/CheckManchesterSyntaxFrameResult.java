@@ -15,10 +15,15 @@ import java.util.Optional;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-@JsonTypeName("webprotege.frames.CheckManchesterSyntax")
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("webprotege.frames.CheckManchesterSyntax")
 public abstract class CheckManchesterSyntaxFrameResult implements Result {
+    @JsonCreator
+    protected static CheckManchesterSyntaxFrameResult create(@JsonProperty("result") String result,
+                                                             @JsonProperty("error") ManchesterSyntaxFrameParseError errorInternal) {
+        return new AutoValue_CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParseResult.getResult(result), errorInternal);
+    }
 
     public abstract ManchesterSyntaxFrameParseResult getResult();
 
@@ -30,9 +35,7 @@ public abstract class CheckManchesterSyntaxFrameResult implements Result {
         return Optional.ofNullable(getErrorInternal());
     }
 
-    @JsonCreator
-    protected static CheckManchesterSyntaxFrameResult create(@JsonProperty("result") ManchesterSyntaxFrameParseResult result,
-                                                          @JsonProperty("error") ManchesterSyntaxFrameParseError errorInternal) {
-        return new AutoValue_CheckManchesterSyntaxFrameResult(result, errorInternal);
-    }
+
+
+
 }
