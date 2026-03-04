@@ -10,7 +10,9 @@ import edu.stanford.bmir.protege.web.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
 import edu.stanford.bmir.protege.web.shared.access.ContextAwareBuiltInCapability;
+import edu.stanford.bmir.protege.web.shared.event.ParentsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.icd.GetLogicalDefinitionsClassAncestorsAction;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -21,6 +23,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.logging.*;
+
+import static edu.stanford.bmir.protege.web.shared.event.ParentsChangedEvent.ON_PARENTS_UPDATED;
 
 @Card(id = "logicaldefinition.card")
 public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPresenter, EntityCardEditorPresenter {
@@ -55,6 +59,8 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
 
     private ImmutableSet<Capability> capabilities = ImmutableSet.of();
 
+    private WebProtegeEventBus  eventBus;
+
     @Inject
     @AutoFactory
     public LogicalDefinitionCardPresenter(LogicalDefinitionCardView view,
@@ -71,7 +77,13 @@ public class LogicalDefinitionCardPresenter implements CustomContentEntityCardPr
     public void start(EntityCardUi ui, WebProtegeEventBus eventBus) {
         entityCardUi = ui;
         entityCardUi.setWidget(view);
+        this.eventBus = eventBus;
         view.setLogicalDefinitionChangeHandler(() -> this.handlerManager.fireEvent(new DirtyChangedEvent()));
+        this.eventBus.addProjectEventHandler(projectId, ON_PARENTS_UPDATED, (ParentsChangedEvent event) -> {
+            dispatch.execute(GetLogicalDefinitionsClassAncestorsAction.create(this.renderedEntity.getIRI(), projectId), getHierarchyParentsResult -> {
+                view.updateAncestorClassHierarchy(getHierarchyParentsResult.getAncestorsTree());
+            });
+        });
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.logicaldefinition.LogicalDefinitionChangeHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.icd.AncestorClassHierarchy;
 import edu.stanford.bmir.protege.web.shared.logicaldefinition.LogicalConditions;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -40,4 +41,6 @@ public interface LogicalDefinitionCardView extends AcceptsOneWidget, IsWidget, H
     void resetPristineState();
 
     boolean isReadOnly();
+
+    void updateAncestorClassHierarchy(AncestorClassHierarchy ancestorClassHierarchy);
 }

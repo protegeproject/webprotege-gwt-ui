@@ -149,6 +149,7 @@ public class LogicalDefinitionTableWrapperImpl extends Composite implements Logi
 
     @Override
     public void setAncestorList(List<OWLEntityData> ancestorsList) {
+        ancestorDropdown.clear();
         this.ancestorsList = ancestorsList;
         for (OWLEntityData ancestor : ancestorsList) {
             ancestorDropdown.addItem(ancestor.getBrowserText(), ancestor.getIri().toString());

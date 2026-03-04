@@ -125,8 +125,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                 result -> handleProjectLoaded(container, eventBus, place));
         dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), applicationEnvironmentManager.getAppEnvVariables().getWebsocketUrl(), this.loggedInUserProvider.getCurrentUserId().getUserName());
-
+            String websocketUrl = applicationEnvironmentManager.getAppEnvVariables().getWebsocketUrl();
+            subscribeToWebsocket(projectId.getId(), r.getToken(), websocketUrl, this.loggedInUserProvider.getCurrentUserId().getUserName());
         });
 
     }
@@ -166,7 +166,6 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public void dispatchEventsFromWebsocket(String data) {
         logger.info("");
         dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) ->  {
-            logger.info("Received a number of events "  + result.getEvents().size());
             eventPollingManager.dispatchEvents(result.getEvents());
         });
     }
@@ -174,6 +173,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
+            $wnd.console.log('[WebSocket] subscribeToWebsocket apelat: projectId=' + projectId + ', websocketUrl=' + websocketUrl + ', userId=' + userId);
 
             var stompClient = new $wnd.StompJs.Client({
                 brokerURL: websocketUrl,
@@ -194,6 +194,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
 
             stompClient.onConnect = function(frame) {
+                 $wnd.console.log('[WebSocket] Conexiune STOMP reușită, frame: ' + (frame ? JSON.stringify(frame) : 'null'));
                  var headers = {
                     'token': token,
                     'userId': userId,
@@ -205,18 +206,20 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                 }, headers);
             };
             stompClient.onWebSocketError = function(error) {
-                console.error('Error with websocket', error);
+                $wnd.console.error('[WebSocket] Eroare WebSocket:', error);
+                $wnd.console.error('[WebSocket] Tip:', (error && error.type) ? error.type : typeof error, 'message:', (error && error.message) ? error.message : (error && error.toString) ? error.toString() : error);
             };
             stompClient.onStompError = function(frame) {
-                console.error('Broker reported error: ' + frame.headers['message']);
-                console.error('Additional details: ' + frame.body);
+                $wnd.console.error('[WebSocket] Eroare STOMP broker:', frame.headers ? frame.headers['message'] : 'unknown');
+                $wnd.console.error('[WebSocket] Detalii: ' + (frame.body || ''));
             };
 
-
+            $wnd.console.log('[WebSocket] Activare client STOMP către ' + websocketUrl);
             stompClient.activate();
 
         } catch (e) {
-            $wnd.console.log('An error has occurred in the websocket connection/subscription ' + e)
+            $wnd.console.error('[WebSocket] Excepție la conexiune/subscriere:', e);
+            $wnd.console.error('[WebSocket] Stack:', e && e.stack ? e.stack : 'n/a');
         }
     }-*/;
 }

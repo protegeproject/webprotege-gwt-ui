@@ -192,11 +192,7 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         });
 
         dispatchServiceManager.execute(GetLogicalDefinitionsClassAncestorsAction.create(owlEntity.getIRI(), projectId), getHierarchyParentsResult -> {
-            Set<OWLEntityData> result = new HashSet<>();
-            populateAncestorsFromTree(getHierarchyParentsResult.getAncestorsTree(), result);
-            ancestorsList = result.stream()
-                    .filter(ancestor -> !ancestor.getIri().equals(owlEntity.getIRI()))
-                    .collect(Collectors.toList());
+            updateAncestorClassHierarchy(getHierarchyParentsResult.getAncestorsTree());
         });
 
         dispatchServiceManager.execute(GetPostCoordinationTableConfigurationAction.create(owlEntity.getIRI(), projectId), config -> {
@@ -286,11 +282,17 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
 
         Set<OWLClass> roots = selectedScales.stream().map(scale -> DataFactory.getOWLClass(IRI.create(scale)))
                 .collect(Collectors.toSet());
+        if(roots == null || roots.isEmpty()) {
+            messageBox.showAlert(
+                    "The selected axis has no root configured.",
+                    "");
+        } else {
+            hierarchyModal.showModal("Select axis value", roots, (entityNodes) -> {
+                Optional<EntityNode> selectedNode = entityNodes.stream().findFirst();
+                selectedNode.ifPresent(table::addNewRow);
+            });
+        }
 
-        hierarchyModal.showModal("Select axis value", roots, (entityNodes) -> {
-            Optional<EntityNode> selectedNode = entityNodes.stream().findFirst();
-            selectedNode.ifPresent(table::addNewRow);
-        });
         this.changeHandler.handleLogicalDefinitionCHange();
     }
 
@@ -493,5 +495,17 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
     @Override
     public boolean isReadOnly() {
         return this.isReadOnly;
+    }
+
+    @Override
+    public void updateAncestorClassHierarchy(AncestorClassHierarchy ancestorClassHierarchy) {
+        Set<OWLEntityData> result = new HashSet<>();
+        populateAncestorsFromTree(ancestorClassHierarchy, result);
+        ancestorsList = result.stream()
+                .filter(ancestor -> !ancestor.getIri().equals(this.entityData.getIri()))
+                .collect(Collectors.toList());
+        for(LogicalDefinitionTableWrapper wrapper : this.tableWrappers){
+            wrapper.setAncestorList(ancestorsList);
+        }
     }
 }
