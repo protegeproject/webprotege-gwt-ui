@@ -199,8 +199,8 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
             this.labels = config.getLabels();
             this.postCoordinationTableConfiguration = config.getTableConfiguration();
             necessaryConditionsTable.setPostCoordinationTableConfiguration(postCoordinationTableConfiguration);
-            populateWithExistingDefinition(owlEntity, projectId);
             populateAvailableAxisValues(owlEntity);
+            populateWithExistingDefinition(owlEntity, projectId);
             this.changeHandler.handleLogicalDefinitionCHange();
         });
         dispatchServiceManager.executeCurrentBatch();
@@ -219,10 +219,13 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                 (GetEntityLogicalDefinitionResult getEntityLogicalDefinitionResult) -> {
                     if (getEntityLogicalDefinitionResult.getLogicalDefinitions() != null && !getEntityLogicalDefinitionResult.getLogicalDefinitions().isEmpty()) {
                         definitions.getElement().getStyle().setBackgroundImage(null);
-
                         for (LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
                             List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
-                                    .map(LogicalDefinitionTableRow::new)
+                                    .map(propertyClassValue ->  {
+                                        LogicalDefinitionTableRow row =  new LogicalDefinitionTableRow(propertyClassValue);
+                                        row.setPostCoordinationAxisLabel(getLabelFromPostCoordinationAxisIRI(propertyClassValue.getProperty().getEntity().getIRI().toString()));
+                                        return row;
+                                    })
                                     .collect(Collectors.toList());
 
                             LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
@@ -247,7 +250,11 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
                     if (getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
 
                         List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
-                                .map(LogicalDefinitionTableRow::new)
+                                .map(propertyClassValue ->  {
+                                    LogicalDefinitionTableRow row =  new LogicalDefinitionTableRow(propertyClassValue);
+                                    row.setPostCoordinationAxisLabel(getLabelFromPostCoordinationAxisIRI(propertyClassValue.getProperty().getEntity().getIRI().toString()));
+                                    return row;
+                                })
                                 .collect(Collectors.toList());
 
                         necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
@@ -294,6 +301,13 @@ public class LogicalDefinitionCardViewImpl extends Composite implements LogicalD
         }
 
         this.changeHandler.handleLogicalDefinitionCHange();
+    }
+
+    private String getLabelFromPostCoordinationAxisIRI(String axisIri) {
+        if(this.labels != null) {
+            return labels.stream().filter(label -> label.getPostCoordinationAxis().equals(axisIri)).map(PostCoordinationTableAxisLabel::getTableLabel).findFirst().orElse(axisIri);
+        }
+        return axisIri;
     }
 
     private void initializeTable(String postCoordinationAxis, LogicalDefinitionTable table) {
