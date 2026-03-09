@@ -97,7 +97,6 @@ public class LogicalDefinitionTable implements IsWidget {
 
     public void setAvailableAxisFromSpec(PostCoordinationSpecification spec, List<PostCoordinationTableAxisLabel> labels) {
         Map<String, LogicalDefinitionTable.DropdownElement> availableAxis = new HashMap<>();
-
         List<String> sortedRequiredAxes = spec.getRequiredAxes().stream()
                 .sorted((s1, s2) -> {
                     int s1Pos = this.orderedPostCoordinationAxisIris.indexOf(s1);

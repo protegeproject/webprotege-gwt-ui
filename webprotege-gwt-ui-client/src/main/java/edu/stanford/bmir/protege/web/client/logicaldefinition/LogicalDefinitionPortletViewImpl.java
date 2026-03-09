@@ -210,7 +210,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
 
                 for (LogicalDefinition logicalDefinition : getEntityLogicalDefinitionResult.getLogicalDefinitions()) {
                     List<LogicalDefinitionTableRow> superClassTableRows = logicalDefinition.getAxis2filler().stream()
-                            .map(LogicalDefinitionTableRow::new)
+                            .map(propertyClassValue ->  {
+                                LogicalDefinitionTableRow row =  new LogicalDefinitionTableRow(propertyClassValue);
+                                row.setPostCoordinationAxisLabel(getLabelFromPostCoordinationAxisIRI(propertyClassValue.getProperty().getEntity().getIRI().toString()));
+                                return row;
+                            })
                             .collect(Collectors.toList());
 
                     LogicalDefinitionTableWrapper newTable = new LogicalDefinitionTableBuilder(dispatchServiceManager,
@@ -235,7 +239,11 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
             if (getEntityLogicalDefinitionResult.getNecessaryConditions() != null && !getEntityLogicalDefinitionResult.getNecessaryConditions().isEmpty()) {
 
                 List<LogicalDefinitionTableRow> necessaryConditionsTableRows = getEntityLogicalDefinitionResult.getNecessaryConditions().stream()
-                        .map(LogicalDefinitionTableRow::new)
+                        .map(propertyClassValue ->  {
+                            LogicalDefinitionTableRow row =  new LogicalDefinitionTableRow(propertyClassValue);
+                            row.setPostCoordinationAxisLabel(getLabelFromPostCoordinationAxisIRI(propertyClassValue.getProperty().getEntity().getIRI().toString()));
+                            return row;
+                        })
                         .collect(Collectors.toList());
 
                 necessaryConditionsTable.addExistingRows(necessaryConditionsTableRows);
@@ -246,7 +254,12 @@ public class LogicalDefinitionPortletViewImpl extends Composite implements Logic
     private void displayPlaceholder() {
         definitions.clear();
     }
-
+    private String getLabelFromPostCoordinationAxisIRI(String axisIri) {
+        if(this.labels != null) {
+            return labels.stream().filter(label -> label.getPostCoordinationAxis().equals(axisIri)).map(PostCoordinationTableAxisLabel::getTableLabel).findFirst().orElse(axisIri);
+        }
+        return axisIri;
+    }
     private void handleAxisValueChanged(String postCoordinationAxis, LogicalDefinitionTable table, WhoficCustomScalesValues superclassScalesValue) {
         List<String> selectedScales = superclassScalesValue.getScaleCustomizations().stream()
                 .filter(s -> s.getPostcoordinationAxis().equalsIgnoreCase(postCoordinationAxis))
