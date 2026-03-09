@@ -43,8 +43,6 @@ public class LogicalDefinitionTable implements IsWidget {
 
     private List<LogicalDefinitionTableRow> tableRows = new ArrayList<>();
 
-    private  List<PostCoordinationTableAxisLabel> labels = new ArrayList<>();
-
     private static final WebProtegeClientBundle.ButtonsCss buttonCss = WebProtegeClientBundle.BUNDLE.buttons();
 
 
@@ -99,7 +97,6 @@ public class LogicalDefinitionTable implements IsWidget {
 
     public void setAvailableAxisFromSpec(PostCoordinationSpecification spec, List<PostCoordinationTableAxisLabel> labels) {
         Map<String, LogicalDefinitionTable.DropdownElement> availableAxis = new HashMap<>();
-        this.labels = labels;
         List<String> sortedRequiredAxes = spec.getRequiredAxes().stream()
                 .sorted((s1, s2) -> {
                     int s1Pos = this.orderedPostCoordinationAxisIris.indexOf(s1);
