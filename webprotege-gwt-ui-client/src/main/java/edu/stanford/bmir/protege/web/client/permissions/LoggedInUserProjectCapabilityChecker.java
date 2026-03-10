@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.*;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -47,5 +48,6 @@ public interface LoggedInUserProjectCapabilityChecker {
                        @Nonnull Consumer<Boolean> callback);
 
     void hasCapability(@Nonnull ContextAwareBuiltInCapability contextAwareCapability,
+                       @Nonnull IRI entityIri,
                        @Nonnull Consumer<Boolean> callback);
 }

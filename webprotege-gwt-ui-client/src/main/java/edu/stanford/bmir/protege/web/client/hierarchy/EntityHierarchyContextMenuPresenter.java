@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
+import static edu.stanford.bmir.protege.web.shared.access.ContextAwareBuiltInCapability.CREATE_ENTITY;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
@@ -193,6 +194,7 @@ public class EntityHierarchyContextMenuPresenter {
         PopupMenu menu = new PopupMenu();
         contextMenu = Optional.of(menu);
         menu.addItem(createEntityAction);
+        createEntityAction.setVisible(false);
         menu.addItem(deleteEntityAction);
         menu.addSeparator();
         menu.addItem(editEntityTagsAction);
@@ -278,6 +280,16 @@ public class EntityHierarchyContextMenuPresenter {
 
         if (isClassHierarchy) {
             capabilityChecker.hasCapability(DELETE_CLASS, deleteEntityAction::setVisible);
+            createEntityAction.setVisible(false);
+            Optional<OWLEntity> firstSelectedEntity = treeWidget.getFirstSelectedKey();
+            if(firstSelectedEntity != null && firstSelectedEntity.isPresent()) {
+                capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), (canDo) -> {
+                    if(canDo) {
+                        createEntityAction.setVisible(true);
+                    }
+                });
+            }
+
         } else {
             capabilityChecker.hasCapability(DELETE_PROPERTY, deleteEntityAction::setVisible);
         }
