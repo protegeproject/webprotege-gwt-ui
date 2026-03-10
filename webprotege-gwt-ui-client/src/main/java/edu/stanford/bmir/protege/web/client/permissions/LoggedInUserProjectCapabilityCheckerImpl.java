@@ -5,8 +5,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.access.*;
+import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.shared.permissions.GetAuthorizedCapabilitiesForEntityAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,14 +37,18 @@ public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserPro
     @Nonnull
     private final DispatchErrorMessageDisplay errorDisplay;
 
+    private final DispatchServiceManager dispatchService;
+
     @Inject
     public LoggedInUserProjectCapabilityCheckerImpl(@Nonnull LoggedInUserProvider loggedInUserProvider,
                                                     @Nonnull ActiveProjectManager activeProjectManager,
-                                                    @Nonnull PermissionManager permissionManager, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+                                                    @Nonnull PermissionManager permissionManager,
+                                                    @Nonnull DispatchErrorMessageDisplay errorDisplay, DispatchServiceManager dispatchService) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.activeProjectManager = checkNotNull(activeProjectManager);
         this.permissionManager = checkNotNull(permissionManager);
         this.errorDisplay = checkNotNull(errorDisplay);
+        this.dispatchService = dispatchService;
     }
 
     @Override
@@ -85,17 +92,18 @@ public class LoggedInUserProjectCapabilityCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasCapability(@Nonnull ContextAwareBuiltInCapability contextAwareCapability, @Nonnull Consumer<Boolean> callback) {
-        hasCapability(contextAwareCapability.getCapability(), new DispatchServiceCallback<Boolean>(errorDisplay) {
-            @Override
-            public void handleSuccess(Boolean hasPermission) {
-                callback.accept(hasPermission);
-            }
-
-            @Override
-            public void handleErrorFinally(Throwable throwable) {
-                logger.info("[LoggedInUserProjectPermissionCheckerImpl] Error when checking permissions: " + throwable.getMessage());
-            }
-        });
+    public void hasCapability(@Nonnull ContextAwareBuiltInCapability contextAwareCapability, IRI entityIri, @Nonnull Consumer<Boolean> callback) {
+        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
+        if (!projectId.isPresent()) {
+            callback.accept(false);
+            return;
+        }
+        dispatchService.execute(
+                GetAuthorizedCapabilitiesForEntityAction.create(projectId.get(), loggedInUserProvider.getCurrentUserId(), entityIri),
+                result -> {
+                    boolean hasCapability = result.getCapabilities().stream().anyMatch(capability -> capability.getId().equals(contextAwareCapability.getCapability().getId()));
+                    callback.accept(hasCapability);
+                }
+        );
     }
 }
