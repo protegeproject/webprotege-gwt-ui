@@ -348,9 +348,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private void refreshCanCreateClass(){
         Optional<OWLEntity> firstSelectedEntity = treeWidget.getFirstSelectedKey();
         if(firstSelectedEntity != null && firstSelectedEntity.isPresent()) {
-            capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), (canDo) -> {
-                createClassAction.setEnabled(canDo);
-            });
+            capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), createClassAction::setEnabled);
         }
     }
 
