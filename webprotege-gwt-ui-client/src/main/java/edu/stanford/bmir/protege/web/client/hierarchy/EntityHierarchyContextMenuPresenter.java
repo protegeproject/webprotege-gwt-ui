@@ -280,14 +280,10 @@ public class EntityHierarchyContextMenuPresenter {
 
         if (isClassHierarchy) {
             capabilityChecker.hasCapability(DELETE_CLASS, deleteEntityAction::setVisible);
-            createEntityAction.setVisible(false);
+            createEntityAction.setVisible(true);
             Optional<OWLEntity> firstSelectedEntity = treeWidget.getFirstSelectedKey();
             if(firstSelectedEntity != null && firstSelectedEntity.isPresent()) {
-                capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), (canDo) -> {
-                    if(canDo) {
-                        createEntityAction.setVisible(true);
-                    }
-                });
+                capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), createEntityAction::setEnabled);
             }
 
         } else {

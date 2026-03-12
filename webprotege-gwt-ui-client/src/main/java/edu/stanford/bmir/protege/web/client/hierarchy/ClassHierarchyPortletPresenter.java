@@ -43,6 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.ContextAwareBuiltInCapability.CREATE_ENTITY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -215,6 +216,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                 result -> setupHierarchy(eventBus, result));
         eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
         updater.start(eventBus);
+        refreshCanCreateClass();
     }
 
     private void setupHierarchy(WebProtegeEventBus eventBus, GetHierarchyDescriptorResult result) {
@@ -277,6 +279,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                 getSelectionModel().clearSelection();
                 updateSelectedPaths();
             }
+
         } finally {
             transmittingSelectionFromTree = false;
         }
@@ -338,6 +341,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private void updateSelectedPaths() {
         if(treeWidget.isAttached()) {
             selectedPathsModel.setSelectedPaths(treeWidget.getSelectedKeyPaths());
+            refreshCanCreateClass();
+        }
+    }
+
+    private void refreshCanCreateClass(){
+        Optional<OWLEntity> firstSelectedEntity = treeWidget.getFirstSelectedKey();
+        if(firstSelectedEntity != null && firstSelectedEntity.isPresent()) {
+            capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), (canDo) -> {
+                createClassAction.setEnabled(canDo);
+            });
         }
     }
 
