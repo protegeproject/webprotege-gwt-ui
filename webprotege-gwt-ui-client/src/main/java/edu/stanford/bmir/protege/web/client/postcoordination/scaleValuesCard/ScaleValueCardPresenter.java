@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.GetRenderedOwlEntitiesAction;
@@ -27,7 +28,7 @@ public class ScaleValueCardPresenter {
     private boolean isReadOnly = true;
 
     private WebProtegeEventBus eventBus;
-
+    private final MessageBox messageBox;
     private Runnable handleChange;
     private Optional<OWLEntity> lastSelectedEntity = Optional.empty();
 
@@ -35,9 +36,11 @@ public class ScaleValueCardPresenter {
 
     public ScaleValueCardPresenter(DispatchServiceManager dispatchServiceManager,
                                    ProjectId projectId,
-                                   HierarchySelectionModalManager hierarchySelectionManager) {
+                                   HierarchySelectionModalManager hierarchySelectionManager,
+                                   MessageBox messageBox) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        this.messageBox = messageBox;
         this.hierarchySelectionManager = hierarchySelectionManager;
     }
 
@@ -119,16 +122,23 @@ public class ScaleValueCardPresenter {
     }
 
     public void showModalForSelection(Optional<OWLEntity> selectedEntity) {
+        if(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass() == null || scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass().isEmpty()){
+            messageBox.showAlert(
+                    "The selected axis has no root configured.",
+                    "");
+        } else {
         String title = "Select Scale Value for " + this.scaleValue.getAxisLabel();
         Set<OWLClass> roots = new HashSet<>(Collections.singletonList(DataFactory.getOWLClass(IRI.create(scaleValue.getGenericScale().getGenericPostcoordinationScaleTopClass()))));
-        hierarchySelectionManager.showModalWithSelection(title, roots, selectedEntity, (entityNodes) -> {
-            for(EntityNode entityNode : entityNodes ) {
-                addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
-            }
-            if (this.handleChange != null) {
-                this.handleChange.run();
-            }
-        });
+            hierarchySelectionManager.showModalWithSelection(title, roots, selectedEntity, (entityNodes) -> {
+                for(EntityNode entityNode : entityNodes ) {
+                    addRow(entityNode.getEntity().toStringID(), entityNode.getBrowserText());
+                }
+                if (this.handleChange != null) {
+                    this.handleChange.run();
+                }
+            });
+        }
+
     }
 
     private void resetLastEntity(){

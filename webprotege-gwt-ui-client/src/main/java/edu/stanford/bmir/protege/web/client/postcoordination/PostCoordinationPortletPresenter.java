@@ -151,7 +151,7 @@ public class PostCoordinationPortletPresenter extends AbstractWebProtegePortletP
 
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
-        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), hierarchySelectionManager);
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, getProjectId(), hierarchySelectionManager, messageBox);
         cardPresenter.setScaleValue(scaleValue);
         cardPresenter.setPostCoordinationAxis(axis);
         return cardPresenter;

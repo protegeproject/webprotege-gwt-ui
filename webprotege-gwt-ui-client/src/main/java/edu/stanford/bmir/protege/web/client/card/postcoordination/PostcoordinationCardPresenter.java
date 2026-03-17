@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.card.*;
 import edu.stanford.bmir.protege.web.client.card.linearization.LinearizationCardPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.selectionModal.HierarchySelectionModalManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.linearization.LinearizationCapabilities;
 import edu.stanford.bmir.protege.web.client.postcoordination.scaleValuesCard.*;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
@@ -70,19 +71,22 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
     private boolean isReadOnly = true;
 
+    private final MessageBox messageBox;
+
     @Inject
     @AutoFactory
     public PostcoordinationCardPresenter(PostcoordinationCardView view,
                                          DispatchServiceManager dispatch,
                                          BusyView busyView,
                                          ProjectId projectid,
-                                         @Nonnull NothingSelectedView nothingSelectedView, HierarchySelectionModalManager hierarchySelectionManager) {
+                                         @Nonnull NothingSelectedView nothingSelectedView, HierarchySelectionModalManager hierarchySelectionManager, MessageBox messageBox) {
         this.view = view;
         this.dispatch = dispatch;
         this.projectId = projectid;
         this.nothingSelectedView = nothingSelectedView;
         this.hierarchySelectionManager = hierarchySelectionManager;
         this.busyView = busyView;
+        this.messageBox = messageBox;
     }
 
     @Override
@@ -245,7 +249,7 @@ public class PostcoordinationCardPresenter implements CustomContentEntityCardPre
 
 
     private ScaleValueCardPresenter createScaleValueCardPresenter(PostCoordinationTableAxisLabel axis, PostcoordinationScaleValue scaleValue) {
-        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, projectId, hierarchySelectionManager);
+        ScaleValueCardPresenter cardPresenter = new ScaleValueCardPresenter(dispatch, projectId, hierarchySelectionManager, messageBox);
         cardPresenter.setScaleValue(scaleValue);
         cardPresenter.setPostCoordinationAxis(axis);
         cardPresenter.setHandleChange(() -> {
