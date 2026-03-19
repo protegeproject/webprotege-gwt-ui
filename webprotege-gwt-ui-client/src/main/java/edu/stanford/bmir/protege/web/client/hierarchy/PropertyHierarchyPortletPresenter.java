@@ -217,7 +217,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         treeWidget.addSelectionChangeHandler(event -> handleSelectionChanged(event, treeWidget));
         contextMenuPresenterFactory.create(model,
                         treeWidget,
-                        createAction,
+                        this::handleCreate,
                         deleteAction,
                         getProjectId())
                 .install();

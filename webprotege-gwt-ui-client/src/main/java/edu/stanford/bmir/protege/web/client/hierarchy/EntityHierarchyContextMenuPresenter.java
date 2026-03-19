@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.parents.EditParentsUiActio
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
@@ -65,9 +66,6 @@ public class EntityHierarchyContextMenuPresenter {
     private final EntityHierarchyModel model;
 
     @Nonnull
-    private final UIAction createEntityAction;
-
-    @Nonnull
     private final UIAction deleteEntityAction;
 
     @Nonnull
@@ -115,9 +113,11 @@ public class EntityHierarchyContextMenuPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final UIAction contextAwareCreateEntityAction;
+
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
-                                               @Nonnull UIAction createEntityAction,
+                                               @Nonnull Runnable createEntityActionRunnable,
                                                @Nonnull UIAction deleteEntityAction,
                                                @Nonnull ProjectId projectId,
                                                @Provided @Nonnull DispatchServiceManager dispatch,
@@ -127,7 +127,6 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
-                                               @Provided @Nonnull ConfigureHierarchyActionFactory configureHierarchyAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
@@ -142,7 +141,6 @@ public class EntityHierarchyContextMenuPresenter {
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
         this.model = checkNotNull(model);
-        this.createEntityAction = checkNotNull(createEntityAction);
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
@@ -152,6 +150,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.inputBox = checkNotNull(inputBox);
         this.editParentsUiAction = checkNotNull(editParentsUiAction);
         this.loggedInUserProvider = loggedInUserProvider;
+        this.contextAwareCreateEntityAction =  new PortletAction(messages.create(), "wp-btn-g--create-property wp-btn-g--create", createEntityActionRunnable);
     }
 
     /**
@@ -193,8 +192,8 @@ public class EntityHierarchyContextMenuPresenter {
     private void createContextMenu(Set<Capability> capabilitySet) {
         PopupMenu menu = new PopupMenu();
         contextMenu = Optional.of(menu);
-        menu.addItem(createEntityAction);
-        createEntityAction.setVisible(false);
+        contextAwareCreateEntityAction.setEnabled(false);
+        menu.addItem(contextAwareCreateEntityAction);
         menu.addItem(deleteEntityAction);
         menu.addSeparator();
         menu.addItem(editEntityTagsAction);
@@ -280,10 +279,10 @@ public class EntityHierarchyContextMenuPresenter {
 
         if (isClassHierarchy) {
             capabilityChecker.hasCapability(DELETE_CLASS, deleteEntityAction::setVisible);
-            createEntityAction.setVisible(true);
+            contextAwareCreateEntityAction.setVisible(true);
             Optional<OWLEntity> firstSelectedEntity = treeWidget.getFirstSelectedKey();
             if(firstSelectedEntity != null && firstSelectedEntity.isPresent()) {
-                capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), createEntityAction::setEnabled);
+                capabilityChecker.hasCapability(CREATE_ENTITY,firstSelectedEntity.get().getIRI(), contextAwareCreateEntityAction::setEnabled);
             }
 
         } else {

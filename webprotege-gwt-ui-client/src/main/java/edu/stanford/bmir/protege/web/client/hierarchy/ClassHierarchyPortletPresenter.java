@@ -233,7 +233,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setDropHandler(this.dropHandler);
         contextMenuPresenterFactory.create(hierarchyModel,
                         treeWidget,
-                        createClassAction,
+                        this::handleCreateSubClasses,
                         deleteClassAction,
                         getProjectId())
                 .install();
