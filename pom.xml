@@ -10,12 +10,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <guava.version>28.0</guava.version>
-        <dagger.version>2.20</dagger.version>
+        <guava.version>33.3.1</guava.version>
+        <dagger.version>2.56</dagger.version>
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>4.0.1</widgetmap.version>
         <graphtree.version>1.2.0</graphtree.version>
-        <autovalue.version>1.7.1</autovalue.version>
+        <autovalue.version>1.11.1</autovalue.version>
         <jackson.version>2.13.0</jackson.version>
         <commons.io.version>2.7</commons.io.version>
         <!-- WebProtege Specific Properties -->
@@ -25,7 +25,7 @@
         <application.analytics/>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-        <auto-factory.version>1.0-beta7</auto-factory.version>
+        <auto-factory.version>1.1.0</auto-factory.version>
         <junit.version>4.12</junit.version>
         <commonmark.version>0.11.0</commonmark.version>
     </properties>
@@ -243,10 +243,10 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.13.0</version>
                     <configuration>
                         <release>11</release>
-                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        <fork>true</fork>
                     </configuration>
                 </plugin>
                 <plugin>
