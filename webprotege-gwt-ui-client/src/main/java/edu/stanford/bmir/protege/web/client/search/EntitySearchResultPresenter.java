@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
@@ -29,10 +27,9 @@ public class EntitySearchResultPresenter {
 
     private final Provider<SearchResultMatchPresenter> matchPresenterProvider;
 
-    @AutoFactory
     public EntitySearchResultPresenter(@Nonnull EntitySearchResult result,
-                                       @Provided @Nonnull EntitySearchResultView view,
-                                       @Provided @Nonnull Provider<SearchResultMatchPresenter> matchPresenterProvider) {
+                                       @Nonnull EntitySearchResultView view,
+                                       @Nonnull Provider<SearchResultMatchPresenter> matchPresenterProvider) {
         this.result = checkNotNull(result);
         this.view = checkNotNull(view);
         this.matchPresenterProvider = checkNotNull(matchPresenterProvider);
