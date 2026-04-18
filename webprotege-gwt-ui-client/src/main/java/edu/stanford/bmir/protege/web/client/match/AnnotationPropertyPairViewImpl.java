@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,10 +31,10 @@ public class AnnotationPropertyPairViewImpl extends Composite implements Annotat
     PrimitiveDataEditorImpl secondEditor;
 
     @Inject
-    public AnnotationPropertyPairViewImpl(@Nonnull PrimitiveDataEditorImpl firstEditor,
-                                          @Nonnull PrimitiveDataEditorImpl secondEditor) {
-        this.firstEditor = checkNotNull(firstEditor);
-        this.secondEditor = checkNotNull(secondEditor);
+    public AnnotationPropertyPairViewImpl(@Nonnull Provider<PrimitiveDataEditorImpl> editorProvider) {
+        checkNotNull(editorProvider);
+        this.firstEditor = checkNotNull(editorProvider.get());
+        this.secondEditor = checkNotNull(editorProvider.get());
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

@@ -98,12 +98,11 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     ValueListEditor<RoleCriteriaBinding> editAccessRestrictionsListEditor;
 
     @Inject
-    public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
-                                       LanguageMapEditor helpEditor,
+    public FormFieldDescriptorViewImpl(Provider<LanguageMapEditor> languageMapEditorProvider,
                                        Provider<FormRegionRoleCriteriaValueEditor> formRegionAccessRestrictionValueEditorProvider) {
         counter.increment();
-        this.labelEditor = labelEditor;
-        this.helpEditor = helpEditor;
+        this.labelEditor = languageMapEditorProvider.get();
+        this.helpEditor = languageMapEditorProvider.get();
         ValueEditorFactory<RoleCriteriaBinding> viewCapEditorFactory = formRegionAccessRestrictionValueEditorProvider::get;
         this.viewAccessRestrictionsListEditor = new ValueListFlexEditorImpl<>(viewCapEditorFactory);
 

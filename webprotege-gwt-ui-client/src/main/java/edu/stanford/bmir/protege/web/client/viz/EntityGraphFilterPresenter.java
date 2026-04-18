@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.viz.FilterName;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.validation.constraints.Null;
 import java.util.Optional;
 
@@ -28,11 +29,10 @@ public class EntityGraphFilterPresenter {
 
     @Inject
     public EntityGraphFilterPresenter(EntityGraphFilterView view,
-                                      @Nonnull EdgeCriteriaListPresenter inclusionCriteriaPresenter,
-                                      @Nonnull EdgeCriteriaListPresenter exclusionCriteriaPresenter) {
+                                      @Nonnull Provider<EdgeCriteriaListPresenter> edgeCriteriaListPresenterProvider) {
         this.view = view;
-        this.inclusionCriteriaPresenter = inclusionCriteriaPresenter;
-        this.exclusionCriteriaPresenter = exclusionCriteriaPresenter;
+        this.inclusionCriteriaPresenter = edgeCriteriaListPresenterProvider.get();
+        this.exclusionCriteriaPresenter = edgeCriteriaListPresenterProvider.get();
     }
 
     public void clearValue() {

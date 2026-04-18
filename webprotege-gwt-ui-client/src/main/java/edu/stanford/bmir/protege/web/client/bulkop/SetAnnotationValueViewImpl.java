@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,10 +40,10 @@ public class SetAnnotationValueViewImpl extends Composite implements SetAnnotati
     DefaultLanguageEditor langEditor;
 
     @Inject
-    public SetAnnotationValueViewImpl(@Nonnull PrimitiveDataEditorImpl propertyField,
-                                      @Nonnull PrimitiveDataEditorImpl valueField) {
-        this.propertyField = checkNotNull(propertyField);
-        this.valueField = checkNotNull(valueField);
+    public SetAnnotationValueViewImpl(@Nonnull Provider<PrimitiveDataEditorImpl> editorProvider) {
+        checkNotNull(editorProvider);
+        this.propertyField = checkNotNull(editorProvider.get());
+        this.valueField = checkNotNull(editorProvider.get());
         this.langEditor = (DefaultLanguageEditor) valueField.getLanguageEditor();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
