@@ -15,7 +15,7 @@
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>4.0.1</widgetmap.version>
         <graphtree.version>1.2.0</graphtree.version>
-        <autovalue.version>1.11.1</autovalue.version>
+        <autovalue.version>1.10.4</autovalue.version>
         <jackson.version>2.13.0</jackson.version>
         <commons.io.version>2.7</commons.io.version>
         <!-- WebProtege Specific Properties -->
@@ -49,9 +49,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.google.gwt</groupId>
+                <groupId>org.gwtproject</groupId>
                 <artifactId>gwt</artifactId>
-                <version>2.8.2</version>
+                <version>2.12.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -68,32 +68,27 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>7.0</version>
+                <version>9.6</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-commons</artifactId>
-                <version>7.0</version>
+                <version>9.6</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>7.0</version>
+                <version>9.6</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>7.0</version>
+                <version>9.6</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-util</artifactId>
-                <version>7.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-xml</artifactId>
-                <version>7.0</version>
+                <version>9.6</version>
             </dependency>
 
             <dependency>
