@@ -241,7 +241,6 @@
                     <version>3.13.0</version>
                     <configuration>
                         <release>11</release>
-                        <fork>true</fork>
                     </configuration>
                 </plugin>
                 <plugin>
