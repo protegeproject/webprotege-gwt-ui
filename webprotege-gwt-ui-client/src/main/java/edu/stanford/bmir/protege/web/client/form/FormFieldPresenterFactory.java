@@ -25,7 +25,6 @@ public class FormFieldPresenterFactory {
     private final FormControlStackPresenterFactory controlStackPresenterFactory;
 
 
-    // Can't @AutoFactory this because it's injected into another @AutoFactory :(
     @Inject
     public FormFieldPresenterFactory(@Nonnull Provider<FormFieldView> viewProvider,
                                      @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper,

@@ -102,13 +102,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.auto.factory</groupId>
-            <artifactId>auto-factory</artifactId>
-            <version>${auto-factory.version}</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>codemirror-gwt</artifactId>
             <version>3.0.0</version>

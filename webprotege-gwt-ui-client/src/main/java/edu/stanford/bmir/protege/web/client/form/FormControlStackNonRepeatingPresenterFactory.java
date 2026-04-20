@@ -15,7 +15,7 @@ public final class FormControlStackNonRepeatingPresenterFactory {
   private static <T> T checkNotNull(T reference, int argumentIndex) {
     if (reference == null) {
       throw new NullPointerException(
-          "@AutoFactory method argument is null but is not marked @Nullable. Argument index: "
+          "Constructor argument is null but is not marked @Nullable. Argument index: "
               + argumentIndex);
     }
     return reference;

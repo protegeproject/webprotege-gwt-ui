@@ -25,7 +25,6 @@
         <application.analytics/>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-        <auto-factory.version>1.1.0</auto-factory.version>
         <junit.version>4.12</junit.version>
         <commonmark.version>0.11.0</commonmark.version>
     </properties>
