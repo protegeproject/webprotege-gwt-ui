@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -35,7 +34,6 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     private final HandlerManager handlerManager = new HandlerManager(this);
 
     @Inject
-    @AutoFactory
     public FormControlStackNonRepeatingPresenter(@Nonnull FormControl formControl,
                                                  @Nonnull FormRegionPosition position) {
         this.formControl = checkNotNull(formControl);

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.projectlist;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindowRequestHandler;
@@ -23,7 +21,6 @@ import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKN
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
-@AutoFactory
 public class AvailableProjectPresenter {
 
     @Nonnull
@@ -46,11 +43,11 @@ public class AvailableProjectPresenter {
 
     @Inject
     public AvailableProjectPresenter(@Nonnull AvailableProject project,
-                                     @Provided @Nonnull AvailableProjectView view,
-                                     @Provided @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
-                                     @Provided @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
-                                     @Provided @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
-                                     @Provided @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
+                                     @Nonnull AvailableProjectView view,
+                                     @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
+                                     @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
+                                     @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
+                                     @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
         this.view = checkNotNull(view);
         this.project = checkNotNull(project);
         this.loadProjectInNewWindowRequestHandler = checkNotNull(loadProjectInNewWindowRequestHandler);

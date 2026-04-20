@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.upload;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -21,7 +19,6 @@ import java.util.logging.Logger;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/05/2013
  */
-@AutoFactory
 public class UploadFileDialogController extends WebProtegeOKCancelDialogController<String> {
     Logger logger = java.util.logging.Logger.getLogger("UploadFileDialogController");
 
@@ -32,8 +29,8 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
     public UploadFileDialogController(String title,
                                       final UploadFileResultHandler resultHandler,
                                       boolean showOverrideCheckbox,
-                                      @Provided DispatchServiceManager dispatch,
-                                      @Provided ProgressDisplay progressDisplay) {
+                                      DispatchServiceManager dispatch,
+                                      ProgressDisplay progressDisplay) {
         super(title);
         this.dispatch = dispatch;
         this.progressDisplay = progressDisplay;

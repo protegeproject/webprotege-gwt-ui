@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
@@ -33,10 +31,9 @@ public class NumberControlFilterPresenter implements FormControlFilterPresenter 
     @Nonnull
     private final NumericValueCriteriaPresenter numericValueCriteriaPresenter;
 
-    @AutoFactory
-    public NumberControlFilterPresenter(@Provided @Nonnull NumberControlFilterView view,
+    public NumberControlFilterPresenter(@Nonnull NumberControlFilterView view,
                                         @Nonnull NumberControlDescriptorDto descriptor,
-                                        @Provided @Nonnull NumericValueCriteriaPresenter numericValueCriteriaPresenter) {
+                                        @Nonnull NumericValueCriteriaPresenter numericValueCriteriaPresenter) {
         this.view = checkNotNull(view);
         this.descriptor = checkNotNull(descriptor);
         this.numericValueCriteriaPresenter = numericValueCriteriaPresenter;
