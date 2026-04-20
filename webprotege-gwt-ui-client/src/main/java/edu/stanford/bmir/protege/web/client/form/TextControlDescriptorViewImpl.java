@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.lang.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import java.util.Optional;
 
@@ -69,12 +70,12 @@ public class TextControlDescriptorViewImpl extends Composite implements TextCont
     HTMLPanel specificLangTagPanel;
 
     @Inject
-    public TextControlDescriptorViewImpl(@Nonnull LanguageMapEditor placeholderEditor,
-                                         @Nonnull LanguageMapEditor patternViolationMessageEditor,
+    public TextControlDescriptorViewImpl(@Nonnull Provider<LanguageMapEditor> languageMapEditorProvider,
                                          @Nonnull LanguageEditor specificLangTagEditor) {
-        this.placeholderEditor = checkNotNull(placeholderEditor);
+        checkNotNull(languageMapEditorProvider);
+        this.placeholderEditor = checkNotNull(languageMapEditorProvider.get());
         this.specificLangTagEditor = checkNotNull(specificLangTagEditor);
-        this.patternViolationMessageEditor = checkNotNull(patternViolationMessageEditor);
+        this.patternViolationMessageEditor = checkNotNull(languageMapEditorProvider.get());
         counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
         specificLangString.addValueChangeHandler(this::handleSpecificLangStringChanged);

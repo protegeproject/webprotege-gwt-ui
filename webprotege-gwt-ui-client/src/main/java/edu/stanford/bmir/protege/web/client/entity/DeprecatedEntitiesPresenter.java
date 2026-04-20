@@ -57,9 +57,8 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
                                        @Nonnull ProjectId projectId,
                                        @Nonnull DeprecatedEntitiesView view,
                                        @Nonnull DispatchServiceManager dispatchServiceManager,
-                                       DisplayNameRenderer displayNameRenderer,
-                                       DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
+                                       DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager, selectedPathsModel);
         this.view = checkNotNull(view);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }

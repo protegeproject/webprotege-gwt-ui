@@ -79,12 +79,12 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     private EntityDisplay entityDisplay = entityData -> {};
 
     @Inject
-    public NamedIndividualFrameEditor(PropertyValueListEditor annotationsEditor,
-                                      PropertyValueListEditor assertionsEditor,
+    public NamedIndividualFrameEditor(Provider<PropertyValueListEditor> propertyValueListEditorProvider,
                                       Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
-        this.annotations = annotationsEditor;
+        checkNotNull(propertyValueListEditorProvider);
+        this.annotations = propertyValueListEditorProvider.get();
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        assertions = assertionsEditor;
+        assertions = propertyValueListEditorProvider.get();
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         types.setPlaceholder(MESSAGES.frame_enterAClassName());

@@ -49,9 +49,8 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
                                                DispatchServiceManager dispatchServiceManager,
                                                ProjectId projectId,
                                                LoggedInUserProjectCapabilityChecker capabilityChecker,
-                                               DisplayNameRenderer displayNameRenderer,
-                                               DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
+                                               DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager, selectedPathsModel);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.capabilityChecker = capabilityChecker;
