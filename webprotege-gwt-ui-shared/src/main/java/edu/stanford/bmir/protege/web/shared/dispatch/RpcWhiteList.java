@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -371,6 +372,7 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     IRI _IRI;
     IRIData _IRIData;
     ImageControlDescriptor _ImageControlDescriptor;
+    ImmutableSet _ImmutableSet;
     ImmutableSetMultimap _ImmutableSetMultimap;
     InstanceRetrievalMode _InstanceRetrievalMode;
     InternalServerError _InternalServerError;
