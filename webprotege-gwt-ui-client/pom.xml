@@ -102,6 +102,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>${autovalue.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>codemirror-gwt</artifactId>
             <version>3.0.0</version>
