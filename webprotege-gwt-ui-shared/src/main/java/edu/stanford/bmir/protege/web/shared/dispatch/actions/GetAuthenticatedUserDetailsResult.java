@@ -5,12 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,12 +25,12 @@ public abstract class GetAuthenticatedUserDetailsResult implements Result {
 
     public abstract UserDetails getUserDetails();
 
-    public abstract Set<BasicCapability> getPermittedActions();
+    public abstract ImmutableSet<BasicCapability> getPermittedActions();
 
     @JsonCreator
     public static GetAuthenticatedUserDetailsResult create(@JsonProperty("userDetails") UserDetails userDetails,
-                                                           @JsonProperty("permittedActions") Set<BasicCapability> permittedActions) {
-        return new AutoValue_GetAuthenticatedUserDetailsResult(userDetails, new HashSet<>(checkNotNull(permittedActions)));
+                                                           @JsonProperty("permittedActions")ImmutableSet<BasicCapability> permittedActions) {
+        return new AutoValue_GetAuthenticatedUserDetailsResult(userDetails, permittedActions);
     }
 
 }
