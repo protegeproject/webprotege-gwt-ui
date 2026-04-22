@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <guava.version>33.3.1</guava.version>
+        <guava.version>28.0</guava.version>
         <dagger.version>2.55</dagger.version>
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>4.0.1</widgetmap.version>
