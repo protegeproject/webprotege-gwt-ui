@@ -122,8 +122,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull ProjectId projectId,
                                              @Nonnull Messages messages,
                                              @Nonnull PropertyHierarchyPortletView view,
-                                             @Nonnull Provider<EntityHierarchyModel> entityHierarchyModelProvider,
-                                             @Nonnull Provider<TreeWidget<EntityNode, OWLEntity>> treeWidgetProvider,
+                                             @Nonnull EntityHierarchyModel objectPropertyHierarchyModel,
+                                             @Nonnull EntityHierarchyModel dataPropertyHierarchyModel,
+                                             @Nonnull EntityHierarchyModel annotationPropertyHierarchyModel,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> objectPropertyTree,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> dataPropertyTree,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull EntityNodeHtmlRenderer renderer,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntitiesPresenter deleteEntitiesPresenter,
@@ -143,12 +147,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property wp-btn-g--create", this::handleCreate);
         this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-property wp-btn-g--delete", this::handleDelete);
         this.searchAction = new PortletAction(messages.search(), "wp-btn-g--search", this::handleSearch);
-        this.objectPropertyHierarchyModel = entityHierarchyModelProvider.get();
-        this.dataPropertyHierarchyModel = entityHierarchyModelProvider.get();
-        this.annotationPropertyHierarchyModel = entityHierarchyModelProvider.get();
-        this.objectPropertyTree = treeWidgetProvider.get();
-        this.dataPropertyTree = treeWidgetProvider.get();
-        this.annotationPropertyTree = treeWidgetProvider.get();
+        this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
+        this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
+        this.annotationPropertyHierarchyModel = annotationPropertyHierarchyModel;
+        this.objectPropertyTree = objectPropertyTree;
+        this.dataPropertyTree = dataPropertyTree;
+        this.annotationPropertyTree = annotationPropertyTree;
         this.renderer = renderer;
         this.createEntityPresenter = createEntityPresenter;
         this.deleteEntitiesPresenter = deleteEntitiesPresenter;

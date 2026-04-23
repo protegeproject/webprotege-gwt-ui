@@ -33,8 +33,9 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
                                       @Nonnull SelectedPathsModel selectedPathsModel,
                                       DispatchServiceManager dispatchServiceManager,
                                       ProjectId projectId,
-                                      DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager, selectedPathsModel);
+                                      DisplayNameRenderer displayNameRenderer,
+                                      DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
         editor.setEnabled(false);

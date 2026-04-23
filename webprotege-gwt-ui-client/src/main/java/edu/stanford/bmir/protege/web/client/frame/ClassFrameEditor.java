@@ -77,12 +77,12 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
 
     @Inject
     public ClassFrameEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                            Provider<PropertyValueListEditor> propertyValueListEditorProvider) {
-        checkNotNull(propertyValueListEditorProvider);
-        this.annotations = propertyValueListEditorProvider.get();
+                            PropertyValueListEditor annotations,
+                            PropertyValueListEditor properties) {
+        this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
-        this.properties = propertyValueListEditorProvider.get();
+        this.properties = properties;
         this.properties.setGrammar(PropertyValueGridGrammar.getClassGrammar());
 
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();

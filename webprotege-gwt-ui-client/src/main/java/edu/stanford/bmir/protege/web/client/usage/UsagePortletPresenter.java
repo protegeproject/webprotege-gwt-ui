@@ -62,8 +62,9 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
                                  DispatchServiceManager dispatchServiceManager,
                                  FilterView filterView,
                                  ProjectId projectId,
-                                 DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager, selectedPathsModel);
+                                 DisplayNameRenderer displayNameRenderer,
+                                 DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());

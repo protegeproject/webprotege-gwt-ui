@@ -48,8 +48,9 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull QueryPortletView view,
-                                 DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager, selectedPathsModel);
+                                 DisplayNameRenderer displayNameRenderer,
+                                 DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);
