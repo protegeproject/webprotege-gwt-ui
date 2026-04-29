@@ -11,6 +11,7 @@
     <source path=""/>
 
     <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.google.gwt.user.Debug"/>
     <inherits name="elemental.Elemental"/>
     <inherits name="com.google.gwt.resources.Resources" />
     <inherits name="com.google.gwt.place.Place"/>
