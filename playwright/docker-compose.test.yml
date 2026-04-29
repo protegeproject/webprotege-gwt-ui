@@ -44,7 +44,8 @@ services:
     networks: [wp]
 
   webprotege-keycloak:
-    image: protegeproject/webprotege-keycloak:2.0.1
+    image: protegeproject/webprotege-keycloak:local
+    pull_policy: never
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -102,7 +103,8 @@ services:
       - "${SERVER_HOST:-localhost}:host-gateway"
 
   webprotege-gwt-ui-server:
-    image: protegeproject/webprotege-gwt-ui-server:9.0.8
+    image: protegeproject/webprotege-gwt-ui-server:local
+    pull_policy: never
     depends_on:
       webprotege-gwt-api-gateway:
         condition: service_started
@@ -122,6 +124,8 @@ services:
       webprotege.rabbit.timeout: 300000
       JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
     networks: [wp]
+    extra_hosts:
+      - "${SERVER_HOST:-localhost}:host-gateway"
 
   webprotege-authorization-service:
     image: protegeproject/webprotege-authorization-service:3.0.9
