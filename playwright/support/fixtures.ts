@@ -25,6 +25,11 @@ async function createProjectViaUi(page: Page, name: string): Promise<TestProject
   await page.locator(ProjectList.createButton).click();
   await page.locator(CreateProjectDialog.name).first().fill(name);
   await page.locator(CreateProjectDialog.submit).click();
+  const projectRow = page
+    .locator(ProjectList.rows)
+    .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) });
+  await expect(projectRow).toBeVisible({ timeout: 30_000 });
+  await projectRow.locator(ProjectList.nameCell).click();
   await expect(page.locator(ProjectView.root)).toBeVisible({ timeout: 30_000 });
   await page.waitForURL((url) => url.hash.startsWith('#projects/'));
   return { name, url: page.url() };
