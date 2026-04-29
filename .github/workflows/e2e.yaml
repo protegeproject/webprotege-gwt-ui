@@ -1,0 +1,82 @@
+name: e2e
+
+on:
+  pull_request:
+    paths:
+      - 'webprotege-gwt-ui-client/**'
+      - 'webprotege-gwt-ui-shared/**'
+      - 'webprotege-gwt-ui-shared-core/**'
+      - 'webprotege-gwt-ui-server/**'
+      - 'webprotege-gwt-ui-server-core/**'
+      - 'playwright/**'
+      - '.github/workflows/e2e.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # Build the UI WAR. The compose stack pulls every other service from
+      # Docker Hub, so this is the only Maven build needed.
+      - name: Build UI WAR
+        run: mvn -B -DskipTests -pl webprotege-gwt-ui-server -am package
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'playwright/package-lock.json'
+
+      - name: Install Playwright deps
+        working-directory: playwright
+        run: |
+          npm ci || npm install
+          npx playwright install --with-deps chromium
+
+      - name: Bring up the test stack
+        working-directory: playwright
+        env:
+          SERVER_HOST: localhost
+        run: docker compose -f docker-compose.test.yml up -d --wait
+
+      - name: Run Playwright suite
+        working-directory: playwright
+        env:
+          CI: 'true'
+          WEBPROTEGE_BASE_URL: http://localhost
+        run: npx playwright test
+
+      - name: Tear down stack
+        if: always()
+        working-directory: playwright
+        run: docker compose -f docker-compose.test.yml down -v
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright/playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: playwright/test-results/
+          retention-days: 14
