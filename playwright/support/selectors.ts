@@ -52,14 +52,14 @@ export const ProjectList = {
 } as const;
 
 export const CreateProjectDialog = {
-  root: 'role=dialog',
-  name: 'input[type="text"]',
-  description: 'textarea',
-  language: '.formField input',
-  fileUpload: 'input[type="file"]',
-  submit: 'button.wp-btn--dialog.wp-btn--primary',
-  cancel: 'button.wp-btn--dialog:has-text("Cancel")',
-  nameError: 'text=Please enter a project name',
+  root: '.wp-modal',
+  name: '.wp-modal input[type="text"]',
+  description: '.wp-modal textarea',
+  language: '.wp-modal .formField input',
+  fileUpload: '.wp-modal input[type="file"]',
+  submit: '.wp-modal button.wp-btn--dialog.wp-btn--primary',
+  cancel: '.wp-modal button.wp-btn--dialog:has-text("Cancel")',
+  nameError: '.wp-modal >> text=Please enter a project name',
 } as const;
 
 export const ProjectView = {
@@ -70,13 +70,19 @@ export const ProjectView = {
 } as const;
 
 export const Hierarchy = {
-  /** Generic tree-node locator by visible label. */
-  treeNode: (label: string) => `.tree-content :text-is("${label}")`,
-  selectedNode: '.tree-row-selected',
+  /** Generic tree-node locator by visible label. The graphtree library
+   * (edu.stanford.protege.gwt.graphtree) renders rows under `.gt-tree`.
+   * Returns the row itself (not the inner text node) so clicks aren't
+   * intercepted by the draggable row container. */
+  treeNode: (label: string) => `.gt-tree__row:has(:text-is("${label}"))`,
+  selectedNode: '.gt-tree__row--selected',
   toolbar: {
-    create: 'button[title="Create"], button:has-text("Create")',
-    delete: 'button[title="Delete"], button:has-text("Delete")',
-    watch: 'button[title="Watch"]',
+    /** Hierarchy "Create" / "Delete" buttons are icon-only and rely on
+     * a hovering tooltip rather than a `title` attribute. Match the GWT
+     * style class added in `*HierarchyPortletPresenter` instead. */
+    create: 'button.wp-btn-g--create',
+    delete: 'button.wp-btn-g--delete',
+    watch: 'button.wp-btn-g--watch',
   },
   contextMenu: 'role=menu',
   contextMenuItem: (label: string) => `role=menuitem >> text=${label}`,
@@ -91,11 +97,13 @@ export const FrameEditor = {
 } as const;
 
 export const CreateEntityDialog = {
-  root: 'role=dialog:has-text("Create")',
-  name: 'role=dialog input[type="text"]',
-  langTag: 'role=dialog select',
-  submit: 'role=dialog button:has-text("Create")',
-  cancel: 'role=dialog button:has-text("Cancel")',
+  root: '.wp-modal',
+  /** "Class names" / "Property names" / etc — a textarea (one name per line). */
+  name: '.wp-modal textarea',
+  /** Language tag input — second text field in the dialog. */
+  langTag: '.wp-modal input[type="text"]',
+  submit: '.wp-modal button.wp-btn--dialog.wp-btn--primary',
+  cancel: '.wp-modal button.wp-btn--dialog:has-text("Cancel")',
 } as const;
 
 export const Search = {
