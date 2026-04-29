@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
-const BASE_URL = process.env.WEBPROTEGE_BASE_URL ?? 'http://localhost:8080';
+const BASE_URL = process.env.WEBPROTEGE_BASE_URL ?? 'http://localhost';
 const STORAGE_STATE = path.join(__dirname, '.auth', 'storageState.json');
 
 export default defineConfig({

@@ -1,0 +1,247 @@
+# Test stack for the Playwright E2E suite.
+#
+# Mirrors the upstream protegeproject/webprotege-deploy compose file, minus
+# the ELK observability stack and mailpit which the tests do not exercise.
+# Kept in sync version-for-version with that compose file so the tests run
+# against the same artefacts that production deploys.
+#
+# Bring it up with:
+#
+#   npm run stack:up        (== docker compose -f docker-compose.test.yml up -d --wait)
+#
+# After the stack is healthy, NGINX serves the UI at http://localhost/ and
+# Keycloak at http://localhost/keycloak/. The Playwright base URL defaults
+# to http://localhost in this configuration; override with WEBPROTEGE_BASE_URL.
+#
+# The Keycloak superuser is admin/password. globalSetup.ts uses these
+# credentials to ensure a test user 'e2e@test.local' / 'testtest123' exists
+# in the 'webprotege' realm before the suite runs.
+
+x-server-host: &server-host
+  SERVER_HOST: ${SERVER_HOST:-localhost}
+
+services:
+
+  mongo:
+    image: mongo:8.0.10
+    networks: [wp]
+
+  rabbitmq:
+    image: rabbitmq:4.1.1-management
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [wp]
+
+  minio:
+    image: minio/minio:RELEASE.2024-05-10T01-41-38Z
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: webprotege
+      MINIO_ROOT_PASSWORD: webprotege
+    networks: [wp]
+
+  webprotege-keycloak:
+    image: protegeproject/webprotege-keycloak:2.0.1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *server-host
+      KC_PROXY_HEADERS: xforwarded
+      KC_HOSTNAME: ${SERVER_HOST:-localhost}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_RELATIVE_PATH: /keycloak
+      KC_HTTP_ENABLED: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+      KC_LOG_LEVEL: INFO
+      KC_FEATURES: hostname
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - '/opt/keycloak/bin/kcadm.sh get realms/webprotege --fields "attributes(frontendUrl)" --server "http://localhost:8080$${KC_HTTP_RELATIVE_PATH:-}" --realm master --user "$$KEYCLOAK_ADMIN" --password "$$KEYCLOAK_ADMIN_PASSWORD" | grep -q ''"frontendUrl" : "http://${SERVER_HOST:-localhost}/keycloak"'''
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    networks: [wp]
+
+  webprotege-gwt-api-gateway:
+    image: protegeproject/webprotege-gwt-api-gateway:3.0.2
+    depends_on:
+      webprotege-keycloak:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *server-host
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      SPRING_RABBITMQ_PUBLISHER_CONFIRM_TYPE: NONE
+      SPRING_RABBITMQ_PUBLISHER_RETURNS: "FALSE"
+      webprotege.minio.bucketName: "webprotege-uploads"
+      webprotege.minio.accessKey: webprotege
+      webprotege.minio.secretKey: webprotege
+      webprotege.minio.endPoint: http://minio:9000
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: http://${SERVER_HOST:-localhost}/keycloak/realms/webprotege
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI: http://${SERVER_HOST:-localhost}/keycloak/realms/webprotege/protocol/openid-connect/auth
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI: http://webprotege-keycloak:8080/keycloak/realms/webprotege/protocol/openid-connect/token
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK_SET_URI: http://webprotege-keycloak:8080/keycloak/realms/webprotege/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI: http://webprotege-keycloak:8080/keycloak/realms/webprotege/protocol/openid-connect/userinfo
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://${SERVER_HOST:-localhost}/keycloak/realms/webprotege
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://webprotege-keycloak:8080/keycloak/realms/webprotege/protocol/openid-connect/certs
+      spring.servlet.multipart.max-file-size: 300MB
+      spring.servlet.multipart.max-request-size: 300MB
+      WEBPROTEGE_ALLOWEDORIGIN: http://${SERVER_HOST:-localhost}
+      webprotege.rabbit.timeout: 600000
+    networks: [wp]
+    extra_hosts:
+      - "${SERVER_HOST:-localhost}:host-gateway"
+
+  webprotege-gwt-ui-server:
+    image: protegeproject/webprotege-gwt-ui-server:9.0.8
+    depends_on:
+      webprotege-gwt-api-gateway:
+        condition: service_started
+      webprotege-keycloak:
+        condition: service_healthy
+    environment:
+      <<: *server-host
+      minio.access.key: webprotege
+      minio.access.secret: webprotege
+      minio.endPoint: http://minio:9000
+      KEYCLOAK_AUTH_URL: http://${SERVER_HOST:-localhost}/keycloak/
+      webprotege.gwt-api-gateway.endPoint: http://webprotege-gwt-api-gateway:7777
+      webprotege.websocketUrl: ws://${SERVER_HOST:-localhost}/wsapps
+      webprotege.logoutUrl: http://${SERVER_HOST:-localhost}/webprotege/logout
+      webprotege.fileUploadurl: http://${SERVER_HOST:-localhost}
+      webprotege.keycloakLogoutUrl: http://${SERVER_HOST:-localhost}/keycloak/realms/webprotege/protocol/openid-connect/logout
+      webprotege.rabbit.timeout: 300000
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+    networks: [wp]
+
+  webprotege-authorization-service:
+    image: protegeproject/webprotege-authorization-service:3.0.9
+    depends_on:
+      webprotege-keycloak:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      spring.data.mongodb.host: mongo
+      spring.data.mongodb.database: webprotege
+      keycloak.jwk-set-uri: http://webprotege-keycloak:8080
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/webprotege
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+    networks: [wp]
+
+  webprotege-user-management-service:
+    image: protegeproject/webprotege-user-management-service:1.0.10
+    depends_on:
+      webprotege-keycloak:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *server-host
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/webprotege
+      webprotege.keycloak.serverUrl: http://${SERVER_HOST:-localhost}/keycloak
+      webprotege.keycloak.clientSecret: ${ADMIN_CLI_SECRET:-}
+      webprotege.keycloak.clientId: user-management
+    networks: [wp]
+
+  webprotege-event-history-service:
+    image: protegeproject/webprotege-event-history-service:2.0.0
+    depends_on:
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *server-host
+      webprotege.keycloak.serverUrl: http://${SERVER_HOST:-localhost}/keycloak
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/webprotege
+    networks: [wp]
+
+  webprotege-ontology-processing-service:
+    image: protegeproject/webprotege-ontology-processing-service:1.0.7
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      webprotege.minio.accessKey: webprotege
+      webprotege.minio.secretKey: webprotege
+      webprotege.minio.endPoint: http://minio:9000
+    networks: [wp]
+
+  webprotege-initial-revision-history-service:
+    image: protegeproject/webprotege-initial-revision-history-service:1.0.8
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      webprotege.minio.accessKey: webprotege
+      webprotege.minio.secretKey: webprotege
+      webprotege.minio.endPoint: http://minio:9000
+    networks: [wp]
+
+  webprotege-backend-service:
+    image: protegeproject/webprotege-backend-service:5.0.2
+    user: root
+    depends_on:
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      webprotege.minio.accessKey: webprotege
+      webprotege.minio.secretKey: webprotege
+      webprotege.minio.endPoint: http://minio:9000
+      webprotege.directories.data: /srv/webprotege
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/webprotege
+      JDK_JAVA_OPTIONS: --add-opens java.base/sun.net=ALL-UNNAMED
+      webprotege.rabbit.timeout: 600000
+    volumes:
+      - webprotege-data:/srv/webprotege
+    networks: [wp]
+
+  webprotege-nginx:
+    image: protegeproject/webprotege-nginx:2.0.2
+    hostname: ${SERVER_HOST:-localhost}
+    ports:
+      - "${WEBPROTEGE_HOST_PORT:-80}:80"
+    depends_on:
+      webprotege-gwt-ui-server:
+        condition: service_started
+      webprotege-gwt-api-gateway:
+        condition: service_started
+      webprotege-keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/ -o /dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    networks: [wp]
+
+volumes:
+  webprotege-data:
+
+networks:
+  wp:
+    driver: bridge
