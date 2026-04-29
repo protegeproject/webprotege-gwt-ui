@@ -2,9 +2,11 @@
  * Centralised Playwright selectors for the WebProtege GWT UI.
  *
  * Selector precedence:
- *   1. `[debug-id="..."]` — emitted by GWT once `com.google.gwt.user.Debug`
- *      is inherited (see webprotege-gwt-ui-client/src/main/module.gwt.xml).
- *      Stable across i18n changes and rebuilds.
+ *   1. `#gwt-debug-...` — emitted by GWT (`debugId` UiBinder attribute calls
+ *      `ensureDebugId`, which sets `id="gwt-debug-<name>"` once
+ *      `com.google.gwt.user.Debug` is inherited; see
+ *      webprotege-gwt-ui-client/src/main/module.gwt.xml). Stable across i18n
+ *      changes and rebuilds.
  *   2. `wp-*` CSS classes from .ui.xml templates (e.g. wp-login__form).
  *      Stable as long as the .ui.xml class name is not renamed.
  *   3. Visible text from Messages.java — least stable but useful as a
@@ -24,7 +26,7 @@ export const Login = {
 } as const;
 
 export const TopBar = {
-  root: '[debug-id="TopBarContainer"]',
+  root: '#gwt-debug-TopBarContainer',
   projectTitle: '.wp-laf-topBarTitle',
   homeButton: '.wp-buttons-topBarButton:has-text("Home")',
   signOut: 'text=Sign Out',
@@ -55,15 +57,15 @@ export const CreateProjectDialog = {
   description: 'textarea',
   language: '.formField input',
   fileUpload: 'input[type="file"]',
-  submit: 'button:has-text("Create")',
-  cancel: 'button:has-text("Cancel")',
+  submit: 'button.wp-btn--dialog.wp-btn--primary',
+  cancel: 'button.wp-btn--dialog:has-text("Cancel")',
   nameError: 'text=Please enter a project name',
 } as const;
 
 export const ProjectView = {
-  root: '[debug-id="ProjectView"]',
-  perspectiveSwitcher: '[debug-id="PerspectiveSwitcher"]',
-  tab: (label: string) => `[debug-id="PerspectiveSwitcher"] >> text=${label}`,
+  root: '#gwt-debug-ProjectView',
+  perspectiveSwitcher: '#gwt-debug-PerspectiveSwitcher',
+  tab: (label: string) => `#gwt-debug-PerspectiveSwitcher >> text=${label}`,
   addTabButton: 'button:has-text("Tabs")',
 } as const;
 
