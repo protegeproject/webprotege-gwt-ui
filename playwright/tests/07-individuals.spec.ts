@@ -20,7 +20,7 @@ test.describe('individuals', () => {
 
   test('I2: create individual Boeing747 (no type)', async ({ page }) => {
     // Individuals tab uses the same Create toolbar pattern.
-    await page.locator('button[title="Create"], button:has-text("Create")').first().click();
+    await page.locator('button.wp-btn-g--create-individual').first().click();
     await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
     await page.locator(CreateEntityDialog.name).fill('Boeing747');
     await page.locator(CreateEntityDialog.submit).click();
@@ -30,13 +30,13 @@ test.describe('individuals', () => {
   });
 
   test('I8: delete an individual', async ({ page }) => {
-    await page.locator('button[title="Create"], button:has-text("Create")').first().click();
+    await page.locator('button.wp-btn-g--create-individual').first().click();
     await page.locator(CreateEntityDialog.name).fill('TempIndividual');
     await page.locator(CreateEntityDialog.submit).click();
     await expect(page.locator('text=TempIndividual').first()).toBeVisible();
 
     await page.locator('text=TempIndividual').first().click();
-    await page.locator('button[title="Delete"], button:has-text("Delete")').first().click();
+    await page.locator('button.wp-btn-g--delete-individual').first().click();
     const confirm = page.locator('role=button >> text=/OK|Delete|Yes/').first();
     if (await confirm.isVisible().catch(() => false)) await confirm.click();
     await expect(page.locator('text=TempIndividual')).toHaveCount(0);
