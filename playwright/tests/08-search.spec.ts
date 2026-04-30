@@ -20,8 +20,12 @@ test.describe('search', () => {
     await expect(page.locator(Search.modal)).toBeVisible();
 
     await page.locator(Search.input).first().fill('Aircraft');
-    await expect(page.locator(Search.result).first()).toBeVisible({
-      timeout: 10_000,
+    // The search modal renders matched entities; ensure at least one of
+    // them has the seeded label as visible text. The modal stacks above
+    // the hierarchy tree so any "Aircraft" rendering on screen now belongs
+    // to the search result list.
+    await expect(page.locator('.wp-modal').getByText('Aircraft').first()).toBeVisible({
+      timeout: 15_000,
     });
   });
 });
