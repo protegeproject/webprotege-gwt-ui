@@ -1,6 +1,24 @@
 import { test as base, expect, Page } from '@playwright/test';
 import { CreateProjectDialog, ProjectList, ProjectView } from './selectors';
 
+/**
+ * Navigate to a perspective tab. "Object Properties" / "Data Properties" /
+ * "Annotation Properties" live as sub-tabs under "Properties" in the same
+ * PerspectiveSwitcher and only render after the parent has been opened, so
+ * route through "Properties" first when targeting any of them.
+ */
+export async function goToPerspective(page: Page, label: string): Promise<void> {
+  if (ProjectView.propertiesSubTabs.includes(label)) {
+    await page.locator(ProjectView.tab('Properties')).first().click();
+    // The sub-tabs ("Object Properties", "Data Properties",
+    // "Annotation Properties") only attach after the parent is opened.
+    await expect(page.locator(ProjectView.tab(label)).first()).toBeVisible({
+      timeout: 10_000,
+    });
+  }
+  await page.locator(ProjectView.tab(label)).first().click();
+}
+
 export interface TestProject {
   /** Unique name for the project, e.g. 'Test_5b3f...' */
   name: string;
@@ -42,7 +60,9 @@ async function trashProjectViaUi(page: Page, project: TestProject): Promise<void
     .filter({ has: page.locator(ProjectList.nameCell, { hasText: project.name }) });
   if ((await row.count()) === 0) return;
   await row.locator(ProjectList.menuButton).click();
-  await page.locator('role=menuitem >> text=/Trash|Move to Trash/').click();
+  const trashItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Move to trash/i });
+  await trashItem.hover();
+  await trashItem.click();
 }
 
 export const test = base.extend<ProjectFixtures>({
