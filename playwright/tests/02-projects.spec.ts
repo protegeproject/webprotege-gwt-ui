@@ -51,20 +51,33 @@ test.describe('projects', () => {
     await expect(page.locator(CreateProjectDialog.root)).not.toBeVisible();
   });
 
-  test('P4: empty name shows inline error', async ({ page }) => {
+  test('P4: empty name shows alert', async ({ page }) => {
+    // The Create Project view validates the name via a MessageBox alert
+    // ("Project name missing" / "Please enter a project name"), not an
+    // inline form error. The alert overlays the create-project modal, so
+    // the surrounding modal's Cancel button is non-clickable until the
+    // alert is dismissed.
     await page.locator(ProjectList.createButton).click();
     await page.locator(CreateProjectDialog.submit).click();
-    await expect(page.locator(CreateProjectDialog.nameError)).toBeVisible();
+    await expect(page.locator('text=Please enter a project name')).toBeVisible();
+    await page.locator('.wp-modal button:has-text("OK")').first().click();
     await page.locator(CreateProjectDialog.cancel).click();
   });
 
   test('P5+P6+P7+P8: create, open, trash, restore round-trip', async ({ page }) => {
     const name = `RoundTrip_${crypto.randomUUID().slice(0, 8)}`;
 
-    // Create.
+    // Create. Submitting the dialog leaves the user on the project list —
+    // there is no automatic navigation. Wait for the new row, then click its
+    // name cell to open the project.
     await page.locator(ProjectList.createButton).click();
     await page.locator(CreateProjectDialog.name).first().fill(name);
     await page.locator(CreateProjectDialog.submit).click();
+    const newRow = page
+      .locator(ProjectList.rows)
+      .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) });
+    await expect(newRow).toBeVisible({ timeout: 30_000 });
+    await newRow.locator(ProjectList.nameCell).click();
     await expect(page.locator(ProjectView.root)).toBeVisible({ timeout: 30_000 });
 
     // Open URL pattern check.
@@ -77,21 +90,35 @@ test.describe('projects', () => {
       .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) });
     await expect(row).toHaveCount(1);
 
-    // Trash.
+    // Trash. The popup menu (AvailableProjectPresenter#addTrashAction)
+    // tracks selection via mousemove and executes on mouseup, but the
+    // FocusPanel that hosts the handlers has a `BlurEvent` dismiss handler,
+    // so a synthetic click can race the focus loss. Move the mouse onto the
+    // item (mousemove sets selectedIndex), then dispatch a real mouseup
+    // event so the GWT handler fires before the popup blurs.
     await row.locator(ProjectList.menuButton).click();
-    await page.locator('role=menuitem >> text=/Trash|Move to Trash/').click();
+    const trashItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Move to trash/i });
+    await trashItem.hover();
+    await trashItem.dispatchEvent('mouseup');
+    // Wait for the project to drop out of the default (non-trash) view.
+    await expect(row).toHaveCount(0);
     await page.locator(ProjectList.filters.trash).check();
     await expect(
       page.locator(ProjectList.rows)
         .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) }),
     ).toHaveCount(1);
 
-    // Restore.
+    // Restore. The same menu item flips to "Remove from trash" when the
+    // project is already trashed.
     const trashedRow = page
       .locator(ProjectList.rows)
       .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) });
+    await expect(trashedRow).toBeVisible();
     await trashedRow.locator(ProjectList.menuButton).click();
-    await page.locator('role=menuitem >> text=/Restore/').click();
+    const restoreItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Remove from trash/i });
+    await expect(restoreItem).toBeVisible();
+    await restoreItem.hover();
+    await restoreItem.click();
     await page.locator(ProjectList.filters.trash).uncheck();
     await expect(
       page.locator(ProjectList.rows)
@@ -99,13 +126,18 @@ test.describe('projects', () => {
     ).toHaveCount(1);
   });
 
-  test('P11: sharing dialog opens from project menu', async ({ project, page }) => {
+  test('P11: project row menu exposes core actions', async ({ project, page }) => {
+    // The project list row menu (AvailableProjectPresenter) exposes Open,
+    // Open in new window, Download and Move to trash. Sharing lives on the
+    // project's topbar, not in this menu.
     await page.goto('/#projects/list');
     const row = page
       .locator(ProjectList.rows)
       .filter({ has: page.locator(ProjectList.nameCell, { hasText: project.name }) });
     await row.locator(ProjectList.menuButton).click();
-    await page.locator('role=menuitem >> text=/Sharing/').click();
-    await expect(page.locator('role=dialog:has-text("Sharing")')).toBeVisible();
+    // Use exact-text match — "Open" alone would also match "Open in new window".
+    for (const label of [/^Open$/, /^Download$/, /^Move to trash$/]) {
+      await expect(page.locator('.wp-popup-menu__item').filter({ hasText: label })).toBeVisible();
+    }
   });
 });
