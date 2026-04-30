@@ -25,8 +25,10 @@ test.describe('history and comments', () => {
     ).toBeVisible({ timeout: 15_000 });
   });
 
-  test('H3: Comments perspective opens', async ({ page, project }) => {
-    await page.locator(ProjectView.tab('Comments')).click();
+  test('H3: Discussions perspective opens', async ({ page, project }) => {
+    // The "Comments" perspective was renamed "Discussions" in the default
+    // perspective set; the underlying portlet (CommentsByEntity) is the same.
+    await page.locator(ProjectView.tab('Discussions')).click();
     await expect(page.locator(ProjectView.root)).toBeVisible();
   });
 });

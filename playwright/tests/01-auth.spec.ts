@@ -36,7 +36,7 @@ test.describe('authentication', () => {
     // Stay on Keycloak's auth endpoint after a failed POST — Keycloak
     // re-renders the form with an inline error.
     await expect(page).toHaveURL(/\/keycloak\/realms\/webprotege\//);
-    await expect(page.locator('#input-error, .alert-error, .kc-feedback-text')).toBeVisible();
+    await expect(page.locator(Login.error)).toBeVisible();
   });
 
   test('A4: sign out returns to login', async ({ page }) => {
