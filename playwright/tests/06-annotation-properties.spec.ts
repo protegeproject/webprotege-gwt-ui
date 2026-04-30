@@ -1,13 +1,12 @@
-import { test, expect } from '../support/fixtures';
+import { test, expect, goToPerspective } from '../support/fixtures';
 import {
   CreateEntityDialog,
   Hierarchy,
-  ProjectView,
 } from '../support/selectors';
 
 test.describe('annotation properties', () => {
   test.beforeEach(async ({ page, project }) => {
-    await page.locator(ProjectView.tab('Annotation Properties')).click();
+    await goToPerspective(page, 'Annotation Properties');
     // Standard built-in annotation properties are guaranteed to be present.
     await expect(page.locator(Hierarchy.treeNode('rdfs:label'))).toBeVisible({
       timeout: 15_000,

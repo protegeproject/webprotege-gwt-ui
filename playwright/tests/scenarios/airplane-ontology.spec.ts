@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { test, expect } from '../../support/fixtures';
+import { test, expect, goToPerspective } from '../../support/fixtures';
 import {
   CreateEntityDialog,
   Hierarchy,
@@ -32,7 +32,7 @@ async function createSubClass(page: Page, parent: string, child: string): Promis
 }
 
 async function createObjectProperty(page: Page, parent: string, name: string): Promise<void> {
-  await page.locator(ProjectView.tab('Object Properties')).click();
+  await goToPerspective(page, 'Object Properties');
   await page.locator(Hierarchy.treeNode(parent)).first().click();
   await page.locator(Hierarchy.toolbar.create).first().click();
   await page.locator(CreateEntityDialog.name).fill(name);
@@ -43,7 +43,7 @@ async function createObjectProperty(page: Page, parent: string, name: string): P
 }
 
 async function createDataProperty(page: Page, parent: string, name: string): Promise<void> {
-  await page.locator(ProjectView.tab('Data Properties')).click();
+  await goToPerspective(page, 'Data Properties');
   await page.locator(Hierarchy.treeNode(parent)).first().click();
   await page.locator(Hierarchy.toolbar.create).first().click();
   await page.locator(CreateEntityDialog.name).fill(name);
@@ -55,7 +55,7 @@ async function createDataProperty(page: Page, parent: string, name: string): Pro
 
 async function createIndividual(page: Page, name: string): Promise<void> {
   await page.locator(ProjectView.tab('Individuals')).click();
-  await page.locator('button[title="Create"], button:has-text("Create")').first().click();
+  await page.locator('button.wp-btn-g--create-individual').first().click();
   await page.locator(CreateEntityDialog.name).fill(name);
   await page.locator(CreateEntityDialog.submit).click();
   await expect(page.locator(`text=${name}`).first()).toBeVisible({ timeout: 15_000 });

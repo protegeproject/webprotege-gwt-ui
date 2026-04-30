@@ -1,13 +1,12 @@
-import { test, expect } from '../support/fixtures';
+import { test, expect, goToPerspective } from '../support/fixtures';
 import {
   CreateEntityDialog,
   Hierarchy,
-  ProjectView,
 } from '../support/selectors';
 
 test.describe('data properties', () => {
   test.beforeEach(async ({ page, project }) => {
-    await page.locator(ProjectView.tab('Data Properties')).click();
+    await goToPerspective(page, 'Data Properties');
     await expect(page.locator(Hierarchy.treeNode('owl:topDataProperty'))).toBeVisible({
       timeout: 15_000,
     });
