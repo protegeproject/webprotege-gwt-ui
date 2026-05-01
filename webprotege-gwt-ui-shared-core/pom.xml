@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
+            <groupId>org.gwtproject</groupId>
             <artifactId>gwt-user</artifactId>
         </dependency>
 
@@ -81,9 +81,15 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <release>8</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.auto.value</groupId>
+                            <artifactId>auto-value</artifactId>
+                            <version>${autovalue.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
@@ -99,7 +105,7 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>com.google.gwt</groupId>
+                    <groupId>org.gwtproject</groupId>
                     <artifactId>gwt-user</artifactId>
                 </dependency>
             </dependencies>

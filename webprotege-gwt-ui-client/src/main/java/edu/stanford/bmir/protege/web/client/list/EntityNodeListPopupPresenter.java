@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.list;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.individualslist.EntityNodeListCellRenderer;
@@ -51,9 +49,8 @@ public class EntityNodeListPopupPresenter {
     private final ListDataSupplier listDataSupplier;
 
     @Inject
-    @AutoFactory
-    public EntityNodeListPopupPresenter(@Nonnull @Provided EntityNodeListCellRenderer renderer,
-                                        @Nonnull @Provided  EntityNodeListPopupView view,
+    public EntityNodeListPopupPresenter(@Nonnull EntityNodeListCellRenderer renderer,
+                                        @Nonnull  EntityNodeListPopupView view,
                                         @Nonnull ListDataSupplier listDataSupplier) {
         this.renderer = checkNotNull(renderer);
         this.view = checkNotNull(view);

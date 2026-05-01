@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
@@ -82,11 +80,10 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler, HasDisp
 
     private DisplayContextManager displayContextManager = new DisplayContextManager(this::fillDisplayContext);
 
-    @AutoFactory
     @Inject
-    public FormPresenter(@Nonnull @Provided FormView formView,
-                         @Nonnull @Provided NoFormView noFormView,
-                         @Nonnull @Provided DispatchServiceManager dispatchServiceManager,
+    public FormPresenter(@Nonnull FormView formView,
+                         @Nonnull NoFormView noFormView,
+                         @Nonnull DispatchServiceManager dispatchServiceManager,
                          @Nonnull FormFieldPresenterFactory formFieldPresenterFactory) {
         this.formView = checkNotNull(formView);
         this.noFormView = checkNotNull(noFormView);

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
@@ -42,8 +40,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
-    @AutoFactory
-    public GridCellPresenter(@Provided @Nonnull GridCellView view,
+    public GridCellPresenter(@Nonnull GridCellView view,
                              @Nonnull GridColumnDescriptorDto columnDescriptor,
                              @Nonnull FormControlStackPresenter stackPresenter) {
         this.view = checkNotNull(view);

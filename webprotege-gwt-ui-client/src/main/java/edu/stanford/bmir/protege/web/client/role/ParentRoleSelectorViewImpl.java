@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.role;
 
-import com.google.auto.factory.AutoFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -23,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
-@AutoFactory
 public class ParentRoleSelectorViewImpl extends Composite implements ParentRoleSelectorView {
 
     private ParentRoleIdSupplier parentRoleIdSupplier = () -> Collections.emptySet();

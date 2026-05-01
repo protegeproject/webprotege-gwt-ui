@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
@@ -37,12 +35,11 @@ public class EntityNameControlFilterPresenter implements FormControlFilterPresen
     @Nonnull
     private final ProjectId projectId;
 
-    @AutoFactory
-    public EntityNameControlFilterPresenter(@Provided @Nonnull EntityNameControlFilterView view,
-                                            @Provided @Nonnull EntityCriteriaPresenter entityCriteriaPresenter,
-                                            @Provided @Nonnull DispatchServiceManager dispatch,
+    public EntityNameControlFilterPresenter(@Nonnull EntityNameControlFilterView view,
+                                            @Nonnull EntityCriteriaPresenter entityCriteriaPresenter,
+                                            @Nonnull DispatchServiceManager dispatch,
                                             @Nonnull EntityNameControlDescriptorDto descriptor,
-                                            @Provided @Nonnull ProjectId projectId) {
+                                            @Nonnull ProjectId projectId) {
         this.view = view;
         this.descriptor = descriptor;
         this.dispatch = dispatch;

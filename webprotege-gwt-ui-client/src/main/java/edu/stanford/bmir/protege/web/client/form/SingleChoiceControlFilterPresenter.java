@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
@@ -32,10 +30,9 @@ public class SingleChoiceControlFilterPresenter implements FormControlFilterPres
     @Nonnull
     private Optional<FormControl> formControl = Optional.empty();
 
-    @AutoFactory
-    public SingleChoiceControlFilterPresenter(@Provided @Nonnull SingleChoiceControlFilterView view,
+    public SingleChoiceControlFilterPresenter(@Nonnull SingleChoiceControlFilterView view,
                                               @Nonnull SingleChoiceControlDescriptorDto descriptor,
-                                              @Provided @Nonnull FormControlFactory formControlFactory) {
+                                              @Nonnull FormControlFactory formControlFactory) {
         this.view = checkNotNull(view);
         this.descriptor = checkNotNull(descriptor);
         this.formControlFactory = checkNotNull(formControlFactory);

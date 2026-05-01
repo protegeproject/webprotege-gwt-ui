@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -48,14 +46,13 @@ public class BulkEditOperationWorkflow {
     @Nonnull
     private final ModalManager modalManager;
 
-    @AutoFactory
     @Inject
-    public BulkEditOperationWorkflow(@Provided @Nonnull DispatchServiceManager dispatch,
-                                     @Provided @Nonnull BulkEditOperationViewContainer viewContainer,
+    public BulkEditOperationWorkflow(@Nonnull DispatchServiceManager dispatch,
+                                     @Nonnull BulkEditOperationViewContainer viewContainer,
                                      @Nonnull BulkEditOperationPresenter presenter,
                                      @Nonnull ImmutableSet<OWLEntityData> entities,
-                                     @Provided @Nonnull CommitMessageInputView commitMessageInputView,
-                                     @Provided @Nonnull ModalManager modalManager) {
+                                     @Nonnull CommitMessageInputView commitMessageInputView,
+                                     @Nonnull ModalManager modalManager) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
         this.viewContainer = checkNotNull(viewContainer);

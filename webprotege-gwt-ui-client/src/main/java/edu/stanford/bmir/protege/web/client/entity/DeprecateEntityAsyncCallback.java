@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
@@ -21,9 +19,8 @@ public class DeprecateEntityAsyncCallback extends DispatchServiceCallbackWithPro
     @Nonnull
     private final String entityRendering;
 
-    @AutoFactory
-    public DeprecateEntityAsyncCallback(@Provided DispatchErrorMessageDisplay errorMessageDisplay,
-                                        @Provided ProgressDisplay progressDisplay,
+    public DeprecateEntityAsyncCallback(DispatchErrorMessageDisplay errorMessageDisplay,
+                                        ProgressDisplay progressDisplay,
                                         @Nonnull String entityRendering) {
         super(errorMessageDisplay, progressDisplay);
         this.entityRendering = checkNotNull(entityRendering);

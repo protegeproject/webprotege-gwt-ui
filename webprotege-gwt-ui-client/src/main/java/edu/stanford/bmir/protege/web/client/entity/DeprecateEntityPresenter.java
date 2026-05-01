@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -48,12 +46,11 @@ public class DeprecateEntityPresenter {
     @Nonnull
     private final FormPresenter formPresenter;
 
-    @AutoFactory
     public DeprecateEntityPresenter(@Nonnull OWLEntity entity,
-                                    @Provided @Nonnull ProjectId projectId,
-                                    @Provided @Nonnull DispatchServiceManager dispatch,
-                                    @Provided @Nonnull DeprecateEntityView view,
-                                    @Provided @Nonnull FormPresenter formPresenter) {
+                                    @Nonnull ProjectId projectId,
+                                    @Nonnull DispatchServiceManager dispatch,
+                                    @Nonnull DeprecateEntityView view,
+                                    @Nonnull FormPresenter formPresenter) {
         this.entity = checkNotNull(entity);
         this.projectId = projectId;
         this.dispatch = checkNotNull(dispatch);

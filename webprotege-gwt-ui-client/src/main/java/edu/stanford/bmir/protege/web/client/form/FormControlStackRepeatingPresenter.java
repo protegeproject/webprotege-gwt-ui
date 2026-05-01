@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -63,10 +61,9 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
-    @AutoFactory
     @Inject
-    public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
-                                              @Provided @Nonnull PaginatorPresenter paginatorPresenter,
+    public FormControlStackRepeatingPresenter(@Nonnull FormControlStackRepeatingView view,
+                                              @Nonnull PaginatorPresenter paginatorPresenter,
                                               @Nonnull FormRegionPosition position,
                                               @Nonnull FormControlDataEditorFactory formControlFactory) {
         this.view = checkNotNull(view);

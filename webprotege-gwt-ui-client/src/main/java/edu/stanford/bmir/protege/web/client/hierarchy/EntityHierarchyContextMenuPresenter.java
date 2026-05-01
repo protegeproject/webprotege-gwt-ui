@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -47,7 +45,6 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 3 Dec 2017
  */
-@AutoFactory
 public class EntityHierarchyContextMenuPresenter {
 
     private final static Logger logger = Logger.getLogger(EntityHierarchyContextMenuPresenter.class.getName());
@@ -117,18 +114,18 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
                                                @Nonnull ProjectId projectId,
-                                               @Provided @Nonnull DispatchServiceManager dispatch,
-                                               @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
-                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction,
-                                               @Provided @Nonnull ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction,
-                                               @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
-                                               @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
-                                               @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
-                                               @Provided Messages messages,
-                                               @Provided @Nonnull WatchUiAction watchUiAction,
-                                               @Provided @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
-                                               @Provided @Nonnull InputBox inputBox,
-                                               @Provided @Nonnull LoggedInUserProvider loggedInUserProvider) {
+                                               @Nonnull DispatchServiceManager dispatch,
+                                               @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
+                                               @Nonnull MoveToParentUiAction moveToParentUiAction,
+                                               @Nonnull ChangeChildrenOrderingUIAction changeChildrenOrderingUIAction,
+                                               @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
+                                               @Nonnull EditEntityTagsUiAction editEntityTagsAction,
+                                               Messages messages,
+                                               @Nonnull WatchUiAction watchUiAction,
+                                               @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
+                                               @Nonnull InputBox inputBox,
+                                               @Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.dispatch = dispatch;
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);

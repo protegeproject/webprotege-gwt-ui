@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
@@ -43,16 +41,15 @@ public class ChangePasswordPresenter {
 
     private final Messages messages;
 
-    @AutoFactory
     @Inject
-    public ChangePasswordPresenter(@Provided ChangePasswordView changePasswordView,
+    public ChangePasswordPresenter(ChangePasswordView changePasswordView,
                                    UserId userId,
-                                   @Provided DispatchServiceManager dispatchServiceManager,
-                                   @Provided MessageBox messageBox,
-                                   @Provided DispatchErrorMessageDisplay errorDisplay,
-                                   @Provided ProgressDisplay progressDisplay,
-                                   @Provided ModalManager modalManager,
-                                   @Provided Messages messages) {
+                                   DispatchServiceManager dispatchServiceManager,
+                                   MessageBox messageBox,
+                                   DispatchErrorMessageDisplay errorDisplay,
+                                   ProgressDisplay progressDisplay,
+                                   ModalManager modalManager,
+                                   Messages messages) {
         this.changePasswordView = changePasswordView;
         this.userId = checkNotNull(userId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);

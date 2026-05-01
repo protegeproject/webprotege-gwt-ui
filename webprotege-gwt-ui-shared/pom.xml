@@ -26,7 +26,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.gwt</groupId>
+            <groupId>org.gwtproject</groupId>
             <artifactId>gwt-user</artifactId>
             <exclusions>
                 <exclusion>
@@ -121,7 +121,8 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-testlib</artifactId>
-            <version>30.1.1-jre</version>
+            <version>${guava.version}-jre</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -154,6 +155,18 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <release>8</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.auto.value</groupId>
+                            <artifactId>auto-value</artifactId>
+                            <version>${autovalue.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>${dagger.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
@@ -169,7 +182,7 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>com.google.gwt</groupId>
+                    <groupId>org.gwtproject</groupId>
                     <artifactId>gwt-user</artifactId>
                 </dependency>
             </dependencies>

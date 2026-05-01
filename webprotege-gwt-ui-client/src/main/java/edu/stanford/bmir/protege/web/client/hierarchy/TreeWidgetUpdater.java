@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -35,8 +33,7 @@ public class TreeWidgetUpdater {
     @Nonnull
     private final EntityHierarchyModel hierarchyModel;
 
-    @AutoFactory
-    public TreeWidgetUpdater(@Provided @Nonnull ProjectId projectId,
+    public TreeWidgetUpdater(@Nonnull ProjectId projectId,
                              @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                              @Nonnull EntityHierarchyModel hierarchyModel) {
         this.projectId = projectId;

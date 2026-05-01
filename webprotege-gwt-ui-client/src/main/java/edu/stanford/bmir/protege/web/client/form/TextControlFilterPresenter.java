@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.LiteralCriteriaListPresenter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -32,10 +30,9 @@ public class TextControlFilterPresenter implements FormControlFilterPresenter {
     private final LiteralCriteriaListPresenter criteriaPresenter;
 
 
-    @AutoFactory
-    public TextControlFilterPresenter(@Provided @Nonnull TextControlFilterView view,
+    public TextControlFilterPresenter(@Nonnull TextControlFilterView view,
                                       @Nonnull TextControlDescriptorDto descriptor,
-                                      @Provided @Nonnull LiteralCriteriaListPresenter criteriaPresenter) {
+                                      @Nonnull LiteralCriteriaListPresenter criteriaPresenter) {
         this.view = checkNotNull(view);
         this.descriptor = descriptor;
         this.criteriaPresenter = criteriaPresenter;

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.card;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -54,13 +52,12 @@ public class FormContentEntityCardPresenter implements EntityCardEditorPresenter
 
     private HandlerManager handlerManager = new HandlerManager(this);
 
-    @AutoFactory
     @Inject
     public FormContentEntityCardPresenter(FormId formId,
-                                          @Provided DispatchServiceManager dispatch,
-                                          @Provided ProjectId projectId,
-                                          @Provided FormPresenter formPresenter,
-                                          @Provided SelectionModel selectionModel) {
+                                          DispatchServiceManager dispatch,
+                                          ProjectId projectId,
+                                          FormPresenter formPresenter,
+                                          SelectionModel selectionModel) {
         this.dispatch = dispatch;
         this.projectId = projectId;
         this.formId = formId;

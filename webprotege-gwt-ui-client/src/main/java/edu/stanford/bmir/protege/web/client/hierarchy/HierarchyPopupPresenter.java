@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -36,10 +34,9 @@ public class HierarchyPopupPresenter {
 
     private Optional<OWLEntity> selectedEntity = Optional.empty();
 
-    @AutoFactory
     public HierarchyPopupPresenter(@Nonnull HierarchyDescriptor hierarchyDescriptor,
-                                   @Provided @Nonnull HierarchyPopupView view,
-                                   @Provided @Nonnull EntityHierarchyModel model) {
+                                   @Nonnull HierarchyPopupView view,
+                                   @Nonnull EntityHierarchyModel model) {
         this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         this.view = view;
         this.model = checkNotNull(model);

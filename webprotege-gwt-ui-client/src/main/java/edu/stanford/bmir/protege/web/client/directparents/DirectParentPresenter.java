@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.directparents;
 
-import com.google.auto.factory.*;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -24,12 +23,11 @@ public class DirectParentPresenter implements HasDispose {
 
     private final ParentSelectionHandler selectionHandler;
 
-    @AutoFactory
     @Inject
     public DirectParentPresenter(@Nonnull EntityNode entityNode,
                                  @Nonnull ParentSelectionHandler selectionHandler,
-                                 @Provided @Nonnull DirectParentView view,
-                                 @Provided @Nonnull EntityNodeHtmlRenderer nodeRenderer) {
+                                 @Nonnull DirectParentView view,
+                                 @Nonnull EntityNodeHtmlRenderer nodeRenderer) {
         this.entityNode = checkNotNull(entityNode);
         this.view = checkNotNull(view);
         this.nodeRenderer = nodeRenderer;
