@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.events;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -10,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.HasChangeRequestId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,6 +50,18 @@ public class ChangeRequestEventAwaiter {
     private static final Logger logger = Logger.getLogger(ChangeRequestEventAwaiter.class.getName());
 
     /**
+     * How long to wait for matching events before delivering an empty event
+     * list to a registered handler. Some change requests do not produce any
+     * events that implement {@link HasChangeRequestId} (e.g. individual
+     * creation fires only {@code BrowserTextChangedEvent} /
+     * {@code NamedIndividualFrameChangedEvent}, which do not carry a
+     * {@link ChangeRequestId}). Without this fallback the handler would
+     * never fire and downstream callers (e.g. the create-entity flow) would
+     * never see their result.
+     */
+    static final int FALLBACK_TIMEOUT_MS = 1500;
+
+    /**
      * Handlers waiting for events keyed by {@link ChangeRequestId}.
      */
     private final Multimap<ChangeRequestId, ChangeRequestEventsHandler> handlers = HashMultimap.create();
@@ -77,12 +91,35 @@ public class ChangeRequestEventAwaiter {
         // Retrieve and remove any buffered events for this ID
         Collection<WebProtegeEvent<?>> alreadyArrivedEvents = bufferedEvents.removeAll(changeRequestId);
         if (alreadyArrivedEvents.isEmpty()) {
-            // No buffered events: store the handler for later delivery
+            // No buffered events: store the handler for later delivery and
+            // arm a fallback timer so the handler still fires if the change
+            // request produces no HasChangeRequestId events.
             handlers.put(changeRequestId, handler);
+            scheduleFallback(() -> {
+                if (handlers.remove(changeRequestId, handler)) {
+                    handler.handle(Collections.emptyList());
+                }
+            });
         } else {
             // Deliver buffered events immediately
             handler.handle(alreadyArrivedEvents);
         }
+    }
+
+    /**
+     * Schedules {@code callback} to run after {@link #FALLBACK_TIMEOUT_MS}
+     * milliseconds. Visible for testing — JVM unit tests may override this
+     * to run synchronously or skip the schedule entirely (the production
+     * implementation uses {@link Timer} which is GWT-only).
+     */
+    protected void scheduleFallback(@Nonnull Runnable callback) {
+        Timer timer = new Timer() {
+            @Override
+            public void run() {
+                callback.run();
+            }
+        };
+        timer.schedule(FALLBACK_TIMEOUT_MS);
     }
 
     /**

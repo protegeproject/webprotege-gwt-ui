@@ -16,9 +16,21 @@ public class ChangeRequestEventAwaiterTest {
 
     private ChangeRequestEventAwaiter awaiter;
 
+    /** Captures the runnable handed to scheduleFallback so tests can fire
+     * the fallback synchronously. */
+    private Runnable pendingFallback;
+
     @Before
     public void setUp() {
-        awaiter = new ChangeRequestEventAwaiter();
+        // Override scheduleFallback so the GWT Timer (JS-only) is never
+        // invoked from the JVM, and so the fallback path can be exercised
+        // deterministically.
+        awaiter = new ChangeRequestEventAwaiter() {
+            @Override
+            protected void scheduleFallback(Runnable callback) {
+                pendingFallback = callback;
+            }
+        };
     }
 
     @Test
@@ -118,6 +130,42 @@ public class ChangeRequestEventAwaiterTest {
         assertTrue(captor1.getValue().containsAll(Arrays.asList(e1, e2)));
         assertEquals(2, captor2.getValue().size());
         assertTrue(captor2.getValue().containsAll(Arrays.asList(e1, e2)));
+    }
+
+    @Test
+    public void shouldDeliverEmptyEventListWhenFallbackFiresBeforeAnyEventArrives() {
+        ChangeRequestId id = ChangeRequestId.valueOf(UUID.randomUUID().toString());
+        ChangeRequestEventsHandler handler = mock(ChangeRequestEventsHandler.class);
+
+        awaiter.waitForEvents(id, handler);
+        assertNotNull("scheduleFallback should have been invoked", pendingFallback);
+
+        // No events arrive — fallback fires.
+        pendingFallback.run();
+
+        ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
+        verify(handler, times(1)).handle(captor.capture());
+        assertTrue("fallback should deliver an empty event collection",
+                   captor.getValue().isEmpty());
+    }
+
+    @Test
+    public void shouldNotDoubleDeliverWhenFallbackFiresAfterEventsArrived() {
+        ChangeRequestId id = ChangeRequestId.valueOf(UUID.randomUUID().toString());
+        ChangeRequestEventsHandler handler = mock(ChangeRequestEventsHandler.class);
+
+        awaiter.waitForEvents(id, handler);
+        assertNotNull(pendingFallback);
+
+        // Events arrive first → handler is fired and removed.
+        WebProtegeEvent<?> event = eventWithId(id);
+        awaiter.handleEvents(Collections.singletonList(event));
+        verify(handler, times(1)).handle(anyCollection());
+
+        // Fallback fires later — must be a no-op (handler already removed).
+        pendingFallback.run();
+
+        verifyNoMoreInteractions(handler);
     }
 
     @Test
