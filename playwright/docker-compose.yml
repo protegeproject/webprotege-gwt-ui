@@ -7,7 +7,7 @@
 #
 # Bring it up with:
 #
-#   npm run stack:up        (== docker compose -f docker-compose.test.yml up -d --wait)
+#   npm run stack:up        (== docker compose up -d --wait)
 #
 # After the stack is healthy, NGINX serves the UI at http://localhost/ and
 # Keycloak at http://localhost/keycloak/. The Playwright base URL defaults
@@ -44,7 +44,7 @@ services:
     networks: [wp]
 
   webprotege-keycloak:
-    image: protegeproject/webprotege-keycloak:local
+    image: protegeproject/webprotege-keycloak:2.0.1
     pull_policy: never
     depends_on:
       rabbitmq:

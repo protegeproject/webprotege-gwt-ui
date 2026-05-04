@@ -51,7 +51,7 @@ jobs:
         working-directory: playwright
         env:
           SERVER_HOST: localhost
-        run: docker compose -f docker-compose.test.yml up -d --wait
+        run: docker compose up -d --wait
 
       - name: Run Playwright suite
         working-directory: playwright
@@ -63,7 +63,7 @@ jobs:
       - name: Tear down stack
         if: always()
         working-directory: playwright
-        run: docker compose -f docker-compose.test.yml down -v
+        run: docker compose down -v
 
       - name: Upload Playwright report
         if: failure()

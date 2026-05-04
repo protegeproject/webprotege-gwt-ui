@@ -53,7 +53,7 @@ specs.
 
 ```
 playwright/
-├── docker-compose.test.yml   # full test stack (mirrors webprotege-deploy minus ELK)
+├── docker-compose.yml        # full test stack (mirrors webprotege-deploy minus ELK)
 ├── .env.example              # SERVER_HOST, WEBPROTEGE_HOST_PORT, ADMIN_CLI_SECRET
 ├── fixtures/                 # sample .owl files for upload tests
 ├── support/                  # selectors, api helpers, per-test fixtures
