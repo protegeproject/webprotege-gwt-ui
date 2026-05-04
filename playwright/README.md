@@ -11,19 +11,29 @@ cd playwright
 npm install
 npx playwright install --with-deps chromium
 
-# 2. Bring up the full webprotege stack
+# 2. Configure the stack hostname (one-time)
+#    cp .env.example .env
+#    The realm import only registers `http://webprotege-local.edu/*` as a
+#    valid redirect URI for the `webprotege` Keycloak client, so the stack
+#    must be addressable under that host. Add a matching /etc/hosts entry:
+#       127.0.0.1   webprotege-local.edu
+#    Without this, Keycloak rejects the OAuth redirect with
+#    "Invalid parameter: redirect_uri" and the login page never renders.
+
+# 3. Bring up the full webprotege stack
 #    (Keycloak + MongoDB + RabbitMQ + MinIO + backend services + NGINX)
-#    Default exposes the UI at http://localhost/ (NGINX on port 80).
-#    On macOS port 80 needs sudo; copy .env.example to .env and set
-#    WEBPROTEGE_HOST_PORT=8080 to use a non-privileged port instead.
+#    Exposes the UI at http://webprotege-local.edu/ (NGINX on port 80).
+#    On macOS port 80 needs sudo; set WEBPROTEGE_HOST_PORT=8080 in .env to
+#    use a non-privileged port instead, and adjust WEBPROTEGE_BASE_URL
+#    accordingly when invoking Playwright.
 npm run stack:up
 
-# 3. Run the suite
-npm test                  # headless
-npm run test:headed       # watch it click
-npm run test:smoke        # ~30s sanity scenario
+# 4. Run the suite (point Playwright at the same host as the stack)
+WEBPROTEGE_BASE_URL=http://webprotege-local.edu npm test            # headless
+WEBPROTEGE_BASE_URL=http://webprotege-local.edu npm run test:headed # watch it click
+WEBPROTEGE_BASE_URL=http://webprotege-local.edu npm run test:smoke  # ~30s sanity scenario
 
-# 4. Tear down when done
+# 5. Tear down when done
 npm run stack:down
 ```
 
@@ -55,9 +65,9 @@ playwright/
 
 | Env var | Default | What it does |
 |---|---|---|
-| `WEBPROTEGE_BASE_URL` | `http://localhost` | URL Playwright drives the browser at |
+| `WEBPROTEGE_BASE_URL` | `http://localhost` | URL Playwright drives the browser at — set to `http://webprotege-local.edu` so it matches `SERVER_HOST` |
 | `WEBPROTEGE_HOST_PORT` | `80` | Host port the NGINX edge container exposes |
-| `SERVER_HOST` | `localhost` | Hostname Keycloak/services use for redirects |
+| `SERVER_HOST` | `localhost` | Hostname Keycloak/services use for redirects — must be `webprotege-local.edu` to match the realm's registered redirect URIs |
 
 ## CI
 

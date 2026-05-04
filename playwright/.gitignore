@@ -1,5 +1,6 @@
 node_modules/
 .auth/
+.env
 playwright-report/
 test-results/
 blob-report/
