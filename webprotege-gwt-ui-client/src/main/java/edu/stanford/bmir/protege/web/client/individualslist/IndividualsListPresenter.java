@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.Timer;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapab
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -27,6 +29,7 @@ import edu.stanford.bmir.protege.web.shared.individuals.GetIndividualsPageContai
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -37,13 +40,13 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.DELETE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
-import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
@@ -92,6 +95,9 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private MessageBox messageBox;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
                                     @Nonnull ProjectId projectId,
@@ -100,7 +106,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     LoggedInUserProjectCapabilityChecker capabilityChecker,
                                     HierarchyFieldPresenter hierarchyFieldPresenter,
                                     Messages messages,
-                                    @Nonnull CreateEntityPresenter createEntityPresenter, EntityNodeUpdater entityNodeUpdater, MessageBox messageBox) {
+                                    @Nonnull CreateEntityPresenter createEntityPresenter,
+                                    EntityNodeUpdater entityNodeUpdater,
+                                    MessageBox messageBox,
+                                    @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = projectId;
         this.selectionModel = selectionModel;
         this.capabilityChecker = capabilityChecker;
@@ -111,6 +120,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         this.createEntityPresenter = createEntityPresenter;
         this.entityNodeUpdater = entityNodeUpdater;
         this.messageBox = messageBox;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
         this.view.addSelectionHandler(this::handleSelectionChangedInView);
         this.view.setSearchStringChangedHandler(this::handleSearchStringChangedInView);
         this.view.setPageNumberChangedHandler(pageNumber -> updateList());
@@ -286,12 +296,14 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void deleteSelectedIndividuals() {
         Collection<EntityNode> selection = view.getSelectedIndividuals();
-        Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
+        ImmutableSet<OWLEntity> entities = view.getSelectedIndividuals().stream()
                 .map(EntityNode::getEntity)
-                .collect(toSet());
-        dsm.execute(new DeleteEntitiesAction(projectId, entities),
+                .collect(toImmutableSet());
+        dsm.execute(new DeleteEntitiesAction(ChangeRequestId.get(uuidV4Provider.get()),
+                                             projectId,
+                                             entities),
                     view,
-                                       result -> updateList());
+                    result -> updateList());
     }
 
     private void updateButtonStates() {
