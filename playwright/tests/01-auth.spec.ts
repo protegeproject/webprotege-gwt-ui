@@ -71,7 +71,16 @@ test.describe('authentication', () => {
     await page.locator(TopBar.userMenu).click();
     await page.locator(TopBar.signOut).click();
 
-    // Clear nothing manually — just navigate again. Should redirect to login.
+    // Wait for the sign-out redirect chain (/logout → Keycloak logout →
+    // login) to fully complete. Skipping this races the in-flight
+    // navigation: a fresh page.goto('/') cancels /logout before the SSO
+    // cookie is cleared, and the next request silently re-authenticates.
+    await expect(page).toHaveURL(
+      /\/keycloak\/realms\/webprotege\/protocol\/openid-connect\/auth|\/$/,
+      { timeout: 30_000 },
+    );
+
+    // Now navigate again — should redirect to login.
     await page.goto('/');
     await expect(page).toHaveURL(/\/keycloak\/realms\/webprotege\//);
     await expect(page.locator(Login.submit)).toBeVisible();
