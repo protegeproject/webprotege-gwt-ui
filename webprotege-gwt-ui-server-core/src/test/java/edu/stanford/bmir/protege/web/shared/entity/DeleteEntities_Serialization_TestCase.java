@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
@@ -20,7 +21,8 @@ public class DeleteEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = new DeleteEntitiesAction(ProjectId.getNil(),
+        var action = new DeleteEntitiesAction(ChangeRequestId.getNil(),
+                                              ProjectId.getNil(),
                                               ImmutableSet.of());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
