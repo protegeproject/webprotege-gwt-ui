@@ -33,12 +33,24 @@ test.describe('individuals', () => {
     await page.locator('button.wp-btn-g--create-individual').first().click();
     await page.locator(CreateEntityDialog.name).fill('TempIndividual');
     await page.locator(CreateEntityDialog.submit).click();
-    await expect(page.locator('text=TempIndividual').first()).toBeVisible();
 
-    await page.locator('text=TempIndividual').first().click();
+    // Scope the row selector to the list cell — `text=TempIndividual` would
+    // also match the project feed link and the frame editor, masking
+    // whether the row was actually added/removed.
+    const listRow = page
+      .locator('.wp-entity-node__display-name')
+      .filter({ hasText: 'TempIndividual' });
+    await expect(listRow).toBeVisible();
+
+    await listRow.click();
     await page.locator('button.wp-btn-g--delete-individual').first().click();
-    const confirm = page.locator('role=button >> text=/OK|Delete|Yes/').first();
-    if (await confirm.isVisible().catch(() => false)) await confirm.click();
-    await expect(page.locator('text=TempIndividual')).toHaveCount(0);
+
+    // Auto-waiting click on the modal-scoped Delete — `isVisible()` does
+    // not auto-wait and was firing before the confirm modal had rendered.
+    await page
+      .locator('.wp-modal button.wp-btn--dialog:has-text("Delete")')
+      .click();
+
+    await expect(listRow).toHaveCount(0);
   });
 });
