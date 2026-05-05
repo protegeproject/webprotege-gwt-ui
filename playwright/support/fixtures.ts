@@ -63,13 +63,11 @@ async function trashProjectViaUi(page: Page, project: TestProject): Promise<void
   const trashItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Move to trash/i });
   await trashItem.hover();
   await trashItem.click();
-  // The trash dispatch fires, but ProjectMovedToTrashEvent does not reach
-  // the client to refresh AvailableProjectsCache (see commit 47772a6a3).
-  // Reload to force a fresh GetAvailableProjectsAction and assert the row
-  // really is gone from the default filters — otherwise cleanup silently
-  // leaks zombie projects every run, polluting the list and making later
-  // creates flaky.
-  await page.reload();
+  // TrashManagerRequestHandlerImpl now fires ProjectMovedToTrashEvent on
+  // dispatch success, so ProjectManagerPresenter updates the cache and
+  // the row drops out of the default view. Assert it without a reload —
+  // otherwise we'd be hiding any future regression of that local
+  // event-fire path behind a workaround.
   await expect(row).toHaveCount(0, { timeout: 15_000 });
 }
 

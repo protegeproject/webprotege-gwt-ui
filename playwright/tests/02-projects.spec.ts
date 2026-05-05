@@ -92,19 +92,18 @@ test.describe('projects', () => {
 
     // Trash. The popup menu (AvailableProjectPresenter#addTrashAction)
     // tracks selection via mousemove and executes on mouseup, so hover the
-    // item before clicking to set selectedIndex. The trash dispatch fires,
-    // but ProjectMovedToTrashEvent does not reach the client to refresh the
-    // local cache — and the OWNED_BY_ME / SHARED_WITH_ME / TRASH filters
-    // are OR'd, so we can't verify trash worked just by toggling a filter
-    // (the row would still appear under Owned by Me from the stale cache).
-    // Reload the page to force a fresh GetAvailableProjectsAction.
+    // item before clicking to set selectedIndex.
+    // TrashManagerRequestHandlerImpl now fires ProjectMovedToTrashEvent
+    // on dispatch success (matching how CreateNewProjectPresenter fires
+    // ProjectCreatedEvent), so ProjectManagerPresenter updates the cache
+    // and the row drops out of the default view without a reload — same
+    // as a real user would see.
     await row.locator(ProjectList.menuButton).click();
     const trashItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Move to trash/i });
     await trashItem.hover();
     await trashItem.click();
-    await page.reload();
     // Default filters are OWNED_BY_ME + SHARED_WITH_ME (no Trash); a trashed
-    // project must NOT appear there.
+    // project must NOT appear there once the cache has been updated.
     await expect(row).toHaveCount(0);
     await page.locator(ProjectList.filters.trash).check();
     await expect(row).toHaveCount(1);
@@ -116,9 +115,13 @@ test.describe('projects', () => {
     await expect(restoreItem).toBeVisible();
     await restoreItem.hover();
     await restoreItem.click();
-    await page.reload();
-    // Default filters again — the restored project should reappear without
-    // needing the Trash filter.
+    // ProjectMovedFromTrashEvent fires on dispatch success → the cache
+    // entry flips back to inTrash=false. With OWNED_BY_ME + SHARED_WITH_ME
+    // + TRASH all checked the row stays visible (now matching
+    // OWNED_BY_ME instead of TRASH — filters are OR'd), so to prove the
+    // restore actually took effect, drop the Trash filter and confirm the
+    // row is still listed under the defaults.
+    await page.locator(ProjectList.filters.trash).uncheck();
     await expect(row).toHaveCount(1);
   });
 
