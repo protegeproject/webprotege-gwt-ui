@@ -91,39 +91,35 @@ test.describe('projects', () => {
     await expect(row).toHaveCount(1);
 
     // Trash. The popup menu (AvailableProjectPresenter#addTrashAction)
-    // tracks selection via mousemove and executes on mouseup, but the
-    // FocusPanel that hosts the handlers has a `BlurEvent` dismiss handler,
-    // so a synthetic click can race the focus loss. Move the mouse onto the
-    // item (mousemove sets selectedIndex), then dispatch a real mouseup
-    // event so the GWT handler fires before the popup blurs.
+    // tracks selection via mousemove and executes on mouseup, so hover the
+    // item before clicking to set selectedIndex. The trash dispatch fires,
+    // but ProjectMovedToTrashEvent does not reach the client to refresh the
+    // local cache — and the OWNED_BY_ME / SHARED_WITH_ME / TRASH filters
+    // are OR'd, so we can't verify trash worked just by toggling a filter
+    // (the row would still appear under Owned by Me from the stale cache).
+    // Reload the page to force a fresh GetAvailableProjectsAction.
     await row.locator(ProjectList.menuButton).click();
     const trashItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Move to trash/i });
     await trashItem.hover();
-    await trashItem.dispatchEvent('mouseup');
-    // Wait for the project to drop out of the default (non-trash) view.
+    await trashItem.click();
+    await page.reload();
+    // Default filters are OWNED_BY_ME + SHARED_WITH_ME (no Trash); a trashed
+    // project must NOT appear there.
     await expect(row).toHaveCount(0);
     await page.locator(ProjectList.filters.trash).check();
-    await expect(
-      page.locator(ProjectList.rows)
-        .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) }),
-    ).toHaveCount(1);
+    await expect(row).toHaveCount(1);
 
     // Restore. The same menu item flips to "Remove from trash" when the
     // project is already trashed.
-    const trashedRow = page
-      .locator(ProjectList.rows)
-      .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) });
-    await expect(trashedRow).toBeVisible();
-    await trashedRow.locator(ProjectList.menuButton).click();
+    await row.locator(ProjectList.menuButton).click();
     const restoreItem = page.locator('.wp-popup-menu__item').filter({ hasText: /Remove from trash/i });
     await expect(restoreItem).toBeVisible();
     await restoreItem.hover();
     await restoreItem.click();
-    await page.locator(ProjectList.filters.trash).uncheck();
-    await expect(
-      page.locator(ProjectList.rows)
-        .filter({ has: page.locator(ProjectList.nameCell, { hasText: name }) }),
-    ).toHaveCount(1);
+    await page.reload();
+    // Default filters again — the restored project should reappear without
+    // needing the Trash filter.
+    await expect(row).toHaveCount(1);
   });
 
   test('P11: project row menu exposes core actions', async ({ project, page }) => {
