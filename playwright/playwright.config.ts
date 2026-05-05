@@ -14,6 +14,7 @@ export default defineConfig({
     ? [['github'], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],
   globalSetup: require.resolve('./globalSetup'),
+  globalTeardown: require.resolve('./globalTeardown'),
   timeout: 60_000,
   expect: { timeout: 10_000 },
   use: {
