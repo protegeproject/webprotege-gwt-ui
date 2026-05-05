@@ -92,17 +92,32 @@ test('builds the Airplane ontology end-to-end', async ({ page, project }) => {
   await createIndividual(page, 'F16');
   await createIndividual(page, 'ApacheHelicopter');
 
-  // Sanity: switch to History and verify several revisions exist.
+  // Sanity: switch to History and verify several revisions exist. The
+  // change list groups all entries from the same day under one date
+  // heading ("... 2026"), so the year only appears once. Count the
+  // per-revision badges instead — ChangeDetailsViewImpl renders each as
+  // an InlineLabel with text "R <n>" (optionally followed by a dropdown
+  // arrow).
   await page.locator(ProjectView.tab('History')).click();
-  const yearStamps = page.locator(`text=/${new Date().getFullYear()}/`);
-  await expect.poll(async () => yearStamps.count(), {
+  const revisionBadges = page.getByText(/^R \d+/);
+  await expect.poll(async () => revisionBadges.count(), {
     timeout: 30_000,
   }).toBeGreaterThan(10);
 
-  // Reload and confirm the hierarchy survives.
+  // Reload and confirm the hierarchy survives. After a fresh load the
+  // class tree is collapsed below owl:Thing, so expand each parent on the
+  // path down to the deepest sub-class via its `.gt-tree__handle` chevron
+  // before asserting visibility.
   await page.reload();
   await page.locator(ProjectView.tab('Classes')).click();
-  for (const label of ['Vehicle', 'Aircraft', 'FixedWingAircraft', 'Helicopter']) {
+  await expect(page.locator(Hierarchy.treeNode('Vehicle'))).toBeVisible();
+  for (const parent of ['Vehicle', 'Aircraft']) {
+    await page
+      .locator(Hierarchy.treeNode(parent))
+      .locator('.gt-tree__handle')
+      .click();
+  }
+  for (const label of ['Aircraft', 'FixedWingAircraft', 'Helicopter']) {
     await expect(page.locator(Hierarchy.treeNode(label))).toBeVisible();
   }
 });
