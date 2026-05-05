@@ -45,7 +45,6 @@ services:
 
   webprotege-keycloak:
     image: protegeproject/webprotege-keycloak:2.0.1
-    pull_policy: never
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -103,8 +102,9 @@ services:
       - "${SERVER_HOST:-localhost}:host-gateway"
 
   webprotege-gwt-ui-server:
+    build:
+      context: ../webprotege-gwt-ui-server
     image: protegeproject/webprotege-gwt-ui-server:local
-    pull_policy: never
     depends_on:
       webprotege-gwt-api-gateway:
         condition: service_started
