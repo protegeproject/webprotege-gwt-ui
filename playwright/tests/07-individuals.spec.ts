@@ -29,6 +29,22 @@ test.describe('individuals', () => {
     });
   });
 
+  test('I3: bulk-create multiple individuals from one dialog', async ({ page }) => {
+    const names = ['Boeing747', 'AirbusA320', 'F16', 'ApacheHelicopter'];
+    await page.locator('button.wp-btn-g--create-individual').first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(
+        page
+          .locator('.wp-entity-node__display-name')
+          .filter({ hasText: name })
+          .first(),
+      ).toBeVisible({ timeout: 15_000 });
+    }
+  });
+
   test('I8: delete an individual', async ({ page }) => {
     await page.locator('button.wp-btn-g--create-individual').first().click();
     await page.locator(CreateEntityDialog.name).fill('TempIndividual');

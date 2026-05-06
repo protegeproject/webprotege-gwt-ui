@@ -30,6 +30,22 @@ test.describe('data properties', () => {
     });
   });
 
+  test('DP4: bulk-create multiple data properties from one dialog', async ({
+    page,
+  }) => {
+    const names = ['hasWeight', 'hasMaxAltitude', 'hasYearBuilt', 'hasName'];
+    await page.locator(Hierarchy.treeNode('owl:topDataProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(page.locator(Hierarchy.treeNode(name))).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
   test('DP3: set Domain and Range on a property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('owl:topDataProperty')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();

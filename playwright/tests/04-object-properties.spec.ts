@@ -47,6 +47,22 @@ test.describe('object properties', () => {
     });
   });
 
+  test('OP5: bulk-create multiple object properties from one dialog', async ({
+    page,
+  }) => {
+    const names = ['hasPart', 'hasEngine', 'hasWing', 'hasFuselage'];
+    await page.locator(Hierarchy.treeNode('owl:topObjectProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(page.locator(Hierarchy.treeNode(name))).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
   test('OP4: set Domain and Range on a property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('owl:topObjectProperty')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();
