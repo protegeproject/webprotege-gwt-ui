@@ -120,6 +120,16 @@ export const FrameEditor = {
   annotationsSection: 'text=Annotations',
   classesSection: 'text=Classes',
   relationshipsSection: 'text=Relationships',
+  /** A labelled section inside a frame editor — `.wp-form-group` wraps each
+   * row, with a `.wp-form-label` heading set from `Messages.java` (e.g.
+   * "Annotations", "Domain", "Range", "Relationships", "Types", "Parents").
+   * Match exact text so "Annotations" doesn't also catch "Annotation
+   * Properties". */
+  section: (label: string) =>
+    `.wp-form-group:has(.wp-form-label:text-is("${label}"))`,
+  /** A row inside a `ValueListFlexEditorImpl`-backed list editor
+   * (PrimitiveDataListEditor or PropertyValueListEditor). */
+  row: '.wp-value-list__row',
 } as const;
 
 export const CreateEntityDialog = {
