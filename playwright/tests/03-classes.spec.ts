@@ -1,4 +1,5 @@
 import { test, expect } from '../support/fixtures';
+import { addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
   FrameEditor,
@@ -112,6 +113,28 @@ test.describe('class hierarchy', () => {
       .locator('.gt-tree__handle')
       .click();
     await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible();
+  });
+
+  test('C10: add multiple annotations with language tags to a class', async ({
+    page,
+    project,
+  }) => {
+    await createClassUnder(page, 'owl:Thing', 'Person');
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Human', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Mensch', 'de');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'An example comment');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    // Values are distinct strings so substring matching is unambiguous.
+    await expect(annotations.filter({ hasText: 'Human' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Mensch' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'An example comment' })).toHaveCount(1);
+    // Spot-check that the language tag survived alongside its literal.
+    await expect(annotations.filter({ hasText: 'Human' })).toContainText('en');
+    await expect(annotations.filter({ hasText: 'Mensch' })).toContainText('de');
   });
 
   test('C8: delete a leaf class', async ({ page, project }) => {

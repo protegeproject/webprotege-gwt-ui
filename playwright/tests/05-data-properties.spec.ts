@@ -1,5 +1,5 @@
 import { test, expect, goToPerspective } from '../support/fixtures';
-import { addPrimitiveValue } from '../support/frameEditor';
+import { addPrimitiveValue, addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
   FrameEditor,
@@ -96,6 +96,31 @@ test.describe('data properties', () => {
     await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test('DP7: add multiple annotations with language tags to a property', async ({
+    page,
+  }) => {
+    await page.locator(Hierarchy.treeNode('owl:topDataProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('hasWeight');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('hasWeight'))).toBeVisible({
+      timeout: 15_000,
+    });
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'weight', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Gewicht', 'de');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'Mass attribute');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    await expect(annotations.filter({ hasText: 'weight' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Gewicht' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Mass attribute' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'weight' })).toContainText('en');
+    await expect(annotations.filter({ hasText: 'Gewicht' })).toContainText('de');
   });
 
   test('DP6: delete a data property', async ({ page }) => {
