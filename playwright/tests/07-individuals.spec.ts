@@ -70,8 +70,15 @@ test.describe('individuals', () => {
     await expect(annotations.filter({ hasText: 'Boeing 747' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Jumbo-Jet' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Wide-body airliner' })).toHaveCount(1);
-    await expect(annotations.filter({ hasText: 'Boeing 747' })).toContainText('en');
-    await expect(annotations.filter({ hasText: 'Jumbo-Jet' })).toContainText('de');
+    // Language tag lives in an `<input class="gwt-SuggestBox">` — its
+    // value is not part of the row's textContent, so `toHaveValue` is
+    // the correct assertion (`toContainText` would never match).
+    await expect(
+      annotations.filter({ hasText: 'Boeing 747' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'Jumbo-Jet' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('de');
   });
 
   test('I8: delete an individual', async ({ page }) => {

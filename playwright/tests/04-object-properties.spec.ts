@@ -106,13 +106,18 @@ test.describe('object properties', () => {
 
     await page.reload();
     await goToPerspective(page, 'Object Properties');
-    await page
-      .locator(Hierarchy.treeNode('opAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
-    await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
-      timeout: 15_000,
-    });
+    // Expansion fires on `mouseup` over the handle; an immediate click
+    // post-reload can land before MouseEventMapper is wired up. Retry
+    // the click until opBeta surfaces.
+    await expect(async () => {
+      await page
+        .locator(Hierarchy.treeNode('opAlpha'))
+        .locator('.gt-tree__handle')
+        .click();
+      await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
+        timeout: 1_500,
+      });
+    }).toPass({ timeout: 15_000 });
   });
 
   test('OP7: add multiple annotations with language tags to a property', async ({
@@ -136,8 +141,13 @@ test.describe('object properties', () => {
     await expect(annotations.filter({ hasText: 'has part' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'hat Teil' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Mereological link' })).toHaveCount(1);
-    await expect(annotations.filter({ hasText: 'has part' })).toContainText('en');
-    await expect(annotations.filter({ hasText: 'hat Teil' })).toContainText('de');
+    // Language tag is stored in the row's `<input>`, outside textContent.
+    await expect(
+      annotations.filter({ hasText: 'has part' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'hat Teil' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('de');
   });
 
   test('OP8: delete a property', async ({ page }) => {
