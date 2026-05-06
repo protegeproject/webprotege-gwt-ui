@@ -101,6 +101,13 @@ test.describe('class hierarchy', () => {
       .locator(Hierarchy.treeNode('DragBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('DragAlpha')).first());
+    // Let the MoveHierarchyNode RPC return before the reload. The
+    // dispatch service answers HTTP 200 with a `//EX[...]` body on a
+    // backend exception, and the per-test fixture watches for those —
+    // but a `page.reload()` while the RPC is still in flight cancels
+    // it client-side, so the //EX body never reaches the listener and
+    // a real backend regression slips through unnoticed.
+    await page.waitForLoadState('networkidle');
 
     // Reload to verify the move was committed server-side, not just a
     // local DOM tweak. The Classes perspective is the project default.

@@ -86,6 +86,9 @@ test.describe('data properties', () => {
       .locator(Hierarchy.treeNode('dpBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('dpAlpha')).first());
+    // Drain the in-flight MoveHierarchyNode RPC before navigating
+    // away — see C9 in 03-classes.spec.ts for why.
+    await page.waitForLoadState('networkidle');
 
     await page.reload();
     await goToPerspective(page, 'Data Properties');
