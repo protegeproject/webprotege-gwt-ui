@@ -89,13 +89,18 @@ test.describe('data properties', () => {
 
     await page.reload();
     await goToPerspective(page, 'Data Properties');
-    await page
-      .locator(Hierarchy.treeNode('dpAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
-    await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
-      timeout: 15_000,
-    });
+    // Expansion fires on `mouseup` over the handle; an immediate click
+    // post-reload can land before MouseEventMapper is wired up. Retry
+    // the click until dpBeta surfaces.
+    await expect(async () => {
+      await page
+        .locator(Hierarchy.treeNode('dpAlpha'))
+        .locator('.gt-tree__handle')
+        .click();
+      await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
+        timeout: 1_500,
+      });
+    }).toPass({ timeout: 15_000 });
   });
 
   test('DP7: add multiple annotations with language tags to a property', async ({
@@ -116,11 +121,19 @@ test.describe('data properties', () => {
     const annotations = page
       .locator(FrameEditor.section('Annotations'))
       .locator(FrameEditor.row);
-    await expect(annotations.filter({ hasText: 'weight' })).toHaveCount(1);
+    // `hasText: 'weight'` would also match the auto-generated
+    // `rdfs:label = hasWeight` row, so use a word-boundary regex to
+    // pin to the exact literal.
+    await expect(annotations.filter({ hasText: /\bweight\b/ })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Gewicht' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Mass attribute' })).toHaveCount(1);
-    await expect(annotations.filter({ hasText: 'weight' })).toContainText('en');
-    await expect(annotations.filter({ hasText: 'Gewicht' })).toContainText('de');
+    // Language tag is stored in the row's `<input>`, outside textContent.
+    await expect(
+      annotations.filter({ hasText: /\bweight\b/ }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'Gewicht' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('de');
   });
 
   test('DP6: delete a data property', async ({ page }) => {

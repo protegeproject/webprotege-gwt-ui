@@ -108,11 +108,20 @@ test.describe('class hierarchy', () => {
     await expect(page.locator(Hierarchy.treeNode('DragAlpha'))).toBeVisible({
       timeout: 15_000,
     });
-    await page
-      .locator(Hierarchy.treeNode('DragAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
-    await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible();
+    // graphtree's expansion fires on `mouseup` over the `.gt-tree__handle`,
+    // but a click immediately after reload sometimes lands before the
+    // handle's MouseEventMapper is wired up — the icon is rendered
+    // optimistically, so the no-op click leaves the row collapsed.
+    // Retry until DragBeta surfaces.
+    await expect(async () => {
+      await page
+        .locator(Hierarchy.treeNode('DragAlpha'))
+        .locator('.gt-tree__handle')
+        .click();
+      await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible({
+        timeout: 1_500,
+      });
+    }).toPass({ timeout: 15_000 });
   });
 
   test('C10: add multiple annotations with language tags to a class', async ({
@@ -132,9 +141,14 @@ test.describe('class hierarchy', () => {
     await expect(annotations.filter({ hasText: 'Human' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Mensch' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'An example comment' })).toHaveCount(1);
-    // Spot-check that the language tag survived alongside its literal.
-    await expect(annotations.filter({ hasText: 'Human' })).toContainText('en');
-    await expect(annotations.filter({ hasText: 'Mensch' })).toContainText('de');
+    // Language tag lives in an `<input>` — its value is not part of the
+    // row's textContent, so check it via `toHaveValue`.
+    await expect(
+      annotations.filter({ hasText: 'Human' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'Mensch' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('de');
   });
 
   test('C8: delete a leaf class', async ({ page, project }) => {

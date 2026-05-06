@@ -63,13 +63,18 @@ test.describe('annotation properties', () => {
 
     await page.reload();
     await goToPerspective(page, 'Annotation Properties');
-    await page
-      .locator(Hierarchy.treeNode('apAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
-    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
-      timeout: 15_000,
-    });
+    // Expansion fires on `mouseup` over the handle; an immediate click
+    // post-reload can land before MouseEventMapper is wired up. Retry
+    // the click until apBeta surfaces.
+    await expect(async () => {
+      await page
+        .locator(Hierarchy.treeNode('apAlpha'))
+        .locator('.gt-tree__handle')
+        .click();
+      await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
+        timeout: 1_500,
+      });
+    }).toPass({ timeout: 15_000 });
   });
 
   test('AP6: add multiple annotations with language tags to a property', async ({
@@ -93,8 +98,13 @@ test.describe('annotation properties', () => {
     await expect(annotations.filter({ hasText: 'ICAO code' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Code OACI' })).toHaveCount(1);
     await expect(annotations.filter({ hasText: 'Four-letter airport identifier' })).toHaveCount(1);
-    await expect(annotations.filter({ hasText: 'ICAO code' })).toContainText('en');
-    await expect(annotations.filter({ hasText: 'Code OACI' })).toContainText('fr');
+    // Language tag is stored in the row's `<input>`, outside textContent.
+    await expect(
+      annotations.filter({ hasText: 'ICAO code' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'Code OACI' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('fr');
   });
 
   test('AP4: delete a custom annotation property', async ({ page }) => {
