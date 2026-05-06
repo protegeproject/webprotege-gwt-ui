@@ -332,14 +332,17 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleCreate() {
-        view.getSelectedHierarchyDescriptor().ifPresent(hierarchyId -> {
-            if (hierarchyId.equals(OBJECT_PROPERTY_HIERARCHY)) {
+        // The selected entry is a HierarchyDescriptor, so it never equals
+        // any of the HierarchyId constants — that comparison silently
+        // dropped every Create click. Match by descriptor type instead.
+        view.getSelectedHierarchyDescriptor().ifPresent(hierarchyDescriptor -> {
+            if (hierarchyDescriptor instanceof ObjectPropertyHierarchyDescriptor) {
                 handleCreateObjectProperty();
             }
-            else if (hierarchyId.equals(DATA_PROPERTY_HIERARCHY)) {
+            else if (hierarchyDescriptor instanceof DataPropertyHierarchyDescriptor) {
                 handleCreateDataProperty();
             }
-            else if (hierarchyId.equals(ANNOTATION_PROPERTY_HIERARCHY)) {
+            else if (hierarchyDescriptor instanceof AnnotationPropertyHierarchyDescriptor) {
                 handleCreateAnnotationProperty();
             }
         });

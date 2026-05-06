@@ -1,0 +1,20 @@
+{
+  "name": "webprotege-gwt-ui-e2e",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Playwright end-to-end tests for the WebProtege GWT UI.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:smoke": "playwright test scenarios/regression-smoke",
+    "test:airplane": "playwright test scenarios/airplane-ontology",
+    "report": "playwright show-report",
+    "stack:up": "docker compose up -d --wait",
+    "stack:down": "docker compose down -v"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}

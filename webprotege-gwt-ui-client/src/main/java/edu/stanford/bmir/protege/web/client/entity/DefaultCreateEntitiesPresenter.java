@@ -163,13 +163,22 @@ public class DefaultCreateEntitiesPresenter {
         ChangeRequestId changeRequestId = action.getChangeRequestId();
         dispatchServiceManager.execute(action,
                 result -> {
-                    // We need to wait for the events associated with change request so
-                    // that we can be sure the hierarchy has updated.  Note the events
-                    // get processed and dispatched before the one-shot wait for events
-                    // handler is called.
-                    awaiter.waitForEvents(changeRequestId, events -> {
+                    if (entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
+                        // Individual creation does not produce events that
+                        // implement HasChangeRequestId, and the result
+                        // already carries the created entities — fire the
+                        // handler immediately so the list updates without
+                        // waiting on the awaiter fallback timer.
                         entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
-                    });
+                    } else {
+                        // Hierarchy types: wait for the EntityHierarchyChangedEvent
+                        // associated with this change request so the tree has
+                        // had a chance to mount the new node before the handler
+                        // tries to select / reveal it.
+                        awaiter.waitForEvents(changeRequestId, events -> {
+                            entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
+                        });
+                    }
                 });
 
     }

@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
@@ -39,15 +42,20 @@ public class DeleteEntitiesPresenter {
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public DeleteEntitiesPresenter(@Nonnull Messages messages,
                                    @Nonnull MessageBox messageBox,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
-                                   @Nonnull ProjectId projectId) {
+                                   @Nonnull ProjectId projectId,
+                                   @Nonnull UuidV4Provider uuidV4Provider) {
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     /**
@@ -117,8 +125,11 @@ public class DeleteEntitiesPresenter {
     private void deleteEntity(@Nonnull Set<OWLEntityData> entities,
                               @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
         treeWidget.moveSelectionDown();
-        Set<OWLEntity> entitiesToDelete = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
-        dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entitiesToDelete), deleteEntityResult -> {});
+        ImmutableSet<OWLEntity> entitiesToDelete = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
+        dispatchServiceManager.execute(new DeleteEntitiesAction(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                projectId,
+                                                                entitiesToDelete),
+                                       deleteEntityResult -> {});
     }
 
 }
