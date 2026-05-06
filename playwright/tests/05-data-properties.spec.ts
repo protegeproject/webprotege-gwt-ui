@@ -72,6 +72,32 @@ test.describe('data properties', () => {
     await expect(rangeRow).toHaveCount(1);
   });
 
+  test('DP5: drag-and-drop reparents a data property', async ({ page }) => {
+    await page.locator(Hierarchy.treeNode('owl:topDataProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('dpAlpha\ndpBeta');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('dpAlpha'))).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible();
+
+    await page
+      .locator(Hierarchy.treeNode('dpBeta'))
+      .first()
+      .dragTo(page.locator(Hierarchy.treeNode('dpAlpha')).first());
+
+    await page.reload();
+    await goToPerspective(page, 'Data Properties');
+    await page
+      .locator(Hierarchy.treeNode('dpAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
+  });
+
   test('DP6: delete a data property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('owl:topDataProperty')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();

@@ -87,6 +87,34 @@ test.describe('object properties', () => {
     await expect(rangeRow).toHaveCount(1);
   });
 
+  test('OP6: drag-and-drop reparents an object property', async ({ page }) => {
+    // graphtree fires standard HTML5 drag/drop events on `.gt-tree__row`.
+    // Playwright's `dragTo` drives the dragstart/dragover/drop sequence.
+    await page.locator(Hierarchy.treeNode('owl:topObjectProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('opAlpha\nopBeta');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('opAlpha'))).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible();
+
+    await page
+      .locator(Hierarchy.treeNode('opBeta'))
+      .first()
+      .dragTo(page.locator(Hierarchy.treeNode('opAlpha')).first());
+
+    await page.reload();
+    await goToPerspective(page, 'Object Properties');
+    await page
+      .locator(Hierarchy.treeNode('opAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
+  });
+
   test('OP8: delete a property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('owl:topObjectProperty')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();

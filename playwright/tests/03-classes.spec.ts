@@ -87,6 +87,33 @@ test.describe('class hierarchy', () => {
     await page.keyboard.press('Escape');
   });
 
+  test('C9: drag-and-drop reparents a class', async ({ page, project }) => {
+    // graphtree (`edu.stanford.protege.gwt.graphtree`) marks each
+    // `.gt-tree__row` as `draggable="true"` and dispatches the standard
+    // HTML5 sequence (`dragstart` → `dragover` w/ preventDefault → `drop`).
+    // Playwright's `locator.dragTo()` synthesises the full sequence via
+    // CDP, which is enough to drive the reparent RPC.
+    await createClassUnder(page, 'owl:Thing', 'DragAlpha');
+    await createClassUnder(page, 'owl:Thing', 'DragBeta');
+
+    await page
+      .locator(Hierarchy.treeNode('DragBeta'))
+      .first()
+      .dragTo(page.locator(Hierarchy.treeNode('DragAlpha')).first());
+
+    // Reload to verify the move was committed server-side, not just a
+    // local DOM tweak. The Classes perspective is the project default.
+    await page.reload();
+    await expect(page.locator(Hierarchy.treeNode('DragAlpha'))).toBeVisible({
+      timeout: 15_000,
+    });
+    await page
+      .locator(Hierarchy.treeNode('DragAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible();
+  });
+
   test('C8: delete a leaf class', async ({ page, project }) => {
     await createClassUnder(page, 'owl:Thing', 'Vehicle');
     await page.locator(Hierarchy.treeNode('Vehicle')).click();
