@@ -44,6 +44,32 @@ test.describe('annotation properties', () => {
     }
   });
 
+  test('AP5: drag-and-drop reparents an annotation property', async ({ page }) => {
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('apAlpha\napBeta');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('apAlpha'))).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible();
+
+    await page
+      .locator(Hierarchy.treeNode('apBeta'))
+      .first()
+      .dragTo(page.locator(Hierarchy.treeNode('apAlpha')).first());
+
+    await page.reload();
+    await goToPerspective(page, 'Annotation Properties');
+    await page
+      .locator(Hierarchy.treeNode('apAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
+  });
+
   test('AP4: delete a custom annotation property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('rdfs:label')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();
