@@ -88,16 +88,7 @@ async function selectIndividual(page: Page, name: string): Promise<void> {
     .click();
 }
 
-// FIXME: The end-to-end build itself succeeds — every mutation
-// commits server-side and the live model patches itself — but the
-// final hierarchy verification clicks `.gt-tree__handle` on `Vehicle`
-// and `Aircraft` to expand them, and on the *Classes* perspective
-// that chevron click does not toggle expansion (same race as C9 in
-// 03-classes.spec.ts: the freshly added handle's MouseEventMapper is
-// not wired up before the click lands). Unmark when the graphtree
-// integration on the classes path wires the new handle synchronously
-// with the GraphModelChangedEvent re-render.
-test.fixme('builds the Airplane ontology end-to-end', async ({ page, project }) => {
+test('builds the Airplane ontology end-to-end', async ({ page, project }) => {
   test.setTimeout(300_000);
 
   // ── Sub-class hierarchy ─────────────────────────────────────────────
@@ -176,19 +167,16 @@ test.fixme('builds the Airplane ontology end-to-end', async ({ page, project }) 
 
   // ── Verify hierarchy + frame from the live state ───────────────────
   // No reload: real users don't refresh, and the tree should already
-  // reflect every mutation via EntityHierarchyChangedEvent. Expand the
-  // path down to the deepest sub-class via the `.gt-tree__handle`
-  // chevron before asserting visibility.
+  // reflect every mutation via EntityHierarchyChangedEvent. The
+  // currently-selected class (Aircraft, from the earlier
+  // `selectClass(...)`) is `revealTreeNodesForKey`-expanded, so the
+  // owl:Thing → Vehicle → Aircraft path is already open and the
+  // siblings under Aircraft are on screen — no chevron click needed.
   await page.locator(ProjectView.tab('Classes')).click();
-  await expect(page.locator(Hierarchy.treeNode('Vehicle'))).toBeVisible();
-  for (const parent of ['Vehicle', 'Aircraft']) {
-    await page
-      .locator(Hierarchy.treeNode(parent))
-      .locator('.gt-tree__handle')
-      .click();
-  }
-  for (const label of ['Aircraft', 'FixedWingAircraft', 'Helicopter']) {
-    await expect(page.locator(Hierarchy.treeNode(label))).toBeVisible();
+  for (const label of ['Vehicle', 'Aircraft', 'FixedWingAircraft', 'Helicopter']) {
+    await expect(page.locator(Hierarchy.treeNode(label))).toBeVisible({
+      timeout: 15_000,
+    });
   }
 
   // The Aircraft frame should now show the rdfs:label annotation and the

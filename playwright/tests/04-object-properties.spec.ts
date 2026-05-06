@@ -104,13 +104,12 @@ test.describe('object properties', () => {
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('opAlpha')).first());
     // Drain the MoveHierarchyNode RPC so the server's
-    // EntityHierarchyChangedEvent updates the live tree.
+    // EntityHierarchyChangedEvent updates the live tree, then let
+    // PropertyHierarchyPortletPresenter.setSelectionInTree run its
+    // post-move `revealTreeNodesForKey(opBeta)` — that expands every
+    // ancestor on the path, so opAlpha is open and opBeta is on
+    // screen without a chevron click.
     await page.waitForLoadState('networkidle');
-
-    await page
-      .locator(Hierarchy.treeNode('opAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
     await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
       timeout: 15_000,
     });
