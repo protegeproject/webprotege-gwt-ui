@@ -4,11 +4,13 @@ import edu.stanford.bmir.protege.web.client.hierarchy.ClassHierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
@@ -22,9 +24,10 @@ public class MoveHierarchyNode_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = MoveHierarchyNodeAction.create(mockProjectId(),
-                ClassHierarchyDescriptor.get(),
-                Path.asPath(mockOWLClassNode()),
+        var action = MoveHierarchyNodeAction.create(ChangeRequestId.get(UUID.randomUUID().toString()),
+                                                    mockProjectId(),
+                                                    ClassHierarchyDescriptor.get(),
+                                                    Path.asPath(mockOWLClassNode()),
                                                     Path.emptyPath(),
                                                     DropType.ADD);
         JsonSerializationTestUtil.testSerialization(action, Action.class);

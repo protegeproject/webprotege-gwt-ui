@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
@@ -27,11 +29,16 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EntityHierarchyDropHandler(@Nonnull ProjectId projectId,
-                                      @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                      @Nonnull DispatchServiceManager dispatchServiceManager,
+                                      @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Nonnull
@@ -85,7 +92,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNod
             dropEndHandler.handleDropCancelled();
             return;
         }
-        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(projectId,
+        dispatchServiceManager.execute(MoveHierarchyNodeAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                      projectId,
                                                                       hierarchyDescriptor.get(),
                                                                       nodePath,
                                                                       targetPath,
