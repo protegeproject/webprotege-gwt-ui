@@ -34,12 +34,14 @@ export async function addPrimitiveValue(
 
 /** Add a property/value row to a PropertyValueListEditor section — used
  * for "Annotations" (annotation property + literal) and "Relationships"
- * (object/data property + entity/literal). */
+ * (object/data property + entity/literal). Pass `lang` to populate the
+ * trailing language-tag column (e.g. "en", "de") on annotation literals. */
 export async function addPropertyValue(
   page: Page,
   sectionLabel: string,
   property: string,
   value: string,
+  lang?: string,
 ): Promise<void> {
   const section = page.locator(FrameEditor.section(sectionLabel));
   const row = blankRow(section);
@@ -47,6 +49,9 @@ export async function addPropertyValue(
   // in document order: property field, value field, language tag.
   await row.locator('input').nth(0).fill(property);
   await row.locator('input').nth(1).fill(value);
+  if (lang) {
+    await row.locator('input').nth(2).fill(lang);
+  }
   await page.keyboard.press('Tab');
   await page.waitForTimeout(COMMIT_DELAY_MS);
 }

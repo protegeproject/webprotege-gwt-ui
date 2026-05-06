@@ -1,5 +1,5 @@
 import { test, expect, goToPerspective } from '../support/fixtures';
-import { addPrimitiveValue } from '../support/frameEditor';
+import { addPrimitiveValue, addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
   FrameEditor,
@@ -113,6 +113,31 @@ test.describe('object properties', () => {
     await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test('OP7: add multiple annotations with language tags to a property', async ({
+    page,
+  }) => {
+    await page.locator(Hierarchy.treeNode('owl:topObjectProperty')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('hasPart');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('hasPart'))).toBeVisible({
+      timeout: 15_000,
+    });
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'has part', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'hat Teil', 'de');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'Mereological link');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    await expect(annotations.filter({ hasText: 'has part' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'hat Teil' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Mereological link' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'has part' })).toContainText('en');
+    await expect(annotations.filter({ hasText: 'hat Teil' })).toContainText('de');
   });
 
   test('OP8: delete a property', async ({ page }) => {

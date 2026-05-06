@@ -1,6 +1,8 @@
 import { test, expect } from '../support/fixtures';
+import { addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
+  FrameEditor,
   ProjectView,
 } from '../support/selectors';
 
@@ -43,6 +45,33 @@ test.describe('individuals', () => {
           .first(),
       ).toBeVisible({ timeout: 15_000 });
     }
+  });
+
+  test('I4: add multiple annotations with language tags to an individual', async ({
+    page,
+  }) => {
+    await page.locator('button.wp-btn-g--create-individual').first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill('Boeing747');
+    await page.locator(CreateEntityDialog.submit).click();
+    const listRow = page
+      .locator('.wp-entity-node__display-name')
+      .filter({ hasText: 'Boeing747' });
+    await expect(listRow).toBeVisible({ timeout: 15_000 });
+    await listRow.click();
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Boeing 747', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Jumbo-Jet', 'de');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'Wide-body airliner');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    await expect(annotations.filter({ hasText: 'Boeing 747' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Jumbo-Jet' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Wide-body airliner' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Boeing 747' })).toContainText('en');
+    await expect(annotations.filter({ hasText: 'Jumbo-Jet' })).toContainText('de');
   });
 
   test('I8: delete an individual', async ({ page }) => {

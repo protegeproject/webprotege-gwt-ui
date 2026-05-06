@@ -1,6 +1,8 @@
 import { test, expect, goToPerspective } from '../support/fixtures';
+import { addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
+  FrameEditor,
   Hierarchy,
 } from '../support/selectors';
 
@@ -68,6 +70,31 @@ test.describe('annotation properties', () => {
     await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test('AP6: add multiple annotations with language tags to a property', async ({
+    page,
+  }) => {
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('icaoCode');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('icaoCode'))).toBeVisible({
+      timeout: 15_000,
+    });
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'ICAO code', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Code OACI', 'fr');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'Four-letter airport identifier');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    await expect(annotations.filter({ hasText: 'ICAO code' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Code OACI' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Four-letter airport identifier' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'ICAO code' })).toContainText('en');
+    await expect(annotations.filter({ hasText: 'Code OACI' })).toContainText('fr');
   });
 
   test('AP4: delete a custom annotation property', async ({ page }) => {
