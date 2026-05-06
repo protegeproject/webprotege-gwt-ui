@@ -73,9 +73,86 @@ async function trashProjectViaUi(page: Page, project: TestProject): Promise<void
 
 export const test = base.extend<ProjectFixtures>({
   project: async ({ page }, use) => {
+    // Watch for server-error MessageBoxes the moment they appear. The
+    // dispatch layer renders every backend NPE/500 as a `wp-modal`
+    // containing "Internal Server Error" or the raw
+    // "ActionExecutionException", but a `page.reload()` later in the
+    // spec dismisses the popup, so a post-test snapshot can miss it.
+    // Polling via DOM mutations catches transient popups too. The
+    // underlying mutation often *did* persist, so a test that only
+    // checks post-condition state (e.g. "is the child under the new
+    // parent after reload?") will pass while the user actually saw a
+    // 500 — this gate turns those silent backend regressions red.
+    const observedErrors: string[] = [];
+    // Watch for server-error MessageBoxes the moment they appear. The
+    // dispatch layer renders every backend NPE/500 as a `wp-modal`
+    // containing "Internal Server Error" or the raw
+    // "ActionExecutionException", but a `page.reload()` later in the
+    // spec dismisses the popup, so a post-test snapshot can miss it.
+    // Polling via DOM mutations catches transient popups too. The
+    // underlying mutation often *did* persist, so a test that only
+    // checks post-condition state (e.g. "is the child under the new
+    // parent after reload?") will pass while the user actually saw a
+    // 500 — this gate turns those silent backend regressions red.
+    await page.exposeFunction('__wpRecordError', (text: string) => {
+      observedErrors.push(text);
+    });
+    await page.addInitScript(() => {
+      const observer = new MutationObserver(() => {
+        document.querySelectorAll('.wp-modal').forEach((node) => {
+          const text = node.textContent ?? '';
+          if (
+            !(node as HTMLElement).dataset.wpErrorRecorded &&
+            (text.includes('Internal Server Error') ||
+              text.includes('ActionExecutionException'))
+          ) {
+            (node as HTMLElement).dataset.wpErrorRecorded = '1';
+            (window as unknown as {
+              __wpRecordError: (s: string) => void;
+            }).__wpRecordError(text.trim().slice(0, 500));
+          }
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+    // Belt-and-braces: also peek at GWT-RPC bodies. The dispatch
+    // service returns HTTP 200 even on backend NPEs — `//EX[...]` for
+    // exceptions vs `//OK[...]` for success — so HTTP status alone
+    // would never catch this. Tests that need this gate to fire
+    // reliably must give the response time to arrive before
+    // navigating (a `page.reload()` immediately after a mutation
+    // cancels the in-flight RPC client-side, so its `//EX` body never
+    // reaches us).
+    const pendingBodies: Promise<unknown>[] = [];
+    page.on('response', (response) => {
+      if (!/dispatchservice/i.test(response.url())) return;
+      pendingBodies.push(
+        response
+          .text()
+          .then((body) => {
+            if (body.startsWith('//EX[')) {
+              observedErrors.push(
+                `dispatchservice EX: ${body.slice(0, 250).replace(/\s+/g, ' ')}`,
+              );
+            }
+          })
+          .catch(() => {
+            // Body read after page navigation — can't tell success
+            // from failure, so stay silent rather than red-herring.
+          }),
+      );
+    });
     const name = uniqueProjectName();
     const project = await createProjectViaUi(page, name);
     await use(project);
+    // Drain any in-flight `response.text()` promises so dispatch
+    // failures captured during the test propagate before the check.
+    await Promise.all(pendingBodies);
+    if (observedErrors.length > 0) {
+      throw new Error(
+        `Backend error(s) surfaced during the test: ${observedErrors.join(' || ')}`,
+      );
+    }
     await trashProjectViaUi(page, project).catch((err) => {
       // Cleanup is best-effort. A failure here should not mask the test result.
       console.warn(`[fixtures] Failed to trash project ${project.name}:`, err);
