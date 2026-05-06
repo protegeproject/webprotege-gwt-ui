@@ -28,6 +28,22 @@ test.describe('annotation properties', () => {
     });
   });
 
+  test('AP3: bulk-create multiple annotation properties from one dialog', async ({
+    page,
+  }) => {
+    const names = ['icaoCode', 'iataCode', 'manufacturerNote'];
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(page.locator(Hierarchy.treeNode(name))).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
   test('AP4: delete a custom annotation property', async ({ page }) => {
     await page.locator(Hierarchy.treeNode('rdfs:label')).click();
     await page.locator(Hierarchy.toolbar.create).first().click();

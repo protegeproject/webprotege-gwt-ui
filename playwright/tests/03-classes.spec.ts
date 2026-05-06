@@ -58,6 +58,22 @@ test.describe('class hierarchy', () => {
     await createClassUnder(page, 'Vehicle', 'Car');
   });
 
+  test('C6: bulk-create multiple classes from one dialog', async ({ page, project }) => {
+    // The Create Classes dialog accepts one name per line in its textarea
+    // and creates each as a sibling under the selected parent.
+    const names = ['Person', 'Animal', 'ConceptA', 'ConceptB', 'ConceptC'];
+    await page.locator(Hierarchy.treeNode('owl:Thing')).first().click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(page.locator(Hierarchy.treeNode(name))).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
   test('C7: right-click context menu exposes core actions', async ({
     page,
     project,
