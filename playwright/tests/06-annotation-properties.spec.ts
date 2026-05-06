@@ -60,24 +60,17 @@ test.describe('annotation properties', () => {
       .locator(Hierarchy.treeNode('apBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('apAlpha')).first());
-    // Drain the in-flight MoveHierarchyNode RPC before navigating
-    // away — see C9 in 03-classes.spec.ts for why.
+    // Drain the MoveHierarchyNode RPC so the server's
+    // EntityHierarchyChangedEvent updates the live tree.
     await page.waitForLoadState('networkidle');
 
-    await page.reload();
-    await goToPerspective(page, 'Annotation Properties');
-    // Expansion fires on `mouseup` over the handle; an immediate click
-    // post-reload can land before MouseEventMapper is wired up. Retry
-    // the click until apBeta surfaces.
-    await expect(async () => {
-      await page
-        .locator(Hierarchy.treeNode('apAlpha'))
-        .locator('.gt-tree__handle')
-        .click();
-      await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
-        timeout: 1_500,
-      });
-    }).toPass({ timeout: 15_000 });
+    await page
+      .locator(Hierarchy.treeNode('apAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test('AP6: add multiple annotations with language tags to a property', async ({

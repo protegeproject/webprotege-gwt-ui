@@ -86,24 +86,17 @@ test.describe('data properties', () => {
       .locator(Hierarchy.treeNode('dpBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('dpAlpha')).first());
-    // Drain the in-flight MoveHierarchyNode RPC before navigating
-    // away — see C9 in 03-classes.spec.ts for why.
+    // Drain the MoveHierarchyNode RPC so the server's
+    // EntityHierarchyChangedEvent updates the live tree.
     await page.waitForLoadState('networkidle');
 
-    await page.reload();
-    await goToPerspective(page, 'Data Properties');
-    // Expansion fires on `mouseup` over the handle; an immediate click
-    // post-reload can land before MouseEventMapper is wired up. Retry
-    // the click until dpBeta surfaces.
-    await expect(async () => {
-      await page
-        .locator(Hierarchy.treeNode('dpAlpha'))
-        .locator('.gt-tree__handle')
-        .click();
-      await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
-        timeout: 1_500,
-      });
-    }).toPass({ timeout: 15_000 });
+    await page
+      .locator(Hierarchy.treeNode('dpAlpha'))
+      .locator('.gt-tree__handle')
+      .click();
+    await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test('DP7: add multiple annotations with language tags to a property', async ({
