@@ -103,6 +103,9 @@ test.describe('object properties', () => {
       .locator(Hierarchy.treeNode('opBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('opAlpha')).first());
+    // Drain the in-flight MoveHierarchyNode RPC before navigating
+    // away — see C9 in 03-classes.spec.ts for why.
+    await page.waitForLoadState('networkidle');
 
     await page.reload();
     await goToPerspective(page, 'Object Properties');

@@ -60,6 +60,9 @@ test.describe('annotation properties', () => {
       .locator(Hierarchy.treeNode('apBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('apAlpha')).first());
+    // Drain the in-flight MoveHierarchyNode RPC before navigating
+    // away — see C9 in 03-classes.spec.ts for why.
+    await page.waitForLoadState('networkidle');
 
     await page.reload();
     await goToPerspective(page, 'Annotation Properties');
