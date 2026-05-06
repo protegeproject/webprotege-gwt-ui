@@ -97,6 +97,14 @@ async function typeAndCommit(
   }
   await page.keyboard.press('Escape');
   await page.keyboard.press('Tab');
+  // The SuggestBox popup (`.gwt-SuggestBoxPopup`) lingers a frame or
+  // two after Tab on the previous field; if the next typeAndCommit
+  // clicks the next textarea while the popup is still on screen, the
+  // popup intercepts the click and the field never gets focus.
+  await page
+    .locator('.gwt-SuggestBoxPopup')
+    .waitFor({ state: 'hidden', timeout: 1_000 })
+    .catch(() => {});
 }
 
 /** `keyboard.press` takes a key name (e.g. 'a', 'A', 'Shift+1'); plain
