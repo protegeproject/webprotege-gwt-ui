@@ -88,19 +88,7 @@ test.describe('class hierarchy', () => {
     await page.keyboard.press('Escape');
   });
 
-  // FIXME: The drag-and-drop server-side commit and the
-  // EntityHierarchyChangedEvent that follows do reach the client — the
-  // live model patches itself and DragAlpha gains a `.gt-tree__handle`
-  // chevron — but on the *Classes* perspective the chevron click does
-  // not toggle expansion: the freshly added handle's MouseEventMapper
-  // is not wired up before the click lands, and graphtree silently
-  // drops the mouseup. The same drop flow works on the Object/Data/
-  // Annotation property perspectives without reload, so this is
-  // class-tree-specific. Unmark when the graphtree integration
-  // (or `EntityHierarchyModel.handleEntityHierarchyChanged` on the
-  // classes path) wires the new handle synchronously with the
-  // GraphModelChangedEvent re-render.
-  test.fixme('C9: drag-and-drop reparents a class', async ({ page, project }) => {
+  test('C9: drag-and-drop reparents a class', async ({ page, project }) => {
     // graphtree (`edu.stanford.protege.gwt.graphtree`) marks each
     // `.gt-tree__row` as `draggable="true"` and dispatches the standard
     // HTML5 sequence (`dragstart` → `dragover` w/ preventDefault → `drop`).
@@ -119,10 +107,12 @@ test.describe('class hierarchy', () => {
     // `//EX[...]` backend-error body the dispatch service might return.
     await page.waitForLoadState('networkidle');
 
-    await page
-      .locator(Hierarchy.treeNode('DragAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
+    // After a drop the selection switches to the moved node, and
+    // ClassHierarchyPortletPresenter.setSelectionInTree calls
+    // `revealTreeNodesForKey` on it — graphtree expands every ancestor
+    // on the path before scrolling the selection into view, so the new
+    // parent is already expanded by the time the live event has
+    // settled. No chevron click needed.
     await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible({
       timeout: 15_000,
     });

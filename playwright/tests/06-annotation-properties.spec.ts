@@ -60,14 +60,10 @@ test.describe('annotation properties', () => {
       .locator(Hierarchy.treeNode('apBeta'))
       .first()
       .dragTo(page.locator(Hierarchy.treeNode('apAlpha')).first());
-    // Drain the MoveHierarchyNode RPC so the server's
-    // EntityHierarchyChangedEvent updates the live tree.
+    // Drain the MoveHierarchyNode RPC; the post-move
+    // `revealTreeNodesForKey` auto-expands apAlpha — see OP6 in
+    // 04-object-properties.spec.ts.
     await page.waitForLoadState('networkidle');
-
-    await page
-      .locator(Hierarchy.treeNode('apAlpha'))
-      .locator('.gt-tree__handle')
-      .click();
     await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
       timeout: 15_000,
     });
