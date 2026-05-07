@@ -163,7 +163,7 @@ services:
     networks: [wp]
 
   webprotege-event-history-service:
-    image: protegeproject/webprotege-event-history-service:2.0.0
+    image: protegeproject/webprotege-event-history-service:2.0.25-WHO
     depends_on:
       mongo:
         condition: service_started
