@@ -26,6 +26,11 @@ jobs:
       !contains(github.event.pull_request.labels.*.name, 'skip-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Need `contents: write` to push the HTML report to the gh-pages
+    # branch and `pull-requests: write` to leave a sticky URL comment.
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -71,14 +76,59 @@ jobs:
         working-directory: playwright
         run: docker compose down -v
 
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright/playwright-report/
-          retention-days: 14
+      # Build the public report URL once so later steps can reference
+      # it. PR runs land in a stable `e2e-report/<number>/` subdir so
+      # re-runs overwrite themselves; manual `workflow_dispatch` runs
+      # all share a single `e2e-report/manual/` slot — back-to-back
+      # debug runs intentionally clobber the previous one.
+      - name: Determine report destination
+        if: always()
+        id: pages
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SUBDIR="e2e-report/${{ github.event.pull_request.number }}"
+          else
+            SUBDIR="e2e-report/manual"
+          fi
+          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO="${{ github.event.repository.name }}"
+          URL="https://${OWNER_LOWER}.github.io/${REPO}/${SUBDIR}/"
+          echo "subdir=$SUBDIR" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 📋 Playwright report"
+            echo ""
+            echo "[$URL]($URL)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Playwright report will be at: $URL"
 
+      # Publish the HTML report to the `gh-pages` branch under the subdir
+      # chosen above. `keep_files: true` preserves other PRs' reports
+      # already on the branch instead of wiping the whole tree per run.
+      - name: Publish report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: playwright/playwright-report
+          destination_dir: ${{ steps.pages.outputs.subdir }}
+          keep_files: true
+          commit_message: 'ci(e2e): publish report for ${{ steps.pages.outputs.subdir }}'
+
+      # Single sticky comment per PR — the `header` key makes re-runs
+      # update the existing comment instead of piling up new ones.
+      - name: Comment report URL on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: playwright-report
+          message: |
+            📋 **Playwright report**: [${{ steps.pages.outputs.url }}](${{ steps.pages.outputs.url }})
+
+            Outcome of the latest run: **${{ job.status }}**. Re-running this workflow overwrites the same URL.
+
+      # Traces are heavy and only useful when a test fails, so keep
+      # uploading them as a workflow artifact rather than to Pages.
       - name: Upload Playwright traces
         if: failure()
         uses: actions/upload-artifact@v4
