@@ -205,7 +205,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.2
+    image: protegeproject/webprotege-backend-service:5.0.3
     user: root
     depends_on:
       mongo:
