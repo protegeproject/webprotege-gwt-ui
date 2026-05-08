@@ -180,14 +180,22 @@ test('builds the Airplane ontology end-to-end', async ({ page, project }) => {
   }
 
   // The Aircraft frame should now show the rdfs:label annotation and the
-  // hasEngine relationship that we added.
+  // hasEngine relationship that we added. Newly-created classes already
+  // get an auto-generated `rdfs:label = <name>` from the server, so after
+  // the explicit `addPropertyValue('Annotations', 'rdfs:label', 'Aircraft')`
+  // above the Annotations section can hold two `rdfs:label` rows. Match
+  // on a row containing both `rdfs:label` and `Aircraft` and assert at
+  // least one is visible — the assertion's intent is "the label exists",
+  // not "exactly one row has it".
   await page.locator(Hierarchy.treeNode('Aircraft')).click();
   await expect(
     page
       .locator(FrameEditor.section('Annotations'))
       .locator(FrameEditor.row)
-      .filter({ hasText: 'rdfs:label' }),
-  ).toContainText('Aircraft');
+      .filter({ hasText: 'rdfs:label' })
+      .filter({ hasText: 'Aircraft' })
+      .first(),
+  ).toBeVisible();
   await expect(
     page
       .locator(FrameEditor.section('Relationships'))
