@@ -35,6 +35,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The api-gateway container has `extra_hosts: ${SERVER_HOST}:host-gateway`
+      # so it can reach nginx via the public URL. That mapping is silently
+      # a no-op for the name "localhost" because the base image's /etc/hosts
+      # already binds 127.0.0.1 to "localhost" (and the resolver picks the
+      # 127.0.0.1 entry first). Use a name that doesn't collide and add an
+      # /etc/hosts entry on the runner so the Playwright browser (running
+      # on the host, not in a container) can resolve it back to loopback.
+      - name: Add /etc/hosts entry for webprotege-local.edu
+        run: echo "127.0.0.1 webprotege-local.edu" | sudo tee -a /etc/hosts
+
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -71,14 +81,14 @@ jobs:
       - name: Bring up the test stack
         working-directory: playwright
         env:
-          SERVER_HOST: localhost
+          SERVER_HOST: webprotege-local.edu
         run: docker compose up -d --wait --build
 
       - name: Run Playwright suite
         working-directory: playwright
         env:
           CI: 'true'
-          WEBPROTEGE_BASE_URL: http://localhost
+          WEBPROTEGE_BASE_URL: http://webprotege-local.edu
         run: npx playwright test
 
       - name: Tear down stack
