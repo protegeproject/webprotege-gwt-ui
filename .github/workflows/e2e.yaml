@@ -41,6 +41,13 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      # Pre-pull stack images in the background so the network I/O overlaps
+      # with the Maven/GWT build. `up --wait --build` later reuses whatever
+      # is already in the local image cache.
+      - name: Pre-pull stack images (background)
+        working-directory: playwright
+        run: docker compose pull --quiet --ignore-pull-failures &
+
       # Build the UI WAR with the `dev` GWT profile: draft-compile, single
       # permutation (user.agent=safari, locale=en), optimize=0. The e2e
       # suite only drives Chromium, so production-grade GWT output is
