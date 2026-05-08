@@ -48,10 +48,13 @@ jobs:
         working-directory: playwright
         run: docker compose pull --quiet --ignore-pull-failures &
 
-      # Build the UI WAR. The compose stack pulls every other service from
-      # Docker Hub, so this is the only Maven build needed.
+      # Build the UI WAR with the `e2e` GWT profile. That profile compiles a
+      # single permutation (user.agent=safari, locale=en) instead of the prod
+      # build's 10 permutations, but keeps full optimization so the JS still
+      # bootstraps quickly enough for Playwright. See
+      # webprotege-gwt-ui-client/pom.xml for the profile definition.
       - name: Build UI WAR
-        run: mvn -B -DskipTests -pl webprotege-gwt-ui-server -am package
+        run: mvn -B -DskipTests -Pe2e -pl webprotege-gwt-ui-server -am package
 
       - uses: actions/setup-node@v4
         with:
