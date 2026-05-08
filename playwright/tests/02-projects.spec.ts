@@ -133,6 +133,11 @@ test.describe('projects', () => {
     const row = page
       .locator(ProjectList.rows)
       .filter({ has: page.locator(ProjectList.nameCell, { hasText: project.name }) });
+    // Project list rows arrive asynchronously after the place change, so
+    // wait for the specific row before reaching for the menu button —
+    // under CPU pressure on CI the menu-click can otherwise outrun the
+    // first paint of the row.
+    await expect(row).toBeVisible({ timeout: 15_000 });
     await row.locator(ProjectList.menuButton).click();
     // Use exact-text match — "Open" alone would also match "Open in new window".
     for (const label of [/^Open$/, /^Download$/, /^Move to trash$/]) {
