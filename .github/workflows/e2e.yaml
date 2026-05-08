@@ -48,12 +48,10 @@ jobs:
         working-directory: playwright
         run: docker compose pull --quiet --ignore-pull-failures &
 
-      # Build the UI WAR with the `dev` GWT profile: draft-compile, single
-      # permutation (user.agent=safari, locale=en), optimize=0. The e2e
-      # suite only drives Chromium, so production-grade GWT output is
-      # wasted work here.
+      # Build the UI WAR. The compose stack pulls every other service from
+      # Docker Hub, so this is the only Maven build needed.
       - name: Build UI WAR
-        run: mvn -B -DskipTests -Pdev -pl webprotege-gwt-ui-server -am package
+        run: mvn -B -DskipTests -pl webprotege-gwt-ui-server -am package
 
       - uses: actions/setup-node@v4
         with:
