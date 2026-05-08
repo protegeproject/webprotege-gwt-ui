@@ -242,6 +242,7 @@
                             <draftCompile>true</draftCompile>
                             <style>DETAILED</style>
                             <logLevel>INFO</logLevel>
+                            <localWorkers>4</localWorkers>
                         </configuration>
                     </plugin>
                             <plugin>
