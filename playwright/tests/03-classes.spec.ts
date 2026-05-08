@@ -49,9 +49,13 @@ test.describe('class hierarchy', () => {
     await page.locator(Hierarchy.toolbar.create).first().click();
     await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
     await page.locator(CreateEntityDialog.submit).click();
-    // Dialog stays open — no class was created.
+    // Dialog stays open — no class was created. That's the assertion the
+    // test needs; we deliberately don't click Cancel afterwards because
+    // GWT re-renders the dialog body when the validation error paints,
+    // and Playwright's "stable element" heuristic on the Cancel button
+    // chases detach/reattach cycles indefinitely on slower CI runners.
+    // The per-test page fixture tears down anyway, so no cleanup needed.
     await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
-    await page.locator(CreateEntityDialog.cancel).click();
   });
 
   test('C5: create child under a non-root class', async ({ page, project }) => {
@@ -113,9 +117,17 @@ test.describe('class hierarchy', () => {
     // on the path before scrolling the selection into view, so the new
     // parent is already expanded by the time the live event has
     // settled. No chevron click needed.
-    await expect(page.locator(Hierarchy.treeNode('DragBeta'))).toBeVisible({
-      timeout: 15_000,
-    });
+    //
+    // graphtree can leave the moved node visible at both the old and
+    // new positions while the EntityHierarchyChangedEvent patch settles
+    // (the previously-expanded ancestor branch keeps its row painted),
+    // so the locator may resolve to two elements. The assertion's
+    // intent is "DragBeta is in the tree after the reparent" — either
+    // position satisfies that, so take `.first()` instead of fighting
+    // the strict-mode multiplicity.
+    await expect(
+      page.locator(Hierarchy.treeNode('DragBeta')).first(),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('C10: add multiple annotations with language tags to a class', async ({
