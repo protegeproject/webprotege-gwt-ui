@@ -8,13 +8,12 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 8 Dec 2017
@@ -25,13 +24,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeResult> {
 
     @JsonCreator
-    public static MoveHierarchyNodeAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static MoveHierarchyNodeAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                  @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
                                                  @JsonProperty("fromNodePath") @Nonnull Path<EntityNode> fromNodePath,
                                                  @JsonProperty("toNodeParentPath") @Nonnull Path<EntityNode> toNodeParentPath,
                                                  @JsonProperty("dropType") @Nonnull DropType dropType) {
-        return new AutoValue_MoveHierarchyNodeAction(projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType);
+        return new AutoValue_MoveHierarchyNodeAction(changeRequestId, projectId, hierarchyDescriptor, fromNodePath, toNodeParentPath, dropType);
     }
+
+    /** Identifies this change request server-side. The hierarchy event
+     * translator (`EntityHierarchyChangedEventProxy`) requires it via
+     * `Objects.requireNonNull`, so omitting it surfaces as a 500 NPE
+     * popup on every drag-and-drop reparent even though the move
+     * itself has already been persisted. */
+    @Nonnull
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

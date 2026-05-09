@@ -70,6 +70,26 @@ services:
 
   webprotege-gwt-api-gateway:
     image: protegeproject/webprotege-gwt-api-gateway:3.0.2
+    # Spring Security fetches the OIDC discovery doc at startup from
+    # http://${SERVER_HOST}/keycloak/.../.well-known/openid-configuration,
+    # which routes back through nginx. Nginx is downstream of this service
+    # in the dependency graph, so on the first try the fetch can hit a
+    # closed port and the JVM exits 1. The retry policy and healthcheck
+    # below let the container restart once nginx is bound and let
+    # `up --wait` block until the gateway is genuinely healthy. See the
+    # OIDC-discovery startup race notes in the e2e CI failure post-mortem.
+    restart: on-failure
+    healthcheck:
+      # Spring Security guards every endpoint (including /actuator/health),
+      # so any URL returns 401 once the JVM is up. Drop curl's -f flag and
+      # accept any HTTP response as proof the gateway is serving — the
+      # check fails only on connection refused / DNS / timeout, which is
+      # exactly the signal we need.
+      test: ["CMD-SHELL", "curl -sS -o /dev/null --max-time 3 http://localhost:7777/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 10s
     depends_on:
       webprotege-keycloak:
         condition: service_healthy
@@ -163,7 +183,7 @@ services:
     networks: [wp]
 
   webprotege-event-history-service:
-    image: protegeproject/webprotege-event-history-service:2.0.0
+    image: protegeproject/webprotege-event-history-service:2.0.25-WHO
     depends_on:
       mongo:
         condition: service_started
@@ -205,7 +225,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.2
+    image: protegeproject/webprotege-backend-service:5.0.3
     user: root
     depends_on:
       mongo:

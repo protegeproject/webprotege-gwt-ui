@@ -1,6 +1,8 @@
 import { test, expect, goToPerspective } from '../support/fixtures';
+import { addPropertyValue } from '../support/frameEditor';
 import {
   CreateEntityDialog,
+  FrameEditor,
   Hierarchy,
 } from '../support/selectors';
 
@@ -26,6 +28,75 @@ test.describe('annotation properties', () => {
     await expect(page.locator(Hierarchy.treeNode('icaoCode'))).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test('AP3: bulk-create multiple annotation properties from one dialog', async ({
+    page,
+  }) => {
+    const names = ['icaoCode', 'iataCode', 'manufacturerNote'];
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await expect(page.locator(CreateEntityDialog.root)).toBeVisible();
+    await page.locator(CreateEntityDialog.name).fill(names.join('\n'));
+    await page.locator(CreateEntityDialog.submit).click();
+    for (const name of names) {
+      await expect(page.locator(Hierarchy.treeNode(name))).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
+  test('AP5: drag-and-drop reparents an annotation property', async ({ page }) => {
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('apAlpha\napBeta');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('apAlpha'))).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible();
+
+    await page
+      .locator(Hierarchy.treeNode('apBeta'))
+      .first()
+      .dragTo(page.locator(Hierarchy.treeNode('apAlpha')).first());
+    // Drain the MoveHierarchyNode RPC; the post-move
+    // `revealTreeNodesForKey` auto-expands apAlpha — see OP6 in
+    // 04-object-properties.spec.ts.
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator(Hierarchy.treeNode('apBeta'))).toBeVisible({
+      timeout: 15_000,
+    });
+  });
+
+  test('AP6: add multiple annotations with language tags to a property', async ({
+    page,
+  }) => {
+    await page.locator(Hierarchy.treeNode('rdfs:label')).click();
+    await page.locator(Hierarchy.toolbar.create).first().click();
+    await page.locator(CreateEntityDialog.name).fill('icaoCode');
+    await page.locator(CreateEntityDialog.submit).click();
+    await expect(page.locator(Hierarchy.treeNode('icaoCode'))).toBeVisible({
+      timeout: 15_000,
+    });
+
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'ICAO code', 'en');
+    await addPropertyValue(page, 'Annotations', 'rdfs:label', 'Code OACI', 'fr');
+    await addPropertyValue(page, 'Annotations', 'rdfs:comment', 'Four-letter airport identifier');
+
+    const annotations = page
+      .locator(FrameEditor.section('Annotations'))
+      .locator(FrameEditor.row);
+    await expect(annotations.filter({ hasText: 'ICAO code' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Code OACI' })).toHaveCount(1);
+    await expect(annotations.filter({ hasText: 'Four-letter airport identifier' })).toHaveCount(1);
+    // Language tag is stored in the row's `<input>`, outside textContent.
+    await expect(
+      annotations.filter({ hasText: 'ICAO code' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('en');
+    await expect(
+      annotations.filter({ hasText: 'Code OACI' }).locator('input.gwt-SuggestBox'),
+    ).toHaveValue('fr');
   });
 
   test('AP4: delete a custom annotation property', async ({ page }) => {

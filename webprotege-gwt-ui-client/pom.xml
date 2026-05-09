@@ -242,6 +242,7 @@
                             <draftCompile>true</draftCompile>
                             <style>DETAILED</style>
                             <logLevel>INFO</logLevel>
+                            <localWorkers>4</localWorkers>
                         </configuration>
                     </plugin>
                             <plugin>
@@ -256,6 +257,33 @@
                             <forkMode>always</forkMode>
                             </configuration>
                             </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!--
+              Used by the e2e (Playwright) CI job. Reuses module-dev.gwt.xml to
+              cut the compile down to a single permutation (user.agent=safari,
+              locale=en) but otherwise builds with prod-grade optimization, so
+              the resulting JS bootstraps fast enough to drive a browser within
+              Playwright's navigation timeout. Do NOT add draftCompile or
+              optimize=0 here — that's what -Pdev is for, and it makes the
+              client too slow for browser tests.
+            -->
+            <id>e2e</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.ltgt.gwt.maven</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <configuration>
+                            <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
+                            <moduleShortName>webprotege</moduleShortName>
+                            <classpathScope>compile+runtime</classpathScope>
+                            <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
+                            <localWorkers>4</localWorkers>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

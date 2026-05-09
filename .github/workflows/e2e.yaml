@@ -26,9 +26,24 @@ jobs:
       !contains(github.event.pull_request.labels.*.name, 'skip-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Need `contents: write` to push the HTML report to the gh-pages
+    # branch and `pull-requests: write` to leave a sticky URL comment.
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
+
+      # The api-gateway container has `extra_hosts: ${SERVER_HOST}:host-gateway`
+      # so it can reach nginx via the public URL. That mapping is silently
+      # a no-op for the name "localhost" because the base image's /etc/hosts
+      # already binds 127.0.0.1 to "localhost" (and the resolver picks the
+      # 127.0.0.1 entry first). Use a name that doesn't collide and add an
+      # /etc/hosts entry on the runner so the Playwright browser (running
+      # on the host, not in a container) can resolve it back to loopback.
+      - name: Add /etc/hosts entry for webprotege-local.edu
+        run: echo "127.0.0.1 webprotege-local.edu" | sudo tee -a /etc/hosts
 
       - uses: actions/setup-java@v4
         with:
@@ -36,10 +51,20 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # Build the UI WAR. The compose stack pulls every other service from
-      # Docker Hub, so this is the only Maven build needed.
+      # Pre-pull stack images in the background so the network I/O overlaps
+      # with the Maven/GWT build. `up --wait --build` later reuses whatever
+      # is already in the local image cache.
+      - name: Pre-pull stack images (background)
+        working-directory: playwright
+        run: docker compose pull --quiet --ignore-pull-failures &
+
+      # Build the UI WAR with the `e2e` GWT profile. That profile compiles a
+      # single permutation (user.agent=safari, locale=en) instead of the prod
+      # build's 10 permutations, but keeps full optimization so the JS still
+      # bootstraps quickly enough for Playwright. See
+      # webprotege-gwt-ui-client/pom.xml for the profile definition.
       - name: Build UI WAR
-        run: mvn -B -DskipTests -pl webprotege-gwt-ui-server -am package
+        run: mvn -B -DskipTests -Pe2e -pl webprotege-gwt-ui-server -am package
 
       - uses: actions/setup-node@v4
         with:
@@ -56,14 +81,14 @@ jobs:
       - name: Bring up the test stack
         working-directory: playwright
         env:
-          SERVER_HOST: localhost
+          SERVER_HOST: webprotege-local.edu
         run: docker compose up -d --wait --build
 
       - name: Run Playwright suite
         working-directory: playwright
         env:
           CI: 'true'
-          WEBPROTEGE_BASE_URL: http://localhost
+          WEBPROTEGE_BASE_URL: http://webprotege-local.edu
         run: npx playwright test
 
       - name: Tear down stack
@@ -71,14 +96,59 @@ jobs:
         working-directory: playwright
         run: docker compose down -v
 
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright/playwright-report/
-          retention-days: 14
+      # Build the public report URL once so later steps can reference
+      # it. PR runs land in a stable `e2e-report/<number>/` subdir so
+      # re-runs overwrite themselves; manual `workflow_dispatch` runs
+      # all share a single `e2e-report/manual/` slot — back-to-back
+      # debug runs intentionally clobber the previous one.
+      - name: Determine report destination
+        if: always()
+        id: pages
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SUBDIR="e2e-report/${{ github.event.pull_request.number }}"
+          else
+            SUBDIR="e2e-report/manual"
+          fi
+          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO="${{ github.event.repository.name }}"
+          URL="https://${OWNER_LOWER}.github.io/${REPO}/${SUBDIR}/"
+          echo "subdir=$SUBDIR" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 📋 Playwright report"
+            echo ""
+            echo "[$URL]($URL)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Playwright report will be at: $URL"
 
+      # Publish the HTML report to the `gh-pages` branch under the subdir
+      # chosen above. `keep_files: true` preserves other PRs' reports
+      # already on the branch instead of wiping the whole tree per run.
+      - name: Publish report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: playwright/playwright-report
+          destination_dir: ${{ steps.pages.outputs.subdir }}
+          keep_files: true
+          commit_message: 'ci(e2e): publish report for ${{ steps.pages.outputs.subdir }}'
+
+      # Single sticky comment per PR — the `header` key makes re-runs
+      # update the existing comment instead of piling up new ones.
+      - name: Comment report URL on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: playwright-report
+          message: |
+            📋 **Playwright report**: [${{ steps.pages.outputs.url }}](${{ steps.pages.outputs.url }})
+
+            Outcome of the latest run: **${{ job.status }}**. Re-running this workflow overwrites the same URL.
+
+      # Traces are heavy and only useful when a test fails, so keep
+      # uploading them as a workflow artifact rather than to Pages.
       - name: Upload Playwright traces
         if: failure()
         uses: actions/upload-artifact@v4
