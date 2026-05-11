@@ -154,6 +154,32 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <!--
+                        Wipe target/test-classes before each test-compile so an IDE's
+                        incremental ECJ output (which can bake "Unresolved compilation
+                        problems" Errors into .class files with a newer mtime than the
+                        source) cannot survive a Maven build. See #265.
+                    -->
+                    <execution>
+                        <id>clean-test-classes</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.testOutputDirectory}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
