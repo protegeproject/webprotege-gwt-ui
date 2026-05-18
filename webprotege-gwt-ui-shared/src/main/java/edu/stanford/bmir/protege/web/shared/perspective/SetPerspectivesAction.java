@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Null;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,7 +35,7 @@ public abstract class SetPerspectivesAction implements ProjectAction<SetPerspect
 
     public static SetPerspectivesAction create(@Nonnull ProjectId projectId,
                                                @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        return new AutoValue_SetPerspectivesAction(projectId, null, perspectives);
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, null, perspectives);
     }
 
 
@@ -42,15 +43,20 @@ public abstract class SetPerspectivesAction implements ProjectAction<SetPerspect
     public static SetPerspectivesAction create(@Nonnull ProjectId projectId,
                                                @Nonnull Optional<UserId> userId,
                                                @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
-        return new AutoValue_SetPerspectivesAction(projectId, userId.orElse(null), perspectiveIds);
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, userId.orElse(null), perspectiveIds);
     }
 
     @JsonCreator
-    public static SetPerspectivesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetPerspectivesAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                               @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                @JsonProperty("userId") @Nullable UserId userId,
                                                @JsonProperty("perspectives") @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
-        return new AutoValue_SetPerspectivesAction(projectId, userId, perspectiveIds);
+        return new AutoValue_SetPerspectivesAction(changeRequestId, projectId, userId, perspectiveIds);
     }
+
+    @JsonProperty("changeRequestId")
+    @Nonnull
+    public abstract ChangeRequestId getChangeRequestId();
 
     @JsonProperty("projectId")
     @Nonnull
