@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -32,15 +34,19 @@ public class GetProjectTagsResult implements Result {
     private GetProjectTagsResult() {
     }
 
-    public static GetProjectTagsResult create(@Nonnull Collection<Tag> tags, @Nonnull Map<TagId, Integer> tagUsage) {
+    @JsonCreator
+    public static GetProjectTagsResult create(@JsonProperty("tags") @Nonnull Collection<Tag> tags,
+                                              @JsonProperty("tagUsage") @Nonnull Map<TagId, Integer> tagUsage) {
         return new GetProjectTagsResult(tags, tagUsage);
     }
 
+    @JsonProperty("tags")
     @Nonnull
     public List<Tag> getTags() {
         return new ArrayList<>(tags);
     }
 
+    @JsonProperty("tagUsage")
     @Nonnull
     public Map<TagId, Integer> getTagUsage() {
         return new HashMap<>(tagUsage);

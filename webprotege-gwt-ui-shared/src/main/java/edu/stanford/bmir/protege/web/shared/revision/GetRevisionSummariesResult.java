@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.revision;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
@@ -28,10 +30,12 @@ public class GetRevisionSummariesResult implements Result {
         this.revisionSummaries = checkNotNull(revisionSummaries);
     }
 
-    public static GetRevisionSummariesResult create(ImmutableList<RevisionSummary> revisionSummaries) {
+    @JsonCreator
+    public static GetRevisionSummariesResult create(@JsonProperty("revisionSummaries") ImmutableList<RevisionSummary> revisionSummaries) {
         return new GetRevisionSummariesResult(revisionSummaries);
     }
 
+    @JsonProperty("revisionSummaries")
     public ImmutableList<RevisionSummary> getRevisionSummaries() {
         return revisionSummaries;
     }

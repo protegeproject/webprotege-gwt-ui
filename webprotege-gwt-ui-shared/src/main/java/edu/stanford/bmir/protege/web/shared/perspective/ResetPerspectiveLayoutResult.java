@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -28,10 +30,12 @@ public class ResetPerspectiveLayoutResult implements Result {
         this.resetLayout = checkNotNull(resetLayout);
     }
 
-    public static ResetPerspectiveLayoutResult create(@Nonnull PerspectiveLayout resetLayout) {
+    @JsonCreator
+    public static ResetPerspectiveLayoutResult create(@JsonProperty("resetLayout") @Nonnull PerspectiveLayout resetLayout) {
         return new ResetPerspectiveLayoutResult(resetLayout);
     }
 
+    @JsonProperty("resetLayout")
     @Nonnull
     public PerspectiveLayout getResetLayout() {
         return resetLayout;

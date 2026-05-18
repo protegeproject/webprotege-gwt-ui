@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -42,22 +44,26 @@ public class GetProjectChangesAction implements ProjectAction<GetProjectChangesR
         this.pageRequest = checkNotNull(pageRequest);
     }
 
-    public static GetProjectChangesAction create(@Nonnull ProjectId projectId,
-                                                 @Nonnull Optional<OWLEntity> subject,
-                                                 @Nonnull PageRequest pageRequest) {
+    @JsonCreator
+    public static GetProjectChangesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                 @JsonProperty("subject") @Nonnull Optional<OWLEntity> subject,
+                                                 @JsonProperty("pageRequest") @Nonnull PageRequest pageRequest) {
         return new GetProjectChangesAction(projectId, subject, pageRequest);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("subject")
     @Nonnull
     public Optional<OWLEntity> getSubject() {
         return Optional.ofNullable(subject);
     }
 
+    @JsonProperty("pageRequest")
     @Nonnull
     public PageRequest getPageRequest() {
         return pageRequest;

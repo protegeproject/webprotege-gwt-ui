@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -35,16 +37,20 @@ public class GetProjectPermissionsAction implements Action<GetProjectPermissions
         this.userId = checkNotNull(userId);
     }
 
-    public static GetProjectPermissionsAction create(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+    @JsonCreator
+    public static GetProjectPermissionsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                     @JsonProperty("userId") @Nonnull UserId userId) {
         return new GetProjectPermissionsAction(projectId, userId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("userId")
     @Nonnull
     @Override
     public UserId getUserId() {

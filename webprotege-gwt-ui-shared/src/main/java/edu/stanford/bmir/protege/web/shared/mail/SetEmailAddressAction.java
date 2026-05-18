@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -32,7 +34,9 @@ public class SetEmailAddressAction implements Action<SetEmailAddressResult> {
      * @throws NullPointerException if {@code userId} or {@code emailAddress} is {@code null}.
      * @throws IllegalArgumentException if the value of {@link UserId} is the user id of the guest user.
      */
-    public SetEmailAddressAction(UserId userId, String emailAddress) {
+    @JsonCreator
+    public SetEmailAddressAction(@JsonProperty("userId") UserId userId,
+                                 @JsonProperty("emailAddress") String emailAddress) {
         this.userId = checkNotNull(userId);
         if(userId.isGuest()) {
             throw new IllegalArgumentException("userId cannot be guest");
@@ -44,6 +48,7 @@ public class SetEmailAddressAction implements Action<SetEmailAddressResult> {
      * Gets the {@link UserId} of the user whose email address should be set.
      * @return The {@link UserId}.  Not {@code null}.
      */
+    @JsonProperty("userId")
     public UserId getUserId() {
         return userId;
     }
@@ -52,6 +57,7 @@ public class SetEmailAddressAction implements Action<SetEmailAddressResult> {
      * Gets the email address to set.
      * @return A string representing the email address. Not {@code null}.
      */
+    @JsonProperty("emailAddress")
     public String getEmailAddress() {
         return emailAddress;
     }

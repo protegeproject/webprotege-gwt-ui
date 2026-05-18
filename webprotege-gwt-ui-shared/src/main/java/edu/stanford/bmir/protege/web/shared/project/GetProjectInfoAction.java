@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -27,10 +29,12 @@ public class GetProjectInfoAction implements ProjectAction<GetProjectInfoResult>
         this.projectId = checkNotNull(projectId);
     }
 
-    public static GetProjectInfoAction create(@Nonnull ProjectId projectId) {
+    @JsonCreator
+    public static GetProjectInfoAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId) {
         return new GetProjectInfoAction(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {

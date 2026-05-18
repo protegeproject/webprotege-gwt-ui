@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -29,8 +31,9 @@ public class GetEntityDiscussionThreadsAction implements ProjectAction<GetEntity
         this.entity = checkNotNull(entity);
     }
 
-    public static GetEntityDiscussionThreadsAction create(@Nonnull ProjectId projectId,
-                                                          @Nonnull OWLEntity entity) {
+    @JsonCreator
+    public static GetEntityDiscussionThreadsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                          @JsonProperty("entity") @Nonnull OWLEntity entity) {
         return new GetEntityDiscussionThreadsAction(projectId, entity);
     }
 
@@ -38,11 +41,13 @@ public class GetEntityDiscussionThreadsAction implements ProjectAction<GetEntity
     private GetEntityDiscussionThreadsAction() {
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("entity")
     @Nonnull
     public OWLEntity getEntity() {
         return entity;

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
@@ -31,16 +33,20 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
     private GetHierarchyRootsAction() {
     }
 
-    public static GetHierarchyRootsAction create(@Nonnull ProjectId projectId, @Nonnull HierarchyDescriptor hierarchyDescriptor) {
+    @JsonCreator
+    public static GetHierarchyRootsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                 @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor) {
         return new GetHierarchyRootsAction(projectId, hierarchyDescriptor);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("hierarchyDescriptor")
     @Nonnull
     public HierarchyDescriptor getHierarchyDescriptor() {
         return hierarchyDescriptor;

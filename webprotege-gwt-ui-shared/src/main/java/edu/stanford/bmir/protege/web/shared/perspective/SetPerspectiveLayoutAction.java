@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -46,23 +48,31 @@ public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveL
     public static SetPerspectiveLayoutAction create(ProjectId projectId, UserId userId, PerspectiveLayout layout) {
         return new SetPerspectiveLayoutAction(ChangeRequestId.get("123"), projectId, userId, layout);
     }
-    public static SetPerspectiveLayoutAction create(ChangeRequestId changeRequestId, ProjectId projectId, UserId userId, PerspectiveLayout layout) {
+    @JsonCreator
+    public static SetPerspectiveLayoutAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                    @JsonProperty("projectId") ProjectId projectId,
+                                                    @JsonProperty("userId") UserId userId,
+                                                    @JsonProperty("layout") PerspectiveLayout layout) {
         return new SetPerspectiveLayoutAction(changeRequestId, projectId, userId, layout);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("userId")
     public UserId getUserId() {
         return userId;
     }
 
+    @JsonProperty("layout")
     public PerspectiveLayout getLayout() {
         return layout;
     }
 
+    @JsonProperty("changeRequestId")
     public ChangeRequestId getChangeRequestId() {
         return changeRequestId;
     }

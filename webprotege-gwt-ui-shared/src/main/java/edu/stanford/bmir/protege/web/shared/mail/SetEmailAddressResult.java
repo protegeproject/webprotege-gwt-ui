@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -39,10 +41,12 @@ public class SetEmailAddressResult implements Result {
     private SetEmailAddressResult() {
     }
 
-    public SetEmailAddressResult(Result result) {
+    @JsonCreator
+    public SetEmailAddressResult(@JsonProperty("result") Result result) {
         this.result = checkNotNull(result);
     }
 
+    @JsonProperty("result")
     public Result getResult() {
         return result;
     }

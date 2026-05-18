@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -34,11 +36,13 @@ public class SetProjectPrefixDeclarationsResult implements Result {
     private SetProjectPrefixDeclarationsResult() {
     }
 
-    public static SetProjectPrefixDeclarationsResult create(@Nonnull ProjectId projectId,
-                                                            @Nonnull List<PrefixDeclaration> prefixDeclarations) {
+    @JsonCreator
+    public static SetProjectPrefixDeclarationsResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                            @JsonProperty("prefixDeclarations") @Nonnull List<PrefixDeclaration> prefixDeclarations) {
         return new SetProjectPrefixDeclarationsResult(projectId, prefixDeclarations);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
@@ -48,6 +52,7 @@ public class SetProjectPrefixDeclarationsResult implements Result {
      * Gets the prefix declarations that were set
      * @return A list of prefix declarations.
      */
+    @JsonProperty("prefixDeclarations")
     @Nonnull
     public List<PrefixDeclaration> getPrefixDeclarations() {
         return new ArrayList<>(prefixDeclarations);

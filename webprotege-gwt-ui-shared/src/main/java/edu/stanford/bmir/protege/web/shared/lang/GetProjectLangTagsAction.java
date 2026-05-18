@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -28,10 +30,12 @@ public class GetProjectLangTagsAction implements ProjectAction<GetProjectLangTag
     private GetProjectLangTagsAction() {
     }
 
-    public static GetProjectLangTagsAction create(@Nonnull ProjectId projectId) {
+    @JsonCreator
+    public static GetProjectLangTagsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId) {
         return new GetProjectLangTagsAction(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {

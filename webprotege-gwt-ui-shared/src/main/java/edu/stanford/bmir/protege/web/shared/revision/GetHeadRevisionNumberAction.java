@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.revision;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -27,10 +29,12 @@ public class GetHeadRevisionNumberAction implements ProjectAction<GetHeadRevisio
         this.projectId = checkNotNull(projectId);
     }
 
-    public static GetHeadRevisionNumberAction create(ProjectId projectId) {
+    @JsonCreator
+    public static GetHeadRevisionNumberAction create(@JsonProperty("projectId") ProjectId projectId) {
         return new GetHeadRevisionNumberAction(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -37,7 +39,9 @@ public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult>
         this.entityLookupRequest = checkNotNull(entityLookupRequest);
     }
 
-    public static LookupEntitiesAction create(ProjectId projectId, EntityLookupRequest entityLookupRequest) {
+    @JsonCreator
+    public static LookupEntitiesAction create(@JsonProperty("projectId") ProjectId projectId,
+                                              @JsonProperty("entityLookupRequest") EntityLookupRequest entityLookupRequest) {
         return new LookupEntitiesAction(projectId, entityLookupRequest);
     }
 
@@ -45,6 +49,7 @@ public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult>
      * Gets the {@link ProjectId} that identifies the project in which the lookup will be performed.
      * @return The {@link ProjectId}.  Not {@code null}.
      */
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {
@@ -55,6 +60,7 @@ public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult>
      * Gets the {@link EntityLookupRequest} that describes the lookup to be performed.
      * @return The {@link EntityLookupRequest}. Not {@code null}.
      */
+    @JsonProperty("entityLookupRequest")
     public EntityLookupRequest getEntityLookupRequest() {
         return entityLookupRequest;
     }

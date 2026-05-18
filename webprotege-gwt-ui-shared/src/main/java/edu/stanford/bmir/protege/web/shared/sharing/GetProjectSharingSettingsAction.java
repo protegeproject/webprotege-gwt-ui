@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -27,10 +29,12 @@ public class GetProjectSharingSettingsAction implements ProjectAction<GetProject
         this.projectId = checkNotNull(projectId);
     }
 
-    public static GetProjectSharingSettingsAction create(ProjectId projectId) {
+    @JsonCreator
+    public static GetProjectSharingSettingsAction create(@JsonProperty("projectId") ProjectId projectId) {
         return new GetProjectSharingSettingsAction(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {

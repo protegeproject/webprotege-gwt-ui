@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -28,10 +30,12 @@ public class GetProjectTagsAction implements ProjectAction<GetProjectTagsResult>
     private GetProjectTagsAction() {
     }
 
-    public static GetProjectTagsAction create(@Nonnull ProjectId projectId) {
+    @JsonCreator
+    public static GetProjectTagsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId) {
         return new GetProjectTagsAction(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {
