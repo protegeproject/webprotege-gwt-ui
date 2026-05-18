@@ -7,12 +7,14 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,12 +28,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.graphs.SetUserProjectEntityGraphSettings")
 public abstract class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphSettingsResult> {
 
+    public static SetUserProjectEntityGraphSettingsAction create(@Nonnull ProjectId projectId,
+                                                                 @Nullable UserId userId,
+                                                                 @Nonnull EntityGraphSettings settings) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, userId, settings);
+    }
+
     @JsonCreator
-    public static SetUserProjectEntityGraphSettingsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetUserProjectEntityGraphSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                                  @JsonProperty("userId") @Nullable UserId userId,
                                                                  @JsonProperty("settings") @Nonnull EntityGraphSettings settings) {
-        return new AutoValue_SetUserProjectEntityGraphSettingsAction(projectId, settings, userId);
+        return new AutoValue_SetUserProjectEntityGraphSettingsAction(changeRequestId, projectId, settings, userId);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
