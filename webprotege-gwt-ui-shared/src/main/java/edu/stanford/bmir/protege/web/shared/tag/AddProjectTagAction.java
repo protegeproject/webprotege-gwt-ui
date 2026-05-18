@@ -9,9 +9,11 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,18 +36,33 @@ public abstract class AddProjectTagAction implements ProjectAction<AddProjectTag
      * @param color The color for the tag (foreground).
      * @param backgroundColor The background-color for the tag
      */
+    @Nonnull
+    public static AddProjectTagAction create(@Nonnull ProjectId projectId,
+                                             @Nonnull String label,
+                                             @Nonnull String description,
+                                             @Nonnull Color color,
+                                             @Nonnull Color backgroundColor) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, label, description, color, backgroundColor);
+    }
+
     @JsonCreator
     @Nonnull
-    public static AddProjectTagAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                    @JsonProperty("label") @Nonnull String label,
-                                                    @JsonProperty("description") @Nonnull String description,
-                                                    @JsonProperty("color") @Nonnull Color color,
-                                                    @JsonProperty("backgroundColor") @Nonnull Color backgroundColor) {
-        return new AutoValue_AddProjectTagAction(projectId,
+    public static AddProjectTagAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                             @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                             @JsonProperty("label") @Nonnull String label,
+                                             @JsonProperty("description") @Nonnull String description,
+                                             @JsonProperty("color") @Nonnull Color color,
+                                             @JsonProperty("backgroundColor") @Nonnull Color backgroundColor) {
+        return new AutoValue_AddProjectTagAction(changeRequestId,
+                                                 projectId,
                                                  label,
                                                  description,
-                                       color, backgroundColor);
+                                                 color, backgroundColor);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
