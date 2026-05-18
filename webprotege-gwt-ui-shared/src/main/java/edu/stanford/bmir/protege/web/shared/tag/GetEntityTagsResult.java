@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -34,14 +36,16 @@ public class GetEntityTagsResult implements Result {
     private GetEntityTagsResult() {
     }
 
-    public static GetEntityTagsResult create(@Nonnull Collection<Tag> entityTags,
-                                             @Nonnull Collection<Tag> projectTags) {
+    @JsonCreator
+    public static GetEntityTagsResult create(@JsonProperty("entityTags") @Nonnull Collection<Tag> entityTags,
+                                             @JsonProperty("projectTags") @Nonnull Collection<Tag> projectTags) {
         return new GetEntityTagsResult(entityTags, projectTags);
     }
 
     /**
      * Gets the tags for the requested entity and project.
      */
+    @JsonProperty("entityTags")
     @Nonnull
     public List<Tag> getEntityTags() {
         return new ArrayList<>(entityTags);
@@ -51,6 +55,7 @@ public class GetEntityTagsResult implements Result {
      * Gets the tags for the requested project.  These represent the available
      * entity tags.
      */
+    @JsonProperty("projectTags")
     @Nonnull
     public List<Tag> getProjectTags() {
         return new ArrayList<>(projectTags);

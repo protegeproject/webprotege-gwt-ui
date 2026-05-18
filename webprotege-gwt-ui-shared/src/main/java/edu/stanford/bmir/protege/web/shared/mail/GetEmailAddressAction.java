@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -35,7 +37,8 @@ public class GetEmailAddressAction implements Action<GetEmailAddressResult> {
         }
     }
 
-    public static GetEmailAddressAction create(UserId userId) {
+    @JsonCreator
+    public static GetEmailAddressAction create(@JsonProperty("userId") UserId userId) {
         return new GetEmailAddressAction(userId);
     }
 
@@ -43,6 +46,7 @@ public class GetEmailAddressAction implements Action<GetEmailAddressResult> {
      * Gets the {@link UserId} of the user whose email address is to be retrieved.
      * @return The {@link UserId}.  Not {@code null}.
      */
+    @JsonProperty("userId")
     public UserId getUserId() {
         return userId;
     }

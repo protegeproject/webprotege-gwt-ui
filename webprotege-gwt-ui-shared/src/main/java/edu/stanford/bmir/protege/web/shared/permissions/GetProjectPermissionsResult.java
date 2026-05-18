@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
@@ -28,10 +30,12 @@ public class GetProjectPermissionsResult implements Result {
         this.allowedActions = ImmutableSet.copyOf(allowedActions);
     }
 
-    public static GetProjectPermissionsResult create(Set<Capability> allowedActions) {
+    @JsonCreator
+    public static GetProjectPermissionsResult create(@JsonProperty("allowedActions") Set<Capability> allowedActions) {
         return new GetProjectPermissionsResult(allowedActions);
     }
 
+    @JsonProperty("allowedActions")
     public Set<Capability> getAllowedActions() {
         return allowedActions;
     }

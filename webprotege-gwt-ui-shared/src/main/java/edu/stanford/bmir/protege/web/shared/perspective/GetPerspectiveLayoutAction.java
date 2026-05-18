@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -35,19 +37,25 @@ public class GetPerspectiveLayoutAction implements ProjectAction<GetPerspectiveL
         this.perspectiveId = checkNotNull(perspectiveId);
     }
 
-    public static GetPerspectiveLayoutAction create(ProjectId projectId, UserId userId, PerspectiveId perspectiveId) {
+    @JsonCreator
+    public static GetPerspectiveLayoutAction create(@JsonProperty("projectId") ProjectId projectId,
+                                                    @JsonProperty("userId") UserId userId,
+                                                    @JsonProperty("perspectiveId") PerspectiveId perspectiveId) {
         return new GetPerspectiveLayoutAction(projectId, userId, perspectiveId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("userId")
     public UserId getUserId() {
         return userId;
     }
 
+    @JsonProperty("perspectiveId")
     public PerspectiveId getPerspectiveId() {
         return perspectiveId;
     }

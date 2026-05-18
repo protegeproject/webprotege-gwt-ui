@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -23,10 +25,12 @@ public class CreateNewProjectResult implements Result {
     private CreateNewProjectResult() {
     }
 
-    public CreateNewProjectResult(ProjectDetails projectDetails) {
+    @JsonCreator
+    public CreateNewProjectResult(@JsonProperty("projectDetails") ProjectDetails projectDetails) {
         this.projectDetails = checkNotNull(projectDetails);
     }
 
+    @JsonProperty("projectDetails")
     public ProjectDetails getProjectDetails() {
         return projectDetails;
     }

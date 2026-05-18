@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -34,7 +36,10 @@ public class SetProjectSharingSettingsAction implements ProjectAction<SetProject
         this.changeRequestId = changeRequestId;
     }
 
-    public static SetProjectSharingSettingsAction create(ProjectSharingSettings projectSharingSettings,  ChangeRequestId changeRequestId, ProjectId projectId) {
+    @JsonCreator
+    public static SetProjectSharingSettingsAction create(@JsonProperty("settings") ProjectSharingSettings projectSharingSettings,
+                                                         @JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                         @JsonProperty("projectId") ProjectId projectId) {
         return new SetProjectSharingSettingsAction(projectSharingSettings, changeRequestId, projectId);
     }
 
@@ -44,10 +49,12 @@ public class SetProjectSharingSettingsAction implements ProjectAction<SetProject
         return settings.getProjectId();
     }
 
+    @JsonProperty("settings")
     public ProjectSharingSettings getSettings() {
         return settings;
     }
 
+    @JsonProperty("changeRequestId")
     public ChangeRequestId getChangeRequestId() {
         return changeRequestId;
     }

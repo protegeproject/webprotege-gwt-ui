@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -25,8 +27,9 @@ public class SetDiscussionThreadStatusResult implements Result {
 
     private EventList<ProjectEvent<?>> eventList;
 
-    public SetDiscussionThreadStatusResult(@Nonnull ThreadId threadId,
-                                           @Nonnull Status result) {
+    @JsonCreator
+    public SetDiscussionThreadStatusResult(@JsonProperty("threadId") @Nonnull ThreadId threadId,
+                                           @JsonProperty("result") @Nonnull Status result) {
         this.threadId = checkNotNull(threadId);
         this.result = checkNotNull(result);
         this.eventList = checkNotNull(eventList);
@@ -36,11 +39,13 @@ public class SetDiscussionThreadStatusResult implements Result {
     private SetDiscussionThreadStatusResult() {
     }
 
+    @JsonProperty("threadId")
     @Nonnull
     public ThreadId getThreadId() {
         return threadId;
     }
 
+    @JsonProperty("result")
     @Nonnull
     public Status getResult() {
         return result;

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -22,10 +24,12 @@ public class GetProjectDetailsAction implements Action<GetProjectDetailsResult>,
     private GetProjectDetailsAction() {
     }
 
-    public GetProjectDetailsAction(ProjectId projectId) {
+    @JsonCreator
+    public GetProjectDetailsAction(@JsonProperty("projectId") ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     @Override
     public ProjectId getProjectId() {

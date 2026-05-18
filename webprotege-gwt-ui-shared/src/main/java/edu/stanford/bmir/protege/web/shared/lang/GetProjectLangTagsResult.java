@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -35,16 +37,19 @@ public class GetProjectLangTagsResult implements Result {
     private GetProjectLangTagsResult() {
     }
 
-    public static GetProjectLangTagsResult create(@Nonnull ProjectId projectId,
-                                                  @Nonnull ImmutableSet<LangTag> langTags) {
+    @JsonCreator
+    public static GetProjectLangTagsResult create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                  @JsonProperty("langTags") @Nonnull ImmutableSet<LangTag> langTags) {
         return new GetProjectLangTagsResult(projectId, langTags);
     }
 
+    @JsonProperty("projectId")
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @JsonProperty("langTags")
     @Nonnull
     public ImmutableSet<LangTag> getLangTags() {
         return langTags;
