@@ -8,9 +8,11 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,11 +27,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class SetEntityGraphActiveFiltersAction implements ProjectAction<SetEntityGraphActiveFiltersResult> {
 
 
-    @JsonCreator
-    public static SetEntityGraphActiveFiltersAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                           @JsonProperty("activeFilters") @Nonnull ImmutableList<FilterName> activeFilters) {
-        return new AutoValue_SetEntityGraphActiveFiltersAction(projectId, activeFilters);
+    public static SetEntityGraphActiveFiltersAction create(@Nonnull ProjectId projectId,
+                                                           @Nonnull ImmutableList<FilterName> activeFilters) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, activeFilters);
     }
+
+    @JsonCreator
+    public static SetEntityGraphActiveFiltersAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                           @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                           @JsonProperty("activeFilters") @Nonnull ImmutableList<FilterName> activeFilters) {
+        return new AutoValue_SetEntityGraphActiveFiltersAction(changeRequestId, projectId, activeFilters);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
