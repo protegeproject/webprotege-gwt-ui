@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,18 +21,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.discussions.SetDiscussionThreadStatus")
 public class SetDiscussionThreadStatusAction implements ProjectAction<SetDiscussionThreadStatusResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private ProjectId projectId;
 
     private ThreadId threadId;
 
     private Status status;
 
-    public SetDiscussionThreadStatusAction(@Nonnull ProjectId projectId,
-                                           @Nonnull ThreadId threadId,
-                                           @Nonnull Status status) {
+    @JsonCreator
+    public SetDiscussionThreadStatusAction(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                           @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                           @JsonProperty("threadId") @Nonnull ThreadId threadId,
+                                           @JsonProperty("status") @Nonnull Status status) {
+        this.changeRequestId = checkNotNull(changeRequestId);
         this.projectId = checkNotNull(projectId);
         this.threadId = checkNotNull(threadId);
         this.status = checkNotNull(status);
+    }
+
+    public SetDiscussionThreadStatusAction(@Nonnull ProjectId projectId,
+                                           @Nonnull ThreadId threadId,
+                                           @Nonnull Status status) {
+        this(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, threadId, status);
     }
 
     @GwtSerializationConstructor
@@ -39,6 +54,12 @@ public class SetDiscussionThreadStatusAction implements ProjectAction<SetDiscuss
                                                                             @Nonnull ThreadId threadId,
                                                                             @Nonnull Status status) {
         return new SetDiscussionThreadStatusAction(projectId, threadId, status);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Override
