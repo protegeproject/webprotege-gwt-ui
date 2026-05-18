@@ -7,9 +7,11 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -21,12 +23,23 @@ import javax.annotation.Nonnull;
 @JsonTypeName("webprotege.projects.MergeUploadedProject")
 public abstract class MergeUploadedProjectAction extends AbstractHasProjectAction<MergeUploadedProjectResult> {
 
+    public static MergeUploadedProjectAction create(ProjectId projectId,
+                                                    DocumentId uploadedDocumentId,
+                                                    String commitMessage) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, uploadedDocumentId, commitMessage);
+    }
+
     @JsonCreator
-    public static MergeUploadedProjectAction create(@JsonProperty("projectId") ProjectId projectId,
+    public static MergeUploadedProjectAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                    @JsonProperty("projectId") ProjectId projectId,
                                                     @JsonProperty("documentId") DocumentId uploadedDocumentId,
                                                     @JsonProperty("commitMessage") String commitMessage) {
-        return new AutoValue_MergeUploadedProjectAction(projectId, uploadedDocumentId, commitMessage);
+        return new AutoValue_MergeUploadedProjectAction(changeRequestId, projectId, uploadedDocumentId, commitMessage);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
