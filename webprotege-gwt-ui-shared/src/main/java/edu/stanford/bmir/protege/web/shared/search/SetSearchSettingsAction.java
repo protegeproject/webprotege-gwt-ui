@@ -8,9 +8,11 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,12 +26,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.search.SetSearchSettings")
 public abstract class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsResult> {
 
+    public static SetSearchSettingsAction create(@Nonnull ProjectId projectId,
+                                                 @Nonnull ImmutableList<EntitySearchFilter> from,
+                                                 @Nonnull ImmutableList<EntitySearchFilter> to) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, from, to);
+    }
+
     @JsonCreator
-    public static SetSearchSettingsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetSearchSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                  @JsonProperty("from") @Nonnull ImmutableList<EntitySearchFilter> from,
                                                  @JsonProperty("to") @Nonnull ImmutableList<EntitySearchFilter> to) {
-        return new AutoValue_SetSearchSettingsAction(projectId, from, to);
+        return new AutoValue_SetSearchSettingsAction(changeRequestId, projectId, from, to);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
