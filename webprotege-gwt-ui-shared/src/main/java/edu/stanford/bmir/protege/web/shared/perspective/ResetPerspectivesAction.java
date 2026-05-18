@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,11 +24,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.perspectives.ResetPerspectives")
 public abstract class ResetPerspectivesAction implements ProjectAction<ResetPerspectivesResult> {
 
+    public static ResetPerspectivesAction create(@Nonnull ProjectId projectId) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId);
+    }
 
     @JsonCreator
-    public static ResetPerspectivesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId) {
-        return new AutoValue_ResetPerspectivesAction(projectId);
+    public static ResetPerspectivesAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId) {
+        return new AutoValue_ResetPerspectivesAction(changeRequestId, projectId);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
