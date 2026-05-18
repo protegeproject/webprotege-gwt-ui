@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,6 +18,8 @@ import javax.annotation.Nonnull;
  */
 @JsonTypeName("webprotege.projects.SetEntityCrudKitSettings")
 public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCrudKitSettingsResult> {
+
+    private ChangeRequestId changeRequestId;
 
     private ProjectId projectId;
 
@@ -29,11 +35,27 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
     private SetEntityCrudKitSettingsAction() {
     }
 
-    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings fromSettings, EntityCrudKitSettings toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
+    @JsonCreator
+    public SetEntityCrudKitSettingsAction(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                          @JsonProperty("projectId") ProjectId projectId,
+                                          @JsonProperty("fromSettings") EntityCrudKitSettings fromSettings,
+                                          @JsonProperty("toSettings") EntityCrudKitSettings toSettings,
+                                          @JsonProperty("prefixUpdateStrategy") IRIPrefixUpdateStrategy prefixUpdateStrategy) {
+        this.changeRequestId = changeRequestId;
         this.projectId = projectId;
         this.toSettings = toSettings;
         this.fromSettings = fromSettings;
         this.prefixUpdateStrategy = prefixUpdateStrategy;
+    }
+
+    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings fromSettings, EntityCrudKitSettings toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
+        this(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, fromSettings, toSettings, prefixUpdateStrategy);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Nonnull
