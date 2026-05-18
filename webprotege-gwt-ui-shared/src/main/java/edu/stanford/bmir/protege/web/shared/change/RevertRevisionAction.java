@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,6 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.history.RevertRevision")
 public class RevertRevisionAction implements ProjectAction<RevertRevisionResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private RevisionNumber revisionNumber;
 
     private ProjectId projectId;
@@ -31,15 +35,28 @@ public class RevertRevisionAction implements ProjectAction<RevertRevisionResult>
     private RevertRevisionAction() {
     }
 
-    private RevertRevisionAction(ProjectId projectId, RevisionNumber revisionNumber) {
+    private RevertRevisionAction(ChangeRequestId changeRequestId, ProjectId projectId, RevisionNumber revisionNumber) {
+        this.changeRequestId = checkNotNull(changeRequestId);
         this.projectId = checkNotNull(projectId);
         this.revisionNumber = checkNotNull(revisionNumber);
     }
 
+    public static RevertRevisionAction create(ProjectId projectId,
+                                              RevisionNumber revisionNumber) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, revisionNumber);
+    }
+
     @JsonCreator
-    public static RevertRevisionAction create(@JsonProperty("projectId") ProjectId projectId,
+    public static RevertRevisionAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                              @JsonProperty("projectId") ProjectId projectId,
                                               @JsonProperty("revisionNumber") RevisionNumber revisionNumber) {
-        return new RevertRevisionAction(projectId, revisionNumber);
+        return new RevertRevisionAction(changeRequestId, projectId, revisionNumber);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Nonnull
