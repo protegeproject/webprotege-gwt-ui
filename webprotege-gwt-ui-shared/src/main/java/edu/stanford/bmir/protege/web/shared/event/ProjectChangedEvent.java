@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
@@ -27,6 +30,8 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
     public transient static final Event.Type<ProjectChangedHandler> TYPE = new Event.Type<ProjectChangedHandler>();
 
+    private String eventId;
+
     private Set<OWLEntityData> subjects;
 
     private RevisionSummary revisionSummary;
@@ -50,6 +55,22 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
         this.subjects = new HashSet<OWLEntityData>(subjects);
     }
 
+    @JsonCreator
+    public ProjectChangedEvent(@JsonProperty("eventId") String eventId,
+                               @JsonProperty("projectId") ProjectId source,
+                               @JsonProperty("revisionSummary") RevisionSummary revisionSummary,
+                               @JsonProperty("subjects") Set<OWLEntityData> subjects) {
+        super(source);
+        this.eventId = eventId;
+        this.revisionSummary = checkNotNull(revisionSummary);
+        this.subjects = new HashSet<OWLEntityData>(subjects);
+    }
+
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
+    }
+
     /**
      * Gets the revision summary for this event.
      * @return The {@link RevisionSummary}.  Not {@code null}.
@@ -62,6 +83,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
      * Gets the {@link RevisionNumber} of the project after the changes were applied.
      * @return The {@link RevisionNumber}.  Not {@code null}.
      */
+    @JsonIgnore
     public RevisionNumber getRevisionNumber() {
         return revisionSummary.getRevisionNumber();
     }
@@ -70,6 +92,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
      * Gets the {@link UserId} of the user that caused the changes to be applied.
      * @return The {@link UserId} of the user.  Not {@code null}.
      */
+    @JsonIgnore
     public UserId getUserId() {
         return revisionSummary.getUserId();
     }
@@ -78,6 +101,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
      * Gets the timestamp that represents the time the changes were applied.
      * @return The timestamp.
      */
+    @JsonIgnore
     public long getTimestamp() {
         return revisionSummary.getTimestamp();
     }
@@ -93,6 +117,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
 
 
+    @JsonIgnore
     @Override
     public Event.Type<ProjectChangedHandler> getAssociatedType() {
         return TYPE;
