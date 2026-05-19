@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -15,14 +18,29 @@ public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChanges
 
     public static final Event.Type<LargeNumberOfChangesHandler> LARGE_NUMBER_OF_CHANGES = new Event.Type<>();
 
+    private String eventId;
+
     public LargeNumberOfChangesEvent(ProjectId source) {
         super(source);
+    }
+
+    @JsonCreator
+    public LargeNumberOfChangesEvent(@JsonProperty("eventId") String eventId,
+                                     @JsonProperty("projectId") ProjectId source) {
+        super(source);
+        this.eventId = eventId;
     }
 
     @GwtSerializationConstructor
     private LargeNumberOfChangesEvent() {
     }
 
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
+    }
+
+    @JsonIgnore
     @Override
     public Event.Type<LargeNumberOfChangesHandler> getAssociatedType() {
         return LARGE_NUMBER_OF_CHANGES;
