@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.individuals;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -70,6 +71,13 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
                                               @Nonnull InstanceRetrievalMode instanceRetrievalMode,
                                               @Nonnull Optional<PageRequest> pageRequest) {
         return new GetIndividualsAction(projectId, type, filterString, instanceRetrievalMode, pageRequest);
+    }
+
+    @Nonnull
+    @Override
+    @JsonProperty("projectId")
+    public ProjectId getProjectId() {
+        return super.getProjectId();
     }
 
     /**
