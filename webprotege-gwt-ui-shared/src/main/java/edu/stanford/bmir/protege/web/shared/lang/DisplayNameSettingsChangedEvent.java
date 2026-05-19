@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
@@ -23,6 +24,8 @@ public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSet
 
     public static final transient Event.Type<DisplayNameSettingsChangedHandler> ON_DISPLAY_LANGUAGE_CHANGED = new Event.Type<>();
 
+    private String eventId;
+
     @Nonnull
     private final DisplayNameSettings displayNameSettings;
 
@@ -32,10 +35,29 @@ public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSet
         this.displayNameSettings = checkNotNull(displayNameSettings);
     }
 
-    @JsonCreator
-    public static DisplayNameSettingsChangedEvent get(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                                      @JsonProperty("displayNameSettings") @Nonnull DisplayNameSettings displayNameSettings) {
+    private DisplayNameSettingsChangedEvent(String eventId,
+                                            @Nonnull ProjectId source,
+                                            @Nonnull DisplayNameSettings displayNameSettings) {
+        super(source);
+        this.eventId = eventId;
+        this.displayNameSettings = checkNotNull(displayNameSettings);
+    }
+
+    public static DisplayNameSettingsChangedEvent get(@Nonnull ProjectId projectId,
+                                                      @Nonnull DisplayNameSettings displayNameSettings) {
         return new DisplayNameSettingsChangedEvent(projectId, displayNameSettings);
+    }
+
+    @JsonCreator
+    public static DisplayNameSettingsChangedEvent get(@JsonProperty("eventId") String eventId,
+                                                      @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                                      @JsonProperty("displayNameSettings") @Nonnull DisplayNameSettings displayNameSettings) {
+        return new DisplayNameSettingsChangedEvent(eventId, projectId, displayNameSettings);
+    }
+
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
     }
 
     @Nonnull
@@ -43,6 +65,7 @@ public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSet
         return ON_DISPLAY_LANGUAGE_CHANGED;
     }
 
+    @JsonIgnore
     @Override
     public Event.Type<DisplayNameSettingsChangedHandler> getAssociatedType() {
         return ON_DISPLAY_LANGUAGE_CHANGED;
