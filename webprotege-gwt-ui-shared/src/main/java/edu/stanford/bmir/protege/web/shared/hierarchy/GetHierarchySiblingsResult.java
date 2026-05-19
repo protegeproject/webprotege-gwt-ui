@@ -24,9 +24,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class GetHierarchySiblingsResult implements Result {
 
     @JsonCreator
-    public static GetHierarchySiblingsResult create(@JsonProperty("siblings") Page<GraphNode<EntityNode>> siblingsPage) {
+    public static GetHierarchySiblingsResult create(@JsonProperty("siblingsPage") Page<GraphNode<EntityNode>> siblingsPage) {
         return new AutoValue_GetHierarchySiblingsResult(siblingsPage);
     }
 
+    @JsonProperty("siblingsPage")
     public abstract Page<GraphNode<EntityNode>> getSiblings();
 }
