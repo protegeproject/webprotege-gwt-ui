@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
@@ -27,21 +28,40 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();
 
+    private String eventId;
+
     private HierarchyDescriptor hierarchyDescriptor;
 
     private GraphModelChangedEvent<EntityNode> changeEvent;
 
     private ChangeRequestId changeRequestId;
 
-    @JsonCreator
-    public EntityHierarchyChangedEvent(@JsonProperty("projectId") @Nonnull ProjectId source,
-                                       @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
-                                       @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
-                                       @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+    public EntityHierarchyChangedEvent(@Nonnull ProjectId source,
+                                       @Nonnull HierarchyDescriptor hierarchyDescriptor,
+                                       @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
+                                       ChangeRequestId changeRequestId) {
         super(source);
         this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
         this.changeEvent = checkNotNull(changeEvent);
         this.changeRequestId = changeRequestId;
+    }
+
+    @JsonCreator
+    public EntityHierarchyChangedEvent(@JsonProperty("eventId") String eventId,
+                                       @JsonProperty("projectId") @Nonnull ProjectId source,
+                                       @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
+                                       @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
+                                       @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        super(source);
+        this.eventId = eventId;
+        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
+        this.changeEvent = checkNotNull(changeEvent);
+        this.changeRequestId = changeRequestId;
+    }
+
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
     }
 
     @JsonProperty("hierarchyDescriptor")
@@ -60,6 +80,7 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
         return changeRequestId;
     }
 
+    @JsonIgnore
     @Override
     public Event.Type<EntityHierarchyChangedHandler> getAssociatedType() {
         return ON_HIERARCHY_CHANGED;
