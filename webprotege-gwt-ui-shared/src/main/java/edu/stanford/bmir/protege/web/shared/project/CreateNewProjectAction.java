@@ -28,12 +28,13 @@ public class CreateNewProjectAction implements Action<CreateNewProjectResult> {
     }
 
     @JsonCreator
-    public CreateNewProjectAction(@JsonProperty("projectId") ProjectId newProjectId,
+    public CreateNewProjectAction(@JsonProperty("newProjectId") ProjectId newProjectId,
                                   @JsonProperty("newProjectSettings") NewProjectSettings newProjectSettings) {
         this.newProjectId = newProjectId;
         this.newProjectSettings = checkNotNull(newProjectSettings);
     }
 
+    @JsonProperty("newProjectId")
     public ProjectId getNewProjectId() {
         return newProjectId;
     }
