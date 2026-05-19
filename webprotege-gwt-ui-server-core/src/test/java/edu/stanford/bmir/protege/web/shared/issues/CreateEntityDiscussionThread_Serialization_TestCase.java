@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class CreateEntityDiscussionThread_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = CreateEntityDiscussionThreadAction.create(ProjectId.getNil(), MockingUtils.mockOWLClass(),
+        var action = CreateEntityDiscussionThreadAction.create(ChangeRequestId.generate(), ProjectId.getNil(), MockingUtils.mockOWLClass(),
                                                 "The comment");
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }

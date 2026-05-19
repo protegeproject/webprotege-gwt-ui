@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class SetProjectTags_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetProjectTagsAction.create(mockProjectId(), ImmutableList.of(
+        var action = SetProjectTagsAction.create(ChangeRequestId.generate(), mockProjectId(), ImmutableList.of(
                 TagData.get(TagId.createTagId(),
                             "Label",
                             "Description",

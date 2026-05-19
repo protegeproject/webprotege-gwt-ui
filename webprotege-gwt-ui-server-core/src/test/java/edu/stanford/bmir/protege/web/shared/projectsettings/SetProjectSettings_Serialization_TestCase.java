@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class SetProjectSettings_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetProjectSettingsAction.create(ProjectSettings.get(
+        var settings = ProjectSettings.get(
                 mockProjectId(),
                 "The display name",
                 "The description",
@@ -31,7 +32,8 @@ public class SetProjectSettings_Serialization_TestCase {
                 SlackIntegrationSettings.get("url"),
                 WebhookSettings.get(ImmutableList.of()),
                 EntityDeprecationSettings.empty()
-        ));
+        );
+        var action = SetProjectSettingsAction.create(ChangeRequestId.generate(), settings.getProjectId(), settings);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

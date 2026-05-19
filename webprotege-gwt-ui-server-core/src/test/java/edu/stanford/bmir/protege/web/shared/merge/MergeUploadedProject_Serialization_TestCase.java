@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.merge;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class MergeUploadedProject_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = MergeUploadedProjectAction.create(mockProjectId(),
+        var action = MergeUploadedProjectAction.create(ChangeRequestId.generate(), mockProjectId(),
                                                        mockDocumentId(),
                                                        "Test");
         JsonSerializationTestUtil.testSerialization(action, Action.class);

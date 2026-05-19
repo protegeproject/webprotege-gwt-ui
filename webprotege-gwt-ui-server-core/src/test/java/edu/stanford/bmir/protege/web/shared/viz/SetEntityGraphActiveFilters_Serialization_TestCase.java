@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class SetEntityGraphActiveFilters_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetEntityGraphActiveFiltersAction.create(mockProjectId(), ImmutableList.of(
+        var action = SetEntityGraphActiveFiltersAction.create(ChangeRequestId.generate(), mockProjectId(), ImmutableList.of(
                 FilterName.get("Hello")
         ));
         JsonSerializationTestUtil.testSerialization(action, Action.class);

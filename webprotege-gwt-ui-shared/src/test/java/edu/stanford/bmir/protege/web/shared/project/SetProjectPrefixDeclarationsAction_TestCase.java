@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,13 +30,13 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
         prefixDeclarations = new ArrayList<>();
         prefixDeclarations.add(mock(PrefixDeclaration.class));
-        action = SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations);
+        action = SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), projectId, prefixDeclarations);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        SetProjectPrefixDeclarationsAction.create(null, prefixDeclarations);
+        SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), null, prefixDeclarations);
     }
 
     @Test
@@ -46,7 +47,7 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_prefixDeclarations_IsNull() {
-        SetProjectPrefixDeclarationsAction.create(projectId, null);
+        SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), projectId, null);
     }
 
     @Test
@@ -67,24 +68,24 @@ public class SetProjectPrefixDeclarationsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(action, is(SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations)));
+        assertThat(action, is(SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), projectId, prefixDeclarations)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(mock(ProjectId.class), prefixDeclarations))));
+        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), mock(ProjectId.class), prefixDeclarations))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_prefixDeclarations() {
         List<PrefixDeclaration> otherDecls = new ArrayList<>();
         otherDecls.add(mock(PrefixDeclaration.class));
-        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(projectId, otherDecls))));
+        assertThat(action, is(Matchers.not(SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), projectId, otherDecls))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(action.hashCode(), is(SetProjectPrefixDeclarationsAction.create(projectId, prefixDeclarations).hashCode()));
+        assertThat(action.hashCode(), is(SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), projectId, prefixDeclarations).hashCode()));
     }
 
     @Test
