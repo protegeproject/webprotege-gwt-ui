@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
@@ -26,6 +29,8 @@ public class ProjectTagsChangedEvent extends ProjectEvent<ProjectTagsChangedHand
     public static final transient Event.Type<ProjectTagsChangedHandler> ON_PROJECT_TAGS_CHANGED = new Event.Type<>();
 
 
+    private String eventId;
+
     private Collection<Tag> projectTags;
 
     @Inject
@@ -35,8 +40,22 @@ public class ProjectTagsChangedEvent extends ProjectEvent<ProjectTagsChangedHand
         this.projectTags = ImmutableList.copyOf(checkNotNull(projectTags));
     }
 
+    @JsonCreator
+    public ProjectTagsChangedEvent(@JsonProperty("eventId") String eventId,
+                                   @JsonProperty("projectId") @Nonnull ProjectId source,
+                                   @JsonProperty("projectTags") @Nonnull Collection<Tag> projectTags) {
+        super(source);
+        this.eventId = eventId;
+        this.projectTags = ImmutableList.copyOf(checkNotNull(projectTags));
+    }
+
     @GwtSerializationConstructor
     private ProjectTagsChangedEvent() {
+    }
+
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
     }
 
     /**
@@ -47,6 +66,7 @@ public class ProjectTagsChangedEvent extends ProjectEvent<ProjectTagsChangedHand
         return projectTags;
     }
 
+    @JsonIgnore
     @Override
     public Event.Type<ProjectTagsChangedHandler> getAssociatedType() {
         return ON_PROJECT_TAGS_CHANGED;
