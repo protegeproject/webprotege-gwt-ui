@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
@@ -23,7 +24,7 @@ public class SetPerspectives_Serialization_TestCase {
     @Test
     public void shouldSerializeAction() throws IOException {
         var action = SetPerspectivesAction.create(mockProjectId(),
-                                                  mockUserId(), ImmutableList.of(
+                                                  Optional.of(mockUserId()), ImmutableList.of(
                                                           PerspectiveDescriptor.get(PerspectiveId.generate(),
                                                                                     LanguageMap.of("en", "Hello"),
                                                                                     true)
