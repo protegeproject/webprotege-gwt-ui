@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -72,6 +74,21 @@ public class ChangeRequestId implements Serializable, IsSerializable {
     @Nonnull
     public static ChangeRequestId getNil() {
         return get(UUIDUtil.getNilUuid());
+    }
+
+    /**
+     * Mints a fresh {@link ChangeRequestId} backed by a random UUID.
+     *
+     * <p>JVM-only helper intended for tests — mirrors the convention used by
+     * {@code PerspectiveId.generate()}, {@code FormId.generate()}, etc. The GWT
+     * compile skips this method because {@code java.util.UUID} is not emulated
+     * on the client; client code mints {@code ChangeRequestId} via
+     * {@code ChangeRequestId.get(uuidV4Provider.get())} instead.</p>
+     */
+    @GwtIncompatible
+    @Nonnull
+    public static ChangeRequestId generate() {
+        return get(UUID.randomUUID().toString());
     }
 
     public static ChangeRequestId valueOf(@Nonnull String uuid) throws IllegalArgumentException {
