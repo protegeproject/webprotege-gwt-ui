@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
@@ -21,6 +24,8 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     public transient static final Event.Type<WatchRemovedHandler> ON_WATCH_REMOVED = new Event.Type<WatchRemovedHandler>();
 
+    private String eventId;
+
     private Watch watch;
 
     public WatchRemovedEvent(ProjectId source, Watch watch) {
@@ -28,9 +33,24 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
         this.watch = watch;
     }
 
+    @JsonCreator
+    public WatchRemovedEvent(@JsonProperty("eventId") String eventId,
+                             @JsonProperty("projectId") ProjectId source,
+                             @JsonProperty("watch") Watch watch) {
+        super(source);
+        this.eventId = eventId;
+        this.watch = watch;
+    }
+
     private WatchRemovedEvent() {
     }
 
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
+    }
+
+    @JsonIgnore
     @Override
     public Event.Type<WatchRemovedHandler> getAssociatedType() {
         return ON_WATCH_REMOVED;
@@ -45,6 +65,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
         return watch;
     }
 
+    @JsonIgnore
     public UserId getUserId() {
         return watch.getUserId();
     }
