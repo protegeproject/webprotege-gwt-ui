@@ -8,11 +8,13 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,11 +29,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.tags.SetProjectTags")
 public abstract class SetProjectTagsAction implements ProjectAction<SetProjectTagsResult> {
 
-    @JsonCreator
-    public static SetProjectTagsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                              @JsonProperty("tagData") @Nonnull List<TagData> tagData) {
-        return new AutoValue_SetProjectTagsAction(projectId, tagData);
+    public static SetProjectTagsAction create(@Nonnull ProjectId projectId,
+                                              @Nonnull List<TagData> tagData) {
+        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, tagData);
     }
+
+    @JsonCreator
+    public static SetProjectTagsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                              @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                              @JsonProperty("tagData") @Nonnull List<TagData> tagData) {
+        return new AutoValue_SetProjectTagsAction(changeRequestId, projectId, tagData);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override
