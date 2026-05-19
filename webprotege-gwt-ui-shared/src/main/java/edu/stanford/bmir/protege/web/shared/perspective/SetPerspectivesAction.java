@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
@@ -18,7 +17,6 @@ import jsinterop.annotations.JsIgnore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,18 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class SetPerspectivesAction implements ProjectAction<SetPerspectivesResult>, HasProjectId {
 
 
-    @GwtIncompatible
-    public static SetPerspectivesAction create(@Nonnull ProjectId projectId,
-                                               @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, null, perspectives);
-    }
 
-    @GwtIncompatible
-    public static SetPerspectivesAction create(@Nonnull ProjectId projectId,
-                                               @Nonnull Optional<UserId> userId,
-                                               @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, userId.orElse(null), perspectiveIds);
-    }
 
     @JsonCreator
     public static SetPerspectivesAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

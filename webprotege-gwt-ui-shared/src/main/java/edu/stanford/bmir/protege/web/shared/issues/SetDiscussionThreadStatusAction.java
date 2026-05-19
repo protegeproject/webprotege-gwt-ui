@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.common.annotations.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -13,7 +12,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -42,22 +40,9 @@ public class SetDiscussionThreadStatusAction implements ProjectAction<SetDiscuss
         this.status = checkNotNull(status);
     }
 
-    @GwtIncompatible
-    public SetDiscussionThreadStatusAction(@Nonnull ProjectId projectId,
-                                           @Nonnull ThreadId threadId,
-                                           @Nonnull Status status) {
-        this(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, threadId, status);
-    }
 
     @GwtSerializationConstructor
     private SetDiscussionThreadStatusAction() {
-    }
-
-    @GwtIncompatible
-    public static SetDiscussionThreadStatusAction setDiscussionThreadStatus(@Nonnull ProjectId projectId,
-                                                                            @Nonnull ThreadId threadId,
-                                                                            @Nonnull Status status) {
-        return new SetDiscussionThreadStatusAction(projectId, threadId, status);
     }
 
     @Nonnull

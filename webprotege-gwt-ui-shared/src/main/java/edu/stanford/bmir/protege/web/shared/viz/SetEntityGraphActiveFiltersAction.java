@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -16,7 +15,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -29,11 +27,6 @@ import java.util.UUID;
 public abstract class SetEntityGraphActiveFiltersAction implements ProjectAction<SetEntityGraphActiveFiltersResult> {
 
 
-    @GwtIncompatible
-    public static SetEntityGraphActiveFiltersAction create(@Nonnull ProjectId projectId,
-                                                           @Nonnull ImmutableList<FilterName> activeFilters) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, activeFilters);
-    }
 
     @JsonCreator
     public static SetEntityGraphActiveFiltersAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

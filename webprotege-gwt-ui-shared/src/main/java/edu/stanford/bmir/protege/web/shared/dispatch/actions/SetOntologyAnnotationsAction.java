@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
@@ -16,7 +15,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,13 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class SetOntologyAnnotationsAction extends AbstractHasProjectAction<SetOntologyAnnotationsResult> {
 
 
-    @GwtIncompatible
-    public static SetOntologyAnnotationsAction create(ProjectId projectId,
-                                                      OWLOntologyID ontologyID,
-                                                      Set<PropertyAnnotationValue> fromAnnotations,
-                                                      Set<PropertyAnnotationValue> toAnnotations) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, ontologyID, fromAnnotations, toAnnotations);
-    }
 
     @JsonCreator
     public static SetOntologyAnnotationsAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,

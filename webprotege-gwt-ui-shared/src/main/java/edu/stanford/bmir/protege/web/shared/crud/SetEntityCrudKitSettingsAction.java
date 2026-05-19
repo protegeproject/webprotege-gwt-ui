@@ -3,14 +3,12 @@ package edu.stanford.bmir.protege.web.shared.crud;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.common.annotations.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
-import java.util.UUID;
 
 /**
  * Author: Matthew Horridge<br>
@@ -50,10 +48,6 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
         this.prefixUpdateStrategy = prefixUpdateStrategy;
     }
 
-    @GwtIncompatible
-    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings fromSettings, EntityCrudKitSettings toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
-        this(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, fromSettings, toSettings, prefixUpdateStrategy);
-    }
 
     @Nonnull
     @JsonProperty("changeRequestId")

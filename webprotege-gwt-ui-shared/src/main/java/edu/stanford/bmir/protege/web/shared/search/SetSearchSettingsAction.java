@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -16,7 +15,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -28,12 +26,6 @@ import java.util.UUID;
 @JsonTypeName("webprotege.search.SetSearchSettings")
 public abstract class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsResult> {
 
-    @GwtIncompatible
-    public static SetSearchSettingsAction create(@Nonnull ProjectId projectId,
-                                                 @Nonnull ImmutableList<EntitySearchFilter> from,
-                                                 @Nonnull ImmutableList<EntitySearchFilter> to) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, from, to);
-    }
 
     @JsonCreator
     public static SetSearchSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

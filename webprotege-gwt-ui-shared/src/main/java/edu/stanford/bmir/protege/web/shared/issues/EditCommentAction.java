@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -15,7 +14,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -27,13 +25,6 @@ import java.util.UUID;
 @JsonTypeName("webprotege.discussions.UpdateComment")
 public abstract class EditCommentAction implements ProjectAction<EditCommentResult> {
 
-    @GwtIncompatible
-    public static EditCommentAction editComment(@Nonnull ProjectId projectId,
-                                                @Nonnull ThreadId threadId,
-                                                @Nonnull CommentId commentId,
-                                                @Nonnull String body) {
-        return editComment(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, threadId, commentId, body);
-    }
 
     @JsonCreator
     public static EditCommentAction editComment(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

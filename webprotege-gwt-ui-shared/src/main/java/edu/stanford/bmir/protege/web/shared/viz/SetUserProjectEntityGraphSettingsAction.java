@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -15,7 +14,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,12 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.graphs.SetUserProjectEntityGraphSettings")
 public abstract class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphSettingsResult> {
 
-    @GwtIncompatible
-    public static SetUserProjectEntityGraphSettingsAction create(@Nonnull ProjectId projectId,
-                                                                 @Nullable UserId userId,
-                                                                 @Nonnull EntityGraphSettings settings) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, userId, settings);
-    }
 
     @JsonCreator
     public static SetUserProjectEntityGraphSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

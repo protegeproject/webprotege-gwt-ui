@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -19,7 +18,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -32,14 +30,6 @@ import java.util.UUID;
 public abstract class SetAnnotationValueAction implements ProjectAction<SetAnnotationValueResult>, HasCommitMessage {
 
 
-    @GwtIncompatible
-    public static SetAnnotationValueAction create(@Nonnull ProjectId projectId,
-                                                  @Nonnull ImmutableSet<OWLEntity> entities,
-                                                  @Nonnull OWLAnnotationProperty property,
-                                                  @Nonnull OWLAnnotationValue value,
-                                                  @Nonnull String commitMessage) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entities, property, value, commitMessage);
-    }
 
     @JsonCreator
     public static SetAnnotationValueAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

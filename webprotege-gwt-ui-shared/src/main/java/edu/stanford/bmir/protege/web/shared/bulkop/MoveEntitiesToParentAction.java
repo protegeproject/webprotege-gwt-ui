@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -18,7 +17,6 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -30,13 +28,6 @@ import java.util.UUID;
 @JsonTypeName("webprotege.entities.MoveEntitiesToParent")
 public abstract class MoveEntitiesToParentAction implements ProjectAction<MoveEntitiesToParentResult>, HasCommitMessage {
 
-    @GwtIncompatible
-    public static MoveEntitiesToParentAction create(@Nonnull ProjectId projectId,
-                                                    @Nonnull ImmutableSet<OWLClass> entities,
-                                                    @Nonnull OWLClass entity,
-                                                    @Nonnull String commitMessage) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entities, entity, commitMessage);
-    }
 
     @JsonCreator
     public static MoveEntitiesToParentAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

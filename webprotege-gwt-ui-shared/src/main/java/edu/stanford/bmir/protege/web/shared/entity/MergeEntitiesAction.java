@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -20,7 +19,6 @@ import javax.annotation.Nonnull;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -33,32 +31,6 @@ import java.util.UUID;
 public abstract class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesResult> implements HasCommitMessage {
 
 
-    /**
-     * Creates a {@link MergeEntitiesAction}.  An entity merge is directional – one entity is merged into
-     * another entity.
-     * @param projectId The project to perform the merge in.
-     * @param sourceEntities The entities that will be merged into another entity.
-     * @param targetEntity The entity that will have the source entity merged into it.
-     * @param treatment The treatment for the merged entity that specifies whether the merged entity
-     *                  will be deleted or deprecated.
-     */
-    @GwtIncompatible
-    public static MergeEntitiesAction mergeEntities(@Nonnull ProjectId projectId,
-                                                    @Nonnull ImmutableSet<OWLEntity> sourceEntities,
-                                                    @Nonnull OWLEntity targetEntity,
-                                                    @Nonnull MergedEntityTreatment treatment,
-                                                    @Nonnull String commitMessage) {
-        return create(projectId, sourceEntities, targetEntity, treatment, commitMessage);
-    }
-
-    @GwtIncompatible
-    public static MergeEntitiesAction create(@Nonnull ProjectId projectId,
-                                             @Nonnull ImmutableSet<OWLEntity> sourceEntities,
-                                             @Nonnull OWLEntity targetEntity,
-                                             @Nonnull MergedEntityTreatment treatment,
-                                             @Nonnull String commitMessage) {
-        return create(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, sourceEntities, targetEntity, treatment, commitMessage);
-    }
 
     @JsonCreator
     public static MergeEntitiesAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.tag;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -14,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
-import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -54,13 +52,6 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
     private UpdateEntityTagsAction() {
     }
 
-    @GwtIncompatible
-    public static UpdateEntityTagsAction create(@Nonnull ProjectId projectId,
-                                                OWLEntity entity,
-                                                @Nonnull Set<TagId> fromTagIds,
-                                                @Nonnull Set<TagId> toTagIds) {
-        return new UpdateEntityTagsAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entity, fromTagIds, toTagIds);
-    }
 
     public static UpdateEntityTagsAction create(@Nonnull ChangeRequestId changeRequestId,
                                                 @Nonnull ProjectId projectId,
