@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectedPathsModel;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
@@ -16,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -38,6 +40,9 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private final LoggedInUserProjectCapabilityChecker capabilityChecker;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
     private Optional<OWLOntologyID> currentOntologyId = Optional.empty();
@@ -50,11 +55,13 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
                                                ProjectId projectId,
                                                LoggedInUserProjectCapabilityChecker capabilityChecker,
                                                DisplayNameRenderer displayNameRenderer,
-                                               DispatchServiceManager dispatch) {
+                                               DispatchServiceManager dispatch,
+                                               @Nonnull UuidV4Provider uuidV4Provider) {
         super(selectionModel, projectId, displayNameRenderer, dispatch, selectedPathsModel);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.capabilityChecker = capabilityChecker;
+        this.uuidV4Provider = uuidV4Provider;
         annotationsView.addValueChangeHandler(event -> handleOntologyAnnotationsChanged());
     }
 
@@ -112,7 +119,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         }
         Optional<Set<PropertyAnnotationValue>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent() && currentOntologyId.isPresent()) {
-            dispatchServiceManager.execute(SetOntologyAnnotationsAction.create(getProjectId(), currentOntologyId.get(), new HashSet<>(lastSet.get()), annotations.get()),
+            dispatchServiceManager.execute(SetOntologyAnnotationsAction.create(ChangeRequestId.get(uuidV4Provider.get()), getProjectId(), currentOntologyId.get(), new HashSet<>(lastSet.get()), annotations.get()),
                     result -> {
                     });
         }

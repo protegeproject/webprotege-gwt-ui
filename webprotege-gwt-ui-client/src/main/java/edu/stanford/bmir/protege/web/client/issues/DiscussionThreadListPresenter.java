@@ -4,10 +4,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -66,6 +68,9 @@ public class DiscussionThreadListPresenter implements HasDispose {
     @Nonnull
     private final CommentEditorModal commentEditorModal;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
@@ -73,13 +78,15 @@ public class DiscussionThreadListPresenter implements HasDispose {
             @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
             @Nonnull ProjectId projectId,
             @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider,
-            @Nonnull CommentEditorModal commentEditorModal) {
+            @Nonnull CommentEditorModal commentEditorModal,
+            @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = view;
         this.dispatch = dispatch;
         this.capabilityChecker = capabilityChecker;
         this.projectId = projectId;
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
         this.commentEditorModal = commentEditorModal;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -175,7 +182,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public void createThread() {
         displayedEntity.ifPresent(targetEntity -> {
             Consumer<String> handler = body -> dispatch.execute(
-                    CreateEntityDiscussionThreadAction.create(projectId, targetEntity, body),
+                    CreateEntityDiscussionThreadAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, targetEntity, body),
                     result -> displayThreads(result.getThreads()));
             commentEditorModal.showModal("", handler);
         });

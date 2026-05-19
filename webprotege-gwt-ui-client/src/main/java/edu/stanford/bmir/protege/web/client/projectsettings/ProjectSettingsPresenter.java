@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsView;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
@@ -20,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectInfoAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
@@ -89,6 +91,9 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private final EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull CapabilityScreener capabilityScreener,
@@ -105,7 +110,8 @@ public class ProjectSettingsPresenter {
                                     @Nonnull Messages messages,
                                     @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
                                     @Nonnull ProjectSettingsService projectSettingsService,
-                                    @Nonnull EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter) {
+                                    @Nonnull EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter,
+                                    @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.capabilityScreener = checkNotNull(capabilityScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -121,6 +127,7 @@ public class ProjectSettingsPresenter {
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
         this.projectSettingsService = checkNotNull(projectSettingsService);
         this.entityDeprecationSettingsPresenter = checkNotNull(entityDeprecationSettingsPresenter);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public ProjectId getProjectId() {
@@ -257,12 +264,13 @@ public class ProjectSettingsPresenter {
                 webhookSettings,
                 entityDeprecationSettingsPresenter.getValue()
         );
-        dispatchServiceManager.execute(SetProjectSettingsAction.create(projectSettings), result -> {
+        dispatchServiceManager.execute(SetProjectSettingsAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, projectSettings), result -> {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
             settingsPresenter.goToNextPlace();
         });
         EntityCrudKitSettings settings = entityCrudKitSettingsPresenter.getSettings();
-            dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,
+            dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                              projectId,
                                                                               settings, settings,
                                                                               IRIPrefixUpdateStrategy.LEAVE_INTACT),
                                            result -> {});

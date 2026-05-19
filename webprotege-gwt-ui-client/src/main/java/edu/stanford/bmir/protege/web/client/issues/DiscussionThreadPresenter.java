@@ -5,9 +5,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -19,12 +21,8 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInCapability.*;
-import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
-import static edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction.deleteComment;
-import static edu.stanford.bmir.protege.web.shared.issues.EditCommentAction.editComment;
-import static edu.stanford.bmir.protege.web.shared.issues.SetDiscussionThreadStatusAction.setDiscussionThreadStatus;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_CAPABILITIES_CHANGED;
 
 /**
@@ -64,6 +62,9 @@ public class DiscussionThreadPresenter implements HasDispose {
     @Nonnull
     private final MessageBox messageBox;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     private final Map<CommentId, CommentView> commentViewMap = new HashMap<>();
 
 
@@ -80,7 +81,8 @@ public class DiscussionThreadPresenter implements HasDispose {
                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
                                      @Nonnull CommentViewFactory commentViewFactory,
                                      @Nonnull MessageBox messageBox,
-                                     @Nonnull CommentEditorModal commentEditorModal) {
+                                     @Nonnull CommentEditorModal commentEditorModal,
+                                     @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
         this.projectId = checkNotNull(projectId);
@@ -91,6 +93,11 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.commentViewFactory = checkNotNull(commentViewFactory);
         this.commentEditorModal = commentEditorModal;
         this.messageBox = checkNotNull(messageBox);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
+    }
+
+    private ChangeRequestId newChangeRequestId() {
+        return ChangeRequestId.get(uuidV4Provider.get());
     }
 
     @Nonnull
@@ -173,7 +180,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleToggleStatus(ThreadId threadId) {
         Status nextStatus = view.getStatus() == Status.OPEN ? Status.CLOSED : Status.OPEN;
         dispatch.execute(
-                setDiscussionThreadStatus(projectId, threadId, nextStatus),
+                new SetDiscussionThreadStatusAction(newChangeRequestId(), projectId, threadId, nextStatus),
                 (result) -> view.setStatus(result.getResult())
         );
     }
@@ -181,14 +188,14 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleReplyToComment(ThreadId threadId) {
         Consumer<String> handler = body -> {
             dispatch.execute(
-                    addComment(projectId, threadId, body),
+                    AddEntityCommentAction.addComment(newChangeRequestId(), projectId, threadId, body),
                     result -> handleCommentAdded(threadId, result.getComment()));
         };
         commentEditorModal.showModal("", handler);
     }
 
     private void handleEditComment(ThreadId threadId, Comment comment) {
-        Consumer<String> handler = body -> dispatch.execute(editComment(projectId, threadId, comment.getId(), body),
+        Consumer<String> handler = body -> dispatch.execute(EditCommentAction.editComment(newChangeRequestId(), projectId, threadId, comment.getId(), body),
                                                             result -> result
                                                                     .getEditedComment()
                                                                     .ifPresent(this::updateComment));
@@ -206,7 +213,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleDeleteComment(Comment comment) {
         messageBox.showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
                                        messages.deleteCommentConfirmationBoxText(),
-                                       () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {
+                                       () -> dispatch.execute(DeleteEntityCommentAction.deleteComment(newChangeRequestId(), projectId, comment.getId()), result -> {
                                        }));
     }
 

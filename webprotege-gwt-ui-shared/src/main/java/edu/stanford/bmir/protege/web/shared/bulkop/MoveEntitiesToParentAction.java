@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
@@ -14,9 +15,10 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -28,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.entities.MoveEntitiesToParent")
 public abstract class MoveEntitiesToParentAction implements ProjectAction<MoveEntitiesToParentResult>, HasCommitMessage {
 
+    @GwtIncompatible
     public static MoveEntitiesToParentAction create(@Nonnull ProjectId projectId,
                                                     @Nonnull ImmutableSet<OWLClass> entities,
                                                     @Nonnull OWLClass entity,

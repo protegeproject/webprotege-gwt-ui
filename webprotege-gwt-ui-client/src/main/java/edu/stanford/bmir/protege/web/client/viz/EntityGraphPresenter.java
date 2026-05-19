@@ -15,7 +15,9 @@ import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
@@ -85,19 +87,24 @@ public class EntityGraphPresenter {
 
     private int rankSpacing = 10;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EntityGraphPresenter(@Nonnull EntityGraphView view,
                                 @Nonnull EntityGraphFilterTokenPresenter filterTokenPresenter,
                                 @Nonnull ProjectId projectId,
                                 @Nonnull DispatchServiceManager dispatch,
                                 @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
-                                @Nonnull PlaceController placeController) {
+                                @Nonnull PlaceController placeController,
+                                @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = view;
         this.filterTokenPresenter = filterTokenPresenter;
         this.projectId = projectId;
         this.dispatch = dispatch;
         this.typePerspectiveMapper = typePerspectiveMapper;
         this.placeController = placeController;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
         addContextMenuItemsToView();
     }
 
@@ -118,7 +125,8 @@ public class EntityGraphPresenter {
 
     private void handleActiveFiltersChanged() {
         List<FilterName> activeFilters = filterTokenPresenter.getActiveFilters();
-        dispatch.execute(SetEntityGraphActiveFiltersAction.create(projectId,
+        dispatch.execute(SetEntityGraphActiveFiltersAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                  projectId,
                                                                   ImmutableList.copyOf(activeFilters)),
                          hasBusy,
                          result -> redisplayCurrentEntity());

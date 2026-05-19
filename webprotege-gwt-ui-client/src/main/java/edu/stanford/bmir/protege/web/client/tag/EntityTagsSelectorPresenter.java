@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -33,6 +35,9 @@ public class EntityTagsSelectorPresenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Nullable
     private OWLEntity entity;
 
@@ -42,10 +47,12 @@ public class EntityTagsSelectorPresenter {
     @Inject
     public EntityTagsSelectorPresenter(@Nonnull ProjectId projectId,
                                        @Nonnull EntityTagsSelectorView view,
-                                       @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                       @Nonnull DispatchServiceManager dispatchServiceManager,
+                                       @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public void start(@Nonnull OWLEntity entity) {
@@ -77,7 +84,8 @@ public class EntityTagsSelectorPresenter {
         List<Tag> tags = getSelectedTags();
         Set<TagId> fromTagIds = selectedTags.stream().map(Tag::getTagId).collect(toSet());
         Set<TagId> toTagIds = tags.stream().map(Tag::getTagId).collect(toSet());
-        dispatchServiceManager.execute(UpdateEntityTagsAction.create(projectId,
+        dispatchServiceManager.execute(UpdateEntityTagsAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                     projectId,
                                                                      entity,
                                                                      fromTagIds,
                                                                      toTagIds),

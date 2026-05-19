@@ -11,9 +11,11 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.merge.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -42,12 +44,16 @@ public class MergeUploadedProjectWorkflow {
     @Nonnull
     private final ProgressDisplay progressDisplay;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
-    public MergeUploadedProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
+    public MergeUploadedProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay, @Nonnull UuidV4Provider uuidV4Provider) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.messageBox = checkNotNull(messageBox);
         this.errorDisplay = checkNotNull(errorDisplay);
         this.progressDisplay = checkNotNull(progressDisplay);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public void start(ProjectId projectId, DocumentId documentId) {
@@ -100,7 +106,7 @@ public class MergeUploadedProjectWorkflow {
 
     private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId, String commitMessage) {
 
-        dispatchServiceManager.execute(MergeUploadedProjectAction.create(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(MergeUploadedProjectAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>(errorDisplay, progressDisplay) {
 
             @Override
             public String getProgressDisplayTitle() {

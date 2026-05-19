@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -15,10 +16,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -40,6 +42,7 @@ public abstract class MergeEntitiesAction extends AbstractHasProjectAction<Merge
      * @param treatment The treatment for the merged entity that specifies whether the merged entity
      *                  will be deleted or deprecated.
      */
+    @GwtIncompatible
     public static MergeEntitiesAction mergeEntities(@Nonnull ProjectId projectId,
                                                     @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                                     @Nonnull OWLEntity targetEntity,
@@ -48,6 +51,7 @@ public abstract class MergeEntitiesAction extends AbstractHasProjectAction<Merge
         return create(projectId, sourceEntities, targetEntity, treatment, commitMessage);
     }
 
+    @GwtIncompatible
     public static MergeEntitiesAction create(@Nonnull ProjectId projectId,
                                              @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                              @Nonnull OWLEntity targetEntity,

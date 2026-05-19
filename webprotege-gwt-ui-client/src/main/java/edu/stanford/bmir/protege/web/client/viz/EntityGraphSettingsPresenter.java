@@ -6,7 +6,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInCapability;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
@@ -51,19 +53,24 @@ public class EntityGraphSettingsPresenter {
     @Nonnull
     private final LoggedInUserProvider loggedInUserProvider;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EntityGraphSettingsPresenter(@Nonnull ProjectId projectId,
                                         @Nonnull EntityGraphSettingsView view,
                                         @Nonnull EntityGraphFilterListPresenter filterListPresenter,
                                         @Nonnull DispatchServiceManager dispatchServiceManager,
                                         @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
-                                        @Nonnull LoggedInUserProvider loggedInUserProvider) {
+                                        @Nonnull LoggedInUserProvider loggedInUserProvider,
+                                        @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = projectId;
         this.view = view;
         this.filterListPresenter = filterListPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
         this.capabilityChecker = capabilityChecker;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -119,7 +126,8 @@ public class EntityGraphSettingsPresenter {
                 filterListPresenter.getFilters(),
                 view.getRankSpacing()
         );
-        dispatchServiceManager.execute(SetUserProjectEntityGraphSettingsAction.create(projectId,
+        dispatchServiceManager.execute(SetUserProjectEntityGraphSettingsAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                                                      projectId,
                                                                                       userId,
                                                                                       settings),
                                        hasBusy,

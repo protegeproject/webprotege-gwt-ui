@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.color.Color;
@@ -13,10 +14,11 @@ import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -36,6 +38,7 @@ public abstract class AddProjectTagAction implements ProjectAction<AddProjectTag
      * @param color The color for the tag (foreground).
      * @param backgroundColor The background-color for the tag
      */
+    @GwtIncompatible
     @Nonnull
     public static AddProjectTagAction create(@Nonnull ProjectId projectId,
                                              @Nonnull String label,

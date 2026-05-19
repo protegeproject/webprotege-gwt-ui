@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -10,9 +11,10 @@ import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -28,6 +30,7 @@ public class DeleteEntityCommentAction implements ProjectAction<DeleteEntityComm
 
     private CommentId commentId;
 
+    @GwtIncompatible
     public static DeleteEntityCommentAction deleteComment(@Nonnull ProjectId projectId,
                                                           @Nonnull CommentId commentId) {
         return deleteComment(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, commentId);
@@ -48,6 +51,7 @@ public class DeleteEntityCommentAction implements ProjectAction<DeleteEntityComm
         this.projectId = checkNotNull(projectId);
     }
 
+    @GwtIncompatible
     public DeleteEntityCommentAction(@Nonnull ProjectId projectId,
                                      @Nonnull CommentId commentId) {
         this(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, commentId);

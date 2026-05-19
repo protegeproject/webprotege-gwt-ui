@@ -8,12 +8,14 @@ import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationPresenter;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkOpMessageFormatter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyDescriptor;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -44,6 +46,9 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     private final HierarchyFieldPresenter hierarchyFieldPresenter;
 
     @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
+    @Nonnull
     private HandlerRegistration selectionHandlerRegistration = () -> {
     };
 
@@ -51,11 +56,13 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     public MergeEntitiesPresenter(@Nonnull MergeEntitiesView view,
                                   @Nonnull ProjectId projectId,
                                   @Nonnull Messages messages,
-                                  @Nonnull HierarchyFieldPresenter hierarchyFieldPresenter) {
+                                  @Nonnull HierarchyFieldPresenter hierarchyFieldPresenter,
+                                  @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.messages = checkNotNull(messages);
         this.view = view;
         this.hierarchyFieldPresenter = checkNotNull(hierarchyFieldPresenter);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -107,7 +114,7 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     private MergeEntitiesAction createMergeAction(@Nonnull ImmutableSet<OWLEntity> entities,
                                                   @Nonnull OWLEntityData target,
                                                   @Nonnull String commitMessage) {
-        return MergeEntitiesAction.create(projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY, commitMessage);
+        return MergeEntitiesAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY, commitMessage);
     }
 
     private void displayConfirmationMessage() {

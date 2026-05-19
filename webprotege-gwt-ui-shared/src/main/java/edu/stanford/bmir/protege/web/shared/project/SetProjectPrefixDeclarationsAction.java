@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.project;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -43,9 +44,16 @@ public class SetProjectPrefixDeclarationsAction implements ProjectAction<SetProj
     private SetProjectPrefixDeclarationsAction() {
     }
 
+    @GwtIncompatible
     public static SetProjectPrefixDeclarationsAction create(@Nonnull ProjectId projectId,
                                                             @Nonnull List<PrefixDeclaration> prefixDeclarations) {
         return new SetProjectPrefixDeclarationsAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, prefixDeclarations);
+    }
+
+    public static SetProjectPrefixDeclarationsAction create(@Nonnull ChangeRequestId changeRequestId,
+                                                            @Nonnull ProjectId projectId,
+                                                            @Nonnull List<PrefixDeclaration> prefixDeclarations) {
+        return new SetProjectPrefixDeclarationsAction(changeRequestId, projectId, prefixDeclarations);
     }
 
     @Nonnull

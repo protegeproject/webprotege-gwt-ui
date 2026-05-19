@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -27,10 +29,16 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
-    public EditAnnotationsPresenter(@Nonnull EditAnnotationsView view, @Nonnull ProjectId projectId) {
+    public EditAnnotationsPresenter(@Nonnull EditAnnotationsView view,
+                                    @Nonnull ProjectId projectId,
+                                    @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = checkNotNull(view);
         this.projectId = checkNotNull(projectId);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -69,7 +77,8 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
     @Nonnull
     @Override
     public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
-        return Optional.of(EditAnnotationsAction.create(projectId,
+        return Optional.of(EditAnnotationsAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                                     projectId,
                                                      entities,
                                                      view.getOperation(),
                                                      view.getAnnotationProperty(),

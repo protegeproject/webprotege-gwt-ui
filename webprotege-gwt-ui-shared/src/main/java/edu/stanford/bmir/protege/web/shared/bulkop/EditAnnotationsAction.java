@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -30,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.bulkop.EditAnnotations")
 public abstract class EditAnnotationsAction implements ProjectAction<EditAnnotationsResult>, HasCommitMessage {
 
+    @GwtIncompatible
     public static EditAnnotationsAction create(@Nonnull ProjectId projectId,
                                             @Nonnull ImmutableSet<OWLEntity> entities,
                                             Operation operation,
