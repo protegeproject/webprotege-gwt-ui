@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
@@ -31,13 +33,18 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ProjectPerspectivesServiceImpl(@Nonnull ProjectId projectId,
                                           @Nonnull DispatchServiceManager dispatch,
-                                          @Nonnull LoggedInUserProvider loggedInUserProvider) {
+                                          @Nonnull LoggedInUserProvider loggedInUserProvider,
+                                          @Nonnull UuidV4Provider uuidV4Provider) {
         this.dispatch = checkNotNull(dispatch);
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.projectId = checkNotNull(projectId);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     public void getPerspectives(final PerspectiveServiceCallback callback) {
@@ -51,7 +58,8 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
     @Override
     public void setPerspectives(List<PerspectiveDescriptor> perspectives, PerspectiveServiceCallback callback) {
         UserId user = loggedInUserProvider.getCurrentUserId();
-        dispatch.execute(SetPerspectivesAction.create(projectId, user, ImmutableList.copyOf(perspectives)), result -> {
+        ChangeRequestId changeRequestId = ChangeRequestId.get(uuidV4Provider.get());
+        dispatch.execute(SetPerspectivesAction.create(changeRequestId, projectId, user, ImmutableList.copyOf(perspectives)), result -> {
             callback.handlePerspectives(result.getPerspectives(), result.getResettablePerspectives());
         });
     }
