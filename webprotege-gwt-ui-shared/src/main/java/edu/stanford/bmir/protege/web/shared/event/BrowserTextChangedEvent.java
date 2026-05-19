@@ -30,6 +30,8 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     public transient static final Event.Type<BrowserTextChangedHandler> ON_BROWSER_TEXT_CHANGED = new Event.Type<>();
 
 
+    private String eventId;
+
     private OWLEntity entity;
 
     private String newBrowserText;
@@ -44,11 +46,13 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     }
 
     @JsonCreator
-    protected BrowserTextChangedEvent(@JsonProperty("entity") OWLEntity entity,
-                                      @JsonProperty("newBrowserText") String newBrowserText,
+    protected BrowserTextChangedEvent(@JsonProperty("eventId") String eventId,
                                       @JsonProperty("projectId") ProjectId projectId,
+                                      @JsonProperty("entity") OWLEntity entity,
+                                      @JsonProperty("newBrowserText") String newBrowserText,
                                       @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms) {
         super(projectId);
+        this.eventId = eventId;
         this.entity = entity;
         this.newBrowserText = newBrowserText;
         this.shortForms = shortForms.stream()
@@ -59,6 +63,11 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
      * For serialization purposes only
      */
     private BrowserTextChangedEvent() {
+    }
+
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
     }
 
     public OWLEntity getEntity() {
@@ -84,6 +93,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     }
 
 
+    @JsonIgnore
     @Override
     public Event.Type<BrowserTextChangedHandler> getAssociatedType() {
         return ON_BROWSER_TEXT_CHANGED;
