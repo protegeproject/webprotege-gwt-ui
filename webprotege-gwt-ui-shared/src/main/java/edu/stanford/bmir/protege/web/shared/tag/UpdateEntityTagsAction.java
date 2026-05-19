@@ -1,15 +1,19 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.tags.UpdateEntityTags")
 public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private ProjectId projectId;
 
     private OWLEntity entity;
@@ -30,10 +36,13 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
 
     private Set<TagId> toTagIds;
 
-    private UpdateEntityTagsAction(@Nonnull ProjectId projectId,
-                                   OWLEntity entity,
-                                   @Nonnull Set<TagId> fromTagIds,
-                                   @Nonnull Set<TagId> toTagIds) {
+    @JsonCreator
+    private UpdateEntityTagsAction(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                   @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                   @JsonProperty("entity") OWLEntity entity,
+                                   @JsonProperty("fromTagIds") @Nonnull Set<TagId> fromTagIds,
+                                   @JsonProperty("toTagIds") @Nonnull Set<TagId> toTagIds) {
+        this.changeRequestId = checkNotNull(changeRequestId);
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
         this.fromTagIds = ImmutableSet.copyOf(fromTagIds);
@@ -48,7 +57,13 @@ public class UpdateEntityTagsAction implements ProjectAction<UpdateEntityTagsRes
                                                 OWLEntity entity,
                                                 @Nonnull Set<TagId> fromTagIds,
                                                 @Nonnull Set<TagId> toTagIds) {
-        return new UpdateEntityTagsAction(projectId, entity, fromTagIds, toTagIds);
+        return new UpdateEntityTagsAction(ChangeRequestId.get(UUID.randomUUID().toString()), projectId, entity, fromTagIds, toTagIds);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Nonnull
