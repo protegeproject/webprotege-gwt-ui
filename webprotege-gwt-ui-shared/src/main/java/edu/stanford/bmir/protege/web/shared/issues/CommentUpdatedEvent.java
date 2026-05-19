@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -23,6 +26,8 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
 
     public static final transient Event.Type<CommentUpdatedHandler> ON_COMMENT_UPDATED = new Event.Type<>();
 
+    private String eventId;
+
     private ProjectId projectId;
 
     private ThreadId threadId;
@@ -38,10 +43,28 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
         this.comment = checkNotNull(comment);
     }
 
+    @JsonCreator
+    public CommentUpdatedEvent(@JsonProperty("eventId") String eventId,
+                               @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                               @JsonProperty("threadId") @Nonnull ThreadId threadId,
+                               @JsonProperty("comment") @Nonnull Comment comment) {
+        super(projectId);
+        this.eventId = eventId;
+        this.projectId = checkNotNull(projectId);
+        this.threadId = checkNotNull(threadId);
+        this.comment = checkNotNull(comment);
+    }
+
     @GwtSerializationConstructor
     private CommentUpdatedEvent() {
     }
 
+    @JsonProperty("eventId")
+    public String getEventId() {
+        return eventId;
+    }
+
+    @JsonIgnore
     @Override
     public Event.Type<CommentUpdatedHandler> getAssociatedType() {
         return ON_COMMENT_UPDATED;
