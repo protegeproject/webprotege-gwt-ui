@@ -9,9 +9,11 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddResult;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -32,15 +34,20 @@ public class ExistingOntologyMergeProjectWorkflow {
     @Nonnull
     private final ProgressDisplay progressDisplay;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ExistingOntologyMergeProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager,
                                                 @Nonnull MessageBox messageBox,
                                                 @Nonnull DispatchErrorMessageDisplay errorDisplay,
-                                                @Nonnull ProgressDisplay progressDisplay) {
+                                                @Nonnull ProgressDisplay progressDisplay,
+                                                @Nonnull UuidV4Provider uuidV4Provider) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.messageBox = messageBox;
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
 
@@ -62,7 +69,7 @@ public class ExistingOntologyMergeProjectWorkflow {
     }
 
     private void mergeIntoExistingOntology(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> selectedOntologies, OWLOntologyID targetOntology){
-        dispatchServiceManager.execute(ExistingOntologyMergeAddAction.create(projectId, documentId, selectedOntologies, targetOntology), new DispatchServiceCallbackWithProgressDisplay<ExistingOntologyMergeAddResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(ExistingOntologyMergeAddAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, documentId, selectedOntologies, targetOntology), new DispatchServiceCallbackWithProgressDisplay<ExistingOntologyMergeAddResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading and Merging Ontologies";
