@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,17 +25,12 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     public transient static final Event.Type<WatchRemovedHandler> ON_WATCH_REMOVED = new Event.Type<WatchRemovedHandler>();
 
-    private String eventId;
+    private EventId eventId;
 
     private Watch watch;
 
-    public WatchRemovedEvent(ProjectId source, Watch watch) {
-        super(source);
-        this.watch = watch;
-    }
-
     @JsonCreator
-    public WatchRemovedEvent(@JsonProperty("eventId") String eventId,
+    public WatchRemovedEvent(@JsonProperty("eventId") EventId eventId,
                              @JsonProperty("projectId") ProjectId source,
                              @JsonProperty("watch") Watch watch) {
         super(source);
@@ -46,7 +42,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

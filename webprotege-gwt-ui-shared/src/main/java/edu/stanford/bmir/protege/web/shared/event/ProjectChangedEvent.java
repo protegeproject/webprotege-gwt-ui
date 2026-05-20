@@ -30,7 +30,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
     public transient static final Event.Type<ProjectChangedHandler> TYPE = new Event.Type<ProjectChangedHandler>();
 
-    private String eventId;
+    private EventId eventId;
 
     private Set<OWLEntityData> subjects;
 
@@ -42,21 +42,8 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
     private ProjectChangedEvent() {
     }
 
-    /**
-     * Creates a {@link ProjectChangedEvent}.
-     * @param source The source of the event.  The project that was changed.  Not {@code null}.
-     * @param revisionSummary The summary of the revision to the project.  Not {@code null}.
-     * @param subjects The possibly empty set of subjects of the changes.  Not {@code null}.
-     * @throws NullPointerException if any parameters are {@code null}.
-     */
-    public ProjectChangedEvent(ProjectId source, RevisionSummary revisionSummary, Set<OWLEntityData> subjects) {
-        super(source);
-        this.revisionSummary = checkNotNull(revisionSummary);
-        this.subjects = new HashSet<OWLEntityData>(subjects);
-    }
-
     @JsonCreator
-    public ProjectChangedEvent(@JsonProperty("eventId") String eventId,
+    public ProjectChangedEvent(@JsonProperty("eventId") EventId eventId,
                                @JsonProperty("projectId") ProjectId source,
                                @JsonProperty("revisionSummary") RevisionSummary revisionSummary,
                                @JsonProperty("subjects") Set<OWLEntityData> subjects) {
@@ -67,7 +54,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

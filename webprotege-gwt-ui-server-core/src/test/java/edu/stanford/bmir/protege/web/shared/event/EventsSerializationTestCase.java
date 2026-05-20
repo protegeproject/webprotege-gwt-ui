@@ -69,7 +69,7 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeBrowserTextChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new BrowserTextChangedEvent(mockOWLClass(), "New", mockProjectId(), ImmutableMap.of()),
+                new BrowserTextChangedEvent(EventId.generate(), mockProjectId(), mockOWLClass(), "New", ImmutableList.of()),
                 WebProtegeEvent.class
         );
     }
@@ -95,7 +95,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeCommentUpdatedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new CommentUpdatedEvent(mockProjectId(),
+                new CommentUpdatedEvent(EventId.generate(),
+                                        mockProjectId(),
                                         ThreadId.create(),
                                         new Comment(CommentId.create(),
                                                    mockUserId(),
@@ -137,6 +138,7 @@ public class EventsSerializationTestCase {
     public void shouldSerializeDisplayNameSettingsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
                 DisplayNameSettingsChangedEvent.get(
+                        EventId.generate(),
                         mockProjectId(),
                         DisplayNameSettings.empty()
                 ),
@@ -147,7 +149,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeEntityDeprecatedChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new EntityDeprecatedChangedEvent(mockProjectId(),
+                new EntityDeprecatedChangedEvent(EventId.generate(),
+                                                 mockProjectId(),
                                                  mockOWLClass(),
                                                  true),
                 WebProtegeEvent.class
@@ -165,7 +168,8 @@ public class EventsSerializationTestCase {
                                               )))
         ));
         JsonSerializationTestUtil.testSerialization(
-                new EntityHierarchyChangedEvent(mockProjectId(),
+                new EntityHierarchyChangedEvent(EventId.generate(),
+                        mockProjectId(),
                         ClassHierarchyDescriptor.get(),
                                                 new GraphModelChangedEvent(changes),
                         ChangeRequestId.get("796d7b24-0d2b-4037-8c03-5eb3e55a3fcf")),
@@ -176,7 +180,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeEntityTagsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new EntityTagsChangedEvent(mockProjectId(),
+                new EntityTagsChangedEvent(EventId.generate(),
+                                           mockProjectId(),
                                            mockOWLClass(),
                                            Collections.emptySet()),
                 WebProtegeEvent.class
@@ -186,7 +191,7 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeLargeNumberOfChangesEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new LargeNumberOfChangesEvent(mockProjectId()),
+                new LargeNumberOfChangesEvent(EventId.generate(), mockProjectId()),
                 WebProtegeEvent.class
         );
     }
@@ -212,7 +217,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeProjectChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new ProjectChangedEvent(mockProjectId(),
+                new ProjectChangedEvent(EventId.generate(),
+                                        mockProjectId(),
                                         new RevisionSummary(
                                                 RevisionNumber.getHeadRevisionNumber(),
                                                 mockUserId(),
@@ -261,7 +267,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeProjectTagsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new ProjectTagsChangedEvent(mockProjectId(),
+                new ProjectTagsChangedEvent(EventId.generate(),
+                                            mockProjectId(),
                                             Collections.emptySet()),
                 WebProtegeEvent.class
         );
@@ -270,7 +277,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeWatchAddedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new WatchAddedEvent(mockProjectId(),
+                new WatchAddedEvent(EventId.generate(),
+                                    mockProjectId(),
                                     Watch.create(mockUserId(),
                                                  mockOWLClass(),
                                                  WatchType.ENTITY)),
@@ -281,7 +289,8 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializeWatchRemovedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new WatchRemovedEvent(mockProjectId(),
+                new WatchRemovedEvent(EventId.generate(),
+                                      mockProjectId(),
                                       Watch.create(mockUserId(),
                                                  mockOWLClass(),
                                                  WatchType.ENTITY)),

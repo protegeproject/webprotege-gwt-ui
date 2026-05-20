@@ -30,7 +30,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     public transient static final Event.Type<BrowserTextChangedHandler> ON_BROWSER_TEXT_CHANGED = new Event.Type<>();
 
 
-    private String eventId;
+    private EventId eventId;
 
     private OWLEntity entity;
 
@@ -38,15 +38,8 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
 
     private ImmutableMap<DictionaryLanguage, String> shortForms;
 
-    public BrowserTextChangedEvent(OWLEntity entity, String newBrowserText, ProjectId projectId, ImmutableMap<DictionaryLanguage, String> shortForms) {
-        super(projectId);
-        this.entity = entity;
-        this.newBrowserText = newBrowserText;
-        this.shortForms = shortForms;
-    }
-
     @JsonCreator
-    protected BrowserTextChangedEvent(@JsonProperty("eventId") String eventId,
+    protected BrowserTextChangedEvent(@JsonProperty("eventId") EventId eventId,
                                       @JsonProperty("projectId") ProjectId projectId,
                                       @JsonProperty("entity") OWLEntity entity,
                                       @JsonProperty("newBrowserText") String newBrowserText,
@@ -66,7 +59,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,7 +25,7 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
     public static final transient Event.Type<WatchAddedHandler> ON_WATCH_ADDED = new Event.Type<>();
 
-    private String eventId;
+    private EventId eventId;
 
     private Watch watch;
 
@@ -34,18 +35,8 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
     private WatchAddedEvent() {
     }
 
-    /**
-     * Creates a {@link WatchAddedEvent}.
-     * @param source The id of the project that the watch was added to.  Not {@code null}.
-     * @param watch The watch that was added.  Not {@code null}.
-     */
-    public WatchAddedEvent(ProjectId source, Watch watch) {
-        super(source);
-        this.watch = watch;
-    }
-
     @JsonCreator
-    public WatchAddedEvent(@JsonProperty("eventId") String eventId,
+    public WatchAddedEvent(@JsonProperty("eventId") EventId eventId,
                            @JsonProperty("projectId") ProjectId source,
                            @JsonProperty("watch") Watch watch) {
         super(source);
@@ -54,7 +45,7 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

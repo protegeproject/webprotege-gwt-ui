@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -24,18 +25,12 @@ public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSet
 
     public static final transient Event.Type<DisplayNameSettingsChangedHandler> ON_DISPLAY_LANGUAGE_CHANGED = new Event.Type<>();
 
-    private String eventId;
+    private EventId eventId;
 
     @Nonnull
     private final DisplayNameSettings displayNameSettings;
 
-    private DisplayNameSettingsChangedEvent(@Nonnull ProjectId source,
-                                            @Nonnull DisplayNameSettings displayNameSettings) {
-        super(source);
-        this.displayNameSettings = checkNotNull(displayNameSettings);
-    }
-
-    private DisplayNameSettingsChangedEvent(String eventId,
+    private DisplayNameSettingsChangedEvent(EventId eventId,
                                             @Nonnull ProjectId source,
                                             @Nonnull DisplayNameSettings displayNameSettings) {
         super(source);
@@ -43,20 +38,15 @@ public class DisplayNameSettingsChangedEvent extends ProjectEvent<DisplayNameSet
         this.displayNameSettings = checkNotNull(displayNameSettings);
     }
 
-    public static DisplayNameSettingsChangedEvent get(@Nonnull ProjectId projectId,
-                                                      @Nonnull DisplayNameSettings displayNameSettings) {
-        return new DisplayNameSettingsChangedEvent(projectId, displayNameSettings);
-    }
-
     @JsonCreator
-    public static DisplayNameSettingsChangedEvent get(@JsonProperty("eventId") String eventId,
+    public static DisplayNameSettingsChangedEvent get(@JsonProperty("eventId") EventId eventId,
                                                       @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                       @JsonProperty("displayNameSettings") @Nonnull DisplayNameSettings displayNameSettings) {
         return new DisplayNameSettingsChangedEvent(eventId, projectId, displayNameSettings);
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

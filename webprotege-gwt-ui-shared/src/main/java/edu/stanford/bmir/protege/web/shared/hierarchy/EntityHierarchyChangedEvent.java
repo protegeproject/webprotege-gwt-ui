@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 1 Dec 2017
@@ -28,7 +29,7 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();
 
-    private String eventId;
+    private EventId eventId;
 
     private HierarchyDescriptor hierarchyDescriptor;
 
@@ -36,18 +37,8 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     private ChangeRequestId changeRequestId;
 
-    public EntityHierarchyChangedEvent(@Nonnull ProjectId source,
-                                       @Nonnull HierarchyDescriptor hierarchyDescriptor,
-                                       @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
-                                       ChangeRequestId changeRequestId) {
-        super(source);
-        this.hierarchyDescriptor = checkNotNull(hierarchyDescriptor);
-        this.changeEvent = checkNotNull(changeEvent);
-        this.changeRequestId = changeRequestId;
-    }
-
     @JsonCreator
-    public EntityHierarchyChangedEvent(@JsonProperty("eventId") String eventId,
+    public EntityHierarchyChangedEvent(@JsonProperty("eventId") EventId eventId,
                                        @JsonProperty("projectId") @Nonnull ProjectId source,
                                        @JsonProperty("hierarchyDescriptor") @Nonnull HierarchyDescriptor hierarchyDescriptor,
                                        @JsonProperty("changeEvent") @Nonnull GraphModelChangedEvent<EntityNode> changeEvent,
@@ -60,7 +51,7 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

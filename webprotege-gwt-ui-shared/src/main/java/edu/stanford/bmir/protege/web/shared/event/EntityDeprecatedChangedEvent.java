@@ -21,20 +21,14 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
 
     public transient static final Event.Type<EntityDeprecatedChangedHandler> ON_ENTITY_DEPRECATED = new Event.Type<EntityDeprecatedChangedHandler>();
 
-    private String eventId;
+    private EventId eventId;
 
     private OWLEntity entity;
 
     private boolean deprecated;
 
-    public EntityDeprecatedChangedEvent(ProjectId source, OWLEntity entity, boolean deprecated) {
-        super(source);
-        this.entity = entity;
-        this.deprecated = deprecated;
-    }
-
     @JsonCreator
-    public EntityDeprecatedChangedEvent(@JsonProperty("eventId") String eventId,
+    public EntityDeprecatedChangedEvent(@JsonProperty("eventId") EventId eventId,
                                         @JsonProperty("projectId") ProjectId source,
                                         @JsonProperty("entity") OWLEntity entity,
                                         @JsonProperty("deprecated") boolean deprecated) {
@@ -51,7 +45,7 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

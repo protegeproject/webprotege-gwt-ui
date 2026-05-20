@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Matthew Horridge
@@ -26,7 +27,7 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
 
     public static final transient Event.Type<CommentUpdatedHandler> ON_COMMENT_UPDATED = new Event.Type<>();
 
-    private String eventId;
+    private EventId eventId;
 
     private ProjectId projectId;
 
@@ -34,17 +35,8 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
 
     private Comment comment;
 
-    public CommentUpdatedEvent(@Nonnull ProjectId projectId,
-                               @Nonnull ThreadId threadId,
-                               @Nonnull Comment comment) {
-        super(projectId);
-        this.projectId = checkNotNull(projectId);
-        this.threadId = checkNotNull(threadId);
-        this.comment = checkNotNull(comment);
-    }
-
     @JsonCreator
-    public CommentUpdatedEvent(@JsonProperty("eventId") String eventId,
+    public CommentUpdatedEvent(@JsonProperty("eventId") EventId eventId,
                                @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                @JsonProperty("threadId") @Nonnull ThreadId threadId,
                                @JsonProperty("comment") @Nonnull Comment comment) {
@@ -60,7 +52,7 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Matthew Horridge
@@ -29,22 +30,14 @@ public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandle
     public static final transient Event.Type<EntityTagsChangedHandler> ON_ENTITY_TAGS_CHANGED = new Event.Type<>();
 
 
-    private String eventId;
+    private EventId eventId;
 
     private OWLEntity entity;
 
     private ImmutableSet<Tag> tags;
 
-    public EntityTagsChangedEvent(@Nonnull ProjectId projectId,
-                                  @Nonnull OWLEntity entity,
-                                  @Nonnull Collection<Tag> tags) {
-        super(checkNotNull(projectId));
-        this.entity = checkNotNull(entity);
-        this.tags = ImmutableSet.copyOf(checkNotNull(tags));
-    }
-
     @JsonCreator
-    public EntityTagsChangedEvent(@JsonProperty("eventId") String eventId,
+    public EntityTagsChangedEvent(@JsonProperty("eventId") EventId eventId,
                                   @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                   @JsonProperty("entity") @Nonnull OWLEntity entity,
                                   @JsonProperty("tags") @Nonnull Collection<Tag> tags) {
@@ -59,7 +52,7 @@ public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandle
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 

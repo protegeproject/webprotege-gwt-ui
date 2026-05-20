@@ -18,14 +18,10 @@ public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChanges
 
     public static final Event.Type<LargeNumberOfChangesHandler> LARGE_NUMBER_OF_CHANGES = new Event.Type<>();
 
-    private String eventId;
-
-    public LargeNumberOfChangesEvent(ProjectId source) {
-        super(source);
-    }
+    private EventId eventId;
 
     @JsonCreator
-    public LargeNumberOfChangesEvent(@JsonProperty("eventId") String eventId,
+    public LargeNumberOfChangesEvent(@JsonProperty("eventId") EventId eventId,
                                      @JsonProperty("projectId") ProjectId source) {
         super(source);
         this.eventId = eventId;
@@ -36,7 +32,7 @@ public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChanges
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 
