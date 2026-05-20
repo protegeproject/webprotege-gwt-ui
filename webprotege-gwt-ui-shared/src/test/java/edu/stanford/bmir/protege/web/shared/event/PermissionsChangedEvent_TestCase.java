@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.event;
 
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
@@ -23,13 +24,13 @@ public class PermissionsChangedEvent_TestCase {
 
     @Before
     public void setUp() {
-        permissionsChangedEvent = new PermissionsChangedEvent(source);
+        permissionsChangedEvent = new PermissionsChangedEvent(EventId.generate(), source);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_source_IsNull() {
-        new PermissionsChangedEvent(null);
+        new PermissionsChangedEvent(EventId.generate(), null);
     }
 
     @Test
@@ -50,17 +51,17 @@ public class PermissionsChangedEvent_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(permissionsChangedEvent, is(new PermissionsChangedEvent(source)));
+        assertThat(permissionsChangedEvent, is(new PermissionsChangedEvent(EventId.generate(), source)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_source() {
-        assertThat(permissionsChangedEvent, is(not(new PermissionsChangedEvent(mock(ProjectId.class)))));
+        assertThat(permissionsChangedEvent, is(not(new PermissionsChangedEvent(EventId.generate(), mock(ProjectId.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(permissionsChangedEvent.hashCode(), is(new PermissionsChangedEvent(source).hashCode()));
+        assertThat(permissionsChangedEvent.hashCode(), is(new PermissionsChangedEvent(EventId.generate(), source).hashCode()));
     }
 
     @Test

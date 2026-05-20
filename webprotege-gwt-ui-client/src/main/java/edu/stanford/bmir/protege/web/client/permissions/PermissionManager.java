@@ -12,9 +12,11 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.BasicCapability;
 import edu.stanford.bmir.protege.web.shared.access.Capability;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
@@ -54,8 +56,10 @@ public class PermissionManager implements HasDispose {
 
     private final DispatchErrorMessageDisplay errorDisplay;
 
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
-    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay) {
+    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay, UuidV4Provider uuidV4Provider) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
@@ -63,6 +67,7 @@ public class PermissionManager implements HasDispose {
         loggedInHandler = eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> firePermissionsChanged());
         loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> firePermissionsChanged());
         this.errorDisplay = errorDisplay;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     /**
@@ -82,7 +87,7 @@ public class PermissionManager implements HasDispose {
             UserIdProjectIdKey key = new UserIdProjectIdKey(userId, theProjectId);
             capabilitiesCache.putAll(key, result.getAllowedActions());
             GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
-            eventBus.fireEventFromSource(new PermissionsChangedEvent(theProjectId).asGWTEvent(), theProjectId);
+            eventBus.fireEventFromSource(new PermissionsChangedEvent(EventId.get(uuidV4Provider.get()), theProjectId).asGWTEvent(), theProjectId);
         });
 
     }

@@ -209,7 +209,7 @@ public class EventsSerializationTestCase {
     @Test
     public void shouldSerializePermissionsChangedEvent() throws IOException {
         JsonSerializationTestUtil.testSerialization(
-                new PermissionsChangedEvent(mockProjectId()),
+                new PermissionsChangedEvent(EventId.generate(), mockProjectId()),
                 WebProtegeEvent.class
         );
     }

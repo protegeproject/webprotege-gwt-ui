@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -28,14 +29,10 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
 
     public static final transient Event.Type<PermissionsChangedHandler> ON_CAPABILITIES_CHANGED = new Event.Type<>();
 
-    private String eventId;
-
-    public PermissionsChangedEvent(@Nonnull ProjectId source) {
-        super(checkNotNull(source));
-    }
+    private EventId eventId;
 
     @JsonCreator
-    public PermissionsChangedEvent(@JsonProperty("eventId") String eventId,
+    public PermissionsChangedEvent(@JsonProperty("eventId") EventId eventId,
                                    @JsonProperty("projectId") @Nonnull ProjectId source) {
         super(checkNotNull(source));
         this.eventId = eventId;
@@ -46,7 +43,7 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
     }
 
     @JsonProperty("eventId")
-    public String getEventId() {
+    public EventId getEventId() {
         return eventId;
     }
 
