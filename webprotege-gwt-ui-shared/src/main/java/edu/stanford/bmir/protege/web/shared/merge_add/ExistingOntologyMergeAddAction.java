@@ -16,7 +16,7 @@ import java.util.List;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.ontologies.MergeOntologies")
+@JsonTypeName("webprotege.ontologies.ExistingOntologyMergeAdd")
 public abstract class ExistingOntologyMergeAddAction implements ProjectAction<ExistingOntologyMergeAddResult> {
 
     @JsonCreator

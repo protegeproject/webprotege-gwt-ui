@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -15,16 +16,20 @@ import java.util.List;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("NewOntologyMergeAdd")
+@JsonTypeName("webprotege.ontologies.MergeOntologies")
 public abstract class NewOntologyMergeAddAction extends AbstractHasProjectAction<NewOntologyMergeAddResult> {
 
     @JsonCreator
-    public static NewOntologyMergeAddAction create(@JsonProperty("projectId") ProjectId projectId,
+    public static NewOntologyMergeAddAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                   @JsonProperty("projectId") ProjectId projectId,
                                                    @JsonProperty("documentId") DocumentId documentId,
                                                    @JsonProperty("iri") String iri,
                                                    @JsonProperty("ontologyList") List<OWLOntologyID> ontologyList) {
-        return new AutoValue_NewOntologyMergeAddAction(projectId, documentId, iri, ontologyList);
+        return new AutoValue_NewOntologyMergeAddAction(changeRequestId, projectId, documentId, iri, ontologyList);
     }
+
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

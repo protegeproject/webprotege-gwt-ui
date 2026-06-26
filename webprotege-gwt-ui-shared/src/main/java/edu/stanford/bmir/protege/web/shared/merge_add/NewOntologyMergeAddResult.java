@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("NewOntologyMergeAdd")
+@JsonTypeName("webprotege.ontologies.MergeOntologies")
 public abstract class NewOntologyMergeAddResult implements Result {
 
     @JsonCreator

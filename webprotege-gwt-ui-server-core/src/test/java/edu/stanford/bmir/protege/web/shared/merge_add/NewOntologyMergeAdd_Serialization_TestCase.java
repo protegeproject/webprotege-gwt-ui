@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class NewOntologyMergeAdd_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = NewOntologyMergeAddAction.create(mockProjectId(),
+        var action = NewOntologyMergeAddAction.create(ChangeRequestId.generate(),
+                                                      mockProjectId(),
                                                       mockDocumentId(),
                                                       "Iri",
                                                       ImmutableList.of());
