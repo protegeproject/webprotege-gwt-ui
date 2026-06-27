@@ -10,8 +10,10 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
@@ -68,19 +70,24 @@ public class ChangeListPresenter {
 
     private EntityDisplay entityDisplay;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ChangeListPresenter(@Nonnull ProjectId projectId,
                                @Nonnull ChangeListView view,
                                @Nonnull DispatchServiceManager dispatch,
                                @Nonnull LoggedInUserProjectCapabilityChecker capabilityChecker,
                                @Nonnull Messages messages,
-                               @Nonnull MessageBox messageBox) {
+                               @Nonnull MessageBox messageBox,
+                               @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.capabilityChecker = checkNotNull(capabilityChecker);
         this.dispatch = checkNotNull(dispatch);
         this.messages = checkNotNull(messages);
         this.messageBox = checkNotNull(messageBox);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
     }
 
@@ -210,7 +217,7 @@ public class ChangeListPresenter {
 
     private void revertChanges(ProjectChange projectChange) {
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
-        dispatch.execute(RevertRevisionAction.create(projectId, revisionNumber),
+        dispatch.execute(RevertRevisionAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, revisionNumber),
                          this::handleChangedReverted);
     }
 

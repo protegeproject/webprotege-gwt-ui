@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class MergeEntities_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = MergeEntitiesAction.create(mockProjectId(), ImmutableSet.of(),
+        var action = MergeEntitiesAction.create(ChangeRequestId.generate(), mockProjectId(), ImmutableSet.of(),
                                                 mockOWLClass(),
                                                 MergedEntityTreatment.DELETE_MERGED_ENTITY,
                                                 "Test");

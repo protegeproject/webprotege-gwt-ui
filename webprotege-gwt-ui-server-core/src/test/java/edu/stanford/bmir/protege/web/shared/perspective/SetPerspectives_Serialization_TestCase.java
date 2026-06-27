@@ -22,8 +22,10 @@ public class SetPerspectives_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetPerspectivesAction.create(mockProjectId(),
-                                                  mockUserId(), ImmutableList.of(
+        var action = SetPerspectivesAction.create(ChangeRequestId.generate(),
+                                                  mockProjectId(),
+                                                  mockUserId(),
+                                                  ImmutableList.of(
                                                           PerspectiveDescriptor.get(PerspectiveId.generate(),
                                                                                     LanguageMap.of("en", "Hello"),
                                                                                     true)

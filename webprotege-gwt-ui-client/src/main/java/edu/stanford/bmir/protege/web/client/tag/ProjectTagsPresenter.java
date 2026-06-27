@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
 
@@ -58,6 +60,9 @@ public class ProjectTagsPresenter implements Presenter {
     @Nonnull
     private Optional<EventBus> eventBus = Optional.empty();
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ProjectTagsPresenter(@Nonnull ProjectId projectId,
                                 @Nonnull ProjectTagsView projectTagsView,
@@ -66,7 +71,8 @@ public class ProjectTagsPresenter implements Presenter {
                                 @Nonnull DispatchServiceManager dispatchServiceManager,
                                 @Nonnull SettingsPresenter settingsPresenter,
                                 @Nonnull TagCriteriaListPresenter tagCriteriaListPresenter,
-                                @Nonnull Messages messages) {
+                                @Nonnull Messages messages,
+                                @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.projectTagsView = checkNotNull(projectTagsView);
         this.forbiddenView = checkNotNull(forbiddenView);
@@ -75,6 +81,7 @@ public class ProjectTagsPresenter implements Presenter {
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.tagCriteriaListPresenter = checkNotNull(tagCriteriaListPresenter);
         this.messages = checkNotNull(messages);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -105,7 +112,7 @@ public class ProjectTagsPresenter implements Presenter {
 
     private void handleApplyChanges() {
         getTagData().ifPresent(tagData -> {
-            dispatchServiceManager.execute(SetProjectTagsAction.create(projectId, tagData),
+            dispatchServiceManager.execute(SetProjectTagsAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, tagData),
                                            result -> settingsPresenter.goToNextPlace());
         });
     }

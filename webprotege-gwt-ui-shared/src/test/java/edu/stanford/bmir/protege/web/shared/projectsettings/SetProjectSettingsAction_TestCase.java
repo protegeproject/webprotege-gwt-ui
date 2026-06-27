@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,13 +31,13 @@ public class SetProjectSettingsAction_TestCase {
     @Before
     public void setUp() throws Exception {
         when(projectSettings.getProjectId()).thenReturn(projectId);
-        action = SetProjectSettingsAction.create(projectSettings);
+        action = SetProjectSettingsAction.create(ChangeRequestId.generate(), projectId, projectSettings);
     }
 
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectSettings_IsNull() {
-        SetProjectSettingsAction.create(null);
+        SetProjectSettingsAction.create(ChangeRequestId.generate(), projectId, null);
     }
 
     @Test
@@ -56,13 +57,13 @@ public class SetProjectSettingsAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        SetProjectSettingsAction other = SetProjectSettingsAction.create(projectSettings);
+        SetProjectSettingsAction other = SetProjectSettingsAction.create(ChangeRequestId.generate(), projectId, projectSettings);
         assertThat(action, is(equalTo(other)));
     }
 
     @Test
     public void shouldHaveSameHashCode() {
-        SetProjectSettingsAction other = SetProjectSettingsAction.create(projectSettings);
+        SetProjectSettingsAction other = SetProjectSettingsAction.create(ChangeRequestId.generate(), projectId, projectSettings);
         assertThat(action.hashCode(), is(other.hashCode()));
     }
 }

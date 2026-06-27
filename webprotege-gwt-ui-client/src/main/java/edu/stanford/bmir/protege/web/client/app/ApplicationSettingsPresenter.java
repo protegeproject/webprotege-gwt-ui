@@ -11,11 +11,13 @@ import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.place.ProjectListPlace;
@@ -85,6 +87,9 @@ public class ApplicationSettingsPresenter implements Presenter {
     @Nonnull
     private final ProgressDisplay progressDisplay;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ApplicationSettingsPresenter(@Nonnull SystemDetailsView systemDetailsView,
                                         @Nonnull ApplicationUrlView applicationUrlView,
@@ -95,7 +100,8 @@ public class ApplicationSettingsPresenter implements Presenter {
                                         @Nonnull DispatchServiceManager dispatchServiceManager,
                                         @Nonnull SettingsPresenter settingsPresenter,
                                         @Nonnull Messages messages,
-                                        @Nonnull MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
+                                        @Nonnull MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay,
+                                        @Nonnull UuidV4Provider uuidV4Provider) {
         this.systemDetailsView = checkNotNull(systemDetailsView);
         this.applicationUrlView = checkNotNull(applicationUrlView);
         this.permissionsView = checkNotNull(permissionsView);
@@ -108,6 +114,7 @@ public class ApplicationSettingsPresenter implements Presenter {
         this.messageBox = messageBox;
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -178,7 +185,7 @@ public class ApplicationSettingsPresenter implements Presenter {
                 emailNotificationSettingsView.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
                 parseMaxUploadSize()
         );
-        dispatchServiceManager.execute(SetApplicationSettingsAction.create(applicationSettings),
+        dispatchServiceManager.execute(SetApplicationSettingsAction.create(ChangeRequestId.get(uuidV4Provider.get()), applicationSettings),
                                        result -> messageBox.showMessage("Settings applied",
                                                                         "The application settings have successfully been applied",
                                                                         settingsPresenter::goToNextPlace));

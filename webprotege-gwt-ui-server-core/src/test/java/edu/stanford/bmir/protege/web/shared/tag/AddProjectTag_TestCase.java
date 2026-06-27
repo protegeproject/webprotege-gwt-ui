@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
@@ -19,7 +20,8 @@ public class AddProjectTag_TestCase {
 
     @Test
     public void shouldSerializeAddProjectTagAction() throws IOException {
-        var action = AddProjectTagAction.create(ProjectId.getNil(),
+        var action = AddProjectTagAction.create(ChangeRequestId.generate(),
+                                                ProjectId.getNil(),
                                                 "TheLabel",
                                                 "TheDescription",
                                                 Color.getWhite(),

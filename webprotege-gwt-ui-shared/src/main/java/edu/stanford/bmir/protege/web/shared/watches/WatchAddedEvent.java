@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -9,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,6 +25,8 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
     public static final transient Event.Type<WatchAddedHandler> ON_WATCH_ADDED = new Event.Type<>();
 
+    private EventId eventId;
+
     private Watch watch;
 
     /**
@@ -29,25 +35,31 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
     private WatchAddedEvent() {
     }
 
-    /**
-     * Creates a {@link WatchAddedEvent}.
-     * @param source The id of the project that the watch was added to.  Not {@code null}.
-     * @param watch The watch that was added.  Not {@code null}.
-     */
-    public WatchAddedEvent(ProjectId source, Watch watch) {
+    @JsonCreator
+    public WatchAddedEvent(@JsonProperty("eventId") EventId eventId,
+                           @JsonProperty("projectId") ProjectId source,
+                           @JsonProperty("watch") Watch watch) {
         super(source);
+        this.eventId = eventId;
         this.watch = watch;
+    }
+
+    @JsonProperty("eventId")
+    public EventId getEventId() {
+        return eventId;
     }
 
     public Watch getWatch() {
         return watch;
     }
 
+    @JsonIgnore
     public UserId getUserId() {
         return watch.getUserId();
     }
 
 
+    @JsonIgnore
     @Override
     public Event.Type<WatchAddedHandler> getAssociatedType() {
         return ON_WATCH_ADDED;

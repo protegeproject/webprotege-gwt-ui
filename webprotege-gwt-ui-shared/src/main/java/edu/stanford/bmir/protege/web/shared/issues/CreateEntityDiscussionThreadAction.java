@@ -7,12 +7,14 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Matthew Horridge
@@ -25,6 +27,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class CreateEntityDiscussionThreadAction implements ProjectAction<CreateEntityDiscussionThreadResult> {
 
     @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
+
+    @Nonnull
     public abstract ProjectId getProjectId();
 
     public abstract OWLEntity getEntity();
@@ -32,11 +38,13 @@ public abstract class CreateEntityDiscussionThreadAction implements ProjectActio
     @Nonnull
     public abstract String getComment();
 
+
     @JsonCreator
-    public static CreateEntityDiscussionThreadAction create(@JsonProperty("projectId") ProjectId projectId,
+    public static CreateEntityDiscussionThreadAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                            @JsonProperty("projectId") ProjectId projectId,
                                                             @JsonProperty("entity") OWLEntity entity,
                                                             @JsonProperty("comment") String comment) {
-        return new AutoValue_CreateEntityDiscussionThreadAction(projectId, entity, comment);
+        return new AutoValue_CreateEntityDiscussionThreadAction(changeRequestId, projectId, entity, comment);
     }
 
 

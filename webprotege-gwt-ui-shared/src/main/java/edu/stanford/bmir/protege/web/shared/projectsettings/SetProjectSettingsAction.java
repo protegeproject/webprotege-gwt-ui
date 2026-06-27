@@ -1,9 +1,18 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Matthew Horridge
@@ -13,6 +22,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 @JsonTypeName("webprotege.projects.SetProjectSettings")
 public class SetProjectSettingsAction extends AbstractHasProjectAction<SetProjectSettingsResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private ProjectSettings projectSettings;
 
     /**
@@ -21,15 +32,36 @@ public class SetProjectSettingsAction extends AbstractHasProjectAction<SetProjec
     private SetProjectSettingsAction() {
     }
 
-    private SetProjectSettingsAction(ProjectSettings projectSettings) {
-        super(projectSettings.getProjectId());
-        this.projectSettings = projectSettings;
+    private SetProjectSettingsAction(ChangeRequestId changeRequestId,
+                                     ProjectId projectId,
+                                     ProjectSettings projectSettings) {
+        super(projectId);
+        this.changeRequestId = checkNotNull(changeRequestId);
+        this.projectSettings = checkNotNull(projectSettings);
     }
 
-    public static SetProjectSettingsAction create(ProjectSettings projectSettings) {
-        return new SetProjectSettingsAction(projectSettings);
+
+    @JsonCreator
+    public static SetProjectSettingsAction create(@JsonProperty("changeRequestId") ChangeRequestId changeRequestId,
+                                                  @JsonProperty("projectId") ProjectId projectId,
+                                                  @JsonProperty("settings") ProjectSettings projectSettings) {
+        return new SetProjectSettingsAction(changeRequestId, projectId, projectSettings);
     }
 
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
+    }
+
+    @Nonnull
+    @Override
+    @JsonProperty("projectId")
+    public ProjectId getProjectId() {
+        return super.getProjectId();
+    }
+
+    @JsonProperty("settings")
     public ProjectSettings getProjectSettings() {
         return projectSettings;
     }

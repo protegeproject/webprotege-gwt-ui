@@ -8,11 +8,13 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Matthew Horridge
@@ -24,12 +26,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.search.SetSearchSettings")
 public abstract class SetSearchSettingsAction implements ProjectAction<SetSearchSettingsResult> {
 
+
     @JsonCreator
-    public static SetSearchSettingsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetSearchSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                  @JsonProperty("from") @Nonnull ImmutableList<EntitySearchFilter> from,
                                                  @JsonProperty("to") @Nonnull ImmutableList<EntitySearchFilter> to) {
-        return new AutoValue_SetSearchSettingsAction(projectId, from, to);
+        return new AutoValue_SetSearchSettingsAction(changeRequestId, projectId, from, to);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

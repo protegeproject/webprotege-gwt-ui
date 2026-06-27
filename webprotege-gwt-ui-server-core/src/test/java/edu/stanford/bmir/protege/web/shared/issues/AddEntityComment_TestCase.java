@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class AddEntityComment_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = AddEntityCommentAction.addComment(projectId, threadId, THE_COMMENT);
+        var action = AddEntityCommentAction.addComment(ChangeRequestId.generate(), projectId, threadId, THE_COMMENT);
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 

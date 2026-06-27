@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
@@ -30,11 +32,15 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
 
     private final SetAnnotationValueView view;
 
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public SetAnnotationValuePresenter(@Nonnull ProjectId projectId,
-                                       @Nonnull SetAnnotationValueView view) {
+                                       @Nonnull SetAnnotationValueView view,
+                                       @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -106,7 +112,8 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
                                                   @Nonnull OWLAnnotationProperty prop,
                                                   @Nonnull OWLAnnotationValue val,
                                                   @Nonnull String commitMessage) {
-        return SetAnnotationValueAction.create(projectId,
+        return SetAnnotationValueAction.create(ChangeRequestId.get(uuidV4Provider.get()),
+                                               projectId,
                                                entities,
                                                prop,
                                                val,

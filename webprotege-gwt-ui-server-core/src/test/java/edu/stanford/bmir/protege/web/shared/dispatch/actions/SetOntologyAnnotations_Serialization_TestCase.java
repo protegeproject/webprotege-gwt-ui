@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class SetOntologyAnnotations_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetOntologyAnnotationsAction.create(mockProjectId(),
+        var action = SetOntologyAnnotationsAction.create(ChangeRequestId.generate(),
+                                                         mockProjectId(),
                                                          mockOWLOntologyID(),
                                                          Collections.emptySet(),
                                                          Collections.emptySet());

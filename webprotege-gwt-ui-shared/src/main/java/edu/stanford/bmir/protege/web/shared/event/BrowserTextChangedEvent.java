@@ -30,25 +30,22 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     public transient static final Event.Type<BrowserTextChangedHandler> ON_BROWSER_TEXT_CHANGED = new Event.Type<>();
 
 
+    private EventId eventId;
+
     private OWLEntity entity;
 
     private String newBrowserText;
 
     private ImmutableMap<DictionaryLanguage, String> shortForms;
 
-    public BrowserTextChangedEvent(OWLEntity entity, String newBrowserText, ProjectId projectId, ImmutableMap<DictionaryLanguage, String> shortForms) {
-        super(projectId);
-        this.entity = entity;
-        this.newBrowserText = newBrowserText;
-        this.shortForms = shortForms;
-    }
-
     @JsonCreator
-    protected BrowserTextChangedEvent(@JsonProperty("entity") OWLEntity entity,
-                                      @JsonProperty("newBrowserText") String newBrowserText,
+    protected BrowserTextChangedEvent(@JsonProperty("eventId") EventId eventId,
                                       @JsonProperty("projectId") ProjectId projectId,
+                                      @JsonProperty("entity") OWLEntity entity,
+                                      @JsonProperty("newBrowserText") String newBrowserText,
                                       @JsonProperty("shortForms") ImmutableList<ShortForm> shortForms) {
         super(projectId);
+        this.eventId = eventId;
         this.entity = entity;
         this.newBrowserText = newBrowserText;
         this.shortForms = shortForms.stream()
@@ -59,6 +56,11 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
      * For serialization purposes only
      */
     private BrowserTextChangedEvent() {
+    }
+
+    @JsonProperty("eventId")
+    public EventId getEventId() {
+        return eventId;
     }
 
     public OWLEntity getEntity() {
@@ -84,6 +86,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     }
 
 
+    @JsonIgnore
     @Override
     public Event.Type<BrowserTextChangedHandler> getAssociatedType() {
         return ON_BROWSER_TEXT_CHANGED;

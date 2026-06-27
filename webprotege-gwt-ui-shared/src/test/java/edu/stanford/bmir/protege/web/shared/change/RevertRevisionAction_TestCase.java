@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.change;
 
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.hamcrest.MatcherAssert;
@@ -26,12 +27,12 @@ public class RevertRevisionAction_TestCase {
     public void setUp()
         throws Exception
     {
-        revertRevisionAction = RevertRevisionAction.create(projectId, revisionNumber);
+        revertRevisionAction = RevertRevisionAction.create(ChangeRequestId.generate(), projectId, revisionNumber);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        RevertRevisionAction.create(null, revisionNumber);
+        RevertRevisionAction.create(ChangeRequestId.generate(), null, revisionNumber);
     }
 
     @Test
@@ -41,7 +42,7 @@ public class RevertRevisionAction_TestCase {
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_revisionNumber_IsNull() {
-        RevertRevisionAction.create(projectId, null);
+        RevertRevisionAction.create(ChangeRequestId.generate(), projectId, null);
     }
 
     @Test
@@ -61,22 +62,22 @@ public class RevertRevisionAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(RevertRevisionAction.create(projectId, revisionNumber)));
+        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(RevertRevisionAction.create(ChangeRequestId.generate(), projectId, revisionNumber)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(Matchers.not(RevertRevisionAction.create(Mockito.mock(ProjectId.class), revisionNumber))));
+        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(Matchers.not(RevertRevisionAction.create(ChangeRequestId.generate(), Mockito.mock(ProjectId.class), revisionNumber))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_revisionNumber() {
-        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(Matchers.not(RevertRevisionAction.create(projectId, Mockito.mock(RevisionNumber.class)))));
+        MatcherAssert.assertThat(revertRevisionAction, Matchers.is(Matchers.not(RevertRevisionAction.create(ChangeRequestId.generate(), projectId, Mockito.mock(RevisionNumber.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(revertRevisionAction.hashCode(), Matchers.is(RevertRevisionAction.create(projectId, revisionNumber)
+        MatcherAssert.assertThat(revertRevisionAction.hashCode(), Matchers.is(RevertRevisionAction.create(ChangeRequestId.generate(), projectId, revisionNumber)
                                                                                                   .hashCode()));
     }
 

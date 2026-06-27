@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
@@ -16,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Matthew Horridge
@@ -28,14 +30,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class SetAnnotationValueAction implements ProjectAction<SetAnnotationValueResult>, HasCommitMessage {
 
 
+
     @JsonCreator
-    public static SetAnnotationValueAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetAnnotationValueAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                  @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                   @JsonProperty("entities") @Nonnull ImmutableSet<OWLEntity> entities,
                                                   @JsonProperty("property") @Nonnull OWLAnnotationProperty property,
                                                   @JsonProperty("value") @Nonnull OWLAnnotationValue value,
                                                   @JsonProperty("commitMessage") @Nonnull String commitMessage) {
-        return new AutoValue_SetAnnotationValueAction(projectId, entities, property, value, commitMessage);
+        return new AutoValue_SetAnnotationValueAction(changeRequestId, projectId, entities, property, value, commitMessage);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

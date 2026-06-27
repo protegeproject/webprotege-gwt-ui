@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.annotation.Nonnull;
 
@@ -23,9 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class SetApplicationSettingsAction implements Action<SetApplicationSettingsResult> {
 
     @JsonCreator
-    public static SetApplicationSettingsAction create(@JsonProperty("applicationSettings") @Nonnull ApplicationSettings applicationSettings) {
-        return new AutoValue_SetApplicationSettingsAction(applicationSettings);
+    public static SetApplicationSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                      @JsonProperty("applicationSettings") @Nonnull ApplicationSettings applicationSettings) {
+        return new AutoValue_SetApplicationSettingsAction(changeRequestId, applicationSettings);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     public abstract ApplicationSettings getApplicationSettings();
 }

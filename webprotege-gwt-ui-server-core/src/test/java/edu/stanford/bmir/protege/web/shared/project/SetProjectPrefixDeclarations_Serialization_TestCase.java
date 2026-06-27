@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class SetProjectPrefixDeclarations_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetProjectPrefixDeclarationsAction.create(mockProjectId(), ImmutableList.of(
+        var action = SetProjectPrefixDeclarationsAction.create(ChangeRequestId.generate(), mockProjectId(), ImmutableList.of(
                 PrefixDeclaration.get("hello:", "http://example.org/")
         ));
         JsonSerializationTestUtil.testSerialization(action, Action.class);

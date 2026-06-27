@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -25,9 +26,14 @@ public abstract class ResetPerspectivesAction implements ProjectAction<ResetPers
 
 
     @JsonCreator
-    public static ResetPerspectivesAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId) {
-        return new AutoValue_ResetPerspectivesAction(projectId);
+    public static ResetPerspectivesAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId) {
+        return new AutoValue_ResetPerspectivesAction(changeRequestId, projectId);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

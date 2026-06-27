@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
@@ -18,7 +19,8 @@ public class DeleteEntityComment_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = new DeleteEntityCommentAction(ProjectId.getNil(),
+        var action = new DeleteEntityCommentAction(ChangeRequestId.generate(),
+                                                   ProjectId.getNil(),
                                                    CommentId.create());
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }

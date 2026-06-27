@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectIdAndSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -29,20 +30,21 @@ public abstract class GetUsageAction implements ProjectAction<GetUsageResult> {
 
     public static GetUsageAction create(OWLEntity subject,
                                         ProjectId projectId) {
-        return new AutoValue_GetUsageAction(projectId, subject, null);
+        return new AutoValue_GetUsageAction(projectId, subject, null, null);
     }
 
     public static GetUsageAction create(OWLEntity subject,
                                         ProjectId projectId,
                                         Optional<UsageFilter> usageFilter) {
-        return new AutoValue_GetUsageAction(projectId, subject, usageFilter.orElse(null));
+        return new AutoValue_GetUsageAction(projectId, subject, usageFilter.orElse(null), null);
     }
 
     @JsonCreator
     public static GetUsageAction create(@JsonProperty("subject") OWLEntity subject,
                                         @JsonProperty("projectId") ProjectId projectId,
-                                        @JsonProperty("usageFilter") @Nullable UsageFilter usageFilter) {
-        return new AutoValue_GetUsageAction(projectId, subject, usageFilter);
+                                        @JsonProperty("usageFilter") @Nullable UsageFilter usageFilter,
+                                        @JsonProperty("pageRequest") @Nullable PageRequest pageRequest) {
+        return new AutoValue_GetUsageAction(projectId, subject, usageFilter, pageRequest);
     }
 
     @Override
@@ -56,6 +58,10 @@ public abstract class GetUsageAction implements ProjectAction<GetUsageResult> {
     public Optional<UsageFilter> getUsageFilter() {
         return Optional.ofNullable(getUsageFilterInternal());
     }
+
+    @Nullable
+    @JsonProperty("pageRequest")
+    public abstract PageRequest getPageRequest();
 
     public int getPageSize() {
         return DEFAULT_PAGE_SIZE;

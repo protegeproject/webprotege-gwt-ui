@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -27,10 +29,12 @@ public class SetProjectSettingsResult implements Result {
         this.projectSettings = checkNotNull(projectSettings);
     }
 
-    public static SetProjectSettingsResult create(@Nonnull ProjectSettings projectSettings) {
+    @JsonCreator
+    public static SetProjectSettingsResult create(@JsonProperty("settings") @Nonnull ProjectSettings projectSettings) {
         return new SetProjectSettingsResult(projectSettings);
     }
 
+    @JsonProperty("settings")
     public ProjectSettings getProjectSettings() {
         return projectSettings;
     }

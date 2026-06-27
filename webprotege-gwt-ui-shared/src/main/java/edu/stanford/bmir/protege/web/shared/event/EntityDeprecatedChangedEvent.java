@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,12 +21,19 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
 
     public transient static final Event.Type<EntityDeprecatedChangedHandler> ON_ENTITY_DEPRECATED = new Event.Type<EntityDeprecatedChangedHandler>();
 
+    private EventId eventId;
+
     private OWLEntity entity;
 
     private boolean deprecated;
 
-    public EntityDeprecatedChangedEvent(ProjectId source, OWLEntity entity, boolean deprecated) {
+    @JsonCreator
+    public EntityDeprecatedChangedEvent(@JsonProperty("eventId") EventId eventId,
+                                        @JsonProperty("projectId") ProjectId source,
+                                        @JsonProperty("entity") OWLEntity entity,
+                                        @JsonProperty("deprecated") boolean deprecated) {
         super(source);
+        this.eventId = eventId;
         this.entity = entity;
         this.deprecated = deprecated;
     }
@@ -34,6 +44,11 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
     private EntityDeprecatedChangedEvent() {
     }
 
+    @JsonProperty("eventId")
+    public EventId getEventId() {
+        return eventId;
+    }
+
     public OWLEntity getEntity() {
         return entity;
     }
@@ -42,6 +57,7 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
         return deprecated;
     }
 
+    @JsonIgnore
     @Override
     public Event.Type<EntityDeprecatedChangedHandler> getAssociatedType() {
         return ON_ENTITY_DEPRECATED;

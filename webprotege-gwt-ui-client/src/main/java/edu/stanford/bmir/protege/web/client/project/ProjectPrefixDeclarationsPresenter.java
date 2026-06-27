@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectPrefixDeclarationsPlace;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
@@ -68,6 +70,9 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Nonnull
     private final ProgressDisplay progressDisplay;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public ProjectPrefixDeclarationsPresenter(@Nonnull ProjectId projectId,
                                               @Nonnull ProjectPrefixDeclarationsView view,
@@ -75,7 +80,8 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                               @Nonnull DispatchServiceManager dispatchServiceManager,
                                               @Nonnull PlaceController placeController,
                                               @Nonnull SettingsPresenter settingsPresenter,
-                                              @Nonnull Messages messages, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
+                                              @Nonnull Messages messages, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay,
+                                              @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.capabilityScreener = checkNotNull(capabilityScreener);
@@ -86,6 +92,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         this.messageBox = checkNotNull(messageBox);
         this.errorDisplay = checkNotNull(errorDisplay);
         this.progressDisplay = checkNotNull(progressDisplay);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Override
@@ -183,7 +190,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     }
 
     private void applyChanges() {
-        dispatchServiceManager.execute(SetProjectPrefixDeclarationsAction.create(projectId, view.getPrefixDeclarations()),
+        dispatchServiceManager.execute(SetProjectPrefixDeclarationsAction.create(ChangeRequestId.get(uuidV4Provider.get()), projectId, view.getPrefixDeclarations()),
                                        result -> handleChangesApplied());
     }
 

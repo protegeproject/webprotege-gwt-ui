@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -26,12 +27,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.graphs.SetUserProjectEntityGraphSettings")
 public abstract class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphSettingsResult> {
 
+
     @JsonCreator
-    public static SetUserProjectEntityGraphSettingsAction create(@JsonProperty("projectId") @Nonnull ProjectId projectId,
+    public static SetUserProjectEntityGraphSettingsAction create(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                                                 @JsonProperty("projectId") @Nonnull ProjectId projectId,
                                                                  @JsonProperty("userId") @Nullable UserId userId,
                                                                  @JsonProperty("settings") @Nonnull EntityGraphSettings settings) {
-        return new AutoValue_SetUserProjectEntityGraphSettingsAction(projectId, settings, userId);
+        return new AutoValue_SetUserProjectEntityGraphSettingsAction(changeRequestId, projectId, settings, userId);
     }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public abstract ChangeRequestId getChangeRequestId();
 
     @Nonnull
     @Override

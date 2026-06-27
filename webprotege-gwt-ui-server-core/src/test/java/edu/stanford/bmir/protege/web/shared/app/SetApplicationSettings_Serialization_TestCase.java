@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.app;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class SetApplicationSettings_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetApplicationSettingsAction.create(new ApplicationSettings(
+        var action = SetApplicationSettingsAction.create(ChangeRequestId.generate(), new ApplicationSettings(
                 "Name",
                 new EmailAddress("Email"),
                 new ApplicationLocation("scheme", "host", "path", 20),

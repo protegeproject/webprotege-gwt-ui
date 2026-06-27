@@ -25,7 +25,7 @@ public abstract class GetRootOntologyIdResult implements Result, HasProjectId {
 
     @JsonCreator
     public static GetRootOntologyIdResult create(@JsonProperty("projectId") ProjectId projectId,
-                                                 @JsonProperty("ontologyId") OWLOntologyID owlOntologyID) {
+                                                 @JsonProperty("rootOntologyId") OWLOntologyID owlOntologyID) {
         return new AutoValue_GetRootOntologyIdResult(projectId, owlOntologyID);
     }
 
@@ -38,5 +38,6 @@ public abstract class GetRootOntologyIdResult implements Result, HasProjectId {
     @Override
     public abstract ProjectId getProjectId();
 
+    @JsonProperty("rootOntologyId")
     public abstract OWLOntologyID getOntologyId();
 }

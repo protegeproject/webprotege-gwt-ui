@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
@@ -33,6 +35,9 @@ public class DisplayNameSettingsManager {
     private final ActiveProjectManager activeProjectManager;
 
     @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
+    @Nonnull
     private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     private boolean loaded = false;
@@ -41,11 +46,13 @@ public class DisplayNameSettingsManager {
     public DisplayNameSettingsManager(@Nonnull ProjectId projectId,
                                       @Nonnull EventBus eventBus,
                                       @Nonnull DisplayLanguageStorage displayLanguageStorage,
-                                      @Nonnull ActiveProjectManager activeProjectManager) {
+                                      @Nonnull ActiveProjectManager activeProjectManager,
+                                      @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.eventBus = checkNotNull(eventBus);
         this.displayLanguageStorage = checkNotNull(displayLanguageStorage);
         this.activeProjectManager = checkNotNull(activeProjectManager);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Nonnull
@@ -64,7 +71,7 @@ public class DisplayNameSettingsManager {
         }
         this.displayNameSettings = checkNotNull(displayNameSettings);
         this.displayLanguageStorage.store(displayNameSettings);
-        eventBus.fireEventFromSource(DisplayNameSettingsChangedEvent.get(projectId, displayNameSettings).asGWTEvent(),
+        eventBus.fireEventFromSource(DisplayNameSettingsChangedEvent.get(EventId.get(uuidV4Provider.get()), projectId, displayNameSettings).asGWTEvent(),
                                      projectId);
     }
 }

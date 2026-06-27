@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -20,12 +23,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName("webprotege.projects.SetProjectPrefixDeclarations")
 public class SetProjectPrefixDeclarationsAction implements ProjectAction<SetProjectPrefixDeclarationsResult> {
 
+    private ChangeRequestId changeRequestId;
+
     private ProjectId projectId;
 
     private List<PrefixDeclaration> prefixDeclarations;
 
-    private SetProjectPrefixDeclarationsAction(@Nonnull ProjectId projectId,
-                                               @Nonnull List<PrefixDeclaration> prefixDeclarations) {
+    @JsonCreator
+    private SetProjectPrefixDeclarationsAction(@JsonProperty("changeRequestId") @Nonnull ChangeRequestId changeRequestId,
+                                               @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                               @JsonProperty("prefixDeclarations") @Nonnull List<PrefixDeclaration> prefixDeclarations) {
+        this.changeRequestId = checkNotNull(changeRequestId);
         this.projectId = checkNotNull(projectId);
         this.prefixDeclarations = new ArrayList<>(checkNotNull(prefixDeclarations));
     }
@@ -34,9 +42,17 @@ public class SetProjectPrefixDeclarationsAction implements ProjectAction<SetProj
     private SetProjectPrefixDeclarationsAction() {
     }
 
-    public static SetProjectPrefixDeclarationsAction create(@Nonnull ProjectId projectId,
+
+    public static SetProjectPrefixDeclarationsAction create(@Nonnull ChangeRequestId changeRequestId,
+                                                            @Nonnull ProjectId projectId,
                                                             @Nonnull List<PrefixDeclaration> prefixDeclarations) {
-        return new SetProjectPrefixDeclarationsAction(projectId, prefixDeclarations);
+        return new SetProjectPrefixDeclarationsAction(changeRequestId, projectId, prefixDeclarations);
+    }
+
+    @Nonnull
+    @JsonProperty("changeRequestId")
+    public ChangeRequestId getChangeRequestId() {
+        return changeRequestId;
     }
 
     @Nonnull

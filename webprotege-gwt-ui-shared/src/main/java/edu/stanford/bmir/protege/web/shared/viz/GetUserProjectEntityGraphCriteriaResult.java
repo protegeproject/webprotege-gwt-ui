@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("webprotege.graphs.GetProjectEntityGraphDefaultEdgeCriteria")
+@JsonTypeName("webprotege.graphs.GetUserProjectEntityGraphCriteria")
 public abstract class GetUserProjectEntityGraphCriteriaResult implements Result {
 
     @JsonCreator

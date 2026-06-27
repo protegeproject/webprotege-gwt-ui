@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
@@ -14,6 +17,7 @@ import java.util.Collection;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import edu.stanford.bmir.protege.web.shared.event.EventId;
 
 /**
  * Matthew Horridge
@@ -26,20 +30,30 @@ public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandle
     public static final transient Event.Type<EntityTagsChangedHandler> ON_ENTITY_TAGS_CHANGED = new Event.Type<>();
 
 
+    private EventId eventId;
+
     private OWLEntity entity;
 
     private ImmutableSet<Tag> tags;
 
-    public EntityTagsChangedEvent(@Nonnull ProjectId projectId,
-                                  @Nonnull OWLEntity entity,
-                                  @Nonnull Collection<Tag> tags) {
+    @JsonCreator
+    public EntityTagsChangedEvent(@JsonProperty("eventId") EventId eventId,
+                                  @JsonProperty("projectId") @Nonnull ProjectId projectId,
+                                  @JsonProperty("entity") @Nonnull OWLEntity entity,
+                                  @JsonProperty("tags") @Nonnull Collection<Tag> tags) {
         super(checkNotNull(projectId));
+        this.eventId = eventId;
         this.entity = checkNotNull(entity);
         this.tags = ImmutableSet.copyOf(checkNotNull(tags));
     }
 
     @GwtSerializationConstructor
     private EntityTagsChangedEvent() {
+    }
+
+    @JsonProperty("eventId")
+    public EventId getEventId() {
+        return eventId;
     }
 
     @Nonnull
@@ -52,6 +66,7 @@ public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandle
         return tags;
     }
 
+    @JsonIgnore
     @Override
     public Event.Type<EntityTagsChangedHandler> getAssociatedType() {
         return ON_ENTITY_TAGS_CHANGED;
