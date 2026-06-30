@@ -13,7 +13,7 @@ import java.util.Objects;
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2016
  */
-@JsonTypeName("webprotege.events.discussion.DiscussionThreadCreated")
+@JsonTypeName("webprotege.events.discussions.DiscussionThreadCreated")
 public class DiscussionThreadCreatedEvent extends ProjectEvent<DiscussionThreadCreatedHandler> implements HasProjectId {
 
     public static final transient Event.Type<DiscussionThreadCreatedHandler> ON_DISCUSSION_THREAD_CREATED = new Event.Type<>();
