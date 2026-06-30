@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2016
  */
-@JsonTypeName("webprotege.events.discussion.CommentPosted")
+@JsonTypeName("webprotege.events.discussions.CommentPosted")
 public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> implements HasProjectId {
 
 
