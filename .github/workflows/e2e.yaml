@@ -122,11 +122,26 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Playwright report will be at: $URL"
 
+      # If the stack never came up, the test step never ran and there is
+      # no report to publish; publishing anyway confuses the pages action
+      # (it treats the missing dir as a first deployment and then trips
+      # over the existing gh-pages branch).
+      - name: Check for report
+        if: always()
+        id: report
+        run: |
+          if [ -d playwright/playwright-report ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No playwright-report directory - skipping publish."
+          fi
+
       # Publish the HTML report to the `gh-pages` branch under the subdir
       # chosen above. `keep_files: true` preserves other PRs' reports
       # already on the branch instead of wiping the whole tree per run.
       - name: Publish report to GitHub Pages
-        if: always()
+        if: always() && steps.report.outputs.exists == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
