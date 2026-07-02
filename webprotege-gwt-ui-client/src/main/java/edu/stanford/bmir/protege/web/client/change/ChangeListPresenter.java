@@ -4,6 +4,7 @@ import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -15,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
-import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -183,13 +183,14 @@ public class ChangeListPresenter {
             }
             view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
-            view.setDownloadRevisionHandler(revisionNumber -> {
-                ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
-                        projectId,
-                        revisionNumber,
-                        DownloadFormatExtension.owl);
-                downloader.download();
-            });
+            view.setDownloadRevisionHandler(revisionNumber ->
+                    DownloadSettingsDialog.showDialog(extension -> {
+                        ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
+                                projectId,
+                                revisionNumber,
+                                extension);
+                        downloader.download();
+                    }));
             view.setDownloadRevisionVisible(downloadVisible);
             Page<DiffElement<String, String>> page = projectChange.getDiff();
             List<DiffElement<String, String>> pageElements = page.getPageElements();
