@@ -94,28 +94,12 @@ public class SnapshotRequestSender {
         var params = objectMapper.createObjectNode();
         params.put("projectId", projectId.getId());
         params.put("revisionNumber", revisionNumber.getValue());
-        params.put("documentFormat", mapToDocumentFormat(format));
+        // The backend DocumentFormat is identified by its MIME type on the wire
+        params.put("documentFormat", format.getMimeType());
         params.put("fileName", fileName);
         root.set("params", params);
 
         return objectMapper.writeValueAsString(root);
-    }
-
-    private String mapToDocumentFormat(DownloadFormat format) {
-        switch (format) {
-            case RDF_XML:
-                return "RDF_XML";
-            case RDF_TURLE:
-                return "TURTLE";
-            case OWL_XML:
-                return "OWL_XML";
-            case MANCHESTER:
-                return "MANCHESTER_SYNTAX";
-            case FUNCTIONAL_SYNTAX:
-                return "FUNCTIONAL_SYNTAX";
-            default:
-                return "RDF_XML";
-        }
     }
 
     private SnapshotStorageCoordinates parseStorageCoordinates(String responseBody) throws IOException {
