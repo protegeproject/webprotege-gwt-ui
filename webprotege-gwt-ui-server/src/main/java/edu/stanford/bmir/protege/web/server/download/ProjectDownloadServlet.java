@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.server.download;
 
+import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionFactory;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
+import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.keycloak.KeycloakPrincipal;
 import org.slf4j.Logger;
@@ -41,11 +46,16 @@ public class ProjectDownloadServlet extends HttpServlet {
     @Nonnull
     private final SnapshotDownloader snapshotDownloader;
 
+    @Nonnull
+    private final DispatchServiceExecutor dispatchServiceExecutor;
+
     @Inject
     public ProjectDownloadServlet(@Nonnull SnapshotRequestSender snapshotRequestSender,
-                                  @Nonnull SnapshotDownloader snapshotDownloader) {
+                                  @Nonnull SnapshotDownloader snapshotDownloader,
+                                  @Nonnull DispatchServiceExecutor dispatchServiceExecutor) {
         this.snapshotRequestSender = snapshotRequestSender;
         this.snapshotDownloader = snapshotDownloader;
+        this.dispatchServiceExecutor = dispatchServiceExecutor;
     }
 
     @Override
@@ -77,17 +87,21 @@ public class ProjectDownloadServlet extends HttpServlet {
             return;
         }
 
+        var executionContext = new ExecutionContext(userId, accessToken);
+        String projectName = getProjectDisplayName(projectId, executionContext);
+
         Path tempFile = null;
         try {
             // 1. Request snapshot creation (or retrieval if cached)
             var coordinates = snapshotRequestSender.sendCreateSnapshotRequest(
-                    projectId, revisionNumber, format, projectId.getId(), accessToken);
+                    projectId, revisionNumber, format, projectName, accessToken);
 
             // 2. Download snapshot from MinIO to temp file
             tempFile = snapshotDownloader.downloadToTempFile(coordinates);
 
             // 3. Stream to browser
-            String fileName = projectId.getId() + "-ontologies." + format.getExtension() + ".zip";
+            String revisionSuffix = revisionNumber.isHead() ? "" : "-r" + revisionNumber.getValue();
+            String fileName = projectName + "-ontologies" + revisionSuffix + "." + format.getExtension() + ".zip";
             var fileTransferTask = new FileTransferTask(projectId, userId, tempFile, fileName, resp);
             fileTransferTask.call();
 
@@ -109,6 +123,25 @@ public class ProjectDownloadServlet extends HttpServlet {
                 }
             }
         }
+    }
+
+    private String getProjectDisplayName(ProjectId projectId, ExecutionContext executionContext) {
+        try {
+            var container = dispatchServiceExecutor.execute(new GetProjectDetailsAction(projectId), executionContext);
+            var result = (GetProjectDetailsResult) container.getResult();
+            var displayName = result.getProjectDetails().getDisplayName();
+            return sanitizeFileName(displayName);
+        } catch (Exception e) {
+            logger.warn("Could not retrieve the display name for {}.  Using the project id as the download file name.",
+                        projectId, e);
+            return projectId.getId();
+        }
+    }
+
+    private static String sanitizeFileName(String name) {
+        return name.trim()
+                   .replaceAll("\\s+", "-")
+                   .replaceAll("[\"\\\\/]", "_");
     }
 
     private String extractAccessToken(HttpServletRequest req) {
