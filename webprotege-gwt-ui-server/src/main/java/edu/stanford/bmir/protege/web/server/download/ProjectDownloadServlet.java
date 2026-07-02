@@ -105,6 +105,15 @@ public class ProjectDownloadServlet extends HttpServlet {
             var fileTransferTask = new FileTransferTask(projectId, userId, tempFile, fileName, resp);
             fileTransferTask.call();
 
+        } catch (SnapshotRequestFailedException e) {
+            logger.error("Snapshot request failed for project {} (status={})", projectId, e.getStatusCode());
+            if (e.getStatusCode() == HttpServletResponse.SC_FORBIDDEN) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN,
+                               "You do not have permission to download this project");
+            }
+            else {
+                resp.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Download failed");
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("Download interrupted for project {}", projectId, e);

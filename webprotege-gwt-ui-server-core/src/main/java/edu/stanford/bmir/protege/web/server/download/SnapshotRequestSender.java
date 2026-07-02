@@ -76,7 +76,7 @@ public class SnapshotRequestSender {
         if (httpResponse.statusCode() >= 400) {
             logger.error("Error response from snapshot service: {} {}",
                          httpResponse.statusCode(), httpResponse.body());
-            throw new IOException("Snapshot service returned error: " + httpResponse.statusCode());
+            throw new SnapshotRequestFailedException(httpResponse.statusCode());
         }
 
         return parseStorageCoordinates(httpResponse.body());
