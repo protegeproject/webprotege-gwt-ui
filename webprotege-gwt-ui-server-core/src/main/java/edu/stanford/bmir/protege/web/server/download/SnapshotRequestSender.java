@@ -82,10 +82,10 @@ public class SnapshotRequestSender {
         return parseStorageCoordinates(httpResponse.body());
     }
 
-    private String buildJsonRpcRequestBody(ProjectId projectId,
-                                           RevisionNumber revisionNumber,
-                                           DownloadFormat format,
-                                           String fileName) throws IOException {
+    String buildJsonRpcRequestBody(ProjectId projectId,
+                                   RevisionNumber revisionNumber,
+                                   DownloadFormat format,
+                                   String fileName) throws IOException {
         var root = objectMapper.createObjectNode();
         root.put("jsonrpc", "2.0");
         root.put("id", UUID.randomUUID().toString());
