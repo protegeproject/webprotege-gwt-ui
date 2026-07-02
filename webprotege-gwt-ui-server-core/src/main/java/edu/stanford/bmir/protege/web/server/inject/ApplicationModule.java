@@ -89,4 +89,24 @@ public class ApplicationModule {
         return System.getenv("webprotege.gwt-api-gateway.endPoint" );
     }
 
+    @ApplicationSingleton
+    @Provides
+    MinioClient provideMinioClient() {
+        var accessKey = getConfigurationValue("minio.access.key", "webprotege");
+        var secretKey = getConfigurationValue("minio.access.secret", "webprotege");
+        var endPoint = getConfigurationValue("minio.endPoint", "http://localhost:9000");
+        return MinioClient.builder()
+                          .credentials(accessKey, secretKey)
+                          .endpoint(endPoint)
+                          .build();
+    }
+
+    private static String getConfigurationValue(String name, String defaultValue) {
+        var env = System.getenv(name);
+        if(env != null) {
+            return env;
+        }
+        return System.getProperty(name, defaultValue);
+    }
+
 }
