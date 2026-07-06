@@ -85,4 +85,34 @@ test.describe('authentication', () => {
     await expect(page).toHaveURL(/\/keycloak\/realms\/webprotege\//);
     await expect(page.locator(Login.submit)).toBeVisible();
   });
+
+  test('A6: favicon fetch during sign-in does not break the login (#278)', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator(Login.username)).toBeVisible();
+
+    // While the sign-in page is open, browsers quietly fetch the site icon
+    // from the app origin. This used to be treated as a new visitor needing
+    // to log in, which invalidated the sign-in already in progress and made
+    // correct credentials fail with a "400 Bad Request" page. Fetch the icon
+    // explicitly so the scenario does not depend on browser timing.
+    const favicon = await page.evaluate(async () => {
+      const res = await fetch('/favicon.ico');
+      return {
+        status: res.status,
+        redirected: res.redirected,
+        contentType: res.headers.get('content-type') ?? '',
+      };
+    });
+    expect(favicon.status).toBe(200);
+    // A redirect here means the icon request was challenged for sign-in,
+    // which is exactly what used to clobber the login in progress.
+    expect(favicon.redirected).toBe(false);
+    expect(favicon.contentType).toContain('image');
+
+    await page.locator(Login.username).fill(TEST_USER.username);
+    await page.locator(Login.password).fill(TEST_USER.password);
+    await page.locator(Login.submit).click();
+    await expect(page).toHaveURL(/#projects\/list/, { timeout: 30_000 });
+    await expect(page.locator(ProjectList.root)).toBeVisible();
+  });
 });
