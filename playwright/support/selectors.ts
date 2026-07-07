@@ -102,10 +102,12 @@ export const Hierarchy = {
   toolbar: {
     /** Hierarchy "Create" / "Delete" buttons are icon-only and rely on
      * a hovering tooltip rather than a `title` attribute. Match the GWT
-     * style class added in `*HierarchyPortletPresenter` instead. */
+     * style class added in `*HierarchyPortletPresenter` instead.
+     * Note: there is NO watch toolbar button — `wp-btn-g--watch` is not
+     * emitted by any presenter; watching goes through the tree context
+     * menu ("Watch..." item, see the `Watches` group below). */
     create: 'button.wp-btn-g--create',
     delete: 'button.wp-btn-g--delete',
-    watch: 'button.wp-btn-g--watch',
   },
   /** PopupMenu (`edu.stanford.bmir.protege.web.client.library.popupmenu`)
    * renders as `<div class="wp-popup-menu">` with `<div class="wp-popup-menu__item">`
@@ -165,6 +167,180 @@ export const Sharing = {
   pageRoot: '.wp-form-group:has(input[type="checkbox"])',
   linkSharingToggle: '.gwt-CheckBox input[type="checkbox"]',
   linkSharingPermission: 'select',
-  shareWithList: '.value-list-flex-editor',
+  /** The "Share with" list is a ValueListFlexEditorImpl — same
+   * `wp-value-list` bundle classes the frame editor uses (the editor runs
+   * in AUTOMATIC new-row mode, so a trailing blank row is always present). */
+  shareWithList: '.wp-value-list',
+  personRow: '.wp-value-list__row',
+  /** Person field inside a row is a GWT SuggestBox backed by
+   * UserIdSuggestOracle. `SharingSettingEditorImpl.getValue()` reads the
+   * raw text, so typing a full username + blur is enough — no suggestion
+   * selection needed. Use pressSequentially, never fill(). */
+  personInput: 'input.gwt-SuggestBox',
+  /** Permission ListBox — option VALUES are the enum names
+   * VIEW | COMMENT | EDIT | MANAGE (labels are lowercased only by CSS),
+   * stable across i18n. Scope under a row locator. */
+  permissionSelect: 'select',
+  /** Settings-page Apply button (SettingsViewImpl.ui.xml). */
+  applyButton: 'button.wp-btn--accept:has-text("Apply")',
+  suggestPopup: '.gwt-SuggestBoxPopup',
   topBarButton: 'button.wp-topbar__btn:has-text("Share")',
+} as const;
+
+export const Comments = {
+  /** Comments portlet toolbar action (EntityDiscussionThreadPortletPresenter).
+   * Icon-only; enabled only while an entity is selected. The portlet sits
+   * in the right-hand column of the default Classes perspective. */
+  startThreadButton: 'button.wp-btn-g--create-thread',
+  /** CommentEditorViewImpl hosts a CodeMirror-5 editor inside a wp-modal.
+   * fill() cannot reach it — click the .CodeMirror element, then
+   * page.keyboard.type(). Avoid '@' in bodies (mention autocomplete). */
+  editor: '.wp-modal .CodeMirror',
+  editorOk: '.wp-modal button.wp-btn--dialog.wp-btn--primary',
+  /** discussion.css declares these @external, so the names survive the
+   * GWT CssResource obfuscation pass. */
+  thread: '.wp-disc-thread__outer',
+  /** Text is "Resolve" while the thread is open, "Re-open" once closed. */
+  threadStatus: 'button.wp-disc-thread__status',
+  comment: '.wp-comment',
+  commentBody: '.wp-comment__body',
+  replyButton: '.wp-disc-thread__outer button:has-text("Reply")',
+} as const;
+
+export const Watches = {
+  /** WatchPresenter modal (title "Watches"). Opened from the hierarchy
+   * context-menu item "Watch...". Reopening the dialog re-reads state via
+   * GetWatchesAction, so it doubles as a persistence assertion. */
+  modal: '.wp-modal:has-text("Watches")',
+  /** WatchViewImpl.ui.xml radio labels are hardcoded (not i18n). GWT
+   * RadioButton = <span class=gwt-RadioButton><input><label>. */
+  radio: (label: 'None' | 'Entity' | 'Branch') =>
+    `.wp-modal .gwt-RadioButton:has(label:text-is("${label}")) input`,
+  ok: '.wp-modal button.wp-btn--dialog.wp-btn--primary',
+  cancel: '.wp-modal button.wp-btn--dialog:has-text("Cancel")',
+} as const;
+
+export const Revision = {
+  /** ChangeDetailsViewImpl renders "R <n> ▾" as a clickable label when
+   * revert/download are permitted — same hook 11-download D2 uses. */
+  badge: /^R \d+ ▾$/,
+  revertMenuItem: '.wp-popup-menu__item:has-text("Revert changes in revision")',
+  /** MessageBox.showConfirmBox swaps the primary/escape button classes
+   * (accept carries wp-btn--escape) — always match confirm buttons by
+   * TEXT, never by wp-btn--primary. Every button selector below is scoped
+   * to its own modal by caption: dismissing a wp-modal runs a 300ms fade
+   * before it detaches, so the confirm box and the follow-up success box
+   * coexist briefly, and an unscoped `.wp-modal button...primary` matches
+   * buttons across both. */
+  confirmModal: '.wp-modal:has-text("Revert Changes?")',
+  confirmRevert: '.wp-modal:has-text("Revert Changes?") button:has-text("Revert")',
+  /** Success MessageBox after a revert — must be dismissed, it would
+   * otherwise intercept subsequent clicks. */
+  successModal: '.wp-modal:has-text("have been reverted")',
+  successOk:
+    '.wp-modal:has-text("have been reverted") button.wp-btn--dialog.wp-btn--primary',
+} as const;
+
+export const ProjectMenu = {
+  /** Top-bar "Project ▾" menu inside a project (ProjectMenuViewImpl). */
+  button: 'button.wp-topbar__btn:has-text("Project")',
+  /** Each MenuItem is an HTMLPanel (`.wp-popup-menu__item`) wrapping a
+   * `.gwt-Label`. Match the container that HAS a label with the exact
+   * text: a bare `.wp-popup-menu__item:text-is("Settings")` never matches
+   * because Playwright's :text-is binds to the deepest text element (the
+   * inner label), not the container. Scoping through the label keeps the
+   * match exact so "Settings" doesn't also catch "Export settings...". */
+  item: (label: string) =>
+    `.wp-popup-menu__item:has(.gwt-Label:text-is("${label}"))`,
+} as const;
+
+export const SettingsPage = {
+  /** All settings-style pages (tags/forms/prefixes/project settings/app
+   * settings/perspectives manager) share SettingsViewImpl chrome. */
+  root: '.wp-settings',
+  section: (label: string) =>
+    `.wp-settings__section:has(.wp-settings__section__title:text-is("${label}"))`,
+  /** Labelled "Apply" on most pages, "OK" on Forms + Perspectives manager
+   * (setApplyButtonText), so match the class not the text. */
+  apply: 'button.wp-btn--page.wp-btn--accept',
+  cancel: 'button.wp-btn--page.wp-btn--escape',
+} as const;
+
+export const Modal = {
+  /** Generic wp-modal dialog chrome (ModalManager / MessageBox / InputBox). */
+  root: '.wp-modal',
+  primary: '.wp-modal button.wp-btn--dialog.wp-btn--primary',
+  escape: '.wp-modal button.wp-btn--dialog.wp-btn--escape',
+  /** InputBox single-line prompt renders a visible gwt-TextBox. */
+  textInput: '.wp-modal input.gwt-TextBox',
+  textArea: '.wp-modal textarea',
+} as const;
+
+export const PerspectiveBar = {
+  /** "Tabs ▾" button at the right end of the perspective switcher
+   * (PerspectiveSwitcherViewImpl newTabButton, msg.perspective_tabs). */
+  tabsButton: 'button:has-text("Tabs")',
+  /** Per-tab menu button — a MenuButton HTMLPanel with title="Menu"
+   * (PerspectiveLinkImpl.ui.xml). Scoped under the tab so multiple tabs
+   * don't collide. */
+  tabMenuButton: (label: string) =>
+    `${ProjectView.tab(label)} div[title="Menu"]`,
+  selectedTab: '.gwt-TabBarItem-selected',
+  /** Items: "Add view", "Reset" (built-ins only), "Close",
+   * "Add blank tab…" (ellipsis char appended in code). */
+  menuItem: (label: string) => `.wp-popup-menu__item:has-text("${label}")`,
+  /** EmptyPerspectiveViewImpl renders this literal text; clicking it opens
+   * the portlet chooser. */
+  emptyPerspective: 'text=Click to add content',
+  /** widgetmap ViewHolder caption for a dropped/added portlet. */
+  viewCaption: (title: string) => `.widget-holder-label:text-is("${title}")`,
+} as const;
+
+export const PortletChooser = {
+  /** "Choose view" is a legacy gwt-DialogBox (like the download format
+   * chooser), containing a GWT ListBox of portlet titles. */
+  dialog: '.gwt-DialogBox:has-text("Choose view")',
+  list: '.gwt-DialogBox select',
+  ok: '.gwt-DialogBox button.wp-btn--accept',
+} as const;
+
+export const TagsPage = {
+  /** Project tags page (#projects/{id}/tags) — a ValueListFlexEditor of
+   * TagEditor rows in AUTOMATIC mode (trailing blank row always present). */
+  row: '.wp-value-list__row',
+  labelInput: 'input[placeholder="Label"]',
+  descriptionInput: 'input[placeholder="Description"]',
+  deleteButton: '.wp-value-list__delete-button',
+} as const;
+
+export const EntityTags = {
+  /** "Tags..." hierarchy context-menu item opens this modal
+   * (EntityTagsSelectorViewImpl). Each row is an EntityTagCheckBoxImpl:
+   * a gwt-CheckBox followed by the .wp-tag chip. */
+  modal: '.wp-modal:has-text("Entity Tags")',
+  checkboxFor: (tagLabel: string) =>
+    `.wp-modal div:has(> .gwt-CheckBox):has(.wp-tag:has-text("${tagLabel}")) input[type="checkbox"]`,
+  /** Assigned tags render as chips in the editor portlet's tag list. */
+  assignedTag: (label: string) => `.wp-tag:has-text("${label}")`,
+} as const;
+
+export const PrefixesPage = {
+  /** Prefix declarations page (#projects/{id}/prefixes). Validation:
+   * prefix name must end with ':', prefix IRI must be absolute and end
+   * with '/' or '#'. */
+  row: '.wp-value-list__row',
+  nameInput: 'input[placeholder="Prefix name"]',
+  valueInput: 'input[placeholder="Prefix"]',
+} as const;
+
+export const FormsPage = {
+  /** Forms manager (#projects/{id}/forms). The Apply button on this page
+   * is relabelled "OK". Editing a form label fires updateForm on blur —
+   * the form exists server-side even before OK. */
+  addFormButton: 'button:has-text("Add form")',
+  copyButton: 'button:has-text("Copy forms from project")',
+  exportButton: 'button:has-text("Export forms...")',
+  importButton: 'button:has-text("Import forms...")',
+  formDetailsButton: 'button:has-text("Form details...")',
+  labelValueInput: '.wp-value-list__row input.gwt-TextBox',
 } as const;

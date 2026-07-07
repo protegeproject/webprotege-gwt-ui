@@ -43,6 +43,20 @@ export const TEST_USER: TestUser = {
   lastName: 'Tester',
 };
 
+/**
+ * Secondary user for collaboration/permission tests. Deliberately carries
+ * NO webprotege client roles — SystemAdmin would satisfy every capability
+ * gate and defeat "viewer cannot edit"-style assertions. Project-level
+ * access is granted per-test via the sharing settings page.
+ */
+export const COLLAB_USER: TestUser = {
+  email: 'e2e-collab@test.local',
+  username: 'e2e-collab@test.local',
+  password: 'testtest123',
+  firstName: 'E2E',
+  lastName: 'Collaborator',
+};
+
 export const KEYCLOAK_DEFAULTS: KeycloakConfig = {
   baseUrl: process.env.WEBPROTEGE_BASE_URL ?? 'http://localhost',
   realm: 'webprotege',
@@ -74,6 +88,7 @@ export async function getAdminToken(cfg: KeycloakConfig): Promise<string> {
 export async function ensureTestUser(
   cfg: KeycloakConfig,
   user: TestUser = TEST_USER,
+  roles: readonly string[] = REQUIRED_CLIENT_ROLES,
 ): Promise<void> {
   const adminToken = await getAdminToken(cfg);
   const ctx = await request.newContext({
@@ -118,16 +133,19 @@ export async function ensureTestUser(
       }
       userId = created[0].id;
     }
-    await ensureRequiredClientRoles(ctx, cfg.realm, userId);
+    if (roles.length > 0) {
+      await ensureClientRoles(ctx, cfg.realm, userId, roles);
+    }
   } finally {
     await ctx.dispose();
   }
 }
 
-async function ensureRequiredClientRoles(
+async function ensureClientRoles(
   ctx: APIRequestContext,
   realm: string,
   userId: string,
+  roles: readonly string[],
 ): Promise<void> {
   const clientLookup = await ctx.get(ADMIN_CLIENTS_PATH(realm), {
     params: { clientId: WEBPROTEGE_CLIENT_ID },
@@ -149,7 +167,7 @@ async function ensureRequiredClientRoles(
     : [];
 
   const toAssign: Array<{ id: string; name: string }> = [];
-  for (const roleName of REQUIRED_CLIENT_ROLES) {
+  for (const roleName of roles) {
     if (currentlyAssigned.includes(roleName)) continue;
     let roleLookup = await ctx.get(`${rolesPath}/${roleName}`);
     if (roleLookup.status() === 404) {

@@ -8,7 +8,7 @@ import { CreateProjectDialog, ProjectList, ProjectView } from './selectors';
  * route through "Properties" first when targeting any of them.
  */
 export async function goToPerspective(page: Page, label: string): Promise<void> {
-  if (ProjectView.propertiesSubTabs.includes(label)) {
+  if ((ProjectView.propertiesSubTabs as readonly string[]).includes(label)) {
     await page.locator(ProjectView.tab('Properties')).first().click();
     // The sub-tabs ("Object Properties", "Data Properties",
     // "Annotation Properties") only attach after the parent is opened.
@@ -24,6 +24,15 @@ export interface TestProject {
   name: string;
   /** URL hash route once opened, e.g. '#projects/{uuid}/perspectives/{uuid}'. */
   url: string;
+}
+
+/** Extract the 36-char project uuid from a TestProject's opened URL. */
+export function projectIdOf(project: TestProject): string {
+  const match = new URL(project.url).hash.match(/projects\/([0-9a-f-]{36})/);
+  if (!match) {
+    throw new Error(`No project id found in URL: ${project.url}`);
+  }
+  return match[1];
 }
 
 export interface ProjectFixtures {
