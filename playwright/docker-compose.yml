@@ -183,7 +183,7 @@ services:
     networks: [wp]
 
   webprotege-event-history-service:
-    image: protegeproject/webprotege-event-history-service:2.0.25-WHO
+    image: protegeproject/webprotege-event-history-service:2.0.0
     depends_on:
       mongo:
         condition: service_started
@@ -247,7 +247,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.3
+    image: protegeproject/webprotege-backend-service:5.0.8
     user: root
     depends_on:
       mongo:
