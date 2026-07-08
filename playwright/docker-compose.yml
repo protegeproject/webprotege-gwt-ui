@@ -189,7 +189,7 @@ services:
     # container exits immediately with a platform mismatch. Every other
     # real release of this service is amd64. Pinned back to the last
     # known-good amd64 build until an amd64/multi-arch :2.0.0 is published
-    # (bug reported upstream against webprotege-event-history-service).
+    # (not yet filed upstream against webprotege-event-history-service).
     image: protegeproject/webprotege-event-history-service:2.0.25-WHO
     depends_on:
       mongo:
