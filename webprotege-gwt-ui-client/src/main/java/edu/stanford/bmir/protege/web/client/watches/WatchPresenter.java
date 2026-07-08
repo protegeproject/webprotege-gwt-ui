@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.*;
@@ -44,6 +46,9 @@ public class WatchPresenter {
     @Nonnull
     private final ModalManager modalManager;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
     private OWLEntity currentEntity;
 
     @Inject
@@ -52,13 +57,19 @@ public class WatchPresenter {
                           @Nonnull Messages messages,
                           @Nonnull LoggedInUserProvider loggedInUserProvider,
                           @Nonnull DispatchServiceManager dispatchServiceManager,
-                          @Nonnull ModalManager modalManager) {
+                          @Nonnull ModalManager modalManager,
+                          @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.modalManager = modalManager;
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
+    }
+
+    private ChangeRequestId newChangeRequestId() {
+        return ChangeRequestId.get(uuidV4Provider.get());
     }
 
     public void start(@Nonnull OWLEntity forEntity) {
@@ -73,7 +84,7 @@ public class WatchPresenter {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         Optional<Watch> watch = getWatchFromType(type, currentEntity);
         ImmutableSet<Watch> watches = watch.map(ImmutableSet::of).orElse(ImmutableSet.of());
-        dispatchServiceManager.execute(SetEntityWatchesAction.create(projectId, userId, currentEntity, watches),
+        dispatchServiceManager.execute(SetEntityWatchesAction.create(newChangeRequestId(), projectId, userId, currentEntity, watches),
                                        result -> modalCloser.closeModal());
     }
 
