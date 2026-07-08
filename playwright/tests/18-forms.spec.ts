@@ -16,8 +16,12 @@ import {
 
 async function openFormsPage(page: Page, projectId: string): Promise<void> {
   await page.goto(`/#projects/${projectId}/forms`);
+  // A cold hash-goto to this page renders reliably under 30s locally, but
+  // CI runners are slower/more contended; give it more headroom there
+  // (FM2/FM3 timed out at 30s in CI while passing consistently at that
+  // bound locally).
   await expect(page.locator(SettingsPage.section('Project Forms'))).toBeVisible({
-    timeout: 30_000,
+    timeout: 45_000,
   });
 }
 
