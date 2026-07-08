@@ -10,7 +10,9 @@
     "test:airplane": "playwright test scenarios/airplane-ontology",
     "report": "playwright show-report",
     "stack:up": "docker compose up -d --wait",
-    "stack:down": "docker compose down -v"
+    "stack:down": "docker compose down -v",
+    "stack:up:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait --build",
+    "stack:down:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down -v"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

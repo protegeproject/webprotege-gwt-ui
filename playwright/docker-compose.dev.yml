@@ -1,0 +1,30 @@
+# Opt-in dev overrides for the e2e stack.
+#
+# The base docker-compose.yml is the CI-reproducible configuration: every
+# dependency service is pinned to the version webprotege-deploy runs, and only
+# webprotege-gwt-ui-server is built locally (it is the code under test in this
+# repo, so it always builds from ../webprotege-gwt-ui-server via the base file).
+#
+# Use THIS file when you are also modifying a *dependency* service (e.g.
+# webprotege-backend-service) and want the stack to run your local build of it
+# instead of the pinned published image:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait --build
+#   # or: npm run stack:up:dev
+#
+# It is applied only when passed explicitly with `-f`, so it can never silently
+# force a stale local image into a normal run (unlike an auto-loaded
+# docker-compose.override.yml). Add more services below as you need them; each
+# sibling repo must be checked out next to webprotege-gwt-ui and have a
+# Dockerfile.
+services:
+  webprotege-backend-service:
+    build:
+      context: ../../webprotege-backend-service
+    image: protegeproject/webprotege-backend-service:local
+
+  # Example — uncomment to also run a locally-built api gateway:
+  # webprotege-gwt-api-gateway:
+  #   build:
+  #     context: ../../webprotege-gwt-api-gateway
+  #   image: protegeproject/webprotege-gwt-api-gateway:local

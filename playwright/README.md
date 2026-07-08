@@ -37,6 +37,43 @@ WEBPROTEGE_BASE_URL=http://webprotege-local.edu npm run test:smoke  # ~30s sanit
 npm run stack:down
 ```
 
+## Stack images and run modes
+
+The stack pulls each dependency service (Keycloak, backend-service, gateway,
+event-history, …) at an **explicit pinned version** matching the set that
+[`webprotege-deploy`](https://github.com/protegeproject/webprotege-deploy)
+runs. Versions are pinned rather than floating on `:latest` because (a) these
+images do not publish a `:latest` tag, and (b) a per-PR e2e run must be
+reproducible — a moving `:latest` would let unrelated upstream changes turn CI
+red. When bumping, mirror `webprotege-deploy/docker-compose.yml`. Do not use
+`-WHO` fork tags.
+
+Only `webprotege-gwt-ui-server` is built locally (`:local`, via the `build:`
+in `docker-compose.yml`) — it is the code under test, so `npm run stack:up`
+already rebuilds it from `../webprotege-gwt-ui-server`. Pass `--build` (the
+`stack:up` script does not) after changing UI code, or use the dev mode below.
+
+**Default mode** — local UI + pinned published dependencies (what CI uses):
+
+```bash
+npm run stack:up      # docker compose up -d --wait
+```
+
+**Dev mode** — also run *locally-built* dependency services. Use this when you
+are modifying, say, `webprotege-backend-service` and want the stack to run your
+build of it. It layers `docker-compose.dev.yml` (opt-in via `-f`, so it never
+silently forces a stale local image the way an auto-loaded
+`docker-compose.override.yml` would):
+
+```bash
+npm run stack:up:dev    # -f docker-compose.yml -f docker-compose.dev.yml up --build
+npm run stack:down:dev
+```
+
+The dependency sibling repos (e.g. `../../webprotege-backend-service`) must be
+checked out next to `webprotege-gwt-ui`. Add more services to
+`docker-compose.dev.yml` as needed.
+
 The compose stack uses the upstream `protegeproject/webprotege-keycloak` image,
 which imports the `webprotege` realm on first boot. `globalSetup.ts` then
 ensures one fixed test user exists in that realm (idempotent — safe to re-run):
@@ -54,6 +91,7 @@ specs.
 ```
 playwright/
 ├── docker-compose.yml        # full test stack (mirrors webprotege-deploy minus ELK)
+├── docker-compose.dev.yml    # opt-in (-f) overrides to run locally-built dependency services
 ├── .env.example              # SERVER_HOST, WEBPROTEGE_HOST_PORT, ADMIN_CLI_SECRET
 ├── fixtures/                 # sample .owl files for upload tests
 ├── support/                  # selectors, api helpers, per-test fixtures
