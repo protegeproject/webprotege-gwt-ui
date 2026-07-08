@@ -79,6 +79,8 @@ import edu.stanford.bmir.protege.web.shared.watches.GetWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
+import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -481,6 +483,8 @@ public class RpcWhiteList implements IsSerializable, Action, Result {
     SetEntityGraphActiveFiltersResult _SetEntityGraphActiveFiltersResult;
     SetEntityWatchesAction _SetEntityWatchesAction;
     SetEntityWatchesResult _SetEntityWatchesResult;
+    Watch _Watch;
+    WatchType _WatchType;
     SetManchesterSyntaxFrameAction _SetManchesterSyntaxFrameAction;
     SetManchesterSyntaxFrameResult _SetManchesterSyntaxFrameResult;
     SetOboTermCrossProductAction _SetOboTermCrossProductAction;
