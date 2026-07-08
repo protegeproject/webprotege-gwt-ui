@@ -32,6 +32,38 @@ async function openTabMenu(
   await menuButton.click();
 }
 
+/**
+ * "Add view" onto an already-populated perspective is a real drag-and-drop
+ * operation, not an instant insert: after choosing a portlet in the
+ * "Choose view" dialog, the perspective enters drop mode behind a
+ * full-bleed `.drop-glass` overlay, and the user must click an existing
+ * region of the layout to complete the drop there. Pressing Escape at
+ * this point *cancels* the pending add — it does not merely dismiss a
+ * leftover overlay, which is an easy mistake to make since the overlay
+ * looks like decoration.
+ *
+ * The resulting layout change is also debounced client-side by ~1s
+ * (PerspectivePresenter.perspectiveSaveTimer) before it's persisted to
+ * the server, so callers must wait past that before navigating away or
+ * the pending SetPerspectiveLayoutAction never fires.
+ */
+async function completeAddViewDrop(
+  page: import('@playwright/test').Page,
+  dropTargetLocator: ReturnType<import('@playwright/test').Page['locator']>,
+): Promise<void> {
+  const box = await dropTargetLocator.boundingBox();
+  const glassBox = await page.locator('.drop-glass').boundingBox();
+  if (!box || !glassBox) {
+    throw new Error('completeAddViewDrop: drop target or .drop-glass not visible');
+  }
+  await page.locator('.drop-glass').click({
+    position: {
+      x: box.x + box.width / 2 - glassBox.x,
+      y: box.y + box.height / 2 - glassBox.y,
+    },
+  });
+}
+
 test.describe('perspectives', () => {
   test('PV1: default tabs render in the switcher', async ({ page, project }) => {
     await expect(page.locator(ProjectView.perspectiveSwitcher)).toBeVisible();
@@ -87,13 +119,15 @@ test.describe('perspectives', () => {
     await page.waitForLoadState('networkidle');
   });
 
-  test('PV3: a view can be added to Classes via the tab menu and Reset is offered', async ({
+  test('PV3: a view added to Classes via the tab menu persists, and Reset removes it', async ({
     page,
     project,
   }) => {
     // Distinct from PV2 (which adds via the empty-perspective click-
     // through): this exercises the tab menu's "Add view" on a populated
-    // built-in perspective.
+    // built-in perspective. Uses "Watched Entities" rather than "Project
+    // Feed" — Project Feed is already part of the built-in Classes
+    // layout (see Classes.json), so adding/resetting it proves nothing.
     await openTabMenu(page, 'Classes');
     const addView = page.locator(PerspectiveBar.menuItem('Add view'));
     await addView.hover();
@@ -102,24 +136,37 @@ test.describe('perspectives', () => {
     await expect(page.locator(PortletChooser.dialog)).toBeVisible({
       timeout: 15_000,
     });
-    await page.locator(PortletChooser.list).selectOption({ label: 'Project Feed' });
+    await page.locator(PortletChooser.list).selectOption({ label: 'Watched Entities' });
     await page.locator(PortletChooser.ok).click();
+
+    // Complete the drop onto the class-hierarchy region of the layout.
+    await completeAddViewDrop(page, page.locator(Hierarchy.treeNode('owl:Thing')).first());
     await expect(
-      page.locator(PerspectiveBar.viewCaption('Project Feed')),
+      page.locator(PerspectiveBar.viewCaption('Watched Entities')),
     ).toBeVisible({ timeout: 15_000 });
-    await page.waitForLoadState('networkidle');
 
-    // "Add view" leaves the perspective in drop mode with a full-bleed
-    // .drop-glass overlay that intercepts pointer events; Escape exits it
-    // so the tab menu is reachable again.
-    await page.keyboard.press('Escape');
-    await expect(page.locator('.drop-glass')).toHaveCount(0, { timeout: 15_000 });
+    // Wait past the client-side save debounce before proving persistence
+    // with a cold reload (a soft reload/navigation is not a strong enough
+    // check — GWT's in-memory place history can mask a save that never
+    // actually reached the server).
+    await page.waitForTimeout(2_500);
+    const addedUrl = page.url();
+    await page.goto('about:blank');
+    await page.goto(addedUrl);
+    await expect(page.locator(ProjectView.root)).toBeVisible({ timeout: 30_000 });
+    // NOTE: dropping directly onto the class-hierarchy row's region can
+    // replace/consume that split rather than adding alongside it, so the
+    // tree is not asserted here — only that the new view was persisted.
+    // The tree's presence is re-checked after Reset below, where it must
+    // be back regardless of how the drop above resolved.
+    await expect(
+      page.locator(PerspectiveBar.viewCaption('Watched Entities')),
+    ).toBeVisible({ timeout: 15_000 });
 
-    // Reset is offered for a resettable built-in and its confirmation
-    // dialog wires up correctly. NOTE: the reset write-path does not
-    // persist on this deployment (the reloaded layout still contains the
-    // added view), so the tab-contents-after-reset outcome is not
-    // asserted here — only that the flow is reachable and confirmable.
+    // Reset removes it. showYesNoConfirmBox swaps button roles just like
+    // showConfirmBox elsewhere in this codebase: "Yes" carries
+    // wp-btn--escape and "No" carries wp-btn--primary, so the accept
+    // button must be matched by text, not by the primary class.
     await openTabMenu(page, 'Classes');
     const reset = page.locator(PerspectiveBar.menuItem('Reset'));
     await reset.hover();
@@ -127,12 +174,19 @@ test.describe('perspectives', () => {
     await expect(
       page.locator(Modal.root).filter({ hasText: 'Reset tab?' }),
     ).toBeVisible({ timeout: 15_000 });
-    await page.locator(Modal.primary).click(); // Yes
-    await page.waitForLoadState('networkidle');
-    // The tab is intact and still shows its hierarchy after the reset.
+    await page.locator('.wp-modal button:has-text("Yes")').click();
+    await page.waitForTimeout(2_000);
+
+    const resetUrl = page.url();
+    await page.goto('about:blank');
+    await page.goto(resetUrl);
+    await expect(page.locator(ProjectView.root)).toBeVisible({ timeout: 30_000 });
     await expect(page.locator(Hierarchy.treeNode('owl:Thing'))).toBeVisible({
-      timeout: 15_000,
+      timeout: 30_000,
     });
+    await expect(
+      page.locator(PerspectiveBar.viewCaption('Watched Entities')),
+    ).toHaveCount(0, { timeout: 15_000 });
   });
 
   test('PV4: closing a tab removes it; "Tabs" re-adds it', async ({
