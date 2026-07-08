@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.event.EventList;
-import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 
 import javax.annotation.Nonnull;
 
@@ -25,14 +22,11 @@ public class SetDiscussionThreadStatusResult implements Result {
 
     private Status result;
 
-    private EventList<ProjectEvent<?>> eventList;
-
     @JsonCreator
     public SetDiscussionThreadStatusResult(@JsonProperty("threadId") @Nonnull ThreadId threadId,
                                            @JsonProperty("result") @Nonnull Status result) {
         this.threadId = checkNotNull(threadId);
         this.result = checkNotNull(result);
-        this.eventList = checkNotNull(eventList);
     }
 
     @GwtSerializationConstructor
