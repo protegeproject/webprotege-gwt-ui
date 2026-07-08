@@ -183,6 +183,13 @@ services:
     networks: [wp]
 
   webprotege-event-history-service:
+    # STOPGAP: webprotege-deploy pins :2.0.0, but that tag is published as
+    # arm64-only (built 2025-06-03), so it cannot run on the amd64 GitHub
+    # Actions runners this repo's e2e workflow uses (ubuntu-latest) - the
+    # container exits immediately with a platform mismatch. Every other
+    # real release of this service is amd64. Pinned back to the last
+    # known-good amd64 build until an amd64/multi-arch :2.0.0 is published
+    # (not yet filed upstream against webprotege-event-history-service).
     image: protegeproject/webprotege-event-history-service:2.0.25-WHO
     depends_on:
       mongo:
@@ -247,7 +254,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.3
+    image: protegeproject/webprotege-backend-service:5.0.8
     user: root
     depends_on:
       mongo:
