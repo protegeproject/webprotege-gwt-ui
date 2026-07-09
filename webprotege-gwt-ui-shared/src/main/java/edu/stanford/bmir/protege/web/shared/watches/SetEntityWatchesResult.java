@@ -24,4 +24,19 @@ public class SetEntityWatchesResult implements Result {
     public static SetEntityWatchesResult create() {
         return new SetEntityWatchesResult();
     }
+
+    @Override
+    public int hashCode() {
+        return SetEntityWatchesResult.class.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof SetEntityWatchesResult;
+    }
+
+    @Override
+    public String toString() {
+        return "SetEntityWatchesResult{}";
+    }
 }
