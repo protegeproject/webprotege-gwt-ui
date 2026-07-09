@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;
@@ -22,6 +23,8 @@ public class SetEntityWatchesAction_TestCase {
 
     private SetEntityWatchesAction setEntityWatchesAction;
     @Mock
+    private ChangeRequestId changeRequestId;
+    @Mock
     private ProjectId projectId;
     @Mock
     private UserId userId;
@@ -33,12 +36,22 @@ public class SetEntityWatchesAction_TestCase {
     @Before
     public void setUp()
     {
-        setEntityWatchesAction = SetEntityWatchesAction.create(projectId, userId, entity, watches);
+        setEntityWatchesAction = SetEntityWatchesAction.create(changeRequestId, projectId, userId, entity, watches);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_changeRequestId_IsNull() {
+        SetEntityWatchesAction.create(null, projectId, userId, entity, watches);
+    }
+
+    @Test
+    public void shouldReturnSupplied_changeRequestId() {
+        assertThat(setEntityWatchesAction.getChangeRequestId(), is(this.changeRequestId));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        SetEntityWatchesAction.create(null, userId, entity, watches);
+        SetEntityWatchesAction.create(changeRequestId, null, userId, entity, watches);
     }
 
     @Test
@@ -48,7 +61,7 @@ public class SetEntityWatchesAction_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
-        SetEntityWatchesAction.create(projectId, null, entity, watches);
+        SetEntityWatchesAction.create(changeRequestId, projectId, null, entity, watches);
     }
 
     @Test
@@ -58,7 +71,7 @@ public class SetEntityWatchesAction_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        SetEntityWatchesAction.create(projectId, userId, null, watches);
+        SetEntityWatchesAction.create(changeRequestId, projectId, userId, null, watches);
     }
 
     @Test
@@ -68,7 +81,7 @@ public class SetEntityWatchesAction_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_watches_IsNull() {
-        SetEntityWatchesAction.create(projectId, userId, entity, null);
+        SetEntityWatchesAction.create(changeRequestId, projectId, userId, entity, null);
     }
 
     @Test
@@ -88,32 +101,32 @@ public class SetEntityWatchesAction_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(setEntityWatchesAction, is(SetEntityWatchesAction.create(projectId, userId, entity, watches)));
+        assertThat(setEntityWatchesAction, is(SetEntityWatchesAction.create(changeRequestId, projectId, userId, entity, watches)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(mock(ProjectId.class), userId, entity, watches))));
+        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(changeRequestId, mock(ProjectId.class), userId, entity, watches))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(projectId, mock(UserId.class), entity, watches))));
+        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(changeRequestId, projectId, mock(UserId.class), entity, watches))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(projectId, userId, mock(OWLEntity.class), watches))));
+        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(changeRequestId, projectId, userId, mock(OWLEntity.class), watches))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_watches() {
-        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(projectId, userId, entity, mock(ImmutableSet.class)))));
+        assertThat(setEntityWatchesAction, is(not(SetEntityWatchesAction.create(changeRequestId, projectId, userId, entity, mock(ImmutableSet.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(setEntityWatchesAction.hashCode(), is(SetEntityWatchesAction.create(projectId, userId, entity, watches)
+        assertThat(setEntityWatchesAction.hashCode(), is(SetEntityWatchesAction.create(changeRequestId, projectId, userId, entity, watches)
                                                                                .hashCode()));
     }
 

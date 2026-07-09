@@ -10,18 +10,6 @@ import {
  * Entity watches. There is no watch toolbar button — the only entry point
  * is the tree context-menu item "Watch...", which opens the Watches modal
  * with the None / Entity / Branch radio options.
- *
- * NOTE ON SCOPE: these tests deliberately stop at the dialog and its
- * options and do NOT assert that a watch persists after clicking OK.
- * On this deployment the OK handler dispatches SetEntityWatchesAction,
- * which carries an ImmutableSet<Watch>; the guava build shipped in the
- * published images drops the ImmutableSet concrete subtypes from the
- * GWT-RPC serialization policy, so the action fails to serialize
- * client-side — no request is sent, the dialog does not close, and the
- * watch is never stored. Asserting persistence here would test a broken
- * path rather than the reachable UI. The context-menu -> dialog wiring
- * and the dialog's contents are the meaningful, stable surface, so that
- * is what these guard.
  */
 
 async function createClassUnder(
@@ -52,42 +40,48 @@ async function openWatchDialog(page: Page, nodeLabel: string): Promise<void> {
   await expect(page.locator(Watches.modal)).toBeVisible({ timeout: 15_000 });
 }
 
+async function setWatchType(
+  page: Page,
+  type: 'None' | 'Entity' | 'Branch',
+): Promise<void> {
+  await page.locator(Watches.radio(type)).check();
+  await page.locator(Watches.ok).click();
+  await expect(page.locator(Watches.modal)).toHaveCount(0, { timeout: 15_000 });
+  // Drain the SetEntityWatches RPC for the backend-error gate.
+  await page.waitForLoadState('networkidle');
+}
+
 test.describe('watches', () => {
-  test('W1: the Watch dialog opens from the tree context menu with all options', async ({
+  test('W1: setting an entity watch persists across dialog reopens', async ({
     page,
     project,
   }) => {
     await createClassUnder(page, 'owl:Thing', 'WatchProbe');
+
     await openWatchDialog(page, 'WatchProbe');
-
-    // A fresh entity has no watch, so None is selected by default.
     await expect(page.locator(Watches.radio('None'))).toBeChecked();
-    await expect(page.locator(Watches.radio('Entity'))).toBeVisible();
-    await expect(page.locator(Watches.radio('Branch'))).toBeVisible();
 
-    await page.locator(Watches.cancel).click();
-    await expect(page.locator(Watches.modal)).toHaveCount(0, { timeout: 15_000 });
-  });
+    await setWatchType(page, 'Entity');
 
-  test('W2: the watch type can be selected in the dialog', async ({
-    page,
-    project,
-  }) => {
-    await createClassUnder(page, 'owl:Thing', 'WatchTypeProbe');
-    await openWatchDialog(page, 'WatchTypeProbe');
-
-    // Selecting a type updates the radio group (None -> Entity -> Branch),
-    // which is the client-side behaviour we can assert reliably regardless
-    // of the server-side persistence limitation described above.
-    await page.locator(Watches.radio('Entity')).check();
+    await openWatchDialog(page, 'WatchProbe');
     await expect(page.locator(Watches.radio('Entity'))).toBeChecked();
     await expect(page.locator(Watches.radio('None'))).not.toBeChecked();
-
-    await page.locator(Watches.radio('Branch')).check();
-    await expect(page.locator(Watches.radio('Branch'))).toBeChecked();
-    await expect(page.locator(Watches.radio('Entity'))).not.toBeChecked();
-
     await page.locator(Watches.cancel).click();
-    await expect(page.locator(Watches.modal)).toHaveCount(0, { timeout: 15_000 });
+  });
+
+  test('W2: clearing the watch persists', async ({ page, project }) => {
+    await createClassUnder(page, 'owl:Thing', 'UnwatchProbe');
+
+    await openWatchDialog(page, 'UnwatchProbe');
+    await setWatchType(page, 'Entity');
+
+    await openWatchDialog(page, 'UnwatchProbe');
+    await expect(page.locator(Watches.radio('Entity'))).toBeChecked();
+    await setWatchType(page, 'None');
+
+    await openWatchDialog(page, 'UnwatchProbe');
+    await expect(page.locator(Watches.radio('None'))).toBeChecked();
+    await expect(page.locator(Watches.radio('Entity'))).not.toBeChecked();
+    await page.locator(Watches.cancel).click();
   });
 });

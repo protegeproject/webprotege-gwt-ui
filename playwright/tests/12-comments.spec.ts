@@ -16,12 +16,6 @@ import {
  * The comment editor is a CodeMirror-5 instance inside a wp-modal:
  * fill() cannot reach it, so type through the keyboard. Bodies must not
  * contain '@' — it triggers the mention autocompleter popup.
- *
- * Scope note: resolving/reopening a thread is not covered. On this
- * deployment SetDiscussionThreadStatusAction fails server-side with a
- * JSON deserialization error, so the resolve write-path is broken in the
- * published build and can only be surfaced (by the fixture error gate),
- * not asserted green.
  */
 
 async function createClassUnder(
@@ -107,5 +101,37 @@ test.describe('comments', () => {
       'Comment for the discussions tab',
       { timeout: 15_000 },
     );
+  });
+
+  test('CM4: resolving a thread flips its status and reopening restores it', async ({
+    page,
+    project,
+  }) => {
+    await createClassUnder(page, 'owl:Thing', 'ResolveProbe');
+    await postComment(page, 'Comment to resolve');
+    await expect(page.locator(Comments.thread)).toBeVisible({ timeout: 15_000 });
+
+    const statusButton = page.locator(Comments.threadStatus).first();
+    await expect(statusButton).toHaveText(/Resolve/);
+    await statusButton.click();
+    await page.waitForLoadState('networkidle');
+
+    // The status label flips to "Re-open" from the direct RPC response,
+    // but when the ON_STATUS_CHANGED event later arrives over the event
+    // stream, DiscussionThreadListPresenter hides the resolved thread
+    // (resolved threads are filtered out of the default view). Both
+    // outcomes prove the resolve landed — accept either.
+    await expect
+      .poll(
+        async () => {
+          const reopenCount = await page
+            .locator(`${Comments.threadStatus}:has-text("Re-open")`)
+            .count();
+          const threadCount = await page.locator(Comments.thread).count();
+          return reopenCount > 0 || threadCount === 0;
+        },
+        { timeout: 15_000 },
+      )
+      .toBe(true);
   });
 });

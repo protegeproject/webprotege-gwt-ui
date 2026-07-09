@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class SetEntityWatches_Serialization_TestCase {
 
     @Test
     public void shouldSerializeAction() throws IOException {
-        var action = SetEntityWatchesAction.create(mockProjectId(),
+        var action = SetEntityWatchesAction.create(ChangeRequestId.generate(),
+                                                   mockProjectId(),
                                                    mockUserId(),
                                                    mockOWLClass(), ImmutableSet.of(
                                                            Watch.create(mockUserId(),
@@ -32,7 +34,7 @@ public class SetEntityWatches_Serialization_TestCase {
 
     @Test
     public void shouldSerializeResult() throws IOException {
-        var result = SetEntityWatchesResult.create(mockEventList());
+        var result = SetEntityWatchesResult.create();
         JsonSerializationTestUtil.testSerialization(result, Result.class);
     }
 }
