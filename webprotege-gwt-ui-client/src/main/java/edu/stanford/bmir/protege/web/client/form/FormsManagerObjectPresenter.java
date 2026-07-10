@@ -101,6 +101,12 @@ public class FormsManagerObjectPresenter implements ObjectPresenter<FormDescript
     private void updateCurrentFormDescriptorWithLanguageMap(FormDescriptor currentFormDescriptor) {
         LanguageMap newLabel = view.getLanguageMap();
         FormDescriptor updatedFormDescriptor = currentFormDescriptor.withLabel(newLabel);
+        // Keep our own snapshot in sync with what was just sent, otherwise
+        // getValue() keeps returning the stale, pre-edit descriptor. That
+        // stale copy is exactly what the page-level OK button's bulk
+        // setForms() re-sends for every row (see FormsManagerPresenter,
+        // ObjectListPresenter.getValues()), silently reverting this edit.
+        this.value = Optional.of(updatedFormDescriptor);
         formsManagerService.updateForm(updatedFormDescriptor,
                                        busyIndicator,
                                        () -> {});
