@@ -81,6 +81,10 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
         delegate.setEnabled(enabled);
     }
 
+    public void setNewRowMode(ValueListEditor.NewRowMode newRowMode) {
+        delegate.setNewRowMode(newRowMode);
+    }
+
     @Override
     public void setValue(LanguageMap object) {
         List<LanguageMapEntry> entries = object.asMap()

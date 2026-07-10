@@ -165,6 +165,33 @@ test.describe('forms', () => {
     await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('en');
   });
 
+  test('FM6: clicking "Form details..." right after typing a label opens the editor immediately', async ({
+    page,
+    project,
+  }) => {
+    const projectId = projectIdOf(project);
+    await openFormsPage(page, projectId);
+
+    await page.locator(FormsPage.addFormButton).click();
+    await expect(page.locator(FormsPage.formDetailsButton)).toHaveCount(1, {
+      timeout: 15_000,
+    });
+
+    // No Tab, no wait: the label's blur (from this very click moving focus
+    // away) used to synchronously insert a second blank label row before
+    // the click's hit-test ran, since the label editor auto-grows in
+    // NewRowMode.AUTOMATIC. That shifted "Form details..." down and
+    // swallowed the click into the new row instead of opening the editor.
+    const labelInput = page.locator(FormsPage.labelValueInput).first();
+    await labelInput.click();
+    await labelInput.fill('ImmediateDetailsForm');
+    await page.locator(FormsPage.formDetailsButton).first().click();
+
+    await expect(page).toHaveURL(/#projects\/[0-9a-f-]{36}\/forms\/[0-9a-f-]{36}/, {
+      timeout: 15_000,
+    });
+  });
+
   test('FM3: "Form details..." opens the form editor page', async ({
     page,
     project,
