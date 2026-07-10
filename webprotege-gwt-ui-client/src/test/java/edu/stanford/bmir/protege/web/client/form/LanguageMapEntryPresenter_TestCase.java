@@ -32,7 +32,6 @@ public class LanguageMapEntryPresenter_TestCase {
     @Test
     public void shouldReturnEmptyWhenValueAndLangTagAreBlank() {
         when(view.getValue()).thenReturn("");
-        when(view.getLangTag()).thenReturn("");
         assertThat(presenter.getValue(), is(Optional.empty()));
         assertThat(presenter.isWellFormed(), is(false));
     }
@@ -50,5 +49,16 @@ public class LanguageMapEntryPresenter_TestCase {
         when(view.getValue()).thenReturn("TestForm");
         when(view.getLangTag()).thenReturn("fr");
         assertThat(presenter.getValue(), is(Optional.of(LanguageMapEntry.get("fr", "TestForm"))));
+    }
+
+    @Test
+    public void shouldReturnEmptyWhenLangTagIsSetButValueIsBlank() {
+        // A lang tag set before any text is typed (e.g. FM4's "set the
+        // language first" flow) must not count as a complete, saveable row
+        // on its own -- otherwise it sends a premature empty-value save that
+        // can race with the real save once the text is typed.
+        when(view.getValue()).thenReturn("");
+        assertThat(presenter.getValue(), is(Optional.empty()));
+        assertThat(presenter.isWellFormed(), is(false));
     }
 }

@@ -59,11 +59,16 @@ public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>,
     @Override
     public Optional<LanguageMapEntry> getValue() {
         String value = view.getValue().trim();
+        // A row is only ever complete once it has actual text: a tag alone
+        // (e.g. set before the label text is typed) isn't a meaningful entry
+        // on its own, and treating it as one sent a premature, empty-value
+        // save that could race with -- and sometimes overwrite -- the real
+        // save that follows once the text is typed.
+        if(value.isEmpty()) {
+            return Optional.empty();
+        }
         String langTag = view.getLangTag().trim();
         if(langTag.isEmpty()) {
-            if(value.isEmpty()) {
-                return Optional.empty();
-            }
             langTag = DEFAULT_LANG_TAG;
         }
         return Optional.of(LanguageMapEntry.get(langTag, value));

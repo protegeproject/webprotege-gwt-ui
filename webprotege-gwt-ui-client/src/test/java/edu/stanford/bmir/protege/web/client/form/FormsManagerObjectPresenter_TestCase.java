@@ -90,4 +90,32 @@ public class FormsManagerObjectPresenter_TestCase {
                                                any(),
                                                any());
     }
+
+    @Test
+    public void shouldNotSendAnUpdateWhenTheLabelIsStillEmpty() {
+        // e.g. a language tag committed before any label text is typed: the
+        // whole LanguageMap is still empty. Sending that save is a race
+        // waiting to happen against the real save that follows once text is
+        // actually typed (see #281), so it must be skipped -- there was
+        // nothing to save before, and still isn't.
+        when(view.getLanguageMap()).thenReturn(LanguageMap.empty());
+
+        capturedHandler.handleLanguageMapChanged();
+
+        assertThat(presenter.getValue().get().getLabel(), is(LanguageMap.empty()));
+        verify(formsManagerService, never()).updateForm(any(), any(), any());
+    }
+
+    @Test
+    public void shouldStillSendAnUpdateWhenIntentionallyClearingAnExistingLabel() {
+        LanguageMap originalLabel = LanguageMap.get(Map.of("en", "TestForm"));
+        presenter.setValue(FormDescriptor.empty(formId).withLabel(originalLabel));
+        when(view.getLanguageMap()).thenReturn(LanguageMap.empty());
+
+        capturedHandler.handleLanguageMapChanged();
+
+        verify(formsManagerService).updateForm(argThat(fd -> fd.getLabel().equals(LanguageMap.empty())),
+                                               any(),
+                                               any());
+    }
 }

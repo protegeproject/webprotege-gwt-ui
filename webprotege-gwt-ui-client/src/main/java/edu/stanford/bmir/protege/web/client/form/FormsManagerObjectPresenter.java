@@ -107,6 +107,15 @@ public class FormsManagerObjectPresenter implements ObjectPresenter<FormDescript
         // setForms() re-sends for every row (see FormsManagerPresenter,
         // ObjectListPresenter.getValues()), silently reverting this edit.
         this.value = Optional.of(updatedFormDescriptor);
+        if(newLabel.asMap().isEmpty() && currentFormDescriptor.getLabel().asMap().isEmpty()) {
+            // Nothing worth saving yet (e.g. a language tag was set before any
+            // label text was typed, which momentarily makes the whole label
+            // empty) and nothing to intentionally clear either. Sending this
+            // save anyway is a race waiting to happen: it can land after --
+            // and silently overwrite -- the real save that follows once the
+            // label text is actually typed.
+            return;
+        }
         formsManagerService.updateForm(updatedFormDescriptor,
                                        busyIndicator,
                                        () -> {});
