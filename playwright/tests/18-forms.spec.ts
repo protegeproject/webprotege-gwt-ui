@@ -57,7 +57,7 @@ test.describe('forms', () => {
     await expect(page.locator(FormsPage.importButton)).toBeVisible();
   });
 
-  test('FM2: "Add form" adds an editable form to the list', async ({
+  test('FM2: "Add form" adds an editable form whose label defaults to English and persists', async ({
     page,
     project,
   }) => {
@@ -77,12 +77,60 @@ test.describe('forms', () => {
     const labelInput = page.locator(FormsPage.labelValueInput).first();
     await expect(labelInput).toBeVisible();
     await labelInput.fill('TestForm');
+    await page.keyboard.press('Tab');
+    // Blur fires updateForm immediately. #281: a label typed with no
+    // explicit language tag now defaults to "en" instead of being
+    // silently dropped.
+    await page.waitForLoadState('networkidle');
     await expect(labelInput).toHaveValue('TestForm');
 
-    // NOTE: the form label is deliberately not asserted across a reload.
-    // On this deployment the form-label LanguageMap is not stored (the
-    // form row persists but its label comes back empty, with or without a
-    // language tag), so a persistence assertion would test a broken path.
+    // Persists across a reload, language tag included.
+    await page.reload();
+    await expect(page.locator(SettingsPage.section('Project Forms'))).toBeVisible({
+      timeout: 45_000,
+    });
+    await expect(page.locator(FormsPage.labelValueInput).first()).toHaveValue(
+      'TestForm',
+      { timeout: 15_000 },
+    );
+    await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('en');
+  });
+
+  test('FM4: a form label with an explicit language tag persists as given', async ({
+    page,
+    project,
+  }) => {
+    const projectId = projectIdOf(project);
+    await openFormsPage(page, projectId);
+
+    await page.locator(FormsPage.addFormButton).click();
+    await expect(page.locator(FormsPage.formDetailsButton)).toHaveCount(1, {
+      timeout: 15_000,
+    });
+
+    // Set the language tag first: if the value field committed first with
+    // the tag still blank, the #281 default-fill would set it to "en"
+    // before we get a chance to type "fr" over it.
+    const langInput = page.locator(FormsPage.labelLangInput).first();
+    await langInput.click();
+    await langInput.pressSequentially('fr', { delay: 30 });
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Tab');
+
+    const labelInput = page.locator(FormsPage.labelValueInput).first();
+    await labelInput.fill('FormulaireTest');
+    await page.keyboard.press('Tab');
+    await page.waitForLoadState('networkidle');
+
+    await page.reload();
+    await expect(page.locator(SettingsPage.section('Project Forms'))).toBeVisible({
+      timeout: 45_000,
+    });
+    await expect(page.locator(FormsPage.labelValueInput).first()).toHaveValue(
+      'FormulaireTest',
+      { timeout: 15_000 },
+    );
+    await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('fr');
   });
 
   test('FM3: "Form details..." opens the form editor page', async ({
