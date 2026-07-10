@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -39,10 +40,12 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
     }
 
     @Override
-    public UpdateObjectPropertyFrameAction createUpdateObjectAction(ObjectPropertyFrame pristineObject, ObjectPropertyFrame editedObject, OWLEntityContext editorContext) {
+    public UpdateObjectPropertyFrameAction createUpdateObjectAction(ObjectPropertyFrame pristineObject, ObjectPropertyFrame editedObject, OWLEntityContext editorContext,
+                                                                    ChangeRequestId changeRequestId) {
         return UpdateObjectPropertyFrameAction.create(editorContext.getProjectId(),
                                                       pristineObject.toPlainFrame(),
-                                                      editedObject.toPlainFrame());
+                                                      editedObject.toPlainFrame(),
+                                                      changeRequestId);
     }
 
     @Override

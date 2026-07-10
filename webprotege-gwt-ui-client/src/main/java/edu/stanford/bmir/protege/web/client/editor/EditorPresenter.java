@@ -9,12 +9,14 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectCapabilityChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -74,14 +76,18 @@ public class EditorPresenter implements HasDispose {
 
     private HasBusy hasBusy = busy -> {};
 
+    private final UuidV4Provider uuidV4Provider;
+
     @Inject
     public EditorPresenter(@Nonnull ProjectId projectId, DispatchServiceManager dispatchServiceManager,
                            ContextMapper contextMapper,
-                           LoggedInUserProjectCapabilityChecker capabilityChecker) {
+                           LoggedInUserProjectCapabilityChecker capabilityChecker,
+                           UuidV4Provider uuidV4Provider) {
         this.projectId = projectId;
         this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
         this.capabilityChecker = capabilityChecker;
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
@@ -163,7 +169,8 @@ public class EditorPresenter implements HasDispose {
         }
         final C editorCtx = editorState.getEditorContext();
         EditorManager<C, O, A, R> editorManager = editorState.getEditorManager();
-        UpdateFrameAction updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
+        ChangeRequestId changeRequestId = ChangeRequestId.get(uuidV4Provider.get());
+        UpdateFrameAction updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx, changeRequestId);
         setEditorState(editedValue, editorCtx, editorManager);
         dispatchServiceManager.execute(updateAction, result -> {});
     }

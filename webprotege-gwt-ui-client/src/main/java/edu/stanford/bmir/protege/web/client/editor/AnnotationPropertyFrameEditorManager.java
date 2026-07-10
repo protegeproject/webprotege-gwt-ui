@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -44,9 +45,11 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
     }
 
     @Override
-    public UpdateAnnotationPropertyFrameAction createUpdateObjectAction(AnnotationPropertyFrame pristineObject, AnnotationPropertyFrame editedObject, OWLEntityContext editorContext) {
+    public UpdateAnnotationPropertyFrameAction createUpdateObjectAction(AnnotationPropertyFrame pristineObject, AnnotationPropertyFrame editedObject, OWLEntityContext editorContext,
+                                                                        ChangeRequestId changeRequestId) {
         return UpdateAnnotationPropertyFrameAction.create(editorContext.getProjectId(),
                                                           pristineObject.toPlainFrame(),
-                                                          editedObject.toPlainFrame());
+                                                          editedObject.toPlainFrame(),
+                                                          changeRequestId);
     }
 }

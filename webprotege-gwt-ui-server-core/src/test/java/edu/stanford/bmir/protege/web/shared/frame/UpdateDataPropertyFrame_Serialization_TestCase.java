@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,7 +34,8 @@ public class UpdateDataPropertyFrame_Serialization_TestCase {
                                                                   ImmutableSet.of(),
                                                                   ImmutableSet.of(),
                                                                   true
-                                                          ));
+                                                          ),
+                ChangeRequestId.get("12345678-1234-1234-1234-123456789abc"));
         JsonSerializationTestUtil.testSerialization(action, Action.class);
     }
 }
