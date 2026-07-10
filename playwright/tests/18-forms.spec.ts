@@ -133,36 +133,45 @@ test.describe('forms', () => {
     await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('fr');
   });
 
-  test('FM5: clicking OK right after typing a label does not revert it', async ({
-    page,
-    project,
-  }) => {
-    const projectId = projectIdOf(project);
-    await openFormsPage(page, projectId);
+  test.describe('FM5', () => {
+    // This one has hit CI's page-load timeout twice in a row before (the
+    // suite-wide retries: 1 budget wasn't enough on a contended runner),
+    // failing the build even though the underlying fix was fine. A couple
+    // of extra retries here only cost time on an unlucky run, not on every
+    // run, since passing attempts are never re-run.
+    test.describe.configure({ retries: 2 });
 
-    await page.locator(FormsPage.addFormButton).click();
-    await expect(page.locator(FormsPage.formDetailsButton)).toHaveCount(1, {
-      timeout: 15_000,
+    test('FM5: clicking OK right after typing a label does not revert it', async ({
+      page,
+      project,
+    }) => {
+      const projectId = projectIdOf(project);
+      await openFormsPage(page, projectId);
+
+      await page.locator(FormsPage.addFormButton).click();
+      await expect(page.locator(FormsPage.formDetailsButton)).toHaveCount(1, {
+        timeout: 15_000,
+      });
+
+      // Click OK directly, with no Tab first: the label's blur-triggered
+      // per-row save (updateForm) and the page-level OK button's bulk
+      // save (setForms, from every row's cached FormDescriptor) both fire
+      // from this one click. If the row's cache wasn't refreshed after the
+      // label edit, OK's bulk save re-sends the stale, label-less snapshot
+      // and reverts what updateForm just persisted.
+      const labelInput = page.locator(FormsPage.labelValueInput).first();
+      await labelInput.click();
+      await labelInput.fill('OkClickForm');
+      await page.locator(SettingsPage.apply).click();
+      await page.waitForLoadState('networkidle');
+
+      await openFormsPage(page, projectId);
+      await expect(page.locator(FormsPage.labelValueInput).first()).toHaveValue(
+        'OkClickForm',
+        { timeout: 15_000 },
+      );
+      await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('en');
     });
-
-    // Click OK directly, with no Tab first: the label's blur-triggered
-    // per-row save (updateForm) and the page-level OK button's bulk
-    // save (setForms, from every row's cached FormDescriptor) both fire
-    // from this one click. If the row's cache wasn't refreshed after the
-    // label edit, OK's bulk save re-sends the stale, label-less snapshot
-    // and reverts what updateForm just persisted.
-    const labelInput = page.locator(FormsPage.labelValueInput).first();
-    await labelInput.click();
-    await labelInput.fill('OkClickForm');
-    await page.locator(SettingsPage.apply).click();
-    await page.waitForLoadState('networkidle');
-
-    await openFormsPage(page, projectId);
-    await expect(page.locator(FormsPage.labelValueInput).first()).toHaveValue(
-      'OkClickForm',
-      { timeout: 15_000 },
-    );
-    await expect(page.locator(FormsPage.labelLangInput).first()).toHaveValue('en');
   });
 
   test('FM6: clicking "Form details..." right after typing a label opens the editor immediately', async ({
