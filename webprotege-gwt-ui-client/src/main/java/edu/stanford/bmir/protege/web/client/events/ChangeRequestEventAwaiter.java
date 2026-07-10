@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.perspective.HasChangeRequestId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -73,17 +72,8 @@ public class ChangeRequestEventAwaiter {
      */
     private final Multimap<ChangeRequestId, WebProtegeEvent<?>> bufferedEvents = HashMultimap.create();
 
-    /**
-     * Lazy provider for the project's {@link EventPollingManager}. Lazy
-     * because {@link EventPollingManager} already depends on this class
-     * (via constructor injection) and a direct field would create a Dagger
-     * cycle.
-     */
-    private final Provider<EventPollingManager> eventPollingManagerProvider;
-
     @Inject
-    public ChangeRequestEventAwaiter(@Nonnull Provider<EventPollingManager> eventPollingManagerProvider) {
-        this.eventPollingManagerProvider = eventPollingManagerProvider;
+    public ChangeRequestEventAwaiter() {
     }
 
     /**
@@ -110,32 +100,9 @@ public class ChangeRequestEventAwaiter {
                     handler.handle(Collections.emptyList());
                 }
             });
-            // Also trigger an immediate event poll so the matching events
-            // arrive within one extra round-trip rather than waiting for
-            // the next periodic tick (default 10s — see
-            // EventPollingPeriodProvider). Without this kick, every
-            // hierarchy create incurs the full FALLBACK_TIMEOUT_MS as
-            // dead time before the tree updates and the new node can be
-            // selected.
-            requestImmediatePoll();
         } else {
             // Deliver buffered events immediately
             handler.handle(alreadyArrivedEvents);
-        }
-    }
-
-    /**
-     * Asks the {@link EventPollingManager} to poll for events right now.
-     * Visible for testing — JVM unit tests may override this to capture
-     * the call without touching the GWT-only timer / network stack.
-     */
-    protected void requestImmediatePoll() {
-        try {
-            eventPollingManagerProvider.get().pollForProjectEvents();
-        } catch (RuntimeException e) {
-            // Polling is best-effort; the fallback timer guarantees the
-            // handler eventually fires either way.
-            logger.warning("Immediate event poll failed: " + e.getMessage());
         }
     }
 

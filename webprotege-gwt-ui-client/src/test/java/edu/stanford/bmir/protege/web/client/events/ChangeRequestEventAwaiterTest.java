@@ -24,18 +24,11 @@ public class ChangeRequestEventAwaiterTest {
     public void setUp() {
         // Override scheduleFallback so the GWT Timer (JS-only) is never
         // invoked from the JVM, and so the fallback path can be exercised
-        // deterministically. Override requestImmediatePoll for the same
-        // reason — its production implementation calls into
-        // EventPollingManager which depends on GWT-only types.
-        awaiter = new ChangeRequestEventAwaiter(() -> { throw new UnsupportedOperationException("test should not invoke"); }) {
+        // deterministically.
+        awaiter = new ChangeRequestEventAwaiter() {
             @Override
             protected void scheduleFallback(Runnable callback) {
                 pendingFallback = callback;
-            }
-
-            @Override
-            protected void requestImmediatePoll() {
-                // no-op for tests
             }
         };
     }
