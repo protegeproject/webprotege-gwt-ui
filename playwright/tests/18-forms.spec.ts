@@ -192,6 +192,49 @@ test.describe('forms', () => {
     });
   });
 
+  test('FM7: OK navigates back to the page you came from', async ({
+    page,
+    project,
+  }) => {
+    // Reached via the Project menu (not a direct goto): the app records the
+    // originating place in-memory so OK knows where to return.
+    await page.locator(ProjectMenu.button).click();
+    const formsItem = page.locator(ProjectMenu.item('Forms'));
+    await formsItem.hover();
+    await formsItem.click();
+    await expect(page).toHaveURL(/#projects\/[0-9a-f-]{36}\/forms$/);
+    await expect(page.locator(SettingsPage.section('Project Forms'))).toBeVisible({
+      timeout: 30_000,
+    });
+
+    await addForm(page, 'NavBackForm');
+    await page.locator(SettingsPage.apply).click();
+
+    await expect(page).toHaveURL(/#projects\/[0-9a-f-]{36}\/perspectives\//, {
+      timeout: 15_000,
+    });
+  });
+
+  test('FM8: OK falls back to the project view when there is no recorded return place', async ({
+    page,
+    project,
+  }) => {
+    const projectId = projectIdOf(project);
+    // Reached via a direct URL (goto): FormsPlaceTokenizer can't reconstruct
+    // an in-memory "return to" place from a URL, so this exercises the
+    // fallback path rather than the recorded-nextPlace path FM7 covers.
+    await openFormsPage(page, projectId);
+
+    await addForm(page, 'NoBackPlaceForm');
+    await page.locator(SettingsPage.apply).click();
+
+    // Previously a no-op: the URL stayed on /forms. Now falls back to the
+    // project's default view instead of doing nothing.
+    await expect(page).toHaveURL(/#projects\/[0-9a-f-]{36}\/perspectives\//, {
+      timeout: 15_000,
+    });
+  });
+
   test('FM3: "Form details..." opens the form editor page', async ({
     page,
     project,

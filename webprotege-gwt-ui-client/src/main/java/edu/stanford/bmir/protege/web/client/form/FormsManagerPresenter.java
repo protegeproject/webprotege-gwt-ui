@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,6 +57,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     @Nonnull
     private final Provider<FormsDownloader> formDownloaderProvider;
 
+    @Nonnull
+    private final LoadProjectRequestHandler loadProjectRequestHandler;
+
     @Inject
     public FormsManagerPresenter(@Nonnull FormsManagerView formManagerView,
                                  @Nonnull SettingsPresenter settingsPresenter,
@@ -64,7 +69,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull Messages messages,
                                  @Nonnull CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter,
                                  @Nonnull FormsManagerObjectListPresenter listPresenter,
-                                 @Nonnull Provider<FormsDownloader> formDownloaderProvider) {
+                                 @Nonnull Provider<FormsDownloader> formDownloaderProvider,
+                                 @Nonnull LoadProjectRequestHandler loadProjectRequestHandler) {
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.formsManagerService = checkNotNull(formsManagerService);
@@ -74,6 +80,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         this.copyFormsFromProjectModalPresenter = checkNotNull(copyFormsFromProjectModalPresenter);
         this.listPresenter = checkNotNull(listPresenter);
         this.formDownloaderProvider = formDownloaderProvider;
+        this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
     }
 
     private void displayFormsList(ImmutableList<FormDescriptor> formDescriptors,
@@ -91,7 +98,18 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private void goToNextPlace() {
         Place currentPlace = placeController.getWhere();
         if (currentPlace instanceof FormsPlace) {
-            ((FormsPlace) currentPlace).getNextPlace().ifPresent(placeController::goTo);
+            FormsPlace formsPlace = (FormsPlace) currentPlace;
+            Optional<Place> nextPlace = formsPlace.getNextPlace();
+            if (nextPlace.isPresent()) {
+                placeController.goTo(nextPlace.get());
+            } else {
+                // Reached here via a URL-only round trip (browser back/forward,
+                // refresh, bookmark) -- FormsPlaceTokenizer can't reconstruct an
+                // in-memory "return to" place from a URL, so there's nowhere
+                // recorded to go back to. Land on the project's default view
+                // instead of silently doing nothing.
+                loadProjectRequestHandler.handleProjectLoadRequest(formsPlace.getProjectId());
+            }
         }
     }
 
