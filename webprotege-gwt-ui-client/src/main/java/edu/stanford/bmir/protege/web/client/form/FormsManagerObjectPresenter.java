@@ -101,6 +101,21 @@ public class FormsManagerObjectPresenter implements ObjectPresenter<FormDescript
     private void updateCurrentFormDescriptorWithLanguageMap(FormDescriptor currentFormDescriptor) {
         LanguageMap newLabel = view.getLanguageMap();
         FormDescriptor updatedFormDescriptor = currentFormDescriptor.withLabel(newLabel);
+        // Keep our own snapshot in sync with what was just sent, otherwise
+        // getValue() keeps returning the stale, pre-edit descriptor. That
+        // stale copy is exactly what the page-level OK button's bulk
+        // setForms() re-sends for every row (see FormsManagerPresenter,
+        // ObjectListPresenter.getValues()), silently reverting this edit.
+        this.value = Optional.of(updatedFormDescriptor);
+        if(newLabel.asMap().isEmpty() && currentFormDescriptor.getLabel().asMap().isEmpty()) {
+            // Nothing worth saving yet (e.g. a language tag was set before any
+            // label text was typed, which momentarily makes the whole label
+            // empty) and nothing to intentionally clear either. Sending this
+            // save anyway is a race waiting to happen: it can land after --
+            // and silently overwrite -- the real save that follows once the
+            // label text is actually typed.
+            return;
+        }
         formsManagerService.updateForm(updatedFormDescriptor,
                                        busyIndicator,
                                        () -> {});

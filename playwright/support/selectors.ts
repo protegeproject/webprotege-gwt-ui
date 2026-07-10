@@ -343,4 +343,7 @@ export const FormsPage = {
   importButton: 'button:has-text("Import forms...")',
   formDetailsButton: 'button:has-text("Form details...")',
   labelValueInput: '.wp-value-list__row input.gwt-TextBox',
+  /** The language tag sits next to the label in the same row as a GWT
+   * SuggestBox — pressSequentially + Escape + Tab, never fill(). */
+  labelLangInput: '.wp-value-list__row input.gwt-SuggestBox',
 } as const;

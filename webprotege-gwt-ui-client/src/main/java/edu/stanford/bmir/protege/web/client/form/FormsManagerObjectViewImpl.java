@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.lang.LanguageMapChangedHandler;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -52,6 +53,12 @@ public class FormsManagerObjectViewImpl extends Composite implements FormsManage
     @Override
     public void setLanguageMap(@Nonnull LanguageMap languageMap) {
         languageMapEditor.setValue(languageMap);
+        // setValue() (still in the default AUTOMATIC mode at this point) seeds
+        // a blank trailing row the same way it always has. Switching to MANUAL
+        // right after stops any further auto-inserted row: typing a label
+        // used to append a new blank row on blur, shifting "Form details..."
+        // down and swallowing the very next click meant for that button (#281).
+        languageMapEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
     }
 
     @Nonnull
