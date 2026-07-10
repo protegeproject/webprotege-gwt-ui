@@ -138,7 +138,11 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-       // eventPollingManager.start();
+        // Periodic polling backs up the live push connection: if the network
+        // drops or the connection glitches, the poll (every 10s, see
+        // EventPollingPeriodProvider) fills the gap. The live push covers
+        // anything time-sensitive.
+        eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
                                     projectId,
                                     largeNumberOfChangesHandler);
