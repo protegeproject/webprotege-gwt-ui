@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -65,6 +66,15 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    /**
+     * The StompJs client that carries the project-events subscription.
+     * Held on the presenter so the connection lives exactly as long as the
+     * project view does: previously the client was a local variable inside
+     * {@link #subscribeToWebsocket}, so nothing owned it and the connection
+     * could silently go away while the user was still on the project. It is
+     * closed explicitly in {@link #dispose()} via {@link #disconnectWebsocket()}.
+     */
+    private JavaScriptObject stompClient;
 
     @Inject
     public ProjectPresenter(ProjectId projectId,
@@ -145,6 +155,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
         eventPollingManager.stop();
+        disconnectWebsocket();
         eventBus.dispose();
     }
 
@@ -162,6 +173,13 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
         try {
             var that = this;
+
+            // If a previous connection is still around (e.g. the presenter is
+            // re-started), close it rather than leaking it.
+            var existing = this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient;
+            if (existing) {
+                existing.deactivate();
+            }
 
             var stompClient = new $wnd.StompJs.Client({
                 brokerURL: websocketUrl,
@@ -203,8 +221,22 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
             stompClient.activate();
 
+            this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient = stompClient;
+
         } catch (e) {
             $wnd.console.log('An error has occurred in the websocket connection/subscription ' + e)
+        }
+    }-*/;
+
+    public native void disconnectWebsocket()/*-{
+        try {
+            var stompClient = this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient;
+            if (stompClient) {
+                stompClient.deactivate();
+                this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient = null;
+            }
+        } catch (e) {
+            $wnd.console.log('An error has occurred while closing the websocket connection ' + e)
         }
     }-*/;
 }
