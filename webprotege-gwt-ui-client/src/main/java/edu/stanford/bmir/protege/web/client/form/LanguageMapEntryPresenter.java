@@ -25,6 +25,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>, HasRequestFocus, HasPlaceholder {
 
+    /**
+     * Applied when a row has label text but no explicit language tag, so a value is
+     * never silently dropped just because its language wasn't set (see #281).
+     */
+    private static final String DEFAULT_LANG_TAG = "en";
+
     @Nonnull
     private final LanguageMapEntryView view;
 
@@ -52,11 +58,15 @@ public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>,
 
     @Override
     public Optional<LanguageMapEntry> getValue() {
-        String langTag = view.getLangTag();
-        if(langTag.trim().isEmpty()) {
-            return Optional.empty();
+        String value = view.getValue().trim();
+        String langTag = view.getLangTag().trim();
+        if(langTag.isEmpty()) {
+            if(value.isEmpty()) {
+                return Optional.empty();
+            }
+            langTag = DEFAULT_LANG_TAG;
         }
-        return Optional.of(LanguageMapEntry.get(langTag, view.getValue().trim()));
+        return Optional.of(LanguageMapEntry.get(langTag, value));
     }
 
     @Override

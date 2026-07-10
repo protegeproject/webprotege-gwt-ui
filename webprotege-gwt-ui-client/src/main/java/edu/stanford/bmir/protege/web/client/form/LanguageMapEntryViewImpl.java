@@ -22,6 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEntryView {
 
+    private static final String DEFAULT_LANG_TAG = "en";
+
     interface LanguageMapEntryViewImplUiBinder extends UiBinder<HTMLPanel, LanguageMapEntryViewImpl> {
 
     }
@@ -43,6 +45,7 @@ public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEn
         this.langTagEditor = checkNotNull(langTagEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
         valueField.addValueChangeHandler(event -> {
+            applyDefaultLangTagIfMissing();
             updateLangTagErrorBorder();
             valueChangedHandler.accept(getValue());
         });
@@ -51,6 +54,12 @@ public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEn
             langTagChangedHandler.accept(getLangTag());
 
         });
+    }
+
+    private void applyDefaultLangTagIfMissing() {
+        if(!valueField.getValue().trim().isEmpty() && langTagEditor.getValue().orElse("").trim().isEmpty()) {
+            langTagEditor.setValue(DEFAULT_LANG_TAG);
+        }
     }
 
     public void updateLangTagErrorBorder() {
