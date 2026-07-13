@@ -310,6 +310,8 @@ export const TagsPage = {
   row: '.wp-value-list__row',
   labelInput: 'input[placeholder="Label"]',
   descriptionInput: 'input[placeholder="Description"]',
+  /** Per-row delete control of any ValueListFlexEditorContainer row —
+   * shared by tags, prefixes, and the frame editor's list sections. */
   deleteButton: '.wp-value-list__delete-button',
 } as const;
 

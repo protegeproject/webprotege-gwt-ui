@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameAct
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -40,10 +41,12 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     }
 
     @Override
-    public UpdateFrameAction createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext) {
+    public UpdateFrameAction createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext,
+                                                      ChangeRequestId changeRequestId) {
         return UpdateClassFrameAction.create(editorContext.getProjectId(),
                                              pristineObject.toPlainFrame(),
-                                             editedObject.toPlainFrame());
+                                             editedObject.toPlainFrame(),
+                                             changeRequestId);
     }
 
     @Override

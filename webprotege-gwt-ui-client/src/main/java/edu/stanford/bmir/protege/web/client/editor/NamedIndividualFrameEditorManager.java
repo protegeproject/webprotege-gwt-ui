@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualF
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 
 import javax.inject.Inject;
 
@@ -39,10 +40,12 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
     }
 
     @Override
-    public UpdateNamedIndividualFrameAction createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
+    public UpdateNamedIndividualFrameAction createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext,
+                                                                     ChangeRequestId changeRequestId) {
         return UpdateNamedIndividualFrameAction.create(editorContext.getProjectId(),
                                                        pristineObject.toPlainFrame(),
-                                                       editedObject.toPlainFrame());
+                                                       editedObject.toPlainFrame(),
+                                                       changeRequestId);
     }
 
     @Override

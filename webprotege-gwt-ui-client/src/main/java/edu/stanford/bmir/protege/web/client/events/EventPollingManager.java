@@ -94,26 +94,32 @@ public class EventPollingManager {
         if(eventList.isEmpty()) {
             return;
         }
-        EventTag eventListStartTag = eventList.getStartTag();
-        if(nextTag.isGreaterOrEqualTo(eventListStartTag)) {
-            // We haven't missed any events - our next retrieval will be from where we got the event to.
+        EventTag eventListEndTag = eventList.getEndTag();
+        if(nextTag.isGreaterOrEqualTo(eventListEndTag)) {
+            // Events arrive over two concurrent paths -- the websocket push
+            // and the polling safety net -- both of which end up here. This
+            // window has already been dispatched via the other path (or is
+            // an older window arriving late), so replaying it would re-apply
+            // stale changes over newer ones: e.g. re-adding a removed parent
+            // to the hierarchy or resurrecting a deleted class (#191).
+            GWT.log("[Event Polling Manager] Skipping already-dispatched events (up to " + eventListEndTag + ")");
+            return;
         }
-        if (!eventList.isEmpty()) {
-            try {
-                for (WebProtegeEvent<?> event : eventList.getEvents()) {
-                    if (event.getSource() != null) {
-                        eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
-                    } else {
-                        eventBus.fireEvent(event.asGWTEvent());
-                    }
+        try {
+            for (WebProtegeEvent<?> event : eventList.getEvents()) {
+                if (event.getSource() != null) {
+                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
+                } else {
+                    eventBus.fireEvent(event.asGWTEvent());
                 }
-                // After dispatching the events handle in the one-shot event awaiter
-                eventAwaiter.handleEvents(eventList.getEvents());
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
-            } finally {
-                nextTag = eventList.getEndTag();
             }
+            // After dispatching the events handle in the one-shot event awaiter
+            eventAwaiter.handleEvents(eventList.getEvents());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
+        } finally {
+            // The guard above ensures this only ever moves the tag forward.
+            nextTag = eventListEndTag;
         }
     }
 

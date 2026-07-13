@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -24,8 +25,9 @@ public abstract class UpdateAnnotationPropertyFrameAction extends UpdateFrameAct
     @JsonCreator
     public static UpdateAnnotationPropertyFrameAction create(@JsonProperty("projectId") ProjectId projectId,
                                                              @JsonProperty("from") PlainAnnotationPropertyFrame from,
-                                                             @JsonProperty("to") PlainAnnotationPropertyFrame to) {
-        return new AutoValue_UpdateAnnotationPropertyFrameAction(projectId, from, to);
+                                                             @JsonProperty("to") PlainAnnotationPropertyFrame to,
+                                                             @JsonProperty("changeRequestId") ChangeRequestId changeRequestId) {
+        return new AutoValue_UpdateAnnotationPropertyFrameAction(projectId, from, to, changeRequestId);
     }
 
     @Nonnull
@@ -37,4 +39,7 @@ public abstract class UpdateAnnotationPropertyFrameAction extends UpdateFrameAct
 
     @Override
     public abstract PlainAnnotationPropertyFrame getTo();
+
+    @Override
+    public abstract ChangeRequestId getChangeRequestId();
 }
