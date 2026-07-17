@@ -76,6 +76,20 @@
 		<location>/forbidden.jsp</location>
 	</error-page>
 
+	<!-- A 400 here is most often the Keycloak adapter rejecting an OAuth
+	     callback whose 'state' query param no longer matches the
+	     OAuth_Token_Request_State cookie: e.g. the login attempt went stale
+	     while a Keycloak required action (email verification, OTP setup, etc.)
+	     interrupted it, or a concurrent auth challenge overwrote the cookie.
+	     bad-request.jsp only redirects when the request itself looks like
+	     that OAuth callback (context root, 'code' and 'state' present); any
+	     other 400 in the app (e.g. ProjectDownloadServlet's malformed
+	     download-request check) keeps its genuine 400 status. -->
+	<error-page>
+		<error-code>400</error-code>
+		<location>/bad-request.jsp</location>
+	</error-page>
+
 	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.app.LogoutServlet</servlet-class>
