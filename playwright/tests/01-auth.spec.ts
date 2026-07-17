@@ -115,4 +115,30 @@ test.describe('authentication', () => {
     await expect(page).toHaveURL(/#projects\/list/, { timeout: 30_000 });
     await expect(page.locator(ProjectList.root)).toBeVisible();
   });
+
+  test('A7: stale OAuth callback state recovers to a clean sign-in instead of a bare 400 (#290)', async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    // Simulates resuming a login after a Keycloak "required action" (e.g.
+    // email verification) interrupts and later completes it: the original
+    // login attempt has gone stale, so the authorization-code callback's
+    // `state` no longer matches the OAuth_Token_Request_State cookie the
+    // server has on file. Seed a cookie so the callback hits the actual
+    // mismatch check rather than the "no cookie at all" case.
+    await context.addCookies([
+      {
+        name: 'OAuth_Token_Request_State',
+        value: 'a-previous-login-attempts-state',
+        domain: new URL(baseURL ?? 'http://webprotege-local.edu').hostname,
+        path: '/',
+      },
+    ]);
+    await page.goto('/?state=stale-state&session_state=stale-session&code=stale-code');
+
+    // Before the fix this landed on Tomcat's raw "HTTP Status 400" page.
+    await expect(page).toHaveURL(/\/keycloak\/realms\/webprotege\/protocol\/openid-connect\/auth/);
+    await expect(page.locator(Login.username)).toBeVisible();
+  });
 });
