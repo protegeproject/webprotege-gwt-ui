@@ -44,7 +44,7 @@ services:
     networks: [wp]
 
   webprotege-keycloak:
-    image: protegeproject/webprotege-keycloak:2.0.1
+    image: protegeproject/webprotege-keycloak:2.0.3
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -148,7 +148,7 @@ services:
       - "${SERVER_HOST:-localhost}:host-gateway"
 
   webprotege-authorization-service:
-    image: protegeproject/webprotege-authorization-service:3.0.9
+    image: protegeproject/webprotege-authorization-service:3.0.10
     depends_on:
       webprotege-keycloak:
         condition: service_healthy
@@ -165,7 +165,7 @@ services:
     networks: [wp]
 
   webprotege-user-management-service:
-    image: protegeproject/webprotege-user-management-service:1.0.10
+    image: protegeproject/webprotege-user-management-service:1.0.12
     depends_on:
       webprotege-keycloak:
         condition: service_healthy
@@ -254,7 +254,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.8
+    image: protegeproject/webprotege-backend-service:5.0.16
     user: root
     depends_on:
       mongo:
