@@ -118,11 +118,11 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
                         .stream()
                         .map(e -> e.getKey() + ": " +  e.getValue())
                         .collect(Collectors.joining("  &&  "));
-                logger.info("Permission denied for {} when executing {}.  User: {}, Headers: {}, Token: {}", executionContext.getUserId(),
-                            action.getClass().getSimpleName(),
+                // The user's access token is a credential and must not be written to the log.
+                logger.info("Permission denied for {} when executing {}.  Headers: {}",
                             executionContext.getUserId(),
-                            headers,
-                            executionContext.getToken());
+                            action.getClass().getSimpleName(),
+                            headers);
                 throw new PermissionDeniedException("Permission denied (" + httpResponse.statusCode() + ")", executionContext.getUserId());
             }
             else if(httpResponse.statusCode() >= 400) {
