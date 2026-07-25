@@ -48,6 +48,14 @@ public class GetProjectEventsAction_CustomFieldSerializer extends CustomFieldSer
     public static GetProjectEventsAction instantiate(SerializationStreamReader streamReader) throws SerializationException {
         String projectName = streamReader.readString();
         int ordinal = streamReader.readInt();
+        // Read in the same order it is written by serialize(). Missing this
+        // read (or the matching write) silently drops the flag on the GWT-RPC
+        // hop from the browser to gwt-ui-server, so the client would keep
+        // replaying the whole history at open.
+        boolean latestOnly = streamReader.readBoolean();
+        if (latestOnly) {
+            return GetProjectEventsAction.anchor(ProjectId.get(projectName));
+        }
         return GetProjectEventsAction.create(EventTag.get(ordinal), ProjectId.get(projectName));
     }
 
@@ -70,6 +78,7 @@ public class GetProjectEventsAction_CustomFieldSerializer extends CustomFieldSer
     public static void serialize(SerializationStreamWriter streamWriter, GetProjectEventsAction instance) throws SerializationException {
         streamWriter.writeString(instance.getProjectId().getId());
         streamWriter.writeInt(instance.getSinceTag().getOrdinal());
+        streamWriter.writeBoolean(instance.isLatestOnly());
     }
 
 
