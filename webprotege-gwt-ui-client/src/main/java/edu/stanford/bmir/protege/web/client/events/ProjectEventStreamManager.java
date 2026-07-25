@@ -101,12 +101,29 @@ public class ProjectEventStreamManager {
     /** Guards against stacking more than one pending watchdog check. */
     private boolean watchdogArmed = false;
 
+    /** Guards against stacking more than one pending liveness check. */
+    private boolean livenessArmed = false;
+
+    /** When the stream last showed signs of life (open, frame, or heartbeat). */
+    private double lastActivityMillis = 0;
+
     /**
      * How long an open attempt gets before the watchdog declares it dead and
      * tries again. Long enough for the token round-trip, ticket mint, and
      * connect; short enough that a viewer does not sit blind for long.
      */
     static final int WATCHDOG_DELAY_MS = 10_000;
+
+    /** How often a live stream is checked for having gone silent. */
+    static final int LIVENESS_CHECK_INTERVAL_MS = 15_000;
+
+    /**
+     * A live stream with no frame and no heartbeat for this long is treated as a
+     * half-open zombie: a network drop can kill delivery without the browser
+     * ever firing an error. The server heartbeats every ~20 seconds, so 2.5
+     * missed heartbeats means the connection is gone in all but name.
+     */
+    static final int STALE_STREAM_THRESHOLD_MS = 50_000;
 
     @Inject
     public ProjectEventStreamManager(ProjectId projectId,
@@ -280,7 +297,69 @@ public class ProjectEventStreamManager {
      */
     void handleOpen() {
         streamLive = true;
+        touchActivity();
+        armLiveness();
         dispatcher.start();
+    }
+
+    /**
+     * Called from JSNI for each server heartbeat. Heartbeats exist precisely so
+     * the client can tell a quiet-but-healthy stream from a dead one.
+     */
+    void handleHeartbeat() {
+        touchActivity();
+    }
+
+    private void touchActivity() {
+        lastActivityMillis = now();
+    }
+
+    private void armLiveness() {
+        if (livenessArmed || closed) {
+            return;
+        }
+        livenessArmed = true;
+        scheduleLiveness(LIVENESS_CHECK_INTERVAL_MS);
+    }
+
+    /**
+     * The liveness check: a stream the browser still reports as open but that
+     * has produced neither a frame nor a heartbeat for longer than the stale
+     * threshold is torn down and reopened with the last seen id -- the missed
+     * window comes back through the reconnect replay. While the stream stays
+     * healthy the check simply re-arms itself.
+     */
+    void livenessCheckFired() {
+        livenessArmed = false;
+        if (closed || !streamLive) {
+            return;
+        }
+        if (now() - lastActivityMillis > STALE_STREAM_THRESHOLD_MS) {
+            logger.info("Event stream went silent past the heartbeat window; reopening");
+            streamLive = false;
+            closeEventSource();
+            acquireTicketAndOpen();
+            return;
+        }
+        armLiveness();
+    }
+
+    /**
+     * Schedules {@link #livenessCheckFired()} after the given delay.
+     * Package-visible so JVM unit tests can override it.
+     */
+    void scheduleLiveness(int delayMs) {
+        new com.google.gwt.user.client.Timer() {
+            @Override
+            public void run() {
+                livenessCheckFired();
+            }
+        }.schedule(delayMs);
+    }
+
+    /** The clock, separated so tests can move time. */
+    double now() {
+        return System.currentTimeMillis();
     }
 
     /**
@@ -289,6 +368,7 @@ public class ProjectEventStreamManager {
      * through the existing {@link TranslateEventListAction} round-trip.
      */
     void handleMessage(String data, String eventId) {
+        touchActivity();
         if (eventId != null && !eventId.isEmpty()) {
             lastEventId = eventId;
         }
@@ -342,6 +422,10 @@ public class ProjectEventStreamManager {
 
             eventSource.addEventListener('project-events', function(event) {
                 that.@edu.stanford.bmir.protege.web.client.events.ProjectEventStreamManager::handleMessage(Ljava/lang/String;Ljava/lang/String;)(event.data, event.lastEventId);
+            });
+
+            eventSource.addEventListener('heartbeat', function(event) {
+                that.@edu.stanford.bmir.protege.web.client.events.ProjectEventStreamManager::handleHeartbeat()();
             });
 
             eventSource.onopen = function() {

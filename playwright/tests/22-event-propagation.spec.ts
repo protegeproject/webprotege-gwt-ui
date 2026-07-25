@@ -60,9 +60,12 @@ test.describe('SSE event propagation', () => {
     await pageB.waitForTimeout(2_000);
     await contextB.setOffline(false);
 
-    // EventSource reconnects on its own and resumes via Last-Event-ID; the
-    // missed window is replayed. Nothing missing...
-    await expect(pageB.locator(Hierarchy.treeNode('WhileOffline'))).toBeVisible({ timeout: 30_000 });
+    // Recovery can take two shapes: a browser-driven reconnect resuming via
+    // Last-Event-ID, or -- when the drop leaves a half-open zombie connection
+    // that never errors -- the client's own liveness check, which notices the
+    // silent stream after ~2.5 missed heartbeats and reopens it with the last
+    // seen id. The budget covers the slower path. Nothing missing...
+    await expect(pageB.locator(Hierarchy.treeNode('WhileOffline'))).toBeVisible({ timeout: 90_000 });
     // ...and nothing duplicated.
     await expect(pageB.locator(Hierarchy.treeNode('WhileOffline'))).toHaveCount(1);
 

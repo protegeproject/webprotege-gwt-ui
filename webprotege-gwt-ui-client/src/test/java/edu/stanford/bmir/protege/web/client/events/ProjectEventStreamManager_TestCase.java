@@ -49,6 +49,12 @@ public class ProjectEventStreamManager_TestCase {
 
         int watchdogScheduleCount = 0;
 
+        int livenessScheduleCount = 0;
+
+        int closeCount = 0;
+
+        double fakeNowMillis = 0;
+
         RecordingStreamManager(ProjectId projectId,
                                DispatchServiceManager dispatchServiceManager,
                                ProjectEventDispatcher dispatcher) {
@@ -67,13 +73,23 @@ public class ProjectEventStreamManager_TestCase {
         }
 
         @Override
+        void scheduleLiveness(int delayMs) {
+            livenessScheduleCount++;
+        }
+
+        @Override
+        double now() {
+            return fakeNowMillis;
+        }
+
+        @Override
         void openEventSource(String url) {
             // stubbed: no browser
         }
 
         @Override
         void closeEventSource() {
-            // stubbed: no browser
+            closeCount++;
         }
     }
 
@@ -113,6 +129,44 @@ public class ProjectEventStreamManager_TestCase {
         manager.stop();
 
         manager.watchdogFired();
+
+        assertThat(manager.reopenCount, is(0));
+    }
+
+    @Test
+    public void shouldReopenWhenALiveStreamGoesSilentPastTheHeartbeatWindow() {
+        // The half-open zombie: the browser still reports the stream open, but a
+        // network drop killed delivery without ever firing an error.
+        manager.handleOpen();
+        manager.fakeNowMillis = ProjectEventStreamManager.STALE_STREAM_THRESHOLD_MS + 1_000;
+
+        manager.livenessCheckFired();
+
+        assertThat(manager.closeCount, is(1));
+        assertThat(manager.reopenCount, is(1));
+    }
+
+    @Test
+    public void shouldKeepCheckingWhileHeartbeatsArrive() {
+        manager.handleOpen();
+        manager.fakeNowMillis = 40_000;
+        manager.handleHeartbeat();
+        manager.fakeNowMillis = 60_000;
+
+        manager.livenessCheckFired();
+
+        // Twenty seconds since the last heartbeat: healthy, just re-armed.
+        assertThat(manager.reopenCount, is(0));
+        assertThat(manager.livenessScheduleCount, is(2));
+    }
+
+    @Test
+    public void shouldStopLivenessCheckingOnceDisposed() {
+        manager.handleOpen();
+        manager.stop();
+        manager.fakeNowMillis = ProjectEventStreamManager.STALE_STREAM_THRESHOLD_MS + 1_000;
+
+        manager.livenessCheckFired();
 
         assertThat(manager.reopenCount, is(0));
     }
