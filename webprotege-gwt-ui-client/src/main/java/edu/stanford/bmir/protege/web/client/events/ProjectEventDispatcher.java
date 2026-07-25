@@ -225,6 +225,28 @@ public class ProjectEventDispatcher {
         startCatchUpFetch();
     }
 
+    /**
+     * Ensures the dispatcher has applied everything up to the given head
+     * position, pulling the difference if not. Heartbeats carry the server's
+     * per-project head so that events lost on a connection that never errored
+     * (a browser can silently drop frames across a brief network loss) are
+     * noticed within one heartbeat interval even when no further event ever
+     * arrives to expose the gap. A dispatcher that is not anchored yet, is
+     * already caught up, or already has a fetch in flight does nothing.
+     */
+    public void ensureCaughtUpTo(int headSeq) {
+        if(nextTag == null || catchUpInFlight) {
+            return;
+        }
+        if(headSeq > nextTag.getOrdinal()) {
+            GWT.log("[Event Dispatcher] Heartbeat reports head " + headSeq
+                            + " ahead of bookmark " + nextTag + "; fetching the difference");
+            logger.warning("Missed events detected via heartbeat for " + projectId
+                                   + ".  Bookmark: " + nextTag + ", server head: " + headSeq);
+            startCatchUpFetch();
+        }
+    }
+
     private void startCatchUpFetch() {
         catchUpInFlight = true;
         // The pull has no upper bound: it returns everything from the bookmark

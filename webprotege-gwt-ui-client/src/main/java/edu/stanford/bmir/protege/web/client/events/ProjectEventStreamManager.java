@@ -303,11 +303,22 @@ public class ProjectEventStreamManager {
     }
 
     /**
-     * Called from JSNI for each server heartbeat. Heartbeats exist precisely so
-     * the client can tell a quiet-but-healthy stream from a dead one.
+     * Called from JSNI for each server heartbeat. Heartbeats serve two jobs:
+     * they prove the stream is alive, and they carry the server's per-project
+     * head sequence so events silently lost on a never-erroring connection are
+     * noticed within one heartbeat interval, even on an otherwise quiet
+     * project.
      */
-    void handleHeartbeat() {
+    void handleHeartbeat(String headSeqData) {
         touchActivity();
+        if (headSeqData == null || headSeqData.isEmpty()) {
+            return;
+        }
+        try {
+            dispatcher.ensureCaughtUpTo(Integer.parseInt(headSeqData.trim()));
+        } catch (NumberFormatException e) {
+            // An unparseable heartbeat still proves liveness; just skip the head check.
+        }
     }
 
     private void touchActivity() {
@@ -425,7 +436,7 @@ public class ProjectEventStreamManager {
             });
 
             eventSource.addEventListener('heartbeat', function(event) {
-                that.@edu.stanford.bmir.protege.web.client.events.ProjectEventStreamManager::handleHeartbeat()();
+                that.@edu.stanford.bmir.protege.web.client.events.ProjectEventStreamManager::handleHeartbeat(Ljava/lang/String;)(event.data);
             });
 
             eventSource.onopen = function() {

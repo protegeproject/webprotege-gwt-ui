@@ -150,7 +150,7 @@ public class ProjectEventStreamManager_TestCase {
     public void shouldKeepCheckingWhileHeartbeatsArrive() {
         manager.handleOpen();
         manager.fakeNowMillis = 40_000;
-        manager.handleHeartbeat();
+        manager.handleHeartbeat("0");
         manager.fakeNowMillis = 60_000;
 
         manager.livenessCheckFired();
@@ -158,6 +158,20 @@ public class ProjectEventStreamManager_TestCase {
         // Twenty seconds since the last heartbeat: healthy, just re-armed.
         assertThat(manager.reopenCount, is(0));
         assertThat(manager.livenessScheduleCount, is(2));
+    }
+
+    @Test
+    public void shouldAskTheDispatcherToCatchUpToTheHeartbeatHead() {
+        manager.handleHeartbeat("7");
+
+        org.mockito.Mockito.verify(dispatcher).ensureCaughtUpTo(7);
+    }
+
+    @Test
+    public void shouldTreatAnUnparseableHeartbeatAsLivenessOnly() {
+        manager.handleHeartbeat("not-a-number");
+
+        org.mockito.Mockito.verify(dispatcher, org.mockito.Mockito.never()).ensureCaughtUpTo(org.mockito.ArgumentMatchers.anyInt());
     }
 
     @Test

@@ -173,6 +173,29 @@ public class ProjectEventDispatcher_TestCase {
         verify(eventBus, never()).fireEvent(gwtEventC);
     }
 
+    @Test
+    public void shouldFetchWhenTheHeartbeatHeadIsAheadOfTheBookmark() {
+        // Bookmark at 5; a heartbeat reports the server head at 9 -- events were
+        // lost on a connection that never errored, with nothing after them to
+        // expose the gap. The heartbeat is what exposes it.
+        manager.dispatchEvents(window(0, 5, eventBackedBy(mock(Event.class))));
+
+        manager.ensureCaughtUpTo(9);
+
+        verify(dispatchServiceManager, atLeastOnce()).execute(actionCaptor.capture(), callbackCaptor.capture());
+        assertThat(actionCaptor.getValue().getSinceTag(), is(equalTo(EventTag.get(5))));
+    }
+
+    @Test
+    public void shouldNotFetchWhenTheHeartbeatHeadMatchesTheBookmark() {
+        manager.dispatchEvents(window(0, 5, eventBackedBy(mock(Event.class))));
+        int before = org.mockito.Mockito.mockingDetails(dispatchServiceManager).getInvocations().size();
+
+        manager.ensureCaughtUpTo(5);
+
+        assertThat(org.mockito.Mockito.mockingDetails(dispatchServiceManager).getInvocations().size(), is(before));
+    }
+
     // ------------------------------------------------------------------
     // #297: a window that does not continue exactly from the bookmark
     // means events were missed. The window must not be applied; the
