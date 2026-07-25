@@ -47,6 +47,8 @@ public class ProjectEventStreamManager_TestCase {
 
         int reopenCount = 0;
 
+        int watchdogScheduleCount = 0;
+
         RecordingStreamManager(ProjectId projectId,
                                DispatchServiceManager dispatchServiceManager,
                                ProjectEventDispatcher dispatcher) {
@@ -56,6 +58,12 @@ public class ProjectEventStreamManager_TestCase {
         @Override
         void acquireTicketAndOpen() {
             reopenCount++;
+        }
+
+        @Override
+        void scheduleWatchdog(int delayMs) {
+            // Recorded instead of scheduled: a GWT timer cannot run off-browser.
+            watchdogScheduleCount++;
         }
 
         @Override
@@ -73,8 +81,48 @@ public class ProjectEventStreamManager_TestCase {
     public void shouldNotReopenWhileTheBrowserIsAutoReconnecting() {
         manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
 
-        // CONNECTING: the browser will resend Last-Event-ID itself; do nothing.
+        // CONNECTING: the browser will resend Last-Event-ID itself; do nothing
+        // immediately -- but the watchdog is armed in case its retries never land.
         assertThat(manager.reopenCount, is(0));
+        assertThat(manager.watchdogScheduleCount, is(1));
+    }
+
+    @Test
+    public void shouldRetryTheOpenWhenTheWatchdogFiresWithoutALiveStream() {
+        // An open attempt died silently (e.g. the ticket mint failed offline).
+        manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
+
+        manager.watchdogFired();
+
+        assertThat(manager.reopenCount, is(1));
+    }
+
+    @Test
+    public void shouldNotRetryOnceTheStreamIsLive() {
+        manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
+        manager.handleOpen();
+
+        manager.watchdogFired();
+
+        assertThat(manager.reopenCount, is(0));
+    }
+
+    @Test
+    public void shouldNotRetryAfterTheProjectIsDisposed() {
+        manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
+        manager.stop();
+
+        manager.watchdogFired();
+
+        assertThat(manager.reopenCount, is(0));
+    }
+
+    @Test
+    public void shouldArmOnlyOneWatchdogAtATime() {
+        manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
+        manager.handleError(ProjectEventStreamManager.READY_STATE_CONNECTING);
+
+        assertThat(manager.watchdogScheduleCount, is(1));
     }
 
     @Test

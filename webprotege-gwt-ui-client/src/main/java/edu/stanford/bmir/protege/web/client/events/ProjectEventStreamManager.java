@@ -91,6 +91,23 @@ public class ProjectEventStreamManager {
      */
     private boolean closed = false;
 
+    /**
+     * True while the {@code EventSource} is actually open. The watchdog uses it
+     * to tell "connected" apart from "an open attempt died somewhere along the
+     * token/ticket/connect chain".
+     */
+    private boolean streamLive = false;
+
+    /** Guards against stacking more than one pending watchdog check. */
+    private boolean watchdogArmed = false;
+
+    /**
+     * How long an open attempt gets before the watchdog declares it dead and
+     * tries again. Long enough for the token round-trip, ticket mint, and
+     * connect; short enough that a viewer does not sit blind for long.
+     */
+    static final int WATCHDOG_DELAY_MS = 10_000;
+
     @Inject
     public ProjectEventStreamManager(ProjectId projectId,
                                      DispatchServiceManager dispatchServiceManager,
@@ -127,10 +144,52 @@ public class ProjectEventStreamManager {
         if (closed) {
             return;
         }
+        // The token fetch, the ticket mint, and the connect can each fail with
+        // nothing but a log line -- most plainly when the machine is offline, in
+        // which case the browser also abandons the old EventSource for good. The
+        // watchdog retries the whole chain until a stream is actually live, so a
+        // failed open is never a dead end.
+        armWatchdog();
         // Always fetch a fresh bearer: the servlet-copied access token lives
         // ~300s, so a cached one may already be expired by reconnect time.
         dispatchServiceManager.execute(new GetUserInfoAction(),
                                        userInfo -> requestTicket(userInfo.getToken()));
+    }
+
+    private void armWatchdog() {
+        if (watchdogArmed) {
+            return;
+        }
+        watchdogArmed = true;
+        scheduleWatchdog(WATCHDOG_DELAY_MS);
+    }
+
+    /**
+     * The watchdog check: if the stream is not live by the time it fires, the
+     * open attempt died somewhere -- start another one (which re-arms the
+     * watchdog, so retrying continues until the stream opens or the project
+     * view is disposed).
+     */
+    void watchdogFired() {
+        watchdogArmed = false;
+        if (closed || streamLive) {
+            return;
+        }
+        logger.info("Event stream did not come up; retrying");
+        acquireTicketAndOpen();
+    }
+
+    /**
+     * Schedules {@link #watchdogFired()} after the given delay. Package-visible
+     * so JVM unit tests can override it -- a GWT timer cannot run off-browser.
+     */
+    void scheduleWatchdog(int delayMs) {
+        new com.google.gwt.user.client.Timer() {
+            @Override
+            public void run() {
+                watchdogFired();
+            }
+        }.schedule(delayMs);
     }
 
     private void requestTicket(String bearerToken) {
@@ -220,6 +279,7 @@ public class ProjectEventStreamManager {
      * caught-up dispatcher, but it retries an anchor that failed on first open.
      */
     void handleOpen() {
+        streamLive = true;
         dispatcher.start();
     }
 
@@ -243,14 +303,20 @@ public class ProjectEventStreamManager {
      * brand-new stream.
      */
     void handleError(int readyState) {
+        streamLive = false;
         if (closed) {
             // We closed the stream deliberately (project disposed); ignore the
             // error fired as the connection tears down.
             return;
         }
         if (readyState == READY_STATE_CLOSED) {
-            logger.info("Event stream closed by the server; re-acquiring a ticket and reopening");
+            logger.info("Event stream closed fatally; re-acquiring a ticket and reopening");
             acquireTicketAndOpen();
+        } else {
+            // The browser is retrying on its own, but arm the watchdog anyway:
+            // if its retries never land (some browsers give up silently after a
+            // network change) a full reopen takes over.
+            armWatchdog();
         }
     }
 
