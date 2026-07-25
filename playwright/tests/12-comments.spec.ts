@@ -41,7 +41,7 @@ async function postComment(page: Page, body: string): Promise<void> {
   await page.locator(Comments.editorOk).click();
   // Drain the CreateEntityDiscussionThread RPC so the fixture's
   // backend-error gate can observe any //EX body.
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('comments', () => {
@@ -74,7 +74,7 @@ test.describe('comments', () => {
     await page.locator(Comments.editor).click();
     await page.keyboard.type('A reply from e2e', { delay: 20 });
     await page.locator(Comments.editorOk).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const comments = page.locator(Comments.thread).locator(Comments.comment);
     await expect(comments).toHaveCount(2, { timeout: 15_000 });
@@ -114,7 +114,7 @@ test.describe('comments', () => {
     const statusButton = page.locator(Comments.threadStatus).first();
     await expect(statusButton).toHaveText(/Resolve/);
     await statusButton.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // The status label flips to "Re-open" from the direct RPC response,
     // but when the ON_STATUS_CHANGED event later arrives over the event

@@ -48,7 +48,7 @@ async function setWatchType(
   await page.locator(Watches.ok).click();
   await expect(page.locator(Watches.modal)).toHaveCount(0, { timeout: 15_000 });
   // Drain the SetEntityWatches RPC for the backend-error gate.
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('watches', () => {

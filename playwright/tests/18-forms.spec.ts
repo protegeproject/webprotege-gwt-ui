@@ -34,7 +34,7 @@ async function addForm(page: Page, label: string): Promise<void> {
   await labelInput.fill(label);
   await page.keyboard.press('Tab');
   // Blur fires updateForm right away — let it land before proceeding.
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('forms', () => {
@@ -81,7 +81,7 @@ test.describe('forms', () => {
     // Blur fires updateForm immediately. #281: a label typed with no
     // explicit language tag now defaults to "en" instead of being
     // silently dropped.
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await expect(labelInput).toHaveValue('TestForm');
 
     // Persists across a reload, language tag included.
@@ -120,7 +120,7 @@ test.describe('forms', () => {
     const labelInput = page.locator(FormsPage.labelValueInput).first();
     await labelInput.fill('FormulaireTest');
     await page.keyboard.press('Tab');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await page.reload();
     await expect(page.locator(SettingsPage.section('Project Forms'))).toBeVisible({
@@ -163,7 +163,7 @@ test.describe('forms', () => {
       await labelInput.click();
       await labelInput.fill('OkClickForm');
       await page.locator(SettingsPage.apply).click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await openFormsPage(page, projectId);
       await expect(page.locator(FormsPage.labelValueInput).first()).toHaveValue(

@@ -112,7 +112,7 @@ test.describe('settings', () => {
     await page.keyboard.press('Tab');
 
     await page.locator(SettingsPage.apply).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await page.reload();
     await expect(page.locator(SettingsPage.section('Prefixes'))).toBeVisible({

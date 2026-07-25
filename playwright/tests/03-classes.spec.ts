@@ -109,7 +109,7 @@ test.describe('class hierarchy', () => {
     // EntityHierarchyChangedEvent reaches EntityHierarchyModel and the
     // live tree patches itself. Also lets the per-test fixture see any
     // `//EX[...]` backend-error body the dispatch service might return.
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // After a drop the selection switches to the moved node, and
     // ClassHierarchyPortletPresenter.setSelectionInTree calls

@@ -58,7 +58,7 @@ async function removeFrameRow(
       .filter({ hasText: rowText }),
   ).toHaveCount(0, { timeout: 15_000 });
   await page.waitForTimeout(COMMIT_DELAY_MS);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('entity removals stay removed', () => {
@@ -83,7 +83,7 @@ test.describe('entity removals stay removed', () => {
     await expect(page.locator(Hierarchy.treeNode('Disposable'))).toHaveCount(0, {
       timeout: 15_000,
     });
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Give Car an extra parent and an annotation, then remove both.
     // Keep Car selected from here on — the point is to observe the SAME
