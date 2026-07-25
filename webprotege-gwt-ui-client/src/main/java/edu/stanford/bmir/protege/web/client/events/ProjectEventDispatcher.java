@@ -1,17 +1,13 @@
 package edu.stanford.bmir.protege.web.client.events;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.inject.EventPollingPeriod;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.perspective.ChangeRequestId;
-import edu.stanford.bmir.protege.web.shared.perspective.HasChangeRequestId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -22,28 +18,45 @@ import java.util.logging.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * Applies project events that arrive from the server to the client-side event
+ * bus, keeping a bookmark ({@link #nextTag}) of how far the client has caught
+ * up. Events are delivered by the {@link ProjectEventStreamManager} over the
+ * SSE stream; this class owns everything downstream of the transport:
+ *
+ * <ul>
+ *   <li>the #191 stale-window guard, so a window that has already been applied
+ *   (or an older window arriving late) is never replayed;</li>
+ *   <li>the #297 contiguity check plus catch-up fetch, so a window that does
+ *   not continue from the bookmark triggers a pull of the missing span rather
+ *   than being applied with a gap;</li>
+ *   <li>the #301 open-time head anchor, so a freshly-opened project starts at
+ *   "now" instead of replaying the whole archived history from ordinal zero.</li>
+ * </ul>
+ *
+ * <p>The 10-second polling timer this class grew out of was removed with the
+ * migration to SSE (#306): the stream's automatic reconnect plus
+ * {@code Last-Event-ID} resume covers the safety-net role the poll used to
+ * play, and the only remaining server pull is the catch-up fetch and the
+ * open-time anchor -- both of which reuse {@link GetProjectEventsAction}.</p>
+ *
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
 @ProjectSingleton
-public class EventPollingManager {
+public class ProjectEventDispatcher {
 
-    Logger logger = Logger.getLogger("EventPollingManager");
+    Logger logger = Logger.getLogger("ProjectEventDispatcher");
 
     private final DispatchServiceManager dispatchServiceManager;
-
-    private int pollingPeriodInMS;
-
-    private Timer pollingTimer;
 
     /**
      * The client's bookmark: the tag up to which project events have been
      * applied. {@code null} until the open-time anchor (see
-     * {@link #requestAnchor()}) resolves. While unanchored the manager neither
-     * polls from a bookmark nor applies pushed windows, so opening a project
-     * never replays the entire archived history from ordinal zero (#301).
+     * {@link #requestAnchor()}) resolves. While unanchored the dispatcher
+     * neither fetches from a bookmark nor applies pushed windows, so opening a
+     * project never replays the entire archived history from ordinal zero (#301).
      */
     private EventTag nextTag = null;
 
@@ -71,67 +84,40 @@ public class EventPollingManager {
     private EventTag catchUpHighWaterMark = null;
 
     /**
-     * True while the open-time head anchor request is on the wire. Stops a poll
-     * tick from firing a second anchor before the first resolves. Cleared on
-     * both success and failure so a failed anchor is retried by the next poll.
+     * True while the open-time head anchor request is on the wire. Stops a
+     * second {@link #start()} (e.g. a stream reconnect re-asserting the anchor)
+     * from firing a second anchor before the first resolves. Cleared on both
+     * success and failure so a failed anchor is retried by the next
+     * {@link #start()}.
      */
     private boolean anchorInFlight = false;
 
     @Inject
-    public EventPollingManager(@EventPollingPeriod int pollingPeriodInMS,
-                               ProjectId projectId,
-                               EventBus eventBus,
-                               DispatchServiceManager dispatchServiceManager,
-                               LoggedInUserProvider loggedInUserProvider,
-                               ChangeRequestEventAwaiter eventAwaiter,
-                               DispatchErrorMessageDisplay errorMessageDisplay) {
+    public ProjectEventDispatcher(ProjectId projectId,
+                                  EventBus eventBus,
+                                  DispatchServiceManager dispatchServiceManager,
+                                  LoggedInUserProvider loggedInUserProvider,
+                                  ChangeRequestEventAwaiter eventAwaiter,
+                                  DispatchErrorMessageDisplay errorMessageDisplay) {
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
         this.eventAwaiter = eventAwaiter;
         this.errorMessageDisplay = errorMessageDisplay;
-        if(pollingPeriodInMS < 1) {
-            throw new IllegalArgumentException("pollingPeriodInMS must be greater than 0");
-        }
-        this.pollingPeriodInMS = pollingPeriodInMS;
         this.projectId = checkNotNull(projectId, "projectId must not be null");
-        pollingTimer = new Timer() {
-            @Override
-            public void run() {
-                pollForProjectEvents();
-            }
-        };
         this.dispatchServiceManager = dispatchServiceManager;
-
     }
 
+    /**
+     * Anchors the dispatcher at the current head, if it is not already anchored.
+     * Called when the project opens and again whenever the event stream
+     * (re)connects: while unanchored, pushed windows are dropped rather than
+     * replaying the whole archive from ordinal zero (#301). The request is
+     * idempotent -- once anchored, or while an anchor is already in flight, it
+     * is a no-op -- so a reconnect re-asserting the anchor never disturbs a
+     * dispatcher that is already caught up.
+     */
     public void start() {
-        if(pollingTimer.isRunning()) {
-            return;
-        }
-        // Open the delta channel at the current head before the periodic poll
-        // begins. Until this resolves the manager stays unanchored: polls and
-        // pushed windows are dropped rather than replaying the whole archive
-        // from ordinal zero (#301).
         requestAnchor();
-        pollingTimer.scheduleRepeating(pollingPeriodInMS);
-    }
-
-    public void stop() {
-        pollingTimer.cancel();
-    }
-
-
-    public void pollForProjectEvents() {
-        if(nextTag == null) {
-            // Not yet anchored -- the open-time anchor is still in flight or a
-            // previous attempt failed. Retry the anchor rather than asking for
-            // events from a bookmark we do not have (which would ask for the
-            // whole history from ordinal zero).
-            requestAnchor();
-            return;
-        }
-        GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
-        dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId), (GetProjectEventsResult result) -> dispatchEvents(result.getEvents()));
     }
 
     private void requestAnchor() {
@@ -149,12 +135,12 @@ public class EventPollingManager {
                 // anchor window is empty, and dispatchEvents' empty-list early
                 // return would leave the bookmark null forever.
                 nextTag = result.getEvents().getEndTag();
-                GWT.log("[Event Polling Manager] Anchored " + projectId + " at " + nextTag);
+                GWT.log("[ProjectEventDispatcher] Anchored " + projectId + " at " + nextTag);
             }
 
             @Override
             public void handleErrorFinally(Throwable throwable) {
-                // Leave nextTag null so the next poll re-attempts the anchor.
+                // Leave nextTag null so the next start() re-attempts the anchor.
                 anchorInFlight = false;
                 logger.log(Level.WARNING, "Anchor fetch for project events failed: " + throwable.getMessage());
             }
@@ -164,28 +150,29 @@ public class EventPollingManager {
 
     public void dispatchEvents(EventList<?> eventList) {
         if(nextTag == null) {
-            // Unanchored: a pushed or polled window arrived before the open-time
-            // anchor resolved. Dropping it is safe -- once anchored we start at
-            // the head and the poll safety net re-delivers anything after it.
-            // Applying it now would also dereference a null nextTag in the
-            // contiguity checks below (#297).
-            GWT.log("[Event Polling Manager] Dropping events received before anchor for " + projectId);
+            // Unanchored: a pushed window arrived before the open-time anchor
+            // resolved. Dropping it is safe -- once anchored we start at the
+            // head and, if the dropped window was contiguous, the next window's
+            // gap triggers a catch-up fetch that re-delivers it. Applying it now
+            // would also dereference a null nextTag in the contiguity checks
+            // below (#297).
+            GWT.log("[ProjectEventDispatcher] Dropping events received before anchor for " + projectId);
             return;
         }
-        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
+        GWT.log("[ProjectEventDispatcher] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
 
         if(eventList.isEmpty()) {
             return;
         }
         EventTag eventListEndTag = eventList.getEndTag();
         if(nextTag.isGreaterOrEqualTo(eventListEndTag)) {
-            // Events arrive over two concurrent paths -- the websocket push
-            // and the polling safety net -- both of which end up here. This
-            // window has already been dispatched via the other path (or is
-            // an older window arriving late), so replaying it would re-apply
-            // stale changes over newer ones: e.g. re-adding a removed parent
-            // to the hierarchy or resurrecting a deleted class (#191).
-            GWT.log("[Event Polling Manager] Skipping already-dispatched events (up to " + eventListEndTag + ")");
+            // Events can still reach this method over two paths -- the SSE push
+            // and the catch-up/anchor pull -- both of which end up here. This
+            // window has already been dispatched via the other path (or is an
+            // older window arriving late), so replaying it would re-apply stale
+            // changes over newer ones: e.g. re-adding a removed parent to the
+            // hierarchy or resurrecting a deleted class (#191).
+            GWT.log("[ProjectEventDispatcher] Skipping already-dispatched events (up to " + eventListEndTag + ")");
             return;
         }
         if(eventList.getStartTag().getOrdinal() != nextTag.getOrdinal()) {
@@ -222,7 +209,7 @@ public class EventPollingManager {
 
     private void handleNonContiguousWindow(EventList<?> eventList) {
         int gapSize = eventList.getStartTag().getOrdinal() - nextTag.getOrdinal();
-        GWT.log("[Event Polling Manager] Missed events detected.  Bookmark: " + nextTag
+        GWT.log("[ProjectEventDispatcher] Missed events detected.  Bookmark: " + nextTag
                         + ", incoming window: " + eventList.getStartTag() + " to " + eventList.getEndTag()
                         + ", gap size: " + gapSize);
         logger.warning("Missed events detected for " + projectId + ".  Bookmark: " + nextTag
@@ -262,15 +249,15 @@ public class EventPollingManager {
                     // in flight; issue one follow-up to cover the remainder.
                     // Without progress we stop instead: the missing events are
                     // not in the archive (yet), and refetching immediately
-                    // would spin -- the next poll or pushed window retries.
+                    // would spin -- the next pushed window retries.
                     startCatchUpFetch();
                 }
             }
 
             @Override
             public void handleErrorFinally(Throwable throwable) {
-                // Never leave the guard wedged: the next poll result or pushed
-                // window re-triggers catch-up.
+                // Never leave the guard wedged: the next pushed window
+                // re-triggers catch-up.
                 catchUpInFlight = false;
                 catchUpHighWaterMark = null;
                 logger.log(Level.WARNING, "Catch-up fetch for missed events failed: " + throwable.getMessage());

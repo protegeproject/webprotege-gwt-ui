@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.inject;
 
 import dagger.Module;
-import dagger.Provides;
 
 /**
  * Matthew Horridge
@@ -11,9 +10,4 @@ import dagger.Provides;
 @Module
 public class SharedApplicationModule {
 
-    @Provides
-    @EventPollingPeriod
-    int provideEventPollingPeriod(EventPollingPeriodProvider provider) {
-        return provider.get();
-    }
 }
