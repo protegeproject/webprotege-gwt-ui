@@ -45,6 +45,9 @@ test.describe('SSE event propagation', () => {
   });
 
   test('SSE2: a disconnected viewer catches up exactly once on reconnect', async ({ page, browser, project }) => {
+    // The zombie-recovery path takes up to ~65s (see below), beyond the
+    // suite's default per-test budget.
+    test.setTimeout(180_000);
     const contextB = await browser.newContext({ storageState: STORAGE_STATE });
     const pageB = await contextB.newPage();
     await pageB.goto(project.url);
