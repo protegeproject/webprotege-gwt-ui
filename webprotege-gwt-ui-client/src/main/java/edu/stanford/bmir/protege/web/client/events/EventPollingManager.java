@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.events;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -46,15 +48,33 @@ public class EventPollingManager {
 
     private final ChangeRequestEventAwaiter eventAwaiter;
 
+    private final DispatchErrorMessageDisplay errorMessageDisplay;
+
+    /**
+     * True while a catch-up fetch for missed events is on the wire. Prevents a
+     * burst of gapped windows from starting a fetch per window.
+     */
+    private boolean catchUpInFlight = false;
+
+    /**
+     * The highest endTag observed on windows that arrived (and were discarded)
+     * while a catch-up fetch was in flight. If the fetch completes below this
+     * mark, one follow-up fetch is issued to cover the remainder.
+     */
+    private EventTag catchUpHighWaterMark = null;
+
     @Inject
     public EventPollingManager(@EventPollingPeriod int pollingPeriodInMS,
                                ProjectId projectId,
                                EventBus eventBus,
                                DispatchServiceManager dispatchServiceManager,
-                               LoggedInUserProvider loggedInUserProvider, ChangeRequestEventAwaiter eventAwaiter) {
+                               LoggedInUserProvider loggedInUserProvider,
+                               ChangeRequestEventAwaiter eventAwaiter,
+                               DispatchErrorMessageDisplay errorMessageDisplay) {
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
         this.eventAwaiter = eventAwaiter;
+        this.errorMessageDisplay = errorMessageDisplay;
         if(pollingPeriodInMS < 1) {
             throw new IllegalArgumentException("pollingPeriodInMS must be greater than 0");
         }
@@ -105,6 +125,20 @@ public class EventPollingManager {
             GWT.log("[Event Polling Manager] Skipping already-dispatched events (up to " + eventListEndTag + ")");
             return;
         }
+        if(eventList.getStartTag().getOrdinal() != nextTag.getOrdinal()) {
+            // The window does not continue from the bookmark: either it jumps
+            // ahead (events in between were lost somewhere upstream) or it
+            // partially overlaps what was already applied. Events carry no
+            // individual tags, so an overlapping window cannot be sliced --
+            // in both cases the only safe recovery is to discard this window
+            // and pull everything from the bookmark forward (#297).
+            handleNonContiguousWindow(eventList);
+            return;
+        }
+        applyWindow(eventList);
+    }
+
+    private void applyWindow(EventList<?> eventList) {
         try {
             for (WebProtegeEvent<?> event : eventList.getEvents()) {
                 if (event.getSource() != null) {
@@ -118,9 +152,67 @@ public class EventPollingManager {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error while sending events " + e.getMessage());
         } finally {
-            // The guard above ensures this only ever moves the tag forward.
-            nextTag = eventListEndTag;
+            // The guards above ensure this only ever moves the tag forward.
+            nextTag = eventList.getEndTag();
         }
+    }
+
+    private void handleNonContiguousWindow(EventList<?> eventList) {
+        int gapSize = eventList.getStartTag().getOrdinal() - nextTag.getOrdinal();
+        GWT.log("[Event Polling Manager] Missed events detected.  Bookmark: " + nextTag
+                        + ", incoming window: " + eventList.getStartTag() + " to " + eventList.getEndTag()
+                        + ", gap size: " + gapSize);
+        logger.warning("Missed events detected for " + projectId + ".  Bookmark: " + nextTag
+                               + ", incoming window: " + eventList.getStartTag() + " to " + eventList.getEndTag()
+                               + ", gap size: " + gapSize);
+        if(catchUpInFlight) {
+            EventTag incomingEndTag = eventList.getEndTag();
+            if(catchUpHighWaterMark == null || incomingEndTag.getOrdinal() > catchUpHighWaterMark.getOrdinal()) {
+                catchUpHighWaterMark = incomingEndTag;
+            }
+            return;
+        }
+        startCatchUpFetch();
+    }
+
+    private void startCatchUpFetch() {
+        catchUpInFlight = true;
+        // The pull has no upper bound: it returns everything from the bookmark
+        // to the head, including the discarded window's events, so filling the
+        // gap and re-delivering the jumped-ahead window collapse into this one
+        // fetch. Its response starts exactly at the bookmark, so it passes the
+        // contiguity check and applies.
+        EventTag fetchedFrom = nextTag;
+        dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId),
+                                       new DispatchServiceCallback<GetProjectEventsResult>(errorMessageDisplay) {
+            @Override
+            public void handleSuccess(GetProjectEventsResult result) {
+                // Clear the guard before re-entering dispatchEvents so the
+                // fetched window is not treated as having arrived mid-flight.
+                catchUpInFlight = false;
+                dispatchEvents(result.getEvents());
+                EventTag highWaterMark = catchUpHighWaterMark;
+                catchUpHighWaterMark = null;
+                boolean madeProgress = nextTag.getOrdinal() > fetchedFrom.getOrdinal();
+                if(madeProgress && highWaterMark != null && !nextTag.isGreaterOrEqualTo(highWaterMark)) {
+                    // Windows beyond the fetch's coverage arrived while it was
+                    // in flight; issue one follow-up to cover the remainder.
+                    // Without progress we stop instead: the missing events are
+                    // not in the archive (yet), and refetching immediately
+                    // would spin -- the next poll or pushed window retries.
+                    startCatchUpFetch();
+                }
+            }
+
+            @Override
+            public void handleErrorFinally(Throwable throwable) {
+                // Never leave the guard wedged: the next poll result or pushed
+                // window re-triggers catch-up.
+                catchUpInFlight = false;
+                catchUpHighWaterMark = null;
+                logger.log(Level.WARNING, "Catch-up fetch for missed events failed: " + throwable.getMessage());
+            }
+        });
     }
 
 }
