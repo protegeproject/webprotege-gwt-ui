@@ -38,7 +38,14 @@ public class EventPollingManager {
 
     private Timer pollingTimer;
 
-    private EventTag nextTag = EventTag.getFirst();
+    /**
+     * The client's bookmark: the tag up to which project events have been
+     * applied. {@code null} until the open-time anchor (see
+     * {@link #requestAnchor()}) resolves. While unanchored the manager neither
+     * polls from a bookmark nor applies pushed windows, so opening a project
+     * never replays the entire archived history from ordinal zero (#301).
+     */
+    private EventTag nextTag = null;
 
     private final ProjectId projectId;
 
@@ -62,6 +69,13 @@ public class EventPollingManager {
      * mark, one follow-up fetch is issued to cover the remainder.
      */
     private EventTag catchUpHighWaterMark = null;
+
+    /**
+     * True while the open-time head anchor request is on the wire. Stops a poll
+     * tick from firing a second anchor before the first resolves. Cleared on
+     * both success and failure so a failed anchor is retried by the next poll.
+     */
+    private boolean anchorInFlight = false;
 
     @Inject
     public EventPollingManager(@EventPollingPeriod int pollingPeriodInMS,
@@ -94,6 +108,11 @@ public class EventPollingManager {
         if(pollingTimer.isRunning()) {
             return;
         }
+        // Open the delta channel at the current head before the periodic poll
+        // begins. Until this resolves the manager stays unanchored: polls and
+        // pushed windows are dropped rather than replaying the whole archive
+        // from ordinal zero (#301).
+        requestAnchor();
         pollingTimer.scheduleRepeating(pollingPeriodInMS);
     }
 
@@ -103,12 +122,56 @@ public class EventPollingManager {
 
 
     public void pollForProjectEvents() {
+        if(nextTag == null) {
+            // Not yet anchored -- the open-time anchor is still in flight or a
+            // previous attempt failed. Retry the anchor rather than asking for
+            // events from a bookmark we do not have (which would ask for the
+            // whole history from ordinal zero).
+            requestAnchor();
+            return;
+        }
         GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
         dispatchServiceManager.execute(GetProjectEventsAction.create(nextTag, projectId), (GetProjectEventsResult result) -> dispatchEvents(result.getEvents()));
     }
 
+    private void requestAnchor() {
+        if(nextTag != null || anchorInFlight) {
+            return;
+        }
+        anchorInFlight = true;
+        dispatchServiceManager.execute(GetProjectEventsAction.anchor(projectId),
+                                       new DispatchServiceCallback<GetProjectEventsResult>(errorMessageDisplay) {
+            @Override
+            public void handleSuccess(GetProjectEventsResult result) {
+                anchorInFlight = false;
+                // Anchor the bookmark at the current head. Set nextTag directly
+                // rather than routing the response through dispatchEvents: the
+                // anchor window is empty, and dispatchEvents' empty-list early
+                // return would leave the bookmark null forever.
+                nextTag = result.getEvents().getEndTag();
+                GWT.log("[Event Polling Manager] Anchored " + projectId + " at " + nextTag);
+            }
+
+            @Override
+            public void handleErrorFinally(Throwable throwable) {
+                // Leave nextTag null so the next poll re-attempts the anchor.
+                anchorInFlight = false;
+                logger.log(Level.WARNING, "Anchor fetch for project events failed: " + throwable.getMessage());
+            }
+        });
+    }
+
 
     public void dispatchEvents(EventList<?> eventList) {
+        if(nextTag == null) {
+            // Unanchored: a pushed or polled window arrived before the open-time
+            // anchor resolved. Dropping it is safe -- once anchored we start at
+            // the head and the poll safety net re-delivers anything after it.
+            // Applying it now would also dereference a null nextTag in the
+            // contiguity checks below (#297).
+            GWT.log("[Event Polling Manager] Dropping events received before anchor for " + projectId);
+            return;
+        }
         GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag() + " current next tag " + nextTag);
 
         if(eventList.isEmpty()) {

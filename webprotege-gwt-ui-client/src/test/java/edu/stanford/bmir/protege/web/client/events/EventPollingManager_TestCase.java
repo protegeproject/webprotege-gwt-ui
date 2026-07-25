@@ -64,13 +64,37 @@ public class EventPollingManager_TestCase {
 
     @Before
     public void setUp() {
-        manager = new EventPollingManager(10_000,
-                                          ProjectId.getNil(),
-                                          eventBus,
-                                          dispatchServiceManager,
-                                          loggedInUserProvider,
-                                          eventAwaiter,
-                                          errorMessageDisplay);
+        manager = newManager();
+        // #301: the manager now opens unanchored (nextTag == null). Anchor it
+        // at tag 0 so the existing #191/#297 dispatch tests exercise the same
+        // bookmark they always started from; the reset() inside clears the
+        // anchor request so it does not perturb the dispatch-count assertions.
+        anchorAtHead(0);
+    }
+
+    private EventPollingManager newManager() {
+        return new EventPollingManager(10_000,
+                                       ProjectId.getNil(),
+                                       eventBus,
+                                       dispatchServiceManager,
+                                       loggedInUserProvider,
+                                       eventAwaiter,
+                                       errorMessageDisplay);
+    }
+
+    /**
+     * Drives {@link #manager}'s open-time head anchor to completion so it is
+     * bookmarked at {@code headTag}, then clears the mock's interaction history
+     * so the anchor request does not count towards the dispatch assertions in
+     * the tests that follow.
+     */
+    @SuppressWarnings("unchecked")
+    private void anchorAtHead(int headTag) {
+        manager.pollForProjectEvents();
+        ArgumentCaptor<DispatchServiceCallback> anchorCallback = ArgumentCaptor.forClass(DispatchServiceCallback.class);
+        verify(dispatchServiceManager).execute(any(GetProjectEventsAction.class), anchorCallback.capture());
+        anchorCallback.getValue().onSuccess(resultOf(EventList.create(EventTag.get(headTag), ImmutableList.of(), EventTag.get(headTag))));
+        reset(dispatchServiceManager);
     }
 
     @SuppressWarnings("unchecked")
@@ -262,6 +286,90 @@ public class EventPollingManager_TestCase {
         // the bookmark does not advance. No immediate refetch -- the next
         // poll or pushed window retries instead.
         capturedCatchUpCallback().onSuccess(resultOf(EventList.create(EventTag.get(5), ImmutableList.of(), EventTag.get(5))));
+
+        verify(dispatchServiceManager, times(1)).execute(any(GetProjectEventsAction.class), any(DispatchServiceCallback.class));
+    }
+
+    // ------------------------------------------------------------------
+    // #301: a freshly-opened project must not replay the whole archive.
+    // The manager opens unanchored and first asks only for the current head
+    // (an anchor request); it neither polls from a bookmark nor applies
+    // pushed windows until that anchor resolves.
+    // ------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    private DispatchServiceCallback<GetProjectEventsResult> capturedAnchorCallback() {
+        verify(dispatchServiceManager, atLeastOnce()).execute(actionCaptor.capture(), callbackCaptor.capture());
+        return callbackCaptor.getValue();
+    }
+
+    @Test
+    public void shouldRequestTheHeadAnchorRatherThanPollingWhileUnanchored() {
+        EventPollingManager unanchored = newManager();
+
+        unanchored.pollForProjectEvents();
+
+        // The first request is the head anchor (latestOnly), not a since-tag
+        // poll that would drag down the entire history from ordinal zero.
+        verify(dispatchServiceManager).execute(actionCaptor.capture(), any(DispatchServiceCallback.class));
+        assertThat(actionCaptor.getValue().isLatestOnly(), is(true));
+        verify(eventBus, never()).fireEvent(any(Event.class));
+    }
+
+    @Test
+    public void shouldAnchorTheBookmarkAtTheResponseEndTag() {
+        EventPollingManager unanchored = newManager();
+        unanchored.pollForProjectEvents();
+
+        // The anchor response carries no events, only the current head (42).
+        capturedAnchorCallback().onSuccess(resultOf(EventList.create(EventTag.get(42), ImmutableList.of(), EventTag.get(42))));
+
+        // Bookmarked at 42: a window that continues from 42 now applies.
+        Event<?> gwtEvent = mock(Event.class);
+        unanchored.dispatchEvents(window(42, 45, eventBackedBy(gwtEvent)));
+        verify(eventBus).fireEvent(gwtEvent);
+    }
+
+    @Test
+    public void shouldDropWindowsArrivingBeforeTheAnchorWithoutWedging() {
+        EventPollingManager unanchored = newManager();
+
+        // A pushed window arrives before the manager has anchored.
+        Event<?> earlyGwtEvent = mock(Event.class);
+        unanchored.dispatchEvents(window(0, 5, eventBackedBy(earlyGwtEvent)));
+
+        verify(eventBus, never()).fireEvent(earlyGwtEvent);
+        // Dropping the window must not start any fetch...
+        verify(dispatchServiceManager, never()).execute(any(GetProjectEventsAction.class), any(DispatchServiceCallback.class));
+
+        // ...and the manager is not wedged: it still anchors and then dispatches.
+        unanchored.pollForProjectEvents();
+        capturedAnchorCallback().onSuccess(resultOf(EventList.create(EventTag.get(10), ImmutableList.of(), EventTag.get(10))));
+        Event<?> laterGwtEvent = mock(Event.class);
+        unanchored.dispatchEvents(window(10, 12, eventBackedBy(laterGwtEvent)));
+        verify(eventBus).fireEvent(laterGwtEvent);
+    }
+
+    @Test
+    public void shouldRetryTheAnchorAfterAFailure() {
+        EventPollingManager unanchored = newManager();
+        unanchored.pollForProjectEvents();
+
+        capturedAnchorCallback().onFailure(new RuntimeException("boom"));
+
+        // The in-flight guard was cleared and the bookmark is still unset, so
+        // the next poll issues a fresh anchor rather than giving up.
+        unanchored.pollForProjectEvents();
+        verify(dispatchServiceManager, times(2)).execute(any(GetProjectEventsAction.class), any(DispatchServiceCallback.class));
+    }
+
+    @Test
+    public void shouldNotIssueASecondAnchorWhileOneIsInFlight() {
+        EventPollingManager unanchored = newManager();
+
+        unanchored.pollForProjectEvents();
+        // A second poll tick fires before the anchor resolves.
+        unanchored.pollForProjectEvents();
 
         verify(dispatchServiceManager, times(1)).execute(any(GetProjectEventsAction.class), any(DispatchServiceCallback.class));
     }

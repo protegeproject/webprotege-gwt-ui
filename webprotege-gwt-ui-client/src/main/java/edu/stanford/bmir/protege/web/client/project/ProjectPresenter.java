@@ -134,15 +134,21 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     }
 
     private void handleProjectLoaded(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus, @Nonnull ProjectViewPlace place) {
+        // Open the project-events delta channel at the current head BEFORE the
+        // batched portlet state queries below are flushed. start() anchors the
+        // event stream at "now"; issuing it here -- outside the batch, so its
+        // request goes on the wire ahead of executeCurrentBatch() -- lets the
+        // state queries observe a snapshot at or after the anchor. If the
+        // anchor instead resolved after the state queries, an edit landing in
+        // between would be lost: the loaded state would predate it while the
+        // stream started after it. Polling also backs up the live push
+        // connection, filling any gap if the connection glitches (#301).
+        eventPollingManager.start();
+
         dispatchServiceManager.beginBatch();
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-        // Periodic polling backs up the live push connection: if the network
-        // drops or the connection glitches, the poll (every 10s, see
-        // EventPollingPeriodProvider) fills the gap. The live push covers
-        // anything time-sensitive.
-        eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
                                     projectId,
                                     largeNumberOfChangesHandler);
