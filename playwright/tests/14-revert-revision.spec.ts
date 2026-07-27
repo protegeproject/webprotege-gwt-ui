@@ -53,7 +53,7 @@ test.describe('revert revision', () => {
     });
     await page.locator(Revision.successOk).click();
     await expect(page.locator(Revision.successModal)).toHaveCount(0);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // The revert lands as a new head revision and the history list
     // refreshes itself (ChangeListPresenter.handleChangesReverted).

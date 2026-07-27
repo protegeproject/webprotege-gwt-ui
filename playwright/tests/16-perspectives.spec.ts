@@ -116,7 +116,7 @@ test.describe('perspectives', () => {
     await expect(
       page.locator(PerspectiveBar.viewCaption('Project Feed')),
     ).toBeVisible({ timeout: 15_000 });
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('PV3: a view added to Classes via the tab menu persists, and Reset removes it', async ({
@@ -213,7 +213,7 @@ test.describe('perspectives', () => {
     await expect(page.locator(ProjectView.tab('History'))).toBeVisible({
       timeout: 15_000,
     });
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('PV5: perspectives manager page renders its sections', async ({

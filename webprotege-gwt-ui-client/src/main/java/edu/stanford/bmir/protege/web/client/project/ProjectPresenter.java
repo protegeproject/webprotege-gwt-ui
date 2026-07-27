@@ -1,25 +1,20 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.CapabilityScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
+import edu.stanford.bmir.protege.web.client.events.ProjectEventDispatcher;
+import edu.stanford.bmir.protege.web.client.events.ProjectEventStreamManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetUserInfoAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.TranslateEventListAction;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.permissions.GetProjectRoleDefinitionsAction;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
@@ -56,7 +51,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final CapabilityScreener capabilityScreener;
 
-    private final EventPollingManager eventPollingManager;
+    private final ProjectEventDispatcher projectEventDispatcher;
+
+    private final ProjectEventStreamManager projectEventStreamManager;
 
     private final WebProtegeEventBus eventBus;
 
@@ -64,36 +61,26 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final LargeNumberOfChangesManager largeNumberOfChangesHandler;
 
-    private final LoggedInUserProvider loggedInUserProvider;
-
-    /**
-     * The StompJs client that carries the project-events subscription.
-     * Held on the presenter so the connection lives exactly as long as the
-     * project view does: previously the client was a local variable inside
-     * {@link #subscribeToWebsocket}, so nothing owned it and the connection
-     * could silently go away while the user was still on the project. It is
-     * closed explicitly in {@link #dispose()} via {@link #disconnectWebsocket()}.
-     */
-    private JavaScriptObject stompClient;
-
     @Inject
     public ProjectPresenter(ProjectId projectId,
                             ProjectView view,
                             BusyView busyView,
                             DispatchServiceManager dispatchServiceManager,
-                            EventPollingManager eventPollingManager,
+                            ProjectEventDispatcher projectEventDispatcher,
+                            ProjectEventStreamManager projectEventStreamManager,
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
                             PerspectivePresenter perspectivePresenter,
                             CapabilityScreener capabilityScreener,
                             WebProtegeEventBus eventBus,
                             ProjectTagsStyleManager projectTagsStyleManager,
-                            LargeNumberOfChangesManager largeNumberOfChangesHandler, LoggedInUserProvider loggedInUserProvider) {
+                            LargeNumberOfChangesManager largeNumberOfChangesHandler) {
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
         this.dispatchServiceManager = dispatchServiceManager;
-        this.eventPollingManager = eventPollingManager;
+        this.projectEventDispatcher = projectEventDispatcher;
+        this.projectEventStreamManager = projectEventStreamManager;
         this.capabilityScreener = capabilityScreener;
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
@@ -101,7 +88,6 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.eventBus = eventBus;
         this.projectTagsStyleManager = projectTagsStyleManager;
         this.largeNumberOfChangesHandler = largeNumberOfChangesHandler;
-        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Nonnull
@@ -126,23 +112,29 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> handleProjectLoaded(container, eventBus, place));
-        dispatchServiceManager.execute(new GetUserInfoAction(), r -> {
-            String userName = this.loggedInUserProvider.getCurrentUserId().getUserName();
-            subscribeToWebsocket(projectId.getId(),  r.getToken(), r.getWebsocketUrl(), userName);
-        });
-
+        // Open the live event stream. The stream manager mints its own
+        // short-lived ticket (#305) and connects the EventSource (#306); frames
+        // flow into the ProjectEventDispatcher.
+        projectEventStreamManager.start();
     }
 
     private void handleProjectLoaded(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus, @Nonnull ProjectViewPlace place) {
+        // Anchor the project-events delta channel at the current head BEFORE the
+        // batched portlet state queries below are flushed. start() anchors the
+        // event stream at "now"; issuing it here -- outside the batch, so its
+        // request goes on the wire ahead of executeCurrentBatch() -- lets the
+        // state queries observe a snapshot at or after the anchor. If the
+        // anchor instead resolved after the state queries, an edit landing in
+        // between would be lost: the loaded state would predate it while the
+        // stream started after it (#301). Any gap between the anchor and the
+        // first streamed window is recovered by the dispatcher's catch-up
+        // fetch (#297); the stream itself reconnects and resumes on a glitch.
+        projectEventDispatcher.start();
+
         dispatchServiceManager.beginBatch();
         topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-        // Periodic polling backs up the live push connection: if the network
-        // drops or the connection glitches, the poll (every 10s, see
-        // EventPollingPeriodProvider) fills the gap. The live push covers
-        // anything time-sensitive.
-        eventPollingManager.start();
         eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
                                     projectId,
                                     largeNumberOfChangesHandler);
@@ -158,8 +150,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.dispose();
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
-        eventPollingManager.stop();
-        disconnectWebsocket();
+        projectEventStreamManager.stop();
         eventBus.dispose();
     }
 
@@ -169,78 +160,4 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                 .addValue(projectId)
                 .toString();
     }
-
-    public void dispatchEventsFromWebsocket(String data) {
-        dispatchServiceManager.execute(TranslateEventListAction.create(data), (GetProjectEventsResult result) -> eventPollingManager.dispatchEvents(result.getEvents()));
-
-    }
-    public native void subscribeToWebsocket(String projectId, String token, String websocketUrl, String userId)/*-{
-        try {
-            var that = this;
-
-            // If a previous connection is still around (e.g. the presenter is
-            // re-started), close it rather than leaking it.
-            var existing = this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient;
-            if (existing) {
-                existing.deactivate();
-            }
-
-            var stompClient = new $wnd.StompJs.Client({
-                brokerURL: websocketUrl,
-                debug: function(str) {
-                    $wnd.console.log(str);
-                    console.log(str);
-                },
-                reconnectDelay: 30000,
-                heartbeatIncoming: 4000,
-                heartbeatOutgoing: 4000,
-                connectHeaders: {
-                   'token': token,
-                    'userId': userId,
-                    'Authorization' : 'Bearer ' + token,
-                    'login': 'Bearer ' + token
-                }
-            });
-
-
-            stompClient.onConnect = function(frame) {
-                 var headers = {
-                    'token': token,
-                    'userId': userId,
-                    'Authorization' : 'Bearer ' + token
-                  };
-                stompClient.subscribe('/topic/project-events/' + projectId, function(message) {
-                    that.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::dispatchEventsFromWebsocket(Ljava/lang/String;)(message.body);
-
-                }, headers);
-            };
-            stompClient.onWebSocketError = function(error) {
-                console.error('Error with websocket', error);
-            };
-            stompClient.onStompError = function(frame) {
-                console.error('Broker reported error: ' + frame.headers['message']);
-                console.error('Additional details: ' + frame.body);
-            };
-
-
-            stompClient.activate();
-
-            this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient = stompClient;
-
-        } catch (e) {
-            $wnd.console.log('An error has occurred in the websocket connection/subscription ' + e)
-        }
-    }-*/;
-
-    public native void disconnectWebsocket()/*-{
-        try {
-            var stompClient = this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient;
-            if (stompClient) {
-                stompClient.deactivate();
-                this.@edu.stanford.bmir.protege.web.client.project.ProjectPresenter::stompClient = null;
-            }
-        } catch (e) {
-            $wnd.console.log('An error has occurred while closing the websocket connection ' + e)
-        }
-    }-*/;
 }

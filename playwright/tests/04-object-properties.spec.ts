@@ -109,7 +109,7 @@ test.describe('object properties', () => {
     // post-move `revealTreeNodesForKey(opBeta)` — that expands every
     // ancestor on the path, so opAlpha is open and opBeta is on
     // screen without a chevron click.
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await expect(page.locator(Hierarchy.treeNode('opBeta'))).toBeVisible({
       timeout: 15_000,
     });

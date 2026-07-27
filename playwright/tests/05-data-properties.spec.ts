@@ -89,7 +89,7 @@ test.describe('data properties', () => {
     // Drain the MoveHierarchyNode RPC; the post-move
     // `revealTreeNodesForKey` auto-expands dpAlpha — see OP6 in
     // 04-object-properties.spec.ts.
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await expect(page.locator(Hierarchy.treeNode('dpBeta'))).toBeVisible({
       timeout: 15_000,
     });

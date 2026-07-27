@@ -25,6 +25,15 @@ public class GetProjectEvents_Serialization_TestCase {
     }
 
     @Test
+    public void shouldSerializeAnchorActionWithLatestOnlyFlag() throws IOException {
+        // The latestOnly flag must survive the JSON-RPC hop to the
+        // event-history-service, otherwise the anchor request degrades into a
+        // full-history query (#301).
+        var action = GetProjectEventsAction.anchor(mockProjectId());
+        JsonSerializationTestUtil.testSerialization(action, Action.class);
+    }
+
+    @Test
     public void shouldSerializeResult() throws IOException {
         var result = GetProjectEventsResult.create(mockEventList());
         JsonSerializationTestUtil.testSerialization(result, Result.class);

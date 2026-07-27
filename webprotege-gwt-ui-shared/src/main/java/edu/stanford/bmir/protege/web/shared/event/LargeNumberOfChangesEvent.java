@@ -8,6 +8,8 @@ import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.Objects;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -49,7 +51,7 @@ public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChanges
 
     @Override
     public int hashCode() {
-        return getProjectId().hashCode();
+        return Objects.hash(getProjectId(), eventId);
     }
 
     @Override
@@ -60,7 +62,11 @@ public class LargeNumberOfChangesEvent extends ProjectEvent<LargeNumberOfChanges
         if(!(obj instanceof LargeNumberOfChangesEvent)) {
             return false;
         }
+        // The event id must take part: handled-event sets use equality to drop
+        // the same signal arriving over both delivery paths, and comparing the
+        // project alone would also swallow every LATER signal for the project.
         LargeNumberOfChangesEvent other = (LargeNumberOfChangesEvent) obj;
-        return this.getProjectId().equals(other.getProjectId());
+        return this.getProjectId().equals(other.getProjectId())
+                && Objects.equals(this.eventId, other.eventId);
     }
 }

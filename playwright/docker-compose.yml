@@ -69,7 +69,7 @@ services:
     networks: [wp]
 
   webprotege-gwt-api-gateway:
-    image: protegeproject/webprotege-gwt-api-gateway:3.0.2
+    image: protegeproject/webprotege-gwt-api-gateway:3.0.3
     # Spring Security fetches the OIDC discovery doc at startup from
     # http://${SERVER_HOST}/keycloak/.../.well-known/openid-configuration,
     # which routes back through nginx. Nginx is downstream of this service
@@ -190,7 +190,7 @@ services:
     # real release of this service is amd64. Pinned back to the last
     # known-good amd64 build until an amd64/multi-arch :2.0.0 is published
     # (not yet filed upstream against webprotege-event-history-service).
-    image: protegeproject/webprotege-event-history-service:2.0.25-WHO
+    image: protegeproject/webprotege-event-history-service:2.0.1
     depends_on:
       mongo:
         condition: service_started
@@ -254,7 +254,7 @@ services:
     networks: [wp]
 
   webprotege-backend-service:
-    image: protegeproject/webprotege-backend-service:5.0.16
+    image: protegeproject/webprotege-backend-service:5.0.17
     user: root
     depends_on:
       mongo:

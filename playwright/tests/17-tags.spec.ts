@@ -33,7 +33,7 @@ async function createProjectTag(
   await blankRow.locator(TagsPage.labelInput).fill(label);
   await page.keyboard.press('Tab');
   await page.locator(SettingsPage.apply).click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('tags', () => {
@@ -106,7 +106,7 @@ test.describe('tags', () => {
       .last();
     await checkbox.check();
     await page.locator(Modal.primary).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // The assigned tag renders as a chip in the editor portlet's tag list.
     await expect(
