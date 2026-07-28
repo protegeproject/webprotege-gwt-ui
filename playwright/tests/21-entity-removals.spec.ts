@@ -14,12 +14,12 @@ import {
 
 /**
  * Regression pin for #191: removed annotations/parents and deleted classes
- * must STAY removed in the UI. Project events arrive over two concurrent
- * paths (websocket push + polling safety net); before the dispatch guard
- * in EventPollingManager, a late-delivered older event window could be
+ * must STAY removed in the UI. Project events arrive over an SSE stream whose
+ * reconnect catch-up can replay an older event window; without the dispatch
+ * guard in ProjectEventDispatcher, a late-delivered older window could be
  * replayed, re-adding removed hierarchy edges and resurrecting deleted
  * classes on screen even though the server data was correct. The
- * deliberate multi-poll-tick wait here gives any replay a chance to
+ * deliberate multi-tick wait here gives any replay a chance to
  * happen before we assert.
  */
 
