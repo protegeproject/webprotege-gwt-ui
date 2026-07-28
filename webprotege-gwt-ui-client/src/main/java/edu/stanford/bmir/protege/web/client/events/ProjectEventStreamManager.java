@@ -19,10 +19,9 @@ import java.util.logging.Logger;
 
 /**
  * Owns the browser-native {@link com.google.gwt.core.client.JavaScriptObject
- * EventSource} that streams project change events from the gateway, replacing
- * the StompJs WebSocket subscription (#306). Received frames are fed, unchanged,
- * into {@link ProjectEventDispatcher} through the same
- * {@link TranslateEventListAction} round-trip the WebSocket path used, so no new
+ * EventSource} that streams project change events from the gateway (#306).
+ * Received frames are fed, unchanged, into {@link ProjectEventDispatcher}
+ * through a {@link TranslateEventListAction} round-trip, so no new
  * deserialization happens on the client.
  *
  * <h3>Connecting</h3>

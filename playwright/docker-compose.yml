@@ -69,7 +69,7 @@ services:
     networks: [wp]
 
   webprotege-gwt-api-gateway:
-    image: protegeproject/webprotege-gwt-api-gateway:3.0.3
+    image: protegeproject/webprotege-gwt-api-gateway:3.0.4
     # Spring Security fetches the OIDC discovery doc at startup from
     # http://${SERVER_HOST}/keycloak/.../.well-known/openid-configuration,
     # which routes back through nginx. Nginx is downstream of this service
@@ -115,7 +115,6 @@ services:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://webprotege-keycloak:8080/keycloak/realms/webprotege/protocol/openid-connect/certs
       spring.servlet.multipart.max-file-size: 300MB
       spring.servlet.multipart.max-request-size: 300MB
-      WEBPROTEGE_ALLOWEDORIGIN: http://${SERVER_HOST:-localhost}
       webprotege.rabbit.timeout: 600000
     networks: [wp]
     extra_hosts:
@@ -137,7 +136,6 @@ services:
       minio.endPoint: http://minio:9000
       KEYCLOAK_AUTH_URL: http://${SERVER_HOST:-localhost}/keycloak/
       webprotege.gwt-api-gateway.endPoint: http://webprotege-gwt-api-gateway:7777
-      webprotege.websocketUrl: ws://${SERVER_HOST:-localhost}/wsapps
       webprotege.logoutUrl: http://${SERVER_HOST:-localhost}/webprotege/logout
       webprotege.fileUploadurl: http://${SERVER_HOST:-localhost}
       webprotege.keycloakLogoutUrl: http://${SERVER_HOST:-localhost}/keycloak/realms/webprotege/protocol/openid-connect/logout

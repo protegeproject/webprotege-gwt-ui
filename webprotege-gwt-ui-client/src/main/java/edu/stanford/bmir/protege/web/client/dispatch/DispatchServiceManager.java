@@ -251,35 +251,9 @@ public class DispatchServiceManager {
                 ResultCache resultCache = getResultCache(((HasProjectId) action).getProjectId(), eventBus);
                 resultCache.cacheResult((Action<R>) action, (R) result.getResult());
             }
-//            dispatchEvents(result.getResult());
             delegate.onSuccess(result.getResult());
         }
     }
-
-    // EVENTS ARE CURRENTLY REIMPLEMENTED WITH WEBSOCKETS
-
-//    private void dispatchEvents(Object result) {
-//        if(result instanceof HasEventList<?>) {
-//            EventList<? extends WebProtegeEvent<?>> eventList = ((HasEventList<? extends WebProtegeEvent<?>>) result).getEventList();
-//
-//            List<WebProtegeEvent> events = eventList.getEvents();
-//            // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
-//            // TODO: more than once!
-//            GWT.log("[Dispatch] Dispatching " + events.size() + " events");
-//            long t0 = TimeUtil.getCurrentTime();
-//            for(WebProtegeEvent<?> event : events) {
-//                GWT.log("[Dispatch] Dispatching event (" + event + ")");
-//                if(event.getSource() != null) {
-//                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
-//                }
-//                else {
-//                    eventBus.fireEvent(event.asGWTEvent());
-//                }
-//            }
-//            long t1 = TimeUtil.getCurrentTime();
-//            GWT.log("[Dispatch] Dispatched events in " + (t1 - t0) + " ms");
-//        }
-//    }
 
     private void handleError(final Throwable throwable, final Action<?> action, final DispatchServiceCallback<?> callback) {
         if(throwable instanceof StatusCodeException) {
