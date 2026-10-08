@@ -275,6 +275,7 @@
     background-image: linkIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -282,6 +283,7 @@
     background-image: iriIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -291,6 +293,7 @@
     background-repeat: no-repeat;
     background-position: 2px 1px;
     background-size: 18px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
